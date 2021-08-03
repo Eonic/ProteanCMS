@@ -1131,7 +1131,7 @@ Partial Public Module xmlTools
                 cVirtualPath2 = Replace(cVirtualPath2, "//", "/")
 
                 'Save any resized freestock to local appart from standard thumbnails
-                If Not (sPrefix = "~ew/tn-" And maxWidth = 85 And maxHeight = 85) Then
+                If Not (sPrefix = "~ew/tn-" And maxWidth = 100 And maxHeight = 100) Then
                     If cVirtualPath2.StartsWith("/images/FreeStock") Then
                         cVirtualPath2 = Replace(cVirtualPath2, "/images/FreeStock", "/images/~ew/FreeStock")
                     End If
@@ -1295,7 +1295,7 @@ Partial Public Module xmlTools
                 cVirtualPath2 = Replace(cVirtualPath2, "//", "/")
 
                 'Save any resized freestock to local appart from standard thumbnails
-                If Not (sPrefix = "~ew/tn-" And maxWidth = 85 And maxHeight = 85) Then
+                If Not (sPrefix = "~ew/tn-" And maxWidth = 100 And maxHeight = 100) Then
                     If cVirtualPath2.StartsWith("/images/FreeStock") Then
                         cVirtualPath2 = Replace(cVirtualPath2, "/images/FreeStock", "/images/~ew/FreeStock")
                     End If

@@ -4054,6 +4054,7 @@
                   <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
                 </div>
               </xsl:if>
+              <xsl:apply-templates select="." mode="displayTagsNoLink"/>
               <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
               <div class="terminus">&#160;</div>
             </div>
@@ -4097,6 +4098,7 @@
       </div>
       <xsl:if test="Content[@type='FAQ']">
         <div class="faq-list">
+          <a name="pageTop" class="pageTop">&#160;</a>
           <h3>Question and Answer</h3>
           <ul>
             <xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
@@ -8816,7 +8818,9 @@
         </xsl:if>
       </a>
       <xsl:if test="position()!=last()">
-        <xsl:text>, </xsl:text>
+        <span class="tag-comma">
+          <xsl:text>, </xsl:text>
+        </span>
       </xsl:if>
     </span>
   </xsl:template>
@@ -8855,7 +8859,46 @@
     </div>
   </xsl:template>
 
+  <!-- Tags Display -->
+  <xsl:template match="Content" mode="displayTagsNoLink">
+    <xsl:param name="sortBy"/>
+    <xsl:variable name="articleList">
+      <xsl:for-each select="Content[@type='Tag']">
+        <xsl:copy-of select="."/>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:if test="count(Content[@type='Tag'])&gt;0">
+      <div class="tags">
+        <!--Tags-->
+        <xsl:apply-templates select="ms:node-set($articleList)" mode="displayBriefNoLink">
+          <xsl:with-param name="sortBy" select="@sortBy"/>
+        </xsl:apply-templates>
+      </div>
+    </xsl:if>
+  </xsl:template>
 
+  <!-- Tags Brief -->
+  <xsl:template match="Content[@type='Tag']" mode="displayBriefNoLink">
+    <xsl:param name="sortBy"/>
+    <xsl:variable name="parentURL">
+      <xsl:apply-templates select="." mode="getHref"/>
+    </xsl:variable>
+    <xsl:variable name="name" select="Name/node()"/>
+    <span>
+      <xsl:apply-templates select="." mode="inlinePopupOptions">
+        <xsl:with-param name="sortBy" select="$sortBy"/>
+      </xsl:apply-templates>
+        <xsl:apply-templates select="Name" mode="displayBrief"/>
+        <xsl:if test="@relatedCount!=''">
+          &#160;(<xsl:value-of select="@relatedCount"/>)
+        </xsl:if>
+      <xsl:if test="position()!=last()">
+        <span class="tag-comma">
+          <xsl:text>, </xsl:text>
+        </span>
+      </xsl:if>
+    </span>
+  </xsl:template>
   <!--   ################   Links   ###############   -->
 
   <!-- Links Module -->
@@ -10910,7 +10953,7 @@
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
-        <a name="faq-{@id}">
+        <a name="faq-{@id}" class="faq-link">
           &#160;
         </a>
         <h3>
@@ -11364,7 +11407,7 @@
     </xsl:variable>
 
     <!-- ###### -->
-    <div class="advanced-carousel-container">
+    <div class="advanced-carousel-container" style="height:{@CarouselHeight}px">
       <div class="cover-container">
         <div class="advanced-carousel">
           <ul style="display:none">

@@ -43,12 +43,13 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
+    <xsl:if test="$ref!=''">
     <script>
       $(function () {
       <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
       <xsl:text>-btn').popover('show');</xsl:text>
       });
-    </script>
+    </script></xsl:if>
   </xsl:template>
 
   <!-- -->
@@ -186,6 +187,38 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
+    </fieldset>
+  </xsl:template>
+
+  <xsl:template match="group[contains(@class,'inline-col3')]" mode="xform">
+    <xsl:param name="class"/>
+    <fieldset>
+      <xsl:if test=" @id!='' ">
+        <xsl:attribute name="id">
+          <xsl:value-of select="@id"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="$class!='' or @class!='' ">
+        <xsl:attribute name="class">
+          <xsl:value-of select="$class"/>
+          <xsl:if test="@class!=''">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="@class"/>
+          </xsl:if>
+          <xsl:for-each select="group">
+            <xsl:text> form-group li-</xsl:text>
+            <xsl:value-of select="./@class"/>
+          </xsl:for-each>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="label[position()=1]" mode="legend"/>
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <div class="form-group input-containing ">
+        <div class="control-wrapper input-wrapper appearance- ">
+          <xsl:apply-templates select="submit" mode="xform"/>
+        </div>
+      </div>
+            
     </fieldset>
   </xsl:template>
 
@@ -1142,7 +1175,9 @@
     </input>
   </xsl:template>
 
-
+  <xsl:template match="*" mode="getRefOrBind">
+   
+  </xsl:template>
 
   <!-- CREATE THE NAME attribute for an input field -->
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="getRefOrBind">

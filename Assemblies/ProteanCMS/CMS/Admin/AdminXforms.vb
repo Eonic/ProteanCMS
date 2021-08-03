@@ -3365,9 +3365,7 @@ Partial Public Class Cms
                         End If
                         bulkContentSchemaName = bulkContentSchemaName & Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
-                    bulkContentSchemaName = bulkContentSchemaName.Trim(",".ToCharArray())
-                    bulkContentSchemaName = bulkContentSchemaName.Remove(bulkContentSchemaName.Length - 1)
-
+                    bulkContentSchemaName = bulkContentSchemaName.Trim(" ").Trim(",").Trim(" ")
                     MyBase.addSubmit(oFrmElmt, "", "Delete " & bulkContentSchemaName, , "principle btn-danger", "fa-trash-o")
 
                     MyBase.Instance.InnerXml = "<delete/>"
@@ -3681,6 +3679,8 @@ Partial Public Class Cms
                 Dim cProcessInfo As String = ""
                 Try
                     MyBase.NewFrm("AddFolder")
+
+
 
                     MyBase.submission("AddFolder", "/?ewcmd=" & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField"), "post", "")
 
@@ -6113,12 +6113,10 @@ Partial Public Class Cms
 
                             End If
                         End If
+
                     End If
-
                     MyBase.addValues()
-
                     Return MyBase.moXformElmt
-
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug)

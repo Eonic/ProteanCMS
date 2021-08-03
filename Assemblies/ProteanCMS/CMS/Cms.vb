@@ -1892,6 +1892,7 @@ Public Class Cms
                     oPageElmt.SetAttribute("updateDate", Protean.Tools.Xml.XmlDate(mdPageUpdateDate))
                     oPageElmt.SetAttribute("userIntegrations", gbUserIntegrations.ToString.ToLower)
                     oPageElmt.SetAttribute("pageViewDate", Protean.Tools.Xml.XmlDate(mdDate))
+                    oPageElmt.SetAttribute("previewHidden", IIf(mbPreviewHidden, "on", "off"))
 
                     ' Assess if this page is a cloned page.
                     ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
@@ -4987,7 +4988,11 @@ Public Class Cms
                 ' - enumerate who teh permissions have come from (indicated by nUserId not being -1 and badminMode being 1)
                 ' - exclude expired, not yet published and hidden pages if not in adminmode.
 
-
+                'If preview mode is set to show hidden
+                Dim spoofAdminMode As Boolean = mbAdminMode
+                If mbPreviewHidden Then
+                    bIncludeExpiredAndHidden = True
+                End If
 
                 sSql = "EXEC getContentStructure_v2 @userId=" & nUserId & ", @bAdminMode=" & CInt(mbAdminMode) & ", @dateNow=" & Protean.sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=1"
 
@@ -5357,6 +5362,13 @@ Public Class Cms
                             newVerNode.SetAttribute("status", oMenuItem.GetAttribute("status"))
                             newVerNode.SetAttribute("access", oMenuItem.GetAttribute("access"))
                             newVerNode.SetAttribute("layout", oMenuItem.GetAttribute("layout"))
+                            Dim sInnerXml As String
+                            Dim infoElmt As XmlElement
+                            For Each infoElmt In oMenuItem.SelectNodes("*[name()!='PageVersion' and name()!='MenuItem']")
+                                sInnerXml = sInnerXml & infoElmt.OuterXml
+                            Next
+                            newVerNode.InnerXml = sInnerXml
+                            sInnerXml = ""
                             If Not goLangConfig Is Nothing Then
                                 newVerNode.SetAttribute("lang", goLangConfig.GetAttribute("code"))
                             End If
@@ -7223,7 +7235,7 @@ Public Class Cms
             If Not Me.mbAdminMode Then
 
                 ' Set the default filter
-                If mbPreview = False Then
+                If Not mbPreviewHidden = True Then
                     sFilterSQL = "a.nStatus = 1 "
                 End If
 

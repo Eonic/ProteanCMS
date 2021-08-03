@@ -1190,13 +1190,13 @@ ProcessFlow:
                         Dim totalStatusCount As Integer = 0
                         For Each id In bulkIds
                             status = myWeb.moDbHelper.getObjectStatus(dbHelper.objectTypes.Content, id)
-                            If (status = 0) Then
+                            If (status <> 1) Then
                                 totalStatusCount = totalStatusCount + 1
                             End If
 
                         Next
                         If (count = totalStatusCount) Then
-                            If (status = 0) Then  'check status here
+                            If (status <> 1) Then  'check status here
                                 oPageDetail.AppendChild(moAdXfm.xFrmDeleteBulkContent(bulkIds))
                             End If
                         End If
@@ -1986,10 +1986,18 @@ ProcessFlow:
                             myWeb.msRedirectOnEnd = "/"
                         End If
 
-                        If IsDate(myWeb.moRequest("PreviewDate")) Then
-                            myWeb.moSession("PreviewDate") = CDate(myWeb.moRequest("PreviewDate"))
+                        If IsDate(myWeb.moRequest("dPreviewDate")) Then
+                            myWeb.moSession("PreviewDate") = CDate(myWeb.moRequest("dPreviewDate"))
                         End If
                         myWeb.mdDate = myWeb.moSession("PreviewDate")
+
+                        If myWeb.moRequest("ewCmd2") = "showHidden" Then
+                            myWeb.moSession("mbPreviewHidden") = True
+                        End If
+                        If myWeb.moRequest("ewCmd2") = "hideHidden" Then
+                            myWeb.moSession("mbPreviewHidden") = False
+                        End If
+                        myWeb.mbPreviewHidden = myWeb.moSession("mbPreviewHidden")
 
                         If CInt("0" & myWeb.moRequest("PreviewUser")) > 0 Then
                             myWeb.moSession("PreviewUser") = CInt("0" & myWeb.moRequest("PreviewUser"))
@@ -4549,6 +4557,7 @@ SP:
 
                 If Not (oContElmt Is Nothing) Then oPageDetail.AppendChild(oContElmt)
 
+                myWeb.moSession("lastPage") = myWeb.mcOriginalURL
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "VersionControlProcess", ex, "", "", gbDebug)
