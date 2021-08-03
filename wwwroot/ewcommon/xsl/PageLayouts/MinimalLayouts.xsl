@@ -4098,6 +4098,7 @@
       </div>
       <xsl:if test="Content[@type='FAQ']">
         <div class="faq-list">
+          <a name="pageTop" class="pageTop">&#160;</a>
           <h3>Question and Answer</h3>
           <ul>
             <xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
@@ -10952,7 +10953,7 @@
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
-        <a name="faq-{@id}">
+        <a name="faq-{@id}" class="faq-link">
           &#160;
         </a>
         <h3>
