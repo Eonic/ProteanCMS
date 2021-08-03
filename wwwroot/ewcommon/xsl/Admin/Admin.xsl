@@ -4819,7 +4819,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule']" mode="LayoutAdminJs">
+	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
 		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
 		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
@@ -4954,18 +4954,13 @@
 			$('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
 			ev.preventDefault();
 			$('.modal-dialog').addClass('loading')
-			$('.modal-body').html('<p class="text-center">
-				<h4>
-					<i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...
-				</h4>
-			</p>');
+			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
 			// load the url and show modal on success
 			var currentModal = $('.pickImageModal')
 			currentModal.load(target, function () {
 			$('.modal-dialog').removeClass('loading')
 			currentModal.modal("show");
-
 			});
 			});
 			};
@@ -5075,12 +5070,9 @@
                               <img src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}" width="160" height="160" class="{@class} img-responsive"/>
                             </div>
                           </xsl:when>
-                          
-                          
-                            <xsl:when test="$Extension='.pdf' or $Extension='.doc' or $Extension='.docx'">
+                          <xsl:when test="$Extension='.pdf' or $Extension='.doc' or $Extension='.docx'">
                               
-                            </xsl:when>
-                          
+                          </xsl:when>
                           <xsl:when test="$Extension='.swf'">
                             <i class="fa fa-flash fa-5x center-block">
                               <xsl:text> </xsl:text>
