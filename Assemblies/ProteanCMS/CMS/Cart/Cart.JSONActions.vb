@@ -654,7 +654,7 @@ Partial Public Class Cms
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-                    Return ex.Message
+                    Return "Error" 'ex.Message
                 End Try
 
             End Function
@@ -699,7 +699,7 @@ Partial Public Class Cms
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-                    Return ex.Message
+                    Return "Error" 'ex.Message
                 End Try
 
             End Function
