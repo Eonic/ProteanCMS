@@ -42,6 +42,8 @@
       <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
       <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
       <bind id="cDisplayDescription" nodeset="@displayDescription" required="false()" type="string"/>
+      <bind id="showHiddenPages" nodeset="@showHiddenPages" required="false()" type="string"/>
+      
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -95,6 +97,17 @@
         <label>Display Settings</label>
         <select1 bind="cDisplayDescription" appearance="full" class="vshort">
           <label>Display each page description</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+          </item>
+        </select1>
+        <select1 bind="showHiddenPages" appearance="full" class="vshort">
+          <label>Show pages hidden from navigation</label>
           <item>
             <label>Yes</label>
             <value>true</value>
