@@ -3489,7 +3489,7 @@
 
   <!--   ################################################   Menu & Content display name  ##############################################   -->
   <!-- Display Name for a Page -->
-  <xsl:template match="MenuItem" mode="getDisplayName">
+  <xsl:template match="MenuItem | PageVersion" mode="getDisplayName">
     <xsl:choose>
       <xsl:when test="DisplayName/node()='_'">
       </xsl:when>
@@ -3603,7 +3603,7 @@
   <!--  ##  Used to build the URLs for pages, and content -->
 
   <!-- Match on Menu Item - Build URL for that MenuItem -->
-  <xsl:template match="MenuItem" mode="getHref">
+  <xsl:template match="MenuItem | PageVersion" mode="getHref">
     <!-- absolute url false by default -->
     <xsl:param name="absoluteURL" select="false()" />
 

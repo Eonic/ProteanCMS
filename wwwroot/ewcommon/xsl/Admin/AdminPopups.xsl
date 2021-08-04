@@ -118,10 +118,9 @@
     newItem = newItem + '<a href="{$appPath}?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file=' + file.name + '" data-toggle="modal" data-target="#modal-{$targetFeild}" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text></i> Pick Image</a>';
     newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span></div>';
     newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel">' + newItem + '</div></div>';
-
   </xsl:template>
 
-  <xsl:template match="Page[@layout='ImageLib' and Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly']]" mode="newItemScript">
+  <xsl:template match="Page[@layout='ImageLib' and (Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly'] or Request/QueryString/Item[@name='pathOnly' and node()='true'])]" mode="newItemScript">
     
     <xsl:variable name="fld">
       <xsl:call-template name="url-encode">
@@ -288,11 +287,13 @@
                 <span class="small">
                   Showing <xsl:value-of select="($startPos + 1)"/> to <xsl:value-of select="$endPos"/> of <xsl:value-of select="$fileCount"/> files
                 </span>
+                
               </div>
               </xsl:when>
          <xsl:otherwise>
            <div class="alert alert-info">
              <xsl:value-of select="$fld"/> contains <xsl:value-of select="$fileCount"/> files
+             ##<xsl:value-of select="$page/Request/QueryString/Item[@name='pathonly']"/>##
            </div>
 
          </xsl:otherwise>
@@ -500,7 +501,7 @@
                                   </a>
                                 </xsl:when>
                                 <xsl:when test="/Page[@ewCmd='ImageLib' and Request/QueryString/Item[@name='ewCmd2']/node()='PathOnly'] or $page/Request/QueryString/Item[@name='pathonly' and node()='true']">
-                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or $Extension='.tiff' or $Extension='.tif' ">
+                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif' ">
                                     <a onclick="passImgFileToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{translate(@root,'\','/')}{translate($fld,'\','/')}/{$filename}');" class="btn btn-xs btn-default" href="#">
                                       <i class="fa fa-picture-o fa-white">
                                         <xsl:text> </xsl:text>
