@@ -633,16 +633,16 @@ Partial Public Class Cms
                     oCart.moPageXml = myWeb.moPageXml
 
                     Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CType(jObj("nProviderReference"), Long), 0)
-                    Dim Amount = IIf(jObj("nAmount") IsNot Nothing, CDec(jObj("nAmount")), "")
-                    Dim providerName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
-                    Dim refundPaymentReceipt = ""
-                    If providerName <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-                        refundPaymentReceipt = oPayProv.Activities.RefundPayment(nProviderReference, Amount)
+                    Dim nAmount = IIf(jObj("nAmount") IsNot Nothing, CDec(jObj("nAmount")), "0")
+                    Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
+                    Dim cRefundPaymentReceipt = ""
+                    If cProviderName <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
+                        cRefundPaymentReceipt = oPayProv.Activities.RefundPayment(nProviderReference, nAmount)
 
                         Dim xmlDoc As New XmlDocument
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
-                        xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & refundPaymentReceipt & "</RefundPaymentReceiptId>"
+                        xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & cRefundPaymentReceipt & "</RefundPaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
                         Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
 
