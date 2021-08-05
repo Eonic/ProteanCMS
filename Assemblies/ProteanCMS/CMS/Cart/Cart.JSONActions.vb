@@ -653,7 +653,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
                     Return "Error" 'ex.Message
                 End Try
 
