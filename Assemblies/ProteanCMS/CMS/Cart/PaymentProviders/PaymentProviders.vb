@@ -294,6 +294,9 @@ Partial Public Class Cms
                     Dim oProviders As XmlNode = oDoc.CreateElement("payment")
                     Dim cnt As Integer = 0
 
+                    'GetValidPaymentProviders returns xml containing only the providers valid for this transaction.
+                    'We can then use this function elsewhere inside providers to get the valid config settings.
+
                     For Each oElmt In moPaymentCfg.SelectNodes("provider")
 
                         Dim oprovider As XmlNode = moPaymentCfg.SelectNodes("provider")(cnt)
