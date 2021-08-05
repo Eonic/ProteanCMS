@@ -644,12 +644,12 @@ Partial Public Class Cms
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
                         xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & cRefundPaymentReceipt & "</RefundPaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                        Dim josResult As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
 
-                        jsonString = jsonString.Replace("""@", """_")
-                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                        josResult = josResult.Replace("""@", """_")
+                        josResult = josResult.Replace("#cdata-section", "cDataValue")
 
-                        Return jsonString
+                        Return josResult
                     End If
 
                 Catch ex As Exception
@@ -670,32 +670,32 @@ Partial Public Class Cms
                     Dim oCart As New Cart(myWeb)
                     oCart.moPageXml = myWeb.moPageXml
 
-                    Dim providerName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
-                    Dim orderId = IIf(jObj("orderId") IsNot Nothing, CStr(jObj("orderId")), "")
-                    Dim amount = IIf(jObj("amount") IsNot Nothing, CDec(jObj("amount")), "")
-                    Dim cardNumber = IIf(jObj("cardNumber") IsNot Nothing, CStr(jObj("cardNumber")), "")
-                    Dim cV2 = IIf(jObj("cV2") IsNot Nothing, CStr(jObj("cV2")), "")
-                    Dim expiryDate = IIf(jObj("expiryDate") IsNot Nothing, CStr(jObj("expiryDate")), "")
-                    Dim startDate = IIf(jObj("startDate") IsNot Nothing, CStr(jObj("startDate")), "")
-                    Dim cardHolderName = IIf(jObj("cardHolderName") IsNot Nothing, CStr(jObj("cardHolderName")), "")
-                    Dim address1 = IIf(jObj("address1") IsNot Nothing, CStr(jObj("address1")), "")
-                    Dim address2 = IIf(jObj("address2") IsNot Nothing, CStr(jObj("address2")), "")
-                    Dim town = IIf(jObj("town") IsNot Nothing, CStr(jObj("town")), "")
-                    Dim postCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
-                    Dim paymentReceipt = ""
-                    Dim jsonString As String = ""
-                    If providerName <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-                        paymentReceipt = oPayProv.Activities.ProcessNewPayment(orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
+                    Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
+                    Dim nOrderId = IIf(jObj("orderId") IsNot Nothing, CStr(jObj("orderId")), "0")
+                    Dim nAmount = IIf(jObj("amount") IsNot Nothing, CDec(jObj("amount")), "0")
+                    Dim cCardNumber = IIf(jObj("cardNumber") IsNot Nothing, CStr(jObj("cardNumber")), "")
+                    Dim cCV2 = IIf(jObj("cV2") IsNot Nothing, CStr(jObj("cV2")), "")
+                    Dim dExpiryDate = IIf(jObj("expiryDate") IsNot Nothing, CStr(jObj("expiryDate")), "")
+                    Dim dStartDate = IIf(jObj("startDate") IsNot Nothing, CStr(jObj("startDate")), "")
+                    Dim cCardHolderName = IIf(jObj("cardHolderName") IsNot Nothing, CStr(jObj("cardHolderName")), "")
+                    Dim cAddress1 = IIf(jObj("address1") IsNot Nothing, CStr(jObj("address1")), "")
+                    Dim cAddress2 = IIf(jObj("address2") IsNot Nothing, CStr(jObj("address2")), "")
+                    Dim cTown = IIf(jObj("town") IsNot Nothing, CStr(jObj("town")), "")
+                    Dim cPostCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
+                    Dim cPaymentReceipt = ""
+                    Dim josResult As String = ""
+                    If cProviderName <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
+                        cPaymentReceipt = oPayProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode)
                         Dim xmlDoc As New XmlDocument
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
-                        xmlResponse.InnerXml = "<PaymentReceiptId>" & paymentReceipt & "</PaymentReceiptId>"
+                        xmlResponse.InnerXml = "<PaymentReceiptId>" & cPaymentReceipt & "</PaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
-                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
-                        jsonString = jsonString.Replace("""@", """_")
-                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                        josResult = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                        josResult = josResult.Replace("""@", """_")
+                        josResult = josResult.Replace("#cdata-section", "cDataValue")
                     End If
-                    Return jsonString
+                    Return josResult
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
