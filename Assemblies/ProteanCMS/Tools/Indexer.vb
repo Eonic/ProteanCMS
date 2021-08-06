@@ -130,6 +130,7 @@ Public Class Indexer
     End Function
 
     Public Sub DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False)
+        ' nPage = 62
         PerfMon.Log("Indexer", "DoIndex")
         Dim cProcessInfo As String = ""
         Dim cPageHtml As String = ""
@@ -201,6 +202,7 @@ Public Class Indexer
             'full pages
             cSQL = "Select nStructKey,cStructName From tblContentStructure" 'get all structure
             If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage 'unless a specific page
+            ' If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage & " Or nStructParId =" & nPage 'unless a specific page
             oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Structure")
 
             'now we loop through the different tables and index the data
