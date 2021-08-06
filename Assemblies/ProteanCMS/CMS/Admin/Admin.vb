@@ -23,7 +23,6 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
-Imports Protean.Providers.Payment.JudoPay
 
 Partial Public Class Cms
     Public Class Admin
