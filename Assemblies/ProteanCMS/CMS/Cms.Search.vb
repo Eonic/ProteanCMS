@@ -672,7 +672,7 @@ Partial Public Class Cms
                                         If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
                                         url = resultDoc.GetField("url").StringValue & ""
-                                        If (Not bShowHiddenForUser) Then
+                                        If (Not bShowHiddenForUser And Not resultDoc.GetField("status") Is Nothing) Then
                                             If LCase(moConfig("ExcludeCategoryFromSearch")) = "on" Then
                                                 If (resultDoc.GetField("status").StringValue = "1" And resultDoc.GetField("contenttype").StringValue = "Product") Then
                                                     nGetProductsLoadedCount += 1
