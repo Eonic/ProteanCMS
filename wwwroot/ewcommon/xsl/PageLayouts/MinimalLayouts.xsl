@@ -6382,7 +6382,7 @@
           </xsl:if>
           <div class="description">
             <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-          </div>
+           </div>
         </div>
         <!-- Tickets  -->
         <xsl:if test="Content[@type='Ticket']">
@@ -6398,7 +6398,6 @@
         </xsl:if>
       </div>
       <div class="terminus">&#160;</div>
-      <pre id="event_availabilty"></pre>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
