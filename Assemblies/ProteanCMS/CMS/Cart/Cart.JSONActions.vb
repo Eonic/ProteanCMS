@@ -698,7 +698,7 @@ Partial Public Class Cms
                     Return josResult
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""))
                     Return "Error" 'ex.Message
                 End Try
 
