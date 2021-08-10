@@ -23,8 +23,6 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
-Imports Protean.Providers.Payment.JudoPayProvider
-
 
 Partial Public Class Cms
     Public Class Admin
@@ -3283,10 +3281,6 @@ AfterProcessFlow:
                         myWeb.moSession(LibType & "-path") = sFolder
                     End If
                 End If
-
-
-
-
 
                 Dim sFile As String = myWeb.moRequest("file")
 
