@@ -74,7 +74,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.49.132</AssemblyVersion>
+    <AssemblyVersion>6.0.49.184</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -180,6 +180,7 @@
     </Reference>
     <Reference Include="EcmaScript.NET, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ephtmltopdf">
       <HintPath>..\ReferencedAssemblies\HtmlToPdf\Bin\ephtmltopdf.dll</HintPath>
@@ -455,6 +456,7 @@
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="TidyHTML5Managed, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\TidyHtml5ManagedRepack.1.1.4\lib\net46\TidyHTML5Managed.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\..\ReferencedAssemblies\dynamic-image-master\src\packages\WebActivatorEx.2.0.2\lib\net40\WebActivatorEx.dll</HintPath>
@@ -949,7 +951,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateFileVersion="False" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_DetectChanges="False" BuildVersion_IncrementBeforeBuild="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

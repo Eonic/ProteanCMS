@@ -86,8 +86,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Fonet.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Google.Protobuf.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\JsonWebTokens.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-AnyCPU.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\MySql.Data.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Renci.SshNet.dll
@@ -96,8 +94,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Fonet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-AnyCPU.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\MySql.Data.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Renci.SshNet.xml
