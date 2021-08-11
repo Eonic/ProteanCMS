@@ -1197,7 +1197,11 @@ ProcessFlow:
                             If (status <> 1) Then  'check status here
                                 oPageDetail.AppendChild(moAdXfm.xFrmDeleteBulkContent(bulkIds))
                             End If
+                        Else
+                            moAdXfm.addNote("DeleteContent", xForm.noteTypes.Alert, "Invalid product selection", , "alert-danger")
                         End If
+
+
 
                         If moAdXfm.valid Then
                             bAdminMode = False
