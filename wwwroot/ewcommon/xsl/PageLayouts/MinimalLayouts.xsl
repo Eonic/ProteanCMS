@@ -2569,10 +2569,7 @@
         <xsl:when test="(@imgDetail and @imgDetail!='') or @lightbox='true'">
           <xsl:choose>
             <xsl:when test="@imgDetail and @imgDetail!=''">
-              <!--<xsl:apply-templates select="node()" mode="cleanXhtml"/>-->
               <a href="{@imgDetail}" title="{@title}" class="responsive-lightbox">
-                <!--<img src="{@imgDetail}" alt="{@title}"/>-->
-
                 <xsl:apply-templates select="node()" mode="cleanXhtml"/>
               </a>
             </xsl:when>
