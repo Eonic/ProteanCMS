@@ -12,7 +12,6 @@
         <cContentXmlBrief>
           <Content position="" moduleType="Image" box="" title="" link="" linkType="internal" resize="false" constrain="true" width="" height="" crop="" stretch="false" responsiveImg="true">
             <img class="image"/>
-            <!--<img class="imageDetail"/>-->
           </Content>
         </cContentXmlBrief>
         <cContentXmlDetail/>
@@ -45,11 +44,12 @@
       <bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
       <bind id="cStretch" nodeset="@stretch" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
+      <bind id="cContentImageDetail" nodeset="@imgDetail" required="false()" type="string"/>
     </bind>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <bind id="cContentImage" nodeset="tblContent/cContentXmlBrief/Content/img" required="false()" type="xml-replace"/>
-    <!--<bind id="cContentImageDetail" nodeset="tblContent/cContentXmlBrief/Content/img" required="false()" type="xml-replace"/>-->
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
   <group ref="EditContent" class="2col">
@@ -80,10 +80,17 @@
         <input bind="cContentImage" class="short pickImage">
           <label>Image</label>
         </input>
-        <!--<input bind="cContentImageDetail" class="short pickImage">
-          <label>Larger Image (if needed)</label>
-          <hint>if you add a larger version, the original image can be clicked on and the larger image will then be displayed</hint>
-        </input>-->
+        <select bind="cLightbox" appearance="full" class="multiline bs-only">
+          <item>
+            <label>Add Lightbox</label>
+            <value>true</value>
+          </item>
+           </select>
+        <input bind="cContentImageDetail" class="pickImageFile bs-only">
+          <label>Lightbox Image</label>
+          <value></value>
+          <hint>If you add a larger image here, the original image can be clicked on and the larger image will then be displayed</hint>
+        </input>
         <group>
           <select1 bind="cResizeImage" appearance="full">
             <label>Resize image</label>
