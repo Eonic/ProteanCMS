@@ -78,6 +78,7 @@
         <add key="CheckDetailPath" value="off" />
         <add key="TrailingSlash" value="off" />
         <add key="LowerCaseUrl" value="off" />
+        <add key="ExcludeCategoryFromSearch" value="off" />
         <add key="EnableWebP" value="off" />
         <add key="EnableRetina" value="off" />
         <add key="EmailOverride" value="" />
@@ -433,40 +434,55 @@
         <help class="inline">
           Convert all urls to lower case and automatically redirect url with uppercase characters.
         </help>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>off</value>
+       </select1>
+        <select1 bind="ewExcludeCategoryFromSearch" appearance="full">
+         <label>Exclude Category from the Search Result</label>
+         <help class="inline">
+          Forces only display product list in search search result without categories
+        </help>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>off</value>
+       </select1>
+       <select1 bind="ewScriptAtBottom" appearance="full">
+         <label>Script at bottom</label>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>off</value>
+       </select1>    
+    <select1 bind="ewActivityLogging" appearance="full">
+      <label>Activity Logging</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
         <value>off</value>
-      </select1>
-      <select1 bind="ewScriptAtBottom" appearance="full">
-        <label>Script at bottom</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value>off</value>
-      </select1>
-      <select1 bind="ewActivityLogging" appearance="full">
-        <label>Activity Logging</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
+      </item>
+      <value />
+    </select1>
 
       <select1 bind="ewIPLogging" appearance="full">
         <label>IP Tracking</label>

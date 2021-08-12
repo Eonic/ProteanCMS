@@ -2681,7 +2681,7 @@ Public Class xForm
                     ElseIf goRequest(oElmt.GetAttribute("ref")) <> "" Then
                         isSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("ref")
-                    ElseIf goRequest(oElmt.GetAttribute("bind")) <> "" Then
+                    ElseIf goRequest(oElmt.GetAttribute("bind")) <> "" And goRequest(oElmt.GetAttribute("bind")) <> goRequest("ewCmd") Then
                         isSubmitted = True
                         SubmittedRef = oElmt.GetAttribute("bind")
                     ElseIf goRequest("ewSubmitClone_" & oElmt.GetAttribute("ref")) <> "" Then

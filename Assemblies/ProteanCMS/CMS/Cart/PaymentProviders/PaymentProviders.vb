@@ -247,30 +247,33 @@ Partial Public Class Cms
 
                     For Each oElmt In xElmtPaymentProvider
 
-                        'If bAllowUser And bAllowCurrencies Then
-
-                        Dim PaymentLabel As String = oElmt.SelectSingleNode("description/@value").InnerText
-                        'allow html in description node...
-                        Dim bXmlLabel As Boolean = False
-
-                        If oElmt.SelectSingleNode("description").InnerXml <> "" Then
-                            PaymentLabel = oElmt.SelectSingleNode("description").InnerXml
-                            bXmlLabel = True
-                        End If
-
-                        Dim iconclass As String = ""
-                        If Not oElmt.SelectSingleNode("icon/@value") Is Nothing Then
-                            iconclass = oElmt.SelectSingleNode("icon/@value").InnerText
-                        End If
-
-
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, oElmt.GetAttribute("name"))
                         oPayProv.Activities.AddPaymentButton(oOptXform, oFrmElmt, oElmt, nPaymentAmount, submissionValue, refValue)
+
+                        nOptCount = nOptCount + 1
+
+                        'If bAllowUser And bAllowCurrencies Then
+
+                        'Dim PaymentLabel As String = oElmt.SelectSingleNode("description/@value").InnerText
+                        ''allow html in description node...
+                        'Dim bXmlLabel As Boolean = False
+
+                        'If oElmt.SelectSingleNode("description").InnerXml <> "" Then
+                        '    PaymentLabel = oElmt.SelectSingleNode("description").InnerXml
+                        '    bXmlLabel = True
+                        'End If
+
+                        'Dim iconclass As String = ""
+                        'If Not oElmt.SelectSingleNode("icon/@value") Is Nothing Then
+                        '    iconclass = oElmt.SelectSingleNode("icon/@value").InnerText
+                        'End If
+
+
 
 
                         'Add new submits
                         ' oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & oElmt.GetAttribute("name"), iconclass, oElmt.GetAttribute("name"))
-                        nOptCount = nOptCount + 1
+
 
                         ' End If
                     Next
@@ -287,7 +290,7 @@ Partial Public Class Cms
             Public Function GetValidPaymentProviders() As XmlElement
                 Try
 
-                    Dim cProcessInfo As String = "getPaymentMethods"
+                    Dim cProcessInfo As String = "GetValidPaymentProviders"
                     Dim oElmt As XmlElement
                     Dim oDoc As New XmlDocument
 

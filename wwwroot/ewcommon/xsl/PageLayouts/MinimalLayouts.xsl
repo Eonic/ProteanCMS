@@ -6335,7 +6335,7 @@
         <xsl:with-param name="class" select="'detail event'"/>
       </xsl:apply-templates>
       <h2>
-        <xsl:apply-templates select="Headline" mode="displayBrief"/>
+         <xsl:apply-templates select="Headline" mode="displayBrief"/>
       </h2>
       <!--RELATED CONTENT-->
       <div class="row">
@@ -6399,7 +6399,7 @@
           </xsl:if>
           <div class="description">
             <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-          </div>
+           </div>
         </div>
         <!-- Tickets  -->
         <xsl:if test="Content[@type='Ticket']">
