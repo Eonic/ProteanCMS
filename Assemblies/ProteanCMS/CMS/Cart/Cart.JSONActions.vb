@@ -731,6 +731,35 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function SaveToSellerNotes(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As Boolean
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim err_msg As String = jObj.ToString()
+                    Try
+                        '// Update Seller Notes
+                        '  String sSql = "select * from tblCartOrder where nCartOrderKey = " + oCart.mnCartId;
+                        '  DataSet oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                        '  foreach(DataRow oRow In oDs.Tables["Order"].Rows)
+                        '  {
+
+                        '                                          {
+                        '              oRow["cSellerNotes"] = oRow["cSellerNotes"] + "\n" + DateTime.Today + " " + DateTime.Now.TimeOfDay + ": changed to: (Payment Failed) " + "\n" + "comment: " + err_msg + "\n" + "Full Response:' " + "" + "'";
+
+                        '  };
+                        '  myWeb.moDbHelper.updateDataset(Ref oDs, "Order");
+
+                    Catch ex As Exception
+                        ' josResult = "ERROR"
+                    End Try
+
+
+                    Return True
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
 
         End Class
 
