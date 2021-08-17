@@ -794,28 +794,26 @@ Partial Public Class Cms
             Public Function SaveToSellerNotes(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As Boolean
                 Try
                     Dim cProcessInfo As String = ""
-                    Dim err_msg As String = jObj.ToString()
-                    Try
-                        '// Update Seller Notes
-                        '  String sSql = "select * from tblCartOrder where nCartOrderKey = " + oCart.mnCartId;
-                        '  DataSet oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                        '  foreach(DataRow oRow In oDs.Tables["Order"].Rows)
-                        '  {
-
-                        '                                          {
-                        '              oRow["cSellerNotes"] = oRow["cSellerNotes"] + "\n" + DateTime.Today + " " + DateTime.Now.TimeOfDay + ": changed to: (Payment Failed) " + "\n" + "comment: " + err_msg + "\n" + "Full Response:' " + "" + "'";
-
-                        '  };
-                        '  myWeb.moDbHelper.updateDataset(Ref oDs, "Order");
-
-                    Catch ex As Exception
-                        ' josResult = "ERROR"
-                    End Try
-
+                    Dim cResponse As String = jObj.ToString()
+                    Dim sSql As String
+                    Dim myWeb As Protean.Cms = New Protean.Cms()
+                    Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
+                    Dim message As String = cResponse.Replace("{", "")
+                    Dim errorMessage As String = message.Replace("}", "")
+                    'Update Seller Notes:
+                    sSql = "select * from tblCartOrder where nCartOrderKey = " & oCart.mnCartId
+                    Dim oDs As DataSet
+                    Dim oRow As DataRow
+                    oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                    For Each oRow In oDs.Tables("Order").Rows
+                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Payment Failed) " & vbLf & "comment: " & " Declined " & vbLf & "Full Response:' " & errorMessage & "'"
+                    Next
+                    myWeb.moDbHelper.updateDataset(oDs, "Order")
 
                     Return True
 
                 Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""))
                     Return ex.Message
                 End Try
             End Function
