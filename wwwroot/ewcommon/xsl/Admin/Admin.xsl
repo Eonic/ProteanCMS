@@ -2099,7 +2099,7 @@
 			</td>
 			<td>
 				<div class="checkbox checkbox-primary">
-					<input type="checkbox" name="id" value="{@id}" class="styled"/>
+					<input type="checkbox" name="id" value="{@id}" class="styled inventory-bulk-checkbox" data-status="{@status}"/>
 					<label>
 						<xsl:text> </xsl:text>
 					</label>

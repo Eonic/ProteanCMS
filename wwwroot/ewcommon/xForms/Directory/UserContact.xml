@@ -46,7 +46,7 @@
       <bind id="cContactCountry" nodeset="cContactCountry" required="true()" type="string"/>
       <bind id="cContactTel" nodeset="cContactTel" required="false()" type="string"/>
       <bind id="cContactFax" nodeset="cContactFax" required="false()" type="string"/>
-      <bind id="cContactEmail" nodeset="cContactEmail" required="true()" type="email"/>
+      <bind id="cContactEmail" nodeset="cContactEmail" required="false()" type="email"/>
       <bind nodeset="cContactXml/Content"/>
     </bind>
   </model>
@@ -89,7 +89,7 @@
         <input bind="cContactFax">
           <label>Fax</label>
         </input>
-        <input bind="cContactEmail" class="required">
+        <input bind="cContactEmail">
           <label>Email</label>
         </input>
       </group>
