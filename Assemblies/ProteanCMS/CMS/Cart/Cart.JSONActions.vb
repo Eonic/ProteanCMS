@@ -704,20 +704,23 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function SavePaymentInfo(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            Public Function CreatePaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim cProcessInfo As String = ""
                     Dim josResult As String = "SUCCESS"
 
                     'input params
-                    Dim cProductPrice As Double = CDbl(jObj("orderId"))
+                    ' Dim cProductPrice As Double = CDbl(jObj("orderId"))
 
                     Try
                         'if we receive any response from judopay pass it from PaymentReceipt
                         'response should contain payment related all references like result, status, cardtoken, receiptId etc
                         'validate if weather success or declined in Judopay.cs and redirect accordingly
 
-                        'Return oPayProv.Activities.PaymentReceipt()
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+                        oPayProv.Activities.CreateOrder(True).Wait()
 
                     Catch ex As Exception
                         josResult = "ERROR"
@@ -727,6 +730,90 @@ Partial Public Class Cms
                     Return josResult
 
                 Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function GetPaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim josResult As String = "SUCCESS"
+
+                    'input params
+                    Dim cOrderId As Double = CDbl(jObj("orderId"))
+
+                    Try
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+                        oPayProv.Activities.GetOrder(cOrderId).Wait()
+
+                        oPayProv.Activities.CaptureOrder(cOrderId, True).Wait()
+
+                        oPayProv.Activities.AuthorizeOrder(cOrderId, True).Wait()
+
+                    Catch ex As Exception
+                        josResult = "ERROR"
+                    End Try
+
+
+                    Return josResult
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function CapturePaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim josResult As String = "SUCCESS"
+
+                    'input params
+                    Dim cOrderId As Double = CDbl(jObj("orderId"))
+
+                    Try
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+
+                        oPayProv.Activities.CaptureOrder(cOrderId, True).Wait()
+
+                    Catch ex As Exception
+                        josResult = "ERROR"
+                    End Try
+
+
+                    Return josResult
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function SaveToSellerNotes(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As Boolean
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim cResponse As String = jObj.ToString()
+                    Dim sSql As String
+                    Dim myWeb As Protean.Cms = New Protean.Cms()
+                    Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
+                    Dim message As String = cResponse.Replace("{", "")
+                    Dim errorMessage As String = message.Replace("}", "")
+                    'Update Seller Notes:
+                    sSql = "select * from tblCartOrder where nCartOrderKey = " & oCart.mnCartId
+                    Dim oDs As DataSet
+                    Dim oRow As DataRow
+                    oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                    For Each oRow In oDs.Tables("Order").Rows
+                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Payment Failed) " & vbLf & "comment: " & " Declined " & vbLf & "Full Response:' " & errorMessage & "'"
+                    Next
+                    myWeb.moDbHelper.updateDataset(oDs, "Order")
+
+                    Return True
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""))
                     Return ex.Message
                 End Try
             End Function

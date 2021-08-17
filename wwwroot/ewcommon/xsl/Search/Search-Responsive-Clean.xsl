@@ -7,14 +7,16 @@
   <xsl:template match="Content[@type='Module' and @moduleType='Search']" mode="displayBrief">
     <xsl:variable name="searchFormId" select="@id" />
     <xsl:variable name="searchMode" select="@searchMode" />
-    <xsl:variable name="searchString" select="/Content[@type='SearchHeader']/@searchString"/>
+    <!--<xsl:variable name="searchString" select="/Content[@type='SearchHeader']/@searchString"/>-->
+
+    <xsl:variable name="searchString" select="/Page/Request/Form[Item[@name='searchMode']=$searchMode]/Item[@name='searchString']"/>
 
     <!-- Collect and Filter results -->
     <xsl:variable name="searchResults">
       <xsl:apply-templates select="." mode="getSearchResults"/>
     </xsl:variable>
 
-    <div class="searchListing searchListingClean">
+    <div class="searchListing">
       <!-- Display Form -->
       <!--<xsl:apply-templates select="." mode="searchForm">
         <xsl:with-param name="searchFormId" select="$searchFormId" />
@@ -32,6 +34,7 @@
 
           <xsl:apply-templates select="." mode="searchResults">
             <xsl:with-param name="searchResults" select="$searchResults"/>
+            <xsl:with-param name="searchString" select="$searchString" />
           </xsl:apply-templates>
 
           <xsl:apply-templates select="Content[@type='SearchHeader']" mode="searchSummary">
@@ -139,6 +142,9 @@
     <xsl:variable name="LastLoadResultCount" select="@loadedResult" />
     <xsl:variable name="pageSize" select="@pageSize" />
     <xsl:variable name="resultsReturned" select="@resultsReturned" />
+    <h4>
+      Search Results for "<xsl:value-of select="$searchString"/>"
+    </h4>
     <div class="clearfix search-results-area" id="ResultDiv">
       <!--<xsl:text> Total </xsl:text>
       <xsl:value-of select="$resultTotalCount" />
