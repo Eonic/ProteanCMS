@@ -1,6 +1,6 @@
 .iti {
   position: relative;
-  display: inline-block; }
+  /*display: inline-block;*/ }
   .iti * {
     box-sizing: border-box;
     -moz-box-sizing: border-box; }
@@ -14,7 +14,9 @@
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     padding-right: 36px;
-    margin-right: 0; }
+    margin-right: 0; 
+    
+  }
   .iti__flag-container {
     position: absolute;
     top: 0;
