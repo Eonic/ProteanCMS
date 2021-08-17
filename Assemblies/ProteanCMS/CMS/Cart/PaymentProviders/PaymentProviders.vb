@@ -265,7 +265,7 @@ Partial Public Class Cms
 
                         'Dim iconclass As String = ""
                         'If Not oElmt.SelectSingleNode("icon/@value") Is Nothing Then
-                        '    iconclass = oElmt.SelectSingleNode("icon/@value").InnerText
+                        '    iconclass = oElmt.oPayProv("icon/@value").InnerText
                         'End If
 
 

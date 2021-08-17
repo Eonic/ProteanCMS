@@ -704,20 +704,80 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function SavePaymentInfo(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            Public Function CreatePaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim cProcessInfo As String = ""
                     Dim josResult As String = "SUCCESS"
 
                     'input params
-                    Dim cProductPrice As Double = CDbl(jObj("orderId"))
+                    ' Dim cProductPrice As Double = CDbl(jObj("orderId"))
 
                     Try
                         'if we receive any response from judopay pass it from PaymentReceipt
                         'response should contain payment related all references like result, status, cardtoken, receiptId etc
                         'validate if weather success or declined in Judopay.cs and redirect accordingly
 
-                        'Return oPayProv.Activities.PaymentReceipt()
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+                        oPayProv.Activities.CreateOrder(True).Wait()
+
+                    Catch ex As Exception
+                        josResult = "ERROR"
+                    End Try
+
+
+                    Return josResult
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function GetPaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim josResult As String = "SUCCESS"
+
+                    'input params
+                    Dim cOrderId As Double = CDbl(jObj("orderId"))
+
+                    Try
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+                        oPayProv.Activities.GetOrder(cOrderId).Wait()
+
+                        oPayProv.Activities.CaptureOrder(cOrderId, True).Wait()
+
+                        oPayProv.Activities.AuthorizeOrder(cOrderId, True).Wait()
+
+                    Catch ex As Exception
+                        josResult = "ERROR"
+                    End Try
+
+
+                    Return josResult
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function CapturePaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim josResult As String = "SUCCESS"
+
+                    'input params
+                    Dim cOrderId As Double = CDbl(jObj("orderId"))
+
+                    Try
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+
+                        oPayProv.Activities.CaptureOrder(cOrderId, True).Wait()
 
                     Catch ex As Exception
                         josResult = "ERROR"
