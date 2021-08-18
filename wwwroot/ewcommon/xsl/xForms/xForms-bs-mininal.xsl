@@ -3581,7 +3581,7 @@
   
  <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
     <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css" />
-    <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js?" async="" defer="">
+    <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
       <xsl:text> </xsl:text>
     </script>
      <script>
@@ -3595,13 +3595,14 @@
       window.intlTelInput(telinput, {
       initialCountry: "auto",
       preferredCountries: ["gb"],
-      separateDialCode: true,
+         separateDialCode: true,
       utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
       hiddenInput: "<xsl:value-of select="$ref"/>"
       });
       </xsl:for-each>
       });
       
+  
     </script>
 
   </xsl:template>
