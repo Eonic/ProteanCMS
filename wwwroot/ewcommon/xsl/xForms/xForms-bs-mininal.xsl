@@ -3576,6 +3576,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </input>
+  
+  <input type="hidden" name="{$ref}-CountryCode" id="{$ref}-CountryCode">
+  </input>
    
   </xsl:template>
   
@@ -3598,11 +3601,18 @@
          separateDialCode: true,
       utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
       hiddenInput: "<xsl:value-of select="$ref"/>"
-      });
+        });
+
+       telinput.addEventListener("countrychange", function() {
+        var countryCode = $("div.iti__selected-dial-code")[0].innerText;
+        $(".<xsl:value-of select="$ref"/>-CountryCode").val(countryCode);
+        });
+
+
       </xsl:for-each>
       });
       
-  
+   
     </script>
 
   </xsl:template>
