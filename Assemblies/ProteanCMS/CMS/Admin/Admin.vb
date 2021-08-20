@@ -3924,9 +3924,12 @@ listItems:
                                 lookupId = Nothing
                                 GoTo listItems
                             End If
-
+                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                                oPageDetail.InnerXml = ""
+                                lookupId = Nothing
+                                GoTo listItems
+                            End If
                         End If
-
 
                 End Select
 
