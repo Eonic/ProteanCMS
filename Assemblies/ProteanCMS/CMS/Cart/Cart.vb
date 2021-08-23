@@ -2721,7 +2721,11 @@ processFlow:
 
                     'Add the addresses to the dataset
                     If nCartIdUse > 0 Then
-                        sSql = "Select cContactType As type, cContactName As GivenName, cContactCompany As Company, cContactAddress As Street, cContactCity As City, cContactState As State, cContactZip As PostalCode, cContactCountry As Country, cContactTel As Telephone, cContactFax As Fax, cContactEmail As Email, cContactXml As Details from tblCartContact where nContactCartId=" & nCartIdUse
+                        If myWeb.moDbHelper.checkTableColumnExists("tblCartContact", "cContactTelCountryCode") Then
+                            sSql = "Select cContactType As type, cContactName As GivenName, cContactCompany As Company, cContactAddress As Street, cContactCity As City, cContactState As State, cContactZip As PostalCode, cContactCountry As Country, cContactTel As Telephone, cContactFax As Fax, cContactEmail As Email, cContactXml As Details,cContactTelCountryCode As TelephoneCountryCode from tblCartContact where nContactCartId=" & nCartIdUse
+                        Else
+                            sSql = "Select cContactType As type, cContactName As GivenName, cContactCompany As Company, cContactAddress As Street, cContactCity As City, cContactState As State, cContactZip As PostalCode, cContactCountry As Country, cContactTel As Telephone, cContactFax As Fax, cContactEmail As Email, cContactXml As Details from tblCartContact where nContactCartId=" & nCartIdUse
+                        End If
                         moDBHelper.addTableToDataSet(oDs, sSql, "Contact")
                     End If
 
@@ -2741,75 +2745,77 @@ processFlow:
                         oDs.Tables(0).Columns(10).ColumnMapping = Data.MappingType.Attribute
                         oDs.Tables(0).Columns(11).ColumnMapping = Data.MappingType.Attribute
                         oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
+
                         'cart contacts
                         oDs.Tables("Contact").Columns(0).ColumnMapping = Data.MappingType.Attribute
 
+
                         oXml = New XmlDocument
-                        oXml.LoadXml(oDs.GetXml)
+                            oXml.LoadXml(oDs.GetXml)
 
-                        oDs.EnforceConstraints = False
+                            oDs.EnforceConstraints = False
 
-                        'Convert the detail to xml
-                        For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
-                            oElmt.InnerXml = oElmt.InnerText
-                            If Not oElmt.SelectSingleNode("Content") Is Nothing Then
-                                Dim oAtt As XmlAttribute
-                                For Each oAtt In oElmt.SelectSingleNode("Content").Attributes
-                                    oElmt.SetAttribute(oAtt.Name, oAtt.Value)
-                                Next
-                                oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
-                                Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
+                            'Convert the detail to xml
+                            For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
+                                oElmt.InnerXml = oElmt.InnerText
+                                If Not oElmt.SelectSingleNode("Content") Is Nothing Then
+                                    Dim oAtt As XmlAttribute
+                                    For Each oAtt In oElmt.SelectSingleNode("Content").Attributes
+                                        oElmt.SetAttribute(oAtt.Name, oAtt.Value)
+                                    Next
+                                    oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
+                                    Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
 
-                            End If
-                        Next
-
-                        For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
-                            If moDBHelper.CheckOptOut(oElmt.InnerText) Then
-                                oElmt.SetAttribute("optOut", "True")
-                            End If
-                        Next
-
-                        'get the option xml
-                        For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
-                            oElmt.InnerXml = oElmt.InnerText
-
-                            Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
-                            Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
-                            cOptionGroupName = ""
-                            If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
-                                cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
-                            End If
-                            If nOptionIndex >= 0 Then
-
-                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
-                                If Not oElmt2 Is Nothing Then
-                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                 End If
+                            Next
 
-                            Else
-                                'case for text option
-                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
-                                If Not oElmt2 Is Nothing Then
-                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                    If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
-                                        oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
-                                    Else
-                                        oElmt2.SetAttribute("name", "Name Not defined")
+                            For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
+                                If moDBHelper.CheckOptOut(oElmt.InnerText) Then
+                                    oElmt.SetAttribute("optOut", "True")
+                                End If
+                            Next
+
+                            'get the option xml
+                            For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
+                                oElmt.InnerXml = oElmt.InnerText
+
+                                Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
+                                Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
+                                cOptionGroupName = ""
+                                If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
+                                    cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
+                                End If
+                                If nOptionIndex >= 0 Then
+
+                                    oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
+                                    If Not oElmt2 Is Nothing Then
+                                        If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                        oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                     End If
-                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
+
+                                Else
+                                    'case for text option
+                                    oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
+                                    If Not oElmt2 Is Nothing Then
+                                        If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                        If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
+                                            oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
+                                        Else
+                                            oElmt2.SetAttribute("name", "Name Not defined")
+                                        End If
+                                        oElmt.ParentNode.InnerXml = oElmt2.OuterXml
+                                    End If
                                 End If
-                            End If
 
-                        Next
+                            Next
 
-                        oElmt = moPageXml.CreateElement("Cart")
-                        ' Note: Preserve the original elements in oCartElmt
-                        oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
+                            oElmt = moPageXml.CreateElement("Cart")
+                            ' Note: Preserve the original elements in oCartElmt
+                            oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
 
 
-                    End If
-                    myWeb.CheckMultiParents(oCartElmt)
+                        End If
+                        myWeb.CheckMultiParents(oCartElmt)
                     sSql = "Select cClientNotes from tblCartOrder where nCartOrderKey=" & nCartIdUse
                     Dim oNotes As XmlElement = oCartElmt.OwnerDocument.CreateElement("Notes")
                     Dim notes As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))

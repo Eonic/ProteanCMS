@@ -2566,6 +2566,20 @@
             <xsl:with-param name="crop" select="$crop"/>
           </xsl:apply-templates>
         </xsl:when>
+        <xsl:when test="(@imgDetail and @imgDetail!='') or @lightbox='true'">
+          <xsl:choose>
+            <xsl:when test="@imgDetail and @imgDetail!=''">
+              <a href="{@imgDetail}" title="{@title}" class="responsive-lightbox">
+                <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+              </a>
+            </xsl:when>
+            <xsl:otherwise>
+              <a href="{node()/@src}" title="{@title}" class="responsive-lightbox">
+                <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="node()" mode="cleanXhtml"/>
         </xsl:otherwise>
@@ -4313,6 +4327,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -4390,6 +4414,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
         <xsl:if test="@stepCount != '0'">
           <div class="terminus">&#160;</div>
@@ -4409,6 +4434,7 @@
   <!-- Contact Brief -->
   <xsl:template match="Content[@type='Contact']" mode="displayBrief">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <!-- contactBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="self::Content" mode="getHref">
@@ -4424,6 +4450,16 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="Url"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -4462,11 +4498,16 @@
         <xsl:if test="Images/img/@src!=''">
           <xsl:choose>
             <xsl:when test="@noLink='true'">
-              <xsl:apply-templates select="." mode="displayThumbnail"/>
+              <xsl:apply-templates select="." mode="displayThumbnail">
+                <xsl:with-param name="crop" select="$cropSetting" />
+              </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
               <a href="{$parentURL}" title="click here to view more details on {GivenName/node()} {Surname/node()}">
-                <xsl:apply-templates select="." mode="displayThumbnail"/>
+
+                <xsl:apply-templates select="." mode="displayThumbnail">
+                  <xsl:with-param name="crop" select="$cropSetting" />
+                </xsl:apply-templates>
               </a>
             </xsl:otherwise>
           </xsl:choose>

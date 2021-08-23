@@ -3354,7 +3354,7 @@ Partial Public Class Cms
 
                     MyBase.submission("DeleteContent", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "DeleteItem", "", "Delete Content")
-                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Are you sure you want to delete this below items ", , "alert-error")
+                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Are you sure you want to delete below items ?", , "alert-error")
                     For i As Integer = 0 To UBound(artid)
                         sContentName = moDbHelper.getNameByKey(dbHelper.objectTypes.Content, artid(i))
                         sContentSchemaName = moDbHelper.getContentType(artid(i))
@@ -8625,7 +8625,7 @@ Partial Public Class Cms
                     MyBase.NewFrm("EditProductGroup")
                     MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey/><cLkpValue/><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
                     If nLookupId > 0 Then
-                        MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Lookup, nLookupId)
+                        'MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Lookup, nLookupId)
                         Category = MyBase.Instance.SelectSingleNode("tblLookup/cLkpCategory").InnerText
                     End If
                     MyBase.submission("EditLookup", "", "post", "form_check(this)")

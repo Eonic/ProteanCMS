@@ -2099,7 +2099,7 @@
 			</td>
 			<td>
 				<div class="checkbox checkbox-primary">
-					<input type="checkbox" name="id" value="{@id}" class="styled"/>
+					<input type="checkbox" name="id" value="{@id}" class="styled inventory-bulk-checkbox" data-status="{@status}"/>
 					<label>
 						<xsl:text> </xsl:text>
 					</label>
@@ -11001,7 +11001,7 @@
         <xsl:value-of select="cLkpValue/node()"/>
       </td>
       <td class="clearfix">
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}" class="btn btn-danger btn-xs pull-right">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-danger btn-xs pull-right">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Del
