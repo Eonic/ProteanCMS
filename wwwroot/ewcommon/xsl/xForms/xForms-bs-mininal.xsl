@@ -3533,5 +3533,88 @@
       <xsl:text> </xsl:text>
     </script>
   </xsl:template>
+  
+<xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
+    <xsl:variable name="label_low">
+      <xsl:apply-templates select="label" mode="lowercase"/>
+    </xsl:variable>
+    <xsl:variable name="inlineHint">
+      <xsl:choose>
+        <xsl:when test="hint[@class='inline']">
+          <xsl:value-of select="hint[@class='inline']/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="msg_required_inline"/>
+          <xsl:value-of select="$label_low"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <input type="text" name="{$ref}-temp" id="{$ref}-temp">
+      <xsl:choose>
+        <xsl:when test="@class!=''">
+          <xsl:attribute name="class">
+            <xsl:text>form-control </xsl:text>
+            <xsl:value-of select="@class"/>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">textbox form-control</xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:choose>
+        <xsl:when test="value!=''">
+          <xsl:attribute name="value">
+            <xsl:value-of select="value"/>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="value">
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+    </input>
+  
+  <input type="hidden" name="{$ref}-CountryCode" id="{$ref}-CountryCode">
+  </input>
+   
+  </xsl:template>
+  
+ <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
+    <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css" />
+    <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
+      <xsl:text> </xsl:text>
+    </script>
+     <script>
+      $(document).ready(function () {
+      <xsl:for-each select="descendant::input[contains(@class,'telephone')]">
+       <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+      const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
+ 
+      window.intlTelInput(telinput, {
+      initialCountry: "auto",
+      preferredCountries: ["gb"],
+         separateDialCode: true,
+      utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
+      hiddenInput: "<xsl:value-of select="$ref"/>"
+        });
+
+       telinput.addEventListener("countrychange", function() {
+        var countryCode = $("div.iti__selected-dial-code")[0].innerText;
+        $(".<xsl:value-of select="$ref"/>-CountryCode").val(countryCode);
+        });
+
+
+      </xsl:for-each>
+      });
+      
+   
+    </script>
+
+  </xsl:template>
 
 </xsl:stylesheet>

@@ -11001,7 +11001,7 @@
         <xsl:value-of select="cLkpValue/node()"/>
       </td>
       <td class="clearfix">
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}" class="btn btn-danger btn-xs pull-right">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-danger btn-xs pull-right">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Del

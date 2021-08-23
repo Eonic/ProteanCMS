@@ -682,11 +682,12 @@ Partial Public Class Cms
                     Dim cAddress2 = IIf(jObj("address2") IsNot Nothing, CStr(jObj("address2")), "")
                     Dim cTown = IIf(jObj("town") IsNot Nothing, CStr(jObj("town")), "")
                     Dim cPostCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
+                    Dim cValidGroup = IIf(jObj("validGroup") IsNot Nothing, CStr(jObj("validGroup")), "")
                     Dim cPaymentReceipt = ""
                     Dim josResult As String = ""
                     If cProviderName <> "" Then
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
-                        cPaymentReceipt = oPayProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode)
+                        cPaymentReceipt = oPayProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode, cValidGroup)
                         Dim xmlDoc As New XmlDocument
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
                         xmlResponse.InnerXml = "<PaymentReceiptId>" & cPaymentReceipt & "</PaymentReceiptId>"
@@ -698,7 +699,7 @@ Partial Public Class Cms
                     Return josResult
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""))
                     Return "Error" 'ex.Message
                 End Try
 
