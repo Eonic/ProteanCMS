@@ -265,7 +265,7 @@ Partial Public Class Cms
 
                         'Dim iconclass As String = ""
                         'If Not oElmt.SelectSingleNode("icon/@value") Is Nothing Then
-                        '    iconclass = oElmt.SelectSingleNode("icon/@value").InnerText
+                        '    iconclass = oElmt.oPayProv("icon/@value").InnerText
                         'End If
 
 
@@ -287,7 +287,7 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function GetValidPaymentProviders() As XmlElement
+            Public Function GetValidPaymentProviders(Optional validGroup As String = "") As XmlElement
                 Try
 
                     Dim cProcessInfo As String = "GetValidPaymentProviders"
@@ -305,8 +305,12 @@ Partial Public Class Cms
                         Dim oprovider As XmlNode = moPaymentCfg.SelectNodes("provider")(cnt)
                         Dim bAllowUser As Boolean = False
                         Dim bAllowCurrencies As Boolean = False
+                        If validGroup <> String.Empty And oElmt.GetAttribute("validGroups") <> "all" Then
+                            If oElmt.GetAttribute("validGroups").Contains(validGroup) Then
+                                bAllowUser = True
+                            End If
+                        ElseIf oElmt.GetAttribute("validGroups") = "all" And validGroup = String.Empty Then
 
-                        If oElmt.GetAttribute("validGroups") = "all" Then
                             bAllowUser = True
                         Else
                             Dim aGroups() As String = Split(oElmt.GetAttribute("validGroups"), ",")
