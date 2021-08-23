@@ -10,7 +10,10 @@
                 xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                 xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
-	<xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
+  <xsl:variable name="GoogleAPIKey">
+    <xsl:value-of select="$page/Settings/add[@key='web.GoogleAPIKey']/@value"/>
+  </xsl:variable>
+  
 	<xsl:template name="eonicwebProductName">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
@@ -2096,7 +2099,7 @@
 			</td>
 			<td>
 				<div class="checkbox checkbox-primary">
-					<input type="checkbox" name="id" value="{@id}" class="styled"/>
+					<input type="checkbox" name="id" value="{@id}" class="styled inventory-bulk-checkbox" data-status="{@status}"/>
 					<label>
 						<xsl:text> </xsl:text>
 					</label>
@@ -4816,7 +4819,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule']" mode="LayoutAdminJs">
+	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
 		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
 		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
@@ -4829,6 +4832,8 @@
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
 		<!-- The File Upload image preview & resize plugin -->
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+		<!-- The Image Lazy load plugin -->
+		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
@@ -4901,6 +4906,8 @@
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
 			<!-- The File Upload image preview & resize plugin -->
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+			<!-- The Image Lazy load plugin -->
+			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
 		<script>
@@ -4947,18 +4954,13 @@
 			$('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
 			ev.preventDefault();
 			$('.modal-dialog').addClass('loading')
-			$('.modal-body').html('<p class="text-center">
-				<h4>
-					<i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...
-				</h4>
-			</p>');
+			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
 			// load the url and show modal on success
 			var currentModal = $('.pickImageModal')
 			currentModal.load(target, function () {
 			$('.modal-dialog').removeClass('loading')
 			currentModal.modal("show");
-
 			});
 			});
 			};
@@ -4976,7 +4978,6 @@
 			});
 		</script>
 
-		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		<script>
 			$(function() {
 			$('.lazy').lazy();
@@ -5069,12 +5070,9 @@
                               <img src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}" width="160" height="160" class="{@class} img-responsive"/>
                             </div>
                           </xsl:when>
-                          
-                          
-                            <xsl:when test="$Extension='.pdf' or $Extension='.doc' or $Extension='.docx'">
+                          <xsl:when test="$Extension='.pdf' or $Extension='.doc' or $Extension='.docx'">
                               
-                            </xsl:when>
-                          
+                          </xsl:when>
                           <xsl:when test="$Extension='.swf'">
                             <i class="fa fa-flash fa-5x center-block">
                               <xsl:text> </xsl:text>
@@ -11003,7 +11001,7 @@
         <xsl:value-of select="cLkpValue/node()"/>
       </td>
       <td class="clearfix">
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}" class="btn btn-danger btn-xs pull-right">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-danger btn-xs pull-right">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Del
@@ -11269,13 +11267,7 @@
       </xsl:if>
     </xsl:variable>
     <td class="btn-group">
-      <xsl:if test="@status='0'">
-        <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to delete this item">
-          <i class="fa fa-remove-circle fa-white">
-            <xsl:text> </xsl:text>
-          </i>
-          <xsl:text> </xsl:text>Delete</a>
-      </xsl:if>
+
 
       <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
         <i class="fa fa-eye">
@@ -11296,6 +11288,13 @@
           <xsl:text> </xsl:text>
         </i>
         <xsl:text> </xsl:text>Edit</a>
+      <xsl:if test="@status='0' or @status='3'">
+        <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-danger" title="Click here to delete this item">
+          <i class="fa fa-trash fa-white">
+            <xsl:text> </xsl:text>
+          </i>
+          </a>
+        </xsl:if>
     </td>
   </xsl:template>
 

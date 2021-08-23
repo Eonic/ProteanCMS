@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+  <!--<xsl:import href="../../../../../ewcommon_v5-1/xsl/Tools/Functions.xsl"/>-->
   <xsl:import href="ResponsiveEmailStyles.xsl"/>
   
   <xsl:template match="*" mode="emailBody">
