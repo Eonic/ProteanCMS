@@ -570,9 +570,11 @@
                       </section>
                     </xsl:when>
                     <xsl:otherwise>
+                      <xsl:if test="not(@position='header' or @position='footer' or (@position='column1' and $page/@layout='Modules_1_column'))">
                       <xsl:attribute name="style">
                         background-image: url('<xsl:value-of select="@backgroundImage"/>');
                       </xsl:attribute>
+                      </xsl:if>
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:when>
