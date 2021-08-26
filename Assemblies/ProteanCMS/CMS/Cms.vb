@@ -3200,30 +3200,21 @@ Public Class Cms
                                     calledType = assemblyInstance.GetType(classPath, True)
                                 End If
                             Else
-                                'Select Case moPrvConfig.Providers(providerName).Parameters("path")
-                                '    Case ""
-                                '        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
-                                '        calledType = assemblyInstance.GetType(classPath, True)
-                                '    Case "builtin"
-                                '        Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
-                                '        'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
-                                '        prepProviderName = moPrvConfig.Providers(providerName).Type
-                                '        calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
-                                '    Case Else
-                                '        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
-                                '        classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
-                                '        calledType = assemblyInstance.GetType(classPath, True)
-                                'End Select
-
-                                'If moPrvConfig.Providers(providerName).Parameters("path") <> "" Then
-                                '    assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
-                                'Else
-                                '    assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
-                                'End If
+                                Select Case moPrvConfig.Providers(providerName).Parameters("path")
+                                    Case ""
+                                        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
+                                        calledType = assemblyInstance.GetType(classPath, True)
+                                    Case "builtin"
+                                        Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
+                                        'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
+                                        prepProviderName = moPrvConfig.Providers(providerName).Type
+                                        calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
+                                    Case Else
+                                        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
+                                        classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
+                                        calledType = assemblyInstance.GetType(classPath, True)
+                                End Select
                             End If
-
-                            '  calledType = assemblyInstance.GetType(classPath, True)
-
                         ElseIf assemblyType <> "" Then
                             'case for external DLL's
                             Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)

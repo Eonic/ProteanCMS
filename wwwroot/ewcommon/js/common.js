@@ -668,7 +668,6 @@ $.fn.prepareXform = function () {
 
     if ($(this).find('.contentLocations').exists()) {
         $(this).find('.contentLocations').each(function (i) {
-            debugger;
             var classString = $(this).attr('class').match(/([^\?]*)pickLimit\-(\d*)/);
             var cbLimit = classString[2];
             //  alert(cbLimit);
