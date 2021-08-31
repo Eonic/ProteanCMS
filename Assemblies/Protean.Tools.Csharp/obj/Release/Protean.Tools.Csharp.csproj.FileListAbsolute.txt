@@ -100,8 +100,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Fonet.dl
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Google.Protobuf.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\JsonWebTokens.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.NET-Q8-AnyCPU.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\MySql.Data.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Newtonsoft.Json.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Renci.SshNet.dll
@@ -110,8 +108,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Fonet.xm
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Google.Protobuf.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.NET-Q8-AnyCPU.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\MySql.Data.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Newtonsoft.Json.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Renci.SshNet.xml
