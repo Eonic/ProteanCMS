@@ -725,7 +725,6 @@ C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.Cop
 C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x64.dll
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\ProteanCMS\bin\tidy.x64.dll
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\ProteanCMS\bin\tidy.x86.dll
@@ -1375,7 +1374,6 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bi
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JudoPayDotNet.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.pdb
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll.config
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\tidy.x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\tidy.x86.dll
@@ -1473,11 +1471,11 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwit
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Msie.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache

@@ -2786,11 +2786,32 @@
 		</form>
 	</xsl:template>
 
-	<xsl:template match="/" mode="ListByContentTypeByPage">
+  <xsl:template match="/" mode="ListByContentTypeByPage-SortBy">
+    <span class="input-group list-control-select">
+      <xsl:variable name="sortBy" select="$page/Request/*/Item[@name='sortby']/node()"/>
+      <label class="input-group-addon">Sort By</label>
+      <select class="form-control submit-on-select" name="sortby" id="sortby" onchange="this.form.submit()">
+        <option value="default">
+          <xsl:if test="not($sortBy!='')">
+            <xsl:attribute name="selected">selected</xsl:attribute>
+          </xsl:if>
+          Page Position
+        </option>
+        <option value="name">
+          <xsl:if test="$sortBy='name'">
+            <xsl:attribute name="selected">selected</xsl:attribute>
+          </xsl:if>Name A-Z
+        </option>
+      </select>
+    </span>
+  </xsl:template>
+
+    <xsl:template match="/" mode="ListByContentTypeByPage">
 		<xsl:param name="contentType"/>
 		<xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
 		<xsl:variable name="itemCount" select="'100'"/>
 		<xsl:variable name="total" select="$page/ContentDetail/@total"/>
+      <xsl:variable name="sortBy" select="$page/Request/*/Item[@name='sortby']/node()"/>
 		<xsl:variable name="queryString">
 			<xsl:text>?</xsl:text>
 			<xsl:call-template name="getQString"/>
@@ -2853,23 +2874,7 @@
 							</div>
 
 							<div class="list-header-select">
-								<span class="input-group list-control-select">
-									<xsl:variable name="sortBy" select="$page/Request/*/Item[@name='sortby']/node()"/>
-									<label class="input-group-addon">Sort By</label>
-									<select class="form-control submit-on-select" name="sortby" id="sortby" onchange="this.form.submit()">
-										<option value="default">
-											<xsl:if test="not($sortBy!='')">
-												<xsl:attribute name="selected">selected</xsl:attribute>
-											</xsl:if>
-											Page Position
-										</option>
-										<option value="name">
-											<xsl:if test="$sortBy='name'">
-												<xsl:attribute name="selected">selected</xsl:attribute>
-											</xsl:if>Name A-Z
-										</option>
-									</select>
-								</span>
+                <xsl:apply-templates select="/" mode="ListByContentTypeByPage-SortBy"/>
 							</div>
 						</form>
 						<div class="stepper-container">
@@ -2897,9 +2902,23 @@
 							<xsl:text> on this page</xsl:text>
 						</td>
 					</tr>
-				</xsl:if>
+				</xsl:if>       
 				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
-				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+        <xsl:choose>
+          <xsl:when test="$sortBy='name'">
+            <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode">
+              <xsl:sort select="@name" data-type="text"/>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:when test="$sortBy='unit'">
+            <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode">
+              <xsl:sort select="UnitNumber" data-type="number"/>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+          </xsl:otherwise>
+        </xsl:choose>
 			</table>
 		</form>
 		<div class="panel-header">
@@ -2969,10 +2988,9 @@
 					</tr>
 				</xsl:if>
 				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
-				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+        <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
 			</table>
 		</div>
-
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='EditStructure']" mode="Admin">
@@ -5112,11 +5130,20 @@
                             <a class="btn btn-xs btn-primary" href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
                               <i class="fa fa-arrows fa-white">
                                 <xsl:text> </xsl:text>
-                              </i></a>
+                              </i>
+                              <span class="sr-only"> Move</span>
+                            </a>
+                            <a href="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="btn btn-xs btn-warning" download="{@name}">
+                              <i class="fa fa-download fa-white">
+                                <xsl:text> </xsl:text>
+                              </i>
+                              <span class="sr-only"> Download</span>
+                            </a>
                             <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
                               <i class="fa fa-trash-o fa-white">
                                 <xsl:text> </xsl:text>
-                              </i> Delete
+                              </i>
+                              <span class="sr-only">Delete</span>
                             </a>
                           </xsl:if>
                         </xsl:otherwise>
