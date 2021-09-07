@@ -33,8 +33,8 @@ Public Class CustomActions
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "7.21.1.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "4.1.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "8.3.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "8.3.0.0"
 
     <CustomAction()> _
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
