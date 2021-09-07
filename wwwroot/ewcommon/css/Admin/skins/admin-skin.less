@@ -8,26 +8,26 @@ NEW BS ADMIN HEADER
 
 //@admin-header-bg: #131a1c;
 @admin-header-bg: #13181c;
-@admin-header-bg-light:			lighten(@admin-header-bg, 10%);
-@admin-header-color:			#fff;
-@admin-header-color-link:		#5cbaf1;
-@admin-header-color-warning:	#d10404;
-@admin-header-logo:				transparent;
-@admin-header-font:				'Open Sans', sans-serif;
-@admin-header-font-color:		#333;
-@admin-bg:						#fff;
-@admin-header-border-radius:	0px;
-@admin-gray:					#777;
-@admin-border:					1px dotted #ccc;
+@admin-header-bg-light: lighten(@admin-header-bg, 10%);
+@admin-header-color: #fff;
+@admin-header-color-link: #5cbaf1;
+@admin-header-color-warning: #d10404;
+@admin-header-logo: transparent;
+@admin-header-font: 'Open Sans', sans-serif;
+@admin-header-font-color: #333;
+@admin-bg: #fff;
+@admin-header-border-radius: 0px;
+@admin-gray: #777;
+@admin-border: 1px dotted #ccc;
 //@admin-primary:                 #428bca;
-@admin-primary:                 @admin-header-color-link;
-@admin-danger:					#d9534f;
-@admin-warning:					#f0ad4e;
-@admin-success:					#5cb85c;
-@admin-field-height:            40px;
+@admin-primary: @admin-header-color-link;
+@admin-danger: #d9534f;
+@admin-warning: #f0ad4e;
+@admin-success: #5cb85c;
+@admin-field-height: 40px;
 @admin-body-font: 'Open Sans', sans-serif;
-@admin-font-size-base:          15px;
-@admin-gutter-width:            30px;
+@admin-font-size-base: 15px;
+@admin-gutter-width: 30px;
 
 // VARIABLES FOR RESKINNING - INVERSE
 /*@admin-header-bg:				#fff;
@@ -65,6 +65,7 @@ body.ewAdmin.layout-Logon {
         width: 100%;
     }
 }
+
 body.ewAdmin.layout-AdmHome {
     background: url(/ewcommon/images/logon-bg.png);
 
@@ -89,13 +90,17 @@ body.ewAdmin.layout-AdmHome {
 
 .ewAdmin {
     .admin-breadcrumb {
-        position: absolute;
-        right: 0px;
-        background: transparent !important;
+        @media(min-width:@screen-sm-min) {
+            position: absolute;
+            right: 0px;
+        }
+
+        background-color: lighten(@admin-header-bg,30%);
         font-family: @admin-header-font;
         color: #a5a7a9;
         text-align: right;
         padding: 15px 30px !important;
+        border-radius: 0;
 
         a {
             color: #fff;
@@ -372,39 +377,39 @@ body.ewAdmin.layout-AdmHome {
             }
 
 
-                .list-controls {
+            .list-controls {
+                text-align: right;
+
+                form {
+                    display: inline-block;
+                }
+
+                .input-group {
+                    width: 220px;
+                }
+
+                .pull-right-stepper {
                     text-align: right;
+                }
 
-                    form {
+                .list-header-select {
+                    display: inline-block;
+                    margin-right: 5px;
+                }
+
+                .stepper-container {
+                    display: inline-block;
+                    position: relative;
+                    top: -15px;
+                    margin-right: 30px;
+
+                    .stepper {
                         display: inline-block;
-                    }
-
-                    .input-group {
-                        width: 220px;
-                    }
-
-                    .pull-right-stepper {
-                        text-align: right;
-                    }
-
-                    .list-header-select {
-                        display: inline-block;
-                        margin-right: 5px;
-                    }
-
-                    .stepper-container {
-                        display: inline-block;
-                        position: relative;
-                        top: -15px;
-                        margin-right: 30px;
-
-                        .stepper {
-                            display: inline-block;
-                            padding-top: 0px;
-                            margin: 0;
-                        }
+                        padding-top: 0px;
+                        margin: 0;
                     }
                 }
+            }
 
             .optionsButton {
                 text-align: right;
@@ -489,79 +494,94 @@ body.ewAdmin.layout-AdmHome {
     }
     //end #adminLayout
 }
+
 .ewAdmin .open,
 #mainTable .ewAdmin,
-#pagefooter .ewAdmin{
-	.dropdown{
-		width:auto;
-		a.btn-primary,
-		a:visited.btn-primary{
-            color:#fff!important;
-            letter-spacing:normal;
-		}
-		a.btn:focus,
-		a.btn:hover{
-			outline:none;
-			text-decoration:none;
-		}
-	}
-	.dropdown-menu{
-		text-align:left;
-		background:@admin-header-bg-light;
-        letter-spacing:normal;
-        li{width:100%;}
-		li a{
-			color:@admin-header-color!important;
-			&:hover{
-				color:@admin-header-color-link!important;
-				background:transparent;
-			}
-			padding:3px 20px!important;
-			background-image:none !important;
-			background:none !important;
-			text-transform:none!important;
-			height:auto!important;
-            letter-spacing:normal;
-            text-decoration:none!important;
-            font-size:13px!important;
-            font-weight:400!important;
-		}
-		li.mansonary-size a.btn{
-			
+#pagefooter .ewAdmin {
+    .dropdown {
+        width: auto;
 
+        a.btn-primary,
+        a:visited.btn-primary {
+            color: #fff !important;
+            letter-spacing: normal;
+        }
 
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-	background-image: -moz-linear-gradient(center top , #FFFFFF, #E6E6E6);
-    border-image: none;
-    border-style: solid;
-    border-width: 1px;
-    box-shadow: inset 0px 1px 0px rgba(255,255,255,0.2), 0px 1px 2px rgba(0,0,0,0.05);
-	display: inline-block;
-    font-size: 14px;
-    line-height: 20px;
-    margin-bottom: 0px;
-    padding: 4px 8px;
-    text-align: center;
-    text-shadow: 0px 1px 1px rgba(255,255,255,0.75);
-    vertical-align: middle;
+        a.btn:focus,
+        a.btn:hover {
+            outline: none;
+            text-decoration: none;
+        }
+    }
 
+    .dropdown-menu {
+        text-align: left;
+        background: @admin-header-bg-light;
+        letter-spacing: normal;
 
-		}
-		li.updown a{padding:0!important;}
-		li.mansonary-size a{padding:3px 5px!important;}
-		li.title{
-			font-size:12px;
-			color:darken(@admin-header-color, 30%)!important;
-		}
-		.divider{
-			background-color:darken(@admin-header-color, 80%)!important;
-			margin:5px 0;
-		}
-	}
+        li {
+            width: 100%;
+        }
+
+        li a {
+            color: @admin-header-color !important;
+
+            &:hover {
+                color: @admin-header-color-link !important;
+                background: transparent;
+            }
+
+            padding: 3px 20px !important;
+            background-image: none !important;
+            background: none !important;
+            text-transform: none !important;
+            height: auto !important;
+            letter-spacing: normal;
+            text-decoration: none !important;
+            font-size: 13px !important;
+            font-weight: 400 !important;
+        }
+
+        li.mansonary-size a.btn {
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            background-image: -moz-linear-gradient(center top, #FFFFFF, #E6E6E6);
+            border-image: none;
+            border-style: solid;
+            border-width: 1px;
+            box-shadow: inset 0px 1px 0px rgba(255,255,255,0.2), 0px 1px 2px rgba(0,0,0,0.05);
+            display: inline-block;
+            font-size: 14px;
+            line-height: 20px;
+            margin-bottom: 0px;
+            padding: 4px 8px;
+            text-align: center;
+            text-shadow: 0px 1px 1px rgba(255,255,255,0.75);
+            vertical-align: middle;
+        }
+
+        li.updown a {
+            padding: 0 !important;
+        }
+
+        li.mansonary-size a {
+            padding: 3px 5px !important;
+        }
+
+        li.title {
+            font-size: 12px;
+            color: darken(@admin-header-color, 30%) !important;
+        }
+
+        .divider {
+            background-color: darken(@admin-header-color, 80%) !important;
+            margin: 5px 0;
+        }
+    }
 }
+
 .normalMode {
     a:hover {
         text-decoration: none;
@@ -590,17 +610,26 @@ body.ewAdmin.layout-AdmHome {
             }
         }
     }
+
     .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown .btn-primary{margin-left:3px;}
-    .ewAdmin > .dropdown .dropdown-menu li{
-        display:block;
-        text-align:left;
-        a{
-            border:0;
-            text-align:left;
+    .ewAdmin > .dropdown .btn-primary {
+        margin-left: 3px;
+    }
+
+    .ewAdmin > .dropdown .dropdown-menu li {
+        display: block;
+        text-align: left;
+
+        a {
+            border: 0;
+            text-align: left;
         }
     }
-    .grid-item > .ewAdmin{margin-top:3px;}
+
+    .grid-item > .ewAdmin {
+        margin-top: 3px;
+    }
+
     span.editable {
         .ewAdmin {
             display: inline-block;
@@ -688,7 +717,10 @@ body.ewAdmin.layout-AdmHome {
         position: relative
     }
 }
-.moduleDrag{.clearfix;}
+
+.moduleDrag {
+    .clearfix;
+}
 
 .ewAdmin #adminLayout {
     .scroll-pane-arrows {
@@ -940,19 +972,17 @@ body.ewAdmin.layout-AdmHome {
     border-top: 4px solid fadeout(@admin-bg, 60%);
 }
 
-#keepalive{
-	display:none;
+#keepalive {
+    display: none;
 }
 
 // - DRAG AND DROP
-.droppable-hover
-{
+.droppable-hover {
     background-color: #d9d9d9;
     height: auto;
 }
 
-.droppable-hover .dropable-active
-{
+.droppable-hover .dropable-active {
     background-color: none;
     height: auto;
 }
@@ -960,50 +990,58 @@ body.ewAdmin.layout-AdmHome {
 // - ADMIN HEADER
 
 // - DROPDOWNS
-.list-group-item .ewAdmin{
-	//.clearfix();
-	//position:relative;
-	//dropdown-menu{margin-top:20px;}
-	//a.btn-primary{
-	//	position: absolute;
-	//	margin-right: 0;
-	//}
+.list-group-item .ewAdmin {
+    //.clearfix();
+    //position:relative;
+    //dropdown-menu{margin-top:20px;}
+    //a.btn-primary{
+    //	position: absolute;
+    //	margin-right: 0;
+    //}
 }
-.Site .ewAdmin .dropdown-menu li{
-	font-size:13px !important;
+
+.Site .ewAdmin .dropdown-menu li {
+    font-size: 13px !important;
 }
+
 .ewAdmin .open .dropdown-menu {
-		background-color: @admin-header-bg-light;
-		font-size:1em !important;
-		margin-top:-1px;
-        min-width:160px!important;
-        &:before,
-        &:after{display:none!important}
-        > li > a {
-          color: @admin-header-color;
-          &:hover,
-          &:focus {
+    background-color: @admin-header-bg-light;
+    font-size: 1em !important;
+    margin-top: -1px;
+    min-width: 160px !important;
+
+    &:before,
+    &:after {
+        display: none !important
+    }
+
+    > li > a {
+        color: @admin-header-color;
+
+        &:hover,
+        &:focus {
             color: @admin-header-color-link;
             background-color: transparent;
-          }
         }
-		li{
-			list-style:none!important;
-			margin-left:0!important;
-			background:none!important;
-			padding:0px;
-            float:none!important;
-		}
-		> .active > a {
-          &,
-          &:hover,
-          &:focus {
+    }
+
+    li {
+        list-style: none !important;
+        margin-left: 0 !important;
+        background: none !important;
+        padding: 0px;
+        float: none !important;
+    }
+
+    > .active > a {
+        &,
+        &:hover,
+        &:focus {
             color: @admin-header-color;
             background-color: transparent;
-          }
         }
-        
-      }
+    }
+}
 
 
 
@@ -1047,12 +1085,13 @@ body.ewAdmin.layout-AdmHome {
         padding: 0 !important
     }
 }
-	#btnHelpEditing.open .fa-chevron-left
-	{
-		transform:rotate(-180deg);
-		-ms-transform:rotate(-180deg); /* IE 9 */
-		-webkit-transform:rotate(-180deg); /* Safari and Chrome */
-	}
+
+#btnHelpEditing.open .fa-chevron-left {
+    transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg); /* IE 9 */
+    -webkit-transform: rotate(-180deg); /* Safari and Chrome */
+}
+
 #helpBox {
     color: #464646;
     padding: 0px 5px 0px 15px;
@@ -1062,25 +1101,27 @@ body.ewAdmin.layout-AdmHome {
     height: 100%;
     overflow: auto;
 }
-    #divHelpBox {
-        right: -350px;
-        position: fixed;
-        width: 350px;
-        z-index: 49900;
-    }
+
+#divHelpBox {
+    right: -350px;
+    position: fixed;
+    width: 350px;
+    z-index: 49900;
+}
 
 .mfp-bg {
     z-index: 49901;
 }
+
 .mfp-wrap {
     z-index: 49902;
 }
+
 .mfp-content {
     z-index: 49903;
 }
 //CMS LOGIN
-.ewAdmin div.report
-{
+.ewAdmin div.report {
     position: relative;
     background: #f3f7fb;
     border: solid 1px #c0cfd8;
@@ -1090,36 +1131,38 @@ body.ewAdmin.layout-AdmHome {
     color: #464646;
 }
 
-.ewAdmin form#UserLogon
-{
+.ewAdmin form#UserLogon {
     //margin-top: 100px;
     margin-bottom: 130px;
-    margin-right:auto;
-    margin-left:auto;
+    margin-right: auto;
+    margin-left: auto;
     width: 380px;
 }
 
-.ewAdmin .stepper
-{
+.ewAdmin .stepper {
     padding-top: 10px;
-	.itemInfo{padding-right: 10px;}
-}
-.ewAdmin #template_ListDirectory .btn{margin-bottom:3px;}
 
-
-.ewAdmin form#UserLogon h3.panel-title
-{
-    font-size:1.7em;
+    .itemInfo {
+        padding-right: 10px;
+    }
 }
 
-.ewAdmin form#UserLogon input.adminButton
-{
+.ewAdmin #template_ListDirectory .btn {
+    margin-bottom: 3px;
+}
+
+
+.ewAdmin form#UserLogon h3.panel-title {
+    font-size: 1.7em;
+}
+
+.ewAdmin form#UserLogon input.adminButton {
     width: auto;
 }
 
 //ACCORDIONS
-.normalMode .panel-group .panel{
-	overflow:visible;
+.normalMode .panel-group .panel {
+    overflow: visible;
 }
 
 
@@ -1203,97 +1246,104 @@ body.ewAdmin.layout-AdmHome {
     }
 }
 
-.ewAdmin .dropdown-menu li.updown 
-{
-	margin: 9px 5px 4px 20px!important;
-    min-width:133px;
-	.clearfix();
+.ewAdmin .dropdown-menu li.updown {
+    margin: 9px 5px 4px 20px !important;
+    min-width: 133px;
+    .clearfix();
 }
 
-.ewAdmin .dropdown-menu li.updown a
-{
-	display: block;
-	margin: 0;
-	background:none!important;
-	border: 0;
-	float: left;
-	clear: none;
-	padding: 0!important;
+.ewAdmin .dropdown-menu li.updown a {
+    display: block;
+    margin: 0;
+    background: none !important;
+    border: 0;
+    float: left;
+    clear: none;
+    padding: 0 !important;
 }
-.ewAdmin .dropdown-menu li.updown a i
-{
-	vertical-align:middle;
-	text-align:center;
-	width:10px;
-	display:block;
-	float:left;
-	margin-right: 27px;
+
+.ewAdmin .dropdown-menu li.updown a i {
+    vertical-align: middle;
+    text-align: center;
+    width: 10px;
+    display: block;
+    float: left;
+    margin-right: 27px;
 }
+
 .ewAdmin .dropdown-menu li.updown a i.fa-step-backward,
-.ewAdmin .dropdown-menu li.updown a i.fa-step-forward
-{
-	padding-top:2px;
+.ewAdmin .dropdown-menu li.updown a i.fa-step-forward {
+    padding-top: 2px;
 }
-.ewAdmin .dropdown-menu li.updown a i.fa-step-forward
-{
-	margin-right:0;
-}
-.Site, .Email{
-	.ewAdmin .btn, .ewAdmin .dropdown
-	{
-		font-weight: normal;
-		font-size: 13px !important;
-		line-height: 20px !important;
-		text-decoration: none;
-		-moz-border-radius: 0px;
-		border-radius: 0px;
-		height:auto !important;
-        
-    text-decoration:none !important;
 
-	}
-	.ewAdmin .btn-xs{
-		padding: 1px 5px;
-	}
-	.ewAdmin .addHere
-	{
-		font-size: 11px;
-		font-weight:400;
-		padding: 3px;
-        letter-spacing:normal;
-	}
-	#isotope-module .editable {
-		position:relative;
-		display:block;
-	}
-	#isotope-module div.options {
-		position:relative;
-		display:block;
-	}
-	.ewAdmin .masonary-size .dropdown-menu li a{
-		padding:3px 5px !important;
-	}
+.ewAdmin .dropdown-menu li.updown a i.fa-step-forward {
+    margin-right: 0;
 }
-form#AddModule{
-	div.panel{
-		a:focus{
-			outline:none;
-			text-decoration:none;
-		}
-		.panel-heading h6{
-			padding-left: 3px;
-			margin-left: -5px;
-			position: relative;
-			&:focus{text-decoration:none;}
-			&:before{
-				font-family:FontAwesome;
-				padding-right:3px;
-			}
-		}
-	}
+
+.Site, .Email {
+    .ewAdmin .btn, .ewAdmin .dropdown {
+        font-weight: normal;
+        font-size: 13px !important;
+        line-height: 20px !important;
+        text-decoration: none;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+        height: auto !important;
+        text-decoration: none !important;
+    }
+
+    .ewAdmin .btn-xs {
+        padding: 1px 5px;
+    }
+
+    .ewAdmin .addHere {
+        font-size: 11px;
+        font-weight: 400;
+        padding: 3px;
+        letter-spacing: normal;
+    }
+
+    #isotope-module .editable {
+        position: relative;
+        display: block;
+    }
+
+    #isotope-module div.options {
+        position: relative;
+        display: block;
+    }
+
+    .ewAdmin .masonary-size .dropdown-menu li a {
+        padding: 3px 5px !important;
+    }
 }
-.pickImageModal{
-    font-family:@admin-header-font;
+
+form#AddModule {
+    div.panel {
+        a:focus {
+            outline: none;
+            text-decoration: none;
+        }
+
+        .panel-heading h6 {
+            padding-left: 3px;
+            margin-left: -5px;
+            position: relative;
+
+            &:focus {
+                text-decoration: none;
+            }
+
+            &:before {
+                font-family: FontAwesome;
+                padding-right: 3px;
+            }
+        }
+    }
+}
+
+.pickImageModal {
+    font-family: @admin-header-font;
 }
 
 #RedirectPage .scolling-pane {
