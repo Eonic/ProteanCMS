@@ -4601,42 +4601,6 @@ Partial Public Class Cms
                         oXform.valid = bOverrideValidity
                     End If
 
-
-                    ' Add processing for deposits on valid forms.
-                    If mcPaymentType <> "Normal" And oXform.valid Then
-
-                        ' Check for a bespoke payment amount
-                        ' Amount is good, let's update the PaymentAmount to reflect this.
-                        If mcPaymentType = "deposit" Then mnPaymentAmount = CDbl(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText)
-
-                        ' Update the Cart Element to reflect the updated figures
-                        mnPaymentAmount = CDbl(FormatNumber(mnPaymentAmount, 2, TriState.True, TriState.False, TriState.False))
-
-                        ' Work out the remaining payment needed
-                        Select Case Me.mcPaymentType
-                            Case "deposit"
-                                nPayableAmount = mnPaymentMaxAmount - mnPaymentAmount
-                            Case Else
-                                nPayableAmount = 0
-                        End Select
-
-                        ' Let's update the cart element
-                        oRoot.SetAttribute("paymentMade", CStr(mnPaymentAmount))
-                        oRoot.SetAttribute("payableAmount", FormatNumber(nPayableAmount, 2, TriState.True, TriState.False, TriState.False))
-
-                        ' Let's create a unique link
-                        ' Make a unique link
-                        Do While cUniqueLink = ""
-                            nLinkNumber = CLng(System.Math.Ceiling(oRandom.NextDouble() * 89999999)) + 10000000
-                            sSql = "select * from tblCartOrder where cSettlementID = '" & CStr(nLinkNumber) & "'"
-                            odr = modbHelper.getDataReader(sSql)
-                            If Not odr.HasRows Then cUniqueLink = CStr(nLinkNumber)
-                            odr.Close()
-                        Loop
-                        oRoot.SetAttribute("settlementID", cUniqueLink)
-                        oRoot.SetAttribute("transStatus", "Complete")
-                    End If
-
                     If moCartConfig("CardholderName") = "on" And oXform.valid Then
                         ' Override mcCArdHoldername
                         If Not (oXform.Instance.SelectSingleNode("creditCard/cardholder") Is Nothing) Then

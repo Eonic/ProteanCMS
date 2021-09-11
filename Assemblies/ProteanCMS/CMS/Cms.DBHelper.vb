@@ -254,6 +254,7 @@ Partial Public Class Cms
             CartDelivery = 31
             CartCarrier = 32
             SubscriptionRenewal = 33
+            CartPayment = 34
 
             '100-199 reserved for LMS
             CpdLog = 100
@@ -292,11 +293,13 @@ Partial Public Class Cms
             tblCodes = 26
             tblContentVersions = 27
             tblCartShippingPermission = 28
+
             'tblContentStructure = 29 'duplicate, but leave this
             tblLookup = 30
             tblCartOrderDelivery = 31
             tblCartCarrier = 32
             tblSubscriptionRenewal = 33
+            tblCartPayment = 34
 
             '100-199 reserved for LMS
             tblCpdLog = 100
@@ -663,6 +666,8 @@ Partial Public Class Cms
                     Return "nCarrierKey"
                 Case 33
                     Return "nSubRenewalKey"
+                Case 34
+                    Return "nCartPaymentKey"
                     '100-199 reserved for LMS
                 Case 100
                     Return "nCpdLogKey"
@@ -10701,6 +10706,21 @@ ReturnMe:
                 End If
 
                 CartPaymentMethod(CartId, nPaymentId)
+
+                If Me.doesTableExist("tblCartPayment") Then
+                    oInstance.RemoveAll()
+                    oElmt = oXml.CreateElement("tblCartPayment")
+                    addNewTextNode("nCartOrderId", oElmt, CartId)
+                    addNewTextNode("nCartPaymentMethodId", oElmt, nPaymentId)
+                    addNewTextNode("bFull", oElmt, "true")
+                    addNewTextNode("nPaymentAmount", oElmt, nAmountPaid.ToString())
+                    addNewTextNode("dInsertDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
+                    addNewTextNode("dUpdateDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
+                    addNewTextNode("nInsertDirId", oElmt, myWeb.mnUserId) '
+                    addNewTextNode("nStatus", oElmt, 1)
+                    oInstance.AppendChild(oElmt)
+                    setObjectInstance(dbHelper.objectTypes.CartPayment, oInstance)
+                End If
 
                 Return nPaymentId
 

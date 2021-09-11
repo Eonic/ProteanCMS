@@ -70,6 +70,7 @@ Partial Public Class Cms
         Public mbStockControl As Boolean = False ' Stock Control
         Public mcDeposit As String ' Deposits are Available
         Public mcDepositAmount As String ' Deposit Amount
+        Public mcPaymentType As String
         Private cOrderNoPrefix As String
         Public mcCurrency As String = ""
         Public mcCurrencySymbol As String = ""
@@ -852,6 +853,8 @@ Partial Public Class Cms
             End Try
         End Sub
 
+
+
         Public Sub writeSessionCookie()
             'writes the session cookie to persist the cart
             If mcPersistCart = "on" Then
@@ -1450,6 +1453,9 @@ processFlow:
                         Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
 
+
+
+
                         If InStr(mcPaymentMethod, "Repeat_") > 0 Then
                             If ccPaymentXform.valid = True Then
                                 mcCartCmd = "ShowInvoice"
@@ -1719,6 +1725,55 @@ processFlow:
 
         End Sub
 
+
+        Public Function ConfirmPayment(ByRef oCartElmt As XmlElement, ByRef PaymentDetailXml As XmlElement, ByVal providerPaymentRef As String, ByVal providerName As String, ByVal amountPaid As Double)
+            Dim cProcessInfo As String = ""
+            Try
+                Dim PayableType As String = oCartElmt.GetAttribute("payableType")
+
+                mnPaymentId = moDBHelper.savePayment(mnCartId, myWeb.mnUserId, providerName, providerPaymentRef, providerName, PaymentDetailXml, DateTime.Now, False, amountPaid)
+
+                'Add processing for deposits.
+                Select Case PayableType
+                    Case "deposit"
+
+                        Dim outstandingAmount As Double = CDbl(oCartElmt.GetAttribute("total")) - CDbl(oCartElmt.GetAttribute("payableAmount"))
+
+                        ' Let's update the cart element
+                        oCartElmt.SetAttribute("paymentMade", oCartElmt.GetAttribute("payableAmount"))
+                        oCartElmt.SetAttribute("outstandingAmount", FormatNumber(outstandingAmount, 2, TriState.True, TriState.False, TriState.False))
+
+                        ' Let's create a unique link for settlement
+                        ' Make a unique link
+                        Dim cUniqueLink As String = ""
+                        Do While cUniqueLink = ""
+                            Dim testLink = System.Guid.NewGuid.ToString()
+                            Dim sSql As String = "select * from tblCartOrder where cSettlementID = '" & testLink & "'"
+                            Dim odr As SqlDataReader = moDBHelper.getDataReader(sSql)
+                            If Not odr.HasRows Then cUniqueLink = testLink
+                            odr.Close()
+                        Loop
+
+                        oCartElmt.SetAttribute("settlementID", cUniqueLink)
+                        oCartElmt.SetAttribute("transStatus", "Complete")
+                        UpdateCartDeposit(oCartElmt, mcDepositAmount, PayableType)
+                        mnProcessId = 10
+
+                    Case "settlement"
+
+
+                    Case Else
+
+                End Select
+
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug)
+
+            Finally
+                'oDr = Nothing
+            End Try
+        End Function
 
         Overridable Sub purchaseActions(ByRef oCartElmt As XmlElement)
             PerfMon.Log("Cart", "purchaseActions")
@@ -2449,6 +2504,7 @@ processFlow:
             Dim quant As Long
             Dim weight As Double
             Dim total As Double
+            Dim nPayableAmount As Double
             Dim vatAmt As Double
             Dim shipCost As Double
             Dim nCheckPrice As Double
@@ -2458,7 +2514,6 @@ processFlow:
             'If true will be added to the unit
             Dim nLineVat As Decimal = 0
             Dim bCheckSubscriptions = False
-
             Dim cOptionGroupName As String = ""
 
             Dim nCartIdUse As Integer
@@ -2544,10 +2599,8 @@ processFlow:
                             Dim nTaxRate As Long = 0
                             Dim bOverridePrice As Boolean = False
                             If Not mbOveridePrice Then ' for openquote
-
                                 If (Not (myWeb.moSession("overridePriceSession") Is Nothing) And Not (myWeb.moConfig("overridePriceKey") Is Nothing)) Then
                                     'get the string value from session
-
                                     Dim sSessionKey As String = Convert.ToString(myWeb.moSession("overridePriceSession"))
                                     Dim sKey As String = Convert.ToString(myWeb.moConfig("overridePriceKey"))
                                     'create the key with the current user
@@ -2567,6 +2620,7 @@ processFlow:
                                         cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         If Not oCheckPrice Is Nothing Then
                                             nCheckPrice = oCheckPrice.InnerText
+                                            nPayableAmount = oCheckPrice.GetAttribute("deposit")
                                             nTaxRate = getProductTaxRate(oCheckPrice)
                                         End If
                                         'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
@@ -2903,7 +2957,6 @@ processFlow:
 
                         vatAmt = updateTotals(oCartElmt, total, shipCost, oCartElmt.GetAttribute("shippingType"))
 
-
                         ' Check if the cart needs to be adjusted for deposits or settlements
                         If mcDeposit = "on" Then
                             Dim nTotalAmount As Double = total + shipCost + vatAmt
@@ -2915,14 +2968,18 @@ processFlow:
                             If IsDBNull(oRow("nAmountReceived")) Then
                                 ' No deposit has been paid yet - let's set the deposit value, if it has been specified
                                 If mcDepositAmount <> "" Then
-                                    If Right(mcDepositAmount, 1) = "%" Then
+                                    If mcDepositAmount = 0 Then
+                                        'we defer to calculating the deposit by line about
+                                        nPayable = nPayableAmount
+
+                                    ElseIf Right(mcDepositAmount, 1) = "%" Then
                                         If IsNumeric(Left(mcDepositAmount, Len(mcDepositAmount) - 1)) Then
                                             nPayable = (nTotalAmount) * CDbl(Left(mcDepositAmount, Len(mcDepositAmount) - 1)) / 100
                                         End If
-
                                     Else
                                         If IsNumeric(mcDepositAmount) Then nPayable = CDbl(mcDepositAmount)
                                     End If
+
                                     If nPayable > nTotalAmount Then nPayable = nTotalAmount
 
                                     ' Set the Payable Amount
@@ -2939,7 +2996,6 @@ processFlow:
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                     End If
                                     oCartElmt.SetAttribute("paymentMade", FormatNumber(CDbl(oRow("nLastPaymentMade")), 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
-
                                 End If
                             End If
 
@@ -6182,7 +6238,7 @@ processFlow:
 
         End Sub
 
-        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "") As Boolean
+        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional despositOnly As Boolean = False) As Boolean
             PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
@@ -6475,6 +6531,7 @@ processFlow:
             Dim oDs As DataSet
             Dim oRow As DataRow
             Dim qtyAdded As Integer = 0
+            Dim bDepositOnly As Boolean
 
             Try
 
@@ -6496,47 +6553,52 @@ processFlow:
                         oOptions = Nothing
                         cReplacementName = ""
 
-
-
                         'begin
                         If InStr(oItem1, "qty_") = 1 Then 'check for getting productID and quantity (since there will only be one of these per item submitted)
-                            nProductKey = CLng(Replace(oItem1, "qty_", "")) 'Product key
-                            cProcessInfo = oItem1.ToString & " = " & myWeb.moRequest.Form.Get(oItem1)
-
-                            If IsNumeric(myWeb.moRequest.Form.Get(oItem1)) Then
-                                nQuantity = myWeb.moRequest.Form.Get(oItem1)
+                            If InStr(oItem1, "qty_deposit_") = 1 Then
+                                nProductKey = CLng(Replace(oItem1, "qty_deposit_", "")) 'Product key
+                                bDepositOnly = True
+                            Else
+                                nProductKey = CLng(Replace(oItem1, "qty_", "")) 'Product key
                             End If
 
-                            'replacementName
-                            If nQuantity > 0 Then
-                                qtyAdded = qtyAdded + nQuantity
-                                If Not InStr(strAddedProducts, "'" & nProductKey & "'") > 0 Then ' double check we havent added this product (dont really need but good just in case)
-                                    For Each oItem2 In myWeb.moRequest.Form 'loop through again checking for options
-                                        If oItem2 = "replacementName_" & nProductKey Then cReplacementName = myWeb.moRequest.Form.Get(oItem2)
-                                        If InStr(oItem2, "_") > 0 Then
-                                            If Split(oItem2, "_")(0) & "_" & Split(oItem2, "_")(1) = "opt_" & nProductKey Then 'check it is an option
-                                                oCurOpt = Split(myWeb.moRequest.Form.Get(oItem2), ",") 'get array of option in "1_2" format
-                                                For nI = 0 To UBound(oCurOpt) 'loop through current options to split into another array
-                                                    ReDim Preserve oOptions(nCurOptNo + 1) 'redim the array to new length while preserving the current data
-                                                    oOptions(nCurOptNo) = Split(oCurOpt(nI), "_") 'split out the arrays of options
-                                                    nCurOptNo += 1 'update number of options
-                                                Next
-                                            End If 'end option check
-                                        End If
-                                    Next 'end option loop
+
+                            cProcessInfo = oItem1.ToString & " = " & myWeb.moRequest.Form.Get(oItem1)
+
+                                If IsNumeric(myWeb.moRequest.Form.Get(oItem1)) Then
+                                    nQuantity = myWeb.moRequest.Form.Get(oItem1)
+                                End If
+
+                                'replacementName
+                                If nQuantity > 0 Then
+                                    qtyAdded = qtyAdded + nQuantity
+                                    If Not InStr(strAddedProducts, "'" & nProductKey & "'") > 0 Then ' double check we havent added this product (dont really need but good just in case)
+                                        For Each oItem2 In myWeb.moRequest.Form 'loop through again checking for options
+                                            If oItem2 = "replacementName_" & nProductKey Then cReplacementName = myWeb.moRequest.Form.Get(oItem2)
+                                            If InStr(oItem2, "_") > 0 Then
+                                                If Split(oItem2, "_")(0) & "_" & Split(oItem2, "_")(1) = "opt_" & nProductKey Then 'check it is an option
+                                                    oCurOpt = Split(myWeb.moRequest.Form.Get(oItem2), ",") 'get array of option in "1_2" format
+                                                    For nI = 0 To UBound(oCurOpt) 'loop through current options to split into another array
+                                                        ReDim Preserve oOptions(nCurOptNo + 1) 'redim the array to new length while preserving the current data
+                                                        oOptions(nCurOptNo) = Split(oCurOpt(nI), "_") 'split out the arrays of options
+                                                        nCurOptNo += 1 'update number of options
+                                                    Next
+                                                End If 'end option check
+                                            End If
+                                        Next 'end option loop
                                     'Add Item
                                     If myWeb.moRequest.Form.Get("donationAmount") <> "" Then
                                         If IsNumeric(myWeb.moRequest.Form.Get("donationAmount")) Then
                                             AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
                                         End If
                                     Else
-                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName)
+                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName, bDepositOnly)
                                     End If
-                                    'Add Item to "Done" List
-                                    strAddedProducts &= "'" & nProductKey & "',"
-                                End If
-                            End If 'end check for previously added
-                        End If 'end check for item/quant
+                                        'Add Item to "Done" List
+                                        strAddedProducts &= "'" & nProductKey & "',"
+                                    End If
+                                End If 'end check for previously added
+                            End If 'end check for item/quant
                     Next 'End Loop for getting products/quants
                     If qtyAdded > 0 Then
                         AddItems = True

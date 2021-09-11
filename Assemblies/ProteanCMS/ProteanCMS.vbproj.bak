@@ -889,7 +889,7 @@
       <Name>Protean.Tools.Csharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\Protean.Tools\Protean.Tools.vbproj">
-      <Project>{76E7C871-9CEC-4795-B6F2-66439DCD9367}</Project>
+      <Project>{C4C3491A-50B4-0864-34AA-AC3DFF5AA7C7}</Project>
       <Name>Protean.Tools</Name>
       <Private>False</Private>
     </ProjectReference>

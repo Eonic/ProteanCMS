@@ -2562,6 +2562,17 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="term3051a">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Deposit Paid</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Deposit Paid</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template name="term3052">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">

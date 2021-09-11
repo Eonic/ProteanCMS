@@ -2172,7 +2172,7 @@
           <xsl:call-template name="term3024" />
           <xsl:text>:&#160;</xsl:text>
           <xsl:value-of select="$currency"/>
-          <xsl:value-of select="format-number(@paymentMade,'0.00')" />
+          <xsl:value-of select="format-number(@payableAmount,'0.00')" />
         </p>
         <p>
           <!--Final Payment Reference-->
@@ -2402,23 +2402,25 @@
             </div>
           </xsl:if>
           <xsl:if test="@payableAmount &gt; 0">
-            <div class="cart-row">
-              <div class="total">
+            <div class="totals-row">
+            <div class="total payable-amount">
+              <span>
                 <xsl:choose>
                   <xsl:when test="@payableType='deposit' and not(@transStatus)">
                     <!--Deposit Payable-->
-                    <xsl:call-template name="term3051" />
+                    <xsl:call-template name="term3051" />:
                   </xsl:when>
                   <xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">
                     <!--Amount Outstanding-->
                     <xsl:call-template name="term3052" />
                   </xsl:when>
                 </xsl:choose>
-              </div>
-              <div class="total amount">
+              </span>
+              <span class="total amount">
                 <xsl:value-of select="$currency"/>
                 <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
-              </div>
+              </span>
+            </div>
             </div>
           </xsl:if>
         </div>
