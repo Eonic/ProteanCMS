@@ -7260,9 +7260,17 @@
             <dd>
               <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
             </dd>
-            <dt>Final Payment Reference</dt>
+            <dt>Final Payment Reference/Link</dt>
             <dd>
-              <xsl:value-of select="@settlementID" />
+              <xsl:variable name="secureURL">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:variable>
+              <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
+                <xsl:value-of select="@settlementID" />
+              </a>
             </dd>
           </xsl:if>
           <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">

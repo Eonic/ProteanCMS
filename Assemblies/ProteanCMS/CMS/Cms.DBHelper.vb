@@ -10631,7 +10631,7 @@ ReturnMe:
             End Try
         End Function
 
-        Public Function savePayment(ByVal CartId As Integer, ByVal nUserId As Long, ByVal cProviderName As String, ByVal cProviderRef As String, ByVal cMethodName As String, ByVal oDetailXML As XmlElement, ByVal dExpire As Date, ByVal bUserSaved As Boolean, ByVal nAmountPaid As Double) As Integer
+        Public Function savePayment(ByVal CartId As Integer, ByVal nUserId As Long, ByVal cProviderName As String, ByVal cProviderRef As String, ByVal cMethodName As String, ByVal oDetailXML As XmlElement, ByVal dExpire As Date, ByVal bUserSaved As Boolean, ByVal nAmountPaid As Double, Optional paymentType As String = "full") As Integer
             Dim cSQL As String = ""
             Dim cRes As String = ""
 
@@ -10712,7 +10712,12 @@ ReturnMe:
                     oElmt = oXml.CreateElement("tblCartPayment")
                     addNewTextNode("nCartOrderId", oElmt, CartId)
                     addNewTextNode("nCartPaymentMethodId", oElmt, nPaymentId)
-                    addNewTextNode("bFull", oElmt, "true")
+                    If paymentType = "full" Then
+                        addNewTextNode("bFull", oElmt, "true")
+                    End If
+                    If paymentType = "deposit" Then
+                        addNewTextNode("bPart", oElmt, "true")
+                    End If
                     addNewTextNode("nPaymentAmount", oElmt, nAmountPaid.ToString())
                     addNewTextNode("dInsertDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
                     addNewTextNode("dUpdateDate", oElmt, Protean.Tools.Xml.XmlDate(Now))

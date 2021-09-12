@@ -2178,8 +2178,9 @@
           <!--Final Payment Reference-->
           <xsl:call-template name="term3025" />
           <xsl:text>:&#160;</xsl:text>
-          <strong>
+          <strong><a href="{$secureURL}?cartCmd=Settlement&amp;settlementRef={@settlementID}">
             <xsl:value-of select="@settlementID" />
+            </a>
           </strong>
         </p>
 
