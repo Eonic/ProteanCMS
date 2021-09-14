@@ -10650,13 +10650,12 @@ ReturnMe:
                 End If
 
                 'check if we allready have a payment method for this order if so we overwrite
-
-                cSQL = "Select nPayMthdId from tblCartOrder WHERE nCartOrderKey = " & CartId
-                cRes = ExeProcessSqlScalar(cSQL)
-
-                If IsNumeric(cRes) Then
-                    nPaymentMethodKey = CLng(cRes)
-                End If
+                'TS Disabled Sept 21 as we might have multiple payment methods per order with new deposit functionality.
+                'cSQL = "Select nPayMthdId from tblCartOrder WHERE nCartOrderKey = " & CartId
+                'cRes = ExeProcessSqlScalar(cSQL)
+                'If IsNumeric(cRes) Then
+                ' nPaymentMethodKey = CLng(cRes)
+                ' End If
 
                 'mask the credit card number
                 Dim oCcNum As XmlElement = oDetailXML.SelectSingleNode("number")
@@ -10718,11 +10717,15 @@ ReturnMe:
                     If paymentType = "deposit" Then
                         addNewTextNode("bPart", oElmt, "true")
                     End If
+                    If paymentType = "settlement" Then
+                        addNewTextNode("bSettlement", oElmt, "true")
+                    End If
                     addNewTextNode("nPaymentAmount", oElmt, nAmountPaid.ToString())
-                    addNewTextNode("dInsertDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
-                    addNewTextNode("dUpdateDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
-                    addNewTextNode("nInsertDirId", oElmt, myWeb.mnUserId) '
+                    ' addNewTextNode("dInsertDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
+                    ' addNewTextNode("dUpdateDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
+                    ' addNewTextNode("nInsertDirId", oElmt, myWeb.mnUserId) '
                     addNewTextNode("nStatus", oElmt, 1)
+                    addNewTextNode("nAuditId", oElmt, getAuditId())
                     oInstance.AppendChild(oElmt)
                     setObjectInstance(dbHelper.objectTypes.CartPayment, oInstance)
                 End If

@@ -40,6 +40,6 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyKeyFile("../../../eonic.snk")>
 <Assembly: AssemblyKeyName("")>
 
-<Assembly: AssemblyFileVersion("6.0.49.247")>
+<Assembly: AssemblyFileVersion("6.0.49.248")>
 <Assembly: NeutralResourcesLanguageAttribute("en")>
 

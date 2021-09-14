@@ -3008,19 +3008,20 @@ processFlow:
                             End If
 
                             ' Set the payableType 
-                            ' If IsDBNull(oRow("nAmountReceived")) Or nStatusId = 10 Then
-                            '   oCartElmt.SetAttribute("payableType", "deposit")
-                            ' Else
-                            '  oCartElmt.SetAttribute("payableType", "settlement")
-                            ' End If
+                            If IsDBNull(oRow("nAmountReceived")) Or nStatusId = 10 Then
+                                oCartElmt.SetAttribute("payableType", "deposit")
+                            Else
+                                oCartElmt.SetAttribute("payableType", "settlement")
+                            End If
+
 
                             If nPayable = 0 Then
-                                oCartElmt.SetAttribute("ReadOnly", "On")
+                                    oCartElmt.SetAttribute("ReadOnly", "On")
+                                End If
                             End If
-                        End If
 
-                        'Add Any Client Notes
-                        If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
+                            'Add Any Client Notes
+                            If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
                             oElmt = moPageXml.CreateElement("Notes")
                             oElmt.InnerXml = oRow("cClientNotes")
                             If oElmt.FirstChild.Name = "Notes" Then
@@ -7819,6 +7820,20 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                             oElmt.SetAttribute("deliveryDate", xmlDate(oRow2("dExpectedDeliveryDate")))
                                             oElmt.SetAttribute("collectionDate", xmlDate(oRow2("dCollectionDate")))
                                             oContent.AppendChild(oElmt)
+                                        Next
+                                    End If
+                                    'Add Payment History
+                                    If oDR("nCartStatus") > 5 And moDBHelper.doesTableExist("tblCartPayment") Then
+                                        Dim sSql As String = "Select p.*, pm.*, a.dInsertDate from tblCartPayment p inner join tblCartPaymentMethod pm on p.nCartPaymentMethodId = pm.nPayMthdKey inner join tblAudit a on a.nAuditKey = p.nAuditId where nCartOrderId=" & oDR("nCartOrderKey")
+                                        Dim oDs3 = moDBHelper.GetDataSet(sSql, "Payment", "Details")
+                                        oDs3.Tables("Payment").Columns("cPayMthdDetailXml").ColumnMapping = MappingType.Element
+                                        Dim oXML2 As New XmlDocument
+                                        oXML2.InnerXml = Replace(Replace(oDs3.GetXml, "&gt;", ">"), "&lt;", "<")
+                                        Dim oPaymentNode As XmlElement = oContent.OwnerDocument.CreateElement("Payments")
+                                        oPaymentNode.InnerXml = oXML2.InnerXml
+                                        Dim oElmt As XmlElement
+                                        For Each oElmt In oPaymentNode.FirstChild.SelectNodes("*")
+                                            oContent.FirstChild.AppendChild(oPaymentNode.FirstChild.FirstChild)
                                         Next
                                     End If
 
