@@ -5130,11 +5130,20 @@
                             <a class="btn btn-xs btn-primary" href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
                               <i class="fa fa-arrows fa-white">
                                 <xsl:text> </xsl:text>
-                              </i></a>
+                              </i>
+                              <span class="sr-only"> Move</span>
+                            </a>
+                            <a href="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="btn btn-xs btn-warning" download="{@name}">
+                              <i class="fa fa-download fa-white">
+                                <xsl:text> </xsl:text>
+                              </i>
+                              <span class="sr-only"> Download</span>
+                            </a>
                             <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
                               <i class="fa fa-trash-o fa-white">
                                 <xsl:text> </xsl:text>
-                              </i> Delete
+                              </i>
+                              <span class="sr-only">Delete</span>
                             </a>
                           </xsl:if>
                         </xsl:otherwise>
