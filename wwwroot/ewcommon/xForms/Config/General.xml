@@ -82,6 +82,12 @@
         <add key="EnableWebP" value="off" />
         <add key="EnableRetina" value="off" />
         <add key="EmailOverride" value="" />
+        <add key="OverrideFromEmail" value="" />
+        <add key="ServerSenderEmail" value="" />
+        <add key="ServerSenderEmailName" value="" />
+        <add key="DisableServerSenderEmail" value="" />
+        
+        
       </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -159,6 +165,11 @@
     <bind id="ewEnableWebP" nodeset="web/add[@key='EnableWebP']/@value" required="false()" type="string" />
     <bind id="ewEnableRetina" nodeset="web/add[@key='EnableRetina']/@value" required="false()" type="string" />
     <bind id="EmailOverride" nodeset="web/add[@key='EmailOverride']/@value" required="false()" type="email" />
+
+    <bind id="OverrideFromEmail" nodeset="web/add[@key='OverrideFromEmail']/@value" required="false()" type="email" />
+    <bind id="ServerSenderEmail" nodeset="web/add[@key='ServerSenderEmail']/@value" required="false()" type="email" />
+    <bind id="ServerSenderEmailName" nodeset="web/add[@key='ServerSenderEmailName']/@value" required="false()" type="email" />
+    <bind id="DisableServerSenderEmail" nodeset="web/add[@key='DisableServerSenderEmail']/@value" required="false()" type="string" />
   </model>
   <group ref="WebSettings">
     <label>Web Settings</label>
@@ -374,6 +385,26 @@
         <label>Email Override</label>
         <value></value>
         <hint>Will override destination of all email forms for site</hint>
+      </input>
+      <input bind="OverrideFromEmail">
+        <label>Override From Email</label>
+        <value></value>
+        <hint>Will override sender email of all email forms for site</hint>
+      </input>
+      <input bind="ServerSenderEmail">
+        <label>Server Sender Email</label>
+        <value></value>
+        <hint>Will override sender email of all email forms for site</hint>
+      </input>
+      <input bind="ServerSenderEmailName">
+        <label>Email Override</label>
+        <value></value>
+        <hint>Will override sender name of all email forms for site</hint>
+      </input>
+      <input bind="DisableServerSenderEmail">
+        <label>Disable Server Sender Email</label>
+        <value></value>
+        <hint>Will remove the server sender email address of all email forms for site</hint>
       </input>
       <select1 bind="ewCompiledTransform" appearance="full">
         <label>Compiled Transform</label>
