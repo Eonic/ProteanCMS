@@ -23,8 +23,6 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
-Imports Protean.Providers.Payment.JudoPayProvider
-
 
 Partial Public Class Cms
     Public Class Admin
@@ -1199,7 +1197,11 @@ ProcessFlow:
                             If (status <> 1) Then  'check status here
                                 oPageDetail.AppendChild(moAdXfm.xFrmDeleteBulkContent(bulkIds))
                             End If
+                        Else
+                            moAdXfm.addNote("DeleteContent", xForm.noteTypes.Alert, "Invalid product selection", , "alert-danger")
                         End If
+
+
 
                         If moAdXfm.valid Then
                             bAdminMode = False
@@ -3280,10 +3282,6 @@ AfterProcessFlow:
                     End If
                 End If
 
-
-
-
-
                 Dim sFile As String = myWeb.moRequest("file")
 
                 Select Case myWeb.moRequest("ewCmd2")
@@ -3926,9 +3924,12 @@ listItems:
                                 lookupId = Nothing
                                 GoTo listItems
                             End If
-
+                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                                oPageDetail.InnerXml = ""
+                                lookupId = Nothing
+                                GoTo listItems
+                            End If
                         End If
-
 
                 End Select
 

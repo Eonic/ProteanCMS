@@ -80,7 +80,7 @@
 		<group>
       <group>
         <label>Enter Plain text</label>
-			  <textarea bind="cContentBody" rows="10" cols="100" class="col-md-12">
+			  <textarea bind="cContentBody" rows="10" cols="100">
 			  </textarea>
       </group>
    </group>

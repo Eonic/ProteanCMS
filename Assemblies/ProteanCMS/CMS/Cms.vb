@@ -3200,30 +3200,21 @@ Public Class Cms
                                     calledType = assemblyInstance.GetType(classPath, True)
                                 End If
                             Else
-                                'Select Case moPrvConfig.Providers(providerName).Parameters("path")
-                                '    Case ""
-                                '        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
-                                '        calledType = assemblyInstance.GetType(classPath, True)
-                                '    Case "builtin"
-                                '        Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
-                                '        'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
-                                '        prepProviderName = moPrvConfig.Providers(providerName).Type
-                                '        calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
-                                '    Case Else
-                                '        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
-                                '        classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
-                                '        calledType = assemblyInstance.GetType(classPath, True)
-                                'End Select
-
-                                'If moPrvConfig.Providers(providerName).Parameters("path") <> "" Then
-                                '    assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
-                                'Else
-                                '    assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
-                                'End If
+                                Select Case moPrvConfig.Providers(providerName).Parameters("path")
+                                    Case ""
+                                        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
+                                        calledType = assemblyInstance.GetType(classPath, True)
+                                    Case "builtin"
+                                        Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
+                                        'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
+                                        prepProviderName = moPrvConfig.Providers(providerName).Type
+                                        calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
+                                    Case Else
+                                        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
+                                        classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
+                                        calledType = assemblyInstance.GetType(classPath, True)
+                                End Select
                             End If
-
-                            '  calledType = assemblyInstance.GetType(classPath, True)
-
                         ElseIf assemblyType <> "" Then
                             'case for external DLL's
                             Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)
@@ -5362,6 +5353,13 @@ Public Class Cms
                             newVerNode.SetAttribute("status", oMenuItem.GetAttribute("status"))
                             newVerNode.SetAttribute("access", oMenuItem.GetAttribute("access"))
                             newVerNode.SetAttribute("layout", oMenuItem.GetAttribute("layout"))
+                            Dim sInnerXml As String
+                            Dim infoElmt As XmlElement
+                            For Each infoElmt In oMenuItem.SelectNodes("*[name()!='PageVersion' and name()!='MenuItem']")
+                                sInnerXml = sInnerXml & infoElmt.OuterXml
+                            Next
+                            newVerNode.InnerXml = sInnerXml
+                            sInnerXml = ""
                             If Not goLangConfig Is Nothing Then
                                 newVerNode.SetAttribute("lang", goLangConfig.GetAttribute("code"))
                             End If
@@ -5440,8 +5438,12 @@ Public Class Cms
                     End If
                 End If
 
-                If verNode Is Nothing And Not goLangConfig Is Nothing Then
-                    urlPrefix = mcPageLanguageUrlPrefix '& cFilePathModifier
+                If Not goLangConfig Is Nothing Then
+
+                    If verNode Is Nothing And goLangConfig.GetAttribute("localDefaults") <> "off" Then
+                        urlPrefix = mcPageLanguageUrlPrefix '& cFilePathModifier
+                    End If
+
                 End If
 
 
@@ -6853,220 +6855,220 @@ Public Class Cms
 
                     'check if new function exists in DB, this logic can be later deprecated when all db are inline.
                     Dim bContLoc As Boolean = moDbHelper.checkDBObjectExists("fxn_getContentLocations", Tools.Database.objectTypes.UserFunction)
-                    If bContLoc Then
-                        sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, dbo.fxn_getContentLocations(c.nContentKey) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
-                    Else
-                        sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
-                    End If
-                    sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
-                    'sSql &= "inner join tblContentLocation CL on c.nContentKey = CL.nContentId "
-
-                    If (bIgnoreContentStatus) Then
-                        sSql &= "where c.nContentKey = " & mnArtId
-                    Else
-                        sSql &= "where c.nContentKey = " & mnArtId & sFilterSql & " "
-                    End If
-
-                    'sSql &= "and CL.nStructId = " & mnPageId
-
-                    If nVersionId > 0 Then
-                        sSql = "select c.nContentPrimaryId as id, nContentVersionKey as verid, nVersion as verno, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
+                        If bContLoc Then
+                            sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, dbo.fxn_getContentLocations(c.nContentKey) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
+                        Else
+                            sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
+                        End If
                         sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
-                        sSql &= "where c.nContentPrimaryId = " & mnArtId & " and nContentVersionKey=" & nVersionId & " "
-                    End If
+                        'sSql &= "inner join tblContentLocation CL on c.nContentKey = CL.nContentId "
 
-                    oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail")
+                        If (bIgnoreContentStatus) Then
+                            sSql &= "where c.nContentKey = " & mnArtId
+                        Else
+                            sSql &= "where c.nContentKey = " & mnArtId & sFilterSql & " "
+                        End If
 
-                    oDs.Tables(0).Columns("id").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("ref").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("name").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("type").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("publish").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("expire").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("update").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
+                        'sSql &= "and CL.nStructId = " & mnPageId
 
-                    If nVersionId > 0 Then
-                        oDs.Tables(0).Columns("verid").ColumnMapping = Data.MappingType.Attribute
-                        oDs.Tables(0).Columns("verno").ColumnMapping = Data.MappingType.Attribute
-                    End If
-                    If bContLoc Then
-                        oDs.Tables(0).Columns("locations").ColumnMapping = Data.MappingType.Attribute
-                    End If
+                        If nVersionId > 0 Then
+                            sSql = "select c.nContentPrimaryId as id, nContentVersionKey as verid, nVersion as verno, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
+                            sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
+                            sSql &= "where c.nContentPrimaryId = " & mnArtId & " and nContentVersionKey=" & nVersionId & " "
+                        End If
 
-                    oDs.Tables(0).Columns("owner").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("status").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("content").ColumnMapping = Data.MappingType.SimpleContent
+                        oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail")
 
-                    'Need to check the content is found on the current page.
+                        oDs.Tables(0).Columns("id").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("ref").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("name").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("type").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("publish").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("expire").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("update").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
+
+                        If nVersionId > 0 Then
+                            oDs.Tables(0).Columns("verid").ColumnMapping = Data.MappingType.Attribute
+                            oDs.Tables(0).Columns("verno").ColumnMapping = Data.MappingType.Attribute
+                        End If
+                        If bContLoc Then
+                            oDs.Tables(0).Columns("locations").ColumnMapping = Data.MappingType.Attribute
+                        End If
+
+                        oDs.Tables(0).Columns("owner").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("status").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("content").ColumnMapping = Data.MappingType.SimpleContent
+
+                        'Need to check the content is found on the current page.
 
 
-                    If oDs.Tables(0).Rows.Count > 0 Then
+                        If oDs.Tables(0).Rows.Count > 0 Then
 
-                        oRoot.InnerXml = Replace(oDs.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
-                        For Each oNode In oRoot.SelectNodes("/ContentDetail/Content")
-                            oElmt = oNode
-                            sContent = oElmt.InnerText
+                            oRoot.InnerXml = Replace(oDs.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
+                            For Each oNode In oRoot.SelectNodes("/ContentDetail/Content")
+                                oElmt = oNode
+                                sContent = oElmt.InnerText
 
-                            If IsDate(oElmt.GetAttribute("update")) Then mdPageUpdateDate = CDate(oElmt.GetAttribute("update"))
+                                If IsDate(oElmt.GetAttribute("update")) Then mdPageUpdateDate = CDate(oElmt.GetAttribute("update"))
 
 
-                            '  Try to convert the InnerText to InnerXml
-                            '  Also if the innerxml has Content as a first node, then get the innerxml of the content node.
-                            Try
-                                oElmt.InnerXml = sContent
-                                bLoadAsXml = True
+                                '  Try to convert the InnerText to InnerXml
+                                '  Also if the innerxml has Content as a first node, then get the innerxml of the content node.
+                                Try
+                                    oElmt.InnerXml = sContent
+                                    bLoadAsXml = True
 
-                            Catch ex As Exception
-                                ' If the load failed, then flag it in the Content node and return the InnerText as a Comment
-                                oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText)
-                                oElmt.SetAttribute("xmlerror", "getContentBriefXml")
-                                oElmt.InnerXml = ""
-                                oElmt.AppendChild(oComment)
-                                oComment = Nothing
-                                bLoadAsXml = False
-                            End Try
+                                Catch ex As Exception
+                                    ' If the load failed, then flag it in the Content node and return the InnerText as a Comment
+                                    oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText)
+                                    oElmt.SetAttribute("xmlerror", "getContentBriefXml")
+                                    oElmt.InnerXml = ""
+                                    oElmt.AppendChild(oComment)
+                                    oComment = Nothing
+                                    bLoadAsXml = False
+                                End Try
 
-                            If bLoadAsXml Then
+                                If bLoadAsXml Then
 
-                                ' Successfully converted to XML.
-                                ' Now check if the node imported is a Content node - if so get rid of the Content node
-                                Dim oFirst As XmlElement = Tools.Xml.firstElement(oElmt)
-                                'NB 19-02-2010 Added to stop unsupported types falling over
-                                If Not oFirst Is Nothing Then
-                                    If oFirst.LocalName = "Content" Then
-                                        Dim oAttr As XmlAttribute
-                                        For Each oAttr In oElmt.SelectNodes("Content/@*")
-                                            If oElmt.GetAttribute(oAttr.Name) = "" Then
-                                                oElmt.SetAttribute(oAttr.Name, oAttr.InnerText)
-                                            End If
-                                        Next
+                                    ' Successfully converted to XML.
+                                    ' Now check if the node imported is a Content node - if so get rid of the Content node
+                                    Dim oFirst As XmlElement = Tools.Xml.firstElement(oElmt)
+                                    'NB 19-02-2010 Added to stop unsupported types falling over
+                                    If Not oFirst Is Nothing Then
+                                        If oFirst.LocalName = "Content" Then
+                                            Dim oAttr As XmlAttribute
+                                            For Each oAttr In oElmt.SelectNodes("Content/@*")
+                                                If oElmt.GetAttribute(oAttr.Name) = "" Then
+                                                    oElmt.SetAttribute(oAttr.Name, oAttr.InnerText)
+                                                End If
+                                            Next
 
-                                        oElmt.InnerXml = oFirst.InnerXml
+                                            oElmt.InnerXml = oFirst.InnerXml
+                                        End If
                                     End If
-                                End If
 
 
 
-                                moDbHelper.addRelatedContent(oNode, mnArtId, mbAdminMode)
-                                If moConfig("ShowOwnerOnDetail") <> "" Then
-                                    Dim cContentType As String = oElmt.GetAttribute("type")
-                                    If moConfig("ShowOwnerOnDetail").Contains(cContentType) Then
-                                        Dim nOwner As Long = CLng("0" & oElmt.GetAttribute("owner"))
-                                        If nOwner > 0 Then
-                                            oElmt.AppendChild(GetUserXML(nOwner))
+                                    moDbHelper.addRelatedContent(oNode, mnArtId, mbAdminMode)
+                                    If moConfig("ShowOwnerOnDetail") <> "" Then
+                                        Dim cContentType As String = oElmt.GetAttribute("type")
+                                        If moConfig("ShowOwnerOnDetail").Contains(cContentType) Then
+                                            Dim nOwner As Long = CLng("0" & oElmt.GetAttribute("owner"))
+                                            If nOwner > 0 Then
+                                                oElmt.AppendChild(GetUserXML(nOwner))
+                                            End If
                                         End If
                                     End If
                                 End If
+
+                            Next
+
+                            'If gbCart Or gbQuote Then
+                            '    moDiscount.getAvailableDiscounts(oRoot)
+                            'End If
+
+                            Dim contentElmt As XmlElement = oRoot.SelectSingleNode("/ContentDetail/Content")
+
+                            If nVersionId > 0 Then
+                                contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId, moConfig("SharedKey")))
                             End If
 
-                        Next
 
-                        'If gbCart Or gbQuote Then
-                        '    moDiscount.getAvailableDiscounts(oRoot)
-                        'End If
+                            AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
 
-                        Dim contentElmt As XmlElement = oRoot.SelectSingleNode("/ContentDetail/Content")
-
-                        If nVersionId > 0 Then
-                            contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId, moConfig("SharedKey")))
-                        End If
-
-
-                        AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
-
-                        If Not oPageElmt Is Nothing Then
-                            Dim oContentDetail As XmlElement = contentElmt
-                            If Not (oContentDetail Is Nothing) _
+                            If Not oPageElmt Is Nothing Then
+                                Dim oContentDetail As XmlElement = contentElmt
+                                If Not (oContentDetail Is Nothing) _
                             AndAlso oContentDetail.InnerXml.Trim() <> "" Then
-                                ' If we can find a content detail Content node, 
-                                ' AND it contains some InnerXml, then YAY.
-                                oPageElmt.AppendChild(oRoot.FirstChild)
-                            Else
+                                    ' If we can find a content detail Content node, 
+                                    ' AND it contains some InnerXml, then YAY.
+                                    oPageElmt.AppendChild(oRoot.FirstChild)
+                                Else
 
-                                'OTHERWISE if there is nothing in the detail we get the brief instead.
-                                GetContentBriefXml(oPageElmt, nArtId)
+                                    'OTHERWISE if there is nothing in the detail we get the brief instead.
+                                    GetContentBriefXml(oPageElmt, nArtId)
+                                End If
                             End If
-                        End If
-                        retElmt = oRoot.FirstChild
+                            retElmt = oRoot.FirstChild
 
-                        If mbAdminMode = False And LCase(moConfig("RedirectToDescriptiveContentURLs")) = "true" Then
+                            If mbAdminMode = False And LCase(moConfig("RedirectToDescriptiveContentURLs")) = "true" Then
 
-                            Dim SafeURLName As String = Protean.Tools.Text.CleanName(contentElmt.GetAttribute("name"), False, True)
-                            Dim myOrigURL As String
-                            Dim myQueryString As String = ""
+                                Dim SafeURLName As String = Protean.Tools.Text.CleanName(contentElmt.GetAttribute("name"), False, True)
+                                Dim myOrigURL As String
+                                Dim myQueryString As String = ""
 
-                            If mcOriginalURL.Contains("?") Then
-                                myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"))
-                                myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"))
-                            Else
-                                myOrigURL = mcOriginalURL
-                            End If
-
-                            If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & SafeURLName Then
-                                'we redirect perminently
-                                mbRedirectPerm = True
-                                msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & SafeURLName & myQueryString
-                            End If
-
-                        End If
-                        moContentDetail = oRoot.FirstChild
-
-                        'Add single item shipping costs for JSON-LD
-                        Dim ProductTypes As String = moConfig("ProductTypes")
-                        If ProductTypes = "" Then ProductTypes = "Product,SKU"
-                        If ProductTypes.Contains(contentElmt.GetAttribute("type")) And Not moCart Is Nothing Then
-                            Try
-                                Dim oShippingElmt As XmlElement = moPageXml.CreateElement("ShippingCosts")
-
-                                Dim cDestinationCountry As String = moCart.moCartConfig("DefaultDeliveryCountry")
-                                Dim nPrice As Double = 0
-                                If Not contentElmt.SelectSingleNode("Prices/Price[@type='sale']") Is Nothing Then
-                                    nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
+                                If mcOriginalURL.Contains("?") Then
+                                    myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"))
+                                    myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"))
+                                Else
+                                    myOrigURL = mcOriginalURL
                                 End If
 
-                                If nPrice = 0 Then
-                                    If Not contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") Is Nothing Then
-                                        nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & SafeURLName Then
+                                    'we redirect perminently
+                                    mbRedirectPerm = True
+                                    msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & SafeURLName & myQueryString
+                                End If
+
+                            End If
+                            moContentDetail = oRoot.FirstChild
+
+                            'Add single item shipping costs for JSON-LD
+                            Dim ProductTypes As String = moConfig("ProductTypes")
+                            If ProductTypes = "" Then ProductTypes = "Product,SKU"
+                            If ProductTypes.Contains(contentElmt.GetAttribute("type")) And Not moCart Is Nothing Then
+                                Try
+                                    Dim oShippingElmt As XmlElement = moPageXml.CreateElement("ShippingCosts")
+
+                                    Dim cDestinationCountry As String = moCart.moCartConfig("DefaultDeliveryCountry")
+                                    Dim nPrice As Double = 0
+                                    If Not contentElmt.SelectSingleNode("Prices/Price[@type='sale']") Is Nothing Then
+                                        nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
                                     End If
-                                End If
-                                Dim nWeight As Double = 0
-                                If (contentElmt.SelectSingleNode("ShippingWeight") IsNot Nothing) Then
-                                    nWeight = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
-                                End If
-                                ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
-                                Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight)
 
-                                oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
-                                contentElmt.AppendChild(oShippingElmt)
-                            Catch ex As Exception
+                                    If nPrice = 0 Then
+                                        If Not contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") Is Nothing Then
+                                            nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                        End If
+                                    End If
+                                    Dim nWeight As Double = 0
+                                    If (contentElmt.SelectSingleNode("ShippingWeight") IsNot Nothing) Then
+                                        nWeight = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
+                                    End If
+                                    ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
+                                    Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight)
 
-                            End Try
-                        End If
+                                    oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
+                                    contentElmt.AppendChild(oShippingElmt)
+                                Catch ex As Exception
 
-                        Return moContentDetail
-
-                    Else
-                        sProcessInfo = "no content to add - we redirect"
-                        'this content is not found either page not found or re-direct home.
-                        If Not disableRedirect Then
-                            'put this in to prevent a redirect if we are calling this from somewhere strange.
-                            If gnPageNotFoundId > 1 Then
-                                ' msRedirectOnEnd = "/System+Pages/Page+Not+Found"
-                                mnPageId = gnPageNotFoundId
-                                moPageXml = New XmlDocument()
-                                BuildPageXML()
-                                moResponse.StatusCode = 404
-                            Else
-                                msRedirectOnEnd = moConfig("BaseUrl")
-                                moResponse.StatusCode = 404
+                                End Try
                             End If
+
+                            Return moContentDetail
+
+                        Else
+                            sProcessInfo = "no content to add - we redirect"
+                            'this content is not found either page not found or re-direct home.
+                            If Not disableRedirect Then
+                                'put this in to prevent a redirect if we are calling this from somewhere strange.
+                                If gnPageNotFoundId > 1 Then
+                                    ' msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                    mnPageId = gnPageNotFoundId
+                                    moPageXml = New XmlDocument()
+                                    BuildPageXML()
+                                    moResponse.StatusCode = 404
+                                Else
+                                    msRedirectOnEnd = moConfig("BaseUrl")
+                                    moResponse.StatusCode = 404
+                                End If
+                            End If
+                            Return Nothing
                         End If
+                    Else
+                        'Just a page no detail requested
                         Return Nothing
-                    End If
-                Else
-                    'Just a page no detail requested
-                    Return Nothing
                 End If
 
             Else
