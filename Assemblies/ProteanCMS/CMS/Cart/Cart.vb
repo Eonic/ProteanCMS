@@ -607,8 +607,8 @@ Partial Public Class Cms
                     Else
                         mcSessionId = myWeb.moSession.SessionID
                     End If
-
-
+                    'session id is assigned
+                    'add logic if same seession id is present or not in db if we have then generate diff session id
 
                     If IsNumeric(myWeb.moRequest.QueryString("cartErr")) Then mnProcessError = CInt(myWeb.moRequest.QueryString("cartErr"))
 
@@ -723,11 +723,17 @@ Partial Public Class Cms
                                     mcSessionId = cSessionFromSessionCookie
                                     cSessionFromSessionCookie = ""
                                 End If
+                                If mnCartId > 0 Then
+                                    ' sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
+                                    sSql = "select Top 1* from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "' and o.nCartOrderKey='" & Convert.ToString(mnCartId) & "' order by o.nCartOrderKey desc "
+                                Else
+                                    sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
+                                    'logic needs here to check cart id if we have car id then pull wiith session id
+                                End If
 
-                                sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
                             End If
 
-                            PerfMon.Log("Cart", "InitializeVariables - check for cart start")
+                                PerfMon.Log("Cart", "InitializeVariables - check for cart start")
                             oDr = moDBHelper.getDataReader(sSql)
                             PerfMon.Log("Cart", "InitializeVariables - check for cart end")
 
@@ -745,6 +751,7 @@ Partial Public Class Cms
                                         ' If a cart has been found, we need to update the session ID in it.
                                         If oDr("cCartSessionId") <> mcSessionId Then
                                             moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
+                                            ' if mnCartId is not null then pull both otherwise pull session id
                                         End If
 
                                         ' Reactivate the order in the database
