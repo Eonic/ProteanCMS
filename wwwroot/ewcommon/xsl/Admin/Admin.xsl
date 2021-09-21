@@ -7260,9 +7260,17 @@
             <dd>
               <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
             </dd>
-            <dt>Final Payment Reference</dt>
+            <dt>Final Payment Reference/Link</dt>
             <dd>
-              <xsl:value-of select="@settlementID" />
+              <xsl:variable name="secureURL">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:variable>
+              <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
+                <xsl:value-of select="@settlementID" />
+              </a>
             </dd>
           </xsl:if>
           <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
@@ -7277,6 +7285,7 @@
             </dd>
           </xsl:if>
           </dl>
+          <xsl:if test="not(Payment)">
           <h4>Payment Details</h4>
           <dl class="dl-horizontal">
             <dt>Payment Method</dt>
@@ -7300,6 +7309,12 @@
               </dd>
             </xsl:for-each>
           </dl>
+         </xsl:if>
+          <xsl:if test="Payment">
+            <a class="btn btn-primary" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
+              Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
+            </a>
+          </xsl:if>
       </div>
       <xsl:if test="Contact[@type='Billing Address']">
         <div id="billingAddress" class="cartAddress col-md-3">
@@ -7374,7 +7389,46 @@
           </xsl:for-each>
         </dl>
       </div>
-          </xsl:if>        
+          </xsl:if>
+        <xsl:if test="Payment">
+          <div class="col-md-12">
+
+          <table class="table collapse" id="paymentTable">
+            <thead>
+            <tr>
+              <th scope="col">Provider</th>
+              <th scope="col">Date</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Other Info</th>
+            </tr>
+              </thead>
+            <tbody>
+            <xsl:for-each select="Payment">
+              <tr>
+                <th scope="row">
+                  <xsl:call-template name="DD_Mon_YYYY">
+                    <xsl:with-param name="date">
+                      <xsl:value-of select="dInsertDate"/>
+                    </xsl:with-param>
+                    <xsl:with-param name="showTime">true</xsl:with-param>
+                  </xsl:call-template>
+                </th>
+                <th scope="row">
+                  <xsl:value-of select="nPaymentAmount"/>
+                </th>
+                <td>
+                  <xsl:value-of select="cPayMthdProviderName"/>
+                </td>
+                <td>
+                  AuthCode:
+                  <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+                </td>
+                </tr>
+            </xsl:for-each>
+              </tbody>
+          </table>
+            </div>
+        </xsl:if>   
         <xsl:if test="Notes/Notes"><div class="col-md-12">
           <div class="notes alert alert-danger">
               <i class="fas fa-lg fa-exclamation-triangle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;

@@ -436,7 +436,7 @@ Public Class Messaging
 
 
             ' Implement the site sender
-            If goConfig("DisableServerSenderEmail") <> "true" Then
+            If goConfig("DisableServerSenderEmail") <> "true" And goConfig("DisableServerSenderEmail") <> "on" Then
                 Dim serverSenderEmail As String = goConfig("ServerSenderEmail") & ""
                 Dim serverSenderEmailName As String = goConfig("ServerSenderEmailName") & ""
                 If Not (Tools.Text.IsEmail(serverSenderEmail)) Then
