@@ -4951,7 +4951,10 @@
 			<xsl:apply-templates select="." mode="fileTypeScript"/>
 			<xsl:text>
         done: function (e, data) {
+
+console.log(JSON.stringify(data));
         $.each(data.files, function (index, file) {
+
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
 			var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
 			<xsl:apply-templates select="." mode="newItemScript"/>

@@ -2087,7 +2087,7 @@ Partial Public Module xmlTools
             Catch ioex As IOException    'New changes on 9/12/21'
                 myWeb.bPageCache = False
                 sReturnString = TargetFile & "/script.js"
-                Return ioex.StackTrace
+                '      Return ioex.StackTrace
                 Return sReturnString
 
             Catch ex As Exception
@@ -2234,8 +2234,8 @@ Partial Public Module xmlTools
 
             Catch ioex As IOException    'New changes on 9/12/21'
                 myWeb.bPageCache = False
-                sReturnString += "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
-                Return ioex.StackTrace
+                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
+                ' Return ioex.StackTrace
                 Return sReturnString
 
             Catch ex As Exception

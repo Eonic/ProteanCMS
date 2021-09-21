@@ -472,7 +472,9 @@
       <span class="pt-label">
         <xsl:value-of select="label"/>
       </span>
-      <xsl:apply-templates select="." mode="xform_control"/>
+      <xsl:apply-templates select="." mode="xform">
+        <xsl:with-param name="nolabel" select="'true'"/>
+      </xsl:apply-templates>
     </div>
   </xsl:template>
 
@@ -652,8 +654,10 @@
   </xsl:template>
 
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform">
+    <xsl:param name="nolabel"/>
 
     <!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
+    <xsl:if test="not($nolabel!='')">
     <xsl:apply-templates select="label">
       <xsl:with-param name="cLabel">
         <xsl:apply-templates select="." mode="getRefOrBind"/>
@@ -662,7 +666,7 @@
         <xsl:if test="contains(@class,'required') and count(item)!=1">true</xsl:if>
       </xsl:with-param>
     </xsl:apply-templates>
-
+    </xsl:if>
     <xsl:variable name="fmhz">
       <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
         <xsl:text>col-sm-9</xsl:text>

@@ -2631,11 +2631,13 @@ processFlow:
                                         cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         If Not oCheckPrice Is Nothing Then
                                             nCheckPrice = oCheckPrice.InnerText
-                                            If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
-                                                nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
+                                            If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
+                                                If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
+                                                    nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
+                                                End If
                                             End If
                                             nTaxRate = getProductTaxRate(oCheckPrice)
-                                        End If
+                                            End If
                                             'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
 
                                             If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
