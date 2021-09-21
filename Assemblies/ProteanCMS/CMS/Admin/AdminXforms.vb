@@ -7187,15 +7187,17 @@ Partial Public Class Cms
             Public Function xFrmEditUserSubscription(ByVal nSubId As Integer) As XmlElement
                 Dim cProcessInfo As String = ""
                 Try
+
                     MyBase.NewFrm("EditUserSubscription")
+                    MyBase.bProcessRepeats = False
                     MyBase.load("/xforms/Subscription/EditSubscription.xml", myWeb.maCommonFolders)
                     Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
 
                     If nSubId > 0 Then
-                        existingInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId)
-                        '  MyBase.Instance = existingInstance
-                        MyBase.Instance.InnerXml = existingInstance.InnerXml
-
+                        Dim existingInstanceDoc As New XmlDocument
+                        existingInstanceDoc.LoadXml("<instance>" & moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId).Replace("xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "").Replace("xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "") & "</instance>")
+                        MyBase.bProcessRepeats = True
+                        MyBase.LoadInstance(existingInstanceDoc)
                     End If
                     moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
                     Dim i As Integer = 1
