@@ -2240,9 +2240,12 @@ Partial Public Module xmlTools
 
             Catch ex As Exception
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
+
+                'regardless we should return the filename.
+
                 sReturnError = ex.Message
                 ' Return ex.StackTrace
-                myWeb.bPageCache = False
+                myWeb.bPageCache = False 'This is not working 100% - can we understand why?????
                 Return sReturnError
             End Try
 
