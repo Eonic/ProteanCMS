@@ -2875,7 +2875,6 @@ Public Class xForm
             Dim obindElmt As XmlElement
             Dim isInserted As Boolean = False
 
-
             If bProcessRepeats Then
 
                 If checkForDeleteCommand(xFormElmt) Then
