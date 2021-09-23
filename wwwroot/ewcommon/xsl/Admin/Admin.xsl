@@ -10,7 +10,10 @@
                 xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                 xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
-	<xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
+  <xsl:variable name="GoogleAPIKey">
+    <xsl:value-of select="$page/Settings/add[@key='web.GoogleAPIKey']/@value"/>
+  </xsl:variable>
+  
 	<xsl:template name="eonicwebProductName">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
@@ -2096,7 +2099,7 @@
 			</td>
 			<td>
 				<div class="checkbox checkbox-primary">
-					<input type="checkbox" name="id" value="{@id}" class="styled"/>
+					<input type="checkbox" name="id" value="{@id}" class="styled inventory-bulk-checkbox" data-status="{@status}"/>
 					<label>
 						<xsl:text> </xsl:text>
 					</label>
@@ -2783,11 +2786,32 @@
 		</form>
 	</xsl:template>
 
-	<xsl:template match="/" mode="ListByContentTypeByPage">
+  <xsl:template match="/" mode="ListByContentTypeByPage-SortBy">
+    <span class="input-group list-control-select">
+      <xsl:variable name="sortBy" select="$page/Request/*/Item[@name='sortby']/node()"/>
+      <label class="input-group-addon">Sort By</label>
+      <select class="form-control submit-on-select" name="sortby" id="sortby" onchange="this.form.submit()">
+        <option value="default">
+          <xsl:if test="not($sortBy!='')">
+            <xsl:attribute name="selected">selected</xsl:attribute>
+          </xsl:if>
+          Page Position
+        </option>
+        <option value="name">
+          <xsl:if test="$sortBy='name'">
+            <xsl:attribute name="selected">selected</xsl:attribute>
+          </xsl:if>Name A-Z
+        </option>
+      </select>
+    </span>
+  </xsl:template>
+
+    <xsl:template match="/" mode="ListByContentTypeByPage">
 		<xsl:param name="contentType"/>
 		<xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
 		<xsl:variable name="itemCount" select="'100'"/>
 		<xsl:variable name="total" select="$page/ContentDetail/@total"/>
+      <xsl:variable name="sortBy" select="$page/Request/*/Item[@name='sortby']/node()"/>
 		<xsl:variable name="queryString">
 			<xsl:text>?</xsl:text>
 			<xsl:call-template name="getQString"/>
@@ -2850,23 +2874,7 @@
 							</div>
 
 							<div class="list-header-select">
-								<span class="input-group list-control-select">
-									<xsl:variable name="sortBy" select="$page/Request/*/Item[@name='sortby']/node()"/>
-									<label class="input-group-addon">Sort By</label>
-									<select class="form-control submit-on-select" name="sortby" id="sortby" onchange="this.form.submit()">
-										<option value="default">
-											<xsl:if test="not($sortBy!='')">
-												<xsl:attribute name="selected">selected</xsl:attribute>
-											</xsl:if>
-											Page Position
-										</option>
-										<option value="name">
-											<xsl:if test="$sortBy='name'">
-												<xsl:attribute name="selected">selected</xsl:attribute>
-											</xsl:if>Name A-Z
-										</option>
-									</select>
-								</span>
+                <xsl:apply-templates select="/" mode="ListByContentTypeByPage-SortBy"/>
 							</div>
 						</form>
 						<div class="stepper-container">
@@ -2894,9 +2902,23 @@
 							<xsl:text> on this page</xsl:text>
 						</td>
 					</tr>
-				</xsl:if>
+				</xsl:if>       
 				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
-				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+        <xsl:choose>
+          <xsl:when test="$sortBy='name'">
+            <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode">
+              <xsl:sort select="@name" data-type="text"/>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:when test="$sortBy='unit'">
+            <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode">
+              <xsl:sort select="UnitNumber" data-type="number"/>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+          </xsl:otherwise>
+        </xsl:choose>
 			</table>
 		</form>
 		<div class="panel-header">
@@ -2966,10 +2988,9 @@
 					</tr>
 				</xsl:if>
 				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
-				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+        <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
 			</table>
 		</div>
-
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='EditStructure']" mode="Admin">
@@ -4816,7 +4837,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule']" mode="LayoutAdminJs">
+	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
 		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
 		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
@@ -4829,6 +4850,8 @@
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
 		<!-- The File Upload image preview & resize plugin -->
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+		<!-- The Image Lazy load plugin -->
+		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
@@ -4901,6 +4924,8 @@
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
 			<!-- The File Upload image preview & resize plugin -->
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+			<!-- The Image Lazy load plugin -->
+			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
 		<script>
@@ -4926,7 +4951,10 @@
 			<xsl:apply-templates select="." mode="fileTypeScript"/>
 			<xsl:text>
         done: function (e, data) {
+
+
         $.each(data.files, function (index, file) {
+
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
 			var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
 			<xsl:apply-templates select="." mode="newItemScript"/>
@@ -4947,18 +4975,13 @@
 			$('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
 			ev.preventDefault();
 			$('.modal-dialog').addClass('loading')
-			$('.modal-body').html('<p class="text-center">
-				<h4>
-					<i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...
-				</h4>
-			</p>');
+			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
 			// load the url and show modal on success
 			var currentModal = $('.pickImageModal')
 			currentModal.load(target, function () {
 			$('.modal-dialog').removeClass('loading')
 			currentModal.modal("show");
-
 			});
 			});
 			};
@@ -4976,7 +4999,6 @@
 			});
 		</script>
 
-		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		<script>
 			$(function() {
 			$('.lazy').lazy();
@@ -5069,12 +5091,9 @@
                               <img src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}" width="160" height="160" class="{@class} img-responsive"/>
                             </div>
                           </xsl:when>
-                          
-                          
-                            <xsl:when test="$Extension='.pdf' or $Extension='.doc' or $Extension='.docx'">
+                          <xsl:when test="$Extension='.pdf' or $Extension='.doc' or $Extension='.docx'">
                               
-                            </xsl:when>
-                          
+                          </xsl:when>
                           <xsl:when test="$Extension='.swf'">
                             <i class="fa fa-flash fa-5x center-block">
                               <xsl:text> </xsl:text>
@@ -5114,11 +5133,20 @@
                             <a class="btn btn-xs btn-primary" href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
                               <i class="fa fa-arrows fa-white">
                                 <xsl:text> </xsl:text>
-                              </i></a>
+                              </i>
+                              <span class="sr-only"> Move</span>
+                            </a>
+                            <a href="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="btn btn-xs btn-warning" download="{@name}">
+                              <i class="fa fa-download fa-white">
+                                <xsl:text> </xsl:text>
+                              </i>
+                              <span class="sr-only"> Download</span>
+                            </a>
                             <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
                               <i class="fa fa-trash-o fa-white">
                                 <xsl:text> </xsl:text>
-                              </i> Delete
+                              </i>
+                              <span class="sr-only">Delete</span>
                             </a>
                           </xsl:if>
                         </xsl:otherwise>
@@ -7235,9 +7263,17 @@
             <dd>
               <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
             </dd>
-            <dt>Final Payment Reference</dt>
+            <dt>Final Payment Reference/Link</dt>
             <dd>
-              <xsl:value-of select="@settlementID" />
+              <xsl:variable name="secureURL">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:variable>
+              <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
+                <xsl:value-of select="@settlementID" />
+              </a>
             </dd>
           </xsl:if>
           <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
@@ -7252,6 +7288,7 @@
             </dd>
           </xsl:if>
           </dl>
+          <xsl:if test="not(Payment)">
           <h4>Payment Details</h4>
           <dl class="dl-horizontal">
             <dt>Payment Method</dt>
@@ -7275,6 +7312,12 @@
               </dd>
             </xsl:for-each>
           </dl>
+         </xsl:if>
+          <xsl:if test="Payment">
+            <a class="btn btn-primary" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
+              Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
+            </a>
+          </xsl:if>
       </div>
       <xsl:if test="Contact[@type='Billing Address']">
         <div id="billingAddress" class="cartAddress col-md-3">
@@ -7349,7 +7392,46 @@
           </xsl:for-each>
         </dl>
       </div>
-          </xsl:if>        
+          </xsl:if>
+        <xsl:if test="Payment">
+          <div class="col-md-12">
+
+          <table class="table collapse" id="paymentTable">
+            <thead>
+            <tr>
+              <th scope="col">Provider</th>
+              <th scope="col">Date</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Other Info</th>
+            </tr>
+              </thead>
+            <tbody>
+            <xsl:for-each select="Payment">
+              <tr>
+                <th scope="row">
+                  <xsl:call-template name="DD_Mon_YYYY">
+                    <xsl:with-param name="date">
+                      <xsl:value-of select="dInsertDate"/>
+                    </xsl:with-param>
+                    <xsl:with-param name="showTime">true</xsl:with-param>
+                  </xsl:call-template>
+                </th>
+                <th scope="row">
+                  <xsl:value-of select="nPaymentAmount"/>
+                </th>
+                <td>
+                  <xsl:value-of select="cPayMthdProviderName"/>
+                </td>
+                <td>
+                  AuthCode:
+                  <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+                </td>
+                </tr>
+            </xsl:for-each>
+              </tbody>
+          </table>
+            </div>
+        </xsl:if>   
         <xsl:if test="Notes/Notes"><div class="col-md-12">
           <div class="notes alert alert-danger">
               <i class="fas fa-lg fa-exclamation-triangle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;
@@ -11003,7 +11085,7 @@
         <xsl:value-of select="cLkpValue/node()"/>
       </td>
       <td class="clearfix">
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}" class="btn btn-danger btn-xs pull-right">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-danger btn-xs pull-right">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Del
@@ -11269,13 +11351,7 @@
       </xsl:if>
     </xsl:variable>
     <td class="btn-group">
-      <xsl:if test="@status='0'">
-        <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to delete this item">
-          <i class="fa fa-remove-circle fa-white">
-            <xsl:text> </xsl:text>
-          </i>
-          <xsl:text> </xsl:text>Delete</a>
-      </xsl:if>
+
 
       <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
         <i class="fa fa-eye">
@@ -11296,6 +11372,13 @@
           <xsl:text> </xsl:text>
         </i>
         <xsl:text> </xsl:text>Edit</a>
+      <xsl:if test="@status='0' or @status='3'">
+        <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-danger" title="Click here to delete this item">
+          <i class="fa fa-trash fa-white">
+            <xsl:text> </xsl:text>
+          </i>
+          </a>
+        </xsl:if>
     </td>
   </xsl:template>
 

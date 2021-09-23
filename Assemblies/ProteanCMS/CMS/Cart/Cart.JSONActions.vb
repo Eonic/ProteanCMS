@@ -632,28 +632,29 @@ Partial Public Class Cms
                     Dim oCart As New Cart(myWeb)
                     oCart.moPageXml = myWeb.moPageXml
 
-                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CObj(jObj("nProviderReference")), "")
-                    Dim Amount = IIf(jObj("nAmount") IsNot Nothing, CDec(jObj("nAmount")), "")
-                    Dim refundPaymentReceipt = ""
-                    If nProviderReference <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, nProviderReference)
-                        refundPaymentReceipt = oPayProv.Activities.RefundPayment(nProviderReference, Amount)
+                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CType(jObj("nProviderReference"), Long), 0)
+                    Dim nAmount = IIf(jObj("nAmount") IsNot Nothing, CDec(jObj("nAmount")), "0")
+                    Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
+                    Dim cRefundPaymentReceipt = ""
+                    If cProviderName <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
+                        cRefundPaymentReceipt = oPayProv.Activities.RefundPayment(nProviderReference, nAmount)
 
                         Dim xmlDoc As New XmlDocument
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
-                        xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & refundPaymentReceipt & "</RefundPaymentReceiptId>"
+                        xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & cRefundPaymentReceipt & "</RefundPaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                        Dim josResult As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
 
-                        jsonString = jsonString.Replace("""@", """_")
-                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                        josResult = josResult.Replace("""@", """_")
+                        josResult = josResult.Replace("#cdata-section", "cDataValue")
 
-                        Return jsonString
+                        Return josResult
                     End If
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-                    Return ex.Message
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
+                    Return "Error" 'ex.Message
                 End Try
 
             End Function
@@ -669,54 +670,58 @@ Partial Public Class Cms
                     Dim oCart As New Cart(myWeb)
                     oCart.moPageXml = myWeb.moPageXml
 
-                    Dim providerName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
-                    Dim orderId = IIf(jObj("orderId") IsNot Nothing, CStr(jObj("orderId")), "")
-                    Dim amount = IIf(jObj("amount") IsNot Nothing, CDec(jObj("amount")), "")
-                    Dim cardNumber = IIf(jObj("cardNumber") IsNot Nothing, CStr(jObj("cardNumber")), "")
-                    Dim cV2 = IIf(jObj("cV2") IsNot Nothing, CStr(jObj("cV2")), "")
-                    Dim expiryDate = IIf(jObj("expiryDate") IsNot Nothing, CStr(jObj("expiryDate")), "")
-                    Dim startDate = IIf(jObj("startDate") IsNot Nothing, CStr(jObj("startDate")), "")
-                    Dim cardHolderName = IIf(jObj("cardHolderName") IsNot Nothing, CStr(jObj("cardHolderName")), "")
-                    Dim address1 = IIf(jObj("address1") IsNot Nothing, CStr(jObj("address1")), "")
-                    Dim address2 = IIf(jObj("address2") IsNot Nothing, CStr(jObj("address2")), "")
-                    Dim town = IIf(jObj("town") IsNot Nothing, CStr(jObj("town")), "")
-                    Dim postCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
-                    Dim paymentReceipt = ""
-                    Dim jsonString As String = ""
-                    If providerName <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-                        paymentReceipt = oPayProv.Activities.ProcessNewPayment(orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
+                    Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
+                    Dim nOrderId = IIf(jObj("orderId") IsNot Nothing, CStr(jObj("orderId")), "0")
+                    Dim nAmount = IIf(jObj("amount") IsNot Nothing, CDec(jObj("amount")), "0")
+                    Dim cCardNumber = IIf(jObj("cardNumber") IsNot Nothing, CStr(jObj("cardNumber")), "")
+                    Dim cCV2 = IIf(jObj("cV2") IsNot Nothing, CStr(jObj("cV2")), "")
+                    Dim dExpiryDate = IIf(jObj("expiryDate") IsNot Nothing, CStr(jObj("expiryDate")), "")
+                    Dim dStartDate = IIf(jObj("startDate") IsNot Nothing, CStr(jObj("startDate")), "")
+                    Dim cCardHolderName = IIf(jObj("cardHolderName") IsNot Nothing, CStr(jObj("cardHolderName")), "")
+                    Dim cAddress1 = IIf(jObj("address1") IsNot Nothing, CStr(jObj("address1")), "")
+                    Dim cAddress2 = IIf(jObj("address2") IsNot Nothing, CStr(jObj("address2")), "")
+                    Dim cTown = IIf(jObj("town") IsNot Nothing, CStr(jObj("town")), "")
+                    Dim cPostCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
+                    Dim cValidGroup = IIf(jObj("validGroup") IsNot Nothing, CStr(jObj("validGroup")), "")
+                    Dim cPaymentReceipt = ""
+                    Dim josResult As String = ""
+                    If cProviderName <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
+                        cPaymentReceipt = oPayProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode, cValidGroup)
                         Dim xmlDoc As New XmlDocument
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
-                        xmlResponse.InnerXml = "<PaymentReceiptId>" & paymentReceipt & "</PaymentReceiptId>"
+                        xmlResponse.InnerXml = "<PaymentReceiptId>" & cPaymentReceipt & "</PaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
-                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
-                        jsonString = jsonString.Replace("""@", """_")
-                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                        josResult = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                        josResult = josResult.Replace("""@", """_")
+                        josResult = josResult.Replace("#cdata-section", "cDataValue")
                     End If
-                    Return jsonString
+                    Return josResult
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-                    Return ex.Message
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""))
+                    Return "Error" 'ex.Message
                 End Try
 
             End Function
 
-            Public Function SavePaymentInfo(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            Public Function CreatePaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim cProcessInfo As String = ""
                     Dim josResult As String = "SUCCESS"
 
                     'input params
-                    Dim cProductPrice As Double = CDbl(jObj("orderId"))
+                    ' Dim cProductPrice As Double = CDbl(jObj("orderId"))
 
                     Try
                         'if we receive any response from judopay pass it from PaymentReceipt
                         'response should contain payment related all references like result, status, cardtoken, receiptId etc
                         'validate if weather success or declined in Judopay.cs and redirect accordingly
 
-                        'Return oPayProv.Activities.PaymentReceipt()
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+                        oPayProv.Activities.CreateOrder(True).Wait()
 
                     Catch ex As Exception
                         josResult = "ERROR"
@@ -726,6 +731,90 @@ Partial Public Class Cms
                     Return josResult
 
                 Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function GetPaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim josResult As String = "SUCCESS"
+
+                    'input params
+                    Dim cOrderId As Double = CDbl(jObj("orderId"))
+
+                    Try
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+                        oPayProv.Activities.GetOrder(cOrderId).Wait()
+
+                        oPayProv.Activities.CaptureOrder(cOrderId, True).Wait()
+
+                        oPayProv.Activities.AuthorizeOrder(cOrderId, True).Wait()
+
+                    Catch ex As Exception
+                        josResult = "ERROR"
+                    End Try
+
+
+                    Return josResult
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function CapturePaypalOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim josResult As String = "SUCCESS"
+
+                    'input params
+                    Dim cOrderId As Double = CDbl(jObj("orderId"))
+
+                    Try
+                        Dim myWeb As Protean.Cms = New Protean.Cms()
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "PayPalCommerce")
+
+                        oPayProv.Activities.CaptureOrder(cOrderId, True).Wait()
+
+                    Catch ex As Exception
+                        josResult = "ERROR"
+                    End Try
+
+
+                    Return josResult
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function SaveToSellerNotes(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As Boolean
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim cResponse As String = jObj.ToString()
+                    Dim sSql As String
+                    Dim myWeb As Protean.Cms = New Protean.Cms()
+                    Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
+                    Dim message As String = cResponse.Replace("{", "")
+                    Dim errorMessage As String = message.Replace("}", "")
+                    'Update Seller Notes:
+                    sSql = "select * from tblCartOrder where nCartOrderKey = " & oCart.mnCartId
+                    Dim oDs As DataSet
+                    Dim oRow As DataRow
+                    oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                    For Each oRow In oDs.Tables("Order").Rows
+                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Payment Failed) " & vbLf & "comment: " & " Declined " & vbLf & "Full Response:' " & errorMessage & "'"
+                    Next
+                    myWeb.moDbHelper.updateDataset(oDs, "Order")
+
+                    Return True
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""))
                     Return ex.Message
                 End Try
             End Function

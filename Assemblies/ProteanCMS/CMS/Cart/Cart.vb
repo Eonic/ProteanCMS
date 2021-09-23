@@ -70,6 +70,7 @@ Partial Public Class Cms
         Public mbStockControl As Boolean = False ' Stock Control
         Public mcDeposit As String ' Deposits are Available
         Public mcDepositAmount As String ' Deposit Amount
+        Public mcPaymentType As String
         Private cOrderNoPrefix As String
         Public mcCurrency As String = ""
         Public mcCurrencySymbol As String = ""
@@ -606,8 +607,8 @@ Partial Public Class Cms
                     Else
                         mcSessionId = myWeb.moSession.SessionID
                     End If
-
-
+                    'session id is assigned
+                    'add logic if same seession id is present or not in db if we have then generate diff session id
 
                     If IsNumeric(myWeb.moRequest.QueryString("cartErr")) Then mnProcessError = CInt(myWeb.moRequest.QueryString("cartErr"))
 
@@ -705,16 +706,16 @@ Partial Public Class Cms
                         ' Also check we need to udpate the session from the cookie
                         If Not (myWeb.moRequest("refSessionId") Is Nothing) _
                             Or Not (myWeb.moRequest("transStatus") Is Nothing) _
-                            Or Not (myWeb.moRequest("ewSettlement") Is Nothing) _
+                            Or Not (myWeb.moRequest("settlementRef") Is Nothing) _
                             Or (cSessionFromSessionCookie <> "") Then
 
                             If Not (myWeb.moRequest("transStatus") Is Nothing) Then
                                 'add in check for session cookie
                                 sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId  where o.cCartSchemaName='Order' and o.nCartOrderKey=" & myWeb.moRequest("cartId") & " and DATEDIFF(hh,a.dInsertDate,GETDATE())<24"
                                 mcPaymentMethod = "WorldPay"
-                            ElseIf Not (myWeb.moRequest("ewSettlement") Is Nothing) Then
+                            ElseIf Not (myWeb.moRequest("settlementRef") Is Nothing) Then
                                 ' Go get the cart, restore settings
-                                sSql = "select * from tblCartOrder where cCartSchemaName='Order' and cSettlementID='" & myWeb.moRequest("ewSettlement") & "'"
+                                sSql = "select * from tblCartOrder where cCartSchemaName='Order' and cSettlementID='" & myWeb.moRequest("settlementRef") & "'"
                             Else
                                 'get session id from ewSession cookie
 
@@ -722,11 +723,17 @@ Partial Public Class Cms
                                     mcSessionId = cSessionFromSessionCookie
                                     cSessionFromSessionCookie = ""
                                 End If
+                                If mnCartId > 0 Then
+                                    ' sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
+                                    sSql = "select Top 1* from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "' and o.nCartOrderKey='" & Convert.ToString(mnCartId) & "' order by o.nCartOrderKey desc "
+                                Else
+                                    sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
+                                    'logic needs here to check cart id if we have car id then pull wiith session id
+                                End If
 
-                                sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
                             End If
 
-                            PerfMon.Log("Cart", "InitializeVariables - check for cart start")
+                                PerfMon.Log("Cart", "InitializeVariables - check for cart start")
                             oDr = moDBHelper.getDataReader(sSql)
                             PerfMon.Log("Cart", "InitializeVariables - check for cart end")
 
@@ -736,7 +743,7 @@ Partial Public Class Cms
                                     mnCartId = oDr("nCartOrderKey") ' get cart id
                                     mnProcessId = oDr("nCartStatus") ' get cart status
                                     mnTaxRate = oDr("nTaxRate")
-                                    If Not (myWeb.moRequest("ewSettlement") Is Nothing) Or Not (myWeb.moRequest("ewsettlement") Is Nothing) Then
+                                    If Not (myWeb.moRequest("settlementRef") Is Nothing) Or Not (myWeb.moRequest("settlementRef") Is Nothing) Then
 
                                         ' Set to a holding state that indicates that the settlement has been initiated
                                         mnProcessId = cartProcess.SettlementInitiated
@@ -744,6 +751,7 @@ Partial Public Class Cms
                                         ' If a cart has been found, we need to update the session ID in it.
                                         If oDr("cCartSessionId") <> mcSessionId Then
                                             moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
+                                            ' if mnCartId is not null then pull both otherwise pull session id
                                         End If
 
                                         ' Reactivate the order in the database
@@ -851,6 +859,8 @@ Partial Public Class Cms
                 oDr = Nothing
             End Try
         End Sub
+
+
 
         Public Sub writeSessionCookie()
             'writes the session cookie to persist the cart
@@ -1244,12 +1254,12 @@ processFlow:
                         End If
 
 
-                    Case "RedirectSecure"
+                    Case "RedirectSecure", "Settlement"
                         Dim cRedirectCommand As String
                         ' Set a Session variable flag to 
                         myWeb.moSession.Add("CartIsOn", "true")
                         bRedirect = True
-                        If myWeb.moRequest("ewSettlement") Is Nothing Then
+                        If myWeb.moRequest("settlementRef") Is Nothing Then
                             cRedirectCommand = "Logon"
                         Else
                             cRedirectCommand = "ChoosePaymentShippingOption"
@@ -1450,6 +1460,9 @@ processFlow:
                         Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
 
+
+
+
                         If InStr(mcPaymentMethod, "Repeat_") > 0 Then
                             If ccPaymentXform.valid = True Then
                                 mcCartCmd = "ShowInvoice"
@@ -1499,7 +1512,7 @@ processFlow:
 
                     Case "ShowInvoice", "ShowCallBackInvoice" 'Payment confirmed / show invoice
 
-                        If mnProcessId <> Cart.cartProcess.Complete And mnProcessId <> Cart.cartProcess.AwaitingPayment Then
+                        If mnProcessId <> Cart.cartProcess.Complete And mnProcessId <> Cart.cartProcess.AwaitingPayment And mnProcessId <> Cart.cartProcess.DepositPaid Then
                             'check we are allready complete otherwise we will risk confirming sale just on URL request.
                             'myWeb.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "FAILED CALLBACK : " & mnProcessId)
                             mcCartCmd = "ChoosePaymentShippingOption"
@@ -1719,6 +1732,54 @@ processFlow:
 
         End Sub
 
+
+        Public Function ConfirmPayment(ByRef oCartElmt As XmlElement, ByRef PaymentDetailXml As XmlElement, ByVal providerPaymentRef As String, ByVal providerName As String, ByVal amountPaid As Double)
+            Dim cProcessInfo As String = ""
+            Try
+                Dim PayableType As String = oCartElmt.GetAttribute("payableType")
+
+                'Add processing for deposits.
+                Select Case PayableType
+                    Case "deposit"
+
+                        Dim outstandingAmount As Double = CDbl(oCartElmt.GetAttribute("total")) - CDbl(oCartElmt.GetAttribute("payableAmount"))
+                        mcDepositAmount = oCartElmt.GetAttribute("payableAmount")
+                        ' Let's update the cart element
+                        oCartElmt.SetAttribute("paymentMade", mcDepositAmount)
+                        oCartElmt.SetAttribute("outstandingAmount", FormatNumber(outstandingAmount, 2, TriState.True, TriState.False, TriState.False))
+
+                        ' Let's create a unique link for settlement
+                        ' Make a unique link
+                        Dim cUniqueLink As String = ""
+                        Do While cUniqueLink = ""
+                            Dim testLink = System.Guid.NewGuid.ToString()
+                            Dim sSql As String = "select * from tblCartOrder where cSettlementID = '" & testLink & "'"
+                            Dim odr As SqlDataReader = moDBHelper.getDataReader(sSql)
+                            If Not odr.HasRows Then cUniqueLink = testLink
+                            odr.Close()
+                        Loop
+
+                        oCartElmt.SetAttribute("settlementID", cUniqueLink)
+                        oCartElmt.SetAttribute("transStatus", "Complete")
+                        UpdateCartDeposit(oCartElmt, mcDepositAmount, PayableType)
+                        mnProcessId = 10
+
+                    Case "settlement"
+
+
+                    Case Else
+                        PayableType = "full"
+                End Select
+
+                mnPaymentId = moDBHelper.savePayment(mnCartId, myWeb.mnUserId, providerName, providerPaymentRef, providerName, PaymentDetailXml, DateTime.Now, False, amountPaid, PayableType)
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug)
+
+            Finally
+                'oDr = Nothing
+            End Try
+        End Function
 
         Overridable Sub purchaseActions(ByRef oCartElmt As XmlElement)
             PerfMon.Log("Cart", "purchaseActions")
@@ -2449,6 +2510,7 @@ processFlow:
             Dim quant As Long
             Dim weight As Double
             Dim total As Double
+            Dim nPayableAmount As Double
             Dim vatAmt As Double
             Dim shipCost As Double
             Dim nCheckPrice As Double
@@ -2458,7 +2520,6 @@ processFlow:
             'If true will be added to the unit
             Dim nLineVat As Decimal = 0
             Dim bCheckSubscriptions = False
-
             Dim cOptionGroupName As String = ""
 
             Dim nCartIdUse As Integer
@@ -2520,12 +2581,17 @@ processFlow:
                     If Not String.IsNullOrEmpty(promocodeFromExternalRef) Then
                         oCartElmt.SetAttribute("promocodeFromExternalRef", promocodeFromExternalRef)
                     End If
-
-                    If moDBHelper.checkTableColumnExists("tblCartItem", "xItemXml") Then
-                        sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, i.xItemXml as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, i.xItemXml.value('Content[1]/@type','nvarchar(50)') AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
-                    Else
-                        sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, p.cContentXmlDetail as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, p.cContentSchemaName AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
+                    Dim additionalFields As String
+                    If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
+                        additionalFields = ", i.nDepositAmount as nDepositAmount"
                     End If
+                    If moDBHelper.checkTableColumnExists("tblCartItem", "xItemXml") Then
+                        sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, i.xItemXml as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, i.xItemXml.value('Content[1]/@type','nvarchar(50)') AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId " & additionalFields & "  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
+                    Else
+                        sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, p.cContentXmlDetail as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, p.cContentSchemaName AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId " & additionalFields & " from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
+                    End If
+
+
 
                     oDs = moDBHelper.getDataSetForUpdate(sSql, "Item", "Cart")
                     'add relationship for options
@@ -2544,10 +2610,8 @@ processFlow:
                             Dim nTaxRate As Long = 0
                             Dim bOverridePrice As Boolean = False
                             If Not mbOveridePrice Then ' for openquote
-
                                 If (Not (myWeb.moSession("overridePriceSession") Is Nothing) And Not (myWeb.moConfig("overridePriceKey") Is Nothing)) Then
                                     'get the string value from session
-
                                     Dim sSessionKey As String = Convert.ToString(myWeb.moSession("overridePriceSession"))
                                     Dim sKey As String = Convert.ToString(myWeb.moConfig("overridePriceKey"))
                                     'create the key with the current user
@@ -2567,11 +2631,16 @@ processFlow:
                                         cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         If Not oCheckPrice Is Nothing Then
                                             nCheckPrice = oCheckPrice.InnerText
+                                            If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
+                                                If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
+                                                    nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
+                                                End If
+                                            End If
                                             nTaxRate = getProductTaxRate(oCheckPrice)
-                                        End If
-                                        'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
+                                            End If
+                                            'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
 
-                                        If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
+                                            If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
 
                                             Dim revisedPrice As Double
                                             If moSubscription.mbOveridePrices = False Then
@@ -2721,7 +2790,11 @@ processFlow:
 
                     'Add the addresses to the dataset
                     If nCartIdUse > 0 Then
-                        sSql = "Select cContactType As type, cContactName As GivenName, cContactCompany As Company, cContactAddress As Street, cContactCity As City, cContactState As State, cContactZip As PostalCode, cContactCountry As Country, cContactTel As Telephone, cContactFax As Fax, cContactEmail As Email, cContactXml As Details from tblCartContact where nContactCartId=" & nCartIdUse
+                        If myWeb.moDbHelper.checkTableColumnExists("tblCartContact", "cContactTelCountryCode") Then
+                            sSql = "Select cContactType As type, cContactName As GivenName, cContactCompany As Company, cContactAddress As Street, cContactCity As City, cContactState As State, cContactZip As PostalCode, cContactCountry As Country, cContactTel As Telephone, cContactFax As Fax, cContactEmail As Email, cContactXml As Details,cContactTelCountryCode As TelephoneCountryCode from tblCartContact where nContactCartId=" & nCartIdUse
+                        Else
+                            sSql = "Select cContactType As type, cContactName As GivenName, cContactCompany As Company, cContactAddress As Street, cContactCity As City, cContactState As State, cContactZip As PostalCode, cContactCountry As Country, cContactTel As Telephone, cContactFax As Fax, cContactEmail As Email, cContactXml As Details from tblCartContact where nContactCartId=" & nCartIdUse
+                        End If
                         moDBHelper.addTableToDataSet(oDs, sSql, "Contact")
                     End If
 
@@ -2741,75 +2814,77 @@ processFlow:
                         oDs.Tables(0).Columns(10).ColumnMapping = Data.MappingType.Attribute
                         oDs.Tables(0).Columns(11).ColumnMapping = Data.MappingType.Attribute
                         oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
+
                         'cart contacts
                         oDs.Tables("Contact").Columns(0).ColumnMapping = Data.MappingType.Attribute
 
+
                         oXml = New XmlDocument
-                        oXml.LoadXml(oDs.GetXml)
+                            oXml.LoadXml(oDs.GetXml)
 
-                        oDs.EnforceConstraints = False
+                            oDs.EnforceConstraints = False
 
-                        'Convert the detail to xml
-                        For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
-                            oElmt.InnerXml = oElmt.InnerText
-                            If Not oElmt.SelectSingleNode("Content") Is Nothing Then
-                                Dim oAtt As XmlAttribute
-                                For Each oAtt In oElmt.SelectSingleNode("Content").Attributes
-                                    oElmt.SetAttribute(oAtt.Name, oAtt.Value)
-                                Next
-                                oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
-                                Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
+                            'Convert the detail to xml
+                            For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
+                                oElmt.InnerXml = oElmt.InnerText
+                                If Not oElmt.SelectSingleNode("Content") Is Nothing Then
+                                    Dim oAtt As XmlAttribute
+                                    For Each oAtt In oElmt.SelectSingleNode("Content").Attributes
+                                        oElmt.SetAttribute(oAtt.Name, oAtt.Value)
+                                    Next
+                                    oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
+                                    Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
 
-                            End If
-                        Next
-
-                        For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
-                            If moDBHelper.CheckOptOut(oElmt.InnerText) Then
-                                oElmt.SetAttribute("optOut", "True")
-                            End If
-                        Next
-
-                        'get the option xml
-                        For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
-                            oElmt.InnerXml = oElmt.InnerText
-
-                            Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
-                            Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
-                            cOptionGroupName = ""
-                            If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
-                                cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
-                            End If
-                            If nOptionIndex >= 0 Then
-
-                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
-                                If Not oElmt2 Is Nothing Then
-                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                 End If
+                            Next
 
-                            Else
-                                'case for text option
-                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
-                                If Not oElmt2 Is Nothing Then
-                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                    If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
-                                        oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
-                                    Else
-                                        oElmt2.SetAttribute("name", "Name Not defined")
+                            For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
+                                If moDBHelper.CheckOptOut(oElmt.InnerText) Then
+                                    oElmt.SetAttribute("optOut", "True")
+                                End If
+                            Next
+
+                            'get the option xml
+                            For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
+                                oElmt.InnerXml = oElmt.InnerText
+
+                                Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
+                                Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
+                                cOptionGroupName = ""
+                                If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
+                                    cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
+                                End If
+                                If nOptionIndex >= 0 Then
+
+                                    oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
+                                    If Not oElmt2 Is Nothing Then
+                                        If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                        oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                     End If
-                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
+
+                                Else
+                                    'case for text option
+                                    oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
+                                    If Not oElmt2 Is Nothing Then
+                                        If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                        If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
+                                            oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
+                                        Else
+                                            oElmt2.SetAttribute("name", "Name Not defined")
+                                        End If
+                                        oElmt.ParentNode.InnerXml = oElmt2.OuterXml
+                                    End If
                                 End If
-                            End If
 
-                        Next
+                            Next
 
-                        oElmt = moPageXml.CreateElement("Cart")
-                        ' Note: Preserve the original elements in oCartElmt
-                        oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
+                            oElmt = moPageXml.CreateElement("Cart")
+                            ' Note: Preserve the original elements in oCartElmt
+                            oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
 
 
-                    End If
-                    myWeb.CheckMultiParents(oCartElmt)
+                        End If
+                        myWeb.CheckMultiParents(oCartElmt)
                     sSql = "Select cClientNotes from tblCartOrder where nCartOrderKey=" & nCartIdUse
                     Dim oNotes As XmlElement = oCartElmt.OwnerDocument.CreateElement("Notes")
                     Dim notes As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))
@@ -2897,7 +2972,6 @@ processFlow:
 
                         vatAmt = updateTotals(oCartElmt, total, shipCost, oCartElmt.GetAttribute("shippingType"))
 
-
                         ' Check if the cart needs to be adjusted for deposits or settlements
                         If mcDeposit = "on" Then
                             Dim nTotalAmount As Double = total + shipCost + vatAmt
@@ -2909,18 +2983,23 @@ processFlow:
                             If IsDBNull(oRow("nAmountReceived")) Then
                                 ' No deposit has been paid yet - let's set the deposit value, if it has been specified
                                 If mcDepositAmount <> "" Then
-                                    If Right(mcDepositAmount, 1) = "%" Then
+                                    If mcDepositAmount = 0 Then
+                                        'we defer to calculating the deposit by line about
+                                        nPayable = nPayableAmount
+
+                                    ElseIf Right(mcDepositAmount, 1) = "%" Then
                                         If IsNumeric(Left(mcDepositAmount, Len(mcDepositAmount) - 1)) Then
                                             nPayable = (nTotalAmount) * CDbl(Left(mcDepositAmount, Len(mcDepositAmount) - 1)) / 100
                                         End If
-
                                     Else
                                         If IsNumeric(mcDepositAmount) Then nPayable = CDbl(mcDepositAmount)
                                     End If
+
                                     If nPayable > nTotalAmount Then nPayable = nTotalAmount
 
                                     ' Set the Payable Amount
                                     If nPayable > 0 Then
+                                        oCartElmt.SetAttribute("payableType", "deposit")
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                         oCartElmt.SetAttribute("paymentMade", "0")
                                     End If
@@ -2933,7 +3012,7 @@ processFlow:
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                     End If
                                     oCartElmt.SetAttribute("paymentMade", FormatNumber(CDbl(oRow("nLastPaymentMade")), 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
-
+                                    oCartElmt.SetAttribute("payableType", "settlement")
                                 End If
                             End If
 
@@ -2944,13 +3023,14 @@ processFlow:
                                 oCartElmt.SetAttribute("payableType", "settlement")
                             End If
 
-                            If nPayable = 0 Then
-                                oCartElmt.SetAttribute("ReadOnly", "On")
-                            End If
-                        End If
 
-                        'Add Any Client Notes
-                        If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
+                            If nPayable = 0 Then
+                                    oCartElmt.SetAttribute("ReadOnly", "On")
+                                End If
+                            End If
+
+                            'Add Any Client Notes
+                            If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
                             oElmt = moPageXml.CreateElement("Notes")
                             oElmt.InnerXml = oRow("cClientNotes")
                             If oElmt.FirstChild.Name = "Notes" Then
@@ -6176,7 +6256,7 @@ processFlow:
 
         End Sub
 
-        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "") As Boolean
+        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional bDepositOnly As Boolean = False) As Boolean
             PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
@@ -6339,107 +6419,110 @@ processFlow:
                     addNewTextNode("nWeight", oElmt, nWeight)
                     addNewTextNode("nParentId", oElmt, 0)
 
+                    If bDepositOnly Then
+                        addNewTextNode("nDepositAmount", oElmt, IIf(IsNumeric(oPrice.GetAttribute("deposit")), oPrice.GetAttribute("deposit"), 0))
+                    End If
 
                     Dim ProductXmlElmt As XmlElement = addNewTextNode("xItemXml", oElmt, "")
-                    ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml
+                        ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml
 
-                    nItemID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
+                        nItemID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
 
-                    'Options
-                    If Not oProdOptions Is Nothing Then
-                        For i = 0 To UBound(oProdOptions)
-                            If Not oProdOptions(i) Is Nothing And nQuantity > 0 Then
-                                'Add Options
-                                oItemInstance = New XmlDataDocument
-                                oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
-                                oElmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
-                                addNewTextNode("nCartOrderId", oElmt, CStr(mnCartId))
+                        'Options
+                        If Not oProdOptions Is Nothing Then
+                            For i = 0 To UBound(oProdOptions)
+                                If Not oProdOptions(i) Is Nothing And nQuantity > 0 Then
+                                    'Add Options
+                                    oItemInstance = New XmlDataDocument
+                                    oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
+                                    oElmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
+                                    addNewTextNode("nCartOrderId", oElmt, CStr(mnCartId))
 
-                                Dim cStockCode As String = ""
-                                Dim cOptName As String = ""
-                                Dim bTextOption As Boolean = False
+                                    Dim cStockCode As String = ""
+                                    Dim cOptName As String = ""
+                                    Dim bTextOption As Boolean = False
 
-                                If UBound(oProdOptions(i)) < 1 Then
-                                    'This option dosen't have an index value
-                                    'Save the submitted value against stock code.
-                                    cStockCode = Me.myWeb.moRequest.Form("opt_" & nProductId & "_" & (i + 1))
-                                    cOptName = cStockCode
-                                    bTextOption = True
-                                Else
-                                    If IsNumeric(oProdOptions(i)(0)) And IsNumeric(oProdOptions(i)(1)) Then
-                                        'add the stock code from the option
-                                        If Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/StockCode") Is Nothing Then
-                                            cStockCode = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/StockCode").InnerText
-                                        ElseIf Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/code") Is Nothing Then
-                                            cStockCode = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/code").InnerText
-                                        ElseIf Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/name") Is Nothing Then
-                                            cStockCode = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/name").InnerText
-                                        End If
-                                        'add the name from the option
-                                        If Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/Name") Is Nothing Then
-                                            cOptName = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/Name").InnerText
-                                        ElseIf Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/name") Is Nothing Then
-                                            cOptName = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/name").InnerText
-                                        ElseIf Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/@name") Is Nothing Then
-                                            cOptName = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/@name").InnerText
-                                        End If
+                                    If UBound(oProdOptions(i)) < 1 Then
+                                        'This option dosen't have an index value
+                                        'Save the submitted value against stock code.
+                                        cStockCode = Me.myWeb.moRequest.Form("opt_" & nProductId & "_" & (i + 1))
+                                        cOptName = cStockCode
+                                        bTextOption = True
                                     Else
-                                        cStockCode = ""
-                                        cOptName = "Invalid Option"
+                                        If IsNumeric(oProdOptions(i)(0)) And IsNumeric(oProdOptions(i)(1)) Then
+                                            'add the stock code from the option
+                                            If Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/StockCode") Is Nothing Then
+                                                cStockCode = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/StockCode").InnerText
+                                            ElseIf Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/code") Is Nothing Then
+                                                cStockCode = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/code").InnerText
+                                            ElseIf Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/name") Is Nothing Then
+                                                cStockCode = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]/option[" & oProdOptions(i)(1) & "]/name").InnerText
+                                            End If
+                                            'add the name from the option
+                                            If Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/Name") Is Nothing Then
+                                                cOptName = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/Name").InnerText
+                                            ElseIf Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/name") Is Nothing Then
+                                                cOptName = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/name").InnerText
+                                            ElseIf Not oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/@name") Is Nothing Then
+                                                cOptName = oProdXml.SelectSingleNode("/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" & "/option[" & oProdOptions(i)(1) & "]/@name").InnerText
+                                            End If
+                                        Else
+                                            cStockCode = ""
+                                            cOptName = "Invalid Option"
+                                        End If
                                     End If
-                                End If
 
-                                addNewTextNode("cItemRef", oElmt, cStockCode)
-                                addNewTextNode("nItemId", oElmt, nProductId)
-                                addNewTextNode("cItemURL", oElmt, myWeb.mcOriginalURL) 'Erm?
-                                addNewTextNode("cItemName", oElmt, cOptName)
+                                    addNewTextNode("cItemRef", oElmt, cStockCode)
+                                    addNewTextNode("nItemId", oElmt, nProductId)
+                                    addNewTextNode("cItemURL", oElmt, myWeb.mcOriginalURL) 'Erm?
+                                    addNewTextNode("cItemName", oElmt, cOptName)
 
-                                If bTextOption Then
-                                    'save the option index as -1 for text option
-                                    addNewTextNode("nItemOptGrpIdx", oElmt, (i + 1))
-                                    addNewTextNode("nItemOptIdx", oElmt, -1)
-                                    'No price variation for text options
-                                    addNewTextNode("nPrice", oElmt, "0")
-                                Else
-                                    addNewTextNode("nItemOptGrpIdx", oElmt, oProdOptions(i)(0))
-                                    addNewTextNode("nItemOptIdx", oElmt, oProdOptions(i)(1))
+                                    If bTextOption Then
+                                        'save the option index as -1 for text option
+                                        addNewTextNode("nItemOptGrpIdx", oElmt, (i + 1))
+                                        addNewTextNode("nItemOptIdx", oElmt, -1)
+                                        'No price variation for text options
+                                        addNewTextNode("nPrice", oElmt, "0")
+                                    Else
+                                        addNewTextNode("nItemOptGrpIdx", oElmt, oProdOptions(i)(0))
+                                        addNewTextNode("nItemOptIdx", oElmt, oProdOptions(i)(1))
 
-                                    Dim oPriceElmt As XmlElement = oProdXml.SelectSingleNode(
+                                        Dim oPriceElmt As XmlElement = oProdXml.SelectSingleNode(
                                                                 "/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" &
                                                                 "/option[" & oProdOptions(i)(1) & "]/Prices/Price[@currency='" & mcCurrency & "']"
                                                                 )
-                                    Dim strPrice2 As String = 0
-                                    If Not oPriceElmt Is Nothing Then strPrice2 = oPriceElmt.InnerText
-                                    addNewTextNode("nPrice", oElmt, IIf(IsNumeric(strPrice2), strPrice2, 0))
+                                        Dim strPrice2 As String = 0
+                                        If Not oPriceElmt Is Nothing Then strPrice2 = oPriceElmt.InnerText
+                                        addNewTextNode("nPrice", oElmt, IIf(IsNumeric(strPrice2), strPrice2, 0))
+                                    End If
+                                    addNewTextNode("nShpCat", oElmt, -1)
+                                    addNewTextNode("nTaxRate", oElmt, 0)
+                                    addNewTextNode("nQuantity", oElmt, 1)
+                                    addNewTextNode("nWeight", oElmt, 0)
+                                    addNewTextNode("nParentId", oElmt, nItemID)
+                                    moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
                                 End If
-                                addNewTextNode("nShpCat", oElmt, -1)
-                                addNewTextNode("nTaxRate", oElmt, 0)
-                                addNewTextNode("nQuantity", oElmt, 1)
-                                addNewTextNode("nWeight", oElmt, 0)
-                                addNewTextNode("nParentId", oElmt, nItemID)
-                                moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
-                            End If
-                        Next
-                    End If
-                Else
-                    'Existing
-                    oDS.Relations.Clear()
-                    If nQuantity <= 0 Then
-                        moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, nItemID, False)
+                            Next
+                        End If
                     Else
+                        'Existing
+                        oDS.Relations.Clear()
+                        If nQuantity <= 0 Then
+                            moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, nItemID, False)
+                        Else
 
-                        For Each oDR1 In oDS.Tables("CartItems").Rows
-                            If oDR1.Item("nCartItemKey") = nItemID Then
-                                oDR1.BeginEdit()
-                                oDR1("nQuantity") += nQuantity
-                                oDR1.EndEdit()
-                                Exit For
-                            End If
-                        Next
+                            For Each oDR1 In oDS.Tables("CartItems").Rows
+                                If oDR1.Item("nCartItemKey") = nItemID Then
+                                    oDR1.BeginEdit()
+                                    oDR1("nQuantity") += nQuantity
+                                    oDR1.EndEdit()
+                                    Exit For
+                                End If
+                            Next
+                        End If
+                        moDBHelper.updateDataset(oDS, "CartItems")
                     End If
-                    moDBHelper.updateDataset(oDS, "CartItems")
-                End If
-                Return True
+                    Return True
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "addItem", ex, "", cProcessInfo, gbDebug)
             End Try
@@ -6469,6 +6552,7 @@ processFlow:
             Dim oDs As DataSet
             Dim oRow As DataRow
             Dim qtyAdded As Integer = 0
+            Dim bDepositOnly As Boolean
 
             Try
 
@@ -6489,48 +6573,53 @@ processFlow:
                         nQuantity = 0
                         oOptions = Nothing
                         cReplacementName = ""
-
-
-
+                        bDepositOnly = False
                         'begin
                         If InStr(oItem1, "qty_") = 1 Then 'check for getting productID and quantity (since there will only be one of these per item submitted)
-                            nProductKey = CLng(Replace(oItem1, "qty_", "")) 'Product key
-                            cProcessInfo = oItem1.ToString & " = " & myWeb.moRequest.Form.Get(oItem1)
-
-                            If IsNumeric(myWeb.moRequest.Form.Get(oItem1)) Then
-                                nQuantity = myWeb.moRequest.Form.Get(oItem1)
+                            If InStr(oItem1, "qty_deposit_") = 1 Then
+                                nProductKey = CLng(Replace(oItem1, "qty_deposit_", "")) 'Product key
+                                bDepositOnly = True
+                            Else
+                                nProductKey = CLng(Replace(oItem1, "qty_", "")) 'Product key
                             End If
 
-                            'replacementName
-                            If nQuantity > 0 Then
-                                qtyAdded = qtyAdded + nQuantity
-                                If Not InStr(strAddedProducts, "'" & nProductKey & "'") > 0 Then ' double check we havent added this product (dont really need but good just in case)
-                                    For Each oItem2 In myWeb.moRequest.Form 'loop through again checking for options
-                                        If oItem2 = "replacementName_" & nProductKey Then cReplacementName = myWeb.moRequest.Form.Get(oItem2)
-                                        If InStr(oItem2, "_") > 0 Then
-                                            If Split(oItem2, "_")(0) & "_" & Split(oItem2, "_")(1) = "opt_" & nProductKey Then 'check it is an option
-                                                oCurOpt = Split(myWeb.moRequest.Form.Get(oItem2), ",") 'get array of option in "1_2" format
-                                                For nI = 0 To UBound(oCurOpt) 'loop through current options to split into another array
-                                                    ReDim Preserve oOptions(nCurOptNo + 1) 'redim the array to new length while preserving the current data
-                                                    oOptions(nCurOptNo) = Split(oCurOpt(nI), "_") 'split out the arrays of options
-                                                    nCurOptNo += 1 'update number of options
-                                                Next
-                                            End If 'end option check
-                                        End If
-                                    Next 'end option loop
+
+                            cProcessInfo = oItem1.ToString & " = " & myWeb.moRequest.Form.Get(oItem1)
+
+                                If IsNumeric(myWeb.moRequest.Form.Get(oItem1)) Then
+                                    nQuantity = myWeb.moRequest.Form.Get(oItem1)
+                                End If
+
+                                'replacementName
+                                If nQuantity > 0 Then
+                                    qtyAdded = qtyAdded + nQuantity
+                                    If Not InStr(strAddedProducts, "'" & nProductKey & "'") > 0 Then ' double check we havent added this product (dont really need but good just in case)
+                                        For Each oItem2 In myWeb.moRequest.Form 'loop through again checking for options
+                                            If oItem2 = "replacementName_" & nProductKey Then cReplacementName = myWeb.moRequest.Form.Get(oItem2)
+                                            If InStr(oItem2, "_") > 0 Then
+                                                If Split(oItem2, "_")(0) & "_" & Split(oItem2, "_")(1) = "opt_" & nProductKey Then 'check it is an option
+                                                    oCurOpt = Split(myWeb.moRequest.Form.Get(oItem2), ",") 'get array of option in "1_2" format
+                                                    For nI = 0 To UBound(oCurOpt) 'loop through current options to split into another array
+                                                        ReDim Preserve oOptions(nCurOptNo + 1) 'redim the array to new length while preserving the current data
+                                                        oOptions(nCurOptNo) = Split(oCurOpt(nI), "_") 'split out the arrays of options
+                                                        nCurOptNo += 1 'update number of options
+                                                    Next
+                                                End If 'end option check
+                                            End If
+                                        Next 'end option loop
                                     'Add Item
                                     If myWeb.moRequest.Form.Get("donationAmount") <> "" Then
                                         If IsNumeric(myWeb.moRequest.Form.Get("donationAmount")) Then
                                             AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
                                         End If
                                     Else
-                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName)
+                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, bDepositOnly)
                                     End If
-                                    'Add Item to "Done" List
-                                    strAddedProducts &= "'" & nProductKey & "',"
-                                End If
-                            End If 'end check for previously added
-                        End If 'end check for item/quant
+                                        'Add Item to "Done" List
+                                        strAddedProducts &= "'" & nProductKey & "',"
+                                    End If
+                                End If 'end check for previously added
+                            End If 'end check for item/quant
                     Next 'End Loop for getting products/quants
                     If qtyAdded > 0 Then
                         AddItems = True
@@ -7740,6 +7829,20 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                             oElmt.SetAttribute("deliveryDate", xmlDate(oRow2("dExpectedDeliveryDate")))
                                             oElmt.SetAttribute("collectionDate", xmlDate(oRow2("dCollectionDate")))
                                             oContent.AppendChild(oElmt)
+                                        Next
+                                    End If
+                                    'Add Payment History
+                                    If oDR("nCartStatus") > 5 And moDBHelper.doesTableExist("tblCartPayment") Then
+                                        Dim sSql As String = "Select p.*, pm.*, a.dInsertDate from tblCartPayment p inner join tblCartPaymentMethod pm on p.nCartPaymentMethodId = pm.nPayMthdKey inner join tblAudit a on a.nAuditKey = p.nAuditId where nCartOrderId=" & oDR("nCartOrderKey")
+                                        Dim oDs3 = moDBHelper.GetDataSet(sSql, "Payment", "Details")
+                                        oDs3.Tables("Payment").Columns("cPayMthdDetailXml").ColumnMapping = MappingType.Element
+                                        Dim oXML2 As New XmlDocument
+                                        oXML2.InnerXml = Replace(Replace(oDs3.GetXml, "&gt;", ">"), "&lt;", "<")
+                                        Dim oPaymentNode As XmlElement = oContent.OwnerDocument.CreateElement("Payments")
+                                        oPaymentNode.InnerXml = oXML2.InnerXml
+                                        Dim oElmt As XmlElement
+                                        For Each oElmt In oPaymentNode.FirstChild.SelectNodes("*")
+                                            oContent.FirstChild.AppendChild(oPaymentNode.FirstChild.FirstChild)
                                         Next
                                     End If
 

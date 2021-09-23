@@ -338,6 +338,7 @@
     <html lang="{$pageLang}" xml:lang="{$pageLang}">
       <xsl:apply-templates select="." mode="htmlattr"/>
       <head>
+        <xsl:apply-templates select="." mode="metacharset"/>
         <xsl:choose>
           <xsl:when test="ContentDetail">
             <xsl:attribute name="prefix">
@@ -375,7 +376,6 @@
           </script>
           <!-- PayPal END -->
         </xsl:if>
-        <xsl:apply-templates select="." mode="metacharset"/>
         <!-- browser title -->
         <title>
           <xsl:apply-templates select="." mode="PageTitle"/>
@@ -442,9 +442,6 @@
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
-
-
-
     </html>
   </xsl:template>
 
@@ -471,7 +468,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="metacharset">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   </xsl:template>
 
   <xsl:template match="Page[Contents/Content[@name='EncType']]" mode="metacharset">
@@ -2429,11 +2426,12 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="BingTrackingCode">
-    <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+   
       <xsl:if test="$BingTrackingID!=''">
         <script>
           (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
         </script>
+         <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
         <script>
           window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' });
         </script>
@@ -3492,7 +3490,7 @@
 
   <!--   ################################################   Menu & Content display name  ##############################################   -->
   <!-- Display Name for a Page -->
-  <xsl:template match="MenuItem" mode="getDisplayName">
+  <xsl:template match="MenuItem | PageVersion" mode="getDisplayName">
     <xsl:choose>
       <xsl:when test="DisplayName/node()='_'">
       </xsl:when>
@@ -3606,7 +3604,7 @@
   <!--  ##  Used to build the URLs for pages, and content -->
 
   <!-- Match on Menu Item - Build URL for that MenuItem -->
-  <xsl:template match="MenuItem" mode="getHref">
+  <xsl:template match="MenuItem | PageVersion" mode="getHref">
     <!-- absolute url false by default -->
     <xsl:param name="absoluteURL" select="false()" />
 

@@ -170,13 +170,13 @@ Partial Public Class Cms
                 Else
                     ' Cart doesn't exist - check if it can be found in the database, although only run this check if we know that we've visited the cart
                     ' Also check out if this is coming from a Worldpay callback.
-                    If Not (myWeb.moRequest("refSessionId") Is Nothing) Or Not (myWeb.moRequest("transStatus") Is Nothing) Or Not (myWeb.moRequest("ewSettlement") Is Nothing) Then
+                    If Not (myWeb.moRequest("refSessionId") Is Nothing) Or Not (myWeb.moRequest("transStatus") Is Nothing) Or Not (myWeb.moRequest("settlementRef") Is Nothing) Then
                         If Not (myWeb.moRequest("transStatus") Is Nothing) Then
                             sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId  where o.cCartSchemaName='cart' and o.nCartOrderKey=" & myWeb.moRequest("cartId") & " and DATEDIFF(hh,a.dInsertDate,GETDATE())<24"
                             'mcPaymentMethod = "WorldPay"
-                        ElseIf Not (myWeb.moRequest("ewSettlement") Is Nothing) Then
+                        ElseIf Not (myWeb.moRequest("settlementRef") Is Nothing) Then
                             ' Go get the cart, restore settings
-                            sSql = "select * from tblCartOrder where cCartSchemaName='cart' and cSettlementID='" & myWeb.moRequest("ewSettlement") & "'"
+                            sSql = "select * from tblCartOrder where cCartSchemaName='cart' and cSettlementID='" & myWeb.moRequest("settlementRef") & "'"
                         Else
                             sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='cart' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "' and DATEDIFF(hh,a.dInsertDate,GETDATE())<24"
                         End If
@@ -187,7 +187,7 @@ Partial Public Class Cms
                                 mnCartId = oDr("nCartOrderKey") ' get cart id
                                 mnProcessId = oDr("nCartStatus") ' get cart status
                                 mnTaxRate = oDr("nTaxRate")
-                                If Not (myWeb.moRequest("ewSettlement") Is Nothing) Then
+                                If Not (myWeb.moRequest("settlementRef") Is Nothing) Then
 
                                     ' Set eh commands for a settlement
                                     mcSubmitText = "Go To Checkout"

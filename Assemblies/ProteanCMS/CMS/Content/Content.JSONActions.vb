@@ -162,12 +162,13 @@ Partial Public Class Cms
                     End If
 
 
-                        Dim oSrch As New Protean.Cms.Search(myApi)
+                    Dim oSrch As New Protean.Cms.Search(myApi)
                     Dim oResultsXml As New XmlDocument()
                     oResultsXml.AppendChild(oResultsXml.CreateElement("Results"))
                     oSrch.moContextNode = oResultsXml.FirstChild
                     oSrch.IndexQuery(myApi, SearchString, HitsLimit, fuzzySearch)
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(oResultsXml, Newtonsoft.Json.Formatting.Indented)
+                    jsonString = jsonString.Replace("/*?xml:namespace prefix = o ns = ""urn:schemas-microsoft-com:office:office"" /*/", "")
                     Return jsonString.Replace("""@", """_")
 
                 Catch ex As Exception
