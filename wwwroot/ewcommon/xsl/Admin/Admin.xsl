@@ -4952,7 +4952,7 @@
 			<xsl:text>
         done: function (e, data) {
 
-console.log(JSON.stringify(data));
+
         $.each(data.files, function (index, file) {
 
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';

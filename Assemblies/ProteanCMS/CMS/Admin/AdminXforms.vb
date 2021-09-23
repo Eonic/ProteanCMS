@@ -7191,20 +7191,21 @@ Partial Public Class Cms
                     MyBase.NewFrm("EditUserSubscription")
                     MyBase.bProcessRepeats = False
                     MyBase.load("/xforms/Subscription/EditSubscription.xml", myWeb.maCommonFolders)
-                    Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
 
                     If nSubId > 0 Then
-                        Dim existingInstanceDoc As New XmlDocument
-                        existingInstanceDoc.LoadXml("<instance>" & moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId).Replace("xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "").Replace("xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "") & "</instance>")
+                        Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                        existingInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId).Replace("xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "").Replace("xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "")
                         MyBase.bProcessRepeats = True
-                        MyBase.LoadInstance(existingInstanceDoc)
+                        MyBase.LoadInstance(existingInstance)
                     End If
+
                     moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
                     Dim i As Integer = 1
                     Dim bDone As Boolean = False
                     Dim cItems As String = ""
                     Dim initialSubContentId As Long = CLng("0" & MyBase.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText)
 
+                    MyBase.addValues()
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
@@ -7268,7 +7269,7 @@ Partial Public Class Cms
                         End If
                     End If
 
-                    MyBase.addValues()
+
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
