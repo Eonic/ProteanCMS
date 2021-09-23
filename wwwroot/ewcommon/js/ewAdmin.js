@@ -410,7 +410,7 @@ $(document).ready(function () {
 
     //select all checkboxes
     $(".select-all").change(function () {  //"select all" change 
-        $(".checkbox input").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
+        $(".checkbox input:not(:disabled)").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
     });
 
     //".checkbox" change 
@@ -432,7 +432,27 @@ $(document).ready(function () {
         var bulkAction = $('select[name=BulkAction]').val();
         var pgid = $('input[name=pgid]').val();
         window.location = '?ewCmd=BulkContentAction&BulkAction=' + bulkAction + "&pgid=" + pgid + '&id=' + ids;
+    });
 
+    $('#BulkAction').on('change', function (e) {
+        //default all enabled
+        var inventoryProductCheckboxes = $('.inventory-bulk-checkbox');
+        inventoryProductCheckboxes.prop('disabled', false);
+
+        //handle delete case
+        var valueSelected = this.value;
+        if (valueSelected.toLowerCase() === "delete") {
+            var activeProductCheckboxes = $('.inventory-bulk-checkbox[data-status="1"]');
+            activeProductCheckboxes.prop('checked', false);
+            activeProductCheckboxes.prop('disabled', true);           
+        }
+
+        //select all value based on items checked.
+        if (inventoryProductCheckboxes.length == $(".inventory-bulk-checkbox:checked").length) {
+            $(".select-all").prop('checked', true);
+        } else {
+            $(".select-all").prop('checked', false);
+        }
     });
 
 });

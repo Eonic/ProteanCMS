@@ -410,7 +410,7 @@ Partial Public Class Cms
                         HitsLimit = pageSize 'first load as per page count
                     End If
                     If (myWeb.moRequest("PageSize") > 0) Then
-                        PageSize = myWeb.moRequest("PageSize")
+                        pageSize = myWeb.moRequest("PageSize")
                     End If
                     If (myWeb.moRequest("command") > 0) Then
                         command = myWeb.moRequest("command")
@@ -425,7 +425,7 @@ Partial Public Class Cms
                     HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
                     If HitsLimit = 0 Then HitsLimit = 300
                     pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
-                    If PageSize = 0 Then PageSize = 300
+                    If pageSize = 0 Then pageSize = 300
                 End If
 
 

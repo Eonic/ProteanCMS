@@ -254,6 +254,7 @@ Partial Public Class Cms
             CartDelivery = 31
             CartCarrier = 32
             SubscriptionRenewal = 33
+            CartPayment = 34
 
             '100-199 reserved for LMS
             CpdLog = 100
@@ -292,11 +293,13 @@ Partial Public Class Cms
             tblCodes = 26
             tblContentVersions = 27
             tblCartShippingPermission = 28
+
             'tblContentStructure = 29 'duplicate, but leave this
             tblLookup = 30
             tblCartOrderDelivery = 31
             tblCartCarrier = 32
             tblSubscriptionRenewal = 33
+            tblCartPayment = 34
 
             '100-199 reserved for LMS
             tblCpdLog = 100
@@ -663,6 +666,8 @@ Partial Public Class Cms
                     Return "nCarrierKey"
                 Case 33
                     Return "nSubRenewalKey"
+                Case 34
+                    Return "nCartPaymentKey"
                     '100-199 reserved for LMS
                 Case 100
                     Return "nCpdLogKey"
@@ -989,6 +994,33 @@ Partial Public Class Cms
 
         End Function
 
+        Public Overridable Function getObjectStatus(ByVal objecttype As objectTypes, ByVal nId As String) As String
+            PerfMon.Log("DBHelper", "setObjectStatus")
+            Dim sSql As String
+            Dim nAuditId As Long
+            Dim oDr As SqlDataReader
+            Dim sResult As Integer
+            Dim cProcessInfo As String = ""
+            Try
+                sSql = "select nAuditId from " & getTable(objecttype) & " where " & getKey(objecttype) & " = " & nId
+                oDr = getDataReader(sSql)
+
+                While oDr.Read
+                    nAuditId = oDr(0)
+                End While
+
+                oDr.Close()
+                oDr = Nothing
+                sSql = "select nStatus from tblAudit WHERE nAuditKey =" & nAuditId
+                sResult = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+
+                Return sResult
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "setObjectStatus", ex, cProcessInfo))
+                Return ""
+            End Try
+
+        End Function
 
         ''' <summary>
         ''' Assess an audit id, it's previous and new status and if changed logs the appropriate change
@@ -10599,7 +10631,7 @@ ReturnMe:
             End Try
         End Function
 
-        Public Function savePayment(ByVal CartId As Integer, ByVal nUserId As Long, ByVal cProviderName As String, ByVal cProviderRef As String, ByVal cMethodName As String, ByVal oDetailXML As XmlElement, ByVal dExpire As Date, ByVal bUserSaved As Boolean, ByVal nAmountPaid As Double) As Integer
+        Public Function savePayment(ByVal CartId As Integer, ByVal nUserId As Long, ByVal cProviderName As String, ByVal cProviderRef As String, ByVal cMethodName As String, ByVal oDetailXML As XmlElement, ByVal dExpire As Date, ByVal bUserSaved As Boolean, ByVal nAmountPaid As Double, Optional paymentType As String = "full") As Integer
             Dim cSQL As String = ""
             Dim cRes As String = ""
 
@@ -10618,13 +10650,12 @@ ReturnMe:
                 End If
 
                 'check if we allready have a payment method for this order if so we overwrite
-
-                cSQL = "Select nPayMthdId from tblCartOrder WHERE nCartOrderKey = " & CartId
-                cRes = ExeProcessSqlScalar(cSQL)
-
-                If IsNumeric(cRes) Then
-                    nPaymentMethodKey = CLng(cRes)
-                End If
+                'TS Disabled Sept 21 as we might have multiple payment methods per order with new deposit functionality.
+                'cSQL = "Select nPayMthdId from tblCartOrder WHERE nCartOrderKey = " & CartId
+                'cRes = ExeProcessSqlScalar(cSQL)
+                'If IsNumeric(cRes) Then
+                ' nPaymentMethodKey = CLng(cRes)
+                ' End If
 
                 'mask the credit card number
                 Dim oCcNum As XmlElement = oDetailXML.SelectSingleNode("number")
@@ -10674,6 +10705,30 @@ ReturnMe:
                 End If
 
                 CartPaymentMethod(CartId, nPaymentId)
+
+                If Me.doesTableExist("tblCartPayment") Then
+                    oInstance.RemoveAll()
+                    oElmt = oXml.CreateElement("tblCartPayment")
+                    addNewTextNode("nCartOrderId", oElmt, CartId)
+                    addNewTextNode("nCartPaymentMethodId", oElmt, nPaymentId)
+                    If paymentType = "full" Then
+                        addNewTextNode("bFull", oElmt, "true")
+                    End If
+                    If paymentType = "deposit" Then
+                        addNewTextNode("bPart", oElmt, "true")
+                    End If
+                    If paymentType = "settlement" Then
+                        addNewTextNode("bSettlement", oElmt, "true")
+                    End If
+                    addNewTextNode("nPaymentAmount", oElmt, nAmountPaid.ToString())
+                    ' addNewTextNode("dInsertDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
+                    ' addNewTextNode("dUpdateDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
+                    ' addNewTextNode("nInsertDirId", oElmt, myWeb.mnUserId) '
+                    addNewTextNode("nStatus", oElmt, 1)
+                    addNewTextNode("nAuditId", oElmt, getAuditId())
+                    oInstance.AppendChild(oElmt)
+                    setObjectInstance(dbHelper.objectTypes.CartPayment, oInstance)
+                End If
 
                 Return nPaymentId
 

@@ -213,6 +213,8 @@ Partial Public Class Cms
                         sSql &= " Convert(Xml, C.cContentXmlBrief).value('(Content/cDisplayName)[1]', 'Varchar(50)') AS displayName,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineColor)[1]', 'Varchar(50)') AS lineColor,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'Varchar(10)') AS lineTension,"
+                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@label-x)[1]', 'Varchar(10)') AS xLabelPosition,"
+                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@label-y)[1]', 'Varchar(10)') AS yLabelPosition,"
                         sSql &= " '' AS url,"
                         sSql &= " P.ProductId AS productId,"
                         sSql &= " CD.D.value('(@x)[1]', 'Varchar(10)') AS xLoc,"

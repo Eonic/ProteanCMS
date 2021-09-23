@@ -60,7 +60,7 @@
     <bind nodeset="tblContent">
       <bind id="cModuleTitle" nodeset="cContentName" required="false()" type="string"/>
       <bind nodeset="cContentXmlBrief/Content">
-        <bind id="cGoogleAPIKey" nodeset="@apiKey" required="false()" type="string"/>
+        <!--bind id="cGoogleAPIKey" nodeset="@apiKey" required="false()" type="string"/-->
         <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
         <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
         <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
@@ -119,9 +119,9 @@
         <input bind="cModuleTitle" class="long">
           <label>Title or name</label>
         </input>
-        <input bind="cGoogleAPIKey" class="long">
+        <!--input bind="cGoogleAPIKey" class="long">
           <label>APIKey</label>
-        </input>
+        </input-->
       </group>
       <group class="inline">
         <label>Map Controls</label>
@@ -198,16 +198,6 @@
         <range bind="nHeight" start="0" end="1000" step="10">
           <label>Height</label>
         </range>
-        <!--<input bind="nLat" class="short">
-          <label>Latitude</label>
-        </input>
-        <input bind="nLong" class="short">
-          <label>Longitude</label>
-        </input>
-        <div>OR</div>-->
-        <!--<input bind="cGeoCode" class="short">
-          <label>Postcode</label>
-        </input>-->
       </group>
       <group>
         <label>Map Locations</label>
@@ -230,17 +220,19 @@
           <input bind="cContentLocationPostCode" class="vshort keep_empty">
             <label>Postal code</label>
           </input>
-          <submit submission="" ref="" class=" hideRequired getGeocodeButton" icon="fa-map-marker">
-            <label>Get Latitude and Longitude</label>
-          </submit>
         </group>
         <group class="inline">
-          <input bind="cContentLocationLat" class="required">
-            <label>Latitude</label>
-          </input>
-          <input bind="cContentLocationLong" class="required">
-            <label>Longitude</label>
-          </input>
+          <group class="inline-col3">
+            <input bind="cContentLocationLat">
+              <label>Latitude</label>
+            </input>
+            <input bind="cContentLocationLong">
+              <label>Longitude</label>
+            </input>
+            <submit submission="" ref="" class="hideRequired getGeocodeButton" icon="fa-map-marker">
+              <label>Get latitude and longitude</label>
+            </submit>
+          </group>
         </group>
         <select1 bind="bMarker" appearance="full" class="">
           <label>Add a marker for this location to the map</label>

@@ -1,2 +1,0 @@
-D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\obj\Release\createsend-dotnet.csprojAssemblyReference.cache
-D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\obj\Release\createsend-dotnet.csproj.CoreCompileInputs.cache

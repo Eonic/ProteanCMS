@@ -570,9 +570,11 @@
                       </section>
                     </xsl:when>
                     <xsl:otherwise>
+                      <xsl:if test="not(@position='header' or @position='footer' or (@position='column1' and $page/@layout='Modules_1_column'))">
                       <xsl:attribute name="style">
                         background-image: url('<xsl:value-of select="@backgroundImage"/>');
                       </xsl:attribute>
+                      </xsl:if>
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:when>
@@ -2566,6 +2568,20 @@
             <xsl:with-param name="crop" select="$crop"/>
           </xsl:apply-templates>
         </xsl:when>
+        <xsl:when test="(@imgDetail and @imgDetail!='') or @lightbox='true'">
+          <xsl:choose>
+            <xsl:when test="@imgDetail and @imgDetail!=''">
+              <a href="{@imgDetail}" title="{@title}" class="responsive-lightbox">
+                <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+              </a>
+            </xsl:when>
+            <xsl:otherwise>
+              <a href="{node()/@src}" title="{@title}" class="responsive-lightbox">
+                <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="node()" mode="cleanXhtml"/>
         </xsl:otherwise>
@@ -4098,6 +4114,7 @@
       </div>
       <xsl:if test="Content[@type='FAQ']">
         <div class="faq-list">
+          <a name="pageTop" class="pageTop">&#160;</a>
           <h3>Question and Answer</h3>
           <ul>
             <xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
@@ -4312,6 +4329,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -4389,6 +4416,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
         <xsl:if test="@stepCount != '0'">
           <div class="terminus">&#160;</div>
@@ -4408,6 +4436,7 @@
   <!-- Contact Brief -->
   <xsl:template match="Content[@type='Contact']" mode="displayBrief">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <!-- contactBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="self::Content" mode="getHref">
@@ -4423,6 +4452,16 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="Url"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -4461,11 +4500,16 @@
         <xsl:if test="Images/img/@src!=''">
           <xsl:choose>
             <xsl:when test="@noLink='true'">
-              <xsl:apply-templates select="." mode="displayThumbnail"/>
+              <xsl:apply-templates select="." mode="displayThumbnail">
+                <xsl:with-param name="crop" select="$cropSetting" />
+              </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
               <a href="{$parentURL}" title="click here to view more details on {GivenName/node()} {Surname/node()}">
-                <xsl:apply-templates select="." mode="displayThumbnail"/>
+
+                <xsl:apply-templates select="." mode="displayThumbnail">
+                  <xsl:with-param name="crop" select="$cropSetting" />
+                </xsl:apply-templates>
               </a>
             </xsl:otherwise>
           </xsl:choose>
@@ -6317,7 +6361,7 @@
         <xsl:with-param name="class" select="'detail event'"/>
       </xsl:apply-templates>
       <h2>
-        <xsl:apply-templates select="Headline" mode="displayBrief"/>
+         <xsl:apply-templates select="Headline" mode="displayBrief"/>
       </h2>
       <!--RELATED CONTENT-->
       <div class="row">
@@ -6381,7 +6425,7 @@
           </xsl:if>
           <div class="description">
             <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-          </div>
+           </div>
         </div>
         <!-- Tickets  -->
         <xsl:if test="Content[@type='Ticket']">
@@ -8724,6 +8768,13 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:attribute>
+	     <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+              <xsl:attribute name="onclick">
+                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                <xsl:value-of select="Title/node()"/>
+                <xsl:text>');</xsl:text>
+              </xsl:attribute>
+            </xsl:if>	    	    
             <xsl:choose>
               <xsl:when test="contains(Path,'http://')">
                 <xsl:attribute name="title">
@@ -9659,6 +9710,9 @@
           <xsl:with-param name="bDescription">
             <xsl:value-of select="@displayDescription"/>
           </xsl:with-param>
+          <xsl:with-param name="showHiddenPages">
+            <xsl:value-of select="@showHiddenPages"/>
+          </xsl:with-param>
         </xsl:apply-templates>
       </ul>
       <div class="terminus">&#160;</div>
@@ -9669,6 +9723,7 @@
   <xsl:template match="MenuItem" mode="sitemap">
     <xsl:param name="level"/>
     <xsl:param name="bDescription"/>
+    <xsl:param name="showHiddenPages"/>
     <li>
       <xsl:apply-templates select="." mode="menuLink"/>
       <xsl:if test="$bDescription='true' and Description/node()">
@@ -9683,6 +9738,7 @@
           <xsl:value-of select="$level"/>
         </xsl:with-param>
         <xsl:with-param name="bDescription" select="$bDescription" />
+        <xsl:with-param name="showHiddenPages" select="$showHiddenPages" />
       </xsl:apply-templates>
     </xsl:if>
   </xsl:template>
@@ -9691,6 +9747,7 @@
   <xsl:template match="MenuItem" mode="sitemapSubLevel">
     <xsl:param name="level"/>
     <xsl:param name="bDescription" />
+    <xsl:param name="showHiddenPages" />
     <xsl:variable name="url">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
@@ -9698,15 +9755,7 @@
       <xsl:apply-templates select="." mode="getDisplayName"/>
     </xsl:variable>
     <xsl:choose>
-      <!-- when this page excluded from Nav, its children may not be. -->
-      <xsl:when test="DisplayName/@exclude='true'">
-        <xsl:apply-templates select="MenuItem" mode="sitemapSubLevel">
-          <xsl:with-param name="level" select="$level"/>
-          <xsl:with-param name="bDescription" select="$bDescription" />
-        </xsl:apply-templates>
-      </xsl:when>
-      <!-- otherwise normal behaviour -->
-      <xsl:otherwise>
+      <xsl:when test="$showHiddenPages='true'">
         <li>
           <xsl:apply-templates select="." mode="menuLink"/>
           <xsl:if test="$bDescription='true' and Description/node()">
@@ -9721,10 +9770,43 @@
                   <xsl:value-of select="$level+1"/>
                 </xsl:with-param>
                 <xsl:with-param name="bDescription" select="$bDescription" />
+                <xsl:with-param name="showHiddenPages" select="$showHiddenPages" />
               </xsl:apply-templates>
             </ul>
           </xsl:if>
         </li>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:choose>
+          <!-- when this page excluded from Nav, its children may not be. -->
+          <xsl:when test="DisplayName/@exclude='true'">
+            <xsl:apply-templates select="MenuItem" mode="sitemapSubLevel">
+              <xsl:with-param name="level" select="$level"/>
+              <xsl:with-param name="bDescription" select="$bDescription" />
+            </xsl:apply-templates>
+          </xsl:when>
+          <!-- otherwise normal behaviour -->
+          <xsl:otherwise>
+            <li>
+              <xsl:apply-templates select="." mode="menuLink"/>
+              <xsl:if test="$bDescription='true' and Description/node()">
+                <p>
+                  <xsl:apply-templates select="Description/node()" mode="flattenXhtml" />
+                </p>
+              </xsl:if>
+              <xsl:if test="MenuItem">
+                <ul>
+                  <xsl:apply-templates select="MenuItem" mode="sitemapSubLevel">
+                    <xsl:with-param name="level">
+                      <xsl:value-of select="$level+1"/>
+                    </xsl:with-param>
+                    <xsl:with-param name="bDescription" select="$bDescription" />
+                  </xsl:apply-templates>
+                </ul>
+              </xsl:if>
+            </li>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -10952,7 +11034,7 @@
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
-        <a name="faq-{@id}">
+        <a name="faq-{@id}" class="faq-link">
           &#160;
         </a>
         <h3>
@@ -11406,7 +11488,7 @@
     </xsl:variable>
 
     <!-- ###### -->
-    <div class="advanced-carousel-container">
+    <div class="advanced-carousel-container" style="height:{@CarouselHeight}px">
       <div class="cover-container">
         <div class="advanced-carousel">
           <ul style="display:none">
