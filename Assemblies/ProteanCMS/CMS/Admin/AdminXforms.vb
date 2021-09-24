@@ -7188,18 +7188,28 @@ Partial Public Class Cms
                 Dim cProcessInfo As String = ""
                 Try
 
+                    If LCase(moRequest("reset")) = "true" Then
+                        myWeb.moSession("tempInstance") = Nothing
+                    End If
+
                     MyBase.NewFrm("EditUserSubscription")
                     MyBase.bProcessRepeats = False
                     MyBase.load("/xforms/Subscription/EditSubscription.xml", myWeb.maCommonFolders)
 
                     If nSubId > 0 Then
-                        Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
-                        existingInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId).Replace("xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "").Replace("xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "")
-                        MyBase.bProcessRepeats = True
-                        MyBase.LoadInstance(existingInstance)
+                        If myWeb.moSession("tempInstance") Is Nothing Then
+                            Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                            existingInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId).Replace("xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "").Replace("xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "")
+                            MyBase.bProcessRepeats = True
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession("tempInstance") = MyBase.Instance
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                        End If
+
                     End If
 
-                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+                        moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
                     Dim i As Integer = 1
                     Dim bDone As Boolean = False
                     Dim cItems As String = ""
@@ -7265,7 +7275,7 @@ Partial Public Class Cms
                                     Next
                                 End If
                             End If
-
+                            myWeb.moSession("tempInstance") = Nothing
                         End If
                     End If
 
