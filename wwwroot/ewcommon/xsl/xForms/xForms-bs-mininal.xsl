@@ -31,6 +31,8 @@
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
   </xsl:template>
 
   <xsl:template match="*" mode="xform_control_script"></xsl:template>
