@@ -583,8 +583,39 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
             End Function
+            Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                'Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
+                Try
+
+                    'Submit the address form as per Cart > Apply > Billing
+                    myCart.mcCartCmd = "Billing"
+                    myCart.apply()
+                    'myCart.addressSubProcess(myCart.moCartXml, "Billing Address")
+                    ' then set processID = 5 if we have shipping set otherwise processID = 4
+                    'confirm myCart.moCartXml.SelectSingleNode("Order/Shipping") node in xml 
+                    If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
+                        myCart.mnProcessId = 5
+                    ElseIf myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Billing Address']") Is Nothing Then
+                        myCart.mnProcessId = 4
+                    End If
+
+                    'return the cart as JSON
+                    'Return GetCart(myApi, jObj)
+                    Dim jsonString As String = GetCart(myApi, jObj)
+                    Dim oCart As Cms.Cart = myCart
+                    Dim oElmt As XmlElement = myCart.moCartXml.SelectSingleNode("Order")
+                    Dim mcPaymentMethod As String = "JudoPay"
+                    Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
+                    Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
+                    ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, oCart, oElmt)
+                    myWeb.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
 
 
+                    Return "true"
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
 
             Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double, ByVal ShippingType As String) As String
                 Try
