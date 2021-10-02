@@ -584,6 +584,25 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
+                Try
+
+
+                    'Submit the address form as per Cart > Apply > Billing
+                    myCart.addressSubProcess(myCart.moCartXml, "Billing Address")
+
+                    ' then set processID = 5 if we have shipping set otherwise processID = 4
+                    If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Shipping") Is Nothing Then
+                        myCart.mnProcessId = 5
+                    End If
+
+                    'return the cart as JSON
+                    Return GetCart(myApi, jObj)
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
 
 
             Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double, ByVal ShippingType As String) As String
