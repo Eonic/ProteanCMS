@@ -7,6 +7,7 @@ Imports System.IO
 Imports System.Reflection
 Imports System.Linq
 Imports System.Collections.Generic
+Imports Newtonsoft.Json
 
 Public Class API
     Inherits Base
@@ -136,7 +137,12 @@ Public Class API
         Catch ex As Exception
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "JSONRequest", ex, sProcessInfo))
             'returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-            moResponse.Write(ex.Message)
+            If gbDebug Then
+                moResponse.Write(JsonConvert.SerializeObject(ex))
+            Else
+                moResponse.Write(ex.Message)
+            End If
+
             Me.Finalize()
         Finally
 

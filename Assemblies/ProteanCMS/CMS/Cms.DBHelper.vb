@@ -5560,12 +5560,16 @@ restart:
                     Dim oContact As XmlElement = moPageXml.CreateElement("Contact")
                     For Each oDC In oDS.Tables(0).Columns
                         Dim oIElmt As XmlElement = moPageXml.CreateElement(oDC.ColumnName)
-
                         If Not IsDBNull(oDRow(oDC.ColumnName)) Then
                             Dim cStrContent As String = oDRow(oDC.ColumnName)
                             cStrContent = Replace(Replace(cStrContent, "&gt;", ">"), "&lt;", "<")
-                            If Not cStrContent Is Nothing And Not cStrContent = "" Then oIElmt.InnerText = cStrContent
-
+                            If Not cStrContent Is Nothing And Not cStrContent = "" Then
+                                If oDC.ColumnName = "cContactXml" Then
+                                    oIElmt.InnerXml = oDRow(oDC.ColumnName)
+                                Else
+                                    oIElmt.InnerText = cStrContent
+                                End If
+                            End If
                         End If
                         oContact.AppendChild(oIElmt)
                     Next
