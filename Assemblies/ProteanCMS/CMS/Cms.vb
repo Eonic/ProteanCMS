@@ -1102,36 +1102,23 @@ Public Class Cms
         End If
     End Sub
 
-    Public Function ValidateAuthentication() As String
-        Dim path As String = moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")
-        Dim sUserId As String = String.Empty
-        Dim sPassKey As String = String.Empty
-        Dim sMessage As String = String.Empty
+    Public Function ValidateAuthentication(ByVal cUserName As String, ByVal cPassword As String) As Boolean
+        Dim isValidUser As Boolean = False
         Dim sProcessInfo As String = ""
-
         Try
 
-            If path.Contains("?") Then
-                If (moRequest.QueryString("ud") IsNot Nothing) Then
-                    sUserId = moRequest.QueryString("ud")
-                End If
-                If (moRequest.QueryString("key") IsNot Nothing) Then
-                    sPassKey = moRequest.QueryString("key")
+            If (cUserName <> String.Empty And cPassword <> String.Empty) Then
+                Dim sMessage As String = moDbHelper.validateUser(cUserName, cPassword)
+                If (IsNumeric(sMessage)) Then
+                    isValidUser = True
                 End If
             End If
-
-            If (sUserId <> String.Empty And sPassKey <> String.Empty) Then
-                sMessage = moDbHelper.validateUser(sUserId, sPassKey)
-                If (sMessage <> String.Empty) Then
-                    Return sMessage
-                End If
-
-            End If
+            Return isValidUser
         Catch ex As Exception
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ValidateAuthentication", ex, sProcessInfo))
-            Return ex.Message
+            Return isValidUser
         End Try
-        Return sMessage
+
     End Function
 
     Public Overridable Sub GetPageHTML()
@@ -1148,15 +1135,10 @@ Public Class Cms
 
                 Case pageResponseType.json
 
-
                     Dim moApi As New Protean.API()
 
                     moApi.InitialiseVariables()
-                    If (ValidateAuthentication() = String.Empty) Then
-                        moApi.JSONRequest()
-                    End If
-
-
+                    moApi.JSONRequest()
 
                 Case Else
                     CheckPagePath()

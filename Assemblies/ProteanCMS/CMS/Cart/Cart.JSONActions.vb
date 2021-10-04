@@ -599,8 +599,8 @@ Partial Public Class Cms
                     Else
                         Dim shippingXml As XmlElement = myCart.makeShippingOptionsXML()
 
-                        Dim nShipOptKey As Integer = Convert.ToInt32(shippingXml.SelectSingleNode("Method[cShipOptName='" + ShippingType + "']").SelectSingleNode("nShipOptKey").InnerText)
-                        myCart.updateGCgetValidShippingOptionsDS(nShipOptKey)
+                        '  Dim nShipOptKey As Integer = Convert.ToInt32(shippingXml.SelectSingleNode("Method[cShipOptName='" + ShippingType + "']").SelectSingleNode("nShipOptKey").InnerText)
+                        myCart.updateGCgetValidShippingOptionsDS(ShippingType)
                     End If
 
                     myWeb.moDbHelper.savePayment(nCartId, 0, sProviderName, sAuthNo, sProviderName, oDetailXml, DateTime.Now, False, dAmount)
