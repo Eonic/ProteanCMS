@@ -1102,24 +1102,7 @@ Public Class Cms
         End If
     End Sub
 
-    Public Function ValidateAuthentication(ByVal cUserName As String, ByVal cPassword As String) As Boolean
-        Dim isValidUser As Boolean = False
-        Dim sProcessInfo As String = ""
-        Try
 
-            If (cUserName <> String.Empty And cPassword <> String.Empty) Then
-                Dim sMessage As String = moDbHelper.validateUser(cUserName, cPassword)
-                If (IsNumeric(sMessage)) Then
-                    isValidUser = True
-                End If
-            End If
-            Return isValidUser
-        Catch ex As Exception
-            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ValidateAuthentication", ex, sProcessInfo))
-            Return isValidUser
-        End Try
-
-    End Function
 
     Public Overridable Sub GetPageHTML()
         PerfMon.Log("Web", "GetPageHTML")
