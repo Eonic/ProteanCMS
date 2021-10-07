@@ -576,55 +576,88 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
             End Function
+            'Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            '    'Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
+            '    Try
+
+            '        Dim moPageXml As XmlDocument
+            '        moPageXml = myWeb.moPageXml
+            '        Dim oCartXML As XmlDocument = moPageXml
+            '        Dim oContentElmt As XmlElement
+            '        Dim oElmt As XmlElement
+            '        Dim contact As New Contact
+            '        Dim contactDel As New Contact
+            '        oContentElmt = myCart.CreateCartElement(oCartXML)
+            '        oElmt = oContentElmt.FirstChild
+            '        myCart.GetCart(oElmt)
+
+            '        '   Dim contact As Contact = jObj("billing").ToObject(Of Contact)()
+            '        '   Dim contact As Contact = jObj("delivery").ToObject(Of Contact)()
+            '        contact.cContactName = IIf(jObj("cContactName") IsNot Nothing, jObj("cContactName").ToString(), "")
+            '        contact.cContactEmail = IIf(jObj("cContactEmail") IsNot Nothing, jObj("cContactEmail").ToString(), "")
+            '        contact.cContactAddress = IIf(jObj("cContactAddress") IsNot Nothing, jObj("cContactAddress").ToString(), "")
+            '        contact.cContactCity = IIf(jObj("cContactCity") IsNot Nothing, jObj("cContactCity").ToString(), "")
+            '        contact.cContactState = IIf(jObj("cContactState") IsNot Nothing, jObj("cContactState").ToString(), "")
+            '        contact.cContactZip = IIf(jObj("cContactZip") IsNot Nothing, jObj("cContactZip").ToString(), "")
+            '        contact.cContactCountry = IIf(jObj("cContactCountry") IsNot Nothing, jObj("cContactCountry").ToString(), "")
+            '        contact.cContactTel = IIf(jObj("cContactTel") IsNot Nothing, jObj("cContactTel").ToString(), "")
+            '        contact.nContactCartId = IIf(myCart.mnCartId = 0, 0, CInt(myCart.mnCartId))
+            '        contact.cContactType = IIf(jObj("cContactType") IsNot Nothing, jObj("cContactType").ToString(), "")
+            '        myWeb.moDbHelper.AddContact(contact)
+
+            '        'Add delivery address
+            '        If contact.cContactType = "Delivery address" Then
+            '            contactDel.cContactName = IIf(jObj("cContactName") IsNot Nothing, jObj("cContactName").ToString(), "")
+            '            contactDel.cContactAddress = IIf(jObj("cContactAddress") IsNot Nothing, jObj("cContactAddress").ToString(), "")
+            '            contactDel.cContactCity = IIf(jObj("cContactCity") IsNot Nothing, jObj("cContactCity").ToString(), "")
+            '            contactDel.cContactState = IIf(jObj("cContactState") IsNot Nothing, jObj("cContactState").ToString(), "")
+            '            contactDel.cContactZip = IIf(jObj("cContactZip") IsNot Nothing, jObj("cContactZip").ToString(), "")
+            '            contactDel.cContactCountry = IIf(jObj("cContactCountry") IsNot Nothing, jObj("cContactCountry").ToString(), "")
+            '            contactDel.nContactCartId = IIf(myWeb.moSession("nContactCartId") IsNot Nothing, CInt(myWeb.moSession("nContactCartId")), 0)
+            '            contactDel.cContactType = IIf(jObj("cContactType") IsNot Nothing, jObj("cContactType").ToString(), "")
+            '            myWeb.moDbHelper.AddContact(contactDel)
+            '        End If
+
+            '        myCart.mcPaymentMethod = "JudoPay"
+
+            '        myCart.GetCart(oElmt)
+            '        'Submit the address form as per Cart > Apply > Billing
+            '        myCart.mcCartCmd = "Billing"
+            '        'myCart.apply()
+            '        ''myCart.addressSubProcess(myCart.moCartXml, "Billing Address")
+            '        '' then set processID = 5 if we have shipping set otherwise processID = 4
+            '        ''confirm myCart.moCartXml.SelectSingleNode("Order/Shipping") node in xml 
+            '        If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
+            '            myCart.mnProcessId = 5
+            '        ElseIf myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Billing Address']") Is Nothing Then
+            '            myCart.mnProcessId = 4
+            '        End If
+
+            '        'return the cart as JSON
+            '        'Return GetCart(myApi, jObj)
+            '        Dim jsonString As String = GetCart(myApi, jObj)
+            '        Dim oCart As Cms.Cart = myCart
+            '        Dim oElmtPayment As XmlElement = myCart.moCartXml.SelectSingleNode("Order")
+            '        'Dim mcPaymentMethod As String = "JudoPay"
+            '        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod) 'mcPaymentMethod
+            '        Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
+            '        ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, oCart, oElmtPayment)
+            '        ' myWeb.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
+            '        Return "true"
+            '    Catch ex As Exception
+            '        Return ex.Message
+            '    End Try
+            'End Function
+
             Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 'Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
                 Try
 
-                    Dim moPageXml As XmlDocument
-                    moPageXml = myWeb.moPageXml
-                    Dim oCartXML As XmlDocument = moPageXml
-                    Dim oContentElmt As XmlElement
-                    Dim oElmt As XmlElement
-                    Dim contact As New Contact
-                    Dim contactDel As New Contact
-                    oContentElmt = myCart.CreateCartElement(oCartXML)
-                    oElmt = oContentElmt.FirstChild
-                    myCart.GetCart(oElmt)
-
-                    '   Dim contact As Contact = jObj("billing").ToObject(Of Contact)()
-                    '   Dim contact As Contact = jObj("delivery").ToObject(Of Contact)()
-                    contact.cContactName = IIf(jObj("cContactName") IsNot Nothing, jObj("cContactName").ToString(), "")
-                    contact.cContactEmail = IIf(jObj("cContactEmail") IsNot Nothing, jObj("cContactEmail").ToString(), "")
-                    contact.cContactAddress = IIf(jObj("cContactAddress") IsNot Nothing, jObj("cContactAddress").ToString(), "")
-                    contact.cContactCity = IIf(jObj("cContactCity") IsNot Nothing, jObj("cContactCity").ToString(), "")
-                    contact.cContactState = IIf(jObj("cContactState") IsNot Nothing, jObj("cContactState").ToString(), "")
-                    contact.cContactZip = IIf(jObj("cContactZip") IsNot Nothing, jObj("cContactZip").ToString(), "")
-                    contact.cContactCountry = IIf(jObj("cContactCountry") IsNot Nothing, jObj("cContactCountry").ToString(), "")
-                    contact.cContactTel = IIf(jObj("cContactTel") IsNot Nothing, jObj("cContactTel").ToString(), "")
-                    contact.nContactCartId = IIf(myCart.mnCartId = 0, 0, CInt(myCart.mnCartId))
-                    contact.cContactType = IIf(jObj("cContactType") IsNot Nothing, jObj("cContactType").ToString(), "")
-                    myWeb.moDbHelper.AddContact(contact)
-
-                    'Add delivery address
-                    If contact.cContactType = "Delivery address" Then
-                        contactDel.cContactName = IIf(jObj("cContactName") IsNot Nothing, jObj("cContactName").ToString(), "")
-                        contactDel.cContactAddress = IIf(jObj("cContactAddress") IsNot Nothing, jObj("cContactAddress").ToString(), "")
-                        contactDel.cContactCity = IIf(jObj("cContactCity") IsNot Nothing, jObj("cContactCity").ToString(), "")
-                        contactDel.cContactState = IIf(jObj("cContactState") IsNot Nothing, jObj("cContactState").ToString(), "")
-                        contactDel.cContactZip = IIf(jObj("cContactZip") IsNot Nothing, jObj("cContactZip").ToString(), "")
-                        contactDel.cContactCountry = IIf(jObj("cContactCountry") IsNot Nothing, jObj("cContactCountry").ToString(), "")
-                        contactDel.nContactCartId = IIf(myWeb.moSession("nContactCartId") IsNot Nothing, CInt(myWeb.moSession("nContactCartId")), 0)
-                        contactDel.cContactType = IIf(jObj("cContactType") IsNot Nothing, jObj("cContactType").ToString(), "")
-                        myWeb.moDbHelper.AddContact(contactDel)
-                    End If
-
-                    myCart.mcPaymentMethod = "JudoPay"
-
-                    myCart.GetCart(oElmt)
                     'Submit the address form as per Cart > Apply > Billing
                     myCart.mcCartCmd = "Billing"
-                    'myCart.apply()
-                    ''myCart.addressSubProcess(myCart.moCartXml, "Billing Address")
+                    myCart.apply()
+                    myCart.addressSubProcess(myCart.moCartXml, "Billing Address")
+
                     '' then set processID = 5 if we have shipping set otherwise processID = 4
                     ''confirm myCart.moCartXml.SelectSingleNode("Order/Shipping") node in xml 
                     If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
@@ -635,14 +668,6 @@ Partial Public Class Cms
 
                     'return the cart as JSON
                     'Return GetCart(myApi, jObj)
-                    Dim jsonString As String = GetCart(myApi, jObj)
-                    Dim oCart As Cms.Cart = myCart
-                    Dim oElmtPayment As XmlElement = myCart.moCartXml.SelectSingleNode("Order")
-                    'Dim mcPaymentMethod As String = "JudoPay"
-                    Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod) 'mcPaymentMethod
-                    Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
-                    ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, oCart, oElmtPayment)
-                    ' myWeb.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
                     Return "true"
                 Catch ex As Exception
                     Return ex.Message

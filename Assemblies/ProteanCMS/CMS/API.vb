@@ -195,7 +195,7 @@ Public Class API
 
 
             Catch ex As Exception
-                ' OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs("API", "ValidateAPICall", ex, ""))
+                'OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs("API", "ValidateAPICall", ex, ""))
 
                 Return False
             End Try
