@@ -633,21 +633,25 @@ Partial Public Class Cms
             '            myCart.mnProcessId = 4
             '        End If
 
-            '        'return the cart as JSON
-            '        'Return GetCart(myApi, jObj)
-            '        Dim jsonString As String = GetCart(myApi, jObj)
-            '        Dim oCart As Cms.Cart = myCart
-            '        Dim oElmtPayment As XmlElement = myCart.moCartXml.SelectSingleNode("Order")
-            '        'Dim mcPaymentMethod As String = "JudoPay"
-            '        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod) 'mcPaymentMethod
-            '        Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
-            '        ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, oCart, oElmtPayment)
-            '        ' myWeb.moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
-            '        Return "true"
-            '    Catch ex As Exception
-            '        Return ex.Message
-            '    End Try
-            'End Function
+            Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
+                Try
+
+
+                    'Submit the address form as per Cart > Apply > Billing
+                    myCart.addressSubProcess(myCart.moCartXml, "Billing Address")
+
+                    ' then set processID = 5 if we have shipping set otherwise processID = 4
+                    If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Shipping") Is Nothing Then
+                        myCart.mnProcessId = 5
+                    End If
+
+                    'return the cart as JSON
+                    Return GetCart(myApi, jObj)
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
 
             Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 'Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
