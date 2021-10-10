@@ -28,8 +28,8 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
         Try
 
 
-            If maxHeight = 0 Then maxHeight = 125
-            If maxWidth = 0 Then maxWidth = 125
+            If maxHeight = 0 Then maxHeight = 135
+            If maxWidth = 0 Then maxWidth = 135
             If sPrefix = "" Then
                 sPrefix = "/" & maxWidth & "x" & maxHeight & "/"
             End If

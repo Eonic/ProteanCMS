@@ -920,8 +920,14 @@ Check:
 
                                     'add addresses
                                     If Not MyBase.Instance.SelectSingleNode("tblCartContact") Is Nothing Then
-                                        MyBase.Instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = id
-                                        moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, MyBase.Instance)
+                                        Dim oCartContact As XmlElement
+                                        For Each oCartContact In MyBase.Instance.SelectNodes("tblCartContact")
+                                            Dim TempInstance As New XmlDocument
+                                            TempInstance.LoadXml("<instance/>")
+                                            TempInstance.DocumentElement.InnerXml = oCartContact.OuterXml
+                                            TempInstance.DocumentElement.SelectSingleNode("tblCartContact/nContactDirId").InnerText = id
+                                            moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, TempInstance.DocumentElement)
+                                        Next
                                     End If
 
                                     ' Save the member code, if applicable

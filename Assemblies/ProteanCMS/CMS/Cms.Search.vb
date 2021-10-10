@@ -410,7 +410,7 @@ Partial Public Class Cms
                         HitsLimit = pageSize 'first load as per page count
                     End If
                     If (myWeb.moRequest("PageSize") > 0) Then
-                        PageSize = myWeb.moRequest("PageSize")
+                        pageSize = myWeb.moRequest("PageSize")
                     End If
                     If (myWeb.moRequest("command") > 0) Then
                         command = myWeb.moRequest("command")
@@ -425,8 +425,9 @@ Partial Public Class Cms
                     HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
                     If HitsLimit = 0 Then HitsLimit = 300
                     pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
-                    If PageSize = 0 Then PageSize = 300
+                    If pageSize = 0 Then pageSize = 300
                 End If
+
 
                 If Not cQuery.Equals("") Then
 
@@ -453,9 +454,15 @@ Partial Public Class Cms
                     'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
                     If bShowHiddenForUser Then
                         _includeFuzzySearch = False ' to get exact matching result
+                        'keep page size for csuser as default
+                        HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
+                        If HitsLimit = 0 Then HitsLimit = 300
+                        pageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
+                        If pageSize = 0 Then pageSize = 300
                     Else
                         _includeFuzzySearch = True
                     End If
+
                     _overrideQueryBuilder = myWeb.moRequest("overrideQueryBuilder") = "true"
                     _includePrefixNameSearch = myWeb.moRequest("prefixNameSearch") = "true"
 

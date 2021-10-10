@@ -89,6 +89,7 @@ Public Class Base
     Public Features As New System.Collections.Generic.Dictionary(Of String, String)
 
     Public mbPreview As Boolean = False
+    Public mbPreviewHidden As Boolean = False
 
 #End Region
 

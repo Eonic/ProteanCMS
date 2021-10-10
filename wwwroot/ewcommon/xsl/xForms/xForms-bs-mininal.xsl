@@ -31,6 +31,8 @@
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
   </xsl:template>
 
   <xsl:template match="*" mode="xform_control_script"></xsl:template>
@@ -43,12 +45,13 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
+    <xsl:if test="$ref!=''">
     <script>
       $(function () {
       <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
       <xsl:text>-btn').popover('show');</xsl:text>
       });
-    </script>
+    </script></xsl:if>
   </xsl:template>
 
   <!-- -->
@@ -186,6 +189,38 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
+    </fieldset>
+  </xsl:template>
+
+  <xsl:template match="group[contains(@class,'inline-col3')]" mode="xform">
+    <xsl:param name="class"/>
+    <fieldset>
+      <xsl:if test=" @id!='' ">
+        <xsl:attribute name="id">
+          <xsl:value-of select="@id"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="$class!='' or @class!='' ">
+        <xsl:attribute name="class">
+          <xsl:value-of select="$class"/>
+          <xsl:if test="@class!=''">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="@class"/>
+          </xsl:if>
+          <xsl:for-each select="group">
+            <xsl:text> form-group li-</xsl:text>
+            <xsl:value-of select="./@class"/>
+          </xsl:for-each>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="label[position()=1]" mode="legend"/>
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <div class="form-group input-containing ">
+        <div class="control-wrapper input-wrapper appearance- ">
+          <xsl:apply-templates select="submit" mode="xform"/>
+        </div>
+      </div>
+            
     </fieldset>
   </xsl:template>
 
@@ -439,7 +474,9 @@
       <span class="pt-label">
         <xsl:value-of select="label"/>
       </span>
-      <xsl:apply-templates select="." mode="xform_control"/>
+      <xsl:apply-templates select="." mode="xform">
+        <xsl:with-param name="nolabel" select="'true'"/>
+      </xsl:apply-templates>
     </div>
   </xsl:template>
 
@@ -619,8 +656,10 @@
   </xsl:template>
 
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform">
+    <xsl:param name="nolabel"/>
 
     <!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
+    <xsl:if test="not($nolabel!='')">
     <xsl:apply-templates select="label">
       <xsl:with-param name="cLabel">
         <xsl:apply-templates select="." mode="getRefOrBind"/>
@@ -629,7 +668,7 @@
         <xsl:if test="contains(@class,'required') and count(item)!=1">true</xsl:if>
       </xsl:with-param>
     </xsl:apply-templates>
-
+    </xsl:if>
     <xsl:variable name="fmhz">
       <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
         <xsl:text>col-sm-9</xsl:text>
@@ -1142,7 +1181,9 @@
     </input>
   </xsl:template>
 
-
+  <xsl:template match="*" mode="getRefOrBind">
+   
+  </xsl:template>
 
   <!-- CREATE THE NAME attribute for an input field -->
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="getRefOrBind">
@@ -3497,6 +3538,89 @@
     <script src="https://www.google.com/recaptcha/api.js" async="" defer="">
       <xsl:text> </xsl:text>
     </script>
+  </xsl:template>
+  
+<xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
+    <xsl:variable name="label_low">
+      <xsl:apply-templates select="label" mode="lowercase"/>
+    </xsl:variable>
+    <xsl:variable name="inlineHint">
+      <xsl:choose>
+        <xsl:when test="hint[@class='inline']">
+          <xsl:value-of select="hint[@class='inline']/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="msg_required_inline"/>
+          <xsl:value-of select="$label_low"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <input type="text" name="{$ref}-temp" id="{$ref}-temp">
+      <xsl:choose>
+        <xsl:when test="@class!=''">
+          <xsl:attribute name="class">
+            <xsl:text>form-control </xsl:text>
+            <xsl:value-of select="@class"/>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">textbox form-control</xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:choose>
+        <xsl:when test="value!=''">
+          <xsl:attribute name="value">
+            <xsl:value-of select="value"/>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="value">
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+    </input>
+  
+  <input type="hidden" name="{$ref}-CountryCode" id="{$ref}-CountryCode">
+  </input>
+   
+  </xsl:template>
+  
+ <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
+    <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css" />
+    <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
+      <xsl:text> </xsl:text>
+    </script>
+     <script>
+      $(document).ready(function () {
+      <xsl:for-each select="descendant::input[contains(@class,'telephone')]">
+       <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+      const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
+ 
+      window.intlTelInput(telinput, {
+      initialCountry: "auto",
+      preferredCountries: ["gb"],
+         separateDialCode: true,
+      utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
+      hiddenInput: "<xsl:value-of select="$ref"/>"
+        });
+
+       telinput.addEventListener("countrychange", function() {
+        var countryCode = $("div.iti__selected-dial-code")[0].innerText;
+        $(".<xsl:value-of select="$ref"/>-CountryCode").val(countryCode);
+        });
+
+
+      </xsl:for-each>
+      });
+      
+   
+    </script>
+
   </xsl:template>
 
 </xsl:stylesheet>

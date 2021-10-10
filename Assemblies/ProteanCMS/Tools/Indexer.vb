@@ -130,6 +130,7 @@ Public Class Indexer
     End Function
 
     Public Sub DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False)
+        ' nPage = 59
         PerfMon.Log("Indexer", "DoIndex")
         Dim cProcessInfo As String = ""
         Dim cPageHtml As String = ""
@@ -201,6 +202,7 @@ Public Class Indexer
             'full pages
             cSQL = "Select nStructKey,cStructName From tblContentStructure" 'get all structure
             If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage 'unless a specific page
+            'If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage & " Or nStructParId =" & nPage 'unless a specific page
             oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Structure")
 
             'now we loop through the different tables and index the data
@@ -213,6 +215,7 @@ Public Class Indexer
                     'so we can see everything
                     xWeb.mnPageId = oDR("nStructKey")
                     xWeb.moPageXml = New XmlDocument
+                    xWeb.moContentDetail = Nothing
                     xWeb.mnArtId = Nothing
                     xWeb.mbIgnorePath = True
                     xWeb.mcEwSiteXsl = cPageXsl
@@ -248,13 +251,20 @@ Public Class Indexer
 
                             If Not oElmtRules Is Nothing Then cRules = oElmtRules.GetAttribute("content")
                             If Not InStr(cRules, "NOINDEX") > 0 And Not oElmtURL Is Nothing Then
-                                If Not (oElmtURL.GetAttribute("url").StartsWith("http")) Then
-                                    IndexPage(oElmtURL.GetAttribute("url"), oPageXml.DocumentElement)
+                                If Not (oElmtURL.GetAttribute("url").StartsWith("http")) Or IsNumeric(oElmtURL.GetAttribute("url")) Then
+
+                                    Dim thisUrl As String = oElmtURL.GetAttribute("url")
+                                    'strip ?pgid if index in admin mode
+                                    If thisUrl.Contains("?pgid") Then
+                                        thisUrl = Left(thisUrl, InStr(thisUrl, "?") - 1)
+                                    End If
+
+                                    IndexPage(thisUrl, oPageXml.DocumentElement)
 
                                     Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
-                                    oPageElmt.SetAttribute("url", oElmtURL.GetAttribute("url"))
+                                    oPageElmt.SetAttribute("url", thisUrl)
                                     oInfoElmt.AppendChild(oPageElmt)
-
+                                    thisUrl = Nothing
                                     nPagesIndexed += 1
                                 Else
                                     nPagesSkipped += 1
@@ -288,12 +298,11 @@ Public Class Indexer
 
                                 Else
                                     cProcessInfo = "Indexing - " & oElmt.GetAttribute("type") & "id=" & oElmt.GetAttribute("id") & " name=" & oElmt.GetAttribute("name")
-
+                                    xWeb.moContentDetail = Nothing
                                     xWeb.moPageXml = New XmlDocument ' we need to get this again with our content Detail
                                     xWeb.moDbHelper.moPageXml = xWeb.moPageXml
                                     xWeb.mcEwSiteXsl = cPageXsl
                                     xWeb.mnArtId = oElmt.GetAttribute("id")
-
                                     cPageHtml = xWeb.ReturnPageHTML(0, True)
                                     'remove any declarations that might affect and Xpath Search
                                     cPageHtml = Replace(cPageHtml, "<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.1//EN"" ""http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"">", "")
@@ -355,17 +364,28 @@ Public Class Indexer
                                                             'don't index
                                                             nDocumentsSkipped += 1
                                                         Else
-                                                            cProcessInfo = "Indexing - " & oDocElmt.InnerText
-                                                            Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText))
-                                                            IndexPage(xWeb.mnPageId, "<h1>" & oElmt.GetAttribute("name") & "</h1>" & fileAsText, oDocElmt.InnerText, oElmt.GetAttribute("name"), "Download", xWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
+                                                            Dim xFilePath As New System.IO.FileInfo(myWeb.goServer.MapPath(oDocElmt.InnerText))
+                                                            If xFilePath.Exists Then
+                                                                cProcessInfo = "Indexing - " & oDocElmt.InnerText
+                                                                Dim DocName As String = oElmt.GetAttribute("name")
+                                                                If DocName = "" Then
+                                                                    DocName = xFilePath.Name
+                                                                End If
 
-                                                            Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
-                                                            oPageElmt.SetAttribute("file", oDocElmt.InnerText)
-                                                            oInfoElmt.AppendChild(oPageElmt)
+                                                                Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText))
+                                                                IndexPage(xWeb.mnPageId, "<h1>" & DocName & "</h1>" & fileAsText, oDocElmt.InnerText, DocName, "Download", xWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
 
-                                                            nIndexed += 1
-                                                            nDocumentsIndexed += 1
+                                                                Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
+                                                                oPageElmt.SetAttribute("file", oDocElmt.InnerText)
+                                                                oInfoElmt.AppendChild(oPageElmt)
+
+                                                                nIndexed += 1
+                                                                nDocumentsIndexed += 1
+                                                            Else
+                                                                nDocumentsSkipped += 1
+                                                            End If
                                                         End If
+
                                                     End If
                                                 Next
                                             End If
@@ -397,14 +417,36 @@ Public Class Indexer
                             oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
                         End If
 
-                        oInfoElmt.SetAttribute("indexCount", nIndexed)
-                        oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
-                        oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
-                        oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
-                        oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
-                        oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
-                        oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+                        'oInfoElmt.SetAttribute("indexCount", nIndexed)
+                        'oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+                        'oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+                        'oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+                        'oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+                        'oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+                        'oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
 
+
+                        If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("indexCount", nIndexed)
+                        End If
+                        If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+                        End If
+                        If oInfoElmt.GetAttribute("pagesSkipped") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+                        End If
+                        If oInfoElmt.GetAttribute("contentCount") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+                        End If
+                        If oInfoElmt.GetAttribute("contentSkipped") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+                        End If
+                        If oInfoElmt.GetAttribute("documentsIndexed") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+                        End If
+                        If oInfoElmt.GetAttribute("documentsSkipped") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+                        End If
                         oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")
 
                         If bIsError Then
@@ -416,14 +458,30 @@ Public Class Indexer
                 Next
             End If
 
-            oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
-            oInfoElmt.SetAttribute("indexCount", nIndexed)
-            oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
-            oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
-            oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
-            oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
-            oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
-            oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+            If oInfoElmt.GetAttribute("endTime") IsNot Nothing Then
+                oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
+            End If
+            If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
+                oInfoElmt.SetAttribute("indexCount", nIndexed)
+            End If
+            If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
+                oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+            End If
+            If oInfoElmt.GetAttribute("pagesSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+            End If
+            If oInfoElmt.GetAttribute("contentCount") IsNot Nothing Then
+                oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+            End If
+            If oInfoElmt.GetAttribute("contentSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+            End If
+            If oInfoElmt.GetAttribute("documentsIndexed") IsNot Nothing Then
+                oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+            End If
+            If oInfoElmt.GetAttribute("documentsSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+            End If
 
             'any non-critical errors ?
             If cExError <> "" Then
@@ -448,14 +506,41 @@ Public Class Indexer
             errElmt = oIndexInfo.CreateElement("error")
             errElmt.InnerXml = cExError
             oIndexInfo.FirstChild.AppendChild(errElmt)
-            oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
-            oInfoElmt.SetAttribute("indexCount", nIndexed)
-            oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
-            oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
-            oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
-            oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
-            oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
-            oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+
+
+            'oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
+            'oInfoElmt.SetAttribute("indexCount", nIndexed)
+            'oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+            'oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+            'oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+            'oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+            'oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+            'oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+
+            If oInfoElmt.GetAttribute("endTime") IsNot Nothing Then
+                oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
+            End If
+            If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
+                oInfoElmt.SetAttribute("indexCount", nIndexed)
+            End If
+            If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
+                oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+            End If
+            If oInfoElmt.GetAttribute("pagesSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+            End If
+            If oInfoElmt.GetAttribute("contentCount") IsNot Nothing Then
+                oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+            End If
+            If oInfoElmt.GetAttribute("contentSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+            End If
+            If oInfoElmt.GetAttribute("documentsIndexed") IsNot Nothing Then
+                oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+            End If
+            If oInfoElmt.GetAttribute("documentsSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+            End If
 
             oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")
 
@@ -589,14 +674,11 @@ Public Class Indexer
             indexDoc.Add(New Field("url", url, Field.Store.YES, Field.Index.NOT_ANALYZED))
             indexDoc.Add(New Field("type", pageType, Field.Store.YES, Field.Index.NOT_ANALYZED))
 
-
             If pageXml IsNot Nothing Then
 
                 ' Add the meta data to the fields
                 For Each metaContent As XmlElement In pageXml.SelectNodes("/html/head/meta")
-
                     indexMeta(indexDoc, metaContent)
-
                 Next
 
                 ' Add the text
@@ -609,9 +691,7 @@ Public Class Indexer
                 End If
                 indexDoc.Add(New Field("text", text, Field.Store.YES, Field.Index.ANALYZED)) 'the actual content/text 
 
-
             End If
-
 
             ' Add document to the index
             oIndexWriter.AddDocument(indexDoc)
@@ -768,30 +848,36 @@ Public Class Indexer
         Try
             Dim oDoc As New Document 'This is the document element
             'here we need to get the proper paths
+            If cPageTitle = "" Or cContentType = "" Then
 
-            oDoc.Add(New Field("pgid", nPageId.ToString(), Field.Store.YES, Field.Index.ANALYZED))
-            oDoc.Add(New Field("artid", nContentId.ToString, Field.Store.YES, Field.Index.NOT_ANALYZED))
+                cExError &= "No Name or Type"
+                bIsError = True
 
-            oDoc.Add(New Field("url", cURL, Field.Store.YES, Field.Index.NOT_ANALYZED)) 'url of the page (simple)
-            oDoc.Add(New Field("name", cPageTitle, Field.Store.YES, Field.Index.NOT_ANALYZED)) 'the name of the page
-            oDoc.Add(New Field("contenttype", cContentType, Field.Store.YES, Field.Index.NOT_ANALYZED))  'the type of the content
+            Else
+                oDoc.Add(New Field("pgid", nPageId.ToString(), Field.Store.YES, Field.Index.ANALYZED))
+                oDoc.Add(New Field("artid", nContentId.ToString, Field.Store.YES, Field.Index.NOT_ANALYZED))
+
+                oDoc.Add(New Field("url", cURL, Field.Store.YES, Field.Index.NOT_ANALYZED)) 'url of the page (simple)
+                oDoc.Add(New Field("name", cPageTitle, Field.Store.YES, Field.Index.NOT_ANALYZED)) 'the name of the page
+                oDoc.Add(New Field("contenttype", cContentType, Field.Store.YES, Field.Index.NOT_ANALYZED))  'the type of the content
 
 
-            If cAbstract <> "" Then
-                oDoc.Add(New Field("abstract", cAbstract, Field.Store.YES, Field.Index.NOT_ANALYZED))
+                If cAbstract <> "" Then
+                    oDoc.Add(New Field("abstract", cAbstract, Field.Store.YES, Field.Index.NOT_ANALYZED))
+                End If
+                If Not dPublish = Nothing Then
+                    oDoc.Add(New Field("publishDate", xmlDate(dPublish), Field.Store.YES, Field.Index.NOT_ANALYZED))
+                End If
+                If Not dUpdate = Nothing Then
+                    oDoc.Add(New Field("updateDate", xmlDate(dUpdate), Field.Store.YES, Field.Index.NOT_ANALYZED))
+
+                End If
+                oDoc.Add(New Field("text", cPageText, Field.Store.YES, Field.Index.ANALYZED)) 'the actual content/text 
+
+                oIndexWriter.AddDocument(oDoc) 'add it to the index
+
+                SavePage(cURL, cPageText)
             End If
-            If Not dPublish = Nothing Then
-                oDoc.Add(New Field("publishDate", xmlDate(dPublish), Field.Store.YES, Field.Index.NOT_ANALYZED))
-            End If
-            If Not dUpdate = Nothing Then
-                oDoc.Add(New Field("updateDate", xmlDate(dUpdate), Field.Store.YES, Field.Index.NOT_ANALYZED))
-
-            End If
-            oDoc.Add(New Field("text", cPageText, Field.Store.YES, Field.Index.ANALYZED)) 'the actual content/text 
-
-            oIndexWriter.AddDocument(oDoc) 'add it to the index
-
-            SavePage(cURL, cPageText)
 
             '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
             'This is also where we can recreate the site as static html if needed

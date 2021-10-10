@@ -377,8 +377,9 @@ public static class Text
                     index = oMatches[oMatches.Count - 2].Index + 1;
 
 
-                truncate = truncate.Substring(0, (int)index) + "...";
-            }
+                //truncate = truncate.Substring(0, (int)index) + "...";
+                    truncate = truncate + "...";
+                }
 
             return truncate;
         }

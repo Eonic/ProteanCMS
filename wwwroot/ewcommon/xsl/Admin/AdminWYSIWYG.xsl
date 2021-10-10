@@ -43,7 +43,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCopyright']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        Eonic Associates LLP.
+        Eonic Digital LLP.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -65,7 +65,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>www.eonic.co.uk</xsl:text>
+        <xsl:text>eonic.com</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -223,6 +223,7 @@
           </div>
         </div>
         <div id="headers" class="preview form-inline">
+          <form class="ewXform" id="previewSettings" action="?ewCmd=PreviewOn">
           <span id="breadcrumb">
             <strong>
               <xsl:value-of select="/Page/PreviewMenu/User/@name"/>
@@ -237,19 +238,32 @@
               
             </strong>
             <xsl:text> </xsl:text>
-            <!--
-              <label for="PreviewDate"> as of date&#160;</label>
+           
+            <label for="PreviewDate"> as of date&#160;</label>&#160;
+            
             <span class="input-group">
-              <input type="text" class="form-control jqDatePicker" name="PreviewDate" value="{/Page/@pageViewDate}">
+              <input type="date" class="form-control" name="dPreviewDate" id="dPreviewDate" value="{/Page/@pageViewDate}" onChange="document.getElementById('previewSettings').submit();">
               </input>
-              <span class="input-group-btn">
-                <label for="dPublishDate" class="input-group-addon btn btn-default">
+              <!--span class="input-group-btn">
+                <label for="dPreviewDate" class="input-group-addon btn btn-default">
                   <i class="fa fa-calendar"> </i>
                 </label>
-              </span>
+              </span-->
              </span>
-             -->
+
+            &#160;
+            <xsl:choose>
+              <xsl:when test="/Page/@previewHidden='on'">
+                <a href="?ewcmd=PreviewOn&amp;ewCmd2=hideHidden" class="btn btn-default">Hide Hidden</a>
+              </xsl:when>
+              <xsl:otherwise>
+                <a href="?ewcmd=PreviewOn&amp;ewCmd2=showHidden" class="btn btn-default">Show Hidden</a>
+              </xsl:otherwise>
+            </xsl:choose>
+             
+          
           </span>
+          </form>
           <xsl:text> </xsl:text>
           <xsl:text> </xsl:text>
           <a href="?ewCmd=Normal&amp;pgid={/Page/@id}" class="btn btn-success btn-lg pull-right" id="previewBack">
@@ -657,7 +671,7 @@
     </xsl:variable>
     <div id="footer">
       <div id="footerCopyright" class="text-muted">
-        <div class="container">
+
           <xsl:text>© </xsl:text>
           <xsl:call-template name="eonicwebCopyright"/>
           <xsl:text> 2002-</xsl:text>
@@ -678,7 +692,9 @@
             </xsl:attribute>
             <xsl:value-of select="$supportWebsite"/>
           </a>
-        </div>
+          <span class="pull-right">
+            <xsl:value-of select="substring-before(//ServerVariables/Item[@name='GENERATOR']/node(),', Culture')"/>
+        </span>
       </div>
     </div>
     <div id="loading-indicator" class="model" style="display:none">
@@ -1361,7 +1377,7 @@
           </section>
         </xsl:if>
         <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
-          <section class="wrapper-sm {@background}">
+          <section>
             <xsl:attribute name="class">
               <xsl:text>wrapper-sm </xsl:text>
               <xsl:value-of select="@background"/>

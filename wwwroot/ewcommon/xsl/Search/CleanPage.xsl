@@ -52,7 +52,7 @@
   <!-- NORMAL PAGE META TAGS -->
   <xsl:template match="Page" mode="metadata">
     <meta name="pgid" content="{@id}"/>
-    <meta name="status" content="{@status}"/>
+    <meta name="status" content="{Contents/Content/@status}"/>
     <meta name="contenttype" content="page"/>
     <meta name="name">
       <xsl:attribute name="content">
@@ -88,7 +88,7 @@
   <xsl:template match="Page[@artid and @artid!='']" mode="metadata">
     <meta name="pgid" content="{@id}"/>
     <meta name="artid" content="{@artid}"/>
-    <meta name="status" content="{@status}"/>
+    <meta name="status" content="{ContentDetail/Content/@status}"/>
     <meta name="contenttype" content="{//ContentDetail/Content/@type}"/>
     <meta name="name">
       <xsl:attribute name="content">

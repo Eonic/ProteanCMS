@@ -1229,11 +1229,11 @@
   </xsl:template>
 
   <xsl:template match="div[ancestor::Page[@cssFramework='bs3' or @adminMode='true']]" mode="xform">
-    <xsl:if test="./@class">
+    <!--<xsl:if test="./@class">
       <xsl:attribute name="class">
         <xsl:value-of select="./@class"/>
       </xsl:attribute>
-    </xsl:if>
+    </xsl:if>-->
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
 

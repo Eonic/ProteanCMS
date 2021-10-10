@@ -210,8 +210,11 @@ Partial Public Class Cms
 
                         Dim sSql As String = "SELECT C.nContentKey,"
                         sSql &= " C.cContentName,"
+                        sSql &= " Convert(Xml, C.cContentXmlBrief).value('(Content/cDisplayName)[1]', 'Varchar(50)') AS displayName,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineColor)[1]', 'Varchar(50)') AS lineColor,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'Varchar(10)') AS lineTension,"
+                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@label-x)[1]', 'Varchar(10)') AS xLabelPosition,"
+                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@label-y)[1]', 'Varchar(10)') AS yLabelPosition,"
                         sSql &= " '' AS url,"
                         sSql &= " P.ProductId AS productId,"
                         sSql &= " CD.D.value('(@x)[1]', 'Varchar(10)') AS xLoc,"
@@ -260,6 +263,37 @@ Partial Public Class Cms
 
             End Function
 
+            Public Function IsParentPage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim pageId As String = inputJson("pageId").ToObject(Of Integer)
+
+                If myApi.mbAdminMode Then
+                    JsonResult = moAdminRedirect.isParentPage(pageId)
+                End If
+                Return JsonResult
+            End Function
+
+            Public Function RedirectPage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
+                Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
+                Dim newUrl As String = inputJson("newUrl").ToObject(Of String)
+                'Dim bChildPageRedirect As String = inputJson("isParent").ToObject(Of String)
+                Dim hiddenOldUrl As String = ""
+                Dim pageId As String = inputJson("pageId").ToObject(Of String)
+                Dim isParentPage As String = inputJson("isParent").ToObject(Of String)
+                Dim sType As String = inputJson("pageType").ToObject(Of String)
+                Try
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.RedirectPage(redirectType, oldUrl, newUrl, hiddenOldUrl, isParentPage, sType, pageId)
+                    End If
+
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
         End Class
 #End Region
 

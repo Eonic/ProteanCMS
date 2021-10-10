@@ -242,13 +242,75 @@ Partial Public Class Cms
                     End If
 
                     Dim nOptCount As Integer = 0
+                    Dim xElmtPaymentProvider As XmlElement
+                    xElmtPaymentProvider = GetValidPaymentProviders()
+
+                    For Each oElmt In xElmtPaymentProvider
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, oElmt.GetAttribute("name"))
+                        oPayProv.Activities.AddPaymentButton(oOptXform, oFrmElmt, oElmt, nPaymentAmount, submissionValue, refValue)
+
+                        nOptCount = nOptCount + 1
+
+                        'If bAllowUser And bAllowCurrencies Then
+
+                        'Dim PaymentLabel As String = oElmt.SelectSingleNode("description/@value").InnerText
+                        ''allow html in description node...
+                        'Dim bXmlLabel As Boolean = False
+
+                        'If oElmt.SelectSingleNode("description").InnerXml <> "" Then
+                        '    PaymentLabel = oElmt.SelectSingleNode("description").InnerXml
+                        '    bXmlLabel = True
+                        'End If
+
+                        'Dim iconclass As String = ""
+                        'If Not oElmt.SelectSingleNode("icon/@value") Is Nothing Then
+                        '    iconclass = oElmt.oPayProv("icon/@value").InnerText
+                        'End If
+
+
+
+
+                        'Add new submits
+                        ' oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & oElmt.GetAttribute("name"), iconclass, oElmt.GetAttribute("name"))
+
+
+                        ' End If
+                    Next
+
+
+                    Return nOptCount
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "getPaymentMethods", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            Public Function GetValidPaymentProviders(Optional validGroup As String = "") As XmlElement
+                Try
+
+                    Dim cProcessInfo As String = "GetValidPaymentProviders"
+                    Dim oElmt As XmlElement
+                    Dim oDoc As New XmlDocument
+
+                    Dim oProviders As XmlNode = oDoc.CreateElement("payment")
+                    Dim cnt As Integer = 0
+
+                    'GetValidPaymentProviders returns xml containing only the providers valid for this transaction.
+                    'We can then use this function elsewhere inside providers to get the valid config settings.
 
                     For Each oElmt In moPaymentCfg.SelectNodes("provider")
 
+                        Dim oprovider As XmlNode = moPaymentCfg.SelectNodes("provider")(cnt)
                         Dim bAllowUser As Boolean = False
                         Dim bAllowCurrencies As Boolean = False
+                        If validGroup <> String.Empty And oElmt.GetAttribute("validGroups") <> "all" Then
+                            If oElmt.GetAttribute("validGroups").Contains(validGroup) Then
+                                bAllowUser = True
+                            End If
+                        ElseIf oElmt.GetAttribute("validGroups") = "all" And validGroup = String.Empty Then
 
-                        If oElmt.GetAttribute("validGroups") = "all" Then
                             bAllowUser = True
                         Else
                             Dim aGroups() As String = Split(oElmt.GetAttribute("validGroups"), ",")
@@ -309,41 +371,18 @@ Partial Public Class Cms
                         End If
 
                         If bAllowUser And bAllowCurrencies Then
-
-                            Dim PaymentLabel As String = oElmt.SelectSingleNode("description/@value").InnerText
-                            'allow html in description node...
-                            Dim bXmlLabel As Boolean = False
-
-                            If oElmt.SelectSingleNode("description").InnerXml <> "" Then
-                                PaymentLabel = oElmt.SelectSingleNode("description").InnerXml
-                                bXmlLabel = True
-                            End If
-
-                            Dim iconclass As String = ""
-                            If Not oElmt.SelectSingleNode("icon/@value") Is Nothing Then
-                                iconclass = oElmt.SelectSingleNode("icon/@value").InnerText
-                            End If
-
-
-                            Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, oElmt.GetAttribute("name"))
-                            oPayProv.Activities.AddPaymentButton(oOptXform, oFrmElmt, oElmt, nPaymentAmount, submissionValue, refValue)
-
-
-                            'Add new submits
-                            ' oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & oElmt.GetAttribute("name"), iconclass, oElmt.GetAttribute("name"))
-                            nOptCount = nOptCount + 1
-
+                            Dim provider As XmlNode = oprovider.OwnerDocument.ImportNode(oprovider, True)
+                            oProviders.AppendChild(oDoc.ImportNode(provider, True))
                         End If
+                        cnt = cnt + 1
                     Next
-
-
-                    Return nOptCount
-
+                    Return oProviders
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "getPaymentMethods", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "GetValidPaymentProviders", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
+
 
             Function paySecPay(ByRef oRoot As XmlElement, ByVal sSubmitPath As String, Optional ByVal sProfile As String = "") As xForm
                 PerfMon.Log("PaymentProviders", "paySecPay")
@@ -4560,42 +4599,6 @@ Partial Public Class Cms
 
                     Else
                         oXform.valid = bOverrideValidity
-                    End If
-
-
-                    ' Add processing for deposits on valid forms.
-                    If mcPaymentType <> "Normal" And oXform.valid Then
-
-                        ' Check for a bespoke payment amount
-                        ' Amount is good, let's update the PaymentAmount to reflect this.
-                        If mcPaymentType = "deposit" Then mnPaymentAmount = CDbl(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText)
-
-                        ' Update the Cart Element to reflect the updated figures
-                        mnPaymentAmount = CDbl(FormatNumber(mnPaymentAmount, 2, TriState.True, TriState.False, TriState.False))
-
-                        ' Work out the remaining payment needed
-                        Select Case Me.mcPaymentType
-                            Case "deposit"
-                                nPayableAmount = mnPaymentMaxAmount - mnPaymentAmount
-                            Case Else
-                                nPayableAmount = 0
-                        End Select
-
-                        ' Let's update the cart element
-                        oRoot.SetAttribute("paymentMade", CStr(mnPaymentAmount))
-                        oRoot.SetAttribute("payableAmount", FormatNumber(nPayableAmount, 2, TriState.True, TriState.False, TriState.False))
-
-                        ' Let's create a unique link
-                        ' Make a unique link
-                        Do While cUniqueLink = ""
-                            nLinkNumber = CLng(System.Math.Ceiling(oRandom.NextDouble() * 89999999)) + 10000000
-                            sSql = "select * from tblCartOrder where cSettlementID = '" & CStr(nLinkNumber) & "'"
-                            odr = modbHelper.getDataReader(sSql)
-                            If Not odr.HasRows Then cUniqueLink = CStr(nLinkNumber)
-                            odr.Close()
-                        Loop
-                        oRoot.SetAttribute("settlementID", cUniqueLink)
-                        oRoot.SetAttribute("transStatus", "Complete")
                     End If
 
                     If moCartConfig("CardholderName") = "on" And oXform.valid Then

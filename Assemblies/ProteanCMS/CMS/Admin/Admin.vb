@@ -797,7 +797,10 @@ ProcessFlow:
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
                                         myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
-                                        myWeb.moDbHelper.addBulkRelatedContent(moPageXML.SelectSingleNode("/Page/Contents"))
+                                        Dim contentsNode = moPageXML.SelectSingleNode("/Page/Contents")
+                                        If Not IsNothing(contentsNode) Then
+                                            myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
+                                        End If
                                         myWeb.moSession("FilterValue") = FilterValue
                                     End If
 
@@ -1110,6 +1113,10 @@ ProcessFlow:
                                 mcEwCmd = "ShowContent"
                                 sAdminLayout = "ShowContent"
                                 GoTo ProcessFlow
+                            Case "Delete"
+                                mcEwCmd = "DeleteContent"
+                                sAdminLayout = "DeleteContent"
+                                GoTo ProcessFlow
                         End Select
                     Case "HideContent"
                         ' hide content
@@ -1173,7 +1180,29 @@ ProcessFlow:
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
                     Case "DeleteContent"
-                        oPageDetail.AppendChild(moAdXfm.xFrmDeleteContent(myWeb.moRequest("id")))
+                        Dim ids = myWeb.moRequest("id")
+                        Dim bulkIds() As String = ids.split(",")
+                        Dim status As Integer
+                        Dim id As String
+                        Dim count As Integer = ids.Split(",").Length
+                        Dim totalStatusCount As Integer = 0
+                        For Each id In bulkIds
+                            status = myWeb.moDbHelper.getObjectStatus(dbHelper.objectTypes.Content, id)
+                            If (status <> 1) Then
+                                totalStatusCount = totalStatusCount + 1
+                            End If
+
+                        Next
+                        If (count = totalStatusCount) Then
+                            If (status <> 1) Then  'check status here
+                                oPageDetail.AppendChild(moAdXfm.xFrmDeleteBulkContent(bulkIds))
+                            End If
+                        Else
+                            moAdXfm.addNote("DeleteContent", xForm.noteTypes.Alert, "Invalid product selection", , "alert-danger")
+                        End If
+
+
+
                         If moAdXfm.valid Then
                             bAdminMode = False
                             sAdminLayout = ""
@@ -1223,6 +1252,9 @@ ProcessFlow:
                             'lest just try this redirecting to page we moved it to
                             If mcEwCmd = "Normal" Or mcEwCmd = "NormalMail" Then
                                 myWeb.msRedirectOnEnd = "?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.mnPageId 'myWeb.moSession("lastPage")
+                            ElseIf myWeb.moSession("lastPage") <> "" Then
+                                myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                myWeb.moSession("lastPage") = ""
                             End If
                             oPageDetail.RemoveAll()
                             myWeb.ClearPageCache()
@@ -1561,6 +1593,43 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
+                    Case "RefundOrder"
+                        sAdminLayout = "RefundOrder"
+                        Dim providerName As String = ""
+                        Dim providerPaymentReference As String = ""
+                        Dim IsRefund As String = ""
+                        Dim nStatus As Long
+                        Dim oCart As New Cart(myWeb)
+                        oCart.moPageXml = moPageXML
+                        Dim orderid As String = myWeb.moRequest("orderId")
+                        Dim sql As String = "select cpayMthdProviderName, cPayMthdProviderRef from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" & myWeb.moRequest("id")
+                        Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
+                        While oDr.Read()
+                            providerName = oDr.GetString(0)
+                            providerPaymentReference = oDr.GetString(1)
+                        End While
+
+                        oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder(CInt("0" & myWeb.moRequest("id")), providerName, providerPaymentReference))
+                        If moAdXfm.valid Then
+                            Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")
+                            nStatus = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+                            nStatus = Cart.cartProcess.Refunded
+                            If CInt(orderid) > 0 Then
+                                Dim sSqlquery As String = "update tblCartOrder set nCartStatus ='" & nStatus & "', cCartSessionId='" & SqlFmt(myWeb.moSession.SessionID) & "'  where nCartOrderKey = " & orderid
+                                myWeb.moDbHelper.ExeProcessSql(sSqlquery)
+                            End If
+
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "OrderDetail"
+                            myWeb.msRedirectOnEnd = "?ewCmd=Orders&ewCmd2=Display&id=" & myWeb.moRequest("id")
+                        End If
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+
+                        '`get the payment mothod id for this order
+                        ' `from the paymentmethod we get the provider name And the card reference
+                        ' `we show a New form populating the refnd amount And showing the provider name And referance
+                        ' `on submitting the form we process using the provider name
+
                     Case "EditUserContact"
 
                         sAdminLayout = "EditUserContact"
@@ -1919,10 +1988,18 @@ ProcessFlow:
                             myWeb.msRedirectOnEnd = "/"
                         End If
 
-                        If IsDate(myWeb.moRequest("PreviewDate")) Then
-                            myWeb.moSession("PreviewDate") = CDate(myWeb.moRequest("PreviewDate"))
+                        If IsDate(myWeb.moRequest("dPreviewDate")) Then
+                            myWeb.moSession("PreviewDate") = CDate(myWeb.moRequest("dPreviewDate"))
                         End If
                         myWeb.mdDate = myWeb.moSession("PreviewDate")
+
+                        If myWeb.moRequest("ewCmd2") = "showHidden" Then
+                            myWeb.moSession("mbPreviewHidden") = True
+                        End If
+                        If myWeb.moRequest("ewCmd2") = "hideHidden" Then
+                            myWeb.moSession("mbPreviewHidden") = False
+                        End If
+                        myWeb.mbPreviewHidden = myWeb.moSession("mbPreviewHidden")
 
                         If CInt("0" & myWeb.moRequest("PreviewUser")) > 0 Then
                             myWeb.moSession("PreviewUser") = CInt("0" & myWeb.moRequest("PreviewUser"))
@@ -3186,12 +3263,23 @@ AfterProcessFlow:
 
                 Dim bShowTree As Boolean = False
                 Dim sFolder As String = myWeb.goServer.UrlDecode(myWeb.moRequest("fld"))
+
                 If sFolder = Nothing Then
                     If myWeb.moSession(LibType & "-path") <> "" Then
                         sFolder = myWeb.moSession(LibType & "-path")
                     End If
                 Else
-                    myWeb.moSession(LibType & "-path") = sFolder
+                    If sFolder.Contains("[yyyy-mm]") Then
+                        sFolder = sFolder.Replace("[yyyy-mm]", Now.Year.ToString("D4") & "-" & Now.Month.ToString("D2"))
+                        Dim oFs As New fsHelper(myWeb.moCtx)
+                        oFs.initialiseVariables(LibType)
+                        oFs.CreatePath(sFolder)
+                        oFs = Nothing
+                        myWeb.moPageXml.SelectSingleNode("/Page/Request/QueryString/Item[@name='fld']").InnerText = sFolder
+
+                    Else
+                        myWeb.moSession(LibType & "-path") = sFolder
+                    End If
                 End If
 
                 Dim sFile As String = myWeb.moRequest("file")
@@ -3278,6 +3366,7 @@ AfterProcessFlow:
                 If bShowTree = True Then
                     oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibType, sFolder))
                 End If
+
                 oFsh = Nothing
 
             Catch ex As Exception
@@ -3835,9 +3924,12 @@ listItems:
                                 lookupId = Nothing
                                 GoTo listItems
                             End If
-
+                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                                oPageDetail.InnerXml = ""
+                                lookupId = Nothing
+                                GoTo listItems
+                            End If
                         End If
-
 
                 End Select
 
@@ -4466,6 +4558,7 @@ SP:
 
                 If Not (oContElmt Is Nothing) Then oPageDetail.AppendChild(oContElmt)
 
+                myWeb.moSession("lastPage") = myWeb.mcOriginalURL
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "VersionControlProcess", ex, "", "", gbDebug)

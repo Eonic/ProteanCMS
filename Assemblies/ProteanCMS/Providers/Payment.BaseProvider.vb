@@ -326,17 +326,7 @@ Namespace Providers
                         ElseIf ccPaymentXform.valid = True Then
                             'added ability to change the success ID in payment providers
 
-                            If mcPaymentMethod = "SaveOrder" Then
-                                oCart.mnProcessId = Cart.cartProcess.AwaitingPayment
-                            Else
 
-                                oCart.mnProcessId = oEwProv.mnProcessIdOnComplete
-                                If oCart.mcDeposit = "On" Then
-                                    oCart.UpdateCartDeposit(oOrder, oEwProv.mnPaymentAmount, oEwProv.mcPaymentType)
-                                    If oEwProv.mcPaymentType = "deposit" Then oCart.mnProcessId = 10
-                                End If
-                                oEwProv.ValidatePaymentByCart(oCart.mnCartId, True)
-                            End If
 
                         End If
 
@@ -458,6 +448,29 @@ Namespace Providers
                     oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & configXml.GetAttribute("name"), iconclass, configXml.GetAttribute("name"))
 
                 End Function
+
+                Public Sub ValidatePaymentByCart(ByVal nCartId As Integer, ByVal bValid As Boolean)
+                    Try
+                        'sets the validity of the payment
+                        'get the audit id 
+                        Dim cSQL As String = "SELECT tblAudit.nAuditKey FROM tblCartOrder INNER JOIN tblCartPaymentMethod ON tblCartOrder.nPayMthdId = tblCartPaymentMethod.nPayMthdKey INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey WHERE tblCartOrder.nCartOrderKey = " & nCartId
+                        Dim nAuditId As String = myWeb.moDbHelper.ExeProcessSqlScalar(cSQL)
+                        If IsNumeric(nAuditId) Then
+
+                            Dim oXml As XmlDocument = New XmlDocument
+                            Dim oInstance As XmlElement = oXml.CreateElement("Instance")
+                            Dim oElmt As XmlElement = oXml.CreateElement("tblAudit")
+                            addNewTextNode("nAuditKey", oElmt, nAuditId)
+                            addNewTextNode("nStatus", oElmt, IIf(bValid, 1, 0))
+                            oInstance.AppendChild(oElmt)
+
+                            myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.Audit, oInstance, nAuditId)
+
+                        End If
+                    Catch ex As Exception
+                        returnException(myWeb.msException, mcModuleName, "ValidatePaymentByCart", ex, "", "", gbDebug)
+                    End Try
+                End Sub
 
 
 

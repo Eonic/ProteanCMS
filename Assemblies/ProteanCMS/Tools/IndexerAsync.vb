@@ -132,6 +132,7 @@ Public Class IndexerAsync
     End Function
 
     Public Function DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False) As String
+        ' nPage = 59
         PerfMon.Log("Indexer", "DoIndex")
         Dim cProcessInfo As String = ""
         Dim cPageHtml As String = ""
@@ -241,6 +242,8 @@ Public Class IndexerAsync
                 'full pages
                 cSQL = "Select nStructKey,cStructName From tblContentStructure" 'get all structure
                 If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage 'unless a specific page
+                'If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage & " Or nStructParId =" & nPage 'unless a specific page
+
                 oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Structure")
 
                 'now we loop through the different tables and index the data
@@ -869,15 +872,31 @@ Public Class IndexerAsync
                     End If
 
                     Interlocked.Decrement(nPagesRemaining)
-                    oInfoElmt.SetAttribute("indexCount", nIndexed)
-                    oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
-                    oInfoElmt.SetAttribute("pagesRemaining", nPagesRemaining)
-                    oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
-                    oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
-                    oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
-                    oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
-                    oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
 
+                    If oInfoElmt.GetAttribute("indexCount") Then
+                        oInfoElmt.SetAttribute("indexCount", nIndexed)
+                    End If
+                    If oInfoElmt.GetAttribute("pagesIndexed") Then
+                        oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+                    End If
+                    If oInfoElmt.GetAttribute("pagesRemaining") IsNot Nothing Then
+                        oInfoElmt.SetAttribute("pagesRemaining", nPagesRemaining)
+                    End If
+                    If oInfoElmt.GetAttribute("pagesSkipped") IsNot Nothing Then
+                        oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+                    End If
+                    If oInfoElmt.GetAttribute("contentCount") IsNot Nothing Then
+                        oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+                    End If
+                    If oInfoElmt.GetAttribute("contentSkipped") IsNot Nothing Then
+                        oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+                    End If
+                    If oInfoElmt.GetAttribute("documentsIndexed") IsNot Nothing Then
+                        oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+                    End If
+                    If oInfoElmt.GetAttribute("documentsSkipped") IsNot Nothing Then
+                        oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+                    End If
                     'sometimes thefile will be locked, that is OK we save it when we can.
                     If Not FileInUse(mcIndexWriteFolder & "/indexInfo.xml") Then
                         oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")

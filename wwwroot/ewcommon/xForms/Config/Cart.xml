@@ -38,6 +38,7 @@
         <add key="PaymentTypeButtons" value="off" />
         <add key="ProductOptionOverideQuantity" value="off"/>
         <add key="EmailReceipts" value="on"/>
+        <add key="TaxFromDeliveryAddress" value="off"/>
       </cart>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -73,6 +74,7 @@
     <bind id="ShippedValidation" nodeset="cart/add[@key='ShippedValidation']/@value" required="false()" type="string" />
     <bind id="PaymentTypeButtons" nodeset="cart/add[@key='PaymentTypeButtons']/@value" required="false()" type="string" />
     <bind id="ProductOptionOverideQuantity" nodeset="cart/add[@key='ProductOptionOverideQuantity']/@value" required="false()" type="string" />
+    <bind id="ewTaxFromDeliveryAddress" nodeset="cart/add[@key='TaxFromDeliveryAddress']/@value" required="false()" type="string" />
   </model>
   <group ref="CartSettings">
     <label>Cart Settings</label>
@@ -143,6 +145,18 @@
         <label>Tax Rate</label>
         <value></value>
       </input>
+      <select1 bind="ewTaxFromDeliveryAddress" appearance="full">
+        <label>Tax Based on Delivery Address</label>
+        <item>
+          <label>On</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>Off</label>
+          <value>off</value>
+        </item>
+        <value />
+      </select1>
     <input bind="ewOrderNoPrefix">
       <label>Order No. Prefix</label>
       <value />

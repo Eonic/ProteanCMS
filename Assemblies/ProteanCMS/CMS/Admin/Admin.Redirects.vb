@@ -10,6 +10,7 @@ Partial Public Class Cms
             Private myWeb As Protean.Cms
             Private myCart As Protean.Cms.Cart
             Public moAdXfm As Protean.Cms.xForm
+            Public moDbHelper As dbHelper
 
             Enum RedirectType
                 Redirect301 = 301
@@ -24,12 +25,15 @@ Partial Public Class Cms
                 myWeb.Open()
                 myCart = New Protean.Cms.Cart(myWeb)
                 moAdXfm = New Protean.Cms.xForm(myWeb)
+                moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
+
                 Try
 
                     Dim rewriteXml As New XmlDocument
+                    Dim Result As String = "success"
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
                     ''Check we do not have a redirect for the OLD URL allready. Remove if exists
@@ -48,55 +52,75 @@ Partial Public Class Cms
                             rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
                         Next
                     Else
-
                         'Add redirect
-                        Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
-                        Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                        If Not redirectSectionXmlNode Is Nothing Then
-                            Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
-                            replacingElement.InnerXml = $"<add key='{OldUrl}' value='{NewUrl}'/>"
+                        If isParentPage = "False" Then
+                            Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
+                            Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                            If Not redirectSectionXmlNode Is Nothing Then
+                                Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
+                                replacingElement.InnerXml = $"<add key='{OldUrl}' value='{NewUrl}'/>"
 
-                            ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
-                            rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
-                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                                rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
+                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+
+                            End If
                         End If
                     End If
                     'Determine all the paths that need to be redirected
-                    If redirectType = "301Redirect" Then
-                        'step through and create rules to deal with paths
-                        Dim folderRules As New ArrayList
-                        Dim rulesXml As New XmlDocument
-                        rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
-                        Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
-                        Dim oRule As XmlElement
+                    ' If redirectType = "301Redirect" Then
+                    If pageId > 0 Then
 
-                        'For Each oRule In replacerNode.SelectNodes("add")
-                        Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
-                        Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
-                        Dim matchString As String = OldUrl
-                        If matchString.StartsWith("/") Then
-                            matchString = matchString.TrimStart("/")
-                        End If
-                        folderRules.Add("Folder: " & OldUrl)
-                        newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
-                        If CurrentRule Is Nothing Then
-                            insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
-                        Else
-                            CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
-                        End If
-                        'Next
+                        If isParentPage = "True" Then
+                            Select Case redirectType
+                                Case "301Redirect"
 
-                        For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
-                            If Not folderRules.Contains(oRule.GetAttribute("name")) Then
-                                oRule.ParentNode.RemoveChild(oRule)
+                                    redirectType = "301 Redirects"
+
+                                Case "302Redirect"
+                                    redirectType = "302 Redirects"
+
+                                Case "Redirect404"
+                                    redirectType = "404 Redirects"
+                                Case Else
+
+                            End Select
+
+                            'step through and create rules to deal with paths
+                            Dim folderRules As New ArrayList
+                            Dim rulesXml As New XmlDocument
+                            rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                            Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: " & redirectType & "']")
+                            Dim oRule As XmlElement
+
+                            'For Each oRule In replacerNode.SelectNodes("add")
+                            Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
+                            Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
+                            Dim matchString As String = OldUrl
+                            If matchString.StartsWith("/") Then
+                                matchString = matchString.TrimStart("/")
                             End If
-                        Next
 
-                        rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                        myWeb.bRestartApp = True
+                            folderRules.Add("Folder: " & OldUrl)
+                            newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
+                            If CurrentRule Is Nothing Then
+                                insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
+                            Else
+                                CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
+                            End If
+                            'Next
+
+                            'For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
+                            '    If Not folderRules.Contains(oRule.GetAttribute("name")) Then
+                            '        oRule.ParentNode.RemoveChild(oRule)
+                            '    End If
+                            'Next
+
+                            rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
+                            myWeb.bRestartApp = True
+                        End If
                     End If
 
-                    Dim Result As String = "success"
                     Return Result
 
                 Catch ex As Exception
@@ -105,6 +129,7 @@ Partial Public Class Cms
                 End Try
 
             End Function
+
 
             Public Function LoadUrlsForPegination(ByRef redirectType As String, ByRef pageloadCount As Integer) As String
                 Try
@@ -388,6 +413,81 @@ Partial Public Class Cms
                 Result = TotalCount.ToString()
 
                 Return Result
+            End Function
+
+            Public Function IsParentPage(ByRef pageId As Integer) As Boolean
+
+                Dim Result As String = ""
+                If pageId > 0 Then
+                    Result = moDbHelper.isParent(pageId)
+                End If
+                Return Result
+            End Function
+            Public Function RedirectPage(ByRef sRedirectType As String, ByRef sOldUrl As String, ByRef sNewUrl As String, ByRef sPageUrl As String, Optional ByVal bRedirectChildPage As Boolean = False, Optional ByVal sType As String = "", Optional ByVal nPageId As Integer = 0) As String
+
+                Dim result As String = "success"
+                If sRedirectType IsNot Nothing And sRedirectType <> String.Empty Then
+
+                    Dim sUrl As String = ""
+                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                        sNewUrl = sNewUrl.TrimEnd()
+                        sOldUrl = sOldUrl.Replace(" ", "-")
+                        sNewUrl = sNewUrl.Replace(" ", "-")
+                    End If
+                    If sPageUrl IsNot Nothing And sPageUrl <> String.Empty Then
+                        sUrl = sPageUrl
+                        Dim arr() As String
+                        arr = sUrl.Split("?"c)
+                        sUrl = arr(0)
+                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
+                    End If
+
+                    Select Case sType
+                        Case "Page"
+                            If (sUrl <> String.Empty) Then
+                                sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
+                                sOldUrl = sUrl
+                            End If
+                        Case Else
+
+                            ' If (sType = "Product") Then
+                            If myWeb.moConfig("DetailPrefix") IsNot Nothing And (myWeb.moConfig("DetailPrefix") <> "") Then
+                                Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
+                                Dim thisPrefix As String = ""
+                                Dim thisContentType As String = ""
+
+                                Dim i As Integer
+                                For i = 0 To prefixs.Length - 1
+                                    thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                    thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                    If thisContentType = sType Then
+                                        sNewUrl = "/" & thisPrefix & "/" & sNewUrl
+                                        sOldUrl = "/" & thisPrefix & "/" & sOldUrl
+                                    End If
+                                Next
+
+                            Else
+
+                                Dim url As String = myWeb.GetContentUrl(nPageId)
+                                sOldUrl = sUrl & url & "/" & sOldUrl
+                                sNewUrl = sUrl & url & "/" & sNewUrl
+                            End If
+                            'End If
+                    End Select
+
+                    Select Case sRedirectType
+                        Case "301Redirect"
+
+                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
+
+                        Case "302Redirect"
+                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
+
+                        Case Else
+                            'do nothing
+                    End Select
+                End If
+                Return result
             End Function
         End Class
     End Class

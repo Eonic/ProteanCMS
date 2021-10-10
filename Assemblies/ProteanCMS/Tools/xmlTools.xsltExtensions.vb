@@ -1131,7 +1131,7 @@ Partial Public Module xmlTools
                 cVirtualPath2 = Replace(cVirtualPath2, "//", "/")
 
                 'Save any resized freestock to local appart from standard thumbnails
-                If Not (sPrefix = "~ew/tn-" And maxWidth = 85 And maxHeight = 85) Then
+                If Not (sPrefix = "~ew/tn-" And maxWidth = 100 And maxHeight = 100) Then
                     If cVirtualPath2.StartsWith("/images/FreeStock") Then
                         cVirtualPath2 = Replace(cVirtualPath2, "/images/FreeStock", "/images/~ew/FreeStock")
                     End If
@@ -1295,7 +1295,7 @@ Partial Public Module xmlTools
                 cVirtualPath2 = Replace(cVirtualPath2, "//", "/")
 
                 'Save any resized freestock to local appart from standard thumbnails
-                If Not (sPrefix = "~ew/tn-" And maxWidth = 85 And maxHeight = 85) Then
+                If Not (sPrefix = "~ew/tn-" And maxWidth = 100 And maxHeight = 100) Then
                     If cVirtualPath2.StartsWith("/images/FreeStock") Then
                         cVirtualPath2 = Replace(cVirtualPath2, "/images/FreeStock", "/images/~ew/FreeStock")
                     End If
@@ -2084,6 +2084,12 @@ Partial Public Module xmlTools
                 Return sReturnString
                 sReturnString = Nothing
 
+            Catch ioex As IOException    'New changes on 9/12/21'
+                myWeb.bPageCache = False
+                sReturnString = TargetFile & "/script.js"
+                '      Return ioex.StackTrace
+                Return sReturnString
+
             Catch ex As Exception
                 myWeb.bPageCache = False
                 Return ex.Message
@@ -2167,8 +2173,10 @@ Partial Public Module xmlTools
                             End Try
 
                             If scriptFile.StartsWith("ERROR: ") Then
+
                                 myWeb.bPageCache = False
-                            End If
+
+                            End If  'we can try adding addional error handling here if we have exact code returned from issue
 
                             If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
                                 sReturnString += scriptFile
@@ -2187,17 +2195,18 @@ Partial Public Module xmlTools
                                 'TS commented out as modified save file to overwrite by using WriteAllBytes
                                 scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetFile, info)
 
-                                    If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & "ERROR: ") Then
-                                        myWeb.bPageCache = False
-                                    End If
+                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & "ERROR: ") Then
+                                    myWeb.bPageCache = False
 
-                                    If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
-                                        'file has been saved successfully.
-                                        sReturnString += "," & scriptFile
-                                    Else
-                                        'we have a file save error we should try again next request.
-                                        sReturnError += scriptFile
-                                    End If
+                                End If
+
+                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
+                                    'file has been saved successfully.
+                                    sReturnString += "," & scriptFile
+                                Else
+                                    'we have a file save error we should try again next request.
+                                    sReturnError += scriptFile
+                                End If
 
 
                             Next
@@ -2223,11 +2232,20 @@ Partial Public Module xmlTools
                 Return sReturnString
                 sReturnString = Nothing
 
+            Catch ioex As IOException    'New changes on 9/12/21'
+                myWeb.bPageCache = False
+                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
+                ' Return ioex.StackTrace
+                Return sReturnString
+
             Catch ex As Exception
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
+
+                'regardless we should return the filename.
+
                 sReturnError = ex.Message
                 ' Return ex.StackTrace
-                myWeb.bPageCache = False
+                myWeb.bPageCache = False 'This is not working 100% - can we understand why?????
                 Return sReturnError
             End Try
 

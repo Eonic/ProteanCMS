@@ -5,7 +5,9 @@ Option Explicit On
 Imports System.Web.Configuration
 Imports System.IO
 Imports System.Reflection
-
+Imports System.Linq
+Imports System.Collections.Generic
+Imports System.Text
 
 Public Class API
     Inherits Base
@@ -88,8 +90,16 @@ Public Class API
             End If
 
             Dim jObj As Newtonsoft.Json.Linq.JObject = Nothing
+            Dim paramDictionary As Dictionary(Of String, String) = Nothing
             If Not jsonString Is Nothing Then
-                jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString)
+                Try
+                    jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString)
+                Catch ex As Exception
+                    'Not a valid json string
+                    Dim query As String = System.Web.HttpUtility.UrlDecode(jsonString)
+                    Dim formData As System.Collections.Specialized.NameValueCollection = System.Web.HttpUtility.ParseQueryString(query)
+                    paramDictionary = formData.AllKeys.ToDictionary(Function(k) k, Function(k) formData(k))
+                End Try
             End If
 
             Dim calledType As Type
@@ -112,7 +122,15 @@ Public Class API
 
             Dim args(1) As Object
             args(0) = Me
-            args(1) = jObj
+            If Not jObj Is Nothing Then
+                args(1) = jObj
+            ElseIf Not paramDictionary Is Nothing Then
+                args(1) = paramDictionary
+            Else
+                args(1) = Nothing
+            End If
+
+            'check the response whatever is coming like with code 400, 200, based on the output- return in Json
 
             Dim myResponse As String = calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
 
@@ -121,6 +139,7 @@ Public Class API
         Catch ex As Exception
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "JSONRequest", ex, sProcessInfo))
             'returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            '
             moResponse.Write(ex.Message)
             Me.Finalize()
         Finally
@@ -129,4 +148,60 @@ Public Class API
         PerfMon.Write()
     End Sub
 
+
+    Public Class JsonActions
+
+        Public Function ValidateAPICall(ByRef myWeb As Cms, ByVal sGroupName As String) As Boolean
+            'Create -InsertOrder Group and pass as a input
+            ' check user present in the group
+            Dim bIsAuthorized As Boolean = False
+            Dim authHeader As String = String.Empty
+            Dim encodedUsernamePassword As String = String.Empty
+            Dim usernamePassword As String = String.Empty
+            Dim encoding As Encoding = Encoding.GetEncoding("iso-8859-1")
+            Dim seperatorIndex As Integer
+            Dim username As String = String.Empty
+            Dim password As String = String.Empty
+            Dim nUserId As Integer
+            Dim sValidResponse As String = String.Empty
+
+            Try
+                'HttpContext httpContext = HttpContext.Current;
+                If myWeb.moCtx.Request.Headers IsNot Nothing Then
+                    If myWeb.moCtx.Request.Headers("Authorization") IsNot Nothing Then
+                        authHeader = myWeb.moCtx.Request.Headers("Authorization")
+                        If authHeader.Substring("Basic ".Length).Trim().Length <> 0 Then
+                            encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim()
+                            usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword))
+                            seperatorIndex = usernamePassword.IndexOf(":")
+                            username = usernamePassword.Substring(0, seperatorIndex)
+                            password = usernamePassword.Substring(seperatorIndex + 1)
+                            sValidResponse = myWeb.moDbHelper.validateUser(username, password)
+                            If IsNumeric(sValidResponse) Then
+                                nUserId = CLng(sValidResponse)
+                                bIsAuthorized = myWeb.moDbHelper.checkUserRole(sGroupName, "Group", nUserId)
+                                If (bIsAuthorized) Then
+                                    myWeb.mnUserId = nUserId
+                                End If
+                            End If
+                        Else
+                            bIsAuthorized = False
+                        End If
+
+                    Else
+                        bIsAuthorized = False
+                    End If
+                End If
+
+
+            Catch ex As Exception
+                'OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs("API", "ValidateAPICall", ex, ""))
+
+                Return False
+            End Try
+            Return bIsAuthorized
+        End Function
+
+
+    End Class
 End Class

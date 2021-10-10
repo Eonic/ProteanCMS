@@ -35,6 +35,8 @@
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="flexbox" nodeset="@flexbox" required="false()" type="string"/>
+      <bind id="flexColumns" nodeset="@flexColumns" required="false()" type="string"/>
     </bind>
     <bind nodeset="tblContent/cContentXmlBrief/Content" id="columnPresentationBinds">
       <bind id="cModuleBox" nodeset="@background" required="false()" type="string"/>
@@ -106,6 +108,53 @@
         </group>
         <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
         <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+        <select1 bind="flexbox" appearance="full"  class="form-group">
+          <label>Enable Flexbox</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+            <toggle case="Flex_true" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+            <toggle case="Flex_false" event="DOMActivate"/>
+          </item>
+          <help class="inline">For expert use, only effective if flexbox has been enabled for your website</help>
+        </select1>
+        <switch class="disable">
+          <case id="Flex_true" >
+            <label>Number of columns</label>
+            <select1 bind="flexColumns">
+              <label>Columns</label>
+              <item>
+                <label>1</label>
+                <value>1</value>
+              </item>
+              <item>
+                <label>2</label>
+                <value>2</value>
+              </item>
+              <item>
+                <label>3</label>
+                <value>3</value>
+              </item>
+              <item>
+                <label>4</label>
+                <value>4</value>
+              </item>
+              <item>
+                <label>5</label>
+                <value>5</value>
+              </item>
+              <item>
+                <label>6</label>
+                <value>6</value>
+              </item>
+            </select1>
+          </case>
+          <case id="Flex_false"/>
+        </switch>
       </group>
     </group>
     <group>
