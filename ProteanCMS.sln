@@ -55,6 +55,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wiki", "wiki\", "{1D896BB0-
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "61668"
+		SlnRelativePath = "wiki\"
 	EndProjectSection
 EndProject
 Global

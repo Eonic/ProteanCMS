@@ -7255,6 +7255,22 @@
             <dd>
               <xsl:value-of select="$orderId"/>
             </dd>
+            <dt>
+              Customer Account
+            </dt>
+            <dd>
+              <xsl:if test="ancestor::Content/User">
+                <a href="?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::Content/User/@id}">
+                  <span class="btn btn-primary btn-xs">
+                    <i class="fa fa-user fa-white"> </i>
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="ancestor::Content/User/FirstName/node()"/>
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="ancestor::Content/User/LastName/node()"/>
+                  </span>
+                </a>
+              </xsl:if>
+            </dd>
 
           <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
             <dt>

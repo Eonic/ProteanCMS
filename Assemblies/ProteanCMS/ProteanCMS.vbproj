@@ -74,7 +74,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.49.255</AssemblyVersion>
+    <AssemblyVersion>6.0.50.27</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -426,13 +426,13 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.vb" />
     <Compile Include="CMS\Admin\Admin.JSONActions.vb" />
     <Compile Include="CMS\Admin\Admin.Redirects.vb" />
     <Compile Include="CMS\Cart\Cart.JSONActions.vb" />
     <Compile Include="CMS\Cart\PaymentProviders\SkipPayment.vb" />
     <Compile Include="CMS\Content\Contact.vb" />
     <Compile Include="ExternalSynchronisation.vb" />
-    <Compile Include="ood.vb" />
     <Compile Include="Providers\Streaming.BaseProvider.vb" />
     <Compile Include="Providers\Membership.BaseProvider.vb" />
     <Compile Include="Providers\Messaging.BaseProvider.vb" />
@@ -561,7 +561,6 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="ClassDiagram1.cd" />
     <None Include="eonic.snk" />
     <None Include="EonicWeb Release Notes.docx" />
     <None Include="My Project\DataSources\System.Xml.XmlElement.datasource" />
