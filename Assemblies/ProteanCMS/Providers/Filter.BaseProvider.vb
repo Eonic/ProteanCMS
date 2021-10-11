@@ -201,6 +201,7 @@ Namespace Providers
 
                         'extract value from the filter node
                         Dim nPageId As Integer = 0
+                        Dim oDr As SqlDataReader
                         nPageId = oFilterNode.SelectNodes("Filter/PageId").ToString()
                         Dim cSql As String = String.Empty
 
@@ -211,6 +212,13 @@ Namespace Providers
                             For Each oMenuItem In oSubMenuList
                                 cSql = cSql + oMenuItem.Attributes("id").InnerText.ToString() + ","
                             Next
+                            'call sp and return xml data
+                            If (cSql <> String.Empty) Then
+                                oDr = aWeb.moDbHelper.GetProductListByPageFilter(cSql)
+                                If (oDr.HasRows) Then
+
+                                End If
+                            End If
 
                         End If
 
