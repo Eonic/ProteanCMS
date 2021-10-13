@@ -5867,7 +5867,7 @@ Partial Public Class Cms
 
                     End If
 
-                    refundAmount = Convert.ToInt16(myWeb.moRequest("RefundAmount"))
+                    refundAmount = Convert.ToDouble(amount)
 
                     MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement
@@ -5889,7 +5889,7 @@ Partial Public Class Cms
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
-                        If (amount > refundAmount) Then
+                        If (amount >= refundAmount) Then
                             If MyBase.valid Then
                                 'oCgfSect.SectionInformation.RestartOnExternalChanges = False    'check this
                                 'oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)

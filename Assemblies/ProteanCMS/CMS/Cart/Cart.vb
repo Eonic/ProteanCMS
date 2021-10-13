@@ -170,6 +170,7 @@ Partial Public Class Cms
         Protected moPay As PaymentProviders
 
         Public mbQuitOnShowInvoice As Boolean = True
+        Private mbDepositOnly As Boolean = False
 
         Enum cartError
 
@@ -969,6 +970,10 @@ Partial Public Class Cms
 
                 If ButtonSubmitted(myWeb.moRequest, "cartAdd") Then
                     mcCartCmd = "Add"
+                End If
+                If ButtonSubmitted(myWeb.moRequest, "cartAddDeposit") Then
+                    mcCartCmd = "Add"
+                    mbDepositOnly = True
                 End If
                 If ButtonSubmitted(myWeb.moRequest, "cartDetail") Then
                     mcCartCmd = "Cart"
@@ -5489,16 +5494,31 @@ processFlow:
                     If oXform.isSubmitted Or myWeb.moRequest("Submit") = "Continue" Or myWeb.moRequest("Submit") = "Search" Then
                         oXform.updateInstanceFromRequest()
                         oXform.validate()
+                        If moCartConfig("NotesToContactsXSL") <> "" Then
+
+                            oXform.Instance.SetAttribute("userId", mnEwUserId)
+                            oXform.Instance.SetAttribute("cartId", mnCartId)
+
+                            Dim oInstanceDoc As New XmlDocument
+                            oInstanceDoc.LoadXml(oXform.Instance.OuterXml)
+
+                            Dim oTransform As New Protean.XmlHelper.Transform(myWeb, moServer.MapPath(moCartConfig("NotesToContactsXSL")), False)
+
+                            moDBHelper.importObjects(oTransform.ProcessDocument(oInstanceDoc).DocumentElement, mnCartId, "")
+
+                            oTransform = Nothing
+
+                        End If
                         If oXform.valid = True Then
-                            oRow("cClientNotes") = oXform.Instance.InnerXml
-                            'if we are useing the notes as a search facility for products
-                            If myWeb.moRequest("Submit") = "Search" Then
-                                mcCartCmd = "Search"
-                            Else
-                                mcCartCmd = "SkipAddress"
+                                oRow("cClientNotes") = oXform.Instance.InnerXml
+                                'if we are useing the notes as a search facility for products
+                                If myWeb.moRequest("Submit") = "Search" Then
+                                    mcCartCmd = "Search"
+                                Else
+                                    mcCartCmd = "SkipAddress"
+                                End If
                             End If
                         End If
-                    End If
                 Next
                 moDBHelper.updateDataset(oDs, "Order", True)
 
@@ -6552,7 +6572,6 @@ processFlow:
             Dim oDs As DataSet
             Dim oRow As DataRow
             Dim qtyAdded As Integer = 0
-            Dim bDepositOnly As Boolean
 
             Try
 
@@ -6573,16 +6592,14 @@ processFlow:
                         nQuantity = 0
                         oOptions = Nothing
                         cReplacementName = ""
-                        bDepositOnly = False
                         'begin
                         If InStr(oItem1, "qty_") = 1 Then 'check for getting productID and quantity (since there will only be one of these per item submitted)
                             If InStr(oItem1, "qty_deposit_") = 1 Then
                                 nProductKey = CLng(Replace(oItem1, "qty_deposit_", "")) 'Product key
-                                bDepositOnly = True
+                                mbDepositOnly = True
                             Else
                                 nProductKey = CLng(Replace(oItem1, "qty_", "")) 'Product key
                             End If
-
 
                             cProcessInfo = oItem1.ToString & " = " & myWeb.moRequest.Form.Get(oItem1)
 
@@ -6613,7 +6630,7 @@ processFlow:
                                             AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
                                         End If
                                     Else
-                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, bDepositOnly)
+                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
                                     End If
                                         'Add Item to "Done" List
                                         strAddedProducts &= "'" & nProductKey & "',"

@@ -165,7 +165,13 @@ Public Class FeedHandler
         Dim logId As Long = 0
         Try
 
-            oTransform.Compiled = True
+            If LCase(oConfig("CompileImportXsl")) = "off" Then
+
+                oTransform.Compiled = False
+            Else
+
+                oTransform.Compiled = True
+            End If
             oTransform.XslFilePath = cXSLTransformPath
 
             Dim ReturnMessage As String = "Streaming Feed "
