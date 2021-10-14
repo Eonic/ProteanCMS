@@ -441,6 +441,12 @@
           <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.49.0/tblCartOrder.sql"/>
         </Sub3>
       </Sub2>
+      <Sub2 Number="50">
+        <Sub3 Number="0">
+          <Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_checkDiscountCode.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.50.0/fxn_checkDiscountCode.sql"/>
+        </Sub3>
+      </Sub2>
     </Sub1>
   </Version>
 </DatabaseUpgrade>

@@ -11133,6 +11133,25 @@ ReturnMe:
             End Try
         End Function
 
+        Public Function CheckDuplicateOrder(ByVal cPayMthdProviderRef As String) As Boolean
+            PerfMon.Log("dbTools", "CheckDuplicateOrder")
+            Dim sSql As String
+            Dim bIsDuplicate As Boolean = False
+            Dim oDr As SqlDataReader
+            Try
+                sSql = "select Count(nPayMthdKey) from tblCartPaymentMethod where cPayMthdProviderRef= '" & cPayMthdProviderRef & "'"
+                oDr = getDataReader(sSql, CommandType.Text)
+                If oDr.Read() Then
+                    bIsDuplicate = (Convert.ToInt32(oDr(0)) > 0)
+                End If
+
+                Return bIsDuplicate
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckDuplicateOrder", ex, ""))
+                Return Nothing
+            End Try
+        End Function
+
         Public Function SetContact(ByRef contact As Contact) As Integer
             If contact.nContactKey > 0 Then
                 UpdateContact(contact)
