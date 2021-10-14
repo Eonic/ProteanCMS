@@ -195,73 +195,7 @@ Partial Public Class Cms
 
             End Function
 
-            'Charts
-            Public Function GetChartData(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
-                Dim JsonResult As String = ""
-                Dim chartContentKey As Integer
-                If Not Integer.TryParse(inputJson("chartContentKey"), chartContentKey) Then
-                    chartContentKey = 0
-                End If
-
-                Try
-                    If chartContentKey > 0 Then
-                        Dim dsChartData As DataSet
-
-                        Dim sSql As String = "SELECT C.nContentKey,"
-                        sSql &= " C.cContentName,"
-                        sSql &= " Convert(Xml, C.cContentXmlBrief).value('(Content/cDisplayName)[1]', 'Varchar(50)') AS displayName,"
-                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineColor)[1]', 'Varchar(50)') AS lineColor,"
-                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'Varchar(10)') AS lineTension,"
-                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@label-x)[1]', 'Varchar(10)') AS xLabelPosition,"
-                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@label-y)[1]', 'Varchar(10)') AS yLabelPosition,"
-                        sSql &= " '' AS url,"
-                        sSql &= " P.ProductId AS productId,"
-                        sSql &= " CD.D.value('(@x)[1]', 'Varchar(10)') AS xLoc,"
-                        sSql &= " CD.D.value('(@y)[1]', 'Varchar(10)') AS yLoc"
-                        sSql &= " FROM tblContentRelation CR"
-                        sSql &= " JOIN tblContent C ON C.nContentKey = CR.nContentChildId"
-                        sSql &= " OUTER APPLY"
-                        sSql &= " ("
-                        sSql &= " SELECT CR1.nContentChildId AS ProductId"
-                        sSql &= " FROM tblContentRelation CR1"
-                        sSql &= " JOIN tblContent C1 ON C1.nContentKey = CR1.nContentChildId"
-                        sSql &= " WHERE CR1.nContentParentId = C.nContentKey AND C1.cContentSchemaName = 'Product'"
-                        sSql &= " ) P"
-                        sSql &= " OUTER APPLY (SELECT CAST(C.cContentXmlBrief as xml) as cContentXmlBriefxml) CB"
-                        sSql &= " OUTER APPLY CB.cContentXmlBriefxml.nodes('/Content/dataset/datapoint') as CD(D) "
-                        sSql &= " WHERE nContentParentId = " & chartContentKey & " AND C.cContentSchemaName = 'ChartDataSet'"
-
-                        dsChartData = myWeb.moDbHelper.GetDataSet(sSql, "ChartDataSet", "Chart")
-
-                        If Not dsChartData Is Nothing Then
-                            'Update the contentUrls
-                            If dsChartData.Tables.Count > 0 Then
-                                For Each oRow As DataRow In dsChartData.Tables(0).Rows
-                                    If Not oRow("productId") Is Nothing And Not oRow("productId") Is System.DBNull.Value Then
-                                        oRow("url") = myWeb.GetContentUrl(oRow("productId"))
-                                    End If
-                                Next
-                            End If
-
-                            Dim chartXml As String = dsChartData.GetXml()
-                            Dim xmlDoc As New XmlDocument
-                            xmlDoc.LoadXml(chartXml)
-
-                            Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
-                            Return jsonString.Replace("""@", """_")
-                        End If
-
-                        Return String.Empty
-
-                    End If
-                    Return JsonResult
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-                    Return ex.Message
-                End Try
-
-            End Function
 
             Public Function IsParentPage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""

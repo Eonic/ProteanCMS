@@ -1101,6 +1101,52 @@ namespace Protean.Tools
             }
         }
 
+        public static string convertStringToEntityCodes(string sString)
+        {
+            try
+            {
+                sString = sString.Replace("¢", "&#162;");
+                sString = sString.Replace("£", "&#163;");
+                sString = sString.Replace("‘", "&#8216;");
+                sString = sString.Replace("’", "&#8217;");
+                sString = sString.Replace("§", "&#167;");
+                sString = sString.Replace("©", "&#169;");
+                sString = sString.Replace("«", "&#171;");
+                sString = sString.Replace("»", "&#187;");
+                sString = sString.Replace("®", "&#174;");
+                sString = sString.Replace("°", "&#176;");
+                sString = sString.Replace("±", "&#177;");
+                sString = sString.Replace("¶", "&#182;");
+                sString = sString.Replace("·", "&#183;");
+                sString = sString.Replace("½", "&#188;");
+                sString = sString.Replace("–", "&#8211;");
+                sString = sString.Replace("—", "&#8212;");
+                sString = sString.Replace("‚", "&#8218;");
+                sString = sString.Replace("“", "&#8220;");
+                sString = sString.Replace("”", "&#8221;");
+                sString = sString.Replace("„", "&#8222;");
+                sString = sString.Replace("†", "&#8224;");
+                sString = sString.Replace("‡", "&#8224;");
+                sString = sString.Replace("•", "&#8226;");
+                sString = sString.Replace("…", "8230;");
+                sString = sString.Replace("′", "&#8242;");
+                sString = sString.Replace("″", "&#8243;");
+                sString = sString.Replace("™", "&#8482;");
+                sString = sString.Replace("≈", "&#8776;");
+                sString = sString.Replace("≠", "&#8800;");
+                sString = sString.Replace("≤", "&#8804;");
+                sString = sString.Replace("≥", "&#8805;");
+                sString = sString.Replace("≠", "&#8800;");
+
+                return sString == null ? "" : sString;
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "convertEntitiesToString", ex, ""));
+                return "";
+            }
+        }
+
         public static string XmlDate(object dDate, bool bIncludeTime = false)
         {
             try

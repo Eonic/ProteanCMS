@@ -602,3 +602,17 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbp
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.IO.Packaging.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\TidyHTML5Managed.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Tinify.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.IO.Packaging.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\TidyHTML5Managed.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Tinify.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml

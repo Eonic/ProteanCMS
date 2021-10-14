@@ -1377,7 +1377,7 @@
           </section>
         </xsl:if>
         <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
-          <section>
+          <section class="wrapper-sm {@background}">
             <xsl:attribute name="class">
               <xsl:text>wrapper-sm </xsl:text>
               <xsl:value-of select="@background"/>
