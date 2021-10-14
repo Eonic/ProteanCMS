@@ -5560,12 +5560,16 @@ restart:
                     Dim oContact As XmlElement = moPageXml.CreateElement("Contact")
                     For Each oDC In oDS.Tables(0).Columns
                         Dim oIElmt As XmlElement = moPageXml.CreateElement(oDC.ColumnName)
-
                         If Not IsDBNull(oDRow(oDC.ColumnName)) Then
                             Dim cStrContent As String = oDRow(oDC.ColumnName)
                             cStrContent = Replace(Replace(cStrContent, "&gt;", ">"), "&lt;", "<")
-                            If Not cStrContent Is Nothing And Not cStrContent = "" Then oIElmt.InnerText = cStrContent
-
+                            If Not cStrContent Is Nothing And Not cStrContent = "" Then
+                                If oDC.ColumnName = "cContactXml" Then
+                                    oIElmt.InnerXml = oDRow(oDC.ColumnName)
+                                Else
+                                    oIElmt.InnerText = cStrContent
+                                End If
+                            End If
                         End If
                         oContact.AppendChild(oIElmt)
                     Next
@@ -11125,6 +11129,25 @@ ReturnMe:
                 Return oDs.Tables(0)
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
+                Return Nothing
+            End Try
+        End Function
+
+        Public Function CheckDuplicateOrder(ByVal cPayMthdProviderRef As String) As Boolean
+            PerfMon.Log("dbTools", "CheckDuplicateOrder")
+            Dim sSql As String
+            Dim bIsDuplicate As Boolean = False
+            Dim oDr As SqlDataReader
+            Try
+                sSql = "select Count(nPayMthdKey) from tblCartPaymentMethod where cPayMthdProviderRef= '" & cPayMthdProviderRef & "'"
+                oDr = getDataReader(sSql, CommandType.Text)
+                If oDr.Read() Then
+                    bIsDuplicate = (Convert.ToInt32(oDr(0)) > 0)
+                End If
+
+                Return bIsDuplicate
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckDuplicateOrder", ex, ""))
                 Return Nothing
             End Try
         End Function
