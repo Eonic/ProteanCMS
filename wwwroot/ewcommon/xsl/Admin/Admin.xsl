@@ -7197,42 +7197,58 @@
     <div id="cartFull">
       <div class="panel panel-default">
         <div class="panel-heading">
-      <h3 class="panel-title">
-        <xsl:choose>
-          <xsl:when test="$statusId='0'">New</xsl:when>
-          <xsl:when test="$statusId='1'">Items Added</xsl:when>
-          <xsl:when test="$statusId='2'">Billing Address Added</xsl:when>
-          <xsl:when test="$statusId='3'">Delivery Address Added</xsl:when>
-          <xsl:when test="$statusId='4'">Confirmed</xsl:when>
-          <xsl:when test="$statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="$statusId='6'"><i class="fa fa-check">
-            <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Completed</xsl:when>
-          <xsl:when test="$statusId='7'">Refunded</xsl:when>
-          <xsl:when test="$statusId='8'">Failed</xsl:when>
-          <xsl:when test="$statusId='9'">
-            <i class="fa fa-truck">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Shipped</xsl:when>
-          <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
-          <xsl:when test="$statusId='11'">Abandoned</xsl:when>
-        </xsl:choose> Order<xsl:choose>
-          <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
-          <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
-          <xsl:when test="@cmd='Delivery'"> - Enter the delivery address</xsl:when>
-          <xsl:when test="@cmd='EnterOptions'"> - Select your delivery options</xsl:when>
-          <xsl:when test="@cmd='ShowInvoice' or @cmd='ShowCallBackInvoice'"> - Your invoice</xsl:when>
-          <xsl:when test="@cmd='Quit'"> - No items added</xsl:when>
-          <xsl:when test="@cmd='ChoosePaymentShippingOption'"> - Enter your payment details</xsl:when>
-        </xsl:choose><!--xsl:value-of select="@cmd"/-->
-        <xsl:text> - </xsl:text>
-        <xsl:value-of select="$orderId"/>
-		  <xsl:text>        </xsl:text>
-		  <xsl:if test="PaymentDetails/Refund">
-			  <label for="refundStatus" style="color:red;">Transaction has been refunded successfully</label>
-		  </xsl:if>
-	   
-      </h3>
+          <xsl:choose>
+            <xsl:when test="@statusId='6' and PaymentDetails/@provider='JudoPay'">
+              <div>
+                <a href="?ewCmd=RefundOrder&amp;orderId={$orderId}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-danger btn-sm pull-right">
+                  <i class="fa fa-money"> </i>
+                  Refund Order
+                </a>
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+             
+            </xsl:otherwise>
+          </xsl:choose>
+          <h3 class="panel-title">
+            <xsl:choose>
+              <xsl:when test="$statusId='0'">New</xsl:when>
+              <xsl:when test="$statusId='1'">Items Added</xsl:when>
+              <xsl:when test="$statusId='2'">Billing Address Added</xsl:when>
+              <xsl:when test="$statusId='3'">Delivery Address Added</xsl:when>
+              <xsl:when test="$statusId='4'">Confirmed</xsl:when>
+              <xsl:when test="$statusId='5'">Pass for Payment</xsl:when>
+              <xsl:when test="$statusId='6'">
+                <i class="fa fa-check">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Completed
+              </xsl:when>
+              <xsl:when test="$statusId='7'">Refunded</xsl:when>
+              <xsl:when test="$statusId='8'">Failed</xsl:when>
+              <xsl:when test="$statusId='9'">
+                <i class="fa fa-truck">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Shipped
+              </xsl:when>
+              <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
+              <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+            </xsl:choose> Order<xsl:choose>
+              <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
+              <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
+              <xsl:when test="@cmd='Delivery'"> - Enter the delivery address</xsl:when>
+              <xsl:when test="@cmd='EnterOptions'"> - Select your delivery options</xsl:when>
+              <xsl:when test="@cmd='ShowInvoice' or @cmd='ShowCallBackInvoice'"> - Your invoice</xsl:when>
+              <xsl:when test="@cmd='Quit'"> - No items added</xsl:when>
+              <xsl:when test="@cmd='ChoosePaymentShippingOption'"> - Enter your payment details</xsl:when>
+            </xsl:choose><!--xsl:value-of select="@cmd"/-->
+            <xsl:text> - </xsl:text>
+            <xsl:value-of select="$orderId"/>
+            <xsl:text>        </xsl:text>
+            <xsl:if test="PaymentDetails/Refund">
+              <label for="refundStatus" style="color:red;">Transaction has been refunded successfully</label>
+            </xsl:if>
+
+          </h3>
         </div>
       <div class="panel-body row">
         <div class="col-md-3">
@@ -7254,6 +7270,22 @@
             </dt>
             <dd>
               <xsl:value-of select="$orderId"/>
+            </dd>
+            <dt>
+              Customer Account
+            </dt>
+            <dd>
+              <xsl:if test="ancestor::Content/User">
+                <a href="?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::Content/User/@id}">
+                  <span class="btn btn-primary btn-xs">
+                    <i class="fa fa-user fa-white"> </i>
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="ancestor::Content/User/FirstName/node()"/>
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="ancestor::Content/User/LastName/node()"/>
+                  </span>
+                </a>
+              </xsl:if>
             </dd>
 
           <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
@@ -7337,23 +7369,6 @@
           <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
         </div>
       </xsl:if>
-		           <xsl:choose>
-						<xsl:when test="PaymentDetails/Refund">
-							<div>
-								<a href="?ewCmd=RefundOrder&amp;orderId={$orderId}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-primary btn-sm pull-right" style="opacity: 0.65;cursor: not-allowed;pointer-events: none;">
-									<i class="fa fa-money"> </i>
-									Refund
-								</a>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<a href="?ewCmd=RefundOrder&amp;orderId={$orderId}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-primary btn-sm pull-right">
-								<i class="fa fa-money"> </i>
-								Refund
-							</a>
-						</xsl:otherwise>
-					</xsl:choose>
-		  
       <xsl:if test="DeliveryDetails">
       <div id="carrier-info" class="col-md-3">
         <h4>Shipping Details</h4>
