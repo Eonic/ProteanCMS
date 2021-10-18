@@ -5562,7 +5562,7 @@ restart:
                         Dim oIElmt As XmlElement = moPageXml.CreateElement(oDC.ColumnName)
                         If Not IsDBNull(oDRow(oDC.ColumnName)) Then
                             Dim cStrContent As String = oDRow(oDC.ColumnName)
-                            cStrContent = Replace(Replace(cStrContent, "&gt;", ">"), "&lt;", "<")
+                            cStrContent = encodeAllHTML(cStrContent)
                             If Not cStrContent Is Nothing And Not cStrContent = "" Then
                                 If oDC.ColumnName = "cContactXml" Then
                                     oIElmt.InnerXml = oDRow(oDC.ColumnName)
