@@ -1265,7 +1265,6 @@
                 <xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
               </xsl:if>
             </td>
-            <td rowspan="6" valign="top" width="4%">&#160;</td>
             <td width="18%">
               <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
                 <xsl:call-template name="term2062" />

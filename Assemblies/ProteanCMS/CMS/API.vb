@@ -7,6 +7,7 @@ Imports System.IO
 Imports System.Reflection
 Imports System.Linq
 Imports System.Collections.Generic
+Imports Newtonsoft.Json
 Imports System.Text
 
 Public Class API
@@ -139,8 +140,12 @@ Public Class API
         Catch ex As Exception
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "JSONRequest", ex, sProcessInfo))
             'returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-            '
-            moResponse.Write(ex.Message)
+            If gbDebug Then
+                moResponse.Write(JsonConvert.SerializeObject(ex))
+            Else
+                moResponse.Write(ex.Message)
+            End If
+
             Me.Finalize()
         Finally
 
@@ -158,7 +163,7 @@ Public Class API
             Dim authHeader As String = String.Empty
             Dim encodedUsernamePassword As String = String.Empty
             Dim usernamePassword As String = String.Empty
-            Dim encoding As Encoding = Encoding.GetEncoding("iso-8859-1")
+            Dim encoding As Encoding = encoding.GetEncoding("iso-8859-1")
             Dim seperatorIndex As Integer
             Dim username As String = String.Empty
             Dim password As String = String.Empty
