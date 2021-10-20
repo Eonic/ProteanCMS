@@ -186,38 +186,24 @@ Namespace Providers
 
                 Sub PageFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
                     Try
-                        'create stored procedure to pull 
-                        ' add it in database upgrade. check if with exists- display errors 
-                        ' Error handling should be there 
 
-                        'This pulls in all the products to be subsequently filtered.
-
-                        'Removes the Products on the current page to be replaced by the products in this query.
-
-                        'additive
-                        'Pull in products from other pages specificed
-                        'Pull in product form all child pages by default
-                        'Also list the child pages within the filterNode to easily render the control on the page
-
-                        'extract value from the filter node
                         Dim nPageId As Integer = 0
-                        Dim oDr As SqlDataReader
+
                         nPageId = oFilterNode.SelectNodes("Filter/PageId").ToString()
-                        Dim cSql As String = String.Empty
+                        Dim cWhereSql As String = String.Empty
 
                         Dim oMenuItem As XmlElement
                         If (nPageId <> 0) Then
                             'Dim oMenuElmt As XmlElement = aWeb.GetStructureXML(aWeb.mnUserId, nPageId, 0, "Site", False, False, False, True, False, "MenuItem", "Menu")
                             Dim oSubMenuList As XmlNodeList = aWeb.moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & nPageId & "']").SelectNodes("MenuItem")
                             For Each oMenuItem In oSubMenuList
-                                cSql = cSql + oMenuItem.Attributes("id").InnerText.ToString() + ","
+                                cWhereSql = cWhereSql + oMenuItem.Attributes("id").InnerText.ToString() + ","
                             Next
                             'call sp and return xml data
-                            If (cSql <> String.Empty) Then
-                                oDr = aWeb.moDbHelper.GetProductListByPageFilter(cSql)
-                                If (oDr.HasRows) Then
+                            If (cWhereSql <> String.Empty) Then
 
-                                End If
+                                cWhereSql = " nStructId IN (" + cWhereSql + ")"
+                                aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
                             End If
 
                         End If

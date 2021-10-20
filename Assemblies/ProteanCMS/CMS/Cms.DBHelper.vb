@@ -11263,23 +11263,22 @@ ReturnMe:
             End Try
         End Function
 
-        Public Function GetProductListByPageFilter(ByVal sPageIds As String) As SqlDataReader
-            Dim oDr As SqlDataReader
-            Dim sSql As String
-            Dim strReturn As String = ""
+        'Public Function GetContentListByPageFilter(ByVal sPageIds As String) As SqlDataReader
+        '    Dim oDr As SqlDataReader
+        '    Dim sSql As String
+        '    Dim strReturn As String = ""
 
-            Try
-                Dim params As New Hashtable
-                params.Add("@PageIds", sPageIds)
-                sSql = "spGetProductListByPageFilter"
-                oDr = myWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure, params)
+        '    Try
+        '        Dim params As New Hashtable
+        '        params.Add("@PageIds", sPageIds)
+        '        ' sSql = "spGetContentListByPageFilter"
+        '        oDr = myWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure, params)
+        '        Return oDr
+        '    Catch ex As Exception
+        '        Return Nothing
+        '    End Try
 
-                Return oDr
-            Catch ex As Exception
-                Return Nothing
-            End Try
-
-        End Function
+        'End Function
 
 #Region "Deprecated Functions"
         Public Function doesTableExist(ByRef sTableName As String) As Boolean
