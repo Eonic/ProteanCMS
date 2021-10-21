@@ -2444,6 +2444,8 @@ Partial Public Class Cms
                     ' Return xFrmEditSubscription(id, pgid)
                     ' End If
 
+                    ''''''' if contentSchemeaName starts with "filter|" then modify the path...
+
                     Dim cXformName As String = cContentSchemaName
                     If AlternateFormName <> "" Then cXformName = AlternateFormName
                     If cModuleType <> "" Then cXformName = cXformName & "/" & cModuleType
