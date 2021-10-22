@@ -183,14 +183,19 @@ Namespace Providers
 
                 Public FilterQueries() As String
 
+                '' Create a filter module 
+                '' Product list module
 
-                Sub PageFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
+
+                Public Sub PageFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
                     Try
 
                         Dim nPageId As Integer = 0
-
-                        nPageId = oFilterNode.SelectNodes("Filter/PageId").ToString()
                         Dim cWhereSql As String = String.Empty
+                        If (oFilterNode.SelectNodes("Filter/PageId") Is Nothing) Then
+                            nPageId = oFilterNode.SelectNodes("Filter/PageId").ToString()
+                        End If
+
 
                         Dim oMenuItem As XmlElement
                         If (nPageId <> 0) Then
@@ -201,7 +206,7 @@ Namespace Providers
                             Next
                             'call sp and return xml data
                             If (cWhereSql <> String.Empty) Then
-
+                                cWhereSql = cWhereSql.Substring(0, cWhereSql.Length - 1)
                                 cWhereSql = " nStructId IN (" + cWhereSql + ")"
                                 aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
                             End If

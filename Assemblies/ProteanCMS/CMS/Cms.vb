@@ -1502,7 +1502,7 @@ Public Class Cms
                         Close()
                     End If
 
-                    End If
+
             End Select
 
 
