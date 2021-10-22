@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="6.0.46.0">
+<DatabaseUpgrade LatestVersion="6.0.49.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -431,7 +431,20 @@
       </Sub2>
       <Sub2 Number="47">
         <Sub3 Number="0">
-          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.46.0/ContactTelCountryCode.sql"/>
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.47.0/ContactTelCountryCode.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="49">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.49.0/tblCartItem.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.49.0/tblCartPayment.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.49.0/tblCartOrder.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="50">
+        <Sub3 Number="0">
+          <Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_checkDiscountCode.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.50.0/fxn_checkDiscountCode.sql"/>
         </Sub3>
       </Sub2>
     </Sub1>

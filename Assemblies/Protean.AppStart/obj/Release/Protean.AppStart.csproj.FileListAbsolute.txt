@@ -27,7 +27,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ru-ru\JavaSc
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csprojAssemblyReference.cache
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\AdvancedStringBuilder.dll
@@ -45,3 +44,4 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppS
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.AssemblyReference.cache

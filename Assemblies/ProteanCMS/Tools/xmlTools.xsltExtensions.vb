@@ -2087,7 +2087,7 @@ Partial Public Module xmlTools
             Catch ioex As IOException    'New changes on 9/12/21'
                 myWeb.bPageCache = False
                 sReturnString = TargetFile & "/script.js"
-                Return ioex.StackTrace
+                '      Return ioex.StackTrace
                 Return sReturnString
 
             Catch ex As Exception
@@ -2234,15 +2234,18 @@ Partial Public Module xmlTools
 
             Catch ioex As IOException    'New changes on 9/12/21'
                 myWeb.bPageCache = False
-                sReturnString += "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
-                Return ioex.StackTrace
+                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
+                ' Return ioex.StackTrace
                 Return sReturnString
 
             Catch ex As Exception
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
+
+                'regardless we should return the filename.
+
                 sReturnError = ex.Message
                 ' Return ex.StackTrace
-                myWeb.bPageCache = False
+                myWeb.bPageCache = False 'This is not working 100% - can we understand why?????
                 Return sReturnError
             End Try
 

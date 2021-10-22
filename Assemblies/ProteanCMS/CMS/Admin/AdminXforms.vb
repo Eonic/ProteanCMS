@@ -83,6 +83,63 @@ Partial Public Class Cms
                 End Try
             End Sub
 
+            Public Function xFrmGenericObject(ByVal nObjectId As Integer, ByVal FormTitle As String, ByVal xFormPath As String, ByVal ptnObjectType As dbHelper.objectTypes) As XmlElement
+                Dim cProcessInfo As String = ""
+                Try
+                    ' This is a generic function for a framework for all protean object.
+                    'This is not intended for use but rather as an example of how xforms are processed
+
+                    'The instance of the form needs to be saved in the session to allow repeating elements to be edited prior to saving in the database.
+                    Dim InstanceSessionName = "tempInstance_" & ptnObjectType.ToString() & "_" & nObjectId.ToString()
+
+                    MyBase.NewFrm(FormTitle)
+                    MyBase.bProcessRepeats = False
+
+                    'We load the xform from a file, it may be in local or in common folders.
+                    MyBase.load(xFormPath, myWeb.maCommonFolders)
+
+                    'We get the instance
+                    If nObjectId > 0 Then
+                        MyBase.bProcessRepeats = True
+                        If myWeb.moSession(InstanceSessionName) Is Nothing Then
+                            Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                            existingInstance.InnerXml = moDbHelper.getObjectInstance(ptnObjectType, nObjectId).Replace("xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "").Replace("xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "")
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession(InstanceSessionName) = MyBase.Instance
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                        End If
+                    End If
+
+                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            Dim nCId As Integer = moDbHelper.setObjectInstance(ptnObjectType, MyBase.Instance, nObjectId)
+                            myWeb.moSession("tempInstance") = Nothing
+                        End If
+                    ElseIf MyBase.isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        MyBase.updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    Else
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    End If
+
+                    'we populate the values onto the form.
+                    MyBase.addValues()
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
 
             <Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", False)>
             Public Overridable Function xFrmUserLogon(Optional ByVal FormName As String = "UserLogon") As XmlElement
@@ -238,68 +295,6 @@ Partial Public Class Cms
                 End Try
             End Function
 
-
-
-
-            '            Public Overridable Function xFrmPasswordReminder() As XmlElement
-            '                Dim oFrmElmt As XmlElement
-
-            '                Dim sValidResponse As String
-            '                Dim cProcessInfo As String = ""
-            '                Try
-            '                    MyBase.NewFrm("PasswordReminder")
-
-            '                    MyBase.submission("PasswordReminder", "", "post", "form_check(this)")
-
-            '                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "PasswordReminder", "", "Please enter your email address and we will email you with your password.")
-
-            '                    MyBase.addInput(oFrmElmt, "cEmail", True, "Email Address")
-            '                    MyBase.addBind("cEmail", "user/email", "true()")
-
-            '                    MyBase.addSubmit(oFrmElmt, "", "Send Password", "ewSubmitReminder")
-
-            '                    If Not MyBase.load("/xforms/passwordreminder.xml", myWeb.maCommonFolders) Then
-            '                        MyBase.NewFrm("PasswordReminder")
-
-            '                        MyBase.submission("PasswordReminder", "", "post", "form_check(this)")
-
-            '                        oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "PasswordReminder", "", "Please enter your email address and we will email you with your password.")
-
-            '                        MyBase.addInput(oFrmElmt, "cEmail", True, "Email Address")
-            '                        MyBase.addBind("cEmail", "user/email", "true()")
-
-            '                        MyBase.addSubmit(oFrmElmt, "", "Send Password", "ewSubmitReminder")
-            '                        MyBase.Instance.InnerXml = "<user><email/></user>"
-
-            '                    End If
-
-            '                    If MyBase.isSubmitted Then
-            '                        MyBase.updateInstanceFromRequest()
-            '                        MyBase.validate()
-            '                        If MyBase.valid Then
-            '                            sValidResponse = moDbHelper.passwordReminder(goRequest("cEmail"))
-            '                            If sValidResponse = "Your password has been emailed to you" Then
-            '                                valid = True
-            '                                MyBase.addNote("cEmail", xForm.noteTypes.Hint, sValidResponse, True)
-            '                            Else
-            '                                valid = False
-            '                                MyBase.addNote("cEmail", xForm.noteTypes.Alert, sValidResponse, True)
-            '                            End If
-            '                        Else
-            '                            valid = False
-            '                        End If
-            '                    End If
-
-            '                    MyBase.addValues()
-            '                    Return MyBase.moXformElmt
-
-            '                Catch ex As Exception
-            '                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
-            '                    Return Nothing
-            '                End Try
-            '            End Function
-
-
             <Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", False)>
             Public Overridable Function xFrmActivateAccount() As XmlElement
                 Dim cProcessInfo As String = ""
@@ -318,39 +313,6 @@ Partial Public Class Cms
                     Return Nothing
                 End Try
             End Function
-
-
-
-
-
-            '            Public Function xFrmActivateAccount() As XmlElement
-            '                Dim oFrmElmt As XmlElement
-
-            '                'Dim sValidResponse As String
-            '                Dim cProcessInfo As String = ""
-            '                Try
-            '                    'Find a user account with the right activation code.
-
-            '                    'Change the account status and delete the activation code.
-            '                    Dim oMembership As New Protean.Cms.Membership(myWeb)
-            '                    'AddHandler oMembership.OnError, AddressOf OnComponentError
-
-            '                    oMembership.ActivateAccount(moRequest("key"))
-
-            '                    oFrmElmt = Me.xFrmUserLogon
-
-            '                    Me.addNote("UserDetails", noteTypes.Hint, "Your account is now activated please logon", True)
-
-            '                    'Update the user Xform to say "Thank you for activating your account please logon, Pre-populating the username"
-
-
-            '                    Return MyBase.moXformElmt
-
-            '                Catch ex As Exception
-            '                    returnException(myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
-            '                    Return Nothing
-            '                End Try
-            '            End Function
 
             <Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", False)>
             Public Overridable Function xFrmResetAccount() As XmlElement
@@ -373,75 +335,6 @@ Partial Public Class Cms
 
 
 
-            '            Public Function xFrmResetAccount() As XmlElement
-            '                Dim oFrmElmt As XmlElement
-
-            '                'Dim sValidResponse As String
-            '                Dim cProcessInfo As String = ""
-            '                Try
-            '                    MyBase.NewFrm("ResetAccount")
-
-            '                    MyBase.submission("ResetAccount", "", "post", "form_check(this)")
-
-            '                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "ResetAccount", "", "Please enter your email address and we will email you with your password.")
-
-            '                    MyBase.addInput(oFrmElmt, "cEmail", True, "Email Address")
-            '                    MyBase.addBind("cEmail", "user/email", "true()")
-
-            '                    MyBase.addSubmit(oFrmElmt, "", "Reset Account", "ewAccountReset")
-
-            '                    MyBase.Instance.InnerXml = "<user><email/></user>"
-
-            '                    If MyBase.isSubmitted Then
-            '                        MyBase.updateInstanceFromRequest()
-            '                        MyBase.validate()
-            '                        If MyBase.valid Then
-            '                            Dim cResponse As String
-            '                            Dim cSQL As String = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirXml like '%<Email>" & LCase(Instance.SelectSingleNode("user/email").InnerText) & "</Email>%'"
-            '                            Dim nAcc As Integer = myWeb.moDbHelper.GetDataValue(cSQL, , , 0)
-            '                            If nAcc > 0 Then
-            '                                ' Get the user XML
-            '                                Dim oUserXml As XmlElement = myWeb.moDbHelper.GetUserXML(nAcc, False)
-
-            '                                If oUserXml Is Nothing Then
-            '                                    cResponse = "There was a problem resetting this account, please contct the website administrator"
-            '                                Else
-            '                                    ' Check the xsl
-
-            '                                    Dim oMembership As New Protean.Cms.Membership(myWeb)
-            '                                    Dim oEmailDoc As New XmlDocument
-            '                                    oEmailDoc.AppendChild(oEmailDoc.CreateElement("AccountReset"))
-            '                                    oEmailDoc.DocumentElement.AppendChild(oEmailDoc.ImportNode(oUserXml, True))
-            '                                    oEmailDoc.DocumentElement.SetAttribute("Link", oMembership.AccountResetLink(nAcc))
-            '                                    oEmailDoc.DocumentElement.SetAttribute("Url", myweb.mcOriginalURL)
-            '                                    Dim oMessage As New Messaging
-
-            '                                    Dim fs As fsHelper = New fsHelper()
-            '                                    Dim path As String = fs.checkCommonFilePath("/xsl/Email/passwordReset.xsl")
-            '                                    cResponse = oMessage.emailer(oEmailDoc.DocumentElement, path, "", myWeb.moConfig("SiteAdminEmail"), LCase(Instance.SelectSingleNode("user/email").InnerText), "Account Reset ")
-            '                                    cResponse = IIf(cResponse = "Message Sent", cResponse, "")
-            '                                End If
-
-            '                            Else
-            '                                cResponse = "There was a problem resetting this account, please contct the website administrator"
-            '                            End If
-
-            '                            If Not String.IsNullOrEmpty(cResponse) Then
-            '                                MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, cResponse, True)
-            '                            End If
-
-            '                        End If
-            '                    End If
-
-            '                    MyBase.addValues()
-            '                    Return MyBase.moXformElmt
-
-            '                Catch ex As Exception
-            '                    returnException(myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
-            '                    Return Nothing
-            '                End Try
-            '            End Function
-
             <Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", False)>
             Public Overridable Function xFrmConfirmPassword(ByVal AccountHash As String) As XmlElement
                 Dim cProcessInfo As String = ""
@@ -463,19 +356,6 @@ Partial Public Class Cms
 
 
 
-            '            Public Function xFrmConfirmPassword(ByVal AccountHash As String) As XmlElement
-            '                Try
-            '                    Dim oMembership As New Protean.Cms.Membership(myWeb)
-            '                    Dim nUserId As Integer = oMembership.DecryptResetLink(goRequest("id"), AccountHash)
-
-            '                    Return xFrmConfirmPassword(nUserId)
-
-            '                Catch ex As Exception
-            '                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug)
-            '                    Return Nothing
-            '                End Try
-            '            End Function
-
             <Obsolete("Don't use this routine any more. Use the new one in Membership Provider ", False)>
             Public Overridable Function xFrmConfirmPassword(ByVal nUserId As Long) As XmlElement
                 Dim cProcessInfo As String = ""
@@ -495,71 +375,6 @@ Partial Public Class Cms
                 End Try
             End Function
 
-
-            '            Public Function xFrmConfirmPassword(ByVal nUserId As Long) As XmlElement
-            '                Try
-
-            '                    MyBase.NewFrm("ConfirmPassword")
-
-            '                    MyBase.Instance.InnerXml = "<Password><cDirPassword/><cDirPassword2/></Password>"
-            '                    Dim oGrp As XmlElement = MyBase.addGroup(MyBase.moXformElmt, "Password")
-            '                    MyBase.submission("SetPassword", "", "POST")
-            '                    Dim oPI1 As XmlElement = MyBase.addSecret(oGrp, "cDirPassword", True, "Password", "required")
-            '                    MyBase.addBind("cDirPassword", "Password/cDirPassword", "true()")
-            '                    Dim oPI2 As XmlElement = MyBase.addSecret(oGrp, "cDirPassword2", True, "Confirm Password", "required")
-            '                    MyBase.addBind("cDirPassword2", "Password/cDirPassword2", "true()")
-            '                    Dim oSB As XmlElement = MyBase.addSubmit(oGrp, "SetPassword", "Set Password")
-
-
-            '                    If MyBase.isSubmitted Then
-            '                        MyBase.updateInstanceFromRequest()
-            '                        MyBase.validate()
-            '                        'any additonal validation goes here
-            '                        'Passwords match?
-            '                        If Len(goRequest("cDirPassword2")) > 0 Then
-            '                            If goRequest("cDirPassword") <> goRequest("cDirPassword2") Then
-            '                                MyBase.valid = False
-            '                                MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must match ")
-            '                            End If
-            '                        End If
-
-            '                        'Password policy?
-            '                        If Len(MyBase.Instance.SelectSingleNode("Password/cDirPassword").InnerXml) < 4 Then
-            '                            MyBase.valid = False
-            '                            MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must be 4 characters long ")
-            '                        End If
-
-            '                        If MyBase.valid Then
-            '                            Dim oMembership As New Protean.Cms.Membership(myWeb)
-            '                            Dim nAccount As Integer = nUserId
-            '                            If nAccount = 0 Then
-            '                                MyBase.addNote("cDirPassword2", xForm.noteTypes.Alert, "The account cannot be found.")
-            '                                MyBase.valid = False
-            '                            Else
-            '                                If Not oMembership.ReactivateAccount(nAccount, goRequest("cDirPassword")) Then
-            '                                    MyBase.addNote("cDirPassword2", xForm.noteTypes.Alert, "There was an problem updating your account")
-            '                                    MyBase.valid = False
-            '                                Else
-            '                                    MyBase.addNote(oGrp, xForm.noteTypes.Alert, "Your password has been reset")
-            '                                    oPI1.ParentNode.RemoveChild(oPI1)
-            '                                    oPI2.ParentNode.RemoveChild(oPI2)
-            '                                    oSB.ParentNode.RemoveChild(oSB)
-            '                                    If myWeb.mnUserId = 0 Then
-            '                                        myWeb.mnUserId = nAccount
-            '                                    End If
-            '                                End If
-            '                            End If
-            '                        End If
-            '                    End If
-
-            '                    MyBase.addValues()
-            '                    Return MyBase.moXformElmt
-
-            '                Catch ex As Exception
-            '                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug)
-            '                    Return Nothing
-            '                End Try
-            '            End Function
 
             Public Function xFrmUserIntegrations(ByVal userId As Long, ByVal secondaryCommand As String) As XmlElement
 
@@ -647,11 +462,6 @@ Partial Public Class Cms
 
                         End If
 
-
-
-
-
-
                         ' Because we have handled the integrations, we need to follow up any responses
                         For Each response As XmlElement In myWeb.PageXMLResponses
 
@@ -659,16 +469,12 @@ Partial Public Class Cms
 
                                 Case "Redirect"
                                     myWeb.msRedirectOnEnd = response.InnerText
-
                                 Case "Alert"
                                     MyBase.addNote(MyBase.moXformElmt.SelectSingleNode("group"), noteTypes.Alert, response.InnerText)
-
                                 Case "Hint"
                                     MyBase.addNote(MyBase.moXformElmt.SelectSingleNode("group"), noteTypes.Hint, response.InnerText)
-
                                 Case "Help"
                                     MyBase.addNote(MyBase.moXformElmt.SelectSingleNode("group"), noteTypes.Help, response.InnerText)
-
                             End Select
 
                         Next
@@ -683,8 +489,6 @@ Partial Public Class Cms
                 End Try
 
             End Function
-
-
 
             Public Function xFrmWebSettings() As XmlElement
                 Dim oFrmElmt As XmlElement
@@ -6063,7 +5867,7 @@ Partial Public Class Cms
 
                     End If
 
-                    refundAmount = Convert.ToInt16(myWeb.moRequest("RefundAmount"))
+                    refundAmount = Convert.ToDouble(amount)
 
                     MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement
@@ -6085,7 +5889,7 @@ Partial Public Class Cms
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
-                        If (amount > refundAmount) Then
+                        If (amount >= refundAmount) Then
                             If MyBase.valid Then
                                 'oCgfSect.SectionInformation.RestartOnExternalChanges = False    'check this
                                 'oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
@@ -7187,33 +6991,44 @@ Partial Public Class Cms
             Public Function xFrmEditUserSubscription(ByVal nSubId As Integer) As XmlElement
                 Dim cProcessInfo As String = ""
                 Try
+
+                    If LCase(moRequest("reset")) = "true" Then
+                        myWeb.moSession("tempInstance") = Nothing
+                    End If
+
                     MyBase.NewFrm("EditUserSubscription")
+                    MyBase.bProcessRepeats = False
                     MyBase.load("/xforms/Subscription/EditSubscription.xml", myWeb.maCommonFolders)
-                    Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
 
                     If nSubId > 0 Then
-                        existingInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId)
-                        '  MyBase.Instance = existingInstance
-                        MyBase.Instance.InnerXml = existingInstance.InnerXml
-
+                        MyBase.bProcessRepeats = True
+                        If myWeb.moSession("tempInstance") Is Nothing Then
+                            Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                            existingInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId).Replace("xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "").Replace("xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "")
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession("tempInstance") = MyBase.Instance
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                        End If
                     End If
-                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+
+                        moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
                     Dim i As Integer = 1
                     Dim bDone As Boolean = False
                     Dim cItems As String = ""
                     Dim initialSubContentId As Long = CLng("0" & MyBase.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText)
 
 
-                    If MyBase.isSubmitted Then
+
+                    If MyBase.isSubmitted Or MyBase.isTriggered Then
                         MyBase.updateInstanceFromRequest()
+
                         Dim ContentId As Long = CLng(MyBase.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText)
                         Dim ContentXml As XmlElement = myWeb.moPageXml.CreateElement("Content")
                         ContentXml.InnerXml = moDbHelper.getContentBrief(ContentId)
 
                         If initialSubContentId <> ContentId Then
                             'Now we populate the instance
-
-
                             MyBase.Instance.SelectSingleNode("tblSubscription/cSubName").InnerText = ContentXml.SelectSingleNode("Content/Name").InnerText
                             MyBase.Instance.SelectSingleNode("tblSubscription/cSubXml").InnerXml = ContentXml.InnerXml
                             'dStartDate Populated by form
@@ -7224,9 +7039,7 @@ Partial Public Class Cms
                             MyBase.Instance.SelectSingleNode("tblSubscription/nValueNet").InnerText = ContentXml.SelectSingleNode("Content/SubscriptionPrices/Price[@type='sale']").InnerText
                             MyBase.Instance.SelectSingleNode("tblSubscription/cRenewalStatus").InnerText = ContentXml.SelectSingleNode("Content/Type").InnerText
                             MyBase.Instance.SelectSingleNode("tblSubscription/dPublishDate").InnerText = MyBase.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText
-
                         End If
-
 
                         If nSubId = 0 Then
                             'we are creating a new subscription
@@ -7246,10 +7059,9 @@ Partial Public Class Cms
                                 MyBase.Instance.SelectSingleNode("tblSubscription/nStatus").InnerText = "1"
                             End If
                         End If
-
-
-
-                        MyBase.validate()
+                        If MyBase.isSubmitted Then
+                            MyBase.validate()
+                        End If
 
                         If MyBase.valid Then
                             Dim nCId As Integer = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, MyBase.Instance, nSubId)
@@ -7262,11 +7074,20 @@ Partial Public Class Cms
                                     Next
                                 End If
                             End If
+                            myWeb.moSession("tempInstance") = Nothing
 
+                        ElseIf MyBase.isTriggered Then
+                            'we have clicked a trigger so we must update the instance
+                            MyBase.updateInstanceFromRequest()
+                            'lets save the instance
+                            goSession("tempInstance") = MyBase.Instance
+                        Else
+                            goSession("tempInstance") = MyBase.Instance
+                            End If
                         End If
-                    End If
 
-                    MyBase.addValues()
+                        MyBase.addValues()
+
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception

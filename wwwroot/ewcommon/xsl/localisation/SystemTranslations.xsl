@@ -2532,10 +2532,10 @@
   <xsl:template name="term3049">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Transaction Made</xsl:text>
+        <xsl:text>Payment Made</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Transaction Made</xsl:text>
+        <xsl:text>Payment Made</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2558,6 +2558,17 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Deposit Payable</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3051a">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Deposit Paid</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Deposit Paid</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

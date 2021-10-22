@@ -777,7 +777,12 @@ Public Class XmlHelper
                 ' If msException = "" Then
                 Dim resolver As New XmlUrlResolver()
                 resolver.Credentials = System.Net.CredentialCache.DefaultCredentials
-                oCStyle.Transform(xReader, xsltArgs, xWriter) ', resolver)
+                If oCStyle Is Nothing Then
+                    oStyle.Transform(xReader, xsltArgs, xWriter)
+                Else
+                    oCStyle.Transform(xReader, xsltArgs, xWriter)
+                End If
+                '' oCStyle.Transform(xReader, xsltArgs, xWriter) ', resolver)
                 '  Else
                 ' xWriter.Write(msException)
                 ' End If

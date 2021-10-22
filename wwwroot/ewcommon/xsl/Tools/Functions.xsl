@@ -2426,11 +2426,12 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="BingTrackingCode">
-    <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+   
       <xsl:if test="$BingTrackingID!=''">
         <script>
           (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
         </script>
+         <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
         <script>
           window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' });
         </script>
@@ -8313,9 +8314,6 @@
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">496</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">496</xsl:template>
 
-
-
-
   <!-- Get Sub Page Thumbnail Dimensions -->
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">100</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThHeight">100</xsl:template>
@@ -8324,6 +8322,26 @@
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">300</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">400</xsl:template>
 
+  
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
+
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">768</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">768</xsl:template>
+
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">496</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">496</xsl:template>
+
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
+    <xsl:apply-templates select="." mode="getDisplayWidth"/>
+  </xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
+    <xsl:apply-templates select="." mode="getDisplayWidth"/>
+  </xsl:template>
+
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
+  
   <!-- To fit 800x600 - fits nicely inside any screen ratio -->
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeWidth">750</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeHeight">550</xsl:template>

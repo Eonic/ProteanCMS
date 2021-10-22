@@ -254,6 +254,7 @@ Partial Public Class Cms
             CartDelivery = 31
             CartCarrier = 32
             SubscriptionRenewal = 33
+            CartPayment = 34
 
             '100-199 reserved for LMS
             CpdLog = 100
@@ -292,11 +293,13 @@ Partial Public Class Cms
             tblCodes = 26
             tblContentVersions = 27
             tblCartShippingPermission = 28
+
             'tblContentStructure = 29 'duplicate, but leave this
             tblLookup = 30
             tblCartOrderDelivery = 31
             tblCartCarrier = 32
             tblSubscriptionRenewal = 33
+            tblCartPayment = 34
 
             '100-199 reserved for LMS
             tblCpdLog = 100
@@ -663,6 +666,8 @@ Partial Public Class Cms
                     Return "nCarrierKey"
                 Case 33
                     Return "nSubRenewalKey"
+                Case 34
+                    Return "nCartPaymentKey"
                     '100-199 reserved for LMS
                 Case 100
                     Return "nCpdLogKey"
@@ -5555,12 +5560,16 @@ restart:
                     Dim oContact As XmlElement = moPageXml.CreateElement("Contact")
                     For Each oDC In oDS.Tables(0).Columns
                         Dim oIElmt As XmlElement = moPageXml.CreateElement(oDC.ColumnName)
-
                         If Not IsDBNull(oDRow(oDC.ColumnName)) Then
                             Dim cStrContent As String = oDRow(oDC.ColumnName)
-                            cStrContent = Replace(Replace(cStrContent, "&gt;", ">"), "&lt;", "<")
-                            If Not cStrContent Is Nothing And Not cStrContent = "" Then oIElmt.InnerText = cStrContent
-
+                            cStrContent = encodeAllHTML(cStrContent)
+                            If Not cStrContent Is Nothing And Not cStrContent = "" Then
+                                If oDC.ColumnName = "cContactXml" Then
+                                    oIElmt.InnerXml = oDRow(oDC.ColumnName)
+                                Else
+                                    oIElmt.InnerText = cStrContent
+                                End If
+                            End If
                         End If
                         oContact.AppendChild(oIElmt)
                     Next
@@ -10626,7 +10635,7 @@ ReturnMe:
             End Try
         End Function
 
-        Public Function savePayment(ByVal CartId As Integer, ByVal nUserId As Long, ByVal cProviderName As String, ByVal cProviderRef As String, ByVal cMethodName As String, ByVal oDetailXML As XmlElement, ByVal dExpire As Date, ByVal bUserSaved As Boolean, ByVal nAmountPaid As Double) As Integer
+        Public Function savePayment(ByVal CartId As Integer, ByVal nUserId As Long, ByVal cProviderName As String, ByVal cProviderRef As String, ByVal cMethodName As String, ByVal oDetailXML As XmlElement, ByVal dExpire As Date, ByVal bUserSaved As Boolean, ByVal nAmountPaid As Double, Optional paymentType As String = "full") As Integer
             Dim cSQL As String = ""
             Dim cRes As String = ""
 
@@ -10645,13 +10654,12 @@ ReturnMe:
                 End If
 
                 'check if we allready have a payment method for this order if so we overwrite
-
-                cSQL = "Select nPayMthdId from tblCartOrder WHERE nCartOrderKey = " & CartId
-                cRes = ExeProcessSqlScalar(cSQL)
-
-                If IsNumeric(cRes) Then
-                    nPaymentMethodKey = CLng(cRes)
-                End If
+                'TS Disabled Sept 21 as we might have multiple payment methods per order with new deposit functionality.
+                'cSQL = "Select nPayMthdId from tblCartOrder WHERE nCartOrderKey = " & CartId
+                'cRes = ExeProcessSqlScalar(cSQL)
+                'If IsNumeric(cRes) Then
+                ' nPaymentMethodKey = CLng(cRes)
+                ' End If
 
                 'mask the credit card number
                 Dim oCcNum As XmlElement = oDetailXML.SelectSingleNode("number")
@@ -10701,6 +10709,30 @@ ReturnMe:
                 End If
 
                 CartPaymentMethod(CartId, nPaymentId)
+
+                If Me.doesTableExist("tblCartPayment") Then
+                    oInstance.RemoveAll()
+                    oElmt = oXml.CreateElement("tblCartPayment")
+                    addNewTextNode("nCartOrderId", oElmt, CartId)
+                    addNewTextNode("nCartPaymentMethodId", oElmt, nPaymentId)
+                    If paymentType = "full" Then
+                        addNewTextNode("bFull", oElmt, "true")
+                    End If
+                    If paymentType = "deposit" Then
+                        addNewTextNode("bPart", oElmt, "true")
+                    End If
+                    If paymentType = "settlement" Then
+                        addNewTextNode("bSettlement", oElmt, "true")
+                    End If
+                    addNewTextNode("nPaymentAmount", oElmt, nAmountPaid.ToString())
+                    ' addNewTextNode("dInsertDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
+                    ' addNewTextNode("dUpdateDate", oElmt, Protean.Tools.Xml.XmlDate(Now))
+                    ' addNewTextNode("nInsertDirId", oElmt, myWeb.mnUserId) '
+                    addNewTextNode("nStatus", oElmt, 1)
+                    addNewTextNode("nAuditId", oElmt, getAuditId())
+                    oInstance.AppendChild(oElmt)
+                    setObjectInstance(dbHelper.objectTypes.CartPayment, oInstance)
+                End If
 
                 Return nPaymentId
 
@@ -11097,6 +11129,25 @@ ReturnMe:
                 Return oDs.Tables(0)
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
+                Return Nothing
+            End Try
+        End Function
+
+        Public Function CheckDuplicateOrder(ByVal cPayMthdProviderRef As String) As Boolean
+            PerfMon.Log("dbTools", "CheckDuplicateOrder")
+            Dim sSql As String
+            Dim bIsDuplicate As Boolean = False
+            Dim oDr As SqlDataReader
+            Try
+                sSql = "select Count(nPayMthdKey) from tblCartPaymentMethod where cPayMthdProviderRef= '" & cPayMthdProviderRef & "'"
+                oDr = getDataReader(sSql, CommandType.Text)
+                If oDr.Read() Then
+                    bIsDuplicate = (Convert.ToInt32(oDr(0)) > 0)
+                End If
+
+                Return bIsDuplicate
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckDuplicateOrder", ex, ""))
                 Return Nothing
             End Try
         End Function

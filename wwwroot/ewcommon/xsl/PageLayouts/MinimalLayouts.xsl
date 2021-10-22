@@ -1340,6 +1340,10 @@
 
   <xsl:template match="Content[@moduleType='1Column' or @moduleType='Conditional1Column']" mode="displayBrief">
     <div class="row">
+      <xsl:if test="@flexbox='true'">
+        <xsl:attribute name="class">row flexbox-columns flexbox-cols-<xsl:value-of select="@flexColumns"/>
+      </xsl:attribute>
+      </xsl:if> 
       <xsl:if test="$adminMode and @moduleType='Conditional1Column'">
         <xsl:attribute name="class">row conditional-block</xsl:attribute>
         <div class="conditional-note">
@@ -1347,6 +1351,7 @@
         </div>
       </xsl:if>
       <div id="column1-{@id}" class="column1 col-md-12">
+               
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -8768,6 +8773,13 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:attribute>
+	     <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+              <xsl:attribute name="onclick">
+                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                <xsl:value-of select="Title/node()"/>
+                <xsl:text>');</xsl:text>
+              </xsl:attribute>
+            </xsl:if>	    	    
             <xsl:choose>
               <xsl:when test="contains(Path,'http://')">
                 <xsl:attribute name="title">
