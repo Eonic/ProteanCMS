@@ -1602,6 +1602,30 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="getFilterButtons" mode="xform">
+    <xsl:variable name="filterButtons">
+      <xsl:apply-templates select="." mode="getFilterButtons"/>
+      <!--
+      <buttons>
+        <button>pageFilter<button>
+        <button>dateFilter<button>
+      <buttons>
+      -->
+    </xsl:variable>
+    <div>
+      <xsl:for-each select="ms:node($filterButtons)/button">
+        <xsl:variable name="buttonName" select="node()"/>
+        <xsl:choose>
+          <xsl:when test="ancestor::Content/Content[@filterType=$buttonName]">
+            <!-- edit button and show filter details -->
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- add button -->
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </div>
+  </xsl:template>
 
   <!-- ##############################################-Nathan (New) RELATED CONTENT-############################## -->
   <xsl:template match="relatedContent" mode="xform">
