@@ -162,4 +162,8 @@
       <!--<Module type="GoogleAd" name="Google Ad">Google Ad placement</Module>-->
     </ModuleGroup>
   </ModuleTypes>
+  <FilterTypes>
+    <Filter type="pageFilter" name="Page Filter">Page Filter</Filter>
+    <Filter type="dateFilter" name="Date Filter">Date Filter</Filter>
+  </FilterTypes>
 </PageLayouts>

@@ -1236,7 +1236,7 @@ Original preload function has been kept but is unused.
 
         moveTop: function (moveId) {
             var moveIdNode = "node" + moveId;
-
+            alert(moveId);
             if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
                 $('#MenuTree li#' + moveIdNode).addClass("locked");
                 $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
@@ -2363,6 +2363,17 @@ if (editPageElement) {
         }
     });
 }
+
+
+$(document).ready(function () {
+    function scrollToAnchor(aid) {
+        var aTag = $("li[id='" + aid + "']");
+        $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
+    }
+    
+    scrollToAnchor($("#MenuTree li.active").prop("id"));
+});
+
 
 //End Page Edit
 
