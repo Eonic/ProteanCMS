@@ -725,7 +725,7 @@ Partial Public Class Cms
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
-                    Return "Error" 'ex.Message
+                    Return "Error " + ex.Message
                 End Try
 
             End Function
