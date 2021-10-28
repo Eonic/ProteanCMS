@@ -952,7 +952,10 @@ Partial Public Class fsHelper
 
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-                Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-")
+                Dim ifilename As String = Path.GetFileName(file.FileName).Replace(" ", "-")
+                Dim fileNameFixed As String = ifilename.Replace("'", "")
+
+                'Path.GetFileName(file.FileName).Replace(" ", "-")
 
                 'If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
                 '    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
@@ -965,7 +968,7 @@ Partial Public Class fsHelper
                     Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
                     eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
                 End If
-                Dim fullName As String = Path.GetFileName(file.FileName)
+                Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
 
 
