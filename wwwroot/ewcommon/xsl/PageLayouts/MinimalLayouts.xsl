@@ -5010,15 +5010,13 @@
             <xsl:text>. </xsl:text>
           </xsl:if>
         </a>
-        <span class="pull-right">
-          <a href="{$parentURL}" class="btn btn-default btn-sm">
+          <a href="{$parentURL}" class="btn btn-default btn-sm directions">
             <i class="fa fa-map-marker">
               <xsl:text> </xsl:text>
             </i>
             <xsl:text> </xsl:text>
             Get Directions
           </a>
-        </span>
         <div class="clear-fix">
           <xsl:text> </xsl:text>
         </div>

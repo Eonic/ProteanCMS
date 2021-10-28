@@ -1423,20 +1423,42 @@
                 <xsl:when test="@data-stellar-background-ratio!='0'">
                   <xsl:choose>
                     <xsl:when test="@data-stellar-background-ratio!='10'">
+                      <xsl:attribute name="style">
+                        <xsl:if test="@minHeight!=''">
+                          <xsl:text>min-height:</xsl:text>
+                          <xsl:value-of select="@minHeight"/>
+                          <xsl:text>px;</xsl:text>
+                        </xsl:if>
+                      </xsl:attribute>
                         <div class="parallax" data-parallax-image="{@backgroundImage}">
                           <xsl:text> </xsl:text>
                         </div>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:attribute name="style">
-                        background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                        <xsl:text>background: url('</xsl:text>
+                        <xsl:value-of select="@backgroundImage"/>
+                        <xsl:text>');</xsl:text>
+                        <xsl:if test="@minHeight!=''">
+                          <xsl:text>min-height:</xsl:text>
+                          <xsl:value-of select="@minHeight"/>
+                          <xsl:text>px;</xsl:text>
+                        </xsl:if>
+                        
                       </xsl:attribute>
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:attribute name="style">
-                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                    <xsl:text>background: url('</xsl:text>
+                    <xsl:value-of select="@backgroundImage"/>
+                    <xsl:text>');</xsl:text>
+                    <xsl:if test="@minHeight!=''">
+                      <xsl:text>min-height:</xsl:text>
+                      <xsl:value-of select="@minHeight"/>
+                      <xsl:text>px;</xsl:text>
+                    </xsl:if>
                   </xsl:attribute>
                 </xsl:otherwise>
               </xsl:choose>

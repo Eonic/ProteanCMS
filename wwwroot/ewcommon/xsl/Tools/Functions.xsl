@@ -10177,7 +10177,32 @@
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> margin-bottom-0 </xsl:text>
               </xsl:if>
+              <xsl:if test="@data-stellar-background-ratio!='10'">
+                <xsl:text> parallax-wrapper </xsl:text>
+              </xsl:if>
             </xsl:attribute>
+            <xsl:if test="@data-stellar-background-ratio!='10'">
+              <xsl:attribute name="data-parallax-speed">
+                <xsl:if test="@data-stellar-background-ratio&lt;'5'">
+                  <xsl:text>1.3</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='5' and @data-stellar-background-ratio&lt;'10'">
+                  <xsl:text>1.6</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='10' and @data-stellar-background-ratio&lt;'15'">
+                  <xsl:text>2</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='15' and @data-stellar-background-ratio&lt;'20'">
+                  <xsl:text>3</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='20' and @data-stellar-background-ratio&lt;'25'">
+                  <xsl:text>4</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='25'">
+                  <xsl:text>5</xsl:text>
+                </xsl:if>
+              </xsl:attribute>
+            </xsl:if>
             <!--<xsl:if test="@data-stellar-background-ratio!='0'">
               <xsl:attribute name="data-stellar-background-ratio">
                 <xsl:value-of select="(@data-stellar-background-ratio div 10)"/> test2
@@ -10185,7 +10210,7 @@
             </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">
               <xsl:attribute name="style">
-                background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                background: url('<xsl:value-of select="@backgroundImage"/>');
               </xsl:attribute>
             </xsl:if>
             <xsl:choose>
