@@ -52,6 +52,16 @@ function calculateHeight(parallax, speed) {
 	}
 }
 
+function testWebP() {
+	return new Promise(res => {
+		const webP = new Image();
+		webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+		webP.onload = webP.onerror = () => {
+			res(webP.height === 2);
+		};
+	})
+};
+
 var universalParallax = function universalParallax() {
 	var up = function up(parallax, speed) {
 
@@ -102,8 +112,15 @@ var universalParallax = function universalParallax() {
 			if (window.getComputedStyle(parallaxContainer.parentElement, null).getPropertyValue('position') !== 'relative') {
 				parallaxContainer.parentElement.style.position = 'relative';
 			}
-
+			debugger;
 			var imgData = parallax[i].dataset.parallaxImage;
+
+			testWebP().then(function () {
+				if (parallax[i].dataset.parallaxImageWebp !== 'undefined') {
+					imgData = parallax[i].dataset.parallaxImageWebp
+				};
+			});
+
 			// add image to div if none is specified
 			if (typeof imgData !== 'undefined') {
 				parallax[i].style.backgroundImage = 'url(' + imgData + ')';

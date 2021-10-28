@@ -10165,10 +10165,29 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
+    
     <!-- THIS IS OVERRIDDEN IN ADMIN MODE BY TEMPLATE IN ADMINWYSIWYG-->
     <xsl:choose>
       <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">
         <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
+          <xsl:variable name="backgroundResized">
+            <xsl:if test="@backgroundImage!=''">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="@backgroundImage"/>
+                <xsl:with-param name="max-width" select="1920"/>
+                <xsl:with-param name="max-height" select="1920"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~bg-1920</xsl:text>
+                  <xsl:text>/~bg-</xsl:text>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="false" />
+                <xsl:with-param name="no-stretch" select="true" />
+                <xsl:with-param name="forceResize" select="false" />
+              </xsl:call-template>
+            </xsl:if>
+          </xsl:variable>
           <section class="wrapper-sm {@background}">
             <xsl:attribute name="class">
               <xsl:text>wrapper-sm </xsl:text>
@@ -10210,7 +10229,7 @@
             </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">
               <xsl:attribute name="style">
-                background: url('<xsl:value-of select="@backgroundImage"/>');
+                background: url('<xsl:value-of select="$backgroundResized"/>');
               </xsl:attribute>
             </xsl:if>
             <xsl:choose>
@@ -10231,14 +10250,31 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@position = $position]">
             <xsl:choose>
               <xsl:when test="@backgroundImage!=''">
+                <xsl:variable name="backgroundResized">
+                  <xsl:if test="@backgroundImage!=''">
+                    <xsl:call-template name="resize-image">
+                      <xsl:with-param name="path" select="/Page/Contents/Content[@position = $position]/@backgroundImage"/>
+                      <xsl:with-param name="max-width" select="1920"/>
+                      <xsl:with-param name="max-height" select="1920"/>
+                      <xsl:with-param name="file-prefix">
+                        <xsl:text>~bg-1920</xsl:text>
+                        <xsl:text>/~bg-</xsl:text>
+                      </xsl:with-param>
+                      <xsl:with-param name="file-suffix" select="''"/>
+                      <xsl:with-param name="quality" select="100"/>
+                      <xsl:with-param name="crop" select="false" />
+                      <xsl:with-param name="no-stretch" select="true" />
+                      <xsl:with-param name="forceResize" select="false" />
+                    </xsl:call-template>
+                  </xsl:if>
+                </xsl:variable>
                 <div>
                   <xsl:attribute name="style">
-                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                    background-image: url('<xsl:value-of select="$backgroundResized"/>');
                   </xsl:attribute>
                   <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
                 </div>

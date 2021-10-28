@@ -615,4 +615,3 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\TidyHTML5Managed.d
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Tinify.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CopyComplete
