@@ -3534,123 +3534,23 @@ Public Class Cms
 
     End Sub
 
-
-    'Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False)
-    '    PerfMon.Log("Web", "GetPageContentFromSelect")
-    '    Dim oRoot As XmlElement
-    '    Dim sSql As String
-
-    '    Dim sPrimarySql As String = ""
-    '    Dim sTopSql As String = ""
-    '    Dim sMembershipSql As String = ""
-    '    Dim sFilterSql As String = ""
-    '    Dim sProcessInfo As String = ""
-    '    Dim oDs As DataSet
-    '    Dim nAuthUserId As Long
-    '    Dim nAuthGroup As Long
-    '    Dim cContentField As String = ""
-
-    '    Try
-
-    '        ' Apply the possiblity of getting contents into a node other than the page contents node
-    '        If oContentsNode Is Nothing Then
-    '            oRoot = moPageXml.SelectSingleNode("//Contents")
-
-    '            If oRoot Is Nothing Then
-    '                oRoot = moPageXml.CreateElement("Contents")
-    '                moPageXml.DocumentElement.AppendChild(oRoot)
-    '            End If
-    '        Else
-    '            oRoot = oContentsNode
-    '        End If
-
-    '        If bContentDetail = False Then
-    '            cContentField = "cContentXmlBrief"
-    '        Else
-    '            cContentField = "cContentXmlDetail"
-    '        End If
-
-    '        If nReturnRows > 0 Then sTopSql = "TOP " & nReturnRows & " "
-
-    '        sSql = "SET ARITHABORT ON "
-    '        sSql &= "SELECT " & sTopSql & " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, " & cContentField & " as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position "
-    '        sSql &= "FROM tblContent AS c INNER JOIN "
-    '        sSql &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
-    '        sSql &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
-
-    '        ' GCF - sql replaced by the above - 24/06/2011
-    '        ' replaced JOIN to tblContentLocation with  LEFT OUTER JOIN
-    '        ' as we were getting nothing back when content had no related 
-    '        ' content location data
-
-    '        'sSql = "SET ARITHABORT ON SELECT " & sTopSql & " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c inner join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey"
-
-
-    '        '' Add the extra joins if specified.
-    '        If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then sSql &= " " & cAdditionalJoins & " "
-
-    '        ' we only want to return results that occur on pages beneath the current root id.
-    '        ' create a new funtion that passes in the StructId and the RootId to return yes or no.
-
-    '        If bPrimaryOnly Then
-    '            sPrimarySql = " CL.bPrimary = 1 "
-    '        End If
-
-    '        If (gbMembership = True And bIgnorePermissionsCheck = False) Then
-
-    '            If mnUserId = 0 And gnNonAuthUsers <> 0 Then
-
-    '                ' Note : if we are checking permissions for a page, and we're not logged in, then we shouldn't check with the gnAuthUsers group
-    '                '         Ratehr, we should use the gnNonAuthUsers user group if it exists.
-
-    '                nAuthUserId = gnNonAuthUsers
-    '                nAuthGroup = gnNonAuthUsers
-
-    '            ElseIf mnUserId = 0 Then
-
-    '                ' If no gnNonAuthUsers user group exists, then remove the auth group
-    '                nAuthUserId = mnUserId
-    '                nAuthGroup = -1
-
-    '            Else
-    '                nAuthUserId = mnUserId
-    '                nAuthGroup = gnAuthUsers
-    '            End If
-
-    '            ' Check the page is not denied
-    '            sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
-
-    '            ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
-    '            ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"
-    '            ' add "and" if clause before
-    '            If sPrimarySql <> "" Then sMembershipSql = " and " & sMembershipSql
-    '        End If
-
-    '        'show only live content that is within date, unless we are in admin mode.
-    '        sFilterSql = GetStandardFilterSQLForContent((sPrimarySql <> "" Or sMembershipSql <> ""))
-
-
-    '        ' add "and" if clause before
-    '        If sPrimarySql <> "" Or sMembershipSql <> "" Or sFilterSql <> "" Then sWhereSql = " and " & sWhereSql
-
-    '        sSql = sSql & " where (" & sPrimarySql & sMembershipSql & sFilterSql & sWhereSql & ")"
-    '        If cOrderBy <> "" Then sSql &= " ORDER BY " & cOrderBy
-    '        sSql = Replace(sSql, "&lt;", "<")
-    '        oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents")
-    '        nCount = oDs.Tables("Content").Rows.Count
-    '        moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
-    '        'If gbCart Or gbQuote Then
-    '        '    moDiscount.getAvailableDiscounts(oRoot)
-    '        'End If
-    '        AddGroupsToContent(oRoot)
-    '    Catch ex As Exception
-
-    '        ' returnException(msException, mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-    '        OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageContentFromSelect", ex, sProcessInfo))
-    '    End Try
-    'End Sub
-
-
+    ''' <summary>
+    ''' This will be passed the where portion of a SQL statement and will add content to the page based on the where statement. This funciton contains all the logic to respect page permissions, statuses and wheather you are logged into the admin system. It also calls moDbHelper.AddDataSetToContent which formats the dataset result and adds as the correct XML to the site page.
+    ''' No content really should be added to the page without calling .AddDataSetToContent otherwise the result will not be consistent.
+    ''' </summary>
+    ''' <param name="sWhereSql"></param>
+    ''' <param name="bPrimaryOnly"></param>
+    ''' <param name="nCount"></param>
+    ''' <param name="bIgnorePermissionsCheck"></param>
+    ''' <param name="nReturnRows"></param>
+    ''' <param name="cOrderBy"></param>
+    ''' <param name="oContentsNode"></param>
+    ''' <param name="cAdditionalJoins"></param>
+    ''' <param name="bContentDetail"></param>
+    ''' <param name="pageNumber"></param>
+    ''' <param name="distinct"></param>
+    ''' <param name="cShowSpecificContentTypes"></param>
+    ''' 
     Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False, Optional cShowSpecificContentTypes As String = "")
         PerfMon.Log("Web", "GetPageContentFromSelect")
         Dim oRoot As XmlElement

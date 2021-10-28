@@ -7706,6 +7706,10 @@
 
   <!-- ################################# Order Item ######################################## -->
   <!--#-->
+  <xsl:template match="Item" mode="product-description">
+    
+  </xsl:template>
+  
   <xsl:template match="Item" mode="orderItemAdmin">
     <xsl:param name="editQty"/>
     <xsl:variable name="parentURL">
@@ -7748,6 +7752,7 @@
         <a href="{$siteURL}{@url}" title="">
           <xsl:value-of select="node()"/>
         </a>
+        <xsl:apply-templates select="." mode="product-description"/>
         <!-- ################################# Line Options Info ################################# -->
         <xsl:for-each select="Item">
           <span class="optionList">

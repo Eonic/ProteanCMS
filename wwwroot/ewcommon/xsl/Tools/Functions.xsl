@@ -9852,6 +9852,12 @@
 
   </xsl:template>
 
+  <xsl:template match="getFilterButtons" mode="getFilterButtons">
+
+      <!--  <xsl:copy-of select="ew:GetFilterButtons()"/> -->
+    
+  </xsl:template>
+
   <xsl:template name="getSelectOptionsFunction">
     <xsl:param name="query"/>
     <xsl:param name="assembly"/>
