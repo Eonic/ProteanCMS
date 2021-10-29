@@ -143,9 +143,10 @@
         <label class="no-margin">Headline</label>
         <input bind="cContentHeadline" class="required long">
         </input>
-        <label class="no-margin">Path</label>
+        <label class="no-margin">Article URL</label>
+        <div>This forms the URL for the article which may be better optimised for SEO.</div>
         <input bind="cContentPath" class="required long">
-          <hint>This forms the URL for the article which may be better optimised for SEO.</hint>
+          <hint>This forms the URL for the article which may be better optimised for SEO. Spaces are converted to hyphens and special characters are removed.</hint>
         </input>
         <label class="no-margin">Strapline</label>
         <textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">

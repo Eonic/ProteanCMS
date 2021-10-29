@@ -1270,6 +1270,71 @@
     <xsl:if test="Contents/Content[@name='fb-pages_id']">
       <meta property="fb:pages" content="{Contents/Content[@name='fb-pages_id']}"/>
     </xsl:if>
+    
+    <!--LUKE 05.10.21-->
+    <!--Open Graph-->
+    <!-- xsl:if test="Contents/Content[@name='ogTitle']">
+      <meta property="og:title" content="{Contents/Content[@name='ogTitle']}"/>
+    </xsl:if>     
+    <xsl:if test="Contents/Content[@name='ogdescription']">
+      <meta property="og:description" content="{Contents/Content[@name='ogdescription']}"/>
+    </xsl:if>  
+      <xsl:if test="Contents/Content[@name='ogurl']">
+      <meta property="og:url" content="{Contents/Content[@name='ogurl']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='ogimage']">
+      <meta name="og:image" content="{Contents/Content[@name='ogimage']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='ogsite_name']">
+      <meta property="og:site_name" content="{Contents/Content[@name='ogsite_name']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='oglocale']">
+      <meta property="og:locale" content="{Contents/Content[@name='oglocale']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='ogtype']">
+      <meta property="og:type" content="{Contents/Content[@name='ogtype']}"/>
+    </xsl:if -->
+ 
+    <!--Twitter-->
+    <xsl:if test="Contents/Content[@name='twittercard']">
+      <meta name="twitter:card" content="{Contents/Content[@name='twittercard']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='twittertitle']">
+      <meta name="twitter:title" content="{Contents/Content[@name='twittertitle']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='twittercreator']">
+      <meta name="twitter:creator" content="{Contents/Content[@name='twittercreator']}"/>
+    </xsl:if>
+    <!--These need to be brought through from elsewhere-->
+    <xsl:if test="Contents/Content[@name='twitterdescription']">
+      <meta name="twitter:description" content="{Contents/Content[@name='twitterdescription']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='twittersite']">
+      <meta name="twitter:site" content="{Contents/Content[@name='twittersite']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='twitterimage']">
+      <meta name="twitter:image" content="{Contents/Content[@name='twitterimage']}"/>
+    </xsl:if>
+
+    <!--LinkedIn-->
+    
+    <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
+      <script type="text/javascript">
+        <xsl:text>_linkedin_partner_id = "</xsl:text>
+        <xsl:value-of select="Contents/Content[@name='LinkedInInsightTag']"/>
+        <xsl:text>"; window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || []; window._linkedin_data_partner_ids.push(_linkedin_partner_id);</xsl:text>
+      </script>
+      <script type="text/javascript">
+        <xsl:text> (function(l) { if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])}; window.lintrk.q=[]} var s = document.getElementsByTagName("script")[0]; var b = document.createElement("script"); b.type = "text/javascript";b.async = true; b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js"; s.parentNode.insertBefore(b, s);})(window.lintrk); </xsl:text>
+      </script>
+      <noscript>
+        <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
+      </noscript>       
+    </xsl:if>
+    <!-- End Linked In Insight Tag Code -->
+    
+    <!--END-->
+    
     <xsl:if test="Contents/Content[@name='pinterestVerify']">
       <meta name="p:domain_verify" content="{Contents/Content[@name='pinterestVerify']}"/>
     </xsl:if>
