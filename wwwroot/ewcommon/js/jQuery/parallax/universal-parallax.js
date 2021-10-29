@@ -52,6 +52,16 @@ function calculateHeight(parallax, speed) {
 	}
 }
 
+function testWebP() {
+	return new Promise(res => {
+		const webP = new Image();
+		webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+		webP.onload = webP.onerror = () => {
+			res(webP.height === 2);
+		};
+	})
+};
+
 var universalParallax = function universalParallax() {
 	var up = function up(parallax, speed) {
 
@@ -102,8 +112,36 @@ var universalParallax = function universalParallax() {
 			if (window.getComputedStyle(parallaxContainer.parentElement, null).getPropertyValue('position') !== 'relative') {
 				parallaxContainer.parentElement.style.position = 'relative';
 			}
-
 			var imgData = parallax[i].dataset.parallaxImage;
+			var imgDataWebp = parallax[i].dataset.parallaxImageWebp
+			var windowWidth = window.innerWidth	|| document.documentElement.clientWidth	|| document.body.clientWidth;;
+			if (windowWidth <= 576) {
+				imgData = parallax[i].dataset.parallaxImageXs
+				imgDataWebp = parallax[i].dataset.parallaxImageXsWebp
+			};
+			if (windowWidth > 576 && windowWidth <= 768 ) {
+				imgData = parallax[i].dataset.parallaxImageSm
+				imgDataWebp = parallax[i].dataset.parallaxImageSmWebp
+			};
+			if (windowWidth > 768 && windowWidth <= 992) {
+				imgData = parallax[i].dataset.parallaxImageMd
+				imgDataWebp = parallax[i].dataset.parallaxImageMdWebp
+			};
+			if (windowWidth > 992 && windowWidth <= 1200) {
+				imgData = parallax[i].dataset.parallaxImageLg
+				imgDataWebp = parallax[i].dataset.parallaxImageLgWebp
+			};
+			if (windowWidth >= 1920) {
+				imgData = parallax[i].dataset.parallaxImageXxl
+				imgDataWebp = parallax[i].dataset.parallaxImageXxlWebp
+			};
+
+			testWebP().then(function () {
+				if (imgDataWebp !== 'undefined') {
+					imgData = imgDataWebp
+				};
+			});
+
 			// add image to div if none is specified
 			if (typeof imgData !== 'undefined') {
 				parallax[i].style.backgroundImage = 'url(' + imgData + ')';

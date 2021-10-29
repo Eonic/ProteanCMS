@@ -211,6 +211,7 @@ Partial Public Class Cms
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'Varchar(10)') AS lineTension,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@label-x)[1]', 'Varchar(10)') AS xLabelPosition,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@label-y)[1]', 'Varchar(10)') AS yLabelPosition,"
+                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@priority)[1]', 'integer') AS priority,"
                         sSql &= " '' AS url,"
                         sSql &= " P.ProductId AS productId,"
                         sSql &= " CD.D.value('(@x)[1]', 'Varchar(10)') AS xLoc,"
@@ -228,7 +229,7 @@ Partial Public Class Cms
                         sSql &= " OUTER APPLY (SELECT CAST(C.cContentXmlBrief as xml) as cContentXmlBriefxml) CB"
                         sSql &= " OUTER APPLY CB.cContentXmlBriefxml.nodes('/Content/dataset/datapoint') as CD(D) "
                         sSql &= " WHERE nContentParentId = " & chartContentKey & " AND C.cContentSchemaName = 'ChartDataSet'"
-                        sSql &= " AND A.nStatus = 1"
+                        sSql &= " AND A.nStatus = 1 ORDER BY priority, C.nContentKey"
 
                         dsChartData = myWeb.moDbHelper.GetDataSet(sSql, "ChartDataSet", "Chart")
 

@@ -598,7 +598,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.x
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CoreCompileInputs.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
