@@ -952,8 +952,7 @@ Partial Public Class fsHelper
 
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-                Dim ifilename As String = Path.GetFileName(file.FileName).Replace(" ", "-")
-                Dim fileNameFixed As String = ifilename.Replace("'", "")
+                Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
 
                 'Path.GetFileName(file.FileName).Replace(" ", "-")
 
