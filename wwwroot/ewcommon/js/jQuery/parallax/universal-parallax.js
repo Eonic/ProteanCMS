@@ -52,15 +52,13 @@ function calculateHeight(parallax, speed) {
 	}
 }
 
-function testWebP() {
-	return new Promise(res => {
-		const webP = new Image();
-		webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
-		webP.onload = webP.onerror = () => {
-			res(webP.height === 2);
-		};
-	})
-};
+ function supportsWebp() {
+	if (!self.createImageBitmap) return false;
+
+	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+	const blob = fetch(webpData).then(r => r.blob());
+	return createImageBitmap(blob).then(() => true, () => false);
+}
 
 var universalParallax = function universalParallax() {
 	var up = function up(parallax, speed) {
@@ -135,12 +133,10 @@ var universalParallax = function universalParallax() {
 				imgData = parallax[i].dataset.parallaxImageXxl
 				imgDataWebp = parallax[i].dataset.parallaxImageXxlWebp
 			};
-
-			testWebP().then(function () {
-				if (imgDataWebp !== 'undefined') {
-					imgData = imgDataWebp
-				};
-			});
+			
+			if (supportsWebp()) {
+				imgData = imgDataWebp;
+			};
 
 			// add image to div if none is specified
 			if (typeof imgData !== 'undefined') {
