@@ -170,6 +170,7 @@ Partial Public Class Cms
         Protected moPay As PaymentProviders
 
         Public mbQuitOnShowInvoice As Boolean = True
+        Private mbDepositOnly As Boolean = False
 
         Enum cartError
 
@@ -607,8 +608,8 @@ Partial Public Class Cms
                     Else
                         mcSessionId = myWeb.moSession.SessionID
                     End If
-
-
+                    'session id is assigned
+                    'add logic if same seession id is present or not in db if we have then generate diff session id
 
                     If IsNumeric(myWeb.moRequest.QueryString("cartErr")) Then mnProcessError = CInt(myWeb.moRequest.QueryString("cartErr"))
 
@@ -723,11 +724,17 @@ Partial Public Class Cms
                                     mcSessionId = cSessionFromSessionCookie
                                     cSessionFromSessionCookie = ""
                                 End If
+                                If mnCartId > 0 Then
+                                    ' sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
+                                    sSql = "select Top 1* from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "' and o.nCartOrderKey='" & Convert.ToString(mnCartId) & "' order by o.nCartOrderKey desc "
+                                Else
+                                    sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
+                                    'logic needs here to check cart id if we have car id then pull wiith session id
+                                End If
 
-                                sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
                             End If
 
-                            PerfMon.Log("Cart", "InitializeVariables - check for cart start")
+                                PerfMon.Log("Cart", "InitializeVariables - check for cart start")
                             oDr = moDBHelper.getDataReader(sSql)
                             PerfMon.Log("Cart", "InitializeVariables - check for cart end")
 
@@ -745,6 +752,7 @@ Partial Public Class Cms
                                         ' If a cart has been found, we need to update the session ID in it.
                                         If oDr("cCartSessionId") <> mcSessionId Then
                                             moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
+                                            ' if mnCartId is not null then pull both otherwise pull session id
                                         End If
 
                                         ' Reactivate the order in the database
@@ -962,6 +970,10 @@ Partial Public Class Cms
 
                 If ButtonSubmitted(myWeb.moRequest, "cartAdd") Then
                     mcCartCmd = "Add"
+                End If
+                If ButtonSubmitted(myWeb.moRequest, "cartAddDeposit") Then
+                    mcCartCmd = "Add"
+                    mbDepositOnly = True
                 End If
                 If ButtonSubmitted(myWeb.moRequest, "cartDetail") Then
                     mcCartCmd = "Cart"
@@ -2624,11 +2636,13 @@ processFlow:
                                         cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         If Not oCheckPrice Is Nothing Then
                                             nCheckPrice = oCheckPrice.InnerText
-                                            If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
-                                                nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
+                                            If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
+                                                If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
+                                                    nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
+                                                End If
                                             End If
                                             nTaxRate = getProductTaxRate(oCheckPrice)
-                                        End If
+                                            End If
                                             'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
 
                                             If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
@@ -5480,16 +5494,31 @@ processFlow:
                     If oXform.isSubmitted Or myWeb.moRequest("Submit") = "Continue" Or myWeb.moRequest("Submit") = "Search" Then
                         oXform.updateInstanceFromRequest()
                         oXform.validate()
+                        If moCartConfig("NotesToContactsXSL") <> "" Then
+
+                            oXform.Instance.SetAttribute("userId", mnEwUserId)
+                            oXform.Instance.SetAttribute("cartId", mnCartId)
+
+                            Dim oInstanceDoc As New XmlDocument
+                            oInstanceDoc.LoadXml(oXform.Instance.OuterXml)
+
+                            Dim oTransform As New Protean.XmlHelper.Transform(myWeb, moServer.MapPath(moCartConfig("NotesToContactsXSL")), False)
+
+                            moDBHelper.importObjects(oTransform.ProcessDocument(oInstanceDoc).DocumentElement, mnCartId, "")
+
+                            oTransform = Nothing
+
+                        End If
                         If oXform.valid = True Then
-                            oRow("cClientNotes") = oXform.Instance.InnerXml
-                            'if we are useing the notes as a search facility for products
-                            If myWeb.moRequest("Submit") = "Search" Then
-                                mcCartCmd = "Search"
-                            Else
-                                mcCartCmd = "SkipAddress"
+                                oRow("cClientNotes") = oXform.Instance.InnerXml
+                                'if we are useing the notes as a search facility for products
+                                If myWeb.moRequest("Submit") = "Search" Then
+                                    mcCartCmd = "Search"
+                                Else
+                                    mcCartCmd = "SkipAddress"
+                                End If
                             End If
                         End If
-                    End If
                 Next
                 moDBHelper.updateDataset(oDs, "Order", True)
 
@@ -6543,7 +6572,6 @@ processFlow:
             Dim oDs As DataSet
             Dim oRow As DataRow
             Dim qtyAdded As Integer = 0
-            Dim bDepositOnly As Boolean
 
             Try
 
@@ -6564,16 +6592,14 @@ processFlow:
                         nQuantity = 0
                         oOptions = Nothing
                         cReplacementName = ""
-                        bDepositOnly = False
                         'begin
                         If InStr(oItem1, "qty_") = 1 Then 'check for getting productID and quantity (since there will only be one of these per item submitted)
                             If InStr(oItem1, "qty_deposit_") = 1 Then
                                 nProductKey = CLng(Replace(oItem1, "qty_deposit_", "")) 'Product key
-                                bDepositOnly = True
+                                mbDepositOnly = True
                             Else
                                 nProductKey = CLng(Replace(oItem1, "qty_", "")) 'Product key
                             End If
-
 
                             cProcessInfo = oItem1.ToString & " = " & myWeb.moRequest.Form.Get(oItem1)
 
@@ -6604,7 +6630,7 @@ processFlow:
                                             AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
                                         End If
                                     Else
-                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, bDepositOnly)
+                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
                                     End If
                                         'Add Item to "Done" List
                                         strAddedProducts &= "'" & nProductKey & "',"
@@ -8579,18 +8605,19 @@ SaveNotes:      ' this is so we can skip the appending of new node
                             "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 0) > 0)"
                     'method allowed for authenticated or imporsonating CS users.
                     Dim shippingGroupCondition As String
-                    Dim customerSuccessGroup = "Customer Services"
-                    If myWeb.moSession("PreviewUser") > 0 And myWeb.moDbHelper.checkUserRole(customerSuccessGroup, "Group") Then
-                        Dim gnCustomerServiceUsers = myWeb.GetUserXML.SelectSingleNode(String.Format("Group[@name='{0}']", customerSuccessGroup)).Attributes("id").Value
-                        shippingGroupCondition = String.Format("perm.nDirId IN ({0},{1})", gnAuthUsers, gnCustomerServiceUsers)
-                    Else
-                        shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
-                    End If
+
+                    shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
+
                     sSql &= " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                            "  where perm.nShippingMethodId = opt.nShipOptKey And " & shippingGroupCondition & " And perm.nPermLevel = 1) > 0"
 
                     ' if no group exists return it.
                     sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
+
+                    sSql &= " And opt.nShipOptKey not in ( select nShippingMethodId
+                                from tblCartShippingPermission perm 
+                                Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId  
+                                 and  nPermLevel = 0  and PermGroup.nDirChildId =" & userId & ")"
 
                 Else
                     Dim nonAuthID As Long = gnNonAuthUsers

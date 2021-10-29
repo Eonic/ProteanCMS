@@ -37,6 +37,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protean.Tools.UnitTests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProteanCMS.IntegrationTests", "Assemblies\ProteanCMS.IntegrationTests\ProteanCMS.IntegrationTests.csproj", "{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wiki", "wiki\", "{1D896BB0-1F17-4D1E-9752-87C6AA70CD61}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_61668"
+		Debug.AspNetCompiler.PhysicalPath = "wiki\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61668\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_61668"
+		Release.AspNetCompiler.PhysicalPath = "wiki\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61668\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "61668"
+		SlnRelativePath = "wiki\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +92,10 @@ Global
 		{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D896BB0-1F17-4D1E-9752-87C6AA70CD61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D896BB0-1F17-4D1E-9752-87C6AA70CD61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D896BB0-1F17-4D1E-9752-87C6AA70CD61}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D896BB0-1F17-4D1E-9752-87C6AA70CD61}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

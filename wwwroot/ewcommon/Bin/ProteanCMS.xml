@@ -124,6 +124,22 @@ ProteanCMS
  <param name="position"></param>
  <remarks></remarks>
 </member>
+<member name="M:Protean.Cms.Cart.JSONActions.RefundOrder(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
+ <summary>
+ Refund order 
+ </summary>
+ <param name="myApi"></param>
+ <param name="jObj"></param>
+ <returns></returns>
+</member>
+<member name="M:Protean.Cms.Cart.JSONActions.ProcessNewPayment(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
+ <summary>
+ Process New payment
+ </summary>
+ <param name="myApi"></param>
+ <param name="jObj"></param>
+ <returns></returns>
+</member>
 <member name="M:Protean.Cms.Cart.AddToLists(System.String,System.Xml.XmlElement@,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
  <summary>
  This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.

@@ -1230,7 +1230,10 @@ Public Class xForm
 
 
                                                     End If
-
+                                                Case "datetime"
+                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDateTime(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
+                                                Case "date"
+                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
                                                 Case Else
                                                     'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
                                                     If bIsXml Then
@@ -2874,7 +2877,6 @@ Public Class xForm
             Dim nNodePosition As Long
             Dim obindElmt As XmlElement
             Dim isInserted As Boolean = False
-
 
             If bProcessRepeats Then
 

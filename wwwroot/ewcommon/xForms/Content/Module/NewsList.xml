@@ -412,7 +412,6 @@
       </group>
       <group>
         <label>Module Links</label>
-
         <select1 bind="cLinkType" appearance="full">
           <label>Type of link</label>
           <item>

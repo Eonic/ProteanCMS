@@ -130,7 +130,7 @@ Public Class Indexer
     End Function
 
     Public Sub DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False)
-        ' nPage = 62
+        ' nPage = 59
         PerfMon.Log("Indexer", "DoIndex")
         Dim cProcessInfo As String = ""
         Dim cPageHtml As String = ""
@@ -202,7 +202,7 @@ Public Class Indexer
             'full pages
             cSQL = "Select nStructKey,cStructName From tblContentStructure" 'get all structure
             If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage 'unless a specific page
-            ' If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage & " Or nStructParId =" & nPage 'unless a specific page
+            'If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage & " Or nStructParId =" & nPage 'unless a specific page
             oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Structure")
 
             'now we loop through the different tables and index the data
@@ -417,14 +417,36 @@ Public Class Indexer
                             oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
                         End If
 
-                        oInfoElmt.SetAttribute("indexCount", nIndexed)
-                        oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
-                        oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
-                        oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
-                        oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
-                        oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
-                        oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+                        'oInfoElmt.SetAttribute("indexCount", nIndexed)
+                        'oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+                        'oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+                        'oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+                        'oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+                        'oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+                        'oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
 
+
+                        If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("indexCount", nIndexed)
+                        End If
+                        If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+                        End If
+                        If oInfoElmt.GetAttribute("pagesSkipped") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+                        End If
+                        If oInfoElmt.GetAttribute("contentCount") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+                        End If
+                        If oInfoElmt.GetAttribute("contentSkipped") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+                        End If
+                        If oInfoElmt.GetAttribute("documentsIndexed") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+                        End If
+                        If oInfoElmt.GetAttribute("documentsSkipped") IsNot Nothing Then
+                            oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+                        End If
                         oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")
 
                         If bIsError Then
@@ -436,14 +458,30 @@ Public Class Indexer
                 Next
             End If
 
-            oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
-            oInfoElmt.SetAttribute("indexCount", nIndexed)
-            oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
-            oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
-            oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
-            oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
-            oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
-            oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+            If oInfoElmt.GetAttribute("endTime") IsNot Nothing Then
+                oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
+            End If
+            If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
+                oInfoElmt.SetAttribute("indexCount", nIndexed)
+            End If
+            If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
+                oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+            End If
+            If oInfoElmt.GetAttribute("pagesSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+            End If
+            If oInfoElmt.GetAttribute("contentCount") IsNot Nothing Then
+                oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+            End If
+            If oInfoElmt.GetAttribute("contentSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+            End If
+            If oInfoElmt.GetAttribute("documentsIndexed") IsNot Nothing Then
+                oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+            End If
+            If oInfoElmt.GetAttribute("documentsSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+            End If
 
             'any non-critical errors ?
             If cExError <> "" Then
@@ -468,14 +506,41 @@ Public Class Indexer
             errElmt = oIndexInfo.CreateElement("error")
             errElmt.InnerXml = cExError
             oIndexInfo.FirstChild.AppendChild(errElmt)
-            oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
-            oInfoElmt.SetAttribute("indexCount", nIndexed)
-            oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
-            oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
-            oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
-            oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
-            oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
-            oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+
+
+            'oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
+            'oInfoElmt.SetAttribute("indexCount", nIndexed)
+            'oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+            'oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+            'oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+            'oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+            'oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+            'oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+
+            If oInfoElmt.GetAttribute("endTime") IsNot Nothing Then
+                oInfoElmt.SetAttribute("endTime", Tools.Xml.XmlDate(Now(), True))
+            End If
+            If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
+                oInfoElmt.SetAttribute("indexCount", nIndexed)
+            End If
+            If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
+                oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
+            End If
+            If oInfoElmt.GetAttribute("pagesSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("pagesSkipped", nPagesSkipped)
+            End If
+            If oInfoElmt.GetAttribute("contentCount") IsNot Nothing Then
+                oInfoElmt.SetAttribute("contentCount", nContentsIndexed)
+            End If
+            If oInfoElmt.GetAttribute("contentSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("contentSkipped", nContentSkipped)
+            End If
+            If oInfoElmt.GetAttribute("documentsIndexed") IsNot Nothing Then
+                oInfoElmt.SetAttribute("documentsIndexed", nDocumentsIndexed)
+            End If
+            If oInfoElmt.GetAttribute("documentsSkipped") IsNot Nothing Then
+                oInfoElmt.SetAttribute("documentsSkipped", nDocumentsSkipped)
+            End If
 
             oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")
 
@@ -605,20 +670,15 @@ Public Class Indexer
 
             Dim indexDoc As New Document
 
-
-
             ' Add the basic field types
             indexDoc.Add(New Field("url", url, Field.Store.YES, Field.Index.NOT_ANALYZED))
             indexDoc.Add(New Field("type", pageType, Field.Store.YES, Field.Index.NOT_ANALYZED))
-
 
             If pageXml IsNot Nothing Then
 
                 ' Add the meta data to the fields
                 For Each metaContent As XmlElement In pageXml.SelectNodes("/html/head/meta")
-
                     indexMeta(indexDoc, metaContent)
-
                 Next
 
                 ' Add the text
@@ -631,9 +691,7 @@ Public Class Indexer
                 End If
                 indexDoc.Add(New Field("text", text, Field.Store.YES, Field.Index.ANALYZED)) 'the actual content/text 
 
-
             End If
-
 
             ' Add document to the index
             oIndexWriter.AddDocument(indexDoc)

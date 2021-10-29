@@ -913,7 +913,7 @@
 
 		<div class="order orderdetail panel panel-default">
       			<div class="panel-body">
-			<xsl:apply-templates select="Order" mode="orderAddresses"/>
+			<xsl:apply-templates select="Order" mode="orderAddressesView"/>
 			<xsl:apply-templates select="Order" mode="orderItems"/>
      
 			<div class="morelink">
@@ -924,6 +924,132 @@
 	</xsl:template>
 	<!-- ##### /Ecommerce List Orders module ##### -->
 
+  <!--#-->
+  <!--##############################Order Addresses ################################-->
+  <!--#-->
+  <xsl:template match="Order" mode="orderAddressesView">
+    <xsl:variable name="parentURL">
+      <xsl:call-template name="getContentParURL"/>
+    </xsl:variable>
+    <div class="row" id="order-addresses">
+      <div class="col-md-4">
+        <h4>Order Details</h4>
+        <dl class="dl-horizontal">
+          <dt>
+            Order Date
+          </dt>
+          <dd>
+            <xsl:call-template name="DD_Mon_YYYY">
+              <xsl:with-param name="date">
+                <xsl:value-of select="@InvoiceDateTime"/>
+              </xsl:with-param>
+              <xsl:with-param name="showTime">true</xsl:with-param>
+            </xsl:call-template>
+          </dd>
+          <dt>
+            Order Reference
+          </dt>
+          <dd>
+            <xsl:value-of select="@InvoiceRef"/>
+          </dd>
+
+          <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
+            <dt>
+              Payment Received
+            </dt>
+            <dd>
+              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="format-number(@paymentMade,'0.00')" />
+            </dd>
+            <dt>Final Payment Reference/Link</dt>
+            <dd>
+              <xsl:variable name="secureURL">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:variable>
+              <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
+                <xsl:value-of select="@settlementID" />
+              </a>
+            </dd>
+          </xsl:if>
+          <xsl:if test="@payableType='settlement'">
+            <dt>Payment Made</dt>
+            <dd>
+              <xsl:value-of select="$currencySymbol"/>&#160;
+              <xsl:value-of select="format-number(@paymentMade,'0.00')" />
+            </dd>
+            <dt><strong>Total Outstanding</strong></dt>
+            <dd>
+              <strong>
+              <xsl:value-of select="$currencySymbol"/>&#160;<xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
+              </strong>
+            </dd>
+          </xsl:if>       
+        </dl>  <xsl:variable name="secureURL">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:variable>
+        <xsl:if test="@settlementID!=''">
+          <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}" class="btn btn-danger">
+            Make Final Payment
+          </a>
+          </xsl:if>
+      </div>
+      <xsl:if test="Contact[@type='Billing Address']">
+        <div class="col-md-4">
+          <div id="billingAddress" class="cartAddress box Default-Box">
+            <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart">
+              <xsl:with-param name="parentURL" select="$parentURL"/>
+              <xsl:with-param name="cartType" select="'cart'"/>
+            </xsl:apply-templates>
+            <xsl:if test="not(@readonly)">
+              <!-- THIS SHOULD BE DONE IN THE ABOVE TEMPLATE - WILL -->
+              <!--<p class="optionButtons">
+						<a href="{$parentURL}?pgid={/Page/@id}&amp;cartCmd=Billing" title="Click here to edit the details you have entered for the billing address" class="button">Edit Billing Address</a>
+					</p>-->
+            </xsl:if>
+          </div>
+        </div>
+      </xsl:if>
+      <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
+        <div class="col-md-4">
+          <div id="deliveryAddress" class="cartAddress box Default-Box">
+            <xsl:choose>
+              <xsl:when test="@giftListId and false()">
+                <p class="addressTitle">
+                  <!--Delivery Address Details-->
+                  <xsl:call-template name="term3036" />
+                  <xsl:text>:</xsl:text>
+                </p>
+                <p>
+                  <!--Your order will be delivered to-->
+                  <xsl:call-template name="term3037" />
+                  <xsl:text>: </xsl:text>
+                  <strong>
+                    <xsl:value-of select="Contact[@type='Delivery Address']/GivenName"/>
+                  </strong>
+                </p>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart">
+                  <xsl:with-param name="parentURL" select="$parentURL"/>
+                  <xsl:with-param name="cartType" select="'cart'"/>
+                </xsl:apply-templates>
+                <!-- THIS SHOULD BE DONE IN THE ABOVE TEMPLATE - WILL -->
+                <!--<p class="optionButtons">
+							<a href="{$parentURL}?pgid={/Page/@id}&amp;cartCmd=Delivery" title="Click here to edit the details you have entered for the delivery address" class="button">Edit Delivery Address</a>
+						</p>-->
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
+        </div>
+      </xsl:if>
+    </div>
+  </xsl:template>
 	
 	<!-- ##### Membership User Contacts module ##### -->
 	<xsl:template match="Content[@moduleType='MembershipUserContacts']" mode="displayBrief">

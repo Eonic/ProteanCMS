@@ -284,3 +284,14 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.v
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.IO.Packaging.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\TidyHTML5Managed.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Tinify.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.xml
