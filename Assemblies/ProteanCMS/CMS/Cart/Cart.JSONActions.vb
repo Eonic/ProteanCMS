@@ -633,24 +633,43 @@ Partial Public Class Cms
             '            myCart.mnProcessId = 4
             '        End If
 
-            Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Dictionary(Of String, String)) As String
                 Try
-
                     'Submit the address form as per Cart > Apply > Billing
                     myCart.mcCartCmd = "Billing"
                     myCart.apply()
-                    myCart.addressSubProcess(myCart.moCartXml, "Billing Address")
+                    'myCart.addressSubProcess(oElmt, "Billing Address")
 
                     '' then set processID = 5 if we have shipping set otherwise processID = 4
                     ''confirm myCart.moCartXml.SelectSingleNode("Order/Shipping") node in xml 
-                    If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
-                        myCart.mnProcessId = 5
-                    ElseIf myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Billing Address']") Is Nothing Then
-                        myCart.mnProcessId = 4
+
+                    'assigning gateway
+                    If (myApi.moRequest("ewSubmitClone_cartBillAddress") IsNot Nothing) Then
+                        myCart.mcPaymentMethod = myApi.moRequest("ewSubmitClone_cartBillAddress")
+                    Else
+                        Return "Gateway not provided"
                     End If
 
-                    'return the cart as JSON
-                    'Return GetCart(myApi, jObj)
+                    If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
+                        myCart.mnProcessId = 4
+                    ElseIf myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Billing Address']") Is Nothing Then
+                        myCart.mnProcessId = 5
+                    End If
+
+                    'paymentform 
+                    Dim moPageXml As XmlDocument
+                    moPageXml = myWeb.moPageXml
+                    Dim oCartXML As XmlDocument = moPageXml
+                    Dim oElmt As XmlElement
+                    Dim oContentElmt As XmlElement
+                    oContentElmt = myCart.CreateCartElement(oCartXML)
+                    oElmt = oContentElmt.FirstChild
+                    myCart.GetCart(oElmt)
+                    Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod)
+                    Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
+                    ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, myCart, oElmt)
+                    moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
+                    ' moPageXml.CreateElement("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
                     Return "true"
                 Catch ex As Exception
                     Return ex.Message
