@@ -8605,18 +8605,19 @@ SaveNotes:      ' this is so we can skip the appending of new node
                             "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 0) > 0)"
                     'method allowed for authenticated or imporsonating CS users.
                     Dim shippingGroupCondition As String
-                    Dim customerSuccessGroup = "Customer Services"
-                    If myWeb.moSession("PreviewUser") > 0 And myWeb.moDbHelper.checkUserRole(customerSuccessGroup, "Group") Then
-                        Dim gnCustomerServiceUsers = myWeb.GetUserXML.SelectSingleNode(String.Format("Group[@name='{0}']", customerSuccessGroup)).Attributes("id").Value
-                        shippingGroupCondition = String.Format("perm.nDirId IN ({0},{1})", gnAuthUsers, gnCustomerServiceUsers)
-                    Else
-                        shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
-                    End If
+
+                    shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
+
                     sSql &= " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                            "  where perm.nShippingMethodId = opt.nShipOptKey And " & shippingGroupCondition & " And perm.nPermLevel = 1) > 0"
 
                     ' if no group exists return it.
                     sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
+
+                    sSql &= " And opt.nShipOptKey not in ( select nShippingMethodId
+                                from tblCartShippingPermission perm 
+                                Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId  
+                                 and  nPermLevel = 0  and PermGroup.nDirChildId =" & userId & ")"
 
                 Else
                     Dim nonAuthID As Long = gnNonAuthUsers

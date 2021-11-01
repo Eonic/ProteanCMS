@@ -4268,9 +4268,18 @@
 			<li>
 				<a href="#google" data-toggle="tab">Google</a>
 			</li>
+      <li>
+				<a href="#opengraph" data-toggle="tab">Open Graph</a>
+			</li>
 			<li>
 				<a href="#facebook" data-toggle="tab">Facebook</a>
 			</li>
+      <li>
+        <a href="#twitter" data-toggle="tab">Twitter</a>
+      </li>
+      <li>
+        <a href="#linkedin" data-toggle="tab">LinkedIn</a>
+      </li>
 			<li>
 				<a href="#cookie" data-toggle="tab">Cookie Policy</a>
 			</li>
@@ -4439,6 +4448,48 @@
 					</xsl:call-template>
 				</table>
 			</div>
+
+      <!--LUKE OG-->
+        <div class="tab-pane panel" id="opengraph">
+		<table cellpadding="0" class="table">
+			<xsl:call-template name="editNamedContent">
+			<xsl:with-param name="desc">OpenGraph Title</xsl:with-param>
+			<xsl:with-param name="name">ogTitle</xsl:with-param>
+			<xsl:with-param name="type">MetaData</xsl:with-param>
+			</xsl:call-template>
+          <!-- xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Description</xsl:with-param>
+            <xsl:with-param name="name">ogdescription</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template -->
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Image</xsl:with-param>
+            <xsl:with-param name="name">ogimage</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <!-- xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Site Name</xsl:with-param>
+            <xsl:with-param name="name">ogsite_name</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Locale</xsl:with-param>
+            <xsl:with-param name="name">oglocale</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Type</xsl:with-param>
+            <xsl:with-param name="name">ogtype</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph URL</xsl:with-param>
+            <xsl:with-param name="name">ogurl</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template -->
+				</table>
+			</div>      
+        <!--END -->
 			<div class="tab-pane panel" id="facebook">
 				<table cellpadding="0" class="table">
 					<xsl:call-template name="editNamedContent">
@@ -4461,16 +4512,7 @@
 						<xsl:with-param name="name">fb-pages_id</xsl:with-param>
 						<xsl:with-param name="type">MetaData</xsl:with-param>
 					</xsl:call-template>
-					<xsl:call-template name="editNamedContent">
-						<xsl:with-param name="desc">OpenGraph Title</xsl:with-param>
-						<xsl:with-param name="name">ogTitle</xsl:with-param>
-						<xsl:with-param name="type">MetaData</xsl:with-param>
-					</xsl:call-template>
-					<xsl:call-template name="editNamedContent">
-						<xsl:with-param name="desc">OpenGraph Image</xsl:with-param>
-						<xsl:with-param name="name">ogImage</xsl:with-param>
-						<xsl:with-param name="type">MetaData</xsl:with-param>
-					</xsl:call-template>
+
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Facebook Chat</xsl:with-param>
 						<xsl:with-param name="name">FacebookChat</xsl:with-param>
@@ -4478,7 +4520,54 @@
 					</xsl:call-template>
 				</table>
 			</div>
-			<div class="tab-pane panel" id="cookie">
+<!--LUKE 05.10.21-->
+      <div class="tab-pane panel" id="twitter">
+        <table cellpadding="0" class="table">
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Card</xsl:with-param>
+            <xsl:with-param name="name">twittercard</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Site</xsl:with-param>
+            <xsl:with-param name="name">twittersite</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Creator</xsl:with-param>
+            <xsl:with-param name="name">twittercreator</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Title</xsl:with-param>
+            <xsl:with-param name="name">twittertitle</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Description</xsl:with-param>
+            <xsl:with-param name="name">twitterdescription</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Image</xsl:with-param>
+            <xsl:with-param name="name">twitterimage</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+
+        </table>
+      </div>
+       <div class="tab-pane panel" id="linkedin">
+        <table cellpadding="0" class="table">
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">LinkedIn Insight Tag</xsl:with-param>
+            <xsl:with-param name="name">LinkedInInsightTag</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+        </table>
+      </div>     
+      <!-- END -->
+
+      <div class="tab-pane panel" id="cookie">
 				<table cellpadding="0" class="table">
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Cookie Policy</xsl:with-param>
