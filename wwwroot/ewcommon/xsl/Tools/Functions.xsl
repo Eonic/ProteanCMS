@@ -8538,7 +8538,14 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order" select="@order"/>
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order!=''">
+          <xsl:value-of select="@order"/>
+        </xsl:when>
+        <xsl:otherwise>descending</xsl:otherwise>
+      </xsl:choose>
+    </xsl:param> 
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -8573,6 +8580,66 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
+
+  <!-- FOR ALL RELATED CONTENT -->
+  <xsl:template match="Content[ancestor::ContentDetail]" mode="getContent">
+    <xsl:param name="contentType" />
+    <xsl:param name="startPos" />
+    <xsl:param name="parentClass" />
+    <xsl:param name="sort-data-type">
+      <xsl:call-template name="ordering-data-type">
+        <xsl:with-param name="field" select="@sortBy"/>
+      </xsl:call-template>
+    </xsl:param>
+    <xsl:param name="sort" select="@sortBy"/>
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order!=''">
+          <xsl:value-of select="@order"/>
+        </xsl:when>
+        <xsl:otherwise>descending</xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
+    <xsl:param name="stepCount" select="'0'"/>
+    <xsl:param name="endPos">
+      <xsl:choose>
+        <xsl:when test="@stepCount = '0'">
+          <xsl:value-of select="count(Content[@type=$contentType])"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="number($startPos + concat('0',@stepCount))"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
+    <xsl:if test="$parentClass!=''">
+      <Parent class="{$parentClass}"/>
+    </xsl:if>
+    test1
+    <xsl:choose>
+      <!-- When Page Order -->
+      <xsl:when test="$sort='Position' or $sort='' or $order=''">
+        test2
+        <xsl:for-each select="Content[@type=$contentType]">
+          <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
+            <xsl:copy-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        test3 <xsl:value-of select="$contentType"/>
+        <xsl:for-each select="Content[@type=$contentType]">
+          <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
+          <xsl:sort select="@update" order="{$order}" data-type="text"/>
+          <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
+            <xsl:copy-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!-- FOR ALL RELATED CONTENT -->
   <xsl:template match="Content[@display='relatedTag']" mode="getContent">
@@ -10274,7 +10341,7 @@
                 </xsl:variable>
                 <div>
                   <xsl:attribute name="style">
-                    background-image: url('<xsl:value-of select="$backgroundResized"/>');
+                    background-image: url('<xsl:value-of select="$backgroundResized"/>');color:red;
                   </xsl:attribute>
                   <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
                 </div>

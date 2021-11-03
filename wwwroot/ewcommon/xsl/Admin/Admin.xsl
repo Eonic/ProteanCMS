@@ -7348,6 +7348,12 @@
           <xsl:if test="Payment">
             <a class="btn btn-primary" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
               Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
+            </a><br/>
+            <br/>
+          </xsl:if>
+          <xsl:if test="Payment">
+            <a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary" target="_new">
+              <i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
             </a>
           </xsl:if>
       </div>

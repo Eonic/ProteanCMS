@@ -1399,10 +1399,10 @@
             <xsl:if test="@backgroundImage!=''">
               <xsl:call-template name="resize-image">
                 <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="576"/>
-                <xsl:with-param name="max-height" select="576"/>
+                <xsl:with-param name="max-width" select="575"/>
+                <xsl:with-param name="max-height" select="575"/>
                 <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-576</xsl:text>
+                  <xsl:text>~bg-575</xsl:text>
                   <xsl:text>/~bg-</xsl:text>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
@@ -1417,10 +1417,10 @@
             <xsl:if test="@backgroundImage!=''">
               <xsl:call-template name="resize-image">
                 <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="768"/>
-                <xsl:with-param name="max-height" select="768"/>
+                <xsl:with-param name="max-width" select="767"/>
+                <xsl:with-param name="max-height" select="767"/>
                 <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-768</xsl:text>
+                  <xsl:text>~bg-767</xsl:text>
                   <xsl:text>/~bg-</xsl:text>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
@@ -1435,10 +1435,10 @@
             <xsl:if test="@backgroundImage!=''">
               <xsl:call-template name="resize-image">
                 <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="992"/>
-                <xsl:with-param name="max-height" select="992"/>
+                <xsl:with-param name="max-width" select="991"/>
+                <xsl:with-param name="max-height" select="991"/>
                 <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-992</xsl:text>
+                  <xsl:text>~bg-991</xsl:text>
                   <xsl:text>/~bg-</xsl:text>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
@@ -1453,10 +1453,10 @@
             <xsl:if test="@backgroundImage!=''">
               <xsl:call-template name="resize-image">
                 <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="1200"/>
-                <xsl:with-param name="max-height" select="1200"/>
+                <xsl:with-param name="max-width" select="1199"/>
+                <xsl:with-param name="max-height" select="1199"/>
                 <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-1200</xsl:text>
+                  <xsl:text>~bg-1199</xsl:text>
                   <xsl:text>/~bg-</xsl:text>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>

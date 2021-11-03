@@ -1105,6 +1105,11 @@ namespace Protean.Tools
         {
             try
             {
+
+                sString = sString.Replace(Strings.Chr(0), Strings.Chr(32));
+                sString = sString.Replace(Strings.Chr(8), Strings.Chr(32));
+                sString = sString.Replace(Strings.Chr(20), Strings.Chr(32));
+                sString = sString.Replace("&nbsp;", "&#160;");
                 sString = sString.Replace("¢", "&#162;");
                 sString = sString.Replace("£", "&#163;");
                 sString = sString.Replace("‘", "&#8216;");
@@ -1128,7 +1133,7 @@ namespace Protean.Tools
                 sString = sString.Replace("†", "&#8224;");
                 sString = sString.Replace("‡", "&#8224;");
                 sString = sString.Replace("•", "&#8226;");
-                sString = sString.Replace("…", "8230;");
+                sString = sString.Replace("…", "&#8230;");
                 sString = sString.Replace("′", "&#8242;");
                 sString = sString.Replace("″", "&#8243;");
                 sString = sString.Replace("™", "&#8482;");

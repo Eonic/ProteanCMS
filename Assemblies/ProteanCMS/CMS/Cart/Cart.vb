@@ -2604,13 +2604,12 @@ processFlow:
                     oDs.Relations("Rel1").Nested = True
                     '
                     For Each oRow In oDs.Tables("Item").Rows
-
                         Dim Discount As Double = 0
+
 
                         If Not oItemList.ContainsValue(oRow("contentId")) Then
                             oItemList.Add(oItemList.Count, oRow("contentId"))
                         End If
-
                         If moDBHelper.DBN2int(oRow("nParentId")) = 0 Then
                             Dim nTaxRate As Long = 0
                             Dim bOverridePrice As Boolean = False
@@ -2642,11 +2641,10 @@ processFlow:
                                                 End If
                                             End If
                                             nTaxRate = getProductTaxRate(oCheckPrice)
-                                            End If
-                                            'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
+                                        End If
+                                        'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
 
-                                            If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
-
+                                        If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
                                             Dim revisedPrice As Double
                                             If moSubscription.mbOveridePrices = False Then
                                                 'TS added when subscription when initial cost is changed in by external logic we should not refer back to the stored content.
@@ -2668,17 +2666,12 @@ processFlow:
                                     Else
                                         bOverridePrice = True
                                     End If
-
                                 End If
                                 If Not bOverridePrice Then
                                     If nCheckPrice > 0 And nCheckPrice <> oRow("price") Then
                                         ' If price is lower, then update the item price field
-                                        'oRow.BeginEdit()
                                         oRow("price") = nCheckPrice
-                                        'oRow("taxRate") = nTaxRate
-                                        'oRow.EndEdit()
                                     End If
-
                                     If oRow("taxRate") <> nTaxRate Then
                                         oRow("taxRate") = nTaxRate
                                     End If
@@ -2695,7 +2688,6 @@ processFlow:
                                         nOpPrices += nNPrice
                                         'oOpRow.BeginEdit()
                                         oOpRow("price") = nNPrice
-
                                         'oOpRow.EndEdit()
                                     Else
 
@@ -2823,73 +2815,67 @@ processFlow:
                         'cart contacts
                         oDs.Tables("Contact").Columns(0).ColumnMapping = Data.MappingType.Attribute
 
-
                         oXml = New XmlDocument
-                            oXml.LoadXml(oDs.GetXml)
+                        oXml.LoadXml(oDs.GetXml)
+                        oDs.EnforceConstraints = False
 
-                            oDs.EnforceConstraints = False
+                        'Convert the detail to xml
+                        For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
+                            oElmt.InnerXml = oElmt.InnerText
+                            If Not oElmt.SelectSingleNode("Content") Is Nothing Then
+                                Dim oAtt As XmlAttribute
+                                For Each oAtt In oElmt.SelectSingleNode("Content").Attributes
+                                    oElmt.SetAttribute(oAtt.Name, oAtt.Value)
+                                Next
+                                oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
+                                Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
+                            End If
+                        Next
 
-                            'Convert the detail to xml
-                            For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
-                                oElmt.InnerXml = oElmt.InnerText
-                                If Not oElmt.SelectSingleNode("Content") Is Nothing Then
-                                    Dim oAtt As XmlAttribute
-                                    For Each oAtt In oElmt.SelectSingleNode("Content").Attributes
-                                        oElmt.SetAttribute(oAtt.Name, oAtt.Value)
-                                    Next
-                                    oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
-                                    Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
 
+                        For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
+                            If moDBHelper.CheckOptOut(oElmt.InnerText) Then
+                                oElmt.SetAttribute("optOut", "True")
+                            End If
+                        Next
+
+                        'get the option xml
+                        For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
+                            oElmt.InnerXml = oElmt.InnerText
+                            Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
+                            Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
+                            cOptionGroupName = ""
+                            If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
+                                cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
+                            End If
+                            If nOptionIndex >= 0 Then
+                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
+                                If Not oElmt2 Is Nothing Then
+                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                 End If
-                            Next
-
-                            For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
-                                If moDBHelper.CheckOptOut(oElmt.InnerText) Then
-                                    oElmt.SetAttribute("optOut", "True")
-                                End If
-                            Next
-
-                            'get the option xml
-                            For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
-                                oElmt.InnerXml = oElmt.InnerText
-
-                                Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
-                                Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
-                                cOptionGroupName = ""
-                                If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
-                                    cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
-                                End If
-                                If nOptionIndex >= 0 Then
-
-                                    oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
-                                    If Not oElmt2 Is Nothing Then
-                                        If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                        oElmt.ParentNode.InnerXml = oElmt2.OuterXml
+                            Else
+                                'case for text option
+                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
+                                If Not oElmt2 Is Nothing Then
+                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                    If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
+                                        oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
+                                    Else
+                                        oElmt2.SetAttribute("name", "Name Not defined")
                                     End If
-
-                                Else
-                                    'case for text option
-                                    oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
-                                    If Not oElmt2 Is Nothing Then
-                                        If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                        If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
-                                            oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
-                                        Else
-                                            oElmt2.SetAttribute("name", "Name Not defined")
-                                        End If
-                                        oElmt.ParentNode.InnerXml = oElmt2.OuterXml
-                                    End If
+                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                 End If
+                            End If
 
-                            Next
+                        Next
+                        oElmt = moPageXml.CreateElement("Cart")
+                        ' Note: Preserve the original elements in oCartElmt
+                        oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
+                    End If
 
-                            oElmt = moPageXml.CreateElement("Cart")
-                            ' Note: Preserve the original elements in oCartElmt
-                            oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
+                    myWeb.CheckMultiParents(oCartElmt)
 
-
-                        End If
-                        myWeb.CheckMultiParents(oCartElmt)
                     sSql = "Select cClientNotes from tblCartOrder where nCartOrderKey=" & nCartIdUse
                     Dim oNotes As XmlElement = oCartElmt.OwnerDocument.CreateElement("Notes")
                     Dim notes As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))
