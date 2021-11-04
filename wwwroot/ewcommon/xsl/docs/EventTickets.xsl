@@ -292,6 +292,7 @@
               <fo:table-row>
                 <fo:table-cell>
                   <fo:block>
+                    <xsl:value-of select="parentProduct/Name/node()"/>
                     <xsl:value-of select="Name/node()"/>
                   </fo:block>
                 </fo:table-cell>

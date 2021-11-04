@@ -6339,6 +6339,7 @@ processFlow:
                         oProdXml.InnerXml = ProductXml
                     Else
                         If nProductId > 0 Then
+                            Dim cContentType As String = moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId)
                             Dim sItemXml As String = CStr("" & moDBHelper.ExeProcessSqlScalar("Select cContentXmlDetail FROM tblContent WHERE nContentKey = " & nProductId))
                             If sItemXml <> "" Then
                                 oProdXml.InnerXml = sItemXml
@@ -6381,7 +6382,7 @@ processFlow:
                             End If
 
                             'Add Parent Product to cart if SKU.
-                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                            If cContentType = "SKU" Or cContentType = "Ticket" Then
                                 'Then we need to add the Xml for the ParentProduct.
                                 Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
                                 Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
@@ -6390,12 +6391,9 @@ processFlow:
                                 ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
                             End If
 
-
+                            oProdXml.DocumentElement.SetAttribute("type", cContentType)
                         End If
                     End If
-
-
-
 
                     addNewTextNode("cItemName", oElmt, cProductText)
                     addNewTextNode("nItemOptGrpIdx", oElmt, 0) 'Dont Need

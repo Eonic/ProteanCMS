@@ -2241,12 +2241,12 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
 
-                'regardless we should return the filename.
+                My.Application.Log.WriteException(ex)
 
-                sReturnError = ex.Message
-                ' Return ex.StackTrace
+                'regardless we should return the filename.
+                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
                 myWeb.bPageCache = False 'This is not working 100% - can we understand why?????
-                Return sReturnError
+                Return sReturnString
             End Try
 
         End Function
