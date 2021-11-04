@@ -1536,8 +1536,8 @@
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:attribute name="style">
-                        <xsl:text>background: url('</xsl:text>
-                        <xsl:value-of select="$backgroundResized"/>
+                        <xsl:text>background-image: url('</xsl:text>
+                        <xsl:value-of select="@backgroundImage"/>
                         <xsl:text>');</xsl:text>
                         <xsl:if test="@minHeight!=''">
                           <xsl:text>min-height:</xsl:text>
@@ -1550,8 +1550,8 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:attribute name="style">
-                    <xsl:text>background: url('</xsl:text>
-                    <xsl:value-of select="$backgroundResized"/>
+                    <xsl:text>background-image: url('</xsl:text>
+                    <xsl:value-of select="@backgroundImage"/>
                     <xsl:text>');</xsl:text>
                     <xsl:if test="@minHeight!=''">
                       <xsl:text>min-height:</xsl:text>
