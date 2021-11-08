@@ -990,20 +990,30 @@
 
 	<xsl:template match="Page[@ewCmd='EditContent' or contains(@ewCmd,'EditXForm') or @ewCmd='EditMailContent']" mode="adminBreadcrumb">
     <div class="breadcrumb admin-breadcrumb">
-      <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary='true']">
-        <i class="fa fa-file">&#160;</i> &#160;[Primary page]&#160;
-        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
-          <xsl:with-param name="thispageid" select="@pgid"/>
-        </xsl:apply-templates>
-        <br/>
-      </xsl:for-each>
-      <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary!='true']">
-        <i class="fa fa-file-o">&#160;</i> &#160; [Also on page]&#160;
-        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
-          <xsl:with-param name="thispageid" select="@pgid"/>
-        </xsl:apply-templates>      
-        <br/>
-      </xsl:for-each>    
+      <div class="admin-breadcrumb-inner">
+        <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary='true']">
+          <ul>
+            <li>
+              <i class="fa fa-file">&#160;</i> &#160;[Primary page]&#160;
+            </li>
+            <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
+              <xsl:with-param name="thispageid" select="@pgid"/>
+            </xsl:apply-templates>
+          </ul>
+        </xsl:for-each>
+        <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary!='true']">
+          <ul>
+            <li>
+              <i class="fa fa-file-o">&#160;</i> &#160; [Also on page]&#160;
+            </li>
+            <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
+              <xsl:with-param name="thispageid" select="@pgid"/>
+            </xsl:apply-templates>
+          </ul>
+        </xsl:for-each>
+      </div>
+      <a href="" class="all-breadcrumb">see all locations</a>
+      <a href="" class="less-breadcrumb">hide locations</a>
     </div>
 	</xsl:template>
 
