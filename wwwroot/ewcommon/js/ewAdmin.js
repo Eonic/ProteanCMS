@@ -1,8 +1,23 @@
 
 var checkiFrameLoaded;
 
-$(document).ready(function () {
+$(document).ready(function() {
+    $(".all-breadcrumb").click(function(){
+        $(".admin-breadcrumb").addClass("breadcrumb-height");
+        $(".all-breadcrumb").hide();
+        $(".less-breadcrumb").show();
+        return false;
+    });
+    $(".less-breadcrumb").click(function() {
+        $(".admin-breadcrumb").removeClass("breadcrumb-height");
+        $(".all-breadcrumb").show();
+        $(".less-breadcrumb").hide();
+        return false;
+    });
+    if ($(".admin-breadcrumb").height() < $(".admin-breadcrumb-inner").height()){
+        $(".all-breadcrumb").show();
 
+    };
     $("[data-toggle=popover]").popover({
         html: true,
         content: function () {

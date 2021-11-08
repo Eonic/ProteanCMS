@@ -90,6 +90,8 @@ body.ewAdmin.layout-AdmHome {
 
 .ewAdmin {
     .admin-breadcrumb {
+        position: relative;
+
         @media(min-width:@screen-sm-min) {
             position: absolute;
             right: 0px;
@@ -101,6 +103,7 @@ body.ewAdmin.layout-AdmHome {
         text-align: right;
         padding: 15px 30px !important;
         border-radius: 0;
+        z-index: 10;
 
         a {
             color: #fff;
@@ -119,6 +122,44 @@ body.ewAdmin.layout-AdmHome {
 
         li:before {
             color: #a5a7a9 !important;
+            content: "/\00a0";
+            padding: 0 5px;
+        }
+
+        li:first-child {
+            &:before {
+                content: '';
+            }
+        }
+
+        height: 60px;
+        overflow: hidden;
+
+        ul {
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+            display: inline-block;
+        }
+
+        .all-breadcrumb,
+        .less-breadcrumb {
+            background: #516677;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            left: 0;
+            padding: 5px 29px;
+            color: #5cbaf1;
+            display: none;
+        }
+
+
+        &.breadcrumb-height {
+            height: auto;
+            z-index: 1050;
         }
     }
 
