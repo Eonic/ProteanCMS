@@ -1855,7 +1855,7 @@ processFlow:
                                 Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)
                                 calledType = assemblyInstance.GetType(classPath, True)
                             Else
-                                'case for methods within EonicWeb Core DLL
+                                'case for methods within ProteanCMS Core DLL
                                 calledType = System.Type.GetType(classPath, True)
                             End If
 
@@ -7760,7 +7760,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                     Dim oCartElmt As XmlElement = oContent.FirstChild
 
                                     'check for invoice date etc.
-                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And (oCartElmt.GetAttribute("InvoiceDate") = "" Or Not (oCartElmt.GetAttribute("InvoiceDateTime").Contains("T"))) Then
+                                    If CLng("0" & oCartElmt.GetAttribute("statusId")) >= 6 And (oCartElmt.GetAttribute("InvoiceDate") = "" Or Not (oCartElmt.GetAttribute("InvoiceDateTime").Contains("T"))) Then
                                         'fix for any items that have lost the invoice date and ref.
                                         'also fix when datetime no stored in XML format.
                                         Dim cartId As Long = oDR("nCartOrderKey")

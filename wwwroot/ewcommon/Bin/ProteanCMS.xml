@@ -470,6 +470,25 @@ ProteanCMS
  <returns></returns>
  <remarks></remarks>
 </member>
+<member name="M:Protean.Cms.GetPageContentFromSelect(System.String,System.Boolean,System.Int32@,System.Boolean,System.Int32,System.String,System.Xml.XmlElement@,System.String,System.Boolean,System.Int64,System.Boolean,System.String)">
+ <summary>
+ This will be passed the where portion of a SQL statement and will add content to the page based on the where statement. This funciton contains all the logic to respect page permissions, statuses and wheather you are logged into the admin system. It also calls moDbHelper.AddDataSetToContent which formats the dataset result and adds as the correct XML to the site page.
+ No content really should be added to the page without calling .AddDataSetToContent otherwise the result will not be consistent.
+ </summary>
+ <param name="sWhereSql"></param>
+ <param name="bPrimaryOnly"></param>
+ <param name="nCount"></param>
+ <param name="bIgnorePermissionsCheck"></param>
+ <param name="nReturnRows"></param>
+ <param name="cOrderBy"></param>
+ <param name="oContentsNode"></param>
+ <param name="cAdditionalJoins"></param>
+ <param name="bContentDetail"></param>
+ <param name="pageNumber"></param>
+ <param name="distinct"></param>
+ <param name="cShowSpecificContentTypes"></param>
+ 
+</member>
 <member name="M:Protean.Cms.SiteRedirection">
  <summary>
  <para>This provides the facility to redirect a logged on user from PATH A to PATH B if they belong to a certain group/directory item.</para>
