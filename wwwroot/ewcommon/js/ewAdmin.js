@@ -2370,8 +2370,9 @@ $(document).ready(function () {
         var aTag = $("li[id='" + aid + "']");
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
     }
-    
-    scrollToAnchor($("#MenuTree li.active").prop("id"));
+    if ($("#MenuTree") != undefined) {
+        scrollToAnchor($("#MenuTree li.active").prop("id"));
+    }
 });
 
 

@@ -136,7 +136,6 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bi
 D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-x64.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.dll
@@ -616,3 +615,11 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\TidyHTML5Managed.d
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Tinify.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
