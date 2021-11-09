@@ -4477,6 +4477,11 @@
             <xsl:with-param name="name">ogimage</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
+	  <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Image Secure URL</xsl:with-param>
+            <xsl:with-param name="name">ogimagesecure</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
           <!-- xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">OpenGraph Site Name</xsl:with-param>
             <xsl:with-param name="name">ogsite_name</xsl:with-param>

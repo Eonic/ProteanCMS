@@ -1281,11 +1281,14 @@
     </xsl:if>  
       <xsl:if test="Contents/Content[@name='ogurl']">
       <meta property="og:url" content="{Contents/Content[@name='ogurl']}"/>
-    </xsl:if>
+    </xsl:if>-->
     <xsl:if test="Contents/Content[@name='ogimage']">
       <meta name="og:image" content="{Contents/Content[@name='ogimage']}"/>
     </xsl:if>
-    <xsl:if test="Contents/Content[@name='ogsite_name']">
+    <xsl:if test="Contents/Content[@name='ogimagesecure']">
+      <meta name="og:image:secure_url" content="{Contents/Content[@name='ogimagesecure']}"/>
+    </xsl:if>
+    <!--<xsl:if test="Contents/Content[@name='ogsite_name']">
       <meta property="og:site_name" content="{Contents/Content[@name='ogsite_name']}"/>
     </xsl:if>
     <xsl:if test="Contents/Content[@name='oglocale']">
