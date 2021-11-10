@@ -990,20 +990,30 @@
 
 	<xsl:template match="Page[@ewCmd='EditContent' or contains(@ewCmd,'EditXForm') or @ewCmd='EditMailContent']" mode="adminBreadcrumb">
     <div class="breadcrumb admin-breadcrumb">
-      <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary='true']">
-        <i class="fa fa-file">&#160;</i> &#160;[Primary page]&#160;
-        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
-          <xsl:with-param name="thispageid" select="@pgid"/>
-        </xsl:apply-templates>
-        <br/>
-      </xsl:for-each>
-      <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary!='true']">
-        <i class="fa fa-file-o">&#160;</i> &#160; [Also on page]&#160;
-        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
-          <xsl:with-param name="thispageid" select="@pgid"/>
-        </xsl:apply-templates>      
-        <br/>
-      </xsl:for-each>    
+      <div class="admin-breadcrumb-inner">
+        <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary='true']">
+          <ul>
+            <li>
+              <i class="fa fa-file">&#160;</i> &#160;[Primary page]&#160;
+            </li>
+            <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
+              <xsl:with-param name="thispageid" select="@pgid"/>
+            </xsl:apply-templates>
+          </ul>
+        </xsl:for-each>
+        <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary!='true']">
+          <ul>
+            <li>
+              <i class="fa fa-file-o">&#160;</i> &#160; [Also on page]&#160;
+            </li>
+            <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
+              <xsl:with-param name="thispageid" select="@pgid"/>
+            </xsl:apply-templates>
+          </ul>
+        </xsl:for-each>
+      </div>
+      <a href="" class="all-breadcrumb">see all locations</a>
+      <a href="" class="less-breadcrumb">hide locations</a>
     </div>
 	</xsl:template>
 
@@ -4467,6 +4477,11 @@
             <xsl:with-param name="name">ogimage</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
+	  <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Image Secure URL</xsl:with-param>
+            <xsl:with-param name="name">ogimagesecure</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
           <!-- xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">OpenGraph Site Name</xsl:with-param>
             <xsl:with-param name="name">ogsite_name</xsl:with-param>
@@ -7437,6 +7452,12 @@
           <xsl:if test="Payment">
             <a class="btn btn-primary" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
               Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
+            </a><br/>
+            <br/>
+          </xsl:if>
+          <xsl:if test="Payment">
+            <a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary" target="_new">
+              <i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
             </a>
           </xsl:if>
       </div>
