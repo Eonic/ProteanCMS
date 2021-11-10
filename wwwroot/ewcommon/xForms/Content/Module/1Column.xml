@@ -41,6 +41,7 @@
     <bind nodeset="tblContent/cContentXmlBrief/Content" id="columnPresentationBinds">
       <bind id="cModuleBox" nodeset="@background" required="false()" type="string"/>
       <bind id="backgroundImage" nodeset="@backgroundImage" required="false()" type="string"/>
+      <bind id="minHeight" nodeset="@minHeight" required="false()" type="string"/>
       <bind id="data-stellar-background-ratio" nodeset="@data-stellar-background-ratio" required="false()" type="string"/>
       <bind id="fullWidth" nodeset="@fullWidth" required="false()" type="string"/>
       <bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
@@ -75,6 +76,10 @@
           </select1>
           <input bind="backgroundImage" class="pickImageFile bs-only">
             <label>Background Image</label>
+            <value></value>
+          </input>
+          <input bind="minHeight" class="bs-only" suffix="px">
+            <label>Minimum Height</label>
             <value></value>
           </input>
           <range bind="data-stellar-background-ratio" start="0" end="30" step="1">

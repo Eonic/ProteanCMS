@@ -572,7 +572,7 @@
                     <xsl:otherwise>
                       <xsl:if test="not(@position='header' or @position='footer' or (@position='column1' and $page/@layout='Modules_1_column'))">
                       <xsl:attribute name="style">
-                        background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                        background-image: url('<xsl:value-of select="@backgroundImage"/>');color:red;
                       </xsl:attribute>
                       </xsl:if>
                     </xsl:otherwise>
@@ -580,7 +580,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:attribute name="style">
-                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                    background-image: url('<xsl:value-of select="@backgroundImage"/>');color:blue;
                   </xsl:attribute>
                 </xsl:otherwise>
               </xsl:choose>
@@ -5010,15 +5010,13 @@
             <xsl:text>. </xsl:text>
           </xsl:if>
         </a>
-        <span class="pull-right">
-          <a href="{$parentURL}" class="btn btn-default btn-sm">
+          <a href="{$parentURL}" class="btn btn-default btn-sm directions">
             <i class="fa fa-map-marker">
               <xsl:text> </xsl:text>
             </i>
             <xsl:text> </xsl:text>
             Get Directions
           </a>
-        </span>
         <div class="clear-fix">
           <xsl:text> </xsl:text>
         </div>
@@ -14919,9 +14917,33 @@
   <!--   ################   Slide Gallery   ###############   -->
   <!-- Slide Gallery Module -->
   <xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="displayBrief">
+    <!--Moved so we can use within Event / Product templates too-->
+    <xsl:apply-templates select="."  mode="displaySlideGallery">
+      <xsl:with-param name="contentType" select="@contentType"/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="contentJS">
+    <!--Moved so we can use within Event / Product templates too-->
+    <xsl:apply-templates select="."  mode="displaySlideGalleryJS"/>
+  </xsl:template>
+
+  <!--   ################   Slide Gallery   ###############   -->
+  <!-- Slide Gallery Module -->
+  <xsl:template match="Content" mode="displaySlideGallery">
     <!-- Set Variables -->
-    <xsl:variable name="contentType" select="@contentType" />
+    <xsl:param name="contentType"/>
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+    <xsl:variable name="stepCount">
+      <xsl:choose>
+        <xsl:when test="@stepCount!=''">
+          <xsl:value-of select="@stepCount"/>
+        </xsl:when>
+        <xsl:otherwise>
+          5
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
     <xsl:variable name="contentList">
       <Content>
@@ -14946,68 +14968,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <!-- Output Module -->
-    <div class="GalleryImageList Grid">
-      <div class="cols{@cols}">
-        <!-- If Stepper, display Stepper -->
-        <xsl:if test="@stepCount != '0'">
-          <xsl:apply-templates select="/" mode="genericStepper">
-            <xsl:with-param name="GalleryImageList" select="$contentList"/>
-            <xsl:with-param name="noPerPage" select="@stepCount"/>
-            <xsl:with-param name="startPos" select="$startPos"/>
-            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-            <xsl:with-param name="totalCount" select="$totalCount"/>
-          </xsl:apply-templates>
-        </xsl:if>
-        <div class="terminus">&#160;</div>
-      </div>
-    </div>
-    <script type="text/javascript">
-      <xsl:text>$(document).ready(function() {
-      var tn1 = $('.mygallery').tn3({
-      skinDir:"skins",
-      autoplay:true,
-      </xsl:text>
-      <xsl:if test="@height!=''">
-        <xsl:text>height:</xsl:text>
-        <xsl:value-of select="@height"/>
-        <xsl:text>,</xsl:text>
-      </xsl:if>
-      <xsl:text>
-      fullOnly:false,
-      responsive:true,
-      mouseWheel:false,
-      delay:</xsl:text>
-      <xsl:value-of select="@advancedSpeed"/>
-      <xsl:text>,
-      imageClick:"url",
-      image:{
-      crop:true,
-      maxZoom:2,
-      align:0,
-      overMove:true,
-      transitions:[{
-      type:"blinds",
-      duration:300
-      },
-      {
-      type:"grid",
-      duration:160,
-      gridX:9,
-      gridY:7,
-      easing:"easeInCubic",
-      sort:"circle"
-      },{
-      type:"slide",
-      duration:430,
-      easing:"easeInOutExpo"
-      }]
-      }
-      });
-      });</xsl:text>
-    </script>
+  
     <div class="contentSliderGallery">
-      <div class="mygallery">
+      <div id="slider-gallery-{@id}">
         <div class="tn3 album">
           <h4>Slider Gallery</h4>
           <div class="tn3 description">In admin mode the Slider Gallery is disabled, to make editing easier. To see the working gallery, use preview mode</div>
@@ -15021,8 +14984,63 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="Content" mode="displaySlideGalleryJS">
+    <script type="text/javascript">
+      <xsl:text>$(document).ready(function() {
+        var tn1 = $('#slider-gallery-</xsl:text>
+      <xsl:value-of select="@id"/><xsl:text>').tn3({
+        skinDir:"skins",
+        autoplay:true,
+        </xsl:text>
+      <xsl:if test="@height!=''">
+        <xsl:text>height:</xsl:text>
+        <xsl:value-of select="@height"/>
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:text>
+        fullOnly:false,
+        responsive:true,
+        mouseWheel:false,
+        delay:</xsl:text>
+      <xsl:choose>
+        <xsl:when test="@advancedSpeed!=''">
+          <xsl:value-of select="@advancedSpeed"/>
+        </xsl:when>
+        <xsl:otherwise>
+          1000
+        </xsl:otherwise>
+      </xsl:choose>      
+      <xsl:text>,
+        imageClick:"url",
+        image:{
+        crop:true,
+        maxZoom:2,
+        align:0,
+        overMove:true,
+        transitions:[{
+        type:"blinds",
+        duration:300
+        },
+        {
+        type:"grid",
+        duration:160,
+        gridX:9,
+        gridY:7,
+        easing:"easeInCubic",
+        sort:"circle"
+        },{
+        type:"slide",
+        duration:430,
+        easing:"easeInOutExpo"
+        }]
+        }
+        });
+        });</xsl:text>
+    </script>
+
+  </xsl:template>
   <!-- Library Image Brief -->
-  <xsl:template match="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGallery">
+  <xsl:template match="Content[@type='LibraryImageWithLink' or @type='LibraryImage']" mode="displayBriefSliderGallery">
     <li>
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem newsarticle'"/>

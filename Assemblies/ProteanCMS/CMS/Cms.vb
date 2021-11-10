@@ -186,6 +186,7 @@ Public Class Cms
         iframe = 6
         pdf = 7
         flush = 8
+        qrcode = 9
     End Enum
 
 #End Region
@@ -947,8 +948,14 @@ Public Class Cms
             If mcOriginalURL.StartsWith("/ewapi/") Then
                 ContentType = "json"
             End If
+            If mcOriginalURL.StartsWith("/QRcode/") Then
+                ContentType = "qrcode"
+            End If
 
             Select Case ContentType
+                Case "qrcode"
+                    moResponseType = pageResponseType.qrcode
+                    mcContentType = "image/png"
                 Case "xml"
                     mcContentType = "application/xml"
                     mbOutputXml = True
@@ -1122,6 +1129,28 @@ Public Class Cms
 
                     moApi.InitialiseVariables()
                     moApi.JSONRequest()
+
+                Case pageResponseType.qrcode
+
+                    'This feature returns a QRcode of the website path.
+                    'calling http://proteancms.com/QRcode/anyurlgoeshere
+                    'returns qr code for http://proteancms.com/anyurlgoeshere
+
+                    Dim QRPath As String = moRequest.RawUrl.ToString()
+
+                    QRPath = QRPath.Replace("/QRcode", "")
+                    Dim isSecure = "https://"
+                    If moRequest.ServerVariables("SERVER_PORT_SECURE") = "0" Then
+                        isSecure = "http://"
+                    End If
+                    QRPath = isSecure & moRequest.ServerVariables("SERVER_NAME") & QRPath
+                    Dim qrGenerator As QRCoder.QRCodeGenerator = New QRCoder.QRCodeGenerator()
+                    Dim qrCodeData As QRCoder.QRCodeData = qrGenerator.CreateQrCode(QRPath, QRCoder.QRCodeGenerator.ECCLevel.Q)
+                    Dim qrCode As QRCoder.QRCode = New QRCoder.QRCode(qrCodeData)
+                    Dim qrCodeImage As System.Drawing.Bitmap = qrCode.GetGraphic(20)
+                    moResponse.ContentType = mcContentType
+                    qrCodeImage.Save(moResponse.OutputStream, Drawing.Imaging.ImageFormat.Png)
+                    moResponse.End()
 
                 Case Else
                     CheckPagePath()
