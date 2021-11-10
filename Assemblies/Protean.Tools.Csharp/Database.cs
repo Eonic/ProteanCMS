@@ -727,8 +727,13 @@ namespace Protean.Tools
                 CloseConnection();
             }
         }
+        public int ExeProcessSqlfromFile(string filepath) 
+        {
+            string errmsg = "";
+            return ExeProcessSqlfromFile(filepath,ref errmsg);
+        }
 
-        public int ExeProcessSqlfromFile(string filepath, string errmsg = "")
+        public int ExeProcessSqlfromFile(string filepath,ref string errmsg)
         {
             int nUpdateCount;
             string vstrSql;

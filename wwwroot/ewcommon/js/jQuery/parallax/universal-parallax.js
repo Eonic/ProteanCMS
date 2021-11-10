@@ -113,23 +113,23 @@ var universalParallax = function universalParallax() {
 			var imgData = parallax[i].dataset.parallaxImage;
 			var imgDataWebp = parallax[i].dataset.parallaxImageWebp
 			var windowWidth = window.innerWidth	|| document.documentElement.clientWidth	|| document.body.clientWidth;;
-			if (windowWidth <= 576) {
+			if (windowWidth < 575) {
 				imgData = parallax[i].dataset.parallaxImageXs
 				imgDataWebp = parallax[i].dataset.parallaxImageXsWebp
 			};
-			if (windowWidth > 576 && windowWidth <= 768 ) {
+			if (windowWidth >= 575 && windowWidth < 768 ) {
 				imgData = parallax[i].dataset.parallaxImageSm
 				imgDataWebp = parallax[i].dataset.parallaxImageSmWebp
 			};
-			if (windowWidth > 768 && windowWidth <= 992) {
+			if (windowWidth >= 768 && windowWidth < 992) {
 				imgData = parallax[i].dataset.parallaxImageMd
 				imgDataWebp = parallax[i].dataset.parallaxImageMdWebp
 			};
-			if (windowWidth > 992 && windowWidth <= 1200) {
+			if (windowWidth >= 992 && windowWidth < 1200) {
 				imgData = parallax[i].dataset.parallaxImageLg
 				imgDataWebp = parallax[i].dataset.parallaxImageLgWebp
 			};
-			if (windowWidth >= 1920) {
+			if (windowWidth > 1920) {
 				imgData = parallax[i].dataset.parallaxImageXxl
 				imgDataWebp = parallax[i].dataset.parallaxImageXxlWebp
 			};

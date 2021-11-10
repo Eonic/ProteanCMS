@@ -184,7 +184,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\MySql.Data.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Fonet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Renci.SshNet.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
@@ -295,3 +294,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\TidyHTML5Manage
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Tinify.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.AssemblyReference.cache

@@ -93,14 +93,7 @@
 			<xsl:apply-templates select="descendant-or-self::*[name()='Order'][1]" mode="PageTitle"/>
 			<fo:static-content flow-name="page-footer">
 				<fo:block>
-					<fo:block margin-left="0.5cm">
-						<fo:block font-size="10pt" font-family="{$bodyfont}" margin-bottom="0.5pt" space-after="2mm" margin-right="1cm">
-							Any shortages or damages must be reported to us within 4 days of delivery. Goods must have been signed for as unchecked if any damage or tampering is
-							visible to outer packaging. All goods remain the property of <xsl:value-of select="$CompanyName"/> until paid for in full. Tel: <xsl:value-of select="$CompanyTel"/>, Email: <xsl:value-of select="$CompanyEmail"/>
-						</fo:block>
-						<fo:block font-size="10pt" font-family="{$bodyfont}" space-after="2mm">
-						</fo:block>
-					</fo:block>
+				
 					<fo:block margin-left="1cm" padding-top="1.2cm">
 						<fo:table table-layout="fixed">
 							<fo:table-column column-width="9.5cm"/>
