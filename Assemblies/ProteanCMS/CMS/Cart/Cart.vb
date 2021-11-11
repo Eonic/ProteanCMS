@@ -6397,7 +6397,8 @@ processFlow:
                             'Add Parent Product to cart if SKU.
                             If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
                                 'Then we need to add the Xml for the ParentProduct.
-                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
+
                                 Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
                                 Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
 
