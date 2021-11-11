@@ -1996,8 +1996,12 @@ DoOptions:
 
                 MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please enter your database connection details.")
 
-                MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Server Hostname")
-                MyBase.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
+                If goConfig("DatabaseServer") = "" Then
+
+                    MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Server Hostname")
+                    MyBase.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
+
+                End If
 
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "DB Name")
                 MyBase.addBind("ewDatabaseName", "web/add[@key='DatabaseName']/@value", "true()")
@@ -2022,8 +2026,8 @@ DoOptions:
                 'MyBase.instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
                 Dim oDefaultCfgXml As New XmlDocument
 
-                If oFsh.VirtualFileExists("/Protean.Cms.config") Then
-                    oDefaultCfgXml.Load(goServer.MapPath("/Protean.Cms.config"))
+                If oFsh.VirtualFileExists("/protean.web.config") Then
+                    oDefaultCfgXml.Load(goServer.MapPath("/protean.web.config"))
                 Else
                     oDefaultCfgXml.Load(goServer.MapPath("/ewcommon/setup/rootfiles/protean_config.xml"))
                 End If
@@ -2086,7 +2090,7 @@ DoOptions:
                                     'update config based on form submission
                                     oDefaultCfgXml.SelectSingleNode("/configuration/protean").InnerXml = MyBase.Instance.InnerXml
                                     'save as web.config in the root
-                                    oDefaultCfgXml.Save(goServer.MapPath("Protean.Cms.config"))
+                                    oDefaultCfgXml.Save(goServer.MapPath("protean.web.config"))
                                 End If
                             Else
                                 'update config based on form submission
@@ -2395,9 +2399,9 @@ Public Class FileStructureSetup
             IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/web_config.xml"), goServer.MapPath(goConfig("ProjectPath") & "/web.config"))
             ' End If
 
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/Protean.Cms.config")) Then
+            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/protean.web.config")) Then
                 IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_config.xml"),
-                 goServer.MapPath(goConfig("ProjectPath") & "/Protean.Cms.config"))
+                 goServer.MapPath(goConfig("ProjectPath") & "/protean.web.config"))
             End If
             If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/protean.theme.config")) Then
                 IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_theme_config.xml"),

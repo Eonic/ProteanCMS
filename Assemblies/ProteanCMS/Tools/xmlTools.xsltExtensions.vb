@@ -2157,32 +2157,30 @@ Partial Public Module xmlTools
                             'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
                             'TS commented out as modified save file to overwrite by using WriteAllBytes
                             Dim cnt As Integer
-                            Dim maxAttempt As String = 3
+                            Dim maxAttempt As String = 5
                             Try
                                 For cnt = 1 To maxAttempt
                                     scriptFile = fsh.SaveFile("style.css", TargetFile, info)
-                                    If Not scriptFile.StartsWith("ERROR: ") Then
+                                    If Not scriptFile.Contains("ERROR:") Then
                                         Exit For
                                     End If
                                 Next
-
                             Catch ex As Exception
                                 If (cnt < maxAttempt) Then
                                     Threading.Thread.Sleep(500 * cnt)
                                 End If
                             End Try
 
-                            If scriptFile.StartsWith("ERROR: ") Then
-
+                            If scriptFile.Contains("ERROR:") Then
                                 myWeb.bPageCache = False
-
+                                scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
                             End If  'we can try adding addional error handling here if we have exact code returned from issue
 
-                            If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
-                                sReturnString += scriptFile
+                            If scriptFile.StartsWith(TargetFile.TrimStart("~"), StringComparison.InvariantCultureIgnoreCase) Then
+                                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
                             Else
                                 myWeb.bPageCache = False
-                                sReturnString += "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
+                                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
                             End If
 
 
@@ -2241,12 +2239,12 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
 
-                'regardless we should return the filename.
+                My.Application.Log.WriteException(ex)
 
-                sReturnError = ex.Message
-                ' Return ex.StackTrace
+                'regardless we should return the filename.
+                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
                 myWeb.bPageCache = False 'This is not working 100% - can we understand why?????
-                Return sReturnError
+                Return sReturnString
             End Try
 
         End Function

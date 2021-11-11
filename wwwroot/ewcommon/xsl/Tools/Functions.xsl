@@ -1270,6 +1270,74 @@
     <xsl:if test="Contents/Content[@name='fb-pages_id']">
       <meta property="fb:pages" content="{Contents/Content[@name='fb-pages_id']}"/>
     </xsl:if>
+    
+    <!--LUKE 05.10.21-->
+    <!--Open Graph-->
+    <!-- xsl:if test="Contents/Content[@name='ogTitle']">
+      <meta property="og:title" content="{Contents/Content[@name='ogTitle']}"/>
+    </xsl:if>     
+    <xsl:if test="Contents/Content[@name='ogdescription']">
+      <meta property="og:description" content="{Contents/Content[@name='ogdescription']}"/>
+    </xsl:if>  
+      <xsl:if test="Contents/Content[@name='ogurl']">
+      <meta property="og:url" content="{Contents/Content[@name='ogurl']}"/>
+    </xsl:if>-->
+    <xsl:if test="Contents/Content[@name='ogimage']">
+      <meta name="og:image" content="{Contents/Content[@name='ogimage']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='ogimagesecure']">
+      <meta name="og:image:secure_url" content="{Contents/Content[@name='ogimagesecure']}"/>
+    </xsl:if>
+    <!--<xsl:if test="Contents/Content[@name='ogsite_name']">
+      <meta property="og:site_name" content="{Contents/Content[@name='ogsite_name']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='oglocale']">
+      <meta property="og:locale" content="{Contents/Content[@name='oglocale']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='ogtype']">
+      <meta property="og:type" content="{Contents/Content[@name='ogtype']}"/>
+    </xsl:if -->
+ 
+    <!--Twitter-->
+    <xsl:if test="Contents/Content[@name='twittercard']">
+      <meta name="twitter:card" content="{Contents/Content[@name='twittercard']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='twittertitle']">
+      <meta name="twitter:title" content="{Contents/Content[@name='twittertitle']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='twittercreator']">
+      <meta name="twitter:creator" content="{Contents/Content[@name='twittercreator']}"/>
+    </xsl:if>
+    <!--These need to be brought through from elsewhere-->
+    <xsl:if test="Contents/Content[@name='twitterdescription']">
+      <meta name="twitter:description" content="{Contents/Content[@name='twitterdescription']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='twittersite']">
+      <meta name="twitter:site" content="{Contents/Content[@name='twittersite']}"/>
+    </xsl:if>
+    <xsl:if test="Contents/Content[@name='twitterimage']">
+      <meta name="twitter:image" content="{Contents/Content[@name='twitterimage']}"/>
+    </xsl:if>
+
+    <!--LinkedIn-->
+    
+    <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
+      <script type="text/javascript">
+        <xsl:text>_linkedin_partner_id = "</xsl:text>
+        <xsl:value-of select="Contents/Content[@name='LinkedInInsightTag']"/>
+        <xsl:text>"; window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || []; window._linkedin_data_partner_ids.push(_linkedin_partner_id);</xsl:text>
+      </script>
+      <script type="text/javascript">
+        <xsl:text> (function(l) { if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])}; window.lintrk.q=[]} var s = document.getElementsByTagName("script")[0]; var b = document.createElement("script"); b.type = "text/javascript";b.async = true; b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js"; s.parentNode.insertBefore(b, s);})(window.lintrk); </xsl:text>
+      </script>
+      <noscript>
+        <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
+      </noscript>       
+    </xsl:if>
+    <!-- End Linked In Insight Tag Code -->
+    
+    <!--END-->
+    
     <xsl:if test="Contents/Content[@name='pinterestVerify']">
       <meta name="p:domain_verify" content="{Contents/Content[@name='pinterestVerify']}"/>
     </xsl:if>
@@ -8538,7 +8606,14 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order" select="@order"/>
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order!=''">
+          <xsl:value-of select="@order"/>
+        </xsl:when>
+        <xsl:otherwise>descending</xsl:otherwise>
+      </xsl:choose>
+    </xsl:param> 
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -8573,6 +8648,66 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
+
+  <!-- FOR ALL RELATED CONTENT -->
+  <xsl:template match="Content[ancestor::ContentDetail]" mode="getContent">
+    <xsl:param name="contentType" />
+    <xsl:param name="startPos" />
+    <xsl:param name="parentClass" />
+    <xsl:param name="sort-data-type">
+      <xsl:call-template name="ordering-data-type">
+        <xsl:with-param name="field" select="@sortBy"/>
+      </xsl:call-template>
+    </xsl:param>
+    <xsl:param name="sort" select="@sortBy"/>
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order!=''">
+          <xsl:value-of select="@order"/>
+        </xsl:when>
+        <xsl:otherwise>descending</xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
+    <xsl:param name="stepCount" select="'0'"/>
+    <xsl:param name="endPos">
+      <xsl:choose>
+        <xsl:when test="@stepCount = '0'">
+          <xsl:value-of select="count(Content[@type=$contentType])"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="number($startPos + concat('0',@stepCount))"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
+    <xsl:if test="$parentClass!=''">
+      <Parent class="{$parentClass}"/>
+    </xsl:if>
+    test1
+    <xsl:choose>
+      <!-- When Page Order -->
+      <xsl:when test="$sort='Position' or $sort='' or $order=''">
+        test2
+        <xsl:for-each select="Content[@type=$contentType]">
+          <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
+            <xsl:copy-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        test3 <xsl:value-of select="$contentType"/>
+        <xsl:for-each select="Content[@type=$contentType]">
+          <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
+          <xsl:sort select="@update" order="{$order}" data-type="text"/>
+          <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
+            <xsl:copy-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!-- FOR ALL RELATED CONTENT -->
   <xsl:template match="Content[@display='relatedTag']" mode="getContent">
@@ -10165,10 +10300,29 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
+    
     <!-- THIS IS OVERRIDDEN IN ADMIN MODE BY TEMPLATE IN ADMINWYSIWYG-->
     <xsl:choose>
       <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">
         <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
+          <xsl:variable name="backgroundResized">
+            <xsl:if test="@backgroundImage!=''">
+              <xsl:call-template name="resize-image">
+                <xsl:with-param name="path" select="@backgroundImage"/>
+                <xsl:with-param name="max-width" select="1920"/>
+                <xsl:with-param name="max-height" select="1920"/>
+                <xsl:with-param name="file-prefix">
+                  <xsl:text>~bg-1920</xsl:text>
+                  <xsl:text>/~bg-</xsl:text>
+                </xsl:with-param>
+                <xsl:with-param name="file-suffix" select="''"/>
+                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="crop" select="false" />
+                <xsl:with-param name="no-stretch" select="true" />
+                <xsl:with-param name="forceResize" select="false" />
+              </xsl:call-template>
+            </xsl:if>
+          </xsl:variable>
           <section class="wrapper-sm {@background}">
             <xsl:attribute name="class">
               <xsl:text>wrapper-sm </xsl:text>
@@ -10177,7 +10331,32 @@
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> margin-bottom-0 </xsl:text>
               </xsl:if>
+              <xsl:if test="@data-stellar-background-ratio!='10'">
+                <xsl:text> parallax-wrapper </xsl:text>
+              </xsl:if>
             </xsl:attribute>
+            <xsl:if test="@data-stellar-background-ratio!='10'">
+              <xsl:attribute name="data-parallax-speed">
+                <xsl:if test="@data-stellar-background-ratio&lt;'5'">
+                  <xsl:text>1.3</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='5' and @data-stellar-background-ratio&lt;'10'">
+                  <xsl:text>1.6</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='10' and @data-stellar-background-ratio&lt;'15'">
+                  <xsl:text>2</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='15' and @data-stellar-background-ratio&lt;'20'">
+                  <xsl:text>3</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='20' and @data-stellar-background-ratio&lt;'25'">
+                  <xsl:text>4</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='25'">
+                  <xsl:text>5</xsl:text>
+                </xsl:if>
+              </xsl:attribute>
+            </xsl:if>
             <!--<xsl:if test="@data-stellar-background-ratio!='0'">
               <xsl:attribute name="data-stellar-background-ratio">
                 <xsl:value-of select="(@data-stellar-background-ratio div 10)"/> test2
@@ -10185,7 +10364,7 @@
             </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">
               <xsl:attribute name="style">
-                background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                background: url('<xsl:value-of select="$backgroundResized"/>');
               </xsl:attribute>
             </xsl:if>
             <xsl:choose>
@@ -10206,14 +10385,31 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@position = $position]">
             <xsl:choose>
               <xsl:when test="@backgroundImage!=''">
+                <xsl:variable name="backgroundResized">
+                  <xsl:if test="@backgroundImage!=''">
+                    <xsl:call-template name="resize-image">
+                      <xsl:with-param name="path" select="/Page/Contents/Content[@position = $position]/@backgroundImage"/>
+                      <xsl:with-param name="max-width" select="1920"/>
+                      <xsl:with-param name="max-height" select="1920"/>
+                      <xsl:with-param name="file-prefix">
+                        <xsl:text>~bg-1920</xsl:text>
+                        <xsl:text>/~bg-</xsl:text>
+                      </xsl:with-param>
+                      <xsl:with-param name="file-suffix" select="''"/>
+                      <xsl:with-param name="quality" select="100"/>
+                      <xsl:with-param name="crop" select="false" />
+                      <xsl:with-param name="no-stretch" select="true" />
+                      <xsl:with-param name="forceResize" select="false" />
+                    </xsl:call-template>
+                  </xsl:if>
+                </xsl:variable>
                 <div>
                   <xsl:attribute name="style">
-                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                    background-image: url('<xsl:value-of select="$backgroundResized"/>');color:red;
                   </xsl:attribute>
                   <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
                 </div>

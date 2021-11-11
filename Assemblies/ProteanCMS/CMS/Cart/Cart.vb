@@ -1855,7 +1855,7 @@ processFlow:
                                 Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)
                                 calledType = assemblyInstance.GetType(classPath, True)
                             Else
-                                'case for methods within EonicWeb Core DLL
+                                'case for methods within ProteanCMS Core DLL
                                 calledType = System.Type.GetType(classPath, True)
                             End If
 
@@ -2604,13 +2604,12 @@ processFlow:
                     oDs.Relations("Rel1").Nested = True
                     '
                     For Each oRow In oDs.Tables("Item").Rows
-
                         Dim Discount As Double = 0
+
 
                         If Not oItemList.ContainsValue(oRow("contentId")) Then
                             oItemList.Add(oItemList.Count, oRow("contentId"))
                         End If
-
                         If moDBHelper.DBN2int(oRow("nParentId")) = 0 Then
                             Dim nTaxRate As Long = 0
                             Dim bOverridePrice As Boolean = False
@@ -2642,11 +2641,10 @@ processFlow:
                                                 End If
                                             End If
                                             nTaxRate = getProductTaxRate(oCheckPrice)
-                                            End If
-                                            'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
+                                        End If
+                                        'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
 
-                                            If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
-
+                                        If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
                                             Dim revisedPrice As Double
                                             If moSubscription.mbOveridePrices = False Then
                                                 'TS added when subscription when initial cost is changed in by external logic we should not refer back to the stored content.
@@ -2668,17 +2666,12 @@ processFlow:
                                     Else
                                         bOverridePrice = True
                                     End If
-
                                 End If
                                 If Not bOverridePrice Then
                                     If nCheckPrice > 0 And nCheckPrice <> oRow("price") Then
                                         ' If price is lower, then update the item price field
-                                        'oRow.BeginEdit()
                                         oRow("price") = nCheckPrice
-                                        'oRow("taxRate") = nTaxRate
-                                        'oRow.EndEdit()
                                     End If
-
                                     If oRow("taxRate") <> nTaxRate Then
                                         oRow("taxRate") = nTaxRate
                                     End If
@@ -2695,7 +2688,6 @@ processFlow:
                                         nOpPrices += nNPrice
                                         'oOpRow.BeginEdit()
                                         oOpRow("price") = nNPrice
-
                                         'oOpRow.EndEdit()
                                     Else
 
@@ -2823,73 +2815,67 @@ processFlow:
                         'cart contacts
                         oDs.Tables("Contact").Columns(0).ColumnMapping = Data.MappingType.Attribute
 
-
                         oXml = New XmlDocument
-                            oXml.LoadXml(oDs.GetXml)
+                        oXml.LoadXml(oDs.GetXml)
+                        oDs.EnforceConstraints = False
 
-                            oDs.EnforceConstraints = False
+                        'Convert the detail to xml
+                        For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
+                            oElmt.InnerXml = oElmt.InnerText
+                            If Not oElmt.SelectSingleNode("Content") Is Nothing Then
+                                Dim oAtt As XmlAttribute
+                                For Each oAtt In oElmt.SelectSingleNode("Content").Attributes
+                                    oElmt.SetAttribute(oAtt.Name, oAtt.Value)
+                                Next
+                                oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
+                                Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
+                            End If
+                        Next
 
-                            'Convert the detail to xml
-                            For Each oElmt In oXml.SelectNodes("/Cart/Item/productDetail | /Cart/Contact/Detail | /Cart/Contact/Details")
-                                oElmt.InnerXml = oElmt.InnerText
-                                If Not oElmt.SelectSingleNode("Content") Is Nothing Then
-                                    Dim oAtt As XmlAttribute
-                                    For Each oAtt In oElmt.SelectSingleNode("Content").Attributes
-                                        oElmt.SetAttribute(oAtt.Name, oAtt.Value)
-                                    Next
-                                    oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
-                                    Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
 
+                        For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
+                            If moDBHelper.CheckOptOut(oElmt.InnerText) Then
+                                oElmt.SetAttribute("optOut", "True")
+                            End If
+                        Next
+
+                        'get the option xml
+                        For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
+                            oElmt.InnerXml = oElmt.InnerText
+                            Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
+                            Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
+                            cOptionGroupName = ""
+                            If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
+                                cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
+                            End If
+                            If nOptionIndex >= 0 Then
+                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
+                                If Not oElmt2 Is Nothing Then
+                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                 End If
-                            Next
-
-                            For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
-                                If moDBHelper.CheckOptOut(oElmt.InnerText) Then
-                                    oElmt.SetAttribute("optOut", "True")
-                                End If
-                            Next
-
-                            'get the option xml
-                            For Each oElmt In oXml.SelectNodes("/Cart/Item/Item/productDetail")
-                                oElmt.InnerXml = oElmt.InnerText
-
-                                Dim nGroupIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptGrpIdx").InnerText
-                                Dim nOptionIndex As String = oElmt.ParentNode.SelectSingleNode("nItemOptIdx").InnerText
-                                cOptionGroupName = ""
-                                If Not oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name") Is Nothing Then
-                                    cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/@name").InnerText
-                                End If
-                                If nOptionIndex >= 0 Then
-
-                                    oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
-                                    If Not oElmt2 Is Nothing Then
-                                        If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                        oElmt.ParentNode.InnerXml = oElmt2.OuterXml
+                            Else
+                                'case for text option
+                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
+                                If Not oElmt2 Is Nothing Then
+                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                    If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
+                                        oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
+                                    Else
+                                        oElmt2.SetAttribute("name", "Name Not defined")
                                     End If
-
-                                Else
-                                    'case for text option
-                                    oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
-                                    If Not oElmt2 Is Nothing Then
-                                        If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                        If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
-                                            oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
-                                        Else
-                                            oElmt2.SetAttribute("name", "Name Not defined")
-                                        End If
-                                        oElmt.ParentNode.InnerXml = oElmt2.OuterXml
-                                    End If
+                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                 End If
+                            End If
 
-                            Next
+                        Next
+                        oElmt = moPageXml.CreateElement("Cart")
+                        ' Note: Preserve the original elements in oCartElmt
+                        oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
+                    End If
 
-                            oElmt = moPageXml.CreateElement("Cart")
-                            ' Note: Preserve the original elements in oCartElmt
-                            oCartElmt.InnerXml = oCartElmt.InnerXml + oXml.FirstChild.InnerXml
+                    myWeb.CheckMultiParents(oCartElmt)
 
-
-                        End If
-                        myWeb.CheckMultiParents(oCartElmt)
                     sSql = "Select cClientNotes from tblCartOrder where nCartOrderKey=" & nCartIdUse
                     Dim oNotes As XmlElement = oCartElmt.OwnerDocument.CreateElement("Notes")
                     Dim notes As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))
@@ -6353,6 +6339,7 @@ processFlow:
                         oProdXml.InnerXml = ProductXml
                     Else
                         If nProductId > 0 Then
+                            Dim cContentType As String = moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId)
                             Dim sItemXml As String = CStr("" & moDBHelper.ExeProcessSqlScalar("Select cContentXmlDetail FROM tblContent WHERE nContentKey = " & nProductId))
                             If sItemXml <> "" Then
                                 oProdXml.InnerXml = sItemXml
@@ -6395,7 +6382,7 @@ processFlow:
                             End If
 
                             'Add Parent Product to cart if SKU.
-                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                            If cContentType = "SKU" Or cContentType = "Ticket" Then
                                 'Then we need to add the Xml for the ParentProduct.
                                 Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
 
@@ -6405,12 +6392,9 @@ processFlow:
                                 ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
                             End If
 
-
+                            oProdXml.DocumentElement.SetAttribute("type", cContentType)
                         End If
                     End If
-
-
-
 
                     addNewTextNode("cItemName", oElmt, cProductText)
                     addNewTextNode("nItemOptGrpIdx", oElmt, 0) 'Dont Need
@@ -7777,7 +7761,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                     Dim oCartElmt As XmlElement = oContent.FirstChild
 
                                     'check for invoice date etc.
-                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And (oCartElmt.GetAttribute("InvoiceDate") = "" Or Not (oCartElmt.GetAttribute("InvoiceDateTime").Contains("T"))) Then
+                                    If CLng("0" & oCartElmt.GetAttribute("statusId")) >= 6 And (oCartElmt.GetAttribute("InvoiceDate") = "" Or Not (oCartElmt.GetAttribute("InvoiceDateTime").Contains("T"))) Then
                                         'fix for any items that have lost the invoice date and ref.
                                         'also fix when datetime no stored in XML format.
                                         Dim cartId As Long = oDR("nCartOrderKey")
@@ -8606,18 +8590,19 @@ SaveNotes:      ' this is so we can skip the appending of new node
                             "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 0) > 0)"
                     'method allowed for authenticated or imporsonating CS users.
                     Dim shippingGroupCondition As String
-                    Dim customerSuccessGroup = "Customer Services"
-                    If myWeb.moSession("PreviewUser") > 0 And myWeb.moDbHelper.checkUserRole(customerSuccessGroup, "Group") Then
-                        Dim gnCustomerServiceUsers = myWeb.GetUserXML.SelectSingleNode(String.Format("Group[@name='{0}']", customerSuccessGroup)).Attributes("id").Value
-                        shippingGroupCondition = String.Format("perm.nDirId IN ({0},{1})", gnAuthUsers, gnCustomerServiceUsers)
-                    Else
-                        shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
-                    End If
+
+                    shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
+
                     sSql &= " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                            "  where perm.nShippingMethodId = opt.nShipOptKey And " & shippingGroupCondition & " And perm.nPermLevel = 1) > 0"
 
                     ' if no group exists return it.
                     sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
+
+                    sSql &= " And opt.nShipOptKey not in ( select nShippingMethodId
+                                from tblCartShippingPermission perm 
+                                Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId  
+                                 and  nPermLevel = 0  and PermGroup.nDirChildId =" & userId & ")"
 
                 Else
                     Dim nonAuthID As Long = gnNonAuthUsers
