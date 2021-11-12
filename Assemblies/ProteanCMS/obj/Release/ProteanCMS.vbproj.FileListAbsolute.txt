@@ -552,3 +552,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\QRCoder.dll
