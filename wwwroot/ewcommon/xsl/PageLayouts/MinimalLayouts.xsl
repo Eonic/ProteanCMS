@@ -13306,7 +13306,7 @@
               </i>
             </a>
           </xsl:if>
-          `         <xsl:if test="@linkedInURL!=''">
+          <xsl:if test="@linkedInURL!=''">
             <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
               <i class="fa fa-2x fa-linkedin">
                 <xsl:text> </xsl:text>
