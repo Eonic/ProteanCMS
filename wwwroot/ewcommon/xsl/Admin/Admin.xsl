@@ -3425,10 +3425,23 @@
 		</xsl:variable>
 		<li id="node{@id}" class="list-group-item level-{$level} {$class}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
 			<div class="pageCell">
+        <xsl:choose>
+          <xsl:when test="DisplayName/@siteTemplate='micro'">
+            <i class="fa fa-home fa-lg status activeParent">
+              &#160;
+            </i>
+            <span class="pageName">
+              &#160;
+              <xsl:value-of select="@name"/>
+            </span>
+          </xsl:when>
+          <xsl:otherwise>
 				<xsl:apply-templates select="." mode="status_legend"/>
 				<span class="pageName">
 					<xsl:value-of select="@name"/>
 				</span>
+            </xsl:otherwise>
+          </xsl:choose>
 			</div>
 			<div class="optionButtons">
 				<xsl:choose>
@@ -3548,10 +3561,24 @@
 				<xsl:if test="MenuItem"> expandable</xsl:if>
 			</xsl:attribute>
 			<div class="pageCell">
+        <xsl:choose>
+          <xsl:when test="DisplayName/@siteTemplate='micro'">
+            <i class="fa fa-home fa-lg status activeParent">
+              &#160;
+            </i>
+            <span class="pageName">
+              &#160;
+              <xsl:value-of select="@name"/>
+            </span>
+          </xsl:when>
+          <xsl:otherwise>
+        
 				<xsl:apply-templates select="." mode="status_legend"/>
 				<span class="pageName">
 					<xsl:value-of select="@name"/>
 				</span>
+            </xsl:otherwise>
+          </xsl:choose>
 			</div>
 			<div class="optionButtons">
 				<xsl:choose>
