@@ -2859,9 +2859,9 @@
               </fieldset>
             </div>
             <div>
-                <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick();">301 Permanant Redirect</button>
-                <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick();">302 Temporary Redirect</button>
-                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick();">404 Page Not Found</button>
+                <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick(this.value);">301 Permanant Redirect</button>
+                <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">302 Temporary Redirect</button>
+                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>
              </div>
 
             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
@@ -2873,7 +2873,7 @@
             <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
             <input name="type" type="hidden"  class="hiddenType" />
-             <input  name="redirectType" type="hidden" class="hiddenRedirectType" />
+             <input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
           </div>
         </div>
       </div>
@@ -2898,8 +2898,9 @@
         </div>
         <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
-            <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
+            <input name="IsParent" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
+      <input  name="redirectOption" type="textbox" class="hiddenRedirectType" />
       </div>
     </div>
   </xsl:template>
