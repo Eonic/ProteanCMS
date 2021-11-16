@@ -265,19 +265,23 @@ Public Class Setup
                 goResponse.Write("<?xml version=""1.0"" encoding=""UTF-8""?>" & moPageXml.OuterXml)
             Else
                 goResponse.Buffer = False
-
-                oTransform.XSLFile = CType(goServer.MapPath("/ewcommon/xsl/admin/setup.xsl"), String)
-                oTransform.Compiled = False
-                oTransform.ProcessTimed(moPageXml, goResponse)
-                oTransform = Nothing
-
-                If Not cPostFlushActions = "" Then
-                    goResponse.Flush()
-                    PostFlushActions()
+                If goConfig("cssFramework") = "bs5" Then
+                    oTransform.XSLFile = CType(goServer.MapPath("/ptn-common/setup/setup.xsl"), String)
+                Else
+                    oTransform.XSLFile = CType(goServer.MapPath("/ewcommon/xsl/admin/setup.xsl"), String)
                 End If
 
-            End If
-            close()
+                oTransform.Compiled = False
+                    oTransform.ProcessTimed(moPageXml, goResponse)
+                    oTransform = Nothing
+
+                    If Not cPostFlushActions = "" Then
+                        goResponse.Flush()
+                        PostFlushActions()
+                    End If
+
+                End If
+                close()
 
         Catch ex As Exception
 
@@ -635,10 +639,10 @@ Recheck:
         Try
             oElmt = moPageXml.CreateElement("AdminMenu")
 
-            oElmt1 = appendMenuItem(oElmt, "Setup Home", "AdmHome", , , "fa-gears")
+            oElmt1 = appendMenuItem(oElmt, "Setup Home", "AdmHome", , , "fa-cogs")
             If mbSchemaExists Then
-                oElmt2 = appendMenuItem(oElmt1, "Setup and Import", "Setup", , , "fa-gear")
-                oElmt3 = appendMenuItem(oElmt2, "Delete Database", "ClearDB", , , "fa-warning")
+                oElmt2 = appendMenuItem(oElmt1, "Setup and Import", "Setup", , , "fa-cogs")
+                oElmt3 = appendMenuItem(oElmt2, "Delete Database", "ClearDB", , , "fa-exclamation-circle")
                 oElmt4 = appendMenuItem(oElmt2, "New Database", "NewV4", , , "fa-briefcase")
                 oElmt6 = appendMenuItem(oElmt2, "Add Shipping Locations", "ShipLoc", , , "fa-globe")
                 oElmt5 = appendMenuItem(oElmt2, "Import V3 Data", "ImportV3", , , "fa-level-up")

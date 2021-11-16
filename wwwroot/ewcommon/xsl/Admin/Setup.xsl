@@ -159,7 +159,7 @@
                 </button>
                 <a class="navbar-brand" href="#">
                   <span class="admin-logo-text">
-                    eonic<strong>web</strong>5
+                    <xsl:call-template name="eonicwebCMSName"/>
                   </span>
                   <span class="visible-xs xs-admin-switch">
                     <span class="sectionName">Setup Panel</span>

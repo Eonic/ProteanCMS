@@ -124,6 +124,22 @@ ProteanCMS
  <param name="position"></param>
  <remarks></remarks>
 </member>
+<member name="M:Protean.Cms.Cart.JSONActions.RefundOrder(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
+ <summary>
+ Refund order 
+ </summary>
+ <param name="myApi"></param>
+ <param name="jObj"></param>
+ <returns></returns>
+</member>
+<member name="M:Protean.Cms.Cart.JSONActions.ProcessNewPayment(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
+ <summary>
+ Process New payment
+ </summary>
+ <param name="myApi"></param>
+ <param name="jObj"></param>
+ <returns></returns>
+</member>
 <member name="M:Protean.Cms.Cart.AddToLists(System.String,System.Xml.XmlElement@,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
  <summary>
  This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.
@@ -453,6 +469,25 @@ ProteanCMS
  </summary>
  <returns></returns>
  <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.GetPageContentFromSelect(System.String,System.Boolean,System.Int32@,System.Boolean,System.Int32,System.String,System.Xml.XmlElement@,System.String,System.Boolean,System.Int64,System.Boolean,System.String)">
+ <summary>
+ This will be passed the where portion of a SQL statement and will add content to the page based on the where statement. This funciton contains all the logic to respect page permissions, statuses and wheather you are logged into the admin system. It also calls moDbHelper.AddDataSetToContent which formats the dataset result and adds as the correct XML to the site page.
+ No content really should be added to the page without calling .AddDataSetToContent otherwise the result will not be consistent.
+ </summary>
+ <param name="sWhereSql"></param>
+ <param name="bPrimaryOnly"></param>
+ <param name="nCount"></param>
+ <param name="bIgnorePermissionsCheck"></param>
+ <param name="nReturnRows"></param>
+ <param name="cOrderBy"></param>
+ <param name="oContentsNode"></param>
+ <param name="cAdditionalJoins"></param>
+ <param name="bContentDetail"></param>
+ <param name="pageNumber"></param>
+ <param name="distinct"></param>
+ <param name="cShowSpecificContentTypes"></param>
+ 
 </member>
 <member name="M:Protean.Cms.SiteRedirection">
  <summary>

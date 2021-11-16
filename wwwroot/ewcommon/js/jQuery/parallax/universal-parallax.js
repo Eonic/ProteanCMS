@@ -48,6 +48,7 @@ function calculateHeight(parallax, speed) {
 		var bgHeight = container.height + (elemOffsetTop - elemOffsetTop / speed) * 2;
 
 		parallax[i].style.height = bgHeight + windowHeightExtra * 2 + 'px';
+
 		positionParallax(container, speed, parallax, i);
 	}
 }
@@ -137,22 +138,32 @@ var universalParallax = function universalParallax() {
 			if (supportsWebp()) {
 				imgData = imgDataWebp;
 			};
-
+			debugger;
 			// add image to div if none is specified
 			if (typeof imgData !== 'undefined') {
-				parallax[i].style.backgroundImage = 'url(' + imgData + ')';
-				// if no other class than .parallax is specified, add CSS
-				if (parallax[i].classList.length === 1 && parallax[i].classList[0] === 'parallax') {
-					Object.assign(parallax[i].style, {
-						'background-repeat': 'no-repeat',
-						'background-position': 'center',
-						'background-size': 'cover'
-					});
-				}
+				var newImg = new Image();
+				newImg.src = imgData;
+				newImg.onload = function () {
+					var curHeight = newImg.height;
+					var curWidth = newImg.width;
+
+					parallax[i].style.backgroundImage = 'url(' + imgData + ')';
+					// if no other class than .parallax is specified, add CSS
+					if (parallax[i].classList.length === 1 && parallax[i].classList[0] === 'parallax') {
+						Object.assign(parallax[i].style, {
+							'background-repeat': 'no-repeat',
+							'background-position': 'center',
+							'background-size': 'cover'
+						});
+						Object.assign(parallax[i].parentNode.parentNode.style, {
+							'height': curHeight + 'px',
+						});
+					};
+					// when init completed, run function
+					up(parallax, param.speed);
+				};
 			}
 		};
 
-		// when init completed, run function
-		up(parallax, param.speed);
 	};
 };

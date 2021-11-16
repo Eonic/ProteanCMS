@@ -1942,6 +1942,25 @@ Public Class xForm
     End Function
 
 
+    Function addClientSideValidation(ByRef oInputNode As XmlElement, ByVal notEmpty As Boolean, ByVal notEmptyMessage As String) As XmlElement
+        Dim oIptElmt As XmlElement
+        Dim oLabelElmt As XmlElement
+        Dim cProcessInfo As String = ""
+        Try
+            If notEmpty Then
+                oInputNode.SetAttribute("data-fv-not-empty", "true")
+            End If
+            If notEmptyMessage <> "" Then
+                oInputNode.SetAttribute("data-fv-not-empty___message", notEmptyMessage)
+            End If
+
+        Catch ex As Exception
+            returnException(msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            Return Nothing
+        End Try
+    End Function
+
+
     Function addBind(ByVal sId As String, ByVal sXpath As String, Optional ByVal sRequired As String = "false()", Optional ByVal sType As String = "string", Optional ByRef oBindParent As XmlElement = Nothing, Optional ByVal sConstraint As String = "") As XmlElement
 
         Dim oBindElmt As XmlElement

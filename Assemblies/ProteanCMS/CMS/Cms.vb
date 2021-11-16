@@ -522,11 +522,16 @@ Public Class Cms
             End If
             If moDbHelper.DatabaseName = "" Then
                 'redirect to setup
-                msRedirectOnEnd = "ewcommon/setup/default.ashx"
+                If moConfig("cssFramework") = "bs5" Then
+                    msRedirectOnEnd = "ptn-common/setup/default.ashx"
+                Else
+                    msRedirectOnEnd = "ewcommon/setup/default.ashx"
+                End If
+
 
             Else
 
-                If Not moSession Is Nothing Then
+                    If Not moSession Is Nothing Then
                     If moSession("adminMode") = "true" Then
                         mbAdminMode = True
                         moDbHelper.gbAdminMode = mbAdminMode

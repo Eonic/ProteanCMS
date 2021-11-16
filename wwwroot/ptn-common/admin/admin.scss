@@ -1,0 +1,59 @@
+﻿/*!
+ * Bootstrap v5.1.3 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+// scss-docs-start import-stack
+// Configuration
+@import "../core/bs5/scss/functions";
+@import "../core/bs5/scss/variables";
+@import "../core/bs5/scss/mixins";
+@import "../core/bs5/scss/utilities";
+
+// Layout & components
+@import "../core/bs5/scss/root";
+@import "../core/bs5/scss/reboot";
+@import "../core/bs5/scss/type";
+@import "../core/bs5/scss/images";
+@import "../core/bs5/scss/containers";
+@import "../core/bs5/scss/grid";
+@import "../core/bs5/scss/tables";
+@import "../core/bs5/scss/forms";
+@import "../core/bs5/scss/buttons";
+@import "../core/bs5/scss/transitions";
+@import "../core/bs5/scss/dropdown";
+@import "../core/bs5/scss/button-group";
+@import "../core/bs5/scss/nav";
+@import "../core/bs5/scss/navbar";
+@import "../core/bs5/scss/card";
+@import "../core/bs5/scss/accordion";
+@import "../core/bs5/scss/breadcrumb";
+@import "../core/bs5/scss/pagination";
+@import "../core/bs5/scss/badge";
+@import "../core/bs5/scss/alert";
+@import "../core/bs5/scss/progress";
+@import "../core/bs5/scss/list-group";
+@import "../core/bs5/scss/close";
+@import "../core/bs5/scss/toasts";
+@import "../core/bs5/scss/modal";
+@import "../core/bs5/scss/tooltip";
+@import "../core/bs5/scss/popover";
+@import "../core/bs5/scss/carousel";
+@import "../core/bs5/scss/spinners";
+@import "../core/bs5/scss/offcanvas";
+@import "../core/bs5/scss/placeholders";
+
+// Helpers
+@import "../core/bs5/scss/helpers";
+
+// Utilities
+@import "../core/bs5/scss/utilities/api";
+// scss-docs-end import-stack
+
+@import "skin/skin";
+@import "skin/header";
+@import "skin/forms";
+@import "../core/formvalidation/css/formValidation.css";
+@import "../core/icons/fa5/css/all.css";

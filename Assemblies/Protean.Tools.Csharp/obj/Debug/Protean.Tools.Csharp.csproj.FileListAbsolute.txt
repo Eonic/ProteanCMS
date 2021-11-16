@@ -246,10 +246,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.To
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CoreCompileInputs.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-AnyCPU.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-x64.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-AnyCPU.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.dll
@@ -282,3 +278,5 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Too
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-AnyCPU.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-AnyCPU.xml
