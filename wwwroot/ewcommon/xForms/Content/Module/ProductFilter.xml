@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content moduleType="ProductFilter" contentType="FilterType" box="" title="" link="" linkType="filter" order="Position" cols="1" stepBy="" stepCount="0" display="all" position="" action="Protean.Cms+Content+Modules.ProductFilter">
+            <Filter providerName="default" type="PageFilter" parentPageId="" active="true" order=""/>
+            <Filter providerName="default" type="PriceRangeFilter" lower="" upper="" step="" style="slider/dropdown" active="true" order="">
+              <IndexDef name="Price" content="SKU" xquery=""/>
+              <IndexDef name="Price" content="Product" xquery=""/>
+            </Filter>
+            <!--
+            <Filter provider="default" type="BrandFilter" parentPageId="" active="true" order="">
+              <IndexDef name="Brand" content="Product" lookup="Manufacturer" xquery="/Content/Manufacturer"/>
+            </Filter>
+            <Filter provider="default" type="InStockFilter" parentPageId="" active="true" order="">
+              <IndexDef name="InStock" content="Product" xquery=""/>
+              <IndexDef name="InStock" content="SKU" xquery=""/>
+            </Filter>
+            -->
+            <!--Filter provider="itb.web" type="StarRatingFilter" active=""/>
+            <Filter type="AgeRangeFilter" active=""/>
+            <Filter type="GroupSizeFilter" active=""/>
+            <Filter type="OfferFilter" active=""/>
+            <Filter type="OccasionFilter" active=""/-->
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+      <bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
+      <bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
+      <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+      <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+      <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+      <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
+      <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      <bind nodeset="Filter[@type='PriceRangeFilter']">
+        <bind id="PriceRangeFilter-lower" nodeset="@lower" required="false()" type="string"/>
+        <bind id="PriceRangeFilter-upper" nodeset="@upper" required="false()" type="string"/>
+        <bind id="PriceRangeFilter-step" nodeset="@step" required="false()" type="string"/>
+        <bind id="PriceRangeFilter-style" nodeset="@style" required="false()" type="string"/>
+      </bind>
+
+    </bind>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Links List Module</label>
+    <group>
+      <group>
+        <label>Settings</label>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+        <!-- end of hidden fields -->
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or Name</label>
+        </input>
+        <group>
+          <label>Filters</label>
+          <group>
+            <repeat bind="cFilterRpt" class="horizontal">
+              <input bind="cFilterType" class="short">
+                <label>Option</label>
+              </input>
+              <trigger>
+                <label>Del</label>
+                <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
+              </trigger>
+            </repeat>
+          </group>
+          <trigger>
+            <label>Add Filter</label>
+            <insert position="after" bind="cFilterRpt" at="index('cFilterRpt')" class="add"/>
+          </trigger>
+        </group>
+      </group>
+      <group class="inline">
+        <label>Display Settings</label>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Product Filter</label>
+    </submit>
+  </group>
+</Content>
