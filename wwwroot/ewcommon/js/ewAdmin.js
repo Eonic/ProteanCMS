@@ -1,4 +1,5 @@
-
+var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
+var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
 
 $(document).ready(function() {
@@ -1251,7 +1252,7 @@ Original preload function has been kept but is unused.
 
         moveTop: function (moveId) {
             var moveIdNode = "node" + moveId;
-
+            alert(moveId);
             if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
                 $('#MenuTree li#' + moveIdNode).addClass("locked");
                 $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
@@ -2157,27 +2158,26 @@ function ValidateContentForm(event) {
         $(".hiddenType").val("Page");
         $(".hiddenPageId").val(pageId);
         var newStructName = $("#cStructName").val();
-        return editPage.structNameOnChange(newStructName);
-
+       editPage.structNameOnChange(newStructName);
+       
     }
 }
 
-function RedirectClick(event) {
-
-    var redirectType = $(".hiddenRedirectType").val();
+function RedirectClick(redirectType) {
+    
+    //var redirectType = $("redirectType").val();
+    alert(redirectType);
     if (redirectType == "404Redirect") {
-
-        $(".hiddenRedirectType").val("");
+        $("input[name*='redirectOption']").val("");
         if ($(".btnSubmitPage").length > 0) {
-
             $(".hiddenParentCheck").val("false");
             $("#redirectModal").modal("hide");
             $(".btnSubmitPage").click();
         }
     }
     else {
-
-        $(".hiddenRedirectType").val(redirectType);
+        
+        $("input[name*='redirectOption']").val(redirectType);
 
         var pageId = $(".hiddenPageId").val();
         var type = $(".hiddenType").val();
@@ -2189,9 +2189,12 @@ function RedirectClick(event) {
 
                     if (response.data == "True") {
                         isParent = response.data;
+                       
+                       
                         $("#RedirectionChildConfirmationModal").modal("show");
                         $("#btnYescreateRuleForChild").removeAttr("disabled");
                         $("#btnNocreateRuleForChild").removeAttr("disabled");
+                        $("input[name*='IsParent']").val(isParent);
                         $("#redirectModal").modal("hide");
                     }
                     else {
@@ -2204,7 +2207,7 @@ function RedirectClick(event) {
                                     $("#redirectModal").modal("hide");
                                     $(".hiddenParentCheck").val("false");
                                     localStorage.originalStructName = newUrl;
-                                    $("#EditPage").unbind().submit();
+                                   
                                 }
                             });
 
@@ -2223,7 +2226,7 @@ function RedirectClick(event) {
                         $("#redirectModal").modal("hide");
                         $(".hiddenParentCheck").val("false");
                         localStorage.originalStructName = newUrl;
-                        $("#EditPage").unbind().submit();
+                        document.createElement('form').submit.call(document.EditContent);
                     }
                 });
         }
@@ -2232,10 +2235,7 @@ function RedirectClick(event) {
 
     }
 
-    if ($(".btnSubmitProduct").length > 0) {
-        $(".btnSubmitProduct").click();
-        $("#redirectModal").modal("hide");
-    }
+    
 
 
 }//);
@@ -2260,29 +2260,32 @@ $(document).on("click", "#btnNocreateRuleForChild", function (event) {
     $(".hiddenParentCheck").val("false");
     $("#RedirectionChildConfirmationModal").modal("hide");
     $("#redirectModal").modal("hide");
+    document.createElement('form').submit.call(document.EditPage);
 
 });
 
 $(document).on("click", "#btnYescreateRuleForChild", function (event) {
 
     var pageId = $(".hiddenPageId").val();
-    var redirectType = $(".hiddenRedirectType").val();
+    var redirectType = $("input[name*='redirectOption']").val();
+    alert(redirectType);
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
+    var isParent = $("input[name*='IsParent']").val();
     inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
     axios.post(redirectAPIUrl, inputJson)
         .then(function (response) {
             if (response.data == "success") {
                 $("#RedirectionChildConfirmationModal").modal("hide");
                 $("#redirectModal").modal("hide");
-
+                document.createElement('form').submit.call(document.EditPage);
+               
 
             }
         });
 
 });
-
 
 const editPageElement = document.querySelector("#EditPage");
 if (editPageElement) {
@@ -2377,11 +2380,36 @@ if (editPageElement) {
             localStorage.originalStructName = this.structName;
         }
     });
-}
+
+    }
+
+
+$(document).ready(function () {
+    function scrollToAnchor(aid) {
+        var aTag = $("li[id='" + aid + "']");
+        $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
+    }
+    if ($("#MenuTree") != undefined) {
+        scrollToAnchor($("#MenuTree li.active").prop("id"));
+    }
+});
+
 
 //End Page Edit
 
 
+function ValidateProductForm(event) {
+
+    if (form_check(event)) {
+        var productId = this.getQueryStringParam('id');
+        $(".hiddenParentCheck").val("False");
+        $(".hiddenType").val("Product");
+        $(".hiddenPageId").val(productId);
+        var cNewContentPath = $("#cContentPath").val();
+        return editProduct.UrlPathOnChange(cNewContentPath);
+
+    }
+}
 //Edit Product
 const editProductElement = $(".ProductSub").length;
 if (editProductElement > 0) {
@@ -2400,11 +2428,12 @@ if (editProductElement > 0) {
                 }
 
                 //clean the storage for struct name when page changes.
-                let pageId = getQueryStringParam('pgid');
-                if (!localStorage.pageId || localStorage.pageId != pageId) {
+                let productId = this.getQueryStringParam('id');
+                if (!localStorage.pageId || localStorage.pageId != productId) {
                     localStorage.removeItem('originalPathName');
                 }
-                localStorage.pageId = pageId;
+                localStorage.pageId = productId;
+                alert(this.urlPathInput);
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
