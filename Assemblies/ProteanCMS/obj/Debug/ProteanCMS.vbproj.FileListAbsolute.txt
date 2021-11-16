@@ -1480,4 +1480,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\QRCoder.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\QRCoder.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\QRCoder.dll

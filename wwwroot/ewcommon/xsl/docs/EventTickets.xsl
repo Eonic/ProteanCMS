@@ -47,7 +47,7 @@
       </fo:layout-master-set>
       <xsl:for-each select="descendant-or-self::*[name()='Order'][1]">
         <xsl:apply-templates select="." mode="documentPage"/>
-        <xsl:apply-templates select="Item" mode="ticketPage"/>
+        <xsl:apply-templates select="Item/productDetail/Ticket" mode="ticketPage"/>
       </xsl:for-each>
     </fo:root>
   </xsl:template>
@@ -269,21 +269,24 @@
   </xsl:template>
 
 
-  <xsl:template match="Item" mode="ticketPage">
+  <xsl:template match="Ticket" mode="ticketPage">
     <fo:page-sequence master-reference="allPages"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
       <xsl:apply-templates select="descendant-or-self::*[name()='Order'][1]" mode="PageTitle"/>
       <fo:flow flow-name="xsl-region-body">
         <xsl:apply-templates select="." mode="TicketBody"/>
-
       </fo:flow>
     </fo:page-sequence>
   </xsl:template>
 
 
-  <xsl:template match="Item" mode="TicketBody">
+  <xsl:template match="Ticket" mode="TicketBody">
     <xsl:variable name="orderId">
       <xsl:value-of select="$page/descendant-or-self::Order[1]/@cartId"/>
     </xsl:variable>
+    
+    <xsl:variable name="productDetail" select="parent::productDetail"/>
+    <xsl:variable name="item" select="ancestor::Item"/>
+
     <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format" margin-left="0.5cm" padding-top="0.5cm" width="10cm">
 
 
@@ -303,33 +306,33 @@
                   </xsl:if>
                   <fo:block padding-left="0.1cm" margin-top="0.5cm" padding-top="0cm" width="5cm" height="5cm">
             
-                    <fo:external-graphic src="{$siteUrl}/QRcode/RedeemTicket/{productDetail/Ticket[0]/@code}" width="5cm" height="5cm"/>
+                    <fo:external-graphic src="{$siteUrl}/QRcode/RedeemTicket/{@code}" width="5cm" height="5cm"/>
 
                   </fo:block>
                   <fo:block padding-left="0.1cm" font-size="10pt" font-family="{$bodyfont}" font-weight="bold" >
-                    <xsl:value-of select="productDetail/Ticket[1]/@code"/>
+                    <xsl:value-of select="@code"/>
                   </fo:block>
                 </fo:table-cell>
                 <fo:table-cell>
                   <fo:block font-size="20pt" font-family="{$bodyfont}" font-weight="bold" >
-                    <xsl:value-of select="productDetail/ParentProduct/Content/@name"/>
+                    <xsl:value-of select="$productDetail/ParentProduct/Content/@name"/>
                   </fo:block>
                   <fo:block font-size="15pt" font-family="{$bodyfont}" padding-top="0.5cm">
-                    <xsl:value-of select="Name/node()"/>
+                    <xsl:value-of select="$item/Name/node()"/>
                   </fo:block>
                   <fo:block font-size="15pt" font-family="{$bodyfont}" padding-top="0.5cm">
                     <xsl:call-template name="DisplayDate">
                       
-                      <xsl:with-param name="date" select="productDetail/ParentProduct/Content/StartDate/node()"/>
+                      <xsl:with-param name="date" select="$productDetail/ParentProduct/Content/StartDate/node()"/>
                     </xsl:call-template>
                         </fo:block>
                   <fo:block font-size="15pt" font-family="{$bodyfont}" padding-top="0.5cm">
               
-                    <xsl:if test="productDetail/ParentProduct/Content/Times/@start!=''">
-                      <xsl:value-of select="translate(productDetail/ParentProduct/Content/Times/@start,',',':')"/>
-                      <xsl:if test="productDetail/ParentProduct/Content/Times/@end!=''">
+                    <xsl:if test="$productDetail/ParentProduct/Content/Times/@start!=''">
+                      <xsl:value-of select="translate($productDetail/ParentProduct/Content/Times/@start,',',':')"/>
+                      <xsl:if test="$productDetail/ParentProduct/Content/Times/@end!=''">
                         <xsl:text> - </xsl:text>
-                        <xsl:value-of select="translate(productDetail/ParentProduct/Content/Times/@end,',',':')"/>
+                        <xsl:value-of select="translate($productDetail/ParentProduct/Content/Times/@end,',',':')"/>
                       </xsl:if>
                     </xsl:if>
                   </fo:block>
@@ -343,17 +346,17 @@
                       Name: <xsl:value-of select="ancestor::Order/Contact[@type='Billing Address']/GivenName/node()"/>
                     </fo:block>
                     <fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.2cm">
-                      Price Paid:  £ <xsl:value-of select="format-number(@price, '#.00')"/>
+                      Ticket Price:  £ <xsl:value-of select="format-number($item/@price, '#.00')"/>
                     </fo:block>
                     <fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.2cm">
-                      Quantity: <xsl:value-of select="@quantity"/>
+                      Party Size: <xsl:value-of select="$item/@quantity"/>
                     </fo:block>
                     <fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.2cm">
-                      Booking Fee:  £ <xsl:value-of select="format-number(@itemTax, '#.00')"/>
+                      Booking Fee:  £ <xsl:value-of select="format-number($item/@itemTax, '#.00')"/>
                     </fo:block>
                   </fo:block>
                   <fo:block font-size="20pt" font-family="{$bodyfont}" padding-top="4.5cm">
-                    ADMIT <xsl:value-of select="@quantity"/>
+                    ADMIT 1
                   </fo:block>
                 </fo:table-cell>
               </fo:table-row>
