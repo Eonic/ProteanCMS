@@ -2166,7 +2166,7 @@ function ValidateContentForm(event) {
 function RedirectClick(redirectType) {
     
     //var redirectType = $("redirectType").val();
-    alert(redirectType);
+    
     if (redirectType == "404Redirect") {
         $("input[name*='redirectOption']").val("");
         if ($(".btnSubmitPage").length > 0) {
@@ -2433,7 +2433,7 @@ if (editProductElement > 0) {
                     localStorage.removeItem('originalPathName');
                 }
                 localStorage.pageId = productId;
-                alert(this.urlPathInput);
+               
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
