@@ -28,6 +28,7 @@ $admin-body-font: 'Open Sans', sans-serif;
 $admin-font-size-base: 15px;
 $admin-gutter-width: 30px;
 
+//Please review this and change to the bootstrap5 methodology
 $screen-xs-max: 576px;
 $screen-sm-min: 577px;
 $screen-sm-max: 768px;
@@ -1019,30 +1020,6 @@ body.ewAdmin.layout-AdmHome {
     display: none;
 }
 
-// - DRAG AND DROP
-.droppable-hover {
-    background-color: #d9d9d9;
-    height: auto;
-}
-
-.droppable-hover .dropable-active {
-    background-color: none;
-    height: auto;
-}
-
-// - ADMIN HEADER
-
-// - DROPDOWNS
-.list-group-item .ewAdmin {
-    //@include clearfix();
-    //position:relative;
-    //dropdown-menu{margin-top:20px;}
-    //a.btn-primary{
-    //	position: absolute;
-    //	margin-right: 0;
-    //}
-}
-
 .Site .ewAdmin .dropdown-menu li {
     font-size: 13px !important;
 }
@@ -1085,9 +1062,6 @@ body.ewAdmin.layout-AdmHome {
         }
     }
 }
-
-
-
 
 
 // - GUIDE

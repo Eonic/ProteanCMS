@@ -746,7 +746,12 @@ Public Class xForm
                             ' No data - error message
                             bIsValid = False
                             bIsThisBindValid = False
-                            If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=""msg-1007"">This must be completed</span>") = False Then
+                            Dim label As String = "Please complete"
+                            Dim sRef As String = oBindElmt.GetAttribute("id")
+                            If Not moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" & sRef & "' or @bind='" & sRef & "') and not(@class='hidden')]/label") Is Nothing Then
+                                label += " " & moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" & sRef & "' or @bind='" & sRef & "') and not(@class='hidden')]/label").InnerText
+                            End If
+                            If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=""msg-1007"">" & label & " </span>") = False Then
                                 missedError = True
                             End If
 
@@ -948,7 +953,7 @@ Public Class xForm
         'Dim sMessage As String
         Try
 
-            If Not moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" & sRef & "'or @bind='" & sRef & "') and @class!='hidden']") Is Nothing Then
+            If Not moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" & sRef & "' or @bind='" & sRef & "') and not(@class='hidden')]") Is Nothing Then
                 ' Look for a child node in the bind element that has a matching note type and bind attribute type
                 Dim sXPath As String = sNoteTypes(oNoteType) & "[@type='" & sBindAttributes(oBindType) & "']"
                 Dim oElmt As XmlElement = oBindElmt.SelectSingleNode(sXPath)
@@ -963,10 +968,10 @@ Public Class xForm
 
                 ' Add the note
                 addNote(oBindElmt.GetAttribute("id"), oNoteType, sDefaultMessage)
-                If moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" & sRef & "'or @bind='" & sRef & "') and @class!='hidden']") Is Nothing Then
-                    Return True
-                Else
+                If moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" & sRef & "' or @bind='" & sRef & "') and not(@class='hidden')]") Is Nothing Then
                     Return False
+                Else
+                    Return True
                 End If
             Else
                 Return False

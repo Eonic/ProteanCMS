@@ -68,9 +68,9 @@
 
   <!-- -->
   <xsl:template match="Content | div[@class='xform']" mode="xform">
-    <form method="{model/submission/@method}" action="">
+    <form method="{model/submission/@method}" action="" novalidate="novalidate">
       <xsl:attribute name="class">
-        <xsl:text>xform</xsl:text>
+        <xsl:text>xform needs-validation</xsl:text>
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>
@@ -701,7 +701,7 @@
 
    
       <xsl:choose>
-        <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!='' or help or hint or alert">
+        <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!='' or help or hint">
           <div class="input-group">
             <xsl:if test="@prefixIcon!=''">
               <span class="input-group-addon">
@@ -733,11 +733,6 @@
             <xsl:if test="hint">
               <span class="input-group-btn">
                 <xsl:apply-templates select="." mode="hintButton"/>
-              </span>
-            </xsl:if>
-            <xsl:if test="alert">
-              <span class="input-group-btn">
-                <xsl:apply-templates select="." mode="alertButton"/>
               </span>
             </xsl:if>
           </div>
@@ -1119,25 +1114,20 @@
       <xsl:if test="contains(@autofocus,'autofocus')">
         <xsl:attribute name="autofocus">autofocus</xsl:attribute>
       </xsl:if>
-      <xsl:choose>
-        <xsl:when test="@class!=''">
-          <xsl:attribute name="class">
-            <xsl:value-of select="@class"/>
-            <xsl:text> textbox form-control</xsl:text>
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="class">textbox form-control</xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:for-each select="@*">
-        <xsl:variable name="nodename" select="name()"/>
-        <xsl:if test="starts-with($nodename,'data-fv')">
-          <xsl:attribute name="{name()}">
-            <xsl:value-of select="." />
-          </xsl:attribute>
-        </xsl:if>
-      </xsl:for-each>
+        <xsl:attribute name="class">
+           <xsl:text>form-control</xsl:text>
+            <xsl:if test="@class!=''">
+              <xsl:text> </xsl:text><xsl:value-of select="@class"/>
+            </xsl:if>
+          <xsl:if test="alert">
+            <xsl:text> is-invalid</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+      <xsl:if test="@data-fv-not-empty='true'">
+        <xsl:attribute name="required">
+          <xsl:text>required</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
       <xsl:choose>
         <xsl:when test="$value!=''">
           <xsl:attribute name="value">
@@ -1163,6 +1153,16 @@
         </xsl:attribute>
       </xsl:if>
     </input>
+    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
+    <div class="invalid-feedback">
+      <xsl:value-of select="@data-fv-not-empty___message"/>
+    </div>
+    </xsl:if>
+    <xsl:if test="alert">
+      <div class="invalid-feedback">
+        <xsl:copy-of select="alert/node()"/>
+      </div>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="*" mode="getRefOrBind">
@@ -1910,11 +1910,14 @@
     </xsl:variable>
     <input type="password" name="{$ref}" id="{$ref}">
       <xsl:attribute name="class">
+        <xsl:text>form-control</xsl:text>
         <xsl:if test="@class!=''">
-          <xsl:value-of select="@class"/>
           <xsl:text> </xsl:text>
+          <xsl:value-of select="@class"/>
         </xsl:if>
-        <xsl:text>textbox form-control</xsl:text>
+        <xsl:if test="alert">
+          <xsl:text> is-invalid</xsl:text>
+        </xsl:if>
       </xsl:attribute>
       <xsl:choose>
         <xsl:when test="value!=''">
@@ -1930,7 +1933,22 @@
           </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
+      <xsl:if test="@data-fv-not-empty='true'">
+        <xsl:attribute name="required">
+          <xsl:text>required</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
     </input>
+    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
+      <div class="invalid-feedback">
+        <xsl:value-of select="@data-fv-not-empty___message"/>
+      </div>
+    </xsl:if>
+    <xsl:if test="alert">
+      <div class="invalid-feedback">
+        <xsl:copy-of select="alert/node()"/>
+      </div>
+    </xsl:if>
     <xsl:if test="contains(@class,'strongPassword')">
       <a id="passwordPolicy" class="text-muted" href="#">view our password policy</a>
     </xsl:if>

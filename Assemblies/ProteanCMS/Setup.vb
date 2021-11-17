@@ -467,10 +467,6 @@ Recheck:
                     Dim oAdXfm As Object = oMembershipProv.AdminXforms
                     oAdXfm.open(moPageXml)
                     oPageDetail.AppendChild(oAdXfm.xFrmUserLogon("AdminLogon"))
-
-                    If oAdXfm.isSubmitted Then
-                        oAdXfm.validate()
-                    End If
                     mnUserId = myWeb.mnUserId
                     If oAdXfm.valid Then
 

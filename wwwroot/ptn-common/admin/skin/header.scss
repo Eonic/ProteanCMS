@@ -339,15 +339,6 @@ body.normalMode {
     }
     // - MAIN MENU
     .admin-main-menu {
-        //.navbar-header{display:none;}
-        @media(min-width:$admin-nav-breakpoint) {
-            margin-left: 175px;
-        }
-
-        @media(min-width:$screen-md-min) {
-            margin-left: 215px;
-        }
-
         font-size: 1.1em;
         background-color: $admin-header-bg-light;
 
@@ -468,11 +459,6 @@ body.normalMode {
     }
     // - SUB MENU
     .admin-sub-menu {
-        margin-left: 175px;
-
-        @media(min-width:$screen-md-min) {
-            margin-left: 215px;
-        }
 
         font-size: 0.8em;
         color: $admin-header-color;

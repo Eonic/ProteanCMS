@@ -222,9 +222,6 @@
 
         <script type="text/javascript" src="/ptn-common/core/jquery/3.6.0/jquery.min.js">&#160;</script>
         <script type="text/javascript" src="/ptn-common/core/bs5/dist/js/bootstrap.min.js">&#160;</script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.3/es6-shim.min.js">&#160;</script>
-        <script type="text/javascript" src="/ptn-common/core/formvalidation/js/formvalidation.js">&#160;</script>
-        <script type="text/javascript" src="/ptn-common/core/formvalidation/js/plugins/Bootstrap5.min.js">&#160;</script>
         <script type="text/javascript" src="/ptn-common/setup/setup.js">&#160;</script>
 		</body>
     </html>

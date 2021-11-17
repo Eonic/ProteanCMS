@@ -1,17 +1,33 @@
-﻿document.addEventListener('DOMContentLoaded', function (e) {
-    FormValidation.formValidation($('#UserLogon'), {
-        plugins: {
-            declarative: new FormValidation.plugins.Declarative(),
-            icon: new FormValidation.plugins.Icon({
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh',
-            }),
-        }
-    });
-});
+﻿////document.addEventListener('DOMContentLoaded', function (e) {
+////    debugger;
+////    FormValidation.formValidation($('.xform'), {
+////        plugins: {
+////            declarative: new FormValidation.plugins.Declarative(),
+////        }
+////    });
+
+////});
 
 
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function () {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
 
 function form_check(oForm) {
     return true;
