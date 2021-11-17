@@ -594,7 +594,7 @@ Partial Public Class Cms
                     If (myApi.moRequest("ewSubmitClone_cartBillAddress") IsNot Nothing) Then
                         myCart.mcPaymentMethod = myApi.moRequest("ewSubmitClone_cartBillAddress")
                     Else
-                        Return "Gateway not provided"
+                        Return "error"
                     End If
 
                     If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
@@ -615,11 +615,15 @@ Partial Public Class Cms
                     Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod)
                     Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
                     ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, myCart, oElmt)
-                    moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
-                    ' moPageXml.CreateElement("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
-                    Return "true"
+                    'moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(ccPaymentXform.moXformElmt, Newtonsoft.Json.Formatting.Indented)
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
+                    'Return "true"
                 Catch ex As Exception
-                    Return ex.Message
+                    Return "error" 'ex.Message
                 End Try
             End Function
 
