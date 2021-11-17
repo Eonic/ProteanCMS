@@ -1,5 +1,5 @@
 ﻿document.addEventListener('DOMContentLoaded', function (e) {
-    FormValidation.formValidation(document.getElementById('UserLogon'), {
+    FormValidation.formValidation($('#UserLogon'), {
         plugins: {
             declarative: new FormValidation.plugins.Declarative(),
             icon: new FormValidation.plugins.Icon({
@@ -10,3 +10,10 @@
         }
     });
 });
+
+
+
+function form_check(oForm) {
+    return true;
+}
+

@@ -94,12 +94,6 @@
           <xsl:value-of select="model/submission/@event"/>
         </xsl:attribute>
       </xsl:if>
-
-      <xsl:if test="model/instance/@valid!=''">
-        <xsl:attribute name="data-fv-valid">
-          <xsl:value-of select="model/instance/@valid"/>
-        </xsl:attribute>
-      </xsl:if>
       <xsl:if test="descendant::upload">
         <xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
       </xsl:if>
@@ -783,24 +777,6 @@
   <!-- ========================== CONTROL : SUBMIT (with xFormQuiz bespokeness) ========================== -->
   <!-- -->
 
-
-  <!-- Commented out to test multi-language on shopping cart -->
-
-  <!--xsl:template match="submit[@ref!='']" mode="xform">
-    <xsl:variable name="class">
-      <xsl:text>button</xsl:text>
-      <xsl:if test="@class!=''">
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="@class"/>
-      </xsl:if>
-    </xsl:variable>
-    <input type="submit" name="{@ref}" class="{$class}"  onclick="disableButton(this);">
-      <xsl:attribute name="value">
-        <xsl:apply-templates select="label" mode="submitText"/>
-      </xsl:attribute>
-    </input>
-  </xsl:template-->
-
   <xsl:template match="submit" mode="xform">
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
@@ -848,7 +824,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}"  onclick="disableButton(this);">
+    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}">
       <xsl:if test="@data-pleasewaitmessage != ''">
         <xsl:attribute name="data-pleasewaitmessage">
           <xsl:value-of select="@data-pleasewaitmessage"/>
@@ -932,7 +908,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}"  onclick="disableButton(this);">
+    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}">
       <xsl:if test="@data-pleasewaitmessage != ''">
         <xsl:attribute name="data-pleasewaitmessage">
           <xsl:value-of select="@data-pleasewaitmessage"/>
@@ -992,7 +968,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}"  onclick="disableButton(this);">
+    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}">
       <xsl:if test="@data-pleasewaitmessage != ''">
         <xsl:attribute name="data-pleasewaitmessage">
           <xsl:value-of select="@data-pleasewaitmessage"/>
@@ -1040,7 +1016,7 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <button type="submit" name="delete:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-danger btn-delete" onclick="disableButton(this);">
+        <button type="submit" name="delete:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-danger btn-delete">
           <i class="fa {$icon} fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -1061,7 +1037,7 @@
         </xsl:choose>
       </xsl:variable>
       <div class="rptInsert">
-        <button type="submit" name="insert:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-primary {$class}" onclick="disableButton(this);">
+        <button type="submit" name="insert:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-primary {$class}">
           <i class="fa {$icon} fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -1082,7 +1058,7 @@
         <xsl:value-of select="@class"/>
       </xsl:if>
     </xsl:variable>
-    <input type="submit" name="{label/node()}" value="{label/node()}" class="{$class}"  onclick="disableButton(this);"/>
+    <input type="submit" name="{label/node()}" value="{label/node()}" class="{$class}"/>
   </xsl:template>
 
   <!-- -->
@@ -3496,7 +3472,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}"  onclick="disableButton(this);">
+    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}">
       <xsl:if test="@data-pleasewaitmessage != ''">
         <xsl:attribute name="data-pleasewaitmessage">
           <xsl:value-of select="@data-pleasewaitmessage"/>
