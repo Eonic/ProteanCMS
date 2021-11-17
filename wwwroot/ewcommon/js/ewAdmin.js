@@ -2390,7 +2390,9 @@ $(document).ready(function () {
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
     }
     if ($("#MenuTree") != undefined) {
-        scrollToAnchor($("#MenuTree li.active").prop("id"));
+        if ($("#MenuTree li.active").prop("id") != undefined) {
+            scrollToAnchor($("#MenuTree li.active").prop("id"));
+        }
     }
 });
 
