@@ -572,7 +572,7 @@
                     <xsl:otherwise>
                       <xsl:if test="not(@position='header' or @position='footer' or (@position='column1' and $page/@layout='Modules_1_column'))">
                       <xsl:attribute name="style">
-                        background-image: url('<xsl:value-of select="@backgroundImage"/>');color:red;
+                        background-image: url('<xsl:value-of select="@backgroundImage"/>');
                       </xsl:attribute>
                       </xsl:if>
                     </xsl:otherwise>
@@ -580,7 +580,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:attribute name="style">
-                    background-image: url('<xsl:value-of select="@backgroundImage"/>');color:blue;
+                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
                   </xsl:attribute>
                 </xsl:otherwise>
               </xsl:choose>
@@ -4682,6 +4682,71 @@
   </xsl:template>
 
   <!-- Contact Brief -->
+  <xsl:template match="Content[@type='Contact']" mode="displayContributor">
+    <xsl:param name="sortBy"/>
+    <!-- contactBrief -->
+    <xsl:variable name="parentURL">
+      <xsl:apply-templates select="self::Content" mode="getHref">
+        <xsl:with-param name="parId" select="@parId"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="preURL" select="substring(Website,1,3)" />
+    <xsl:variable name="linkURL">
+      <xsl:choose>
+        <xsl:when test="$preURL='www' or $preURL='WWW'">
+          <xsl:text>http://</xsl:text>
+          <xsl:value-of select="Url"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="Url"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <div class="contributor row">
+      <xsl:if test="Images/img/@src!=''">
+        <a href="{$parentURL}" rel="author" title="click here to view more details on {GivenName/node()} {Surname/node()}" class="col-md-4">
+          <xsl:apply-templates select="." mode="displayThumbnail">
+            <xsl:with-param name="width">150</xsl:with-param>
+            <xsl:with-param name="height">150</xsl:with-param>
+            <xsl:with-param name="crop" select="true()"/>
+          </xsl:apply-templates>
+        </a>
+      </xsl:if>
+      <div class="col-md-8">
+      <h5 class="title">
+      <a href="{$parentURL}" rel="author">
+        <xsl:attribute name="title">
+          <xsl:call-template name="term2072" />
+          <xsl:text>&#160;</xsl:text>
+          <xsl:value-of select="GivenName/node()"/>
+          <xsl:text>&#160;</xsl:text>
+          <xsl:value-of select="Surname/node()"/>
+        </xsl:attribute>
+        <xsl:apply-templates select="." mode="getDisplayName"/>
+      </a></h5>
+      <xsl:if test="Title/node()!=''">
+        <h6 class="title">
+          <xsl:apply-templates select="Title" mode="displayBrief"/>
+          <xsl:if test="Company/node()!=''">
+            <xsl:text> - </xsl:text>
+            <xsl:apply-templates select="Company" mode="displayBrief"/>
+          </xsl:if>
+        </h6>
+      </xsl:if>
+      <xsl:if test="Profile/node()!=''">
+        <p>
+          <xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
+        </p>
+      </xsl:if>
+        <a href="{$parentURL}" class="btn btn-sm btn-default">
+          more about
+          <xsl:value-of select="GivenName/node()"/>
+        </a>
+      </div>
+    </div>
+  </xsl:template>
+
+  <!-- Contact Brief -->
   <xsl:template match="Content[@type='Contact']" mode="displayAuthorBrief">
     <xsl:param name="sortBy"/>
     <!-- contactBrief -->
@@ -6050,6 +6115,28 @@
     </div>
   </xsl:template>
 
+  
+  <!-- month heading-->
+  <xsl:template name="MonthHeading">
+    <xsl:param name="date"/>
+    <xsl:variable name="month" select="number(substring($date, 6, 2))"/>
+    <xsl:choose>
+      <xsl:when test="$month=1">January</xsl:when>
+      <xsl:when test="$month=2">February</xsl:when>
+      <xsl:when test="$month=3">March</xsl:when>
+      <xsl:when test="$month=4">April</xsl:when>
+      <xsl:when test="$month=5">May</xsl:when>
+      <xsl:when test="$month=6">June</xsl:when>
+      <xsl:when test="$month=7">July</xsl:when>
+      <xsl:when test="$month=8">August</xsl:when>
+      <xsl:when test="$month=9">September</xsl:when>
+      <xsl:when test="$month=10">October</xsl:when>
+      <xsl:when test="$month=11">November</xsl:when>
+      <xsl:when test="$month=12">December</xsl:when>
+      <xsl:otherwise>INVALID MONTH</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   <!-- Event Brief -->
   <xsl:template match="Content[@type='Event']" mode="displayBrief">
     <xsl:param name="sortBy"/>
@@ -6057,12 +6144,37 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
+    
     <div class="listItem list-group-item vevent">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem list-group-item vevent'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner media">
+      <xsl:if test="$page/Contents/Content[@moduleType='EventList' and @groupEventsByMonth='true']">
+        <xsl:variable name="thisDate">
+          <xsl:value-of select="StartDate/node()"/>
+        </xsl:variable>
+        <xsl:variable name="lastDate">
+          <xsl:value-of select="./preceding-sibling::*[ 1]/StartDate/node()"/>
+        </xsl:variable>
+        <xsl:variable name="thisMonth">
+          <xsl:value-of select="number(substring($thisDate, 6, 2))"/>
+        </xsl:variable>
+        <xsl:variable name="lastMonth">
+          <xsl:value-of select="number(substring($lastDate, 6, 2))"/>
+        </xsl:variable>
+        <xsl:if test="$thisMonth != $lastMonth">
+          <xsl:attribute name="class">
+            <xsl:text>lIinner media  month-heading-wrapper </xsl:text>
+          </xsl:attribute>
+          <h2 class="month-heading">
+            <xsl:call-template name="MonthHeading">
+              <xsl:with-param name="date" select="StartDate/node()"/>
+            </xsl:call-template>
+          </h2>
+        </xsl:if>
+      </xsl:if>    
         <xsl:if test="Images/img/@src!=''">
           <a href="{$parentURL}" title="Read More - {Headline/node()}">
             <xsl:apply-templates select="." mode="displayThumbnail"/>
@@ -6073,21 +6185,25 @@
             <a href="{$parentURL}" title="Read More - {Headline/node()}" class="url summary">
               <xsl:apply-templates select="." mode="getDisplayName"/>
             </a>
+
           </h4>
+         
           <xsl:if test="StartDate/node()!=''">
             <p class="date">
               <span class="dtstart">
-                <xsl:call-template name="DisplayDate">
-                  <xsl:with-param name="date" select="StartDate/node()"/>
+                <xsl:call-template name="formatdate">
+                  <xsl:with-param name="date" select="StartDate/node()" />
+                  <xsl:with-param name="format" select="'ddd, dd MMM yyyy'" />
                 </xsl:call-template>
                 <span class="value-title" title="{StartDate/node()}T{translate(Times/@start,',',':')}" ></span>
               </span>
               <xsl:if test="EndDate/node()!='' and EndDate/node() != StartDate/node()">
                 <xsl:text> - </xsl:text>
                 <span class="dtend">
-                  <xsl:call-template name="DisplayDate">
-                    <xsl:with-param name="date" select="EndDate/node()"/>
-                  </xsl:call-template>
+                  <xsl:call-template name="formatdate">
+                      <xsl:with-param name="date" select="EndDate/node()" />
+                      <xsl:with-param name="format" select="'ddd, dd MMM yyyy'" />
+                    </xsl:call-template>
                   <span class="value-title" title="{EndDate/node()}T{translate(Times/@end,',',':')}"></span>
                 </span>
               </xsl:if>
@@ -6103,6 +6219,12 @@
               </xsl:if>
             </p>
           </xsl:if>
+          <xsl:if test="@teaserSlug!=''">
+            <div class="label label-default">
+              <xsl:value-of select="@teaserSlug"/>
+            </div>
+          </xsl:if>
+          
           <xsl:if test="Location/Venue!=''">
             <p class="location vcard">
               <span class="fn org">
@@ -6122,7 +6244,11 @@
                 <xsl:value-of select="Headline/node()"/>
               </xsl:with-param>
             </xsl:apply-templates>
+            <xsl:if test="@bookingURL!=''">
             <xsl:text> </xsl:text>
+            <a href="{@bookingURL}" class="btn btn-success">Book Here&#160;&#160;<i class="fa fa-mouse-pointer">&#160;</i>
+          </a>
+            </xsl:if>
           </div>
         </div>
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
@@ -6266,104 +6392,15 @@
     </li>
   </xsl:template>
 
+  
   <!-- Event Detail -->
   <xsl:template match="Content[@type='Event']" mode="ContentDetail">
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
-    <div class="detail vevent content-title">
+    <div class="detail vevent">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'detail vevent content-title'"/>
+        <xsl:with-param name="class" select="'detail vevent'"/>
       </xsl:apply-templates>
-      <h2 class="summary">
-        <xsl:apply-templates select="." mode="getDisplayName"/>
-      </h2>
-      <xsl:apply-templates select="." mode="displayDetailImage"/>
-      <xsl:if test="StartDate!=''">
-        <p class="date">
-          <xsl:if test="StartDate/node()!=''">
-            <xsl:call-template name="DisplayDate">
-              <xsl:with-param name="date" select="StartDate/node()"/>
-            </xsl:call-template>
-          </xsl:if>
-          <xsl:if test="EndDate/node()!=StartDate/node()">
-            <xsl:text> to </xsl:text>
-            <xsl:call-template name="DisplayDate">
-              <xsl:with-param name="date" select="EndDate/node()"/>
-            </xsl:call-template>
-          </xsl:if>
-          <xsl:text>&#160;</xsl:text>
-          <xsl:if test="Times/@start!='' and Times/@start!=','">
-            <span class="times">
-              <xsl:value-of select="translate(Times/@start,',',':')"/>
-              <xsl:if test="Times/@end!='' and Times/@end!=','">
-                <xsl:text> - </xsl:text>
-                <xsl:value-of select="translate(Times/@end,',',':')"/>
-              </xsl:if>
-            </span>
-          </xsl:if>
-        </p>
-      </xsl:if>
-      <xsl:if test="Location/Venue!=''">
-        <p class="location vcard">
-          <span class="fn org">
-            <xsl:value-of select="Location/Venue"/>
-          </span>
-          <xsl:if test="Location/@loc='address'">
-            <xsl:apply-templates select="Location/Address" mode="getAddress" />
-          </xsl:if>
-          <xsl:if test="Location/@loc='geo'">
-            <span class="geo">
-              <span class="latitude">
-                <span class="value-title" title="Location/Geo/@latitude"/>
-              </span>
-              <span class="longitude">
-                <span class="value-title" title="Location/Geo/@longitude"/>
-              </span>
-            </span>
-          </xsl:if>
-        </p>
-      </xsl:if>
-      <xsl:choose>
-        <xsl:when test="Content[@type='Ticket']">
-          <div class="row">
-            <div class="description col-md-8">
-              <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-            </div>
-            <div class="col-md-4">
-              <xsl:apply-templates select="." mode="ticketsGrouped" />
-            </div>
-          </div>
-        </xsl:when>
-        <xsl:otherwise>
-          <div class="description">
-            <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-          </div>
-        </xsl:otherwise>
-      </xsl:choose>
-      <div class="terminus">&#160;</div>
-      <div class="entryFooter">
-        <div class="tags">
-          <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
-          <xsl:text> </xsl:text>
-        </div>
-        <xsl:apply-templates select="." mode="backLink">
-          <xsl:with-param name="link" select="$thisURL"/>
-          <xsl:with-param name="altText">
-            <xsl:call-template name="term2013" />
-          </xsl:with-param>
-        </xsl:apply-templates>
-      </div>
-      <div class="terminus">&#160;</div>
-    </div>
-  </xsl:template>
-
-  <!-- Event Detail -->
-  <xsl:template match="Content[@type='Event']" mode="ContentDetail">
-    <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
-    <div class="detail vevent content-title">
-      <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'detail event'"/>
-      </xsl:apply-templates>
-      <h2>
+      <h2 class="content-title">
          <xsl:apply-templates select="Headline" mode="displayBrief"/>
       </h2>
       <!--RELATED CONTENT-->
@@ -6375,7 +6412,16 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:attribute name="class">col-md-12</xsl:attribute>
+              <div class="col-md-5 pull-right">
               <xsl:apply-templates select="." mode="displayDetailImage"/>
+                <xsl:if test="@bookingURL!=''">
+                  <xsl:text> </xsl:text>
+                  <a href="{@bookingURL}" class="btn btn-success btn-block">
+                    Book Here&#160;&#160;<i class="fa fa-mouse-pointer">&#160;</i>
+                  </a>
+                </xsl:if>
+                <xsl:apply-templates select="Content[@type='Contact']" mode="displayContributor"/>
+              </div>
             </xsl:otherwise>
           </xsl:choose>
           <xsl:if test="StartDate!=''">
@@ -6402,6 +6448,11 @@
                 </span>
               </xsl:if>
             </p>
+          </xsl:if>
+          <xsl:if test="@teaserSlug!=''">
+            <div class="label label-default label-lg">
+              <xsl:value-of select="@teaserSlug"/>
+            </div>
           </xsl:if>
           <xsl:if test="Location/Venue!=''">
             <p class="location vcard">
@@ -6460,6 +6511,7 @@
     </div>
   </xsl:template>
 
+  
   <!-- List Related Tickets-->
   <xsl:template match="Content" mode="RelatedTickets">
     <xsl:param name="sortBy"/>
@@ -6582,6 +6634,102 @@
         </button>
       </span>
     </div>
+  </xsl:template>
+
+
+
+
+  <xsl:template match="Content[@type='Event' and ancestor::ContentDetail]" mode="JSONLD">
+   [ { "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "<xsl:apply-templates select="." mode="getDisplayName" />",
+    "EventStatus": "<xsl:value-of select="@eventStatus"/>",
+    "eventAttendanceMode": "OfflineEventAttendanceMode",
+    "description": "<xsl:call-template name="escape-json">
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="Strap/*" mode="flattenXhtml"/>
+        <xsl:apply-templates select="Body/*" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>",
+    "startDate": "<xsl:value-of select="StartDate/node()"/>",
+    "endDate": "<xsl:value-of select="EndDate/node()"/>",
+    "image": "<xsl:value-of select="Images/img[@class='detail']/@src"/>",
+    <xsl:apply-templates select="Content[@type='Organisation' and @rtype='venue']" mode="JSONLD"/>
+    "performer":[
+     <xsl:apply-templates select="Content[@type='Performer']" mode="JSONLD"/>
+    ],
+    "offers": [ 
+      <xsl:apply-templates select="Content[@type='Ticket']" mode="JSONLD"/>   
+    ],
+    "url": "<xsl:value-of select="$href"/>"
+    <xsl:apply-templates select="." mode="organiser"/>
+    } } ]
+  </xsl:template>
+  <xsl:template match="Content[@type='Event' and ancestor::ContentDetail]" mode="organiser">
+    <!-- Copy this to set the value site wide for the organiastion events.
+      ,
+      "organizer": {
+      "@type": "Organization",
+      "name": "Kira and Morrison Music",
+      "url": "https://kiraandmorrisonmusic.com"
+      }
+      -->
+  </xsl:template>
+  <xsl:template match="Content[@type='Organisation' and @rtype='venue']" mode="JSONLD">
+    "location": {
+    "@type": "Place",
+    "name": "<xsl:value-of select="name/node()"/>",
+    "sameAs": "http://www.example.com",
+    "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "<xsl:value-of select="Organization/location/PostalAddress/streetAddress/node()"/>",
+    "addressLocality": "<xsl:value-of select="Organization/location/PostalAddress/addressLocality/node()"/>",
+    "addressRegion": "<xsl:value-of select="Organization/location/PostalAddress/addressRegion/node()"/>",
+    "postalCode": "<xsl:value-of select="Organization/location/PostalAddress/postalCode/node()"/>",
+    "addressCountry": "<xsl:value-of select="Organization/location/PostalAddress/addressCountry/node()"/>"
+    },
+  </xsl:template>
+
+  <xsl:template match="Content[@type='Performer']" mode="JSONLD">
+    {"@type": "MusicGroup",
+    "name": "<xsl:value-of select="Surname/node()"/>",
+    "sameAs": [
+      "<xsl:apply-templates select="self::Content" mode="getHref">
+      <xsl:with-param name="parId" select="@parId"/>
+    </xsl:apply-templates>"
+    <xsl:if test="@websiteURL!=''">
+      ,"<xsl:value-of select="@websiteURL"/>"
+    </xsl:if>
+      <xsl:if test="@facebookURL!=''">
+        ,"<xsl:value-of select="@facebookURL"/>"
+      </xsl:if>
+      <xsl:if test="@twitterURL!=''">
+        ,"<xsl:value-of select="@twitterURL"/>"
+      </xsl:if>
+      <xsl:if test="@youtubeURL!=''">
+        ,"<xsl:value-of select="@youtubeURL"/>"
+      </xsl:if>
+    <xsl:if test="@spotifyURL!=''">
+     ,"<xsl:value-of select="@spotifyURL"/>"
+    </xsl:if>
+    <xsl:if test="@pinterestURL!=''">
+      ,"<xsl:value-of select="@pinterestURL"/>"
+    </xsl:if>    ]
+    }
+    <xsl:if test="position()!=last()">,</xsl:if>
+  </xsl:template>
+
+  <xsl:template match="Content[@type='Ticket']" mode="JSONLD">
+    {
+    "@type": "Offer",
+    "description":"<xsl:value-of select="@name"/>",
+    "url": "<xsl:value-of select="$href"/>",
+    "price": "<xsl:apply-templates select="." mode="displayPrice" />",
+    "priceCurrency": "GBP",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "<xsl:value-of select="@publishDate"/>"
+    }
+    <xsl:if test="position()!=last()">,</xsl:if>
   </xsl:template>
 
   <!--  ==  TICKETS  =================================================================================  -->
@@ -13158,7 +13306,7 @@
               </i>
             </a>
           </xsl:if>
-          `         <xsl:if test="@linkedInURL!=''">
+          <xsl:if test="@linkedInURL!=''">
             <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
               <i class="fa fa-2x fa-linkedin">
                 <xsl:text> </xsl:text>
@@ -15007,7 +15155,7 @@
           <xsl:value-of select="@advancedSpeed"/>
         </xsl:when>
         <xsl:otherwise>
-          1000
+          10
         </xsl:otherwise>
       </xsl:choose>      
       <xsl:text>,

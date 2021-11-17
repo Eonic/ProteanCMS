@@ -54,7 +54,10 @@ Partial Public Class Cms
 
             Public Function LoadUrlsForPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
+                Dim redirectType As String = ""
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
+                End If
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Dim JsonResult As String = ""
                 Try
@@ -63,7 +66,7 @@ Partial Public Class Cms
                     End If
                     Return JsonResult
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "LoadUrlsForPagination", ex, ""))
                     Return ex.Message
                 End Try
 
@@ -71,9 +74,20 @@ Partial Public Class Cms
 
             Public Function AddNewUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-                Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
-                Dim newUrl As String = inputJson("newUrl").ToObject(Of String)
+                Dim redirectType As String = ""
+                Dim oldUrl As String = ""
+                Dim newUrl As String = ""
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
+                End If
+
+                If inputJson("oldUrl") IsNot Nothing Then
+                    oldUrl = inputJson("oldUrl").ToObject(Of String)()
+                End If
+
+                If inputJson("newUrl") IsNot Nothing Then
+                    newUrl = inputJson("newUrl").ToObject(Of String)()
+                End If
                 Try
                     If myApi.mbAdminMode Then
                         JsonResult = moAdminRedirect.CreateRedirect(redirectType, oldUrl, newUrl)
@@ -81,16 +95,27 @@ Partial Public Class Cms
 
                     Return JsonResult
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddNewUrl", ex, ""))
                     Return ex.Message
                 End Try
 
             End Function
 
             Public Function SearchUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-                Dim searchObj As String = inputJson("searchObj").ToObject(Of String)
-                Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
+                Dim redirectType As String = ""
+                Dim searchObj As String = ""
+                Dim pageloadCount As Integer = 0
+
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
+                End If
+                If inputJson("searchObj") IsNot Nothing Then
+                    searchObj = inputJson("searchObj").ToObject(Of String)()
+                End If
+                If inputJson("loadCount") IsNot Nothing Then
+                    pageloadCount = inputJson("loadCount").ToObject(Of Integer)
+                End If
+
                 Try
                     Dim JsonResult As String = ""
                     If myApi.mbAdminMode Then
@@ -99,7 +124,7 @@ Partial Public Class Cms
                     Return JsonResult
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SearchUrl", ex, ""))
                     Return ex.Message
                 End Try
 
@@ -108,11 +133,25 @@ Partial Public Class Cms
 
 
             Public Function SaveUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-                Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
-                Dim newUrl As String = inputJson("NewUrl").ToObject(Of String)
-                Dim hiddenOldUrl As String = inputJson("hiddenOldUrl").ToObject(Of String)
+                Dim redirectType As String = ""
+                Dim oldUrl As String = ""
+                Dim newUrl As String = ""
+                Dim hiddenOldUrl As String = ""
                 Dim JsonResult As String = ""
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
+                End If
+
+                If inputJson("oldUrl") IsNot Nothing Then
+                    oldUrl = inputJson("oldUrl").ToObject(Of String)()
+                End If
+
+                If inputJson("NewUrl") IsNot Nothing Then
+                    newUrl = inputJson("NewUrl").ToObject(Of String)()
+                End If
+                If inputJson("hiddenOldUrl") IsNot Nothing Then
+                    hiddenOldUrl = inputJson("hiddenOldUrl").ToObject(Of String)
+                End If
 
                 Try
                     If myApi.mbAdminMode Then
@@ -120,7 +159,7 @@ Partial Public Class Cms
                     End If
                     Return JsonResult
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveUrls", ex, ""))
                     Return ex.Message
                 End Try
 
@@ -128,11 +167,20 @@ Partial Public Class Cms
             End Function
 
             Public Function DeleteUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-                Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
-                Dim newUrl As String = inputJson("NewUrl").ToObject(Of String)
+                Dim redirectType As String = ""
+                Dim oldUrl As String = ""
+                Dim newUrl As String = ""
                 Dim JsonResult As String = ""
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
+                End If
+                If inputJson("oldUrl") IsNot Nothing Then
+                    oldUrl = inputJson("oldUrl").ToObject(Of String)()
+                End If
 
+                If inputJson("NewUrl") IsNot Nothing Then
+                    newUrl = inputJson("NewUrl").ToObject(Of String)()
+                End If
                 Try
                     If myApi.mbAdminMode Then
                         JsonResult = moAdminRedirect.DeleteUrls(redirectType, oldUrl, newUrl)
@@ -140,46 +188,84 @@ Partial Public Class Cms
 
                     Return JsonResult
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteUrls", ex, ""))
                     Return ex.Message
                 End Try
             End Function
 
             Public Function IsUrlPresent(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-                Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
-                If myApi.mbAdminMode Then
-                    JsonResult = moAdminRedirect.IsUrlPresent(redirectType, oldUrl)
+                Dim redirectType As String = ""
+                Dim oldUrl As String = ""
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
                 End If
-                Return JsonResult
+                If inputJson("oldUrl") IsNot Nothing Then
+                    oldUrl = inputJson("oldUrl").ToObject(Of String)()
+                End If
+                Try
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.IsUrlPresent(redirectType, oldUrl)
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "IsUrlPresent", ex, ""))
+                    Return ex.Message
+                End Try
             End Function
 
             Public Function GetTotalNumberOfUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-
-                If myApi.mbAdminMode Then
-                    JsonResult = moAdminRedirect.getTotalNumberOfUrls(redirectType)
+                Dim redirectType As String = ""
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
                 End If
-                Return JsonResult
+                Try
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.GetTotalNumberOfUrls(redirectType)
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetTotalNumberOfUrls", ex, ""))
+                    Return ex.Message
+                End Try
             End Function
             Public Function GetTotalNumberOfSearchUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-                Dim SearchObj As String = inputJson("searchObj").ToObject(Of String)
-
-                If myApi.mbAdminMode Then
-                    JsonResult = moAdminRedirect.GetTotalNumberOfSearchUrls(redirectType, SearchObj)
+                Dim redirectType As String = ""
+                Dim SearchObj As String = ""
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
                 End If
-                Return JsonResult
+                If inputJson("searchObj") IsNot Nothing Then
+                    SearchObj = inputJson("searchObj").ToObject(Of String)()
+                End If
+
+                Try
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.GetTotalNumberOfSearchUrls(redirectType, SearchObj)
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetTotalNumberOfSearchUrls", ex, ""))
+                    Return ex.Message
+                End Try
             End Function
 
             Public Function LoadAllUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-                Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
-                Dim actionFlag As String = inputJson("flag").ToObject(Of String)
+                Dim redirectType As String = ""
+                Dim pageloadCount As Integer = 0
+                Dim actionFlag As String = ""
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
+                End If
+                If inputJson("loadCount") IsNot Nothing Then
+                    pageloadCount = inputJson("loadCount").ToObject(Of Integer)
+                End If
+                If inputJson("flag") IsNot Nothing Then
+                    actionFlag = inputJson("flag").ToObject(Of String)
+                End If
 
                 Dim JsonResult As String = ""
                 Try
@@ -189,7 +275,7 @@ Partial Public Class Cms
                     End If
                     Return JsonResult
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "LoadAllUrls", ex, ""))
                     Return ex.Message
                 End Try
 
@@ -199,24 +285,53 @@ Partial Public Class Cms
 
             Public Function IsParentPage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim pageId As String = inputJson("pageId").ToObject(Of Integer)
-
-                If myApi.mbAdminMode Then
-                    JsonResult = moAdminRedirect.isParentPage(pageId)
+                Dim pageId As String = 0
+                If inputJson("pageId") IsNot Nothing Then
+                    pageId = inputJson("pageId").ToObject(Of Integer)
                 End If
-                Return JsonResult
+                Try
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.isParentPage(pageId)
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "IsParentPage", ex, ""))
+                    Return ex.Message
+                End Try
             End Function
 
             Public Function RedirectPage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
-                Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
-                Dim newUrl As String = inputJson("newUrl").ToObject(Of String)
-                'Dim bChildPageRedirect As String = inputJson("isParent").ToObject(Of String)
+                Dim redirectType As String = ""
+                Dim oldUrl As String = ""
+                Dim newUrl As String = ""
                 Dim hiddenOldUrl As String = ""
-                Dim pageId As String = inputJson("pageId").ToObject(Of String)
-                Dim isParentPage As String = inputJson("isParent").ToObject(Of String)
-                Dim sType As String = inputJson("pageType").ToObject(Of String)
+                Dim pageId As String = ""
+                Dim isParentPage As String = ""
+                Dim sType As String = ""
+
+                If inputJson("redirectType") IsNot Nothing Then
+                    redirectType = inputJson("redirectType").ToObject(Of String)()
+                End If
+
+                If inputJson("oldUrl") IsNot Nothing Then
+                    oldUrl = inputJson("oldUrl").ToObject(Of String)()
+                End If
+
+                If inputJson("newUrl") IsNot Nothing Then
+                    newUrl = inputJson("newUrl").ToObject(Of String)()
+                End If
+
+                If inputJson("pageId") IsNot Nothing Then
+                    pageId = inputJson("pageId").ToObject(Of String)()
+                End If
+                If inputJson("isParent") IsNot Nothing Then
+                    isParentPage = inputJson("isParent").ToObject(Of String)()
+                End If
+
+                If inputJson("pageType") IsNot Nothing Then
+                    sType = inputJson("pageType").ToObject(Of String)()
+                End If
                 Try
                     If myApi.mbAdminMode Then
                         JsonResult = moAdminRedirect.RedirectPage(redirectType, oldUrl, newUrl, hiddenOldUrl, isParentPage, sType, pageId)
@@ -224,7 +339,7 @@ Partial Public Class Cms
 
                     Return JsonResult
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""))
                     Return ex.Message
                 End Try
             End Function

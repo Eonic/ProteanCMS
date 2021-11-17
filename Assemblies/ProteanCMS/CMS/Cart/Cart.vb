@@ -1855,7 +1855,7 @@ processFlow:
                                 Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)
                                 calledType = assemblyInstance.GetType(classPath, True)
                             Else
-                                'case for methods within EonicWeb Core DLL
+                                'case for methods within ProteanCMS Core DLL
                                 calledType = System.Type.GetType(classPath, True)
                             End If
 
@@ -6384,7 +6384,8 @@ processFlow:
                             'Add Parent Product to cart if SKU.
                             If cContentType = "SKU" Or cContentType = "Ticket" Then
                                 'Then we need to add the Xml for the ParentProduct.
-                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
+
                                 Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
                                 Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
 
@@ -7760,7 +7761,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                     Dim oCartElmt As XmlElement = oContent.FirstChild
 
                                     'check for invoice date etc.
-                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And (oCartElmt.GetAttribute("InvoiceDate") = "" Or Not (oCartElmt.GetAttribute("InvoiceDateTime").Contains("T"))) Then
+                                    If CLng("0" & oCartElmt.GetAttribute("statusId")) >= 6 And (oCartElmt.GetAttribute("InvoiceDate") = "" Or Not (oCartElmt.GetAttribute("InvoiceDateTime").Contains("T"))) Then
                                         'fix for any items that have lost the invoice date and ref.
                                         'also fix when datetime no stored in XML format.
                                         Dim cartId As Long = oDR("nCartOrderKey")

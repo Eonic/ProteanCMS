@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Event</cContentSchemaName>
         <cContentXmlBrief>
-          <Content>
+          <Content eventStatus="EventScheduled">
             <Headline/>
             <StartDate/>
             <EndDate/>
@@ -36,7 +36,7 @@
           </Content>
         </cContentXmlBrief>
         <cContentXmlDetail>
-          <Content>
+          <Content eventStatus="EventScheduled" additionalTerms="">
             <Headline/>
             <Strap/>
             <StartDate/>
@@ -60,6 +60,7 @@
               <img class="display"/>
               <img class="detail"/>
             </Images>
+
           </Content>
         </cContentXmlDetail>
         <nAuditId/>
@@ -84,6 +85,10 @@
       <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
       <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
       <bind nodeset="cContentXmlBrief/Content">
+        <bind id="cEventStatus" nodeset="@eventStatus" required="false()" type="string"/>
+        <bind id="cEventAttendanceMode" nodeset="@eventAttendanceMode" required="false()" type="string"/>
+        <bind id="cEventBookingURL" nodeset="@bookingURL" required="false()" type="string"/>
+        <bind id="cTeaserSlug" nodeset="@teaserSlug" required="false()" type="string"/>
         <bind id="dEventDate" nodeset="StartDate" required="false()" type="string"/>
         <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string"/>
         <bind id="cContentEventName" nodeset="Headline" required="true()" type="string"/>
@@ -114,6 +119,10 @@
         <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
       </bind>
       <bind nodeset="cContentXmlDetail/Content">
+        <bind id="cEventStatus" nodeset="@eventStatus" required="false()" type="string"/>
+        <bind id="cEventAttendanceMode" nodeset="@eventAttendanceMode" required="false()" type="string"/>
+        <bind id="cEventBookingURL" nodeset="@bookingURL" required="false()" type="string"/>
+        <bind id="cTeaserSlug" nodeset="@teaserSlug" required="false()" type="string"/>
         <bind id="VenueType" nodeset="@venueType" required="false()" type="string"/>
         <bind id="dEventDate" nodeset="StartDate" required="true()" type="string"/>
         <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string" constraint="(//cContentXmlDetail/Content/EndDate = '') or ( (//cContentXmlDetail/Content/EndDate != '') and translate(//cContentXmlDetail/Content/EndDate,'-','') &gt;= translate(//cContentXmlDetail/Content/StartDate,'-',''))">
@@ -145,6 +154,8 @@
         <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
         <bind id="cContentPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
         <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="cContentSpecificationDocument" nodeset="@additionalTerms" required="false()" type="string"/>
+
       </bind>
     </bind>
   </model>
@@ -191,6 +202,17 @@
           <label>Alternative picture</label>
         </input>
       </group>
+      <group>
+        <label>Image gallery</label>
+        <help class="inline">Besides the main product images, You can add additional images below to display as a gallery.</help>
+        <relatedContent search="add" type="LibraryImage" relationType="" direction="1way"/>
+      </group>
+      <group>
+        <label>Event Terms</label>
+        <input bind="cContentSpecificationDocument" class="short pickDocument">
+          <label>Specification document</label>
+        </input>
+      </group>
     </group>
     <group>
       <group>
@@ -199,6 +221,14 @@
           <input bind="cContentEventName" class="required long">
             <label>Event name</label>
           </input>
+          <group>
+            <label>Headliner</label>
+            <relatedContent type="Contact" search="add find" relationType="Headliner" direction="2way" />
+          </group>
+          <group>
+            <label>Support</label>
+            <relatedContent type="Contact" search="add find" relationType="Support" direction="2way" />
+          </group>
         </group>
         <group class="inline">
           <input bind="dEventDate" class="calendar required">
@@ -219,7 +249,45 @@
             <label>End time</label>
           </input>
         </group>
-      </group>
+        <select1 bind="cEventStatus" appearance="full" class="vshort">
+          <label>Event Status</label>
+          <item>
+            <label>Scheduled</label>
+            <value>EventScheduled</value>
+          </item>
+          <item>
+            <label>Moved Online</label>
+            <value>EventMovedOnline</value>
+          </item>
+          <item>
+            <label>Postponed</label>
+            <value>EventPostponed</value>
+          </item>
+          <item>
+            <label>Rescheduled</label>
+            <value>EventRescheduled</value>
+          </item>
+          <item>
+            <label>Cancelled</label>
+            <value>EventCancelled</value>
+          </item>
+        </select1>
+        <select1 bind="cEventAttendanceMode" appearance="full" class="vshort">
+          <label>Attendance Type</label>
+          <item>
+            <label>In Person</label>
+            <value>OfflineEventAttendanceMode</value>
+          </item>
+          <item>
+            <label>Online</label>
+            <value>OnlineEventAttendanceMode</value>
+          </item>
+          <item>
+            <label>Mixed</label>
+            <value>MixedEventAttendanceMode</value>
+          </item>         
+        </select1>
+      </group>    
       <group>
         <label>Location</label>
         <select1 bind="VenueType" appearance="full">
@@ -238,7 +306,7 @@
         <switch class="disable">
           <case id="cVenue_1">
             <label>Venue</label>
-            <relatedContent type="Organisation" search="add" relationType="" direction="2way" />
+            <relatedContent type="Organisation" search="add find" relationType="venue" direction="2way" />
           </case>
           <case id="cVenue_2">
             <group>
@@ -308,6 +376,12 @@
       <group>
         <label>Tickets</label>
         <relatedContent type="Ticket" search="add" relationType="" direction="2way" />
+        <input bind="cEventBookingURL" class="long">
+          <label>External Booking URL</label>
+        </input>
+        <input bind="cTeaserSlug" class="long">
+          <label>Teaser Slug</label>
+        </input>
       </group>
       <group>
         <label>Details</label>
