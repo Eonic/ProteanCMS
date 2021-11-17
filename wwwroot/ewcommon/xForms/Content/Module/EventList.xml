@@ -269,14 +269,15 @@
           </case>
           <case id="cSortBy_5"/>
         </switch>
-        <select bind="groupByMonth" appearance="full" class="multiline hidden groupEventsByMonth">
+
+      </group>
+      <group class="inline">
+        <select bind="groupEventsByMonth" appearance="full">
           <item>
             <label>Group Events By Month</label>
             <value>true</value>
           </item>
         </select>
-      </group>
-      <group class="inline">
         <select1 bind="carousel" appearance="full"  class="form-group">
           <label>Add articles to a carousel</label>
           <item>

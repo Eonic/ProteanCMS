@@ -171,14 +171,15 @@
 			<xsl:with-param name="comma-separated-files">
 				<xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js,</xsl:text>
-				<xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
+			
 				<xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
-				<xsl:text>~/ewcommon/js/vuejs/protean-vue.js</xsl:text>
+				<xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
+      	<xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
 			</xsl:with-param>
 			<xsl:with-param name="bundle-path">
 				<xsl:text>~/Bundles/Admin</xsl:text>
@@ -990,20 +991,30 @@
 
 	<xsl:template match="Page[@ewCmd='EditContent' or contains(@ewCmd,'EditXForm') or @ewCmd='EditMailContent']" mode="adminBreadcrumb">
     <div class="breadcrumb admin-breadcrumb">
-      <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary='true']">
-        <i class="fa fa-file">&#160;</i> &#160;[Primary page]&#160;
-        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
-          <xsl:with-param name="thispageid" select="@pgid"/>
-        </xsl:apply-templates>
-        <br/>
-      </xsl:for-each>
-      <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary!='true']">
-        <i class="fa fa-file-o">&#160;</i> &#160; [Also on page]&#160;
-        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
-          <xsl:with-param name="thispageid" select="@pgid"/>
-        </xsl:apply-templates>      
-        <br/>
-      </xsl:for-each>    
+      <div class="admin-breadcrumb-inner">
+        <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary='true']">
+          <ul>
+            <li>
+              <i class="fa fa-file">&#160;</i> &#160;[Primary page]&#160;
+            </li>
+            <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
+              <xsl:with-param name="thispageid" select="@pgid"/>
+            </xsl:apply-templates>
+          </ul>
+        </xsl:for-each>
+        <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary!='true']">
+          <ul>
+            <li>
+              <i class="fa fa-file-o">&#160;</i> &#160; [Also on page]&#160;
+            </li>
+            <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
+              <xsl:with-param name="thispageid" select="@pgid"/>
+            </xsl:apply-templates>
+          </ul>
+        </xsl:for-each>
+      </div>
+      <a href="" class="all-breadcrumb">see all locations</a>
+      <a href="" class="less-breadcrumb">hide locations</a>
     </div>
 	</xsl:template>
 
@@ -3301,10 +3312,24 @@
 				<xsl:value-of select="$level"/>
 			</xsl:attribute>
 			<div class="pageCell">
-				<xsl:apply-templates select="." mode="status_legend"/>
-				<span class="pageName">
-					<xsl:apply-templates select="." mode="getDisplayName" />
-				</span>
+	          <xsl:choose>
+                  <xsl:when test="DisplayName/@siteTemplate='micro'">
+                    <i class="fa fa-home fa-lg status activeParent">
+                      &#160;
+                    </i>
+                    <span class="pageName">
+                      &#160;
+                      <xsl:value-of select="@name"/>
+                    </span>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates select="." mode="status_legend"/>
+                    <span class="pageName">
+					                    <xsl:apply-templates select="." mode="getDisplayName" />
+                    </span>
+                  </xsl:otherwise>
+                </xsl:choose>
+				
 			</div>
 			<div class="optionButtons">
 				<xsl:choose>
@@ -3317,12 +3342,13 @@
 								<xsl:text>Moving...</xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
-								<a href="{$appPath}?ewCmd=MoveHere&amp;pgid={$movingPageId}&amp;parId={@id}" title="Move this item under here" class="btn btn-primary">
-									<i class="fa fa-hand-o-down fa-white">
-										<xsl:text> </xsl:text>
-									</i><xsl:text> </xsl:text>
-									Move Here
-								</a>
+
+								      <a href="{$appPath}?ewCmd=MoveHere&amp;pgid={$movingPageId}&amp;parId={@id}" title="Move this item under here" class="btn btn-primary">
+									      <i class="fa fa-hand-o-down fa-white">
+										      <xsl:text> </xsl:text>
+									      </i><xsl:text> </xsl:text>
+									      Move Here
+								      </a>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
@@ -3400,10 +3426,23 @@
 		</xsl:variable>
 		<li id="node{@id}" class="list-group-item level-{$level} {$class}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
 			<div class="pageCell">
+        <xsl:choose>
+          <xsl:when test="DisplayName/@siteTemplate='micro'">
+            <i class="fa fa-home fa-lg status activeParent">
+              &#160;
+            </i>
+            <span class="pageName">
+              &#160;
+              <xsl:value-of select="@name"/>
+            </span>
+          </xsl:when>
+          <xsl:otherwise>
 				<xsl:apply-templates select="." mode="status_legend"/>
 				<span class="pageName">
 					<xsl:value-of select="@name"/>
 				</span>
+            </xsl:otherwise>
+          </xsl:choose>
 			</div>
 			<div class="optionButtons">
 				<xsl:choose>
@@ -3523,10 +3562,24 @@
 				<xsl:if test="MenuItem"> expandable</xsl:if>
 			</xsl:attribute>
 			<div class="pageCell">
+        <xsl:choose>
+          <xsl:when test="DisplayName/@siteTemplate='micro'">
+            <i class="fa fa-home fa-lg status activeParent">
+              &#160;
+            </i>
+            <span class="pageName">
+              &#160;
+              <xsl:value-of select="@name"/>
+            </span>
+          </xsl:when>
+          <xsl:otherwise>
+        
 				<xsl:apply-templates select="." mode="status_legend"/>
 				<span class="pageName">
 					<xsl:value-of select="@name"/>
 				</span>
+            </xsl:otherwise>
+          </xsl:choose>
 			</div>
 			<div class="optionButtons">
 				<xsl:choose>
@@ -4268,9 +4321,18 @@
 			<li>
 				<a href="#google" data-toggle="tab">Google</a>
 			</li>
+      			<li>
+				<a href="#opengraph" data-toggle="tab">Open Graph</a>
+			</li>
 			<li>
 				<a href="#facebook" data-toggle="tab">Facebook</a>
 			</li>
+     			<li>
+        			<a href="#twitter" data-toggle="tab">Twitter</a>
+      			</li>
+      			<li>
+        			<a href="#linkedin" data-toggle="tab">LinkedIn</a>
+      			</li>
 			<li>
 				<a href="#cookie" data-toggle="tab">Cookie Policy</a>
 			</li>
@@ -4439,6 +4501,53 @@
 					</xsl:call-template>
 				</table>
 			</div>
+
+      <!--LUKE OG-->
+        <div class="tab-pane panel" id="opengraph">
+		<table cellpadding="0" class="table">
+			<xsl:call-template name="editNamedContent">
+			<xsl:with-param name="desc">OpenGraph Title</xsl:with-param>
+			<xsl:with-param name="name">ogTitle</xsl:with-param>
+			<xsl:with-param name="type">MetaData</xsl:with-param>
+			</xsl:call-template>
+          <!-- xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Description</xsl:with-param>
+            <xsl:with-param name="name">ogdescription</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template -->
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Image</xsl:with-param>
+            <xsl:with-param name="name">ogimage</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+	  <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Image Secure URL</xsl:with-param>
+            <xsl:with-param name="name">ogimagesecure</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <!-- xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Site Name</xsl:with-param>
+            <xsl:with-param name="name">ogsite_name</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Locale</xsl:with-param>
+            <xsl:with-param name="name">oglocale</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph Type</xsl:with-param>
+            <xsl:with-param name="name">ogtype</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">OpenGraph URL</xsl:with-param>
+            <xsl:with-param name="name">ogurl</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template -->
+				</table>
+			</div>      
+        <!--END -->
 			<div class="tab-pane panel" id="facebook">
 				<table cellpadding="0" class="table">
 					<xsl:call-template name="editNamedContent">
@@ -4461,16 +4570,7 @@
 						<xsl:with-param name="name">fb-pages_id</xsl:with-param>
 						<xsl:with-param name="type">MetaData</xsl:with-param>
 					</xsl:call-template>
-					<xsl:call-template name="editNamedContent">
-						<xsl:with-param name="desc">OpenGraph Title</xsl:with-param>
-						<xsl:with-param name="name">ogTitle</xsl:with-param>
-						<xsl:with-param name="type">MetaData</xsl:with-param>
-					</xsl:call-template>
-					<xsl:call-template name="editNamedContent">
-						<xsl:with-param name="desc">OpenGraph Image</xsl:with-param>
-						<xsl:with-param name="name">ogImage</xsl:with-param>
-						<xsl:with-param name="type">MetaData</xsl:with-param>
-					</xsl:call-template>
+
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Facebook Chat</xsl:with-param>
 						<xsl:with-param name="name">FacebookChat</xsl:with-param>
@@ -4478,7 +4578,54 @@
 					</xsl:call-template>
 				</table>
 			</div>
-			<div class="tab-pane panel" id="cookie">
+<!--LUKE 05.10.21-->
+      <div class="tab-pane panel" id="twitter">
+        <table cellpadding="0" class="table">
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Card</xsl:with-param>
+            <xsl:with-param name="name">twittercard</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Site</xsl:with-param>
+            <xsl:with-param name="name">twittersite</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Creator</xsl:with-param>
+            <xsl:with-param name="name">twittercreator</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Title</xsl:with-param>
+            <xsl:with-param name="name">twittertitle</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Description</xsl:with-param>
+            <xsl:with-param name="name">twitterdescription</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Twitter Image</xsl:with-param>
+            <xsl:with-param name="name">twitterimage</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+
+        </table>
+      </div>
+       <div class="tab-pane panel" id="linkedin">
+        <table cellpadding="0" class="table">
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">LinkedIn Insight Tag</xsl:with-param>
+            <xsl:with-param name="name">LinkedInInsightTag</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+        </table>
+      </div>     
+      <!-- END -->
+
+      <div class="tab-pane panel" id="cookie">
 				<table cellpadding="0" class="table">
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Cookie Policy</xsl:with-param>
@@ -7348,6 +7495,12 @@
           <xsl:if test="Payment">
             <a class="btn btn-primary" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
               Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
+            </a><br/>
+            <br/>
+          </xsl:if>
+          <xsl:if test="Payment">
+            <a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary" target="_new">
+              <i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
             </a>
           </xsl:if>
       </div>
@@ -7706,6 +7859,10 @@
 
   <!-- ################################# Order Item ######################################## -->
   <!--#-->
+  <xsl:template match="Item" mode="product-description">
+    
+  </xsl:template>
+  
   <xsl:template match="Item" mode="orderItemAdmin">
     <xsl:param name="editQty"/>
     <xsl:variable name="parentURL">
@@ -7748,6 +7905,7 @@
         <a href="{$siteURL}{@url}" title="">
           <xsl:value-of select="node()"/>
         </a>
+        <xsl:apply-templates select="." mode="product-description"/>
         <!-- ################################# Line Options Info ################################# -->
         <xsl:for-each select="Item">
           <span class="optionList">
