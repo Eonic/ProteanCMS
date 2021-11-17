@@ -156,14 +156,14 @@ Public Class API
 
     Public Class JsonActions
 
-        Public Function ValidateAPICall(ByRef myWeb As Cms, ByVal sGroupName As String) As Boolean
+        Public Function ValidateAPICall(ByRef myWeb As Cms, ByVal sGroupName As String, Optional ByVal cSchemaName As String = "Role") As Boolean
             'Create -InsertOrder Group and pass as a input
             ' check user present in the group
             Dim bIsAuthorized As Boolean = False
             Dim authHeader As String = String.Empty
             Dim encodedUsernamePassword As String = String.Empty
             Dim usernamePassword As String = String.Empty
-            Dim encoding As Encoding = encoding.GetEncoding("iso-8859-1")
+            Dim encoding As Encoding = Encoding.GetEncoding("iso-8859-1")
             Dim seperatorIndex As Integer
             Dim username As String = String.Empty
             Dim password As String = String.Empty
@@ -184,7 +184,7 @@ Public Class API
                             sValidResponse = myWeb.moDbHelper.validateUser(username, password)
                             If IsNumeric(sValidResponse) Then
                                 nUserId = CLng(sValidResponse)
-                                bIsAuthorized = myWeb.moDbHelper.checkUserRole(sGroupName, "Group", nUserId)
+                                bIsAuthorized = myWeb.moDbHelper.checkUserRole(sGroupName, cSchemaName, nUserId)
                                 If (bIsAuthorized) Then
                                     myWeb.mnUserId = nUserId
                                 End If

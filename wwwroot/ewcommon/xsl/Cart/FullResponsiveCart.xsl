@@ -1240,6 +1240,9 @@
   </xsl:template>
 
   <xsl:template match="Item[contentType='Ticket']" mode="CartProductName">
+    <xsl:if test="productDetail/ParentProduct">
+      <xsl:value-of select="substring(productDetail/ParentProduct/Content/@name,1,25)"/> -
+    </xsl:if><br/>
     <xsl:value-of select="Name"/> -
     <xsl:call-template name="formatdate">
       <xsl:with-param name="date" select="productDetail/StartDate/node()" />

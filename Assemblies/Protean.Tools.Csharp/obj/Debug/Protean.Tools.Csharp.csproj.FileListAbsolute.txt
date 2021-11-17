@@ -282,6 +282,3 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Too
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET.Core.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET.Core.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache
