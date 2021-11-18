@@ -266,7 +266,7 @@ Public Class Setup
             Else
                 goResponse.Buffer = False
                 If goConfig("cssFramework") = "bs5" Then
-                    oTransform.XSLFile = CType(goServer.MapPath("/ptn-common/setup/setup.xsl"), String)
+                    oTransform.XSLFile = CType(goServer.MapPath("/ptn/setup/setup.xsl"), String)
                 Else
                     oTransform.XSLFile = CType(goServer.MapPath("/ewcommon/xsl/admin/setup.xsl"), String)
                 End If
