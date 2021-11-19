@@ -6566,6 +6566,7 @@
               </i>
               <xsl:text> </xsl:text>Activity</a>
           </xsl:if>
+          <xsl:apply-templates select="." mode="bespokeUserButtons"/>
           <xsl:choose>
             <xsl:when test="Status='0'">
               <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
@@ -6585,6 +6586,10 @@
         </td>
       </tr>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="user" mode="bespokeUserButtons">
+    
   </xsl:template>
   
   <xsl:template match="company" mode="list">

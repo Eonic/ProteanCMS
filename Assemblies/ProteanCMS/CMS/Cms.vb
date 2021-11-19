@@ -2233,8 +2233,12 @@ Public Class Cms
 
                 'NB put the parId code here?
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Contents/Content")
-
-                    If CLng("0" & oElmt.GetAttribute("parId")) > 0 Then
+                    Dim sParId As String = oElmt.GetAttribute("parId")
+                    If sParId.Contains(",") Then
+                        'if multiple parents get the first one.
+                        sParId = sParId.Split(","c)(0)
+                    End If
+                    If CLng("0" & sParId) > 0 Then
                         processInfo = "Cleaning parId for: " & oElmt.OuterXml
                         Dim primaryParId As Long = 0
 
