@@ -734,7 +734,11 @@
             </xsl:if>
             <xsl:if test="alert">
               <span class="input-group-btn">
-                <xsl:apply-templates select="." mode="alertButton"/>
+                <button type="button" class="btn btn-danger" title="{label/node()}">
+                  <i class="fa fa-exclamation-triangle">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </button>
               </span>
             </xsl:if>
           </div>
@@ -743,7 +747,12 @@
           <xsl:apply-templates select="." mode="xform_control"/>
         </xsl:otherwise>
       </xsl:choose>
-
+      <xsl:if test="alert">
+        <div class="invalid-feedback text-warning small">
+          <xsl:value-of select="alert/node()"/>
+          <xsl:value-of select="label/node()"/>
+        </div>
+      </xsl:if>
     </div>
 
     <xsl:if test="not(contains(@class,'pickImage'))">
@@ -3189,7 +3198,7 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
-    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-content="{alert/node()}" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="bottom" rel="frmPopover"  title="{label/node()}">
+    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-content="{alert/node()} !!" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="bottom" rel="frmPopover"  title="{label/node()}">
       <i class="fa fa-exclamation-triangle">
         <xsl:text> </xsl:text>
       </i>

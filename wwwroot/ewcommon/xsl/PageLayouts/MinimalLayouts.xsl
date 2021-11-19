@@ -2929,11 +2929,11 @@
     <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
       <xsl:variable name="apiKey">
         <xsl:choose>
-          <xsl:when test="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey!=''">
-            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+          <xsl:when test="$GoogleAPIKey!=''">
+            <xsl:value-of select="$GoogleAPIKey"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="$GoogleAPIKey"/>
+            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
            </xsl:otherwise>
         </xsl:choose>
        </xsl:variable>

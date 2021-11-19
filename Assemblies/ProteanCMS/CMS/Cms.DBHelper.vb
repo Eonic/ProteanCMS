@@ -5562,7 +5562,7 @@ restart:
                         Dim oIElmt As XmlElement = moPageXml.CreateElement(oDC.ColumnName)
                         If Not IsDBNull(oDRow(oDC.ColumnName)) Then
                             Dim cStrContent As String = oDRow(oDC.ColumnName)
-                            cStrContent = Replace(Replace(cStrContent, "&gt;", ">"), "&lt;", "<")
+                            cStrContent = encodeAllHTML(cStrContent)
                             If Not cStrContent Is Nothing And Not cStrContent = "" Then
                                 If oDC.ColumnName = "cContactXml" Then
                                     oIElmt.InnerXml = oDRow(oDC.ColumnName)
@@ -11266,6 +11266,23 @@ ReturnMe:
                 Return Nothing
             End Try
         End Function
+
+        'Public Function GetContentListByPageFilter(ByVal sPageIds As String) As SqlDataReader
+        '    Dim oDr As SqlDataReader
+        '    Dim sSql As String
+        '    Dim strReturn As String = ""
+
+        '    Try
+        '        Dim params As New Hashtable
+        '        params.Add("@PageIds", sPageIds)
+        '        ' sSql = "spGetContentListByPageFilter"
+        '        oDr = myWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure, params)
+        '        Return oDr
+        '    Catch ex As Exception
+        '        Return Nothing
+        '    End Try
+
+        'End Function
 
 #Region "Deprecated Functions"
         Public Function doesTableExist(ByRef sTableName As String) As Boolean
