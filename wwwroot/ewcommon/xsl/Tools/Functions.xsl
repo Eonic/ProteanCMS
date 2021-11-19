@@ -4135,9 +4135,9 @@
                   <xsl:when test="self::MenuItem[@id=/Page/@id]">
                     <xsl:text>active</xsl:text>
                   </xsl:when>
-                  <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+                  <!--<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
                     <xsl:text>on</xsl:text>
-                  </xsl:when>
+                  </xsl:when>-->
                 </xsl:choose>
               </xsl:attribute>
               <xsl:text>Overview</xsl:text>
