@@ -3198,7 +3198,7 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
-    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-content="{alert/node()} !!" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="bottom" rel="frmPopover"  title="{label/node()}">
+    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-content="{alert/node()}" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="bottom" rel="frmPopover"  title="{label/node()}">
       <i class="fa fa-exclamation-triangle">
         <xsl:text> </xsl:text>
       </i>
