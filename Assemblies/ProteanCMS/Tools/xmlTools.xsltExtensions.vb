@@ -1503,19 +1503,28 @@ Partial Public Module xmlTools
         End Function
 
         Public Function GetFilterButtons() As Object
-            Dim oXformDoc As XmlDocument = New XmlDocument()
-            Dim oChoices As XmlElement
-            Dim buttonName As String
-            Dim xmlButtons As XmlElement = oXformDoc.CreateElement("buttons")
+            Try
+                Dim oXformDoc As XmlDocument = New XmlDocument()
+                Dim oChoices As XmlElement
+                Dim buttonName As String = ""
+                Dim projectPath As String = ""
+                Dim xmlButtons As XmlElement = oXformDoc.CreateElement("buttons")
+                If (myWeb.moConfig("ProjectPath") <> String.Empty) Then
+                    projectPath = myWeb.moConfig("ProjectPath")
+                End If
+                oXformDoc.Load(goServer.MapPath(projectPath & "/xsl") & "/LayoutManifest.xml")
+                For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/FilterTypes/Filter")
+                    Dim buttonElement As XmlElement = oXformDoc.CreateElement("button")
+                    buttonElement.InnerText = oChoices.InnerText
+                    xmlButtons.AppendChild(buttonElement)
 
-            oXformDoc.Load(goServer.MapPath(myWeb.moConfig("ProjectPath") & "/xsl") & "/LayoutManifest.xml")
-            For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/FilterTypes/Filter")
-                Dim buttonElement As XmlElement = oXformDoc.CreateElement("button")
-                buttonElement.InnerText = oChoices.InnerText
-                xmlButtons.AppendChild(buttonElement)
+                Next
+                Return xmlButtons.OuterXml
+            Catch ex As Exception
+                Return "Error - Changed Position" & ex.Message
+            End Try
 
-            Next
-            Return xmlButtons.OuterXml
+
         End Function
 
 
