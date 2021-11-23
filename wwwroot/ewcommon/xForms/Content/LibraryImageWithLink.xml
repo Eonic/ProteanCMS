@@ -67,6 +67,7 @@
 				<bind id="cContentDetail" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
 				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
         <bind id="showHeading" nodeset="@showHeading" required="false()" type="string"/>
+        <bind id="showButton" nodeset="@showButton" required="false()" type="string"/>
 
         <bind id="cContentLink" nodeset="@externalLink" required="false()" type="string"/>
         <bind id="cContentPage" nodeset="@internalLink" required="false()" type="string"/>
@@ -200,6 +201,17 @@
         <input bind="cModuleLinkText" class="long">
           <label>Module footer link text</label>
         </input>
+        <select1 bind="showButton" appearance="full" class="vshort">
+          <label>Show button on slide?</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+          </item>
+        </select1>
       </group>
     </group>
 	</group>
