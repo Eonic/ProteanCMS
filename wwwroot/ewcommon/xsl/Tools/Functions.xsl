@@ -5842,7 +5842,16 @@
           </xsl:choose>
 
         </xsl:attribute>
+
       </xsl:for-each>
+      
+      <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains(@href,'.pdf')">
+        <xsl:attribute name="onclick">
+          <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+          <xsl:value-of select="@href"/>
+          <xsl:text>');</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
 
       <xsl:apply-templates mode="cleanXhtml"/>
 
