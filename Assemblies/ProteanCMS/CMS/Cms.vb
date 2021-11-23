@@ -4540,9 +4540,9 @@ Public Class Cms
             If mnUserId <> 0 Then
                 oUserXml = moPageXml.SelectSingleNode("/Page/User")
                 If oUserXml Is Nothing Then
-                    moPageXml.DocumentElement.AppendChild(Me.GetUserXML(mnUserId))
+                    moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(Me.GetUserXML(mnUserId), True))
                 Else
-                    moPageXml.DocumentElement.ReplaceChild(Me.GetUserXML(mnUserId), oUserXml)
+                    moPageXml.DocumentElement.ReplaceChild(moPageXml.ImportNode(Me.GetUserXML(mnUserId), True), oUserXml)
                 End If
             End If
         Catch ex As Exception
