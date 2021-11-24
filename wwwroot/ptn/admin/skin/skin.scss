@@ -29,15 +29,16 @@ $admin-font-size-base: 15px;
 $admin-gutter-width: 30px;
 
 //Please review this and change to the bootstrap5 methodology
-$screen-xs-max: 576px;
-$screen-sm-min: 577px;
-$screen-sm-max: 768px;
-$screen-md-min: 769px;
-$screen-md-max: 991px;
-$screen-lg-min: 992px;
-$screen-lg-max: 1190px;
-$screen-xl-min: 1200px;
-$screen-xxl-min: 1400px;
+//Numbers corrected by Vic 24/11/21
+$screen-xs-max: 767px;
+$screen-sm-min: 768px;
+$screen-sm-max: 991px;
+$screen-md-min: 992px;
+$screen-md-max: 1199px;
+$screen-lg-min: 1200px;
+//$screen-lg-max: 1190px;
+//$screen-xl-min: 1200px;
+//$screen-xxl-min: 1400px;
 
 // VARIABLES FOR RESKINNING - INVERSE
 /*$admin-header-bg:				#fff;
