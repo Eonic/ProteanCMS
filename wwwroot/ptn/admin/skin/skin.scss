@@ -47,7 +47,7 @@ $admin-header-logo:				url(/ewcommon/images/admin/skin/eonic-admin-purple.png) 1
 // END VARIABLES
 
 body.ewAdmin.layout-Logon {
-    background: url(/ptn-common/admin/skin/images/logon_bg.png) no-repeat #001834;
+    background: url(/ptn/admin/skin/images/logon_bg.png) no-repeat #001834;
     background-size: cover;
 
      #adminLayout .card {
@@ -70,7 +70,7 @@ body.ewAdmin.layout-Logon {
 }
 
 body.ewAdmin.layout-AdmHome {
-    background: url(/ewcommon/images/logon-bg.png);
+    background: url(/ptn/admin/skin/images/logon_bg.png);
 
     #adminLayout {
         margin: 50px;
