@@ -3526,8 +3526,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cProductType").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nProductId").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
@@ -3543,8 +3542,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nDay").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
@@ -3559,8 +3557,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nWeek").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If

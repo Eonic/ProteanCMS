@@ -7014,7 +7014,7 @@ Partial Public Class Cms
                         End If
                     End If
 
-                        moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
                     Dim i As Integer = 1
                     Dim bDone As Boolean = False
                     Dim cItems As String = ""
@@ -7085,10 +7085,10 @@ Partial Public Class Cms
                             goSession("tempInstance") = MyBase.Instance
                         Else
                             goSession("tempInstance") = MyBase.Instance
-                            End If
                         End If
+                    End If
 
-                        MyBase.addValues()
+                    MyBase.addValues()
 
                     Return MyBase.moXformElmt
 
@@ -7667,16 +7667,15 @@ Partial Public Class Cms
                     MyBase.Instance.InnerXml = "<Criteria><dBegin>" & Protean.Tools.Xml.XmlDate(Now.AddMonths(-1), False) &
                     "</dBegin><dEnd>" & Protean.Tools.Xml.XmlDate(Now.AddDays(1), False) & "</dEnd><bSplit>0</bSplit>" &
                     "<cProductType/><nProductId>0</nProductId><cCurrencySymbol/>" &
-                    "<nOrderStatus1>6</nOrderStatus1><nOrderStatus2>9</nOrderStatus2><cOrderType>Order</cOrderType>" &
+                    "<nOrderStatus>6,9,17</nOrderStatus><cOrderType>Order</cOrderType>" &
                     "</Criteria>"
 
                     MyBase.addInput(oGrp0Elmt, "dBegin", True, "From", "calendar")
                     MyBase.addInput(oGrp0Elmt, "dEnd", True, "To", "calendar")
                     Dim oSel1 As XmlElement = MyBase.addSelect1(oGrp0Elmt, "cCurrencySymbol", True, "Currency")
-                    MyBase.addOption(oSel1, "All/None", "")
-                    MyBase.addOption(oSel1, "GBP", "£")
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus1", True, "nOrderStatus1", "hidden")
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus2", True, "nOrderStatus2", "hidden")
+                    MyBase.addOption(oSel1, "All", "")
+                    MyBase.addOption(oSel1, "GBP", "GBP")
+                    MyBase.addInput(oGrp0Elmt, "nOrderStatus", True, "nOrderStatus", "hidden")
 
                     If myWeb.moConfig("Quote") <> "on" Then
                         oSel1 = MyBase.addSelect1(oGrp0Elmt, "cOrderType", True, "Cart Type")
@@ -7728,8 +7727,7 @@ Partial Public Class Cms
                     MyBase.addBind("cProductType", "Criteria/cProductType", , "string")
                     MyBase.addBind("nProductId", "Criteria/nProductId", , "number")
                     MyBase.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", , "string")
-                    MyBase.addBind("nOrderStatus1", "Criteria/nOrderStatus1", , "number")
-                    MyBase.addBind("nOrderStatus2", "Criteria/nOrderStatus2", , "number")
+                    MyBase.addBind("nOrderStatus", "Criteria/nOrderStatus", , "string")
                     MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
 
 
@@ -7772,7 +7770,7 @@ Partial Public Class Cms
                     "<nMonth>" & Now.Month & "</nMonth>" &
                     "<nDay>0</nDay>" &
                     "<cGrouping>Page</cGrouping><cCurrencySymbol/>" &
-                    "<nOrderStatus1>6</nOrderStatus1><nOrderStatus2>9</nOrderStatus2>" &
+                    "<nOrderStatus>6,9,17</nOrderStatus>" &
                     "<cOrderType>Order</cOrderType>" &
                     "</Criteria>"
                     'Year
@@ -7802,8 +7800,7 @@ Partial Public Class Cms
                     MyBase.addOption(oSel1, "All/None", "")
                     MyBase.addOption(oSel1, "GBP", "£")
                     'OrderStatus
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus1", True, "nOrderStatus1", "hidden")
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus2", True, "nOrderStatus2", "hidden")
+                    MyBase.addInput(oGrp0Elmt, "nOrderStatus", True, "nOrderStatus", "hidden")
                     'CartType
                     oSel1 = MyBase.addSelect1(oGrp0Elmt, "cOrderType", True, "Cart Type", "required")
                     MyBase.addOption(oSel1, "Order", "Order")
@@ -7818,8 +7815,7 @@ Partial Public Class Cms
                     MyBase.addBind("nDay", "Criteria/nDay")
                     MyBase.addBind("cGrouping", "Criteria/cGrouping", , "string")
                     MyBase.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", , "string")
-                    MyBase.addBind("nOrderStatus1", "Criteria/nOrderStatus1", , "number")
-                    MyBase.addBind("nOrderStatus2", "Criteria/nOrderStatus2", , "number")
+                    MyBase.addBind("nOrderStatus", "Criteria/nOrderStatus", , "string")
                     MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
 
 
@@ -7860,7 +7856,7 @@ Partial Public Class Cms
                     "<nMonth>0</nMonth>" &
                     "<nWeek>0</nWeek>" &
                     "<cGroup>Month</cGroup><cCurrencySymbol/>" &
-                    "<nOrderStatus1>6</nOrderStatus1><nOrderStatus2>9</nOrderStatus2>" &
+                    "<nOrderStatus>6,9,17</nOrderStatus>" &
                     "<cOrderType>Order</cOrderType>" &
                     "</Criteria>"
                     'Year
@@ -7891,8 +7887,7 @@ Partial Public Class Cms
                     MyBase.addOption(oSel1, "All/None", "")
                     MyBase.addOption(oSel1, "GBP", "£")
                     'OrderStatus
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus1", True, "nOrderStatus1", "hidden")
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus2", True, "nOrderStatus2", "hidden")
+                    MyBase.addInput(oGrp0Elmt, "nOrderStatus", True, "nOrderStatus", "hidden")
                     'CartType
                     oSel1 = MyBase.addSelect1(oGrp0Elmt, "cOrderType", True, "Cart Type", "required")
                     MyBase.addOption(oSel1, "Order", "Order")
@@ -7905,8 +7900,7 @@ Partial Public Class Cms
                     MyBase.addBind("nWeek", "Criteria/nWeek")
                     MyBase.addBind("cGroup", "Criteria/cGroup", , "string")
                     MyBase.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", , "string")
-                    MyBase.addBind("nOrderStatus1", "Criteria/nOrderStatus1", , "number")
-                    MyBase.addBind("nOrderStatus2", "Criteria/nOrderStatus2", , "number")
+                    MyBase.addBind("nOrderStatus", "Criteria/nOrderStatus", , "string")
                     MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
 
 

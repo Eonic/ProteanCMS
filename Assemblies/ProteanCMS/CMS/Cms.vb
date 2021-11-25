@@ -522,7 +522,12 @@ Public Class Cms
             End If
             If moDbHelper.DatabaseName = "" Then
                 'redirect to setup
-                msRedirectOnEnd = "ewcommon/setup/default.ashx"
+                If moConfig("cssFramework") = "bs5" Then
+                    msRedirectOnEnd = "ptn-common/setup/default.ashx"
+                Else
+                    msRedirectOnEnd = "ewcommon/setup/default.ashx"
+                End If
+
 
             Else
 
@@ -2233,12 +2238,8 @@ Public Class Cms
 
                 'NB put the parId code here?
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Contents/Content")
-                    Dim sParId As String = oElmt.GetAttribute("parId")
-                    If sParId.Contains(",") Then
-                        'if multiple parents get the first one.
-                        sParId = sParId.Split(","c)(0)
-                    End If
-                    If CLng("0" & sParId) > 0 Then
+
+                    If CLng("0" & oElmt.GetAttribute("parId")) > 0 Then
                         processInfo = "Cleaning parId for: " & oElmt.OuterXml
                         Dim primaryParId As Long = 0
 
@@ -4540,9 +4541,9 @@ Public Class Cms
             If mnUserId <> 0 Then
                 oUserXml = moPageXml.SelectSingleNode("/Page/User")
                 If oUserXml Is Nothing Then
-                    moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(Me.GetUserXML(mnUserId), True))
+                    moPageXml.DocumentElement.AppendChild(Me.GetUserXML(mnUserId))
                 Else
-                    moPageXml.DocumentElement.ReplaceChild(moPageXml.ImportNode(Me.GetUserXML(mnUserId), True), oUserXml)
+                    moPageXml.DocumentElement.ReplaceChild(Me.GetUserXML(mnUserId), oUserXml)
                 End If
             End If
         Catch ex As Exception

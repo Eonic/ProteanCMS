@@ -12086,22 +12086,49 @@
           <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
             <tr>
               <xsl:for-each select="*">
-                <xsl:if test="local-name()!='cCartXml' and local-name()!='Currency_Symbol'">
+                <xsl:if test="local-name()!='cCartXml' and local-name()!='Currency_Symbol' and local-name()!='Total_Cost'">
                   <td>
                     <xsl:value-of select="node()"/>
                   </td>
                 </xsl:if>
-                <!--<xsl:if test="local-name()='cCartXml'">
-              <td>
-                <xsl:apply-templates select="." mode="WELLARDSOVERRIDE"/>
-              </td>
-            </xsl:if>-->
+                <xsl:if test="local-name()='Total_Cost'">
+                  <td>
+                    <xsl:call-template name="formatPrice">
+                      <xsl:with-param name="price" select="node()"/>
+                      <xsl:with-param name="currency" select="following-sibling::Currency_Symbol/node()"/>
+                    </xsl:call-template>
+                  </td>
+                </xsl:if>
               </xsl:for-each>
               <td align="right">
-                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
+                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="btn btn-default">view order</a>
               </td>
             </tr>
           </span>
+          <xsl:if test="position()=last()">
+            <tr>
+              <xsl:for-each select="*">
+                <xsl:choose>
+                  <xsl:when test="local-name()='Quantity'">
+                    <th>
+                      Total:<br/><xsl:value-of select="sum(ancestor::Report/Item/Quantity)"/>
+                    </th>
+                  </xsl:when>
+                  <xsl:when test="local-name()='Total_Cost'">
+                    <th>
+                      Total:<br/><xsl:value-of select="sum(ancestor::Report/Item/Total_Cost)"/>
+                    </th>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <th>
+                      &#160;
+                    </th>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:for-each>
+              <th>&#160;</th>
+            </tr>
+          </xsl:if>
         </xsl:for-each>
       </table>
     </div>
