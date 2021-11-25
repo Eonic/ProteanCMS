@@ -270,12 +270,6 @@ $(document).ready(function() {
         hide: true
     });
 
-    //   $('#tpltDeliveryMethodLocations #MenuTree').ajaxtreeview({
-    //       loadPath: treeviewPath,
-    //       ajaxCmd: 'GetLocateNode',
-    //       hide: true
-    //   });
-
     $('#template_permissions #MenuTree').ajaxtreeview({
         loadPath: treeviewPath,
         ajaxCmd: '',
@@ -289,9 +283,7 @@ $(document).ready(function() {
         hide: true
     });
 
-
-
-    $('div.module div.moduleDrag').closest('.module').draggable({
+     $('div.module div.moduleDrag').closest('.module').draggable({
         cursor: 'move',
         containment: '#dragableModules',
         handle: 'a.drag',

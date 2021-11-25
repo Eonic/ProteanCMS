@@ -556,32 +556,6 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="commonStyle">
-    <xsl:choose>
-      <xsl:when test="@cssFramework='bs3' or @adminMode='true'">
-        <xsl:call-template name="bundle-css">
-          <xsl:with-param name="comma-separated-files">
-            <xsl:text>/ewcommon/css/base-bs.less</xsl:text>
-          </xsl:with-param>
-          <xsl:with-param name="bundle-path">
-            <xsl:text>~/Bundles/baseStyle</xsl:text>
-          </xsl:with-param>
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="bundle-css">
-          <xsl:with-param name="comma-separated-files">
-            <xsl:text>/ewcommon/css/base.less</xsl:text>
-          </xsl:with-param>
-          <xsl:with-param name="bundle-path">
-            <xsl:text>~/Bundles/baseStyle</xsl:text>
-          </xsl:with-param>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-
-    <xsl:if test="contains($userAgent, 'MSIE 7.0') and not(contains($userAgent, 'Trident/5.0'))">
-      <link rel="stylesheet" type="text/css" href="/ewcommon/icons/fa/css/font-awesome-ie7.min.css"/>
-    </xsl:if>
 
     <xsl:if test="not(@adminMode='true')">
       <xsl:apply-templates select="." mode="siteStyle"/>
@@ -594,27 +568,10 @@
         </style>
       </xsl:if>
 
-      <xsl:if test="@previewMode!='true'">
-        <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
-          <link rel="stylesheet" href="/ewcommon/js/jquery/cookiecuttr/cookiecuttr.css"/>
-        </xsl:if>
-      </xsl:if>
 
-      <xsl:if test="//Content[@moduleType='SlideCarousel'] and not(/Page/@adminMode)">
-        <link rel="stylesheet" href="/ewcommon/js/jquery/SlideCarousel/SlideCarousel.css"/>
-      </xsl:if>
-      <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
-        <link rel="stylesheet" href="/ewcommon/js/jquery/SliderGallery/skins/tn3/tn3.css"/>
-        <link rel="stylesheet" href="/ewcommon/js/jquery/SliderGallery/skins/tn3a/tn3a.css"/>
-        <link rel="stylesheet" href="/ewcommon/js/jquery/SliderGallery/skins/tn3e/tn3e.css"/>
-        <link rel="stylesheet" href="/ewcommon/js/jquery/SliderGallery/skins/tn3f/tn3f.css"/>
-      </xsl:if>
     </xsl:if>
     <xsl:apply-templates select="." mode="adminStyle"/>
     <xsl:if test="/Page/@adminMode">
-      <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 8') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 7') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0')">
-        <link rel="stylesheet" href="/ewcommon/css/Admin/skins/ie8.less"/>
-      </xsl:if>
       <xsl:if test="@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='CopyContent'">
         <xsl:apply-templates select="." mode="siteStyle"/>
       </xsl:if>
@@ -641,18 +598,9 @@
 
 
   <xsl:template match="Page" mode="js">
-    <!-- bring in jQuery and standard plugins -->
-    <xsl:apply-templates select="." mode="commonJs" />
-
-    <!-- site specific javascripts -->
-    <xsl:apply-templates select="." mode="siteJs"/>
-
-    <!-- admin javascripts -->
-    <xsl:if test="$adminMode">
-      <xsl:apply-templates select="." mode="adminJs"/>
-    </xsl:if>
-
+    <xsl:apply-templates select="." mode="siteJs"/>   
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
+    
     <!-- IF IE6 apply PNG Fix as standard -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
@@ -669,20 +617,9 @@
   <xsl:template match="Content" mode="contentDetailJS">
   </xsl:template>
 
-  <xsl:template match="Page" mode="commonJs">
-    <xsl:call-template name="bundle-js">
-      <xsl:with-param name="comma-separated-files">
-        <xsl:apply-templates select="." mode="commonJsFiles" />
-      </xsl:with-param>
-      <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/Jquery</xsl:text>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
-
   <xsl:template match="Page" mode="commonJsFiles">
     <xsl:text>~/ptn/core/jquery/3.6.0/jquery.min.js,</xsl:text>
-    <xsl:text>~/ptn/core/bs5/dist/js/bootstrap.min.js,</xsl:text>
+    <xsl:text>~/ptn/core/bs5/dist/js/bootstrap.bundle.min.js,</xsl:text>
   </xsl:template>
 
   <!-- template to bring in all the jQuery and plugins that are as standard on each page -->

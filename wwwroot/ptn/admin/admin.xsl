@@ -181,24 +181,27 @@
       <link rel="stylesheet" type="text/css" href="/ptn/admin/admin.scss?v={$scriptVersion}" />
     </xsl:template>
 
-    <xsl:template match="Page" mode="adminJs">
-      <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
-        <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
-      </xsl:if>
+    <xsl:template match="Page[@adminMode='true']" mode="siteJs">
+
       <xsl:call-template name="bundle-js">
         <xsl:with-param name="comma-separated-files">
+          <xsl:apply-templates select="." mode="commonJsFiles" />
           <xsl:text>~/ptn/core/vue/vue.min.js,</xsl:text>
           <xsl:text>~/ptn/core/vue/axios.min.js,</xsl:text>
           <xsl:text>~/ptn/core/vue/polyfill.js,</xsl:text>
           <xsl:text>~/ptn/core/vue/protean-vue.js,</xsl:text>
           <xsl:text>~/ptn/core/tinymce/jquery.tinymce.min.js,</xsl:text>
+          <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text>
+          <xsl:text>~/ptn/core/core.js,</xsl:text>
           <xsl:text>~/ptn/admin/admin.js</xsl:text>
         </xsl:with-param>
         <xsl:with-param name="bundle-path">
           <xsl:text>~/Bundles/Admin</xsl:text>
         </xsl:with-param>
       </xsl:call-template>
-
+      <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
+        <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
+      </xsl:if>
       <xsl:apply-templates select="." mode="siteAdminJs"/>
       <xsl:apply-templates select="." mode="LayoutAdminJs"/>
     </xsl:template>
@@ -228,17 +231,6 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <!-- Not Needed - Pulled into Admin.js 
-    <script src="/ewcommon/js/jquery/ajaxtreeview/jquery.ajaxtreeview.js" type="text/javascript">&#160;</script>-->
-      <script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
-      <script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
-      <script type="text/javascript" src="/ewcommon/js/jQuery/simplemodal/jquery.simplemodal-1.4.4.min.js">&#160;</script>
-      <xsl:if test="@cssFramework!='bs3'">
-        <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
-      </xsl:if>
-
-      <script type="text/javascript" src="/ewcommon/js/ewAdmin.js">&#160;</script>
-      <!--level: <xsl:value-of select="$menuLevelDepth"/>-->
 
       <xsl:apply-templates select="." mode="LayoutAdminJs"/>
 

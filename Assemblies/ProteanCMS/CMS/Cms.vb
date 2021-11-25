@@ -910,7 +910,9 @@ Public Class Cms
             If moConfig("ShowRelatedBriefDepth") <> "" Then
                 gnShowRelatedBriefDepth = moConfig("ShowRelatedBriefDepth")
             End If
-
+            If moConfig("cssFramework") = "bs5" Then
+                mcEWCommonFolder = "/ptn"
+            End If
 
         Catch ex As Exception
             'returnException("GlobalObjects", "open", ex, "", sProcessInfo, gbDebug)

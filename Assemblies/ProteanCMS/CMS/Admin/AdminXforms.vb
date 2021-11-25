@@ -1353,7 +1353,9 @@ Partial Public Class Cms
                 Try
 
                     cXmlFilePath = "/xforms/page/" & cFormName & ".xml"
-
+                    If goConfig("cssFramework") = "bs5" Then
+                        cXmlFilePath = "/admin" & cXmlFilePath
+                    End If
                     If Not MyBase.load(cXmlFilePath, myWeb.maCommonFolders) Then
                         'If not a custom page is loaded, pull in the standard elements
                         MyBase.NewFrm("EditPage")

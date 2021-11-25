@@ -262,7 +262,7 @@
       <xsl:attribute name="class">
         <xsl:value-of select="$dependantClass" />
         <xsl:if test="@id!=$selectedCase and not(descendant-or-self::alert)">
-          <xsl:text> hidden</xsl:text>
+          <xsl:text> invisible</xsl:text>
         </xsl:if>
         <xsl:text> form-group</xsl:text>
       </xsl:attribute>
@@ -723,11 +723,6 @@
             <xsl:if test="@suffixIcon!=''">
               <span class="input-group-addon">
                 <i class="{@suffixIcon}">&#160;</i>
-              </span>
-            </xsl:if>
-            <xsl:if test="help">
-              <span class="input-group-btn">
-                <xsl:apply-templates select="." mode="infoButton"/>
               </span>
             </xsl:if>
             <xsl:if test="hint">
@@ -2065,7 +2060,7 @@
     <select name="{$ref}" id="{$ref}">
 
       <xsl:attribute name="class">
-        <xsl:text>form-select</xsl:text>
+        <xsl:text>form-select </xsl:text>
         <xsl:choose>
           <xsl:when test="ancestor::switch and contains(@class,'required')">
             <xsl:apply-templates select="." mode="isRequired"/>
@@ -2200,7 +2195,7 @@
         <xsl:apply-templates select="." mode="xform"/>
       </xsl:when>
       <xsl:when test="contains(@class,'hidden')">
-        <div class="form-group hidden">
+        <div class="form-group invisible">
           <xsl:apply-templates select="." mode="xform"/>
         </div>
       </xsl:when>
@@ -3127,11 +3122,11 @@
           <span class="req">*</span>
         </xsl:if>
       </label>
+        <xsl:apply-templates select="parent::*[help]" mode="infoButton"/>
     </xsl:if>
   </xsl:template>
 
   <xsl:template match="label" mode="xform-label">
-
     <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
   </xsl:template>
 
@@ -3154,10 +3149,6 @@
         <xsl:copy-of select="help/node()"/>
       </span>
     </xsl:if>
-    <!--This has moved to popover features-->
-    <!--xsl:if test="alert">
-      <xsl:apply-templates select="alert" mode="inlineAlert"/>
-    </xsl:if-->
   </xsl:template>
 
   <xsl:template match="input[not(contains(@class,'hidden'))]" mode="xform_legend">
@@ -3175,14 +3166,15 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
+    &#160;
+    <a data-contentwrapper="#popover-{$ref2}" data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}">
+      <i class="fas fa-info-circle">
+        <xsl:text> </xsl:text>
+      </i>
+    </a>
     <div id="popover-{$ref2}" class="popover-{$ref2} popoverContent" role="tooltip">
       <xsl:copy-of select="help/node()"/>
     </div>
-    <button type="button" class="btn btn-info" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="bottom" rel="frmPopover" data-original-title="{label/node()}" title="{label/node()}">
-      <i class="fa fa-info">
-        <xsl:text> </xsl:text>
-      </i>
-    </button>
   </xsl:template>
 
   <xsl:template match="input[not(contains(@class,'hidden'))] | secret | select | select1 | range | textarea | upload" mode="alertButton">
