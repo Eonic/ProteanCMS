@@ -9,7 +9,7 @@
   
   <xsl:import href="../core/functions.xsl"/>
   <xsl:import href="../core/xforms.xsl"/>
-  <xsl:import href="xforms.xsl"/>
+  <xsl:import href="admin-xforms.xsl"/>
   <xsl:import href="../core/localisation.xsl"/>
 
   <xsl:template name="initialiseSocialBookmarks"></xsl:template>
