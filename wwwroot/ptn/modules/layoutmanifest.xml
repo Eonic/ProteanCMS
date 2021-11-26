@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+<PageLayouts imgPath="/ptn/modules/">
   <LayoutGroup name="Modules">
     <Layout name="Modules_1_column">Devise your own 1 column page layouts with any content types.</Layout>
     <Layout name="Modules_2_columns">Devise your own 2 column page layouts with any content types.</Layout>
