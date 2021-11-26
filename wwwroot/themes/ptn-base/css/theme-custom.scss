@@ -39,24 +39,24 @@ body {
 }
 //heading mixins
 @mixin h1-style() {
-    .heading-style(40px)
+    @include heading-style(40px);
 }
 
 @mixin h2-style() {
-    .heading-style(35px)
+    @include heading-style(35px)
 }
 
 @mixin h3-style() {
-    .heading-style(25px)
+    @include heading-style(25px)
 }
 
 @mixin h4-style() {
-    .heading-style(18px)
+    @include heading-style(18px)
 }
 
 .Site {
     h1 {
-        .h1-style
+        @include h1-style
     }
 
     h2 {
@@ -65,7 +65,7 @@ body {
     }
 
     h3 {
-        .h3-style
+        @include h3-style
     }
 
     h3 > .center-large {
@@ -74,7 +74,7 @@ body {
     }
 
     h4 {
-        .h4-style
+        @include h4-style
     }
 
     h4.modal-title {
@@ -87,7 +87,7 @@ body {
     //main title
     #mainTitle {
         h1 {
-            .h1-style
+            @include h1-style
         }
     }
     //section title
@@ -162,11 +162,11 @@ body {
 //------------------------------------------------
 .Site {
     h3.title .center-block i when($icon-circles = true) {
-        .icon-circles
+        @include icon-circles
     }
 
     h3.title .center-block span.upload-icon when($icon-circles = true) {
-        .icon-circles
+        @include icon-circles
     }
 
     h3.title .center-block span.upload-icon {
@@ -1251,7 +1251,7 @@ $percentage: $link-hover-percentage;
         }
 
         .morelink .btn {
-            .btn-mixin()
+            @include btn-mixin()
         }
 
         .footer-utility {
@@ -1283,7 +1283,7 @@ $percentage: $link-hover-percentage;
         }
 
         .listItem .morelink a.btn when ($btn-clean = true) {
-            .link-color($footer-link;
+            @include link-color($footer-link;
             )
         }
 
