@@ -1,0 +1,674 @@
+﻿.Site {
+    //box padding
+    .alert,
+    .well {
+        padding: $box-padding-vertical $box-padding-horizontal;
+
+        .cols1 {
+            margin-left: -$box-padding-horizontal;
+            margin-right: -$box-padding-horizontal;
+        }
+    }
+
+    .list-group-item,
+    .panel-body,
+    .well {
+        padding: $box-padding-vertical $box-padding-horizontal;
+    }
+
+    .panel-heading {
+        padding: $box-padding-vertical $box-padding-horizontal 0;
+    }
+
+    .panel-footer {
+        padding: 10px $box-padding-horizontal;
+    }
+
+    div.alert-title,
+    div.well-heading {
+        margin-top: -$box-padding-vertical;
+        padding-top: 10px;
+    }
+
+    .panel,
+    .alert,
+    .well,
+    .nobox {
+        margin-bottom: $box-margin;
+    }
+
+    .alert .alert-image,
+    .well .well-image {
+        margin-left: -$box-padding-horizontal;
+        margin-right: -$box-padding-horizontal;
+        margin-bottom: $box-padding-vertical;
+    }
+
+    .alert-footer,
+    .well-footer {
+        padding-top: 10px;
+    }
+
+    .panel {
+        padding-top: $box-padding-vertical;
+        padding-bottom: ($box-padding-vertical/2);
+
+        .panel-heading {
+            padding-top: 0;
+            padding-bottom: ($box-padding-vertical/2);
+        }
+
+        .panel-image {
+            margin-bottom: $box-padding-vertical;
+        }
+
+        .panel-body,
+        .list-group-item {
+            padding-top: 0;
+            padding-bottom: ($box-padding-vertical/2);
+        }
+
+        .list-group-item {
+        }
+
+        .panel-footer {
+            padding-top: 0;
+            padding-bottom: 0;
+
+            &.center-block-footer {
+                text-align: center;
+
+                .btn {
+                    float: none
+                }
+            }
+        }
+    }
+
+    .panelImage {
+        padding-top: 0;
+
+        div:first-child.panel-heading {
+            padding-top: $box-padding-vertical;
+        }
+    }
+
+    @media(max-width:$xs-grid-max) {
+        //xs box padding
+        .alert,
+        .well {
+            padding: $xs-box-padding-vertical $xs-box-padding-horizontal;
+
+            .cols1 {
+                margin-left: -$xs-box-padding-horizontal;
+                margin-right: -$xs-box-padding-horizontal;
+            }
+        }
+
+        .list-group-item,
+        .panel-body,
+        .well {
+            padding: $xs-box-padding-vertical $xs-box-padding-horizontal;
+        }
+
+        .panel-heading {
+            padding: $xs-box-padding-vertical $xs-box-padding-horizontal 0;
+        }
+
+        .panel-footer {
+            padding: 10px $xs-box-padding-horizontal;
+        }
+
+        div.alert-title,
+        div.well-heading {
+            margin-top: -$xs-box-padding-vertical;
+            padding-top: 10px;
+        }
+
+        .panel,
+        .alert,
+        .well,
+        .nobox {
+            margin-bottom: $xs-box-margin;
+        }
+
+        .alert .alert-image,
+        .well .well-image {
+            margin-left: -$xs-box-padding-horizontal;
+            margin-right: -$xs-box-padding-horizontal;
+            margin-bottom: $xs-box-padding-vertical;
+        }
+
+        .alert-footer,
+        .well-footer {
+            padding-top: 10px;
+        }
+
+        .panel {
+            padding-top: $xs-box-padding-vertical;
+            padding-bottom: ($xs-box-padding-vertical/2);
+
+            .panel-heading {
+                padding-top: 0;
+                padding-bottom: ($xs-box-padding-vertical/2);
+            }
+
+            .panel-image {
+                margin-bottom: $xs-box-padding-vertical;
+            }
+
+            .panel-body,
+            .list-group-item {
+                padding-top: 0;
+                padding-bottom: ($xs-box-padding-vertical/2);
+            }
+
+            .list-group-item {
+            }
+
+            .panel-footer {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+        }
+
+        .panelImage {
+            padding-top: 0;
+
+            div:first-child.panel-heading {
+                padding-top: $xs-box-padding-vertical;
+            }
+        }
+    }
+}
+//------------------------------------------------
+//PANELS
+//------------------------------------------------
+#adminLayout .boxStyle,
+.Site {
+    h3.panel-title {
+        @include h4-style;
+        margin-bottom: 0;
+    }
+
+    .panel-default > .panel-heading + .panel-collapse .panel-body {
+        border-color: $tint-border;
+    }
+
+    .panel-footer {
+        border-color: $tint-border;
+        background: $stronger-tint;
+    }
+
+    .panel {
+        border-width: 0;
+        @include clear-shadow;
+
+        .panel-heading {
+            border-radius: $border-radius-base $border-radius-base 0 0;
+            border-width: 0;
+
+            h6.panel-title {
+                font-size: 1em;
+            }
+        }
+
+        .panel-footer {
+            background: none;
+            border-width: 0;
+
+            a.btn when($btn-clean-footer = true) {
+                @include btn-clean;
+            }
+        }
+    }
+
+    .panel-footer {
+        @include clearfix;
+    }
+
+    .panel-title {
+        color: $headings-color;
+    }
+    //DEFAULT PANEL
+    a .panel-default {
+        color: $text-color;
+    }
+
+    .panel-default {
+        background: #fff;
+        border: 2px solid $tint-border;
+        color: $text-color;
+
+        .panel-heading {
+            border-color: $tint-border;
+            background: #fff;
+
+            h3.panel-title {
+                color: $headings-color;
+            }
+        }
+    }
+
+    .heading-only {
+        @include panel-clean;
+
+        h3.panel-title {
+            font-size: $font-size-base;
+            font-weight: $font-weight-base;
+            margin-bottom: 0 !important;
+
+            a {
+                color: $text-color;
+
+                &:hover {
+                    color: $brand-primary;
+                }
+
+                i {
+                    color: $brand-primary;
+                    margin-right: 5px;
+                }
+            }
+        }
+
+        .FormattedText {
+            display: none;
+        }
+    }
+}
+
+//PANEL	MIXIN
+@mixin panel-mixin($color,$contrast: contrast($color,#fff,$contrast-color),$link: fade($contrast,80%),$hover: fade($contrast,70%),$btn-bg: $contrast,$btn-color: $color,$btn-bg-hover: fade($btn-bg,90%)) {
+    background: $color;
+    color: $contrast;
+
+    .panel-heading {
+        background: none;
+
+        h1, h2, h3, h4, h5, h6 {
+            color: $contrast;
+
+            a {
+                color: $contrast;
+            }
+
+            a:hover {
+                color: $hover
+            }
+        }
+    }
+
+    .panel-body,
+    .list-group {
+        a {
+            color: $link;
+        }
+
+        a:hover {
+            color: $hover;
+        }
+
+        li,
+        p,
+        .title,
+        .tags,
+        .author,
+        label,
+        legend {
+            color: $contrast;
+
+            a {
+                color: $link
+            }
+
+            a:hover {
+                color: $hover;
+            }
+        }
+
+        h1, h2, h3, h4, h5, h6,
+        h3.title,
+        h4.media-heading {
+            color: $contrast;
+
+            a {
+                color: $contrast
+            }
+
+            a:hover {
+                color: $hover;
+            }
+        }
+        //a.btn{@include btn-mixin($color);}
+        .btn-default {
+            background: $btn-bg;
+            border-color: $btn-bg;
+            color: $btn-color;
+
+            &:hover {
+                background-color: $btn-bg-hover;
+                border-color: $btn-bg-hover;
+                color: $btn-color;
+            }
+        }
+
+        .btn-default when($btn-clean = true) {
+            @include btn-clean;
+            color: $contrast;
+
+            &:hover {
+                color: $hover;
+            }
+        }
+    }
+
+    .pager a {
+        color: $color;
+        background-color: $contrast;
+        border-color: $contrast;
+
+        &:hover {
+            background-color: lighten($color,50%);
+            border-color: lighten($color,50%);
+        }
+    }
+
+    .pager .disabled a {
+        background-color: fade($contrast,40%);
+        border-color: fade($contrast,0%);
+    }
+
+    .panel-footer {
+        background: none;
+        border: none;
+        padding-top: 0;
+
+        .btn {
+            @include btn-mixin($btn-bg);
+        }
+
+        .btn {
+            background: $btn-bg;
+            border-color: $btn-bg;
+            color: $btn-color;
+
+            &:hover {
+                background-color: $btn-bg-hover;
+                border-color: $btn-bg-hover;
+                color: $btn-color;
+            }
+        }
+
+        .btn-default when($btn-clean-footer = true) {
+            @include btn-clean;
+            color: $contrast;
+
+            &:hover {
+                color: $hover;
+            }
+        }
+    }
+}
+
+.boxStyle .panel-heading {
+    font-family: $headings-font-family;
+}
+
+.Site,
+#adminLayout .boxStyle {
+    //PANEL	COLOURS
+    .panel-action {
+        @include panel-variant($panel-action-border;
+        $panel-action-text;
+        $panel-action-heading-bg;
+        $panel-action-border
+        );
+    }
+
+    .alert-action {
+        @include alert-variant($alert-action-bg;
+        $alert-action-border;
+        $alert-action-text
+        );
+    }
+
+    .panel-primary {
+        .panel-mixin($state-primary-bg)
+    }
+
+    .panel-action {
+        .panel-mixin($state-action-bg)
+    }
+
+    .panel-info {
+        .panel-mixin($state-info-bg)
+    }
+
+    .panel-success {
+        .panel-mixin($state-success-bg)
+    }
+
+    .panel-warning {
+        .panel-mixin($state-warning-bg)
+    }
+
+    .panel-danger {
+        .panel-mixin($state-danger-bg)
+    }
+
+    .alert-action {
+        .alert-mixin($state-action-bg,contrast($state-action-bg,#fff,$contrast-color))
+    }
+
+    .alert-info {
+        .alert-mixin($state-info-bg,contrast($state-info-bg,#fff,$contrast-color))
+    }
+
+    .alert-success {
+        .alert-mixin($state-success-bg,contrast($state-success-bg,#fff,$contrast-color))
+    }
+
+    .alert-warning {
+        .alert-mixin($state-warning-bg,contrast($state-warning-bg,#fff,$contrast-color))
+    }
+
+    .alert-danger {
+        .alert-mixin($state-danger-bg,contrast($state-danger-bg,#fff,$contrast-color))
+    }
+}
+//------------------------------------------------
+//ALERTS
+//------------------------------------------------
+@mixin alert-mixin($color,$contrast) {
+    a {
+        color: lighten($color,30%);
+    }
+
+    a:hover {
+        color: lighten($color, 10%);
+    }
+
+    background: $color;
+    color: $contrast;
+
+    li,
+    p,
+    .title,
+    .media-heading,
+    .tags,
+    label,
+    legend,
+    h1, h2, h3, h4, h5, h6 {
+        color: $contrast;
+
+        a {
+            color: lighten($color,30%);
+        }
+
+        a:hover {
+            color: lighten($color, 10%);
+        }
+    }
+
+    .listItem,
+    .cols {
+        border-color: darken($color,5%);
+    }
+
+    .list-group {
+        a.btn when($btn-clean = true) {
+            @include btn-clean;
+            color: lighten($color,30%);
+
+            &:hover {
+                color: lighten($color, 10%);
+            }
+        }
+
+        a.btn when($btn-clean = false) {
+            color: $color;
+            background-color: $contrast;
+            border-color: $contrast;
+
+            &:hover {
+                background-color: lighten($color,50%);
+                border-color: lighten($color,50%);
+            }
+        }
+    }
+
+    a.btn-default {
+        background: $contrast;
+        border-color: $contrast;
+        color: $color;
+
+        &:hover {
+            background-color: fade($contrast,90%);
+            border-color: fade($contrast,90%);
+            color: $color;
+        }
+    }
+
+    .pager a {
+        color: $color;
+        background-color: $contrast;
+        border-color: $contrast;
+
+        &:hover {
+            background-color: lighten($color,50%);
+            border-color: lighten($color,50%);
+        }
+    }
+
+    .pager .disabled a {
+        background-color: fade($contrast,40%);
+        border-color: fade($contrast,0%);
+    }
+}
+//------------------------------------------------
+//ALERTS, WELLS AND JUMBOTRON
+//------------------------------------------------
+.Site {
+    .alert-body {
+        @include clearfix;
+    }
+
+    .alert-footer,
+    .well-footer {
+        @include clearfix();
+    }
+
+    .alert p:last-child {
+        margin-bottom: 0;
+    }
+
+    .jumbotron {
+        @include clearfix();
+    }
+
+    .jumbotron .morelink a {
+        @include btn-primary;
+        @include btn-lg;
+    }
+
+    .well {
+        border: none;
+        margin-bottom: $box-margin;
+    }
+
+    .sentMessage {
+        @include alert;
+        @include alert-success;
+        .alert-mixin($state-success-bg,#fff)
+    }
+
+    #cartFull .template_2_Columns .column1,
+    #cartFull .template_2_Columns .column2 {
+        @include make-sm-column(6);
+    }
+
+    #cartFull #cartInvoice {
+        @include alert;
+        @include alert-success;
+        @include alert-mixin($state-success-bg,#fff);
+
+        .button {
+            @include pull-right();
+        }
+    }
+
+    .form-group span.alert {
+        @include alert-danger;
+        @include alert-mixin($state-danger-bg,#fff);
+        padding: 7px 11px;
+        display: inline-block;
+    }
+
+    .jumbotron,
+    .well {
+        background: $light-tint;
+    }
+
+    .well .well-heading h3.well-title {
+        border-color: $tint-border;
+    }
+
+    .well h3.well-title {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .well h3.well-title {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: $well-color;
+        border-bottom: $border-width $border-style $list-group-border;
+        padding-bottom: 3px;
+    }
+}
+
+@mixin panel-clean() {
+    background: none;
+    padding: 0;
+    border: 0;
+
+    .panel-heading,
+    .panel-body,
+    .list-group,
+    .panel-footer {
+        background: none;
+        padding: 0;
+        border: 0;
+    }
+
+    .list-group {
+        margin-left: -($grid-gutter-width/2);
+        margin-right: -($grid-gutter-width/2);
+
+        @media(max-width:$xs-grid-max) {
+            margin-left: -($xs-grid-gutter-width/2);
+            margin-right: -($xs-grid-gutter-width/2);
+        }
+    }
+}

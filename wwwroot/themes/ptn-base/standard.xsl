@@ -3,28 +3,33 @@
 
   <!-- ######################################## IMPORT ALL COMMON XSL's ########################################### -->
 
-  <!--<xsl:import href="../../../../../ewcommon_v5-1/xsl/CommonImports.xsl"/>
-  <xsl:import href="../../../../../ewcommon_v5-1/xsl/cart/FullResponsiveCart.xsl"/>-->
+  <xsl:import href="../../../../../ewcommon_v5-1/xsl/MinimalImports.xsl"/>
   <xsl:import href="../../../../../ptn/core/core.xsl"/>
   <xsl:import href="../../../../../ptn/modules/modules.xsl"/>
-  <xsl:import href="../../xsl/InstalledModules.xsl"/>
-  <xsl:import href="CustomBoxStyles.xsl"/>
+  <!--<xsl:import href="../../xsl/InstalledModules.xsl"/>-->
+  <xsl:import href="D:\HostingSpaces\EonicSites\v5demo\wwwroot\xsl\InstalledModules.xsl"/>
+  <xsl:import href="custom-box-styles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
 
 
   <!-- ############################################ THEME VARIABLES ############################################### -->
 
-  <xsl:variable name="theme">ProteanMasterTheme</xsl:variable>
+  <xsl:variable name="theme">ptn-base</xsl:variable>
+  <!--menu below header-->
+  <xsl:variable name="header-layout">header-menu-below</xsl:variable>
+  <!--menu within header-->
+  <!--<xsl:variable name="header-layout">header-menu-right</xsl:variable>-->
+  
   <xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
   <xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
   <xsl:variable name="HomeInfo">false</xsl:variable>
   <xsl:variable name="HomeNav">true</xsl:variable>
   <xsl:variable name="NavFix">false</xsl:variable>
-  <xsl:variable name="nav-dropdown">hover</xsl:variable>
+  <xsl:variable name="nav-dropdown">true</xsl:variable>
   <!--true/false/hover-->
   <xsl:variable name="SideSubWidth">3</xsl:variable>
   <xsl:variable name="SideSubWidthCustom"></xsl:variable>
-  <xsl:variable name="themeBreadcrumb">true</xsl:variable>
+  <xsl:variable name="themeBreadcrumb">false</xsl:variable>
   <xsl:variable name="themeTitle">true</xsl:variable>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
   <xsl:variable name="thWidth">500</xsl:variable>
@@ -64,18 +69,34 @@
   <!-- ############################################### THEME CSS's ################################################ -->
 
   <xsl:template match="Page" mode="siteStyle">
-    <xsl:call-template name="bundle-css">
-      <xsl:with-param name="comma-separated-files">
-        <xsl:text>/ewThemes/</xsl:text>
-        <xsl:value-of select="$theme"/>
-        <xsl:text>/css/bootstrapBase.less</xsl:text>
-      </xsl:with-param>
-      <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/</xsl:text>
-        <xsl:value-of select="$theme"/>
-      </xsl:with-param>
-    </xsl:call-template>
-
+    <xsl:choose>
+      <xsl:when test="$header-layout='header-flex1'">
+        <xsl:call-template name="bundle-css">
+          <xsl:with-param name="comma-separated-files">
+            <xsl:text>/ewThemes/</xsl:text>
+            <xsl:value-of select="$theme"/>
+            <xsl:text>/css/bootstrapBase2.less</xsl:text>
+          </xsl:with-param>
+          <xsl:with-param name="bundle-path">
+            <xsl:text>~/Bundles/</xsl:text>
+            <xsl:value-of select="$theme"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="bundle-css">
+          <xsl:with-param name="comma-separated-files">
+            <xsl:text>/ewThemes/</xsl:text>
+            <xsl:value-of select="$theme"/>
+            <xsl:text>/css/bootstrapBase.less</xsl:text>
+          </xsl:with-param>
+          <xsl:with-param name="bundle-path">
+            <xsl:text>~/Bundles/</xsl:text>
+            <xsl:value-of select="$theme"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:if test="$font-import-base!='none'">
       <link href='//fonts.googleapis.com/css?family={$font-import-base}' rel='stylesheet' type='text/css' />
     </xsl:if>
@@ -91,7 +112,7 @@
       <xsl:with-param name="comma-separated-files">
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js-plugins/moduleAnimate/jquery.appear.js,</xsl:text>
+        <xsl:text>/js/jquery.appear.js,</xsl:text>
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/offcanvas.js,</xsl:text>
@@ -106,9 +127,6 @@
         <xsl:text>/js/theme-specific.js,</xsl:text>
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js/jasny-bootstrap.min.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
-        <xsl:value-of select="$theme"/>
         <xsl:text>/js/smoothproducts.js,</xsl:text>
         <xsl:text>~/ewCommon/js/newcart.js</xsl:text>
       </xsl:with-param>
@@ -119,7 +137,6 @@
   </xsl:template>
 
   <!-- ############################################ BOX STYLES ############################################### -->
-
 
   <xsl:template match="Content[@type='Module']" mode="themeModuleExtras">
     <xsl:if test="@modAnim!=''">
@@ -144,15 +161,13 @@
 
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">600</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">600</xsl:template>
-  <!-- ############################################ PAGE LAYOUT ############################################### -->
-
 
 
   <!-- ############################################ CART ############################################### -->
   <xsl:template match="/" mode="cartBrief">
     <div id="cartBrief">
       <div class="cartinfo">
-        <a href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
+        <a href="{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
           <div class="cart-icon">
             <i class="fa fa-shopping-basket">
               <xsl:text> </xsl:text>
@@ -229,7 +244,7 @@
                 </xsl:otherwise>
               </xsl:choose>
             </p>
-            <a class=""  href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
+            <a class=""  href="{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
               View basket&#160;<i class="fa fa-chevron-right">
                 <xsl:text> </xsl:text>
               </i>
@@ -271,7 +286,6 @@
 
 
   <xsl:template match="/" mode="loginTop">
-
     <div id="signin">
       <a class="loginText login-btn" data-toggle="modal" data-target="#LoginModal">
         <xsl:if test="/Page/User[@id!='']">
@@ -281,22 +295,21 @@
         </xsl:if>
         <xsl:choose>
           <xsl:when test="/Page/User">My Account</xsl:when>
-          <xsl:otherwise>Login</xsl:otherwise>
+          <xsl:otherwise>Log in</xsl:otherwise>
         </xsl:choose>
       </a>
     </div>
   </xsl:template>
 
   <xsl:template match="/" mode="loginTopxs">
-    <div id="loginBriefxs" data-toggle="modal" data-target="#LoginModal">
-      <div id="signinxs">
-        <a class="loginText login-small">
-          <i class="fa fa-user fa-2x">
-            <xsl:text> </xsl:text>
-          </i>
-        </a>
-      </div>
-    </div>
+    <li id="loginBriefxs" >
+      <a class="loginText login-small" data-toggle="modal" data-target="#LoginModal">
+        <xsl:choose>
+          <xsl:when test="/Page/User">My Account</xsl:when>
+          <xsl:otherwise>Log in</xsl:otherwise>
+        </xsl:choose>
+      </a>
+    </li>
   </xsl:template>
 
   <!-- ########################################## MEMBERSHIP TEMPLATES ############################################ -->
@@ -307,7 +320,6 @@
       <strong>
         <xsl:choose>
           <xsl:when test="/Page/User/FirstName!=''">
-            <!--<xsl:value-of select="/Page/User/FirstName/node()"/>&#160;<xsl:value-of select="/Page/User/LastName/node()"/>&#160;-->
             <xsl:value-of select="/Page/User/FirstName/node()"/>&#160;
           </xsl:when>
           <xsl:otherwise>
@@ -318,7 +330,6 @@
     </div>
   </xsl:template>
 
-  <!-- -->
   <xsl:template match="/" mode="membershipBrief">
     <xsl:choose>
       <xsl:when test="/Page/User">
@@ -336,17 +347,13 @@
             </xsl:otherwise>
           </xsl:choose>
         </div>
-
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="loginBrief"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  <!-- -->
-  
-  
-
+ 
 
   <!-- ############################################# BESPOKE ############################################### -->
 
