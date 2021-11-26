@@ -1,6 +1,6 @@
 ﻿//applies body bg styles from theme settings
 body {
-    background: $background-repeat $background-position $background-attachment $body-bg;
+    background: $body-bg;
 }
 
 @mixin transition-all($speed: 0.2s) {
@@ -161,11 +161,11 @@ body {
 //ICONS
 //------------------------------------------------
 .Site {
-    h3.title .center-block i when($icon-circles = true) {
+    h3.title .center-block i {
         @include icon-circles
     }
 
-    h3.title .center-block span.upload-icon when($icon-circles = true) {
+    h3.title .center-block span.upload-icon {
         @include icon-circles
     }
 
@@ -210,10 +210,7 @@ body {
 //LINKS
 //------------------------------------------------
 //Link Mixins
-@mixin link-color($color: $link-color;
-$percentage: $link-hover-percentage;
-
-) {
+@mixin link-color($color: $link-color,$percentage: $link-hover-percentage,) {
     color: $color;
 
     &:hover,
@@ -222,10 +219,7 @@ $percentage: $link-hover-percentage;
     }
 }
 
-@mixin link-color-lighten($color: $link-color;
-$percentage: $link-hover-percentage;
-
-) {
+@mixin link-color-lighten($color: $link-color,$percentage: $link-hover-percentage,) {
     color: $color;
 
     &:hover,
@@ -285,9 +279,11 @@ $percentage: $link-hover-percentage;
         float: $btn-align;
     }
 
-    .listItem .btn when($btn-clean = true) {
-        @include btn-clean;
-        @include btn-icon(angle);
+    .listItem .btn {
+        @if $btn-clean == true {
+            @include btn-clean;
+            @include btn-icon(angle);
+        }
     }
 
     .entryFooter {
@@ -300,7 +296,7 @@ $percentage: $link-hover-percentage;
     }
 
     a.btn-danger {
-        .btn-mixin($brand-danger)
+        @include btn-mixin($brand-danger)
     }
 
     .btn-action {
@@ -331,12 +327,7 @@ $percentage: $link-hover-percentage;
 //BACKGROUNDS
 //------------------------------------------------
 .Site {
-    @mixin background-coloring($background: $light-tint;
-    $color: contrast($background,$text-color,#fff);
-    $link: $link-color;
-    $hover: darken($link-color,$link-hover-percentage)
-
-    ) {
+    @mixin background-coloring($background: $light-tint, $color: contrast($background,$text-color,#fff), $link: $link-color, $hover: darken($link-color,$link-hover-percentage)) {
         background: $background;
         color: contrast($background,$text-color,#fff);
 
@@ -361,14 +352,14 @@ $percentage: $link-hover-percentage;
         .module-FormattedText.nobox.module-centred > .editable > h3.title:not(.module-with-icon),
         .module-FormattedText.nobox.module-centred > h3.title.module-with-icon,
         .module-FormattedText.nobox.module-centred > .editable > h3.title.module-with-icon {
-            @include heading-color($color:$color;
+            @include heading-color($color:$color,
             $link: $color
             );
         }
     }
 
-    @mixin background-spacing($margin: $section-padding;
-    $xs-margin: $xs-section-padding;
+    @mixin background-spacing($margin: $section-padding,
+    $xs-margin: $xs-section-padding,
 
     ) {
         margin-bottom: $margin;
@@ -1282,9 +1273,10 @@ $percentage: $link-hover-percentage;
             }
         }
 
-        .listItem .morelink a.btn when ($btn-clean = true) {
-            @include link-color($footer-link;
-            )
+        .listItem .morelink a.btn {
+            @if $btn-clean == true {
+                @include link-color($footer-link)
+            }
         }
 
         .fa-inverse {
@@ -1375,9 +1367,9 @@ body .cc-cookies {
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
 }
 
-@mixin box-content($background: $body-bg;
-$color: contrast($background,#fff,$text-color);
-$link: $link-color;
+@mixin box-content($background: $body-bg,
+$color: contrast($background,#fff,$text-color),
+$link: $link-color,
 $hover: darken($link-color,$link-hover-percentage)
 
 ) {
@@ -1387,15 +1379,15 @@ $hover: darken($link-color,$link-hover-percentage)
     color: $color;
 }
 
-@mixin list-box-content($background: $body-bg;
-$color: contrast($background,#fff,$text-color);
-$link: $link-color;
-$hover: darken($link-color,$link-hover-percentage);
-$heading: $headings-color;
-$padding-vertical: $box-padding-vertical;
-$padding-horizontal: $box-padding-horizontal;
-$btn-height: 30px;
-$btn-align: $btn-align;
+@mixin list-box-content($background: $body-bg,
+$color: contrast($background,#fff,$text-color),
+$link: $link-color,
+$hover: darken($link-color,$link-hover-percentage),
+$heading: $headings-color,
+$padding-vertical: $box-padding-vertical,
+$padding-horizontal: $box-padding-horizontal,
+$btn-height: 30px,
+$btn-align: $btn-align
 
 ) {
     .listItem .lIinner {
@@ -1420,15 +1412,15 @@ $btn-align: $btn-align;
 
         h3.title,
         h4.media-heading {
-            @include heading-color($color:$heading;
+            @include heading-color($color:$heading,
             $link: $heading
             );
         }
     }
 }
 
-@mixin list-btn-align($btn-height: 30px;
-$padding: 20px;
+@mixin list-btn-align($btn-height: 30px,
+$padding: 20px,
 
 ) {
     height: 100%;
@@ -1444,7 +1436,7 @@ $padding: 20px;
     }
 }
 
-@mixin grid-spacing($space: ($grid-gutter-width*2);
+@mixin grid-spacing($space: ($grid-gutter-width*2),
 $vertical-space: $space
 
 ) {
@@ -1463,7 +1455,7 @@ $vertical-space: $space
     }
 }
 
-@mixin list-grid-spacing($space: ($grid-gutter-width*2);
+@mixin list-grid-spacing($space: ($grid-gutter-width*2),
 $vertical-space: $space
 
 ) {
