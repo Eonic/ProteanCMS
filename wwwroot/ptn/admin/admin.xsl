@@ -816,7 +816,6 @@
       </div>-->
 
       </div>
-      <div class="terminus">&#160;</div>
 
       <xsl:if test="not(/Page[@ewCmd='Normal'])">
         <!--<div id="breadcrumb">-->
