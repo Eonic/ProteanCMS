@@ -16,6 +16,10 @@ body.normalMode {
 }
 
 .ewAdmin #adminHeader {
+    img.cms-logo {
+        padding: 13px 10px;
+    }
+
     background: $admin-header-bg;
     //height:103px;
     z-index: 1000;
@@ -25,12 +29,17 @@ body.normalMode {
     font-weight: 300;
     padding: 0;
 
+    a {
+        text-decoration: none;
+    }
+
     i {
         padding-right: 7px;
     }
 
     .navbar {
         min-height: 1px !important;
+        padding: 0;
     }
 
     .navbar-brand {
@@ -57,11 +66,14 @@ body.normalMode {
     }
 
     .navbar-nav {
+        flex-direction: row;
+
         > li > a {
             padding-left: 14px;
             padding-right: 14px;
             line-height: 21px;
             color: $admin-header-color;
+            display: block;
 
             &:hover {
                 color: $admin-header-color-link;
@@ -190,7 +202,7 @@ body.normalMode {
         background-color: $admin-header-bg-light;
         border-right: 3px solid fadeout($admin-header-color, 70%);
         font-size: 1.2em;
-        color: fadeout($admin-header-color,30%);
+        color: lighten($admin-header-color,30%);
         padding-right: 5px;
         font-family: $admin-header-font;
         background: $admin-header-logo;
@@ -257,6 +269,17 @@ body.normalMode {
     }
 
     .admin-department-menu {
+        align-items: flex-start;
+
+
+        .navbar-nav {
+            float: left;
+        }
+
+        .navbar-right {
+            float:right;
+        }
+
         .in {
             background: $admin-header-bg;
         }
@@ -342,6 +365,14 @@ body.normalMode {
     }
     // - MAIN MENU
     .admin-main-menu {
+        @media(min-width:$admin-nav-breakpoint) {
+            margin-left: 175px;
+        }
+
+        @media(min-width:$screen-md-min) {
+            margin-left: 215px;
+        }
+
         font-size: 1.1em;
         background-color: $admin-header-bg-light;
 
@@ -462,6 +493,12 @@ body.normalMode {
     }
     // - SUB MENU
     .admin-sub-menu {
+        margin-left: 175px;
+
+        @media(min-width:$screen-md-min) {
+            margin-left: 215px;
+        }
+
         font-size: 0.8em;
         color: $admin-header-color;
 
@@ -551,7 +588,7 @@ body.normalMode {
         border: 0;
 
         .navbar-nav {
-            background: $admin-header-bg; 
+            background: $admin-header-bg;
             flex-direction: row;
         }
 
