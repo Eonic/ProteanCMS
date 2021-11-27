@@ -100,17 +100,16 @@ body.ewAdmin.layout-AdmHome {
             position: absolute;
             right: 0px;
         }
-
-        background-color: lighten($admin-header-bg,30%);
+        //background-color: lighten($admin-header-bg,30%);
         font-family: $admin-header-font;
-        color: #a5a7a9;
+        //color: #a5a7a9;
         text-align: right;
         padding: 15px 30px !important;
         border-radius: 0;
         z-index: 10;
 
         a {
-            color: #fff;
+            color: $admin-primary;
 
             &:hover {
                 color: $admin-header-color-link;
@@ -125,7 +124,7 @@ body.ewAdmin.layout-AdmHome {
         margin-bottom: 0 !important;
 
         li:before {
-            color: #a5a7a9 !important;
+            //    color: #a5a7a9 !important;
             content: "/\00a0";
             padding: 0 5px;
         }
@@ -207,12 +206,10 @@ body.ewAdmin.layout-AdmHome {
             margin-left: 0px;
             margin-right: 0px;
         }
-
         /*.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
             padding-left: 0px;
             padding-right: 1px;
         }*/
-
         .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
             color: $admin-header-color;
             background-color: $admin-header-color-link;
@@ -239,16 +236,16 @@ body.ewAdmin.layout-AdmHome {
             }
 
             h1.page-header {
-                padding-left: $admin-gutter-width;
-                padding-right: $admin-gutter-width;
+                padding-left: 15px;
+                padding-right: 15px;
                 padding-top: 15px;
                 padding-bottom: 15px;
                 //background-color: lighten($admin-header-bg,70%);
-                background-color: lighten($admin-header-bg,30%);
-                color: #fff;
+                //background-color: lighten($admin-header-bg,30%);
+                //color: #fff;
                 margin-bottom: 0px;
                 border: 0;
-                font-size: 30px;
+                font-size: 20px;
             }
 
             > .panel-default {
@@ -1469,6 +1466,186 @@ form#AddModule {
                     text-align: center;
                 }
             }
+        }
+    }
+}
+//bfh
+//
+// Select box
+// --------------------------------------------------
+$zindex-select:10;
+$select-bg:#fff;
+$select-fallback-border:#ccc;
+$select-border: #ccc;
+$border-radius-base:2px;
+$select-divider-bg:#ccc;
+$select-height-base:40px;
+$select-link-color:$admin-primary;
+$select-link-hover-color: lighten($admin-primary,10%);
+$select-link-hover-bg:#fff;
+$font-size-small:12px;
+$select-header-color: $admin-primary;
+$select-link-disabled-color:#ccc;
+$select-caret-color:#666;
+$grid-float-breakpoint:$screen-md-min;
+.bfh-selectbox {
+    position: relative;
+
+    .bfh-selectbox-toggle {
+        display: inline-block;
+        text-decoration: none;
+        padding: 6px 24px 6px 12px;
+
+        &:focus {
+            outline: 0;
+        }
+
+        .bfh-selectbox-option {
+            display: inline-block;
+            float: left;
+            height: 20px;
+            overflow: hidden;
+            width: 100%;
+            text-overflow: ellipsis;
+        }
+
+        .selectbox-caret {
+            float: right;
+            margin-top: 8px;
+            margin-left: -10px;
+            margin-right: -16px;
+        }
+    }
+
+    .bfh-selectbox-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: $zindex-select;
+        display: none; // none by default, but block on "open" of the menu
+        float: left;
+        min-width: 90px;
+        padding: 5px 0;
+        margin: -1px 0 0; // override default ul
+        font-size: $font-size-base;
+        background-color: $select-bg;
+        border: 1px solid $select-fallback-border; // IE8 fallback
+        border: 1px solid $select-border;
+        border-radius: $border-radius-base;
+        @include box-shadow(0 6px 12px rgba(0,0,0,.175));
+        background-clip: padding-box;
+        // Aligns the select box to right
+        &.pull-right {
+            right: 0;
+            left: auto;
+        }
+        // Dividers (basically an hr) within the select box
+        .divider {
+          //  @include nav-divider($select-divider-bg);
+        }
+
+        .bfh-selectbox-filter-container {
+            width: 100%;
+            padding: 5px;
+        }
+
+        ul {
+            list-style: none;
+            max-height: $select-height-base;
+            overflow-x: hidden;
+            overflow-y: auto;
+            margin: 5px 0 0 0;
+            max-width: 500px;
+            padding: 0;
+
+            li > a {
+                display: block;
+                padding: 3px 20px;
+                clear: both;
+                font-weight: normal;
+                line-height: $line-height-base;
+                color: $select-link-color;
+                white-space: nowrap;
+                min-height: 26px;
+                text-overflow: ellipsis;
+                width: 100%;
+                overflow-x: hidden;
+
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                    color: $select-link-hover-color;
+                    background-color: $select-link-hover-bg;
+                }
+            }
+
+            .bfh-selectbox-options-header {
+                display: block;
+                padding: 3px 20px;
+                font-size: $font-size-small;
+                line-height: $line-height-base;
+                color: $select-header-color;
+            }
+
+            .disabled > a {
+                color: $select-link-disabled-color;
+
+                &:hover,
+                &:focus {
+                    color: $select-link-disabled-color;
+                    text-decoration: none;
+                    background-color: transparent;
+                    background-image: none; // Remove CSS gradient
+                    //@include reset-filter();
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    &.open {
+        > .bfh-selectbox-options {
+            display: block;
+        }
+
+        a {
+            outline: 0;
+        }
+    }
+}
+
+.pull-right > .bfh-selectbox-options {
+    right: 0;
+    left: auto;
+}
+
+// Allow for select box to go bottom up
+//
+// Just add .bfh-selectbox-up after the standard .bfh-selectbox class and you're set, bro.
+.bfh-selectbox-up,
+.navbar-fixed-bottom .bfh-selectbox {
+    // Reverse the caret
+    .caret {
+        border-top: 0 dotted;
+        border-bottom: 4px solid $select-caret-color;
+        content: "";
+    }
+    // Different positioning for bottom up menu
+    .bfh-selectbox-options {
+        top: auto;
+        bottom: 100%;
+        margin-bottom: 1px;
+    }
+}
+
+// Component alignment
+//
+// Reiterate per navbar.less and the modified component alignment there.
+
+@media (min-width: $grid-float-breakpoint) {
+    .navbar-right {
+        .bfh-selectbox-options {
+            //.pull-right > @include bfh-selectbox-options();
         }
     }
 }

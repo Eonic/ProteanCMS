@@ -2727,12 +2727,12 @@
     <xsl:variable name="class" select="../@class"/>
     <span>
       <xsl:attribute name="class">
-        <xsl:text>radio radio-primary</xsl:text>
+        <xsl:text>form-check form-check-inline</xsl:text>
         <xsl:if test="contains($class,'multiline')">
           <xsl:text> multiline</xsl:text>
         </xsl:if>
       </xsl:attribute>
-      <input type="{$type}">
+      <input class="form-check-input" type="{$type}">
         <xsl:if test="$ref!=''">
           <xsl:attribute name="name">
             <xsl:value-of select="$ref"/>
@@ -2773,7 +2773,7 @@
           <xsl:text>');</xsl:text>
         </xsl:attribute>
       </input>
-      <label for="{$ref}_{position()}" class="radio {translate(value/node(),'/ ','')}">
+      <label for="{$ref}_{position()}" class="form-check-label {translate(value/node(),'/ ','')}">
         <xsl:value-of select="label/node()"/>
       </label>
     </span>

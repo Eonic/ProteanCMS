@@ -20,7 +20,7 @@
         <cUrl/>
         <nStructOrder/>
         <cStructLayout>Modules_1_column</cStructLayout>
-		    <cVersionLang/>
+        <cVersionLang/>
         <nAuditId/>
         <nAuditKey/>
         <dPublishDate/>
@@ -37,7 +37,7 @@
     <submission id="EditPage" action="" method="post" event="form_check(this)"/>
     <bind id="nStructParId" nodeset="tblContentStructure/nStructParId" required="true()" type="string"/>
     <bind id="cStructName" nodeset="tblContentStructure/cStructName" required="true()" type="string"/>
-    <bind nodeset="tblContentStructure/cStructDescription">   
+    <bind nodeset="tblContentStructure/cStructDescription">
       <!-- DISPLAY NAME!! 
             Due to a considerable Content upgrade across all v4 DB's,
             and large component changes across the board.
@@ -64,18 +64,18 @@
       <bind id="cStructDescription" nodeset="Description" required="false()" type="string"/>
       <bind id="thumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
     </bind>
-	<bind id="cVersionLang" nodeset="tblContentStructure/cVersionLang" required="false()" type="string"/>
+    <bind id="cVersionLang" nodeset="tblContentStructure/cVersionLang" required="false()" type="string"/>
     <bind id="cUrl" nodeset="tblContentStructure/cUrl" required="false()" type="string"/>
     <bind id="dPublishDate" nodeset="tblContentStructure/dPublishDate" required="false()" type="string"/>
     <bind id="dExpireDate" nodeset="tblContentStructure/dExpireDate" required="false()" type="string"/>
     <bind id="nStatus" nodeset="tblContentStructure/nStatus" required="true()" type="string"/>
     <bind id="cDescription" nodeset="tblContentStructure/cDescription" required="false()" type="string"/>
   </model>
-  <label>Add/Edit Page</label> 
+  <label>Add/Edit Page</label>
   <group ref="EditPage" class="2col">
     <group>
       <group>
-        <label>Page Settings</label>
+        <!--<label>Page Settings</label>-->
         <input bind="nStructParId" class="hidden">
           <label>ParId</label>
         </input>
@@ -96,39 +96,39 @@
             <value>0</value>
           </item>
         </select1>
-          <select1 bind="cXcludeFromSiteNav" appearance="full" class="">
-            <label class="bold-label">Exclude from navigation</label>
-            <item>
-              <label>Yes</label>
-              <value>true</value>
-            </item>
-            <item>
-              <label>No</label>
-              <value>false</value>
-            </item>
-            <help class="inline">
-              <p>If Yes, this page and all of it's children will NOT be displayed in any of the site's menu's or automated navigation such as;</p>
-              <ul>
-                <li>Main and sub navigation</li>
-                <li>user sitemaps</li>
-              </ul>
-              <p>However the page can still be live, and you can link to it manually within the content, and may still be picked up by search engines.</p>
-            </help>
-          </select1>
-          <select1 bind="cXcludeNav" appearance="full">
-            <label class="bold-label">Hide navigation bar on this page</label>
-            <item>
-              <label>Yes</label>
-              <value>true</value>
-            </item>
-            <item>
-              <label>No</label>
-              <value>false</value>
-            </item>
-            <help class="inline">
-              <p>If Yes, this page will not contain the main or sub navigation, useful for creating squeeze pages</p>
-            </help>
-          </select1>
+        <select1 bind="cXcludeFromSiteNav" appearance="full" class="">
+          <label class="bold-label">Exclude from navigation</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+          </item>
+          <help class="inline">
+            <p>If Yes, this page and all of it's children will NOT be displayed in any of the site's menu's or automated navigation such as;</p>
+            <ul>
+              <li>Main and sub navigation</li>
+              <li>user sitemaps</li>
+            </ul>
+            <p>However the page can still be live, and you can link to it manually within the content, and may still be picked up by search engines.</p>
+          </help>
+        </select1>
+        <select1 bind="cXcludeNav" appearance="full">
+          <label class="bold-label">Hide navigation bar on this page</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+          </item>
+          <help class="inline">
+            <p>If Yes, this page will not contain the main or sub navigation, useful for creating squeeze pages</p>
+          </help>
+        </select1>
         <select1 bind="cNavPadding" appearance="full">
           <label class="bold-label">Padding below main menu</label>
           <item>
@@ -143,20 +143,20 @@
             <p>By default, pages have some space below the main menu, but if you would like content to start directly below the main menu, for example if you have a banner at the top of the page, select "no"</p>
           </help>
         </select1>
-          <select1 bind="cXcludeFromSearchEngines" appearance="full">
-            <label class="bold-label">Exclude from search engines</label>
-              <item>
-                  <label>Yes</label>
-                  <value>true</value>
-              </item>
-              <item>
-                  <label>No</label>
-                  <value>false</value>
-              </item>
-              <help class="inline">
-                  <p>If Yes, this page will indicate to search engine 'bots or spiders' not to follow this link, and not to index and record the content within the page. It will also exclude from search engine sitemaps.</p>
-              </help>
-          </select1>
+        <select1 bind="cXcludeFromSearchEngines" appearance="full">
+          <label class="bold-label">Exclude from search engines</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+          </item>
+          <help class="inline">
+            <p>If Yes, this page will indicate to search engine 'bots or spiders' not to follow this link, and not to index and record the content within the page. It will also exclude from search engine sitemaps.</p>
+          </help>
+        </select1>
         <select1 bind="bParalaxLoad" appearance="full">
           <label class="bold-label">Paralax Load</label>
           <item>
@@ -193,10 +193,10 @@
       </group>
       <group>
         <label>Images</label>
-      
-      <input bind="thumbnail" class="short pickImage">
-        <label>Thumbnail image</label>
-      </input>
+
+        <input bind="thumbnail" class="short pickImage">
+          <label>Thumbnail image</label>
+        </input>
       </group>
       <group>
         <label>Icon</label>
@@ -215,23 +215,29 @@
     </group>
     <group class="col2">
       <group class="inline">
-        <label>Page Names</label>
+        <!--<label>Page Names</label>-->
         <input bind="cStructName" class="required">
           <label>Page name</label>
           <help class="inline">
             <p>
               <strong>Required. </strong>
               <span>Name of the page that is also used to make up the URL of the page.</span>
-              </p>
-            <p>Cannot contain any special characters such as; <strong>&amp; $ £ " ! % ^ * ( )</strong> etc...</p>
-            <p>e.g. For a terms and conditions page enter;</p>  
-            <p>"Terms <strong>and</strong> Conditions" in Page name,<br/>and<br/>"Terms <strong>&amp;</strong> Conditions" in Display name</p>
+            </p>
+            <p>
+              Cannot contain any special characters such as; <strong>&amp; $ £ " ! % ^ * ( )</strong> etc...
+            </p>
+            <p>e.g. For a terms and conditions page enter;</p>
+            <p>
+              "Terms <strong>and</strong> Conditions" in Page name,<br/>and<br/>"Terms <strong>&amp;</strong> Conditions" in Display name
+            </p>
           </help>
         </input>
         <input bind="cDisplayName">
           <label>Display name</label>
           <help class="inline">
-            <p><strong>Optional. </strong>Only needs to be used if;</p>
+            <p>
+              <strong>Optional. </strong>Only needs to be used if;
+            </p>
             <ul>
               <li>Page name contains non-web safe characters</li>
               <li>You want the name that appears in the site's navigation to differ to the page name</li>
@@ -264,12 +270,12 @@
             <value>external</value>
             <toggle case="cLinkType_2" event="DOMActivate"/>
             <help class="inline">
-            <p>
-              <strong>External</strong>
-            </p>
-            <p>Links for this page will open up another URL in a new window</p>
-          </help>
-          </item>        
+              <p>
+                <strong>External</strong>
+              </p>
+              <p>Links for this page will open up another URL in a new window</p>
+            </help>
+          </item>
         </select1>
         <switch class="disable">
           <case id="cLinkType_1">
@@ -300,7 +306,7 @@
       </group>
     </group>
     <group class="conditional-modal" id="namechange" showonsubmitwhenchanged="cStructName ">
-      
+
     </group>
     <submit submission="" ref="submit" class="principle">
       <label>Save Page</label>
@@ -308,5 +314,5 @@
     <group class="redirect-modal">
       <input type="hidden" bind=""></input>
     </group>
-  </group>   
+  </group>
 </Content>

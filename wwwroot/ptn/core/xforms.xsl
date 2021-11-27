@@ -2519,7 +2519,7 @@
         </label>
       </span>
     </xsl:if>
-    <div class="{@class} list-group">
+    <div class="{@class}">
       <xsl:choose>
         <!-- when Query to get select options -->
         <xsl:when test="contains(@class,'ewQuery')">
