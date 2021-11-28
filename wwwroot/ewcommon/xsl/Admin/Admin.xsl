@@ -1690,9 +1690,16 @@
 																	<b>{{result.Key}}</b>: {{result.Value}}<br/>
 																</h1>
 															</div>
-														</div>
+                              <div class="buttons" style="text-align: center;">
+                                <br/>
+                                <a href="{@url}" class="btn btn-default">
+                                  <xsl:value-of select="@name"/>
+                                </a>
+                              </div>
+                            </div>
 													</div>
 												</div>
+
 											</xsl:if>
 										</xsl:for-each>
 									</div>

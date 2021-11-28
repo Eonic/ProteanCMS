@@ -1763,6 +1763,16 @@ ProcessFlow:
                             sAdminLayout = "AdminXForm"
                         End If
 
+                    Case "RegradeUser"
+                        sAdminLayout = "AdminXForm"
+                        Dim xformPath As String = "/xforms/directory/regradeuser.xml"
+                        oPageDetail.AppendChild(moAdXfm.xFrmRegradeUser(myWeb.moRequest("id"), myWeb.moRequest("existingGroupId"), myWeb.moRequest("newGroupId"), "Regrade User", xformPath, myWeb.moRequest("messageId")))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "ListUsers"
+                            GoTo ProcessFlow
+                        End If
+
                     Case "EditRole"
                         'replaces admin menu with one with full permissions
                         GetAdminMenu()

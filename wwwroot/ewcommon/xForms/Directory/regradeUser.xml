@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Content>
+<model class="ewXform">
+	<instance>
+		<RegradeUser existingGroupId="" newGroupId="" existingGroupName="" newGroupName="" sendEmail="1">
+      <User>
+        <FirstName label="First name"/>
+        <MiddleName label="Middle name"/>
+        <LastName label="Surname"/>
+        <Position/>
+        <Telephone/>
+        <Mobile/>
+        <Email/>
+        <Company/>
+        <NatureOfBusiness/>
+        <TradingLength/>
+        <Website/>
+        <Social/>
+        <VATNumber/>
+        <InvoiceAddress/>
+        <Notes/>
+      </User>
+      <emailer>
+        <oBodyXML>
+          <Items subjectLine="Your Trade Account Application">
+            <Name />
+            <Company />
+            <Website />
+            <Message id="approve" subjectLine="Your Trade Account Application - SUCCESS">PHEW.... YOU MADE IT IN, CONGRATS</Message>
+            <Message id="decline" subjectLine="Your Trade Account Application - FAILED">BAD LUCK SUNSHINE</Message>
+          </Items>
+        </oBodyXML>
+        <xsltPath>/xsl/email/RegradeAlert.xsl</xsltPath>
+        <fromName></fromName>
+        <fromEmail></fromEmail>
+        <recipientEmail></recipientEmail>
+        <ccRecipient>mark.l@valetpro.global</ccRecipient>
+        <SubjectLine>Website Enquiry - Contact Form</SubjectLine>
+      </emailer>		
+		</RegradeUser>
+	</instance>
+	<submission method="post" action="/ewCommon/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="send" />
+  <bind id="RegradeUser" nodeset="RegradeUser">
+    <bind id="bSendEmail" nodeset="@sendEmail" required="false()" type="number" />
+    <bind id="movefrom" nodeset="@existingGroupName" required="false()" type="number" />
+    <bind id="moveto" nodeset="@newGroupName" required="false()" type="number" />
+    <bind id="User" nodeset="User">
+      <bind id="fName" nodeset="FirstName" required="false()" type="string" />
+      <bind id="lName" nodeset="LastName" required="false()" type="string" />
+      <bind id="Company" nodeset="Company" required="false()" type="string" />
+      <bind id="Email" nodeset="Email" required="true()" type="string" />
+      <bind id="cPosition" nodeset="Position" required="false()" type="string"/>
+      <bind id="cTel" nodeset="Telephone" required="false()" type="string"/>
+      <bind id="cMobile" nodeset="Mobile" required="false()" type="string"/>
+      <bind id="cCompany" nodeset="Company" required="false()" type="string"/>
+      <bind id="cNatureOfBusiness" nodeset="NatureOfBusiness" required="false()" type="string"/>
+      <bind id="cTradingLength" nodeset="TradingLength" required="false()" type="string"/>
+      <bind id="cWebsite" nodeset="Website" required="false()" type="string"/>
+      <bind id="cSocial" nodeset="Social" required="false()" type="string"/>
+      <bind id="cVATNumber" nodeset="VATNumber" required="false()" type="string"/>
+      <bind id="cNotes" nodeset="Notes" required="false()" type="string"/>
+    </bind>
+    <bind id="emailer" nodeset="emailer">
+      <bind id="oBodyXML" nodeset="oBodyXML/Items">
+        <bind id="Message" nodeset="Message" required="false()" type="string" />
+      </bind>
+      <bind id="Subject" nodeset="SubjectLine" required="true()" type="string" />
+	  </bind>
+  </bind>
+</model>
+<group>
+  <label>Regrade User</label>
+  <group class="2col">
+  <group>
+  <group class="inline">
+    <input bind="movefrom" class="readonly short">
+      <label>Move From</label>
+    </input>
+    <input bind="moveto" class="readonly short">
+      <label>Move To</label>
+    </input>
+    <input bind="fName" class="readonly short">
+      <label>First Name</label>
+    </input>
+    <input bind="lName" class="readonly short">
+      <label>last Name</label>
+    </input>
+    <input bind="cPosition" class="readonly short">
+      <label>Position</label>
+    </input>
+    <input bind="cTel" class="readonly">
+      <label>Telephone</label>
+    </input>
+    <input bind="cMobile" class="readonly">
+      <label>Mobile</label>
+    </input>
+  </group>
+    <group class="inline">
+      <label>Company Info</label>
+      <input bind="cCompany" class="readonly">
+        <label>Company</label>
+      </input>
+      <input bind="cNatureOfBusiness" class="readonly">
+        <label>Nature of Business</label>
+      </input>
+      <input bind="cTradingLength" class="readonly">
+        <label>How long have you been trading?</label>
+      </input>
+
+      <input bind="cVATNumber" class="readonly">
+        <label>VAT Number (if registered)</label>
+      </input>
+    </group>
+    <group>
+      <input bind="cWebsite" class="readonly">
+        <label>Website Address</label>
+      </input>
+      <textarea bind="cSocial" rows="2" class="readonly">
+        <label>Social Media Feeds / addresses</label>
+      </textarea>
+      <textarea bind="cNotes" rows="3" class="readonly">
+        <label>Any questions / comments</label>
+      </textarea>
+    </group>
+  </group>
+    <group>
+      <group class="inline">
+        <input bind="movefrom" class="readonly short">
+          <label>Move From</label>
+        </input>
+        <input bind="moveto" class="readonly short">
+          <label>Move To</label>
+        </input>
+      </group>
+  <input bind="Email" class="readonly required">
+    <label>Email</label>
+  </input>
+  <select1 bind="bSendEmail" appearance="full" class="required vshort">
+    <label>Email User</label>
+    <item>
+      <label>Update and Send Message</label>
+      <value>1</value>
+    </item>
+    <item>
+      <label>Update Only</label>
+      <value>0</value>
+    </item>
+  </select1>
+  <input bind="Subject" class="required">
+    <label>Subject</label>
+  </input>
+  <textarea bind="Message" class="textarea xhtml" rows="10">
+    <label>Message</label>
+  </textarea>
+    </group>
+  </group>
+	<submit submission="send" bind="ewCmd" class="principle">
+		<label>Upgrade User and Send Email</label>
+	</submit>
+</group>
+</Content>

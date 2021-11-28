@@ -8936,6 +8936,112 @@ Partial Public Class Cms
             End Class
 
 
+            Public Function xFrmRegradeUser(ByVal nUserId As Integer, ByVal existingGroupId As Long, ByVal newGroupId As String, ByVal FormTitle As String, ByVal xFormPath As String, ByVal messageId As String) As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim InstanceSessionName = "tempInstance_regrade" & nUserId.ToString()
+                Try
+                    ' This is a generic function for a framework for all protean object.
+                    'This is not intended for use but rather as an example of how xforms are processed
+
+                    'The instance of the form needs to be saved in the session to allow repeating elements to be edited prior to saving in the database.
+
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    MyBase.NewFrm(FormTitle)
+                    MyBase.bProcessRepeats = False
+
+                    'We load the xform from a file, it may be in local or in common folders.
+                    MyBase.load(xFormPath, myWeb.maCommonFolders)
+
+                    'We get the instance
+                    If nUserId > 0 Then
+                        Dim sNewGroupNames As String = ""
+                        If newGroupId.Contains(",") Then
+                            Dim i As String
+                            For Each i In Split(newGroupId, ",")
+                                sNewGroupNames = sNewGroupNames & myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, i.ToString()) & ", "
+                            Next
+                            sNewGroupNames.TrimEnd()
+                            sNewGroupNames.TrimEnd(",")
+                        Else
+                            sNewGroupNames = myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, newGroupId)
+                        End If
+
+                        MyBase.bProcessRepeats = True
+                        If myWeb.moSession(InstanceSessionName) Is Nothing Then
+                            Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                            Dim regradeUser As XmlElement = existingInstance.AppendChild(MyBase.moXformElmt.OwnerDocument.CreateElement("RegradeUser"))
+                            regradeUser.SetAttribute("existingGroupId", existingGroupId.ToString())
+                            regradeUser.SetAttribute("existingGroupName", myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, existingGroupId))
+                            regradeUser.SetAttribute("newGroupId", newGroupId.ToString())
+                            regradeUser.SetAttribute("newGroupName", sNewGroupNames)
+                            regradeUser.SetAttribute("sendEmail", "1")
+
+                            regradeUser.InnerXml = myWeb.GetUserXML(nUserId).OuterXml
+                            'Remove Messages that don't match the messageId
+                            Dim msgNode As XmlElement
+                            For Each msgNode In MyBase.Instance.SelectNodes("RegradeUser/emailer/oBodyXML/Items/Message")
+                                If msgNode.GetAttribute("id") = messageId Then
+                                    'do nothing we want to keep
+                                Else
+                                    msgNode.ParentNode.RemoveChild(msgNode)
+                                End If
+                            Next
+
+                            regradeUser.AppendChild(MyBase.Instance.SelectSingleNode("RegradeUser/emailer"))
+                                MyBase.LoadInstance(existingInstance)
+                                myWeb.moSession(InstanceSessionName) = MyBase.Instance
+                                Else
+                                MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                        End If
+                    End If
+
+                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+
+                            'Change User Group
+                            moDbHelper.saveDirectoryRelations(nUserId, existingGroupId, True)
+                            If newGroupId.Contains(",") Then
+                                Dim i As String
+                                For Each i In Split(newGroupId, ",")
+                                    moDbHelper.saveDirectoryRelations(nUserId, CLng(i), False)
+                                Next
+                            Else
+                                moDbHelper.saveDirectoryRelations(nUserId, newGroupId, False)
+                            End If
+
+                            'Send Email
+                            Dim oMsg As New Protean.Messaging()
+                            oMsg.emailer(MyBase.Instance.SelectSingleNode("RegradeUser"), MyBase.Instance.SelectSingleNode("RegradeUser/emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/fromEmail").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/User/Email").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/SubjectLine").InnerText)
+
+                            myWeb.moSession(InstanceSessionName) = Nothing
+
+                        End If
+                    ElseIf MyBase.isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        MyBase.updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    Else
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    End If
+
+                    'we populate the values onto the form.
+                    MyBase.addValues()
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
         End Class
 
 
