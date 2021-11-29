@@ -535,6 +535,98 @@ body.ewAdmin.layout-AdmHome {
         }
     }
     //end #adminLayout
+
+    #MenuTree {
+        .list-group-item {
+            paddin-left: 50px;
+        }
+        .level-2 {
+            padding-left: 70px
+        }
+        .level-3 {
+            padding-left: 80px
+        }
+        .level-4 {
+            padding-left: 90px
+        }
+        .level-5 {
+            padding-left: 100px
+        }
+        .level-6 {
+            padding-left: 110px
+        }
+        .level-7 {
+            padding-left: 120px
+        }
+        .level-8 {
+            padding-left: 130px
+        }
+        .level-9 {
+            padding-left: 140px
+        }
+        .level-10 {
+            padding-left: 150px
+        }
+
+        .level-11 {
+            padding-left: 160px
+        }
+        .level-12 {
+            padding-left: 170px
+        }
+        .level-13 {
+            padding-left: 180px
+        }
+        .level-14 {
+            padding-left: 190px
+        }
+        .level-15 {
+            padding-left: 200px
+        }
+        i.hitarea {
+            top: 13px;
+            position: absolute;
+            margin-left: -15px;
+            cursor: pointer;
+        }
+        i.hitarea.fa-chevron-down {
+            margin-left: -18px;
+        }
+        div.pageCell {
+            i {
+                top: 17px;
+                position: absolute;
+            }
+
+            .status i {
+                position: inherit;
+            }
+
+            display: inline-block;
+            width: 230px;
+            max-width: 100%;
+            margin: 0px;
+
+            .pageName {
+                display: inline-block;
+                padding-left: 25px;
+            }
+        }
+
+        div.optionButtons {
+            display: inline-block;
+            margin: 0px;
+
+            .checkbox {
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+        }
+
+        .list-group-item {
+            border-bottom: 1px solid lighten($admin-header-bg,75%);
+        }
+    }
 }
 
 .ewAdmin .open,

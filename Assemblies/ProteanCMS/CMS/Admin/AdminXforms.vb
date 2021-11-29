@@ -8782,7 +8782,7 @@ Partial Public Class Cms
                     End Try
                 End Sub
 
-                '                            oContentLocations.ProcessRequest(nReturnId)
+
                 Public Sub ProcessRequest(ByVal ContentId As Long)
                     PerfMon.Log(mcModuleName, "ProcessRequest")
 
@@ -8799,25 +8799,18 @@ Partial Public Class Cms
 
                                 ' The inner text will be a comma separated list, we need to add this to the inclusion list.
                                 If Not (String.IsNullOrEmpty(location.InnerText)) Then
-
                                     If Not (String.IsNullOrEmpty(InclusionList)) Then
                                         InclusionList &= ","
                                     End If
-
                                     InclusionList &= location.InnerText
-
                                 End If
-
                             Next
 
-
                             ' Convert the Scope to a CSV
-                            ScopeList = hashtableToCSV(Me._locationsScope, Dimension.Key)
-
+                            ScopeList = Dictionary.hashtableToCSV(Me._locationsScope, Dictionary.Dimension.Key)
 
                             ' manage the locations
                             _form.moDbHelper.updateLocationsWithScope(ContentId, InclusionList, ScopeList)
-
 
                         End If
 

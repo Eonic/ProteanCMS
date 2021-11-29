@@ -55,7 +55,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.52.31</AssemblyVersion>
+    <AssemblyVersion>6.0.52.45</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -301,14 +301,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.vb" />
-    <Compile Include="DocReader.vb" />
-    <Compile Include="Enum.vb" />
-    <Compile Include="GnuPG.vb" />
     <Compile Include="Conversion.vb" />
-    <Compile Include="Counter.vb" />
-    <Compile Include="CSV.vb" />
+    <Compile Include="DocReader.vb" />
+    <Compile Include="GnuPG.vb" />
     <Compile Include="DelegateWrappers.vb" />
-    <Compile Include="Dictionary.vb" />
     <Compile Include="Encryption.vb" />
     <Compile Include="FileHelper.vb" />
     <Compile Include="FTPClient.vb" />

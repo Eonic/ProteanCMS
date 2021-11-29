@@ -4892,9 +4892,9 @@
 
           <div class="col-md-9 col-sm-8">
             <xsl:for-each select="descendant-or-self::folder[@active='true']">
-              <ul class="pageControlButtons">
+              <div class="btn-group">
                 <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
-                  <li>
+                
                     <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-primary">
                       <xsl:if test="$submitPath!='/?'">
                         <xsl:attribute name="data-toggle">modal</xsl:attribute>
@@ -4908,10 +4908,10 @@
                       </i>
                       Up Folder
                     </a>
-                  </li>
+        
                 </xsl:if>
                 <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-                  <li>
+            
                     <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-success">
                       <xsl:if test="$submitPath!='/?'">
                         <xsl:attribute name="data-toggle">modal</xsl:attribute>
@@ -4924,8 +4924,7 @@
                         <xsl:text> </xsl:text>
                       </i>&#160;New Folder
                     </a>
-                  </li>
-                  <li>
+       
                     <!-- The fileinput-button span is used to style the file input field as button -->
                     <span class="btn btn-success fileinput-button">
                       <i class="fa fa-upload fa-white">
@@ -4939,20 +4938,20 @@
                     <span class="fileupload-loading">
                       <xsl:text> </xsl:text>
                     </span>
-                  </li>
+          
                   <!--not for popup window or for root..!-->
                   <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
-                    <li>
+                  
                       <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-danger">
                         <i class="fa fa-trash-o fa-white">
                           <xsl:text> </xsl:text>
                         </i>
                         Delete Folder
                       </a>
-                    </li>
+              
                   </xsl:if>
                 </xsl:if>
-              </ul>
+              </div>
             </xsl:for-each>
             <div id="uploadFiles">
               <xsl:choose>
@@ -13275,6 +13274,268 @@
       </div>
 
     </xsl:template>
+
+  <!-- ==================== / Generic Status Legend ==================== -->
+
+  <xsl:template match="MenuItem | Content | ListItem | TreeItem | PageActivity | Subscription" mode="status_legend">
+    <a class="status" title="none">
+      <xsl:choose>
+        <xsl:when test="@status=0">
+          <xsl:attribute name="class">
+            <xsl:text>status inactive</xsl:text>
+            <xsl:if test="MenuItem">Parent</xsl:if>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is hidden</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=1 or @status='-1'">
+          <xsl:attribute name="class">
+            <xsl:text>status active</xsl:text>
+            <xsl:if test="MenuItem">Parent</xsl:if>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is live !</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=2">
+          <xsl:attribute name="class">
+            <xsl:text>status superceded</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content has been superceded</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=3">
+          <xsl:attribute name="class">
+            <xsl:text>status approval</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is awaiting approval</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=4">
+          <xsl:attribute name="class">
+            <xsl:text>status editing</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is being edited</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=5">
+          <xsl:attribute name="class">
+            <xsl:text>status rejected</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is on hold/rejected</xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">
+            <xsl:text>status active</xsl:text>
+            <xsl:if test="MenuItem | Content | ListItem | TreeItem | PageActivity">Parent</xsl:if>
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+      &#160;
+    </a>
+  </xsl:template>
+
+
+  <xsl:template match="MenuItem | PageVersion" mode="status_legend">
+    <xsl:choose>
+      <xsl:when test="@status=0">
+        <i>
+          <xsl:attribute name="class">
+            <xsl:text>far fa-file-alt fa-lg text-muted status inactive</xsl:text>
+            <xsl:if test="MenuItem">Parent</xsl:if>
+          </xsl:attribute>
+          &#160;
+        </i>
+      </xsl:when>
+      <xsl:when test="@status=1 or @status='-1'">
+        <i>
+          <xsl:attribute name="class">
+            <xsl:text>far fa-file-alt fa-lg status active</xsl:text>
+            <xsl:if test="MenuItem">Parent</xsl:if>
+          </xsl:attribute>
+          &#160;
+        </i>
+      </xsl:when>
+      <xsl:when test="@status=2">
+
+      </xsl:when>
+      <xsl:when test="@status=3">
+
+      </xsl:when>
+      <xsl:when test="@status=4">
+
+      </xsl:when>
+      <xsl:when test="@status=5">
+
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:attribute name="class">
+          <xsl:text>status active</xsl:text>
+          <xsl:if test="MenuItem | Content | ListItem | TreeItem | PageActivity">Parent</xsl:if>
+        </xsl:attribute>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
+
+  <xsl:template match="Content | ListItem | PageActivity" mode="status_legend">
+    <i class="status" title="none">
+      <xsl:choose>
+        <xsl:when test="@status=0">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-eye-slash fa-lg inactive</xsl:text>
+            <xsl:if test="MenuItem">Parent</xsl:if>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is hidden</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=1 or @status='-1'">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-eye fa-lg active</xsl:text>
+            <xsl:if test="MenuItem">Parent</xsl:if>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is live</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=2">
+          <xsl:attribute name="class">
+            <xsl:text>status fa a-clock-o fa-lg</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content has been superceded</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=3">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-eye fa-lg</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is awaiting approval</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=4">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-pencil fa-lg</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is being edited</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=5">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-trash-o fa-lg</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is on hold/rejected</xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">
+            <xsl:text>status active</xsl:text>
+            <xsl:if test="MenuItem | Content | ListItem | TreeItem | PageActivity">Parent</xsl:if>
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text> </xsl:text>
+    </i>
+  </xsl:template>
+
+  <!--<xsl:template match="MenuItem" mode="status_legend">
+    <i class="status" title="none">
+      <xsl:choose>
+        <xsl:when test="@status=0">
+          <xsl:attribute name="class">
+            <xsl:text>status hidden </xsl:text>
+            <xsl:choose>
+              <xsl:when test="MenuItem">icon-folder-close-alt</xsl:when>
+              <xsl:otherwise>icon-file-alt</xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is hidden</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=1 or @status='-1'">
+          <xsl:attribute name="class">
+            <xsl:text>status active </xsl:text>
+            <xsl:choose>
+              <xsl:when test="MenuItem">icon-folder-close-alt</xsl:when>
+              <xsl:otherwise>icon-file-alt</xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is live</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=2">
+          <xsl:attribute name="class">
+            <xsl:text>status superceded</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content has been superceded</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=3">
+          <xsl:attribute name="class">
+            <xsl:text>status approval</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is awaiting approval</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=4">
+          <xsl:attribute name="class">
+            <xsl:text>status editing</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is being edited</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="@status=5">
+          <xsl:attribute name="class">
+            <xsl:text>status rejected</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is on hold/rejected</xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">
+            <xsl:text>status live</xsl:text>
+            <xsl:if test="MenuItem | Content | ListItem | TreeItem | PageActivity">Parent</xsl:if>
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+      &#160;
+    </i>
+  </xsl:template>-->
+
+
+  <xsl:template name="status_legend">
+    <xsl:param name="status"/>
+    <i class="status" title="none">
+      <xsl:choose>
+        <xsl:when test="$status=0">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-times-circle fa-lg text-danger inactive</xsl:text>
+            <xsl:if test="MenuItem">Parent</xsl:if>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is hidden</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="$status=1 or $status='-1'">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-check fa-lg text-success active</xsl:text>
+            <xsl:if test="MenuItem">Parent</xsl:if>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is live</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="$status=2">
+          <xsl:attribute name="class">
+            <xsl:text>status fa a-clock-o fa-lg</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content has been superceded</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="$status=3">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-eye fa-lg</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is awaiting approval</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="$status=4">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-pencil fa-lg</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is being edited</xsl:attribute>
+        </xsl:when>
+        <xsl:when test="$status=5">
+          <xsl:attribute name="class">
+            <xsl:text>status fa fa-trash-o fa-lg</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="title">This content is on hold/rejected</xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">
+            <xsl:text>status active</xsl:text>
+            <xsl:if test="MenuItem | Content | ListItem | TreeItem | PageActivity">Parent</xsl:if>
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:text> </xsl:text>
+    </i>
+  </xsl:template>
 
 
 

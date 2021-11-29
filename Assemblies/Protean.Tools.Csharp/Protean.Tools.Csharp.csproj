@@ -124,6 +124,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calendar.cs" />
+    <Compile Include="Counter.cs" />
+    <Compile Include="Dictionary.cs" />
+    <Compile Include="Enum.cs" />
     <Compile Include="MySqlDatabase.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Encryption.cs" />
@@ -156,6 +159,9 @@
   <ItemGroup>
     <Folder Include="CMS.Admin\" />
     <Folder Include="CMS.Helpers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CSV.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets')" />

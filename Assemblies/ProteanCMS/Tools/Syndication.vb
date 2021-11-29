@@ -336,7 +336,7 @@ Public Class Syndication
 
                     Dim sqlCriteria As String = ""
                     sqlCriteria &= " cContentSchemaName ='BlogSettings'"
-                    sqlCriteria &= " AND CL.nStructId IN (" & Dictionary.hashtableToCSV(blogArticlePageIds, Dimension.Key) & ")"
+                    sqlCriteria &= " AND CL.nStructId IN (" & Dictionary.hashtableToCSV(blogArticlePageIds, Dictionary.Dimension.Key) & ")"
                     _myWeb.GetPageContentFromSelect(sqlCriteria, , , True, , , blogControls)
 
                     Dim blogControl As XmlElement = Nothing
