@@ -523,12 +523,10 @@ Public Class Cms
             If moDbHelper.DatabaseName = "" Then
                 'redirect to setup
                 If moConfig("cssFramework") = "bs5" Then
-                    msRedirectOnEnd = "ptn-common/setup/default.ashx"
+                    msRedirectOnEnd = "ptn/setup/default.ashx"
                 Else
                     msRedirectOnEnd = "ewcommon/setup/default.ashx"
                 End If
-
-
             Else
 
                     If Not moSession Is Nothing Then

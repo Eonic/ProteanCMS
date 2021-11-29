@@ -1082,7 +1082,7 @@
             </xsl:attribute>
             <xsl:value-of select="$supportWebsite"/>
           </a>
-          <span class="pull-right">
+          <span class="float-end">
             <xsl:value-of select="substring-before(//ServerVariables/Item[@name='GENERATOR']/node(),', Culture')"/>
           </span>
         </div>
@@ -1442,7 +1442,6 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <li>
           <a href="{$href}" title="{Description}" class="btn btn-lg btn-primary">
             <i class="fa {@icon} fa-large">
               <xsl:text> </xsl:text>
@@ -1450,7 +1449,6 @@
             <xsl:text> </xsl:text>
             <xsl:value-of select="@name"/>
           </a>
-        </li>
       </xsl:if>
     </xsl:template>
 
@@ -1889,21 +1887,20 @@
       <div class="row">
         <div class="col-md-3 panel">
           <div class="card-body">
-            <ul class="nav nav-stacked">
+            <div class="btn-group-vertical">
               <xsl:for-each select="AdminMenu/descendant-or-self::MenuItem[@cmd='SettingsDash']/MenuItem">
                 <xsl:apply-templates select="." mode="button">
                   <xsl:with-param name="level">1</xsl:with-param>
                 </xsl:apply-templates>
               </xsl:for-each>
-              <li>
+            
                 <a href="?reBundle=true" title="" class="btn btn-lg btn-primary">
                   <i class="fa fa-gift fa-large">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
                   Rebundle CSS /JS
                 </a>
-              </li>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -1960,7 +1957,7 @@
       <div class="card card-default">
         <div class="card-header">
           <xsl:if test="$contentType!='Module'">
-            <div class="pull-right">
+            <div class="float-end">
               <xsl:apply-templates select="/Page" mode="inlinePopupAdd">
                 <xsl:with-param name="type">
                   <xsl:value-of select="$contentType"/>
@@ -2431,8 +2428,8 @@
       <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
         <xsl:choose>
           <xsl:when test="contains($type,',')">
-            <div class="dropdown pull-right">
-              <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
+            <div class="dropdown float-end">
+              <a href="#" class="btn btn-default btn-xs float-end" data-toggle="dropdown">
                 <xsl:value-of select="$text"/>
               </a>
               <ul class="dropdown-menu">
@@ -2445,7 +2442,7 @@
           </xsl:when>
           <xsl:when test="$type='Module'">
             <div class="dropdown">
-              <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
+              <a href="#" class="btn btn-default btn-xs float-end" data-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
                 <xsl:value-of select="$text"/>&#160;
                 <i class="fa fa-caret-down">&#160;</i>
@@ -2461,8 +2458,8 @@
           </xsl:when>
           <xsl:when test="contains($find,'true')">
             <div class="ewAdmin options">
-              <div class="dropdown pull-right">
-                <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
+              <div class="dropdown float-end">
+                <a href="#" class="btn btn-default btn-xs float-end" data-toggle="dropdown">
                   <i class="fa fa-plus">&#160;</i>&#160;
                   <xsl:value-of select="$text"/>&#160;
                   <i class="fa fa-caret-down">&#160;</i>
@@ -2484,8 +2481,8 @@
           </xsl:when>
           <xsl:when test="contains($find,'only')">
             <div class="ewAdmin options">
-              <div class="dropdown pull-right">
-                <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
+              <div class="dropdown float-end">
+                <a href="#" class="btn btn-default btn-xs float-end" data-toggle="dropdown">
                   <i class="fa fa-plus">&#160;</i>&#160;
                   <xsl:value-of select="$text"/>&#160;
                   <i class="fa fa-caret-down">&#160;</i>
@@ -2515,7 +2512,7 @@
                   <xsl:value-of select="$position"/>
                 </xsl:if>
               </xsl:variable>
-              <a class="btn btn-default btn-xs pull-right" href="{$href}">
+              <a class="btn btn-default btn-xs float-end" href="{$href}">
                 <i class="fa fa-plus">
                   <xsl:text> </xsl:text>
                 </i>
@@ -2939,7 +2936,7 @@
       <div class="panel-header">
 
         <xsl:if test="$page/ContentDetail/@total > 0">
-          <div class="pull-right-stepper">
+          <div class="float-end-stepper">
             <xsl:apply-templates select="/" mode="adminStepper">
               <xsl:with-param name="itemCount" select="$page/ContentDetail/@rows"/>
               <xsl:with-param name="itemTotal" select="$total"/>
@@ -3524,7 +3521,7 @@
           <div class="col-md-9">
             <div class="card card-default">
               <div class="card-header">
-                <button type="submit" name="submit" class="pull-right btn btn-success btn-sm" value="submit">
+                <button type="submit" name="submit" class="float-end btn btn-success btn-sm" value="submit">
                   <i class="fa fa-check">
                     <xsl:text> </xsl:text>
                   </i> Save Locations
@@ -3537,7 +3534,7 @@
                 </xsl:apply-templates>
               </ul>
               <div class="panel-footer">
-                <button type="submit" name="submit" class="pull-right btn btn-success btn-sm" value="submit">
+                <button type="submit" name="submit" class="float-end btn btn-success btn-sm" value="submit">
                   <i class="fa fa-check">
                     <xsl:text> </xsl:text>
                   </i> Save Locations
@@ -3737,13 +3734,13 @@
               <input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
               <input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
               <div class="card-header">
-                <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary btn-xs pull-right">
+                <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary btn-xs float-end">
                   <i class="fa fa-check fa-white">
                     <xsl:text> </xsl:text>
                   </i> Check All
                 </button>
                 <xsl:text> </xsl:text>
-                <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary btn-xs pull-right">
+                <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary btn-xs float-end">
                   <i class="fa fa-share fa-white">
                     <xsl:text> </xsl:text>
                   </i> Uncheck All
@@ -3903,7 +3900,7 @@
       <div class="row" id="tpltProductGroups">
         <div class="col-md-3">
           <div class="alert alert-info">
-            <i class="fa fa-info-sign fa-3x pull-right">
+            <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
@@ -4068,7 +4065,7 @@
       <div class="row" id="tpltDiscountRules">
         <div class="col-md-3">
           <div class="alert alert-info">
-            <i class="fa fa-info-sign fa-3x pull-right">
+            <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
@@ -4764,7 +4761,7 @@
             <xsl:otherwise>
               <xsl:choose>
                 <xsl:when test="$type='Module'">
-                  <a class="btn btn-default btn-xs pull-right" href="{$appPath}?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$name}">
+                  <a class="btn btn-default btn-xs float-end" href="{$appPath}?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$name}">
                     <i class="fa fa-th-large">&#160;</i>&#160;<xsl:text>Add Module</xsl:text>
                   </a>
                 </xsl:when>
@@ -5832,7 +5829,7 @@
       <xsl:for-each select="ContentDetail/User">
         <div id="template_ListDirectory" class="card card-default">
           <div class="card-header">
-            <div class="pull-right">
+            <div class="float-end">
               <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
                 <i class="fa fa-user fa-white">
                   <xsl:text> </xsl:text>
@@ -5977,7 +5974,7 @@
 
           <div class="card card-default">
             <div class="card-header">
-              <a href="{$appPath}?ewCmd=EditUserSubscription&amp;id=0&amp;userId={@id}"  class="btn btn-primary btn-sm pull-right">
+              <a href="{$appPath}?ewCmd=EditUserSubscription&amp;id=0&amp;userId={@id}"  class="btn btn-primary btn-sm float-end">
                 <i class="fa fa-plus">&#160;</i>&#160;Add Subscription
               </a>
               <h3 >Subscriptions</h3>
@@ -6136,7 +6133,7 @@
       <xsl:for-each select="ContentDetail/Company">
         <div id="template_ListDirectory" class="card card-default">
           <div class="card-header">
-            <div class="pull-right">
+            <div class="float-end">
               <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=Company&amp;id={@id}" class="btn btn-xs btn-primary">
                 <i class="fa fa-user fa-white">
                   <xsl:text> </xsl:text>
@@ -6214,7 +6211,7 @@
                 </xsl:for-each>
               </div>
               <div class="col-md-8">
-                <a href="{$appPath}?ewCmd=AddUserContact&amp;parid=0&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-success btn-sm pull-right">
+                <a href="{$appPath}?ewCmd=AddUserContact&amp;parid=0&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-success btn-sm float-end">
                   <i class="fa fa-plus">&#160;</i>&#160;Add New Address
                 </a>
                 <xsl:for-each select="Contacts/Contact">
@@ -6440,7 +6437,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <div class="pull-right clearfix">
+              <div class="float-end clearfix">
                 <xsl:if test="$itemTotal &gt; $itemCount">
                   <xsl:apply-templates select="/" mode="adminStepper">
                     <xsl:with-param name="itemTotal" select="$itemTotal"/>
@@ -6538,7 +6535,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-12">
-              <div class="pull-right clearfix">
+              <div class="float-end clearfix">
                 <xsl:if test="$itemTotal &gt; $itemCount">
                   <xsl:apply-templates select="/" mode="adminStepper">
                     <xsl:with-param name="itemTotal" select="$itemTotal"/>
@@ -7019,7 +7016,7 @@
         <div class="col-md-12">
           <div class="row" id="template_ListUsersContacts">
             <div class="headerButtons col-md-12 clearfix">
-              <a href="{$appPath}?ewCmd=Add{$dirType}Contact&amp;parid={/Page/Request/QueryString/Item[@name='parid']}" class="btn btn-success btn-sm pull-right">
+              <a href="{$appPath}?ewCmd=Add{$dirType}Contact&amp;parid={/Page/Request/QueryString/Item[@name='parid']}" class="btn btn-success btn-sm float-end">
                 <i class="fa fa-plus">&#160;</i>&#160;Add New Address
               </a>
             </div>
@@ -7037,14 +7034,14 @@
         <div class="card card-default">
           <div class="card-header">
 
-            <!--<a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">-->
-            <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-primary btn-sm pull-right">
+            <!--<a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-primary btn-sm float-end">-->
+            <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-primary btn-sm float-end">
               <i class="fa fa-edit">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>
               Edit
             </a>
-            <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-danger btn-sm pull-right">
+            <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-danger btn-sm float-end">
               <i class="fa fa-trash-o">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Delete
@@ -7153,7 +7150,7 @@
 
                     <input type="hidden" name="ewCmd" value="BulkCartAction"/>
                     <input type="hidden" name="pgid" value="{$page/@id}"/>
-                    <div class="card-header-buttons col-md-3 pull-right">
+                    <div class="card-header-buttons col-md-3 float-end">
                       <xsl:if test="@ewCmd='Orders'">
                         <div class="form-group bulk-action">
                           <div class="input-group">
@@ -7170,7 +7167,7 @@
                         </div>
                       </xsl:if>
                     </div>
-                    <div class="pull-right">
+                    <div class="float-end">
                       <xsl:apply-templates select="/" mode="adminStepper">
                         <xsl:with-param name="itemCount" select="'100'"/>
                         <xsl:with-param name="itemTotal" select="$total"/>
@@ -7210,7 +7207,7 @@
 
                 </form>
                 <div class="panel-footer">
-                  <div class="pull-right">
+                  <div class="float-end">
                     <xsl:apply-templates select="/" mode="adminStepper">
                       <xsl:with-param name="itemCount" select="'100'"/>
                       <xsl:with-param name="itemTotal" select="$total"/>
@@ -7227,7 +7224,7 @@
               <xsl:otherwise>
                 <xsl:choose>
                   <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-                    <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
+                    <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary float-end">
                       <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
                     </a>
                     <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
@@ -7482,7 +7479,7 @@
             <xsl:choose>
               <xsl:when test="@statusId='6' and PaymentDetails/@provider='JudoPay'">
                 <div>
-                  <a href="?ewCmd=RefundOrder&amp;orderId={$orderId}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-danger btn-sm pull-right">
+                  <a href="?ewCmd=RefundOrder&amp;orderId={$orderId}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-danger btn-sm float-end">
                     <i class="fa fa-money"> </i>
                     Refund Order
                   </a>
@@ -7643,7 +7640,7 @@
             </div>
             <xsl:if test="Contact[@type='Billing Address']">
               <div id="billingAddress" class="cartAddress col-md-3">
-                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm pull-right">
+                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm float-end">
                   <i class="fa fa-edit"> </i>
                   Edit
                 </a>
@@ -7652,7 +7649,7 @@
             </xsl:if>
             <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
               <div id="deliveryAddress" class="cartAddress col-md-3">
-                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm pull-right">
+                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm float-end">
                   <i class="fa fa-edit"> </i>
                   Edit
                 </a>
@@ -7937,7 +7934,7 @@
       <div>
         <xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
           <xsl:if test="/Page/Cart/Order/@cmd!='MakePayment'">
-            <a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn btn-default btn-sm pull-right">
+            <a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn btn-default btn-sm float-end">
               <i class="fa fa-pencil">&#160;</i>&#160;Edit <xsl:value-of select="@type"/>
             </a>
           </xsl:if>
@@ -8459,7 +8456,7 @@
       <div id="tpltShippingLocations" class="row">
         <div class="col-md-3">
           <div class="alert alert-info">
-            <i class="fa fa-info-sign fa-3x pull-right">
+            <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
@@ -8472,7 +8469,7 @@
           <div class="card card-default">
             <div class="card-header">
 
-              <a href="{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=edit" class="btn btn-success pull-right btn-xs">
+              <a href="{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=edit" class="btn btn-success float-end btn-xs">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Add Root Location
@@ -8563,7 +8560,7 @@
       <div class="row" id="tpltDeliveryMethods">
         <div class="col-md-3" id="column1">
           <div class="alert alert-info">
-            <i class="fa fa-info-sign fa-3x pull-right">
+            <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
@@ -8573,7 +8570,7 @@
         <div class="col-md-9" id="column2">
           <div class="card card-default" >
             <div class="card-header">
-              <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit" class="btn btn-xs btn-success pull-right">
+              <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit" class="btn btn-xs btn-success float-end">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Add New Delivery Method
@@ -8647,7 +8644,7 @@
       <div class="row" id="tpltCarrierss">
         <div class="col-md-3" id="column1">
           <div class="alert alert-info">
-            <i class="fa fa-info-sign fa-3x pull-right">
+            <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
@@ -8657,7 +8654,7 @@
         <div class="col-md-9" id="column2">
           <div class="card card-default" >
             <div class="card-header">
-              <a href="{$appPath}?ewCmd=Carriers&amp;ewcmd2=edit" class="btn btn-xs btn-success pull-right">
+              <a href="{$appPath}?ewCmd=Carriers&amp;ewcmd2=edit" class="btn btn-xs btn-success float-end">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Add New Carrier
@@ -8699,7 +8696,7 @@
       <div id="tpltDeliveryMethodLocations" class="row">
         <div class="col-md-3">
           <div class="alert alert-info">
-            <i class="fa fa-info-sign fa-3x pull-right">
+            <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
@@ -8843,12 +8840,12 @@
                     <td class="clearfix">
                       <xsl:choose>
                         <xsl:when test="@active='true'">
-                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=delete&amp;type={node()}" class="btn btn-xs btn-danger pull-right">
+                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=delete&amp;type={node()}" class="btn btn-xs btn-danger float-end">
                             <i class="fa fa-trash-o fa-white">
                               <xsl:text> </xsl:text>
                             </i><xsl:text> </xsl:text>Delete
                           </a>
-                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=edit&amp;type={node()}" class="btn btn-xs btn-primary pull-right">
+                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=edit&amp;type={node()}" class="btn btn-xs btn-primary float-end">
                             <i class="fa fa-pencil fa-white">
                               <xsl:text> </xsl:text>
                             </i><xsl:text> </xsl:text>Edit
@@ -8856,7 +8853,7 @@
 
                         </xsl:when>
                         <xsl:otherwise>
-                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=add&amp;type={node()}" class="btn btn-xs btn-default pull-right">
+                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=add&amp;type={node()}" class="btn btn-xs btn-default float-end">
                             <i class="fa fa-plus fa-white">
                               <xsl:text> </xsl:text>
                             </i><xsl:text> </xsl:text>Add
@@ -8898,7 +8895,7 @@
                       <xsl:value-of select="node()"/>
                     </td>
                     <td>
-                      <a href="{$appPath}?ewCmd=Reports&amp;ewCmd2={@type}" class="btn btn-xs btn-primary pull-right">
+                      <a href="{$appPath}?ewCmd=Reports&amp;ewCmd2={@type}" class="btn btn-xs btn-primary float-end">
                         <i class="fa fa-chevron-circle-right">
                           &#160;
                         </i>&#160;Run Report
@@ -9225,7 +9222,7 @@
           <div class="card card-default">
             <div class="panel-header">
               <h3 >&#160;</h3>
-              <a href="{$appPath}?ewCmd=NewMail&amp;parId={$MailRoot}" class="btn btn-sm btn-success pull-right">
+              <a href="{$appPath}?ewCmd=NewMail&amp;parId={$MailRoot}" class="btn btn-sm btn-success float-end">
                 <i class="fa fa-envelope">
                   <xsl:text> </xsl:text>
                 </i>&#160;Add New Campaign
@@ -9518,7 +9515,7 @@
                       <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm float-end">
                           <i class="fa fa-plus">&#160;</i>&#160;
                           Add
                         </a>
@@ -9531,7 +9528,7 @@
                         <h3>Feeds</h3>
                       </div>
                       <div class="col-md-6">
-                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm float-end">
                           <i class="fa fa-plus">&#160;</i>&#160;
                           Add
                         </a>
@@ -9544,7 +9541,7 @@
                       <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm float-end">
                           <i class="fa fa-plus">&#160;</i>&#160;
                           Add
                         </a>
@@ -9557,7 +9554,7 @@
                       <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm float-end">
                           <i class="fa fa-plus">&#160;</i>&#160;
                           Add
                         </a>
@@ -9573,7 +9570,7 @@
                           </h3>
                         </div>
                         <div class="col-md-6">
-                          <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                          <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm float-end">
                             <i class="fa fa-plus">&#160;</i>&#160;
                             Add
                           </a>
@@ -10021,7 +10018,7 @@
           <div class="card card-default">
             <div class="card-header">
               <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
-                <a href="{$appPath}?ewCmd=AddSubscriptionGroup"  class="btn btn-success pull-right">
+                <a href="{$appPath}?ewCmd=AddSubscriptionGroup"  class="btn btn-success float-end">
                   <i class="fa fa-plus">&#160;</i>&#160;
                   Add Subscription Category
                 </a>
@@ -10046,10 +10043,10 @@
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="{$appPath}?ewCmd=EditSubscriptionGroup&amp;grp={@nCatKey}"  class="btn btn-primary btn-sm pull-right">
+                        <a href="{$appPath}?ewCmd=EditSubscriptionGroup&amp;grp={@nCatKey}"  class="btn btn-primary btn-sm float-end">
                           <i class="fa fa-edit">&#160;</i>&#160;Edit
                         </a>
-                        <a href="{$appPath}?ewCmd=AddSubscription&amp;grp={@nCatKey}"  class="btn btn-success btn-sm pull-right">
+                        <a href="{$appPath}?ewCmd=AddSubscription&amp;grp={@nCatKey}"  class="btn btn-success btn-sm float-end">
                           <i class="fa fa-plus">&#160;</i>&#160;Add Subscription
                         </a>
                       </xsl:otherwise>
@@ -10253,7 +10250,7 @@
             <div class="col-md-6">
               <div class="card card-default">
                 <div class="card-header">
-                  <a href="?ewCmd=EditUserSubscription&amp;id={@id}" class="btn btn-primary pull-right">
+                  <a href="?ewCmd=EditUserSubscription&amp;id={@id}" class="btn btn-primary float-end">
                     <i class="fa fa-pencil">&#160;</i>&#160;
                     Edit Subscripiton
                   </a>
@@ -10461,7 +10458,7 @@
                         Paid By
                         <xsl:value-of select="@providerName"/>
 
-                        <a class="pull-right btn btn-default" href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@orderId}">Order</a>
+                        <a class="float-end btn btn-default" href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@orderId}">Order</a>
                       </li>
 
                     </xsl:for-each>
@@ -10864,10 +10861,10 @@
                 <th>Count</th>
                 <th>Subject</th>
                 <th>
-                  <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=processAll" class="btn btn-danger pull-right">
+                  <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=processAll" class="btn btn-danger float-end">
                     <i class="fa fa-plus">&#160;</i>&#160;Process All
                   </a>
-                  <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default pull-right" disabled="disabled">
+                  <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default float-end" disabled="disabled">
                     <i class="fa fa-history">&#160;</i>&#160;Process History
                   </a>
                 </th>
@@ -10944,7 +10941,7 @@
           </xsl:when>
           <xsl:otherwise>
             <div class="col-md-12 panel">
-              <a href="{$appPath}?ewCmd=MemberActivity" class="btn btn-primary pull-right">
+              <a href="{$appPath}?ewCmd=MemberActivity" class="btn btn-primary float-end">
                 <i class="fa fa-mail-reply">
                   <xsl:text> </xsl:text>
                 </i>Back
@@ -11124,7 +11121,7 @@
       <div class="row" id="template_AdvancedMode">
         <div class="col-md-3">
           <div class="alert alert-info">
-            <i class="fa fa-info-sign fa-3x pull-right">
+            <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
             </i>
             <h4>Hint</h4>
@@ -11472,7 +11469,7 @@
           <xsl:value-of select="@Name"/>
         </th>
         <th class="clearfix buttonCell">
-          <a href="{$appPath}?ewCmd=ManageLookups&amp;lookupId=0&amp;Category={@Name}" class="btn btn-success pull-right">
+          <a href="{$appPath}?ewCmd=ManageLookups&amp;lookupId=0&amp;Category={@Name}" class="btn btn-success float-end">
             <i class="fa fa-plus fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Add New Item
@@ -11495,12 +11492,12 @@
           <xsl:value-of select="cLkpValue/node()"/>
         </td>
         <td class="clearfix">
-          <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-danger btn-xs pull-right">
+          <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-danger btn-xs float-end">
             <i class="fa fa-trash-o fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Del
           </a>
-          <a href="{$appPath}?ewCmd=ManageLookups&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-primary btn-xs pull-right">
+          <a href="{$appPath}?ewCmd=ManageLookups&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-primary btn-xs float-end">
             <i class="fa fa-edit fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Edit
@@ -11996,8 +11993,8 @@
       <xsl:variable name="sortCol" select="/Page/Request//Item[@name='sortCol']/node()"/>
       <div class="panel">
         <div class="card-header">
-          <div class="btn-group pull-right">
-            <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-success btn-xs pull-right" target="_new">
+          <div class="btn-group float-end">
+            <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-success btn-xs float-end" target="_new">
               <i class="fa icon-file-excel">&#160;</i>&#160;Excel Download
             </a>
           </div>
@@ -12905,7 +12902,7 @@
             <xsl:apply-templates select="Summary" mode="cleanXhtml"/>
           </div>
           <div class="panel-footer">
-            <button class="btn btn-success pull-right" name="themeName" value="{ItemName/node()}">
+            <button class="btn btn-success float-end" name="themeName" value="{ItemName/node()}">
               <i class="fa fa-arrow-down">&#160;</i>&#160;Install Theme
             </button>&#160;<br/>&#160;
           </div>
@@ -12948,7 +12945,7 @@
             </td>
             <td>
               <!--
-          <button class="btn btn-success pull-right" name="themeName" value="{ItemName/node()}">
+          <button class="btn btn-success float-end" name="themeName" value="{ItemName/node()}">
             <i class="fa fa-pencil">&#160;</i>&#160;Edit Rule
           </button>
           -->

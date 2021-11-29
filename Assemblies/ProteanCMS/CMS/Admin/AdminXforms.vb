@@ -696,6 +696,10 @@ Partial Public Class Cms
                 Dim oFsh As fsHelper
                 Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
                 Try
+                    If myWeb.mcEWCommonFolder = "/ptn" Then
+                        xFormPath = "/admin/xforms/config/" & ConfigType & ".xml"
+                    End If
+
                     oFsh = New fsHelper
                     oFsh.open(moPageXML)
 

@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Content type="xform" name="WebSettings">
+  <model>
+    <instance>
+      <cart>
+        <add key="SiteURL" value="http://test.ds01.eonic.co.uk" />
+        <add key="SecureURL" value="http://test.ds01.eonic.co.uk/" />
+        <add key="TaxRate" value="20" />
+        <add key="MerchantName" value="Eonic Associates LLP." />
+        <add key="MerchantEmail" value="support@eonic.co.uk" />
+        <add key="OrderEmailSubject" value="" />
+        <add key="TermsContentId" value="" />
+        <add key="OrderNoPrefix" value="" />
+        <add key="CurrencySymbol" value="£" />
+        <add key="currency" value="GBP" />
+        <add key="DefaultCurrencyOveride" value="" />
+        <add key="StockControl" value="off" />
+        <add key="Deposit" value="off" />
+        <add key="DepositAmount" value="0" />
+        <add key="NotesXForm" value="..\xsl\cart\notes.xsl" />
+        <add key="BillingAddressXForm" value="" />
+        <add key="DeliveryAddressXForm" value="" />
+        <add key="MerchantEmailTemplatePath" value="..\xsl\cart\mailOrderMerchant.xsl" />
+        <add key="CustomerEmailTemplatePath" value="..\xsl\cart\mailOrderCustomer.xsl" />
+        <add key="CustomerEmailShippedTemplatePath" value="..\xsl\cart\mailOrderCustomerDelivery.xsl" />
+        <add key="NoDeliveryAddress" value="off" />
+        <add key="SavePayments" value="on" />
+        <add key="VatAtUnit" value="on" />
+        <add key="Discounts" value="on" />
+        <add key="AddBehaviour" value="none" />
+        <add key="PriorityCountries" value="United Kingdom, United States" />
+        <add key="PriceModOrder" value="Basic_Money,Basic_Percent,Break_Product" />
+        <add key="ClearOnAdd" value="off" />
+        <add key="DontTaxShipping" value="off" />
+        <add key="DefaultDeliveryCountry" value="" />
+        <add key="ShippedValidation" value="on" />
+        <add key="PaymentTypeButtons" value="off" />
+        <add key="ProductOptionOverideQuantity" value="off"/>
+        <add key="EmailReceipts" value="on"/>
+        <add key="TaxFromDeliveryAddress" value="off"/>
+      </cart>
+    </instance>
+    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+    <bind id="ewSiteURL" nodeset="cart/add[@key='SiteURL']/@value" required="true()" type="string" />
+    <bind id="ewSecureURL" nodeset="cart/add[@key='SecureURL']/@value" required="true()" type="string" />
+    <bind id="ewTaxRate" nodeset="cart/add[@key='TaxRate']/@value" required="true()" type="string" />
+    <bind id="ewMerchantName" nodeset="cart/add[@key='MerchantName']/@value" required="true()" type="string" />
+    <bind id="ewMerchantEmail" nodeset="cart/add[@key='MerchantEmail']/@value" required="true()" type="string" />
+    <bind id="ewOrderEmailSubject" nodeset="cart/add[@key='OrderEmailSubject']/@value" required="true()" type="string" />
+    <bind id="ewOrderNoPrefix" nodeset="cart/add[@key='OrderNoPrefix']/@value" required="true()" type="string" />
+    <bind id="ewCurrencySymbol" nodeset="cart/add[@key='CurrencySymbol']/@value" required="false()" type="string" />
+    <bind id="ewDefaultCurrencyOveride" nodeset="cart/add[@key='DefaultCurrencyOveride']/@value" required="false()" type="string" />
+    <bind id="ewStockControl" nodeset="cart/add[@key='StockControl']/@value" required="true()" type="string" />
+    <bind id="ewDeposit" nodeset="cart/add[@key='Deposit']/@value" required="true()" type="string" />
+    <bind id="ewDepositAmount" nodeset="cart/add[@key='DepositAmount']/@value" required="false()" type="string" />
+    <bind id="ewNotesXForm" nodeset="cart/add[@key='NotesXForm']/@value" required="false()" type="string" />
+    <bind id="ewBillingAddressXForm" nodeset="cart/add[@key='BillingAddressXForm']/@value" required="false()" type="string" />
+    <bind id="ewDeliveryAddressXForm" nodeset="cart/add[@key='DeliveryAddressXForm']/@value" required="false()" type="string" />
+    <bind id="ewNoDeliveryAddress" nodeset="cart/add[@key='NoDeliveryAddress']/@value" required="true()" type="string" />
+    <bind id="ewEmailReceipts" nodeset="cart/add[@key='EmailReceipts']/@value" required="false()" type="string" />
+    <bind id="ewMerchantEmailTemplatePath" nodeset="cart/add[@key='MerchantEmailTemplatePath']/@value" required="false()" type="string" />
+    <bind id="ewCustomerEmailTemplatePath" nodeset="cart/add[@key='CustomerEmailTemplatePath']/@value" required="false()" type="string" />
+    <bind id="CustomerEmailShippedTemplatePath" nodeset="cart/add[@key='CustomerEmailShippedTemplatePath']/@value" required="false()" type="string" />
+    <bind id="ewPriorityCountries" nodeset="cart/add[@key='PriorityCountries']/@value" required="true()" type="string" />
+    <bind id="ewSavePayments" nodeset="cart/add[@key='SavePayments']/@value" required="true()" type="string" />
+    <bind id="ewVatAtUnit" nodeset="cart/add[@key='VatAtUnit']/@value" required="true()" type="string" />
+    <bind id="ewDiscounts" nodeset="cart/add[@key='Discounts']/@value" required="true()" type="string" />
+    <bind id="ewAddBehaviour" nodeset="cart/add[@key='AddBehaviour']/@value" required="true()" type="string" />
+    <bind id="ewPriceModOrder" nodeset="cart/add[@key='PriceModOrder']/@value" required="false()" type="string" />
+    <bind id="ewClearOnAdd" nodeset="cart/add[@key='ClearOnAdd']/@value" required="false()" type="string" />
+    <bind id="ewDontTaxShipping" nodeset="cart/add[@key='DontTaxShipping']/@value" required="false()" type="string" />
+    <bind id="DefaultDeliveryCountry" nodeset="cart/add[@key='DefaultDeliveryCountry']/@value" required="false()" type="string" />
+    <bind id="ShippedValidation" nodeset="cart/add[@key='ShippedValidation']/@value" required="false()" type="string" />
+    <bind id="PaymentTypeButtons" nodeset="cart/add[@key='PaymentTypeButtons']/@value" required="false()" type="string" />
+    <bind id="ProductOptionOverideQuantity" nodeset="cart/add[@key='ProductOptionOverideQuantity']/@value" required="false()" type="string" />
+    <bind id="ewTaxFromDeliveryAddress" nodeset="cart/add[@key='TaxFromDeliveryAddress']/@value" required="false()" type="string" />
+  </model>
+  <group ref="CartSettings">
+    <label>Cart Settings</label>
+    <alert>Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call Eonic Technical Support on +44(0)1892 534044.</alert>
+    <group class="inline">
+    
+    <input bind="ewMerchantName" class="long">
+      <label>Merchant Name</label>
+      <value></value>
+    </input>
+    <input bind="ewSiteURL">
+      <label>Site URL</label>
+      <value></value>
+    </input>
+    <input bind="ewSecureURL">
+      <label>Secure URL</label>
+      <value></value>
+    </input>
+    </group>
+    <group class="inline">
+      <label>Email Settings</label>
+     <input bind="ewMerchantEmail">
+      <label>Merchant Email</label>
+      <value></value>
+    </input>
+    <input bind="ewOrderEmailSubject">
+      <label>Order Email Subject</label>
+      <value />
+    </input>
+      <select1 bind="ewEmailReceipts" appearance="full">
+        <label>Email Receipts</label>
+        <item>
+          <label>Yes</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>off</value>
+        </item>
+      </select1>
+      <input bind="ewMerchantEmailTemplatePath">
+        <label>Merchant Email Template Path</label>
+        <value />
+      </input>
+      <input bind="ewCustomerEmailTemplatePath">
+        <label>Customer Email Template Path</label>
+        <value />
+      </input>
+      <select1 bind="ShippedValidation" appearance="full">
+        <label>Force Shipping Dates</label>
+        <item>
+          <label>Yes</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>off</value>
+        </item>
+      </select1>
+      <input bind="CustomerEmailShippedTemplatePath">
+        <label>Customer Shipped Email Template Path</label>
+        <value />
+      </input>
+    </group>
+    <group class="inline">
+      <label>Configuration</label>
+      <input bind="ewTaxRate">
+        <label>Tax Rate</label>
+        <value></value>
+      </input>
+      <select1 bind="ewTaxFromDeliveryAddress" appearance="full">
+        <label>Tax Based on Delivery Address</label>
+        <item>
+          <label>On</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>Off</label>
+          <value>off</value>
+        </item>
+        <value />
+      </select1>
+    <input bind="ewOrderNoPrefix">
+      <label>Order No. Prefix</label>
+      <value />
+    </input>
+    <input bind="ewCurrencySymbol">
+      <label>Currency Symbol</label>
+      <value />
+    </input>
+      <input bind="ewDefaultCurrencyOveride">
+        <label>Default Transaction currency, overides GBP</label>
+        <value />
+      </input>
+      
+      <select1 bind="ewStockControl" appearance="full">
+      <label>Stock Control</label>
+      <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+      <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+     <select1 bind="ewSavePayments" appearance="full">
+        <label>SavePayments</label>
+        <item>
+          <label>On</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>Off</label>
+          <value>off</value>
+        </item>
+        <value />
+      </select1>
+      <select1 bind="ewVatAtUnit" appearance="full">
+        <label>Vat At Unit</label>
+        <item>
+          <label>Yes</label>
+          <value>yes</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>no</value>
+        </item>
+        <value />
+      </select1>
+        <select1 bind="ewDontTaxShipping" appearance="full">
+            <label>Do Not Tax Shipping</label>
+            <item>
+                <label>Yes</label>
+                <value>yes</value>
+            </item>
+            <item>
+                <label>No</label>
+                <value>no</value>
+            </item>
+            <value />
+        </select1>
+      <select1 bind="ewDiscounts" appearance="full">
+        <label>Discounts</label>
+        <item>
+          <label>On</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>Off</label>
+          <value>off</value>
+        </item>
+        <value />
+      </select1>
+      <input bind="ewPriceModOrder">
+        <label>Price Mod Order</label>
+        <value />
+      </input><input bind="ewPriorityCountries">
+        <label>Priority Countries</label>
+        <value />
+      </input>
+      <select1 bind="ewAddBehaviour" appearance="full">
+        <label>Add to Cart Behaviour</label>
+        <item>
+          <label>Cart Summary</label>
+          <value>none</value>
+        </item>
+        <item>
+          <label>Discounts Form</label>
+          <value>discounts</value>
+        </item>
+        <item>
+          <label>Notes Form</label>
+          <value>notes</value>
+        </item>
+        <item>
+          <label>Don't Show Cart</label>
+          <value>brief</value>
+        </item>
+        <value />
+      </select1>
+    </group>
+    <group class="inline">
+      <label>Deposit Collection</label>
+    <select1 bind="ewDeposit" appearance="full">
+      <label>Deposit</label>
+      <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+      <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+    <input bind="ewDepositAmount">
+      <label>DepositAmount</label>
+      <value>0</value>
+    </input>
+    </group>
+    <group class="inline">
+      <label>Bespoke Forms</label>
+    <input bind="ewNotesXForm" class="long">
+      <label>Notes Xform</label>
+      <value />
+    </input>
+    <select1 bind="ewNoDeliveryAddress" appearance="full">
+      <label>Disable Delivery Address</label>
+      <item>
+        <label>Yes</label>
+        <value>on</value>
+      </item>
+      <item>
+        <label>No</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+    <input bind="ewBillingAddressXForm">
+      <label>Billing Address Xform</label>
+      <value />
+    </input>
+    <input bind="ewDeliveryAddressXForm">
+      <label>DeliveryAddress Xform</label>
+      <value />
+    </input>
+        <select1 bind="ewClearOnAdd" appearance="full">
+            <label>Clear cart when adding new items</label>
+            <item>
+                <label>On</label>
+                <value>on</value>
+            </item>
+            <item>
+                <label>Off</label>
+                <value>off</value>
+            </item>
+            <value />
+        </select1>
+      <select1 bind="DefaultDeliveryCountry" class="ewQuery" query="Countries" appearance="minimal" >
+        <label>Default Delivery Country</label>
+      </select1>
+      <select1 bind="PaymentTypeButtons" appearance="full">
+        <label>Show buttons not radios for Payment Type</label>
+        <item>
+          <label>On</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>Off</label>
+          <value>off</value>
+        </item>
+        <value />
+      </select1>
+      <select1 bind="ProductOptionOverideQuantity" appearance="full">
+        <label>Ignore product quantity for price options, and use option quanity</label>
+        <item>
+          <label>On</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>Off</label>
+          <value>off</value>
+        </item>
+        <value />
+      </select1>
+    </group>
+     <submit submission="" ref="submit" class="principle">
+      <label>Save Settings</label>
+    </submit>
+    </group>
+</Content>
