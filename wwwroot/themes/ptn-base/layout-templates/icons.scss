@@ -52,16 +52,7 @@
 //------------------------
 //ICON CIRCLES
 //------------------------
-@mixin icon-circles($background: $brand-primary;
-$color: contrast($background,$contrast-color,#fff);
-$width: 90px;
-$height: 90px;
-$padding: 0px;
-$radius: 100px;
-$size: 40px;
-
-) {
-    
+@mixin icon-circles($background: $brand-primary, $color: contrast($background,$contrast-color,#fff), $width: 90px, $height: 90px, $padding: 0px, $radius: 100px, $size: 40px ) {
     background: $background;
     color: $color;
     padding: $padding;

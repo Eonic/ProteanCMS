@@ -60,7 +60,7 @@
         margin-bottom: 0;
 
         .principle {
-            .btn-mixin($brand-action)
+            @include btn-mixin($brand-action)
         }
 
         .navbar-header {
@@ -133,43 +133,33 @@
 //NAV MIXINS
 //------------------------------------------------
 //navbars spacing
-@mixin main-navbar-spacing($vertical: $navbar-padding-vertical;
-$horizontal: $navbar-padding-horizontal;
-
-) {
+@mixin main-navbar-spacing($vertical: $navbar-padding-vertical, $horizontal: $navbar-padding-horizontal ) {
     a {
         padding: $vertical $horizontal;
     }
 }
 
-@mixin main-navbar-spacing($vertical: $navbar-padding-vertical;
-$horizontal: $navbar-padding-horizontal;
+@mixin main-navbar-spacing($vertical: $navbar-padding-vertical, $horizontal: $navbar-padding-horizontal ) {
+    @if $navbar-default-bg == transparent and $nav-hover-bg == transparent and $nav-active-bg == transparent {
+        margin: 0;
 
-) when ($navbar-default-bg = transparent) and ($nav-hover-bg = transparent) and ($nav-active-bg = transparent) {
-    margin: 0;
+        @media(min-width:$grid-float-breakpoint) {
+            margin: 0 -$horizontal;
+        }
 
-    @media(min-width:$grid-float-breakpoint) {
-        margin: 0 -$horizontal;
+        a {
+            padding: $vertical $horizontal;
+        }
     }
+}
 
+@mixin navbar-spacing($vertical: $navbar-padding-vertical, $horizontal: $navbar-padding-horizontal ) {
     a {
         padding: $vertical $horizontal;
     }
 }
 
-@mixin navbar-spacing($vertical: $navbar-padding-vertical;
-$horizontal: $navbar-padding-horizontal;
-
-) {
-    a {
-        padding: $vertical $horizontal;
-    }
-}
-
-@mixin navbar-spacing-clean($vertical: $navbar-padding-vertical;
-$horizontal: $navbar-padding-horizontal;
-
-) {
+@mixin navbar-spacing-clean($vertical: $navbar-padding-vertical, $horizontal: $navbar-padding-horizontal ) {
     margin: 0 -$horizontal;
 
     a {
@@ -177,13 +167,7 @@ $horizontal: $navbar-padding-horizontal;
     }
 }
 //navbar colours
-@mixin navbar-color-basic($color: $nav-text-color;
-$hover: $nav-hover-color;
-$hover-bg: $nav-hover-bg;
-$active: $nav-active-color;
-$active-bg: $nav-active-bg
-
-) {
+@mixin navbar-color-basic($color: $nav-text-color, $hover: $nav-hover-color, $hover-bg: $nav-hover-bg, $active: $nav-active-color, $active-bg: $nav-active-bg ) {
     li a {
         color: $color;
 
@@ -201,11 +185,7 @@ $active-bg: $nav-active-bg
     }
 }
 //navbars without backgrounds
-@mixin navbar-color-clean($color: $nav-text-color;
-$hover: $nav-hover-color;
-$active: $nav-active-color;
-
-) {
+@mixin navbar-color-clean($color: $nav-text-color, $hover: $nav-hover-color, $active: $nav-active-color ) {
     li a {
         color: $color;
 
@@ -261,12 +241,14 @@ $active: $nav-active-color;
             }
         }
 
-        nav.navbar-collapse when ($flex-nav = true) {
-            @include flex-grow(3);
+        nav.navbar-collapse {
+            @if $flex-nav == true {
+                @include flex-grow(3);
 
-            ul.navbar-nav {
-                @include flex-display;
-                @include justify-content(flex-end);
+                ul.navbar-nav {
+                    @include flex-display;
+                    @include justify-content(flex-end);
+                }
             }
         }
     }
@@ -556,11 +538,7 @@ $active: $nav-active-color;
         @include icon-center;
 
         i {
-            .icon-circles($background:$header-icon;
-            $width: 35px;
-            $height: 35px;
-            $size: 1em;
-            )
+            @include icon-circles($background:$header-icon, $width: 35px, $height: 35px, $size: 1em )
         }
     }
 
@@ -612,12 +590,7 @@ $active: $nav-active-color;
 //CART BRIEF
 //------------------------------------------------
 .Site {
-    @mixin cart-circle($background: $header-icon;
-    $padding: 10px;
-    $radius: 50px;
-    $percentage: $btn-hover-percentage;
-
-    ) {
+    @mixin cart-circle($background: $header-icon, $padding: 10px, $radius: 50px, $percentage: $btn-hover-percentage ) {
         padding-top: 0;
         margin-left: ($header-item-spacing/2);
         margin-right: ($header-item-spacing/2);
@@ -726,14 +699,7 @@ $active: $nav-active-color;
 //SEARCH
 //------------------------------------------------
 .Site {
-    @mixin search-grouped($height: 35px;
-    $border: 1px;
-    $radius: $btn-radius-base;
-    $btn-width: 40px;
-    $btn-color: $brand-action;
-    $border-color: #ccc;
-
-    ) {
+    @mixin search-grouped($height: 35px, $border: 1px, $radius: $btn-radius-base, $btn-width: 40px, $btn-color: $brand-action, $border-color: #ccc) {
         .CTAsearch {
             height: $height;
             border-width: $border;
@@ -769,8 +735,7 @@ $active: $nav-active-color;
             float: left;
             margin-top: 20px;
             margin-bottom: 30px;
-            @include search-grouped($border:0px;
-            );
+            @include search-grouped($border:0px );
 
             input.CTAsearch {
                 width: ($xs-navmenu-width - ($grid-gutter-width + 35px));
@@ -836,11 +801,13 @@ $active: $nav-active-color;
         }
     }
     //HEADER WITH DARK BACKGROUND
-    .header when (luma($header-bg) < 50%) {
-        .navbar-header {
-            #cartBrief .cartinfo > a,
-            .strapline {
-                color: #fff
+    .header {
+        @if luma($header-bg) < 50% {
+            .navbar-header {
+                #cartBrief .cartinfo > a,
+                .strapline {
+                    color: #fff
+                }
             }
         }
     }
@@ -862,13 +829,7 @@ $active: $nav-active-color;
 //------------------------------------------------
 .Site {
     //sub menu colours from variables
-    @mixin sub-menu-colors($color: $sub-nav-color;
-    $hover: $sub-nav-hover;
-    $hover-bg: $sub-nav-hover-bg;
-    $active: $sub-nav-active;
-    $active-bg: $sub-nav-active-bg
-
-    ) {
+    @mixin sub-menu-colors($color: $sub-nav-color, $hover: $sub-nav-hover, $hover-bg: $sub-nav-hover-bg, $active: $sub-nav-active, $active-bg: $sub-nav-active-bg ) {
         li a {
             color: $color;
 
@@ -897,12 +858,7 @@ $active: $nav-active-color;
             padding: 0;
             margin: 0;
             @include navbar-spacing-clean($sub-nav-padding-vertical,$sub-nav-padding-horizontal);
-            @include navbar-color-basic($color:$sub-nav-color;
-            $hover: $sub-nav-hover;
-            $hover-bg: $sub-nav-hover-bg;
-            $active: $sub-nav-active;
-            $active-bg: $sub-nav-active-bg
-            );
+            @include navbar-color-basic($color:$sub-nav-color, $hover: $sub-nav-hover, $hover-bg: $sub-nav-hover-bg, $active: $sub-nav-active, $active-bg: $sub-nav-active-bg );
             @include clearfix;
 
             li {
@@ -917,19 +873,23 @@ $active: $nav-active-color;
         }
     }
 
-    .top-sub-menu when ($flex-sub-nav = true) {
-        @include flex-grow(3);
+    .top-sub-menu {
+        @if $flex-sub-nav == true {
+            @include flex-grow(3);
 
-        ul {
-            @include flex-display;
-            @include justify-content(flex-end);
+            ul {
+                @include flex-display;
+                @include justify-content(flex-end);
+            }
         }
     }
 
-    .top-sub-menu when ($sub-nav-background = transparent) {
-        ul {
-            margin-left: -$sub-nav-padding-horizontal;
-            margin-right: -$sub-nav-padding-horizontal;
+    .top-sub-menu {
+        @if $sub-nav-background == transparent {
+            ul {
+                margin-left: -$sub-nav-padding-horizontal;
+                margin-right: -$sub-nav-padding-horizontal;
+            }
         }
     }
     //SIDE SUB NAV AND MOBILE SUB MENU
@@ -980,13 +940,17 @@ $active: $nav-active-color;
             }
         }
 
-        > ul when ($sub-nav-background = transparent) {
-            margin-left: -$sub-nav-padding-horizontal;
-            margin-right: -$sub-nav-padding-horizontal;
+        > ul {
+            @if $sub-nav-background == transparent {
+                margin-left: -$sub-nav-padding-horizontal;
+                margin-right: -$sub-nav-padding-horizontal;
+            }
         }
 
-        h4 when ($sub-nav-background = transparent) {
-            padding: 0;
+        h4 {
+            @if $sub-nav-background == transparent {
+                padding: 0;
+            }
         }
     }
 
@@ -1186,11 +1150,7 @@ $active: $nav-active-color;
     }
 }
 
-@mixin link-list-clean($color: $link-color;
-$size: $font-size-base;
-$padding: 10px;
-
-) {
+@mixin link-list-clean($color: $link-color, $size: $font-size-base, $padding: 10px ) {
     padding-top: 0;
     padding-bottom: $padding;
 

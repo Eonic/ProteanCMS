@@ -1,4 +1,28 @@
-﻿.Site {
+﻿@mixin panel-clean() {
+    background: none;
+    padding: 0;
+    border: 0;
+
+    .panel-heading,
+    .panel-body,
+    .list-group,
+    .panel-footer {
+        background: none;
+        padding: 0;
+        border: 0;
+    }
+
+    .list-group {
+        margin-left: -($grid-gutter-width/2);
+        margin-right: -($grid-gutter-width/2);
+
+        @media(max-width:$xs-grid-max) {
+            margin-left: -($xs-grid-gutter-width/2);
+            margin-right: -($xs-grid-gutter-width/2);
+        }
+    }
+}
+.Site {
     //box padding
     .alert,
     .well {
@@ -217,8 +241,10 @@
             background: none;
             border-width: 0;
 
-            a.btn when($btn-clean-footer = true) {
-                @include btn-clean;
+            a.btn {
+                @if $btn-clean-footer == true {
+                    @include btn-clean;
+                }
             }
         }
     }
@@ -353,12 +379,14 @@
             }
         }
 
-        .btn-default when($btn-clean = true) {
-            @include btn-clean;
-            color: $contrast;
+        .btn-default {
+            @if $btn-clean == true {
+                @include btn-clean;
+                color: $contrast;
 
-            &:hover {
-                color: $hover;
+                &:hover {
+                    color: $hover;
+                }
             }
         }
     }
@@ -400,12 +428,14 @@
             }
         }
 
-        .btn-default when($btn-clean-footer = true) {
-            @include btn-clean;
-            color: $contrast;
+        .btn-default {
+            @if $btn-clean-footer == true {
+                @include btn-clean;
+                color: $contrast;
 
-            &:hover {
-                color: $hover;
+                &:hover {
+                    color: $hover;
+                }
             }
         }
     }
@@ -419,63 +449,37 @@
 #adminLayout .boxStyle {
     //PANEL	COLOURS
     .panel-action {
-        @include panel-variant($panel-action-border;
-        $panel-action-text;
-        $panel-action-heading-bg;
-        $panel-action-border
-        );
+     //   @include panel-variant($panel-action-border, $panel-action-text, $panel-action-heading-bg, $panel-action-border );
     }
 
     .alert-action {
-        @include alert-variant($alert-action-bg;
-        $alert-action-border;
-        $alert-action-text
-        );
+        @include alert-variant($alert-action-bg, $alert-action-border, $alert-action-text );
     }
 
     .panel-primary {
-        .panel-mixin($state-primary-bg)
+        @include panel-mixin($state-primary-bg);
     }
 
     .panel-action {
-        .panel-mixin($state-action-bg)
+        @include panel-mixin($state-action-bg);
     }
 
     .panel-info {
-        .panel-mixin($state-info-bg)
+        @include panel-mixin($state-info-bg);
     }
 
     .panel-success {
-        .panel-mixin($state-success-bg)
+        @include panel-mixin($state-success-bg);
     }
 
     .panel-warning {
-        .panel-mixin($state-warning-bg)
+        @include panel-mixin($state-warning-bg);
     }
 
     .panel-danger {
-        .panel-mixin($state-danger-bg)
+        @include panel-mixin($state-danger-bg);
     }
 
-    .alert-action {
-        .alert-mixin($state-action-bg,contrast($state-action-bg,#fff,$contrast-color))
-    }
-
-    .alert-info {
-        .alert-mixin($state-info-bg,contrast($state-info-bg,#fff,$contrast-color))
-    }
-
-    .alert-success {
-        .alert-mixin($state-success-bg,contrast($state-success-bg,#fff,$contrast-color))
-    }
-
-    .alert-warning {
-        .alert-mixin($state-warning-bg,contrast($state-warning-bg,#fff,$contrast-color))
-    }
-
-    .alert-danger {
-        .alert-mixin($state-danger-bg,contrast($state-danger-bg,#fff,$contrast-color))
-    }
 }
 //------------------------------------------------
 //ALERTS
@@ -517,23 +521,27 @@
     }
 
     .list-group {
-        a.btn when($btn-clean = true) {
-            @include btn-clean;
-            color: lighten($color,30%);
+        a.btn {
+            @if $btn-clean == true {
+                @include btn-clean;
+                color: lighten($color,30%);
 
-            &:hover {
-                color: lighten($color, 10%);
+                &:hover {
+                    color: lighten($color, 10%);
+                }
             }
         }
 
-        a.btn when($btn-clean = false) {
-            color: $color;
-            background-color: $contrast;
-            border-color: $contrast;
+        a.btn {
+            @if $btn-clean == true {
+                color: $color;
+                background-color: $contrast;
+                border-color: $contrast;
 
-            &:hover {
-                background-color: lighten($color,50%);
-                border-color: lighten($color,50%);
+                &:hover {
+                    background-color: lighten($color,50%);
+                    border-color: lighten($color,50%);
+                }
             }
         }
     }
@@ -565,6 +573,26 @@
         background-color: fade($contrast,40%);
         border-color: fade($contrast,0%);
     }
+
+    .alert-action {
+        @include alert-mixin($state-action-bg,contrast($state-action-bg,#fff,$contrast-color));
+    }
+
+    .alert-info {
+        @include alert-mixin($state-info-bg,contrast($state-info-bg,#fff,$contrast-color));
+    }
+
+    .alert-success {
+        @include alert-mixin($state-success-bg,contrast($state-success-bg,#fff,$contrast-color));
+    }
+
+    .alert-warning {
+        @include alert-mixin($state-warning-bg,contrast($state-warning-bg,#fff,$contrast-color));
+    }
+
+    .alert-danger {
+        @include alert-mixin($state-danger-bg,contrast($state-danger-bg,#fff,$contrast-color));
+    }
 }
 //------------------------------------------------
 //ALERTS, WELLS AND JUMBOTRON
@@ -588,8 +616,8 @@
     }
 
     .jumbotron .morelink a {
-        @include btn-primary;
-        @include btn-lg;
+      //  @include btn-primary;
+       // @include btn-lg;
     }
 
     .well {
@@ -598,9 +626,9 @@
     }
 
     .sentMessage {
-        @include alert;
-        @include alert-success;
-        .alert-mixin($state-success-bg,#fff)
+      //  @include alert;
+     //   @include alert-success;
+        @include alert-mixin($state-success-bg,#fff);
     }
 
     #cartFull .template_2_Columns .column1,
@@ -648,27 +676,4 @@
     }
 }
 
-@mixin panel-clean() {
-    background: none;
-    padding: 0;
-    border: 0;
 
-    .panel-heading,
-    .panel-body,
-    .list-group,
-    .panel-footer {
-        background: none;
-        padding: 0;
-        border: 0;
-    }
-
-    .list-group {
-        margin-left: -($grid-gutter-width/2);
-        margin-right: -($grid-gutter-width/2);
-
-        @media(max-width:$xs-grid-max) {
-            margin-left: -($xs-grid-gutter-width/2);
-            margin-right: -($xs-grid-gutter-width/2);
-        }
-    }
-}

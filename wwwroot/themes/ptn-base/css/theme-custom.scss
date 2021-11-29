@@ -38,21 +38,7 @@ body {
     }
 }
 //heading mixins
-@mixin h1-style() {
-    @include heading-style(40px);
-}
 
-@mixin h2-style() {
-    @include heading-style(35px)
-}
-
-@mixin h3-style() {
-    @include heading-style(25px)
-}
-
-@mixin h4-style() {
-    @include heading-style(18px)
-}
 
 .Site {
     h1 {
@@ -210,23 +196,7 @@ body {
 //LINKS
 //------------------------------------------------
 //Link Mixins
-@mixin link-color($color: $link-color,$percentage: $link-hover-percentage,) {
-    color: $color;
 
-    &:hover,
-    &:focus {
-        color: darken($color,$percentage)
-    }
-}
-
-@mixin link-color-lighten($color: $link-color,$percentage: $link-hover-percentage,) {
-    color: $color;
-
-    &:hover,
-    &:focus {
-        color: lighten($color,$percentage)
-    }
-}
 
 //Impiment Links
 .Site {
@@ -352,16 +322,11 @@ body {
         .module-FormattedText.nobox.module-centred > .editable > h3.title:not(.module-with-icon),
         .module-FormattedText.nobox.module-centred > h3.title.module-with-icon,
         .module-FormattedText.nobox.module-centred > .editable > h3.title.module-with-icon {
-            @include heading-color($color:$color,
-            $link: $color
-            );
+            @include heading-color($color:$color, $link: $color );
         }
     }
 
-    @mixin background-spacing($margin: $section-padding,
-    $xs-margin: $xs-section-padding,
-
-    ) {
+    @mixin background-spacing($margin: $section-padding, $xs-margin: $xs-section-padding) {
         margin-bottom: $margin;
         padding-top: $margin;
         padding-bottom: ($section-padding - $box-margin);
@@ -1353,43 +1318,21 @@ body .cc-cookies {
     }
 }
 
-@mixin clear-shadow() {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    -webkit-text-shadow: none;
-    -moz-text-shadow: none;
-    text-shadow: none;
-}
+
 
 @mixin remove-gradient() {
     background: none;
     filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
 }
 
-@mixin box-content($background: $body-bg,
-$color: contrast($background,#fff,$text-color),
-$link: $link-color,
-$hover: darken($link-color,$link-hover-percentage)
-
-) {
+@mixin box-content($background: $body-bg, $color: contrast($background,#fff,$text-color), $link: $link-color, $hover: darken($link-color,$link-hover-percentage) ) {
     background: $background;
     padding: $box-padding-vertical $box-padding-horizontal;
     border-radius: $border-radius-base;
     color: $color;
 }
 
-@mixin list-box-content($background: $body-bg,
-$color: contrast($background,#fff,$text-color),
-$link: $link-color,
-$hover: darken($link-color,$link-hover-percentage),
-$heading: $headings-color,
-$padding-vertical: $box-padding-vertical,
-$padding-horizontal: $box-padding-horizontal,
-$btn-height: 30px,
-$btn-align: $btn-align
-
-) {
+@mixin list-box-content($background: $body-bg, $color: contrast($background,#fff,$text-color), $link: $link-color, $hover: darken($link-color,$link-hover-percentage), $heading: $headings-color, $padding-vertical: $box-padding-vertical, $padding-horizontal: $box-padding-horizontal, $btn-height: 30px, $btn-align: $btn-align ) {
     .listItem .lIinner {
         background: $background;
         padding: $padding-vertical $padding-horizontal ($padding-vertical + $btn-height);
@@ -1412,17 +1355,12 @@ $btn-align: $btn-align
 
         h3.title,
         h4.media-heading {
-            @include heading-color($color:$heading,
-            $link: $heading
-            );
+            @include heading-color($color:$heading, $link: $heading );
         }
     }
 }
 
-@mixin list-btn-align($btn-height: 30px,
-$padding: 20px,
-
-) {
+@mixin list-btn-align($btn-height: 30px, $padding: 20px) {
     height: 100%;
     position: relative;
     padding-bottom: ($btn-height + $padding);
@@ -1436,10 +1374,7 @@ $padding: 20px,
     }
 }
 
-@mixin grid-spacing($space: ($grid-gutter-width*2),
-$vertical-space: $space
-
-) {
+@mixin grid-spacing($space: ($grid-gutter-width*2), $vertical-space: $space ) {
     .row {
         margin-left: -($space/2);
         margin-right: -($space/2);
@@ -1455,10 +1390,7 @@ $vertical-space: $space
     }
 }
 
-@mixin list-grid-spacing($space: ($grid-gutter-width*2),
-$vertical-space: $space
-
-) {
+@mixin list-grid-spacing($space: ($grid-gutter-width*2), $vertical-space: $space ) {
     .cols {
         margin-left: -($space/2) !important;
         margin-right: -($space/2) !important;
@@ -1470,7 +1402,7 @@ $vertical-space: $space
     }
 }
 
-.quote-clean {
+@mixin quote-clean {
     blockquote {
         padding: 0;
         margin: 0;

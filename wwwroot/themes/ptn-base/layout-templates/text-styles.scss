@@ -24,11 +24,7 @@
 //------------------------
 //HEADING STYLES
 //------------------------
-@mixin heading-color($color: $headings-color;
-$link: $headings-color;
-$hover: $link-color;
-
-) {
+@mixin heading-color($color: $headings-color, $link: $headings-color, $hover: $link-color ) {
     color: $color;
 
     a {
@@ -41,13 +37,7 @@ $hover: $link-color;
     }
 }
 
-@mixin heading-style($size: 25px;
-$margin: 10px;
-$font-weight: $headings-font-weight;
-$line-height: 1.2;
-$font-family: $headings-font-family
-
-) {
+@mixin heading-style($size: 25px, $margin: 10px, $font-weight: $headings-font-weight, $line-height: 1.2, $font-family: $headings-font-family ) {
     font-size: ($size / 1.2);
 
     @media(min-width:$screen-sm-min) {
@@ -58,4 +48,19 @@ $font-family: $headings-font-family
     line-height: $line-height;
     font-family: $font-family;
     margin-bottom: $margin;
+}
+@mixin h1-style() {
+    @include heading-style(40px);
+}
+
+@mixin h2-style() {
+    @include heading-style(35px)
+}
+
+@mixin h3-style() {
+    @include heading-style(25px)
+}
+
+@mixin h4-style() {
+    @include heading-style(18px)
 }

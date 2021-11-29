@@ -104,137 +104,147 @@
     //LAYOUTS
     //------------------------------------------------
     //adjusts width of container when grid gutter width is over 30 to prevent horizontal scrolling
-    .container when($xs-grid-gutter-width > 30) {
-        @media (min-width: $screen-sm-min) {
-            width: ($container-sm - ($xs-grid-gutter-width - 30));
-        }
-
-        @media (min-width: $screen-md-min) {
-            width: ($container-md - ($xs-grid-gutter-width - 30));
-        }
-
-        @media (min-width: $screen-lg-min) {
-            width: ($container-lg - ($xs-grid-gutter-width - 30));
-        }
-    }
-
-    #mainTable when($container = true) {
-        background: $content-bg;
-        @include container-fixed;
-        padding-left: 0;
-        padding-right: 0;
-
-        @media (min-width: $screen-sm-min) {
-            width: $container-sm;
-        }
-
-        @media (min-width: $screen-md-min) {
-            width: $container-md;
-        }
-
-        @media (min-width: $screen-lg-min) {
-            width: $container-lg;
-        }
-
-        .container {
+    .container {
+        @if $xs-grid-gutter-width > 30 {
             @media (min-width: $screen-sm-min) {
-                width: ($container-sm - $xs-grid-gutter-width);
+                width: ($container-sm - ($xs-grid-gutter-width - 30));
             }
 
             @media (min-width: $screen-md-min) {
-                width: ($container-md - $xs-grid-gutter-width);
+                width: ($container-md - ($xs-grid-gutter-width - 30));
             }
 
             @media (min-width: $screen-lg-min) {
-                width: ($container-lg - $xs-grid-gutter-width);
+                width: ($container-lg - ($xs-grid-gutter-width - 30));
             }
         }
     }
 
-    #mainTable when($container = true) and ($xs-grid-gutter-width > 30) {
-        @media (min-width: $screen-sm-min) {
-            width: ($container-sm - ($xs-grid-gutter-width - 30));
-        }
+    #mainTable {
+        @if $container == true {
+            background: $content-bg;
+            @include container-fixed;
+            padding-left: 0;
+            padding-right: 0;
 
-        @media (min-width: $screen-md-min) {
-            width: ($container-md - ($xs-grid-gutter-width - 30));
-        }
-
-        @media (min-width: $screen-lg-min) {
-            width: ($container-lg - ($xs-grid-gutter-width - 30));
-        }
-
-        .container {
             @media (min-width: $screen-sm-min) {
-                width: ($container-sm - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                width: $container-sm;
             }
 
             @media (min-width: $screen-md-min) {
-                width: ($container-md - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                width: $container-md;
             }
 
             @media (min-width: $screen-lg-min) {
-                width: ($container-lg - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                width: $container-lg;
+            }
+
+            .container {
+                @media (min-width: $screen-sm-min) {
+                    width: ($container-sm - $xs-grid-gutter-width);
+                }
+
+                @media (min-width: $screen-md-min) {
+                    width: ($container-md - $xs-grid-gutter-width);
+                }
+
+                @media (min-width: $screen-lg-min) {
+                    width: ($container-lg - $xs-grid-gutter-width);
+                }
             }
         }
     }
 
-    #pagefooter when($container = true) {
-        @include container-fixed;
-        padding-left: 0;
-        padding-right: 0;
-
-        @media (min-width: $screen-sm-min) {
-            width: $container-sm;
-        }
-
-        @media (min-width: $screen-md-min) {
-            width: $container-md;
-        }
-
-        @media (min-width: $screen-lg-min) {
-            width: $container-lg;
-        }
-
-        .container {
+    #mainTable {
+        @if $container = true and $xs-grid-gutter-width > 30 {
             @media (min-width: $screen-sm-min) {
-                width: ($container-sm - $xs-grid-gutter-width);
+                width: ($container-sm - ($xs-grid-gutter-width - 30));
             }
 
             @media (min-width: $screen-md-min) {
-                width: ($container-md - $xs-grid-gutter-width);
+                width: ($container-md - ($xs-grid-gutter-width - 30));
             }
 
             @media (min-width: $screen-lg-min) {
-                width: ($container-lg - $xs-grid-gutter-width);
+                width: ($container-lg - ($xs-grid-gutter-width - 30));
+            }
+
+            .container {
+                @media (min-width: $screen-sm-min) {
+                    width: ($container-sm - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                }
+
+                @media (min-width: $screen-md-min) {
+                    width: ($container-md - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                }
+
+                @media (min-width: $screen-lg-min) {
+                    width: ($container-lg - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                }
             }
         }
     }
 
-    #pagefooter when($container = true) and ($xs-grid-gutter-width > 30) {
-        @media (min-width: $screen-sm-min) {
-            width: ($container-sm - ($xs-grid-gutter-width - 30));
-        }
+    #pagefooter {
+        @if $container == true {
+            @include container-fixed;
+            padding-left: 0;
+            padding-right: 0;
 
-        @media (min-width: $screen-md-min) {
-            width: ($container-md - ($xs-grid-gutter-width - 30));
-        }
-
-        @media (min-width: $screen-lg-min) {
-            width: ($container-lg - ($xs-grid-gutter-width - 30));
-        }
-
-        .container {
             @media (min-width: $screen-sm-min) {
-                width: ($container-sm - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                width: $container-sm;
             }
 
             @media (min-width: $screen-md-min) {
-                width: ($container-md - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                width: $container-md;
             }
 
             @media (min-width: $screen-lg-min) {
-                width: ($container-lg - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                width: $container-lg;
+            }
+
+            .container {
+                @media (min-width: $screen-sm-min) {
+                    width: ($container-sm - $xs-grid-gutter-width);
+                }
+
+                @media (min-width: $screen-md-min) {
+                    width: ($container-md - $xs-grid-gutter-width);
+                }
+
+                @media (min-width: $screen-lg-min) {
+                    width: ($container-lg - $xs-grid-gutter-width);
+                }
+            }
+        }
+    }
+
+    #pagefooter {
+        @if $container == true and $xs-grid-gutter-width > 30 {
+            @media (min-width: $screen-sm-min) {
+                width: ($container-sm - ($xs-grid-gutter-width - 30));
+            }
+
+            @media (min-width: $screen-md-min) {
+                width: ($container-md - ($xs-grid-gutter-width - 30));
+            }
+
+            @media (min-width: $screen-lg-min) {
+                width: ($container-lg - ($xs-grid-gutter-width - 30));
+            }
+
+            .container {
+                @media (min-width: $screen-sm-min) {
+                    width: ($container-sm - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                }
+
+                @media (min-width: $screen-md-min) {
+                    width: ($container-md - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                }
+
+                @media (min-width: $screen-lg-min) {
+                    width: ($container-lg - (($xs-grid-gutter-width - 30) + $xs-grid-gutter-width));
+                }
             }
         }
     }

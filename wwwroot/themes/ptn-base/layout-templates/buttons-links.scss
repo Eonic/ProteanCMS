@@ -1,12 +1,24 @@
-﻿//------------------------
+﻿@mixin link-color($color: $link-color,$percentage: $link-hover-percentage) {
+    color: $color;
+
+    &:hover,
+    &:focus {
+        color: darken($color,$percentage)
+    }
+}
+
+@mixin link-color-lighten($color: $link-color,$percentage: $link-hover-percentage) {
+    color: $color;
+
+    &:hover,
+    &:focus {
+        color: lighten($color,$percentage)
+    }
+}
+//------------------------
 //BUTTONS
 //------------------------
-@mixin btn-icon($_;
-$size: inherit;
-$offset: 7px;
-$indent: 5px;
-
-) {
+@mixin btn-icon($_, $size: inherit, $offset: 7px, $indent: 5px) {
     &:after {
         padding-left: $offset;
         font-size: $size;
@@ -15,30 +27,22 @@ $indent: 5px;
     }
 }
 
-@mixin btn-icon(angle;
-$size: inherit;
-$offset: 7px;
-$indent: 5px;
-
-) {
+//@mixin btn-icon(angle, $size: inherit, $offset: 7px, $indent: 5px ) {
+@mixin btn-icon($size: inherit, $offset: 7px, $indent: 5px ) {
     &:after {
         @include angle-right();
     }
 }
 
-@mixin btn-icon(chevron;
-$offset: 7px;
-$size: 0.8em;
-$indent: 5px;
-
-) {
+//@mixin btn-icon(chevron, $offset: 7px, $size: 0.8em, $indent: 5px ) {
+@mixin btn-icon($offset: 7px, $size: 0.8em, $indent: 5px ) {
     &:after {
         @include chevron-right();
     }
 }
 //link style button
 @mixin btn-clean($color: $link-color) {
-    @include pill-clean;
+    //@include pill-clean;
     @include clear-shadow;
     border: 0;
     background: none;
@@ -49,14 +53,7 @@ $indent: 5px;
     @include link-color($color);
 }
 //solid button
-@mixin btn-mixin($background: $btn-default-bg;
-$color: #fff;
-$percentage: $btn-hover-percentage;
-$radius: $btn-radius-base;
-$size: $btn-font-size;
-$padding: $btn-padding;
-
-) {
+@mixin btn-mixin($background: $btn-default-bg, $color: #fff, $percentage: $btn-hover-percentage, $radius: $btn-radius-base, $size: $btn-font-size, $padding: $btn-padding ) {
     background: $background;
     border-color: $background;
     color: $color;
@@ -73,8 +70,8 @@ $padding: $btn-padding;
     &:hover,
     &:focus {
         color: $color;
-        background: darken($background,$percentage);
-        border-color: darken($background,$percentage);
+        background: darken($btn-default-bg,$percentage);
+        border-color: darken($btn-default-bg,$percentage);
 
         a {
             color: $color;
@@ -82,14 +79,7 @@ $padding: $btn-padding;
     }
 }
 //border button
-@mixin btn-border($color: $btn-default-bg;
-$border-width: 2px;
-$percentage: $btn-hover-percentage;
-$radius: $btn-radius-base;
-$size: $btn-font-size;
-$padding: $btn-padding;
-
-) {
+@mixin btn-border($color: $btn-default-bg, $border-width: 2px, $percentage: $btn-hover-percentage, $radius: $btn-radius-base, $size: $btn-font-size, $padding: $btn-padding ) {
     @include clear-shadow;
     background: transparent;
     border: $border-width solid $color;
@@ -111,11 +101,8 @@ $padding: $btn-padding;
 //CONTENT CAROUSEL ARROWS
 //------------------------
 //icon options
-@mixin content-carousel-icon(angle;
-$offset: 3px;
-$size: 20px
-
-) {
+//@mixin content-carousel-icon(angle, $offset: 3px, $size: 20px ) {
+@mixin content-carousel-icon($offset: 3px, $size: 20px ) {
     button.slick-prev:before {
         @include angle-left;
         padding-right: $offset;
@@ -128,12 +115,8 @@ $size: 20px
         font-size: $size;
     }
 }
-
-@mixin content-carousel-icon(chevron;
-$offset: 4px;
-$size: 24px
-
-) {
+//@mixin content-carousel-icon(chevron, $offset: 4px, $size: 24px ){
+@mixin content-carousel-icon($offset: 4px, $size: 24px ) {
     button.slick-prev:before {
         @include chevron-left;
         padding-right: $offset;

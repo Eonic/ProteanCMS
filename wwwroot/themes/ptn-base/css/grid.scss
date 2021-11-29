@@ -2,137 +2,147 @@
 //LAYOUTS
 //------------------------------------------------
 //adjusts width of container when grid gutter width is over 30 to prevent horizontal scrolling
-.container when($grid-gutter-width > 30) {
-    @media (min-width: $screen-sm-min) {
-        width: ($container-sm - ($grid-gutter-width - 30));
-    }
-
-    @media (min-width: $screen-md-min) {
-        width: ($container-md - ($grid-gutter-width - 30));
-    }
-
-    @media (min-width: $screen-lg-min) {
-        width: ($container-lg - ($grid-gutter-width - 30));
-    }
-}
-
-#mainTable when($container = true) {
-    background: $content-bg;
-    @include container-fixed;
-    padding-left: 0;
-    padding-right: 0;
-
-    @media (min-width: $screen-sm-min) {
-        width: $container-sm;
-    }
-
-    @media (min-width: $screen-md-min) {
-        width: $container-md;
-    }
-
-    @media (min-width: $screen-lg-min) {
-        width: $container-lg;
-    }
-
-    .container {
+.container {
+    @if $grid-gutter-width > 30 {
         @media (min-width: $screen-sm-min) {
-            width: ($container-sm - $grid-gutter-width);
+            width: ($container-sm - ($grid-gutter-width - 30));
         }
 
         @media (min-width: $screen-md-min) {
-            width: ($container-md - $grid-gutter-width);
+            width: ($container-md - ($grid-gutter-width - 30));
         }
 
         @media (min-width: $screen-lg-min) {
-            width: ($container-lg - $grid-gutter-width);
+            width: ($container-lg - ($grid-gutter-width - 30));
         }
     }
 }
 
-#mainTable when($container = true) and ($grid-gutter-width > 30) {
-    @media (min-width: $screen-sm-min) {
-        width: ($container-sm - ($grid-gutter-width - 30));
-    }
+#mainTable {
+    @if $container == true {
+        background: $content-bg;
+        @include make-container();
+        padding-left: 0;
+        padding-right: 0;
 
-    @media (min-width: $screen-md-min) {
-        width: ($container-md - ($grid-gutter-width - 30));
-    }
-
-    @media (min-width: $screen-lg-min) {
-        width: ($container-lg - ($grid-gutter-width - 30));
-    }
-
-    .container {
         @media (min-width: $screen-sm-min) {
-            width: ($container-sm - (($grid-gutter-width - 30) + $grid-gutter-width));
+            width: $container-sm;
         }
 
         @media (min-width: $screen-md-min) {
-            width: ($container-md - (($grid-gutter-width - 30) + $grid-gutter-width));
+            width: $container-md;
         }
 
         @media (min-width: $screen-lg-min) {
-            width: ($container-lg - (($grid-gutter-width - 30) + $grid-gutter-width));
+            width: $container-lg;
+        }
+
+        .container {
+            @media (min-width: $screen-sm-min) {
+                width: ($container-sm - $grid-gutter-width);
+            }
+
+            @media (min-width: $screen-md-min) {
+                width: ($container-md - $grid-gutter-width);
+            }
+
+            @media (min-width: $screen-lg-min) {
+                width: ($container-lg - $grid-gutter-width);
+            }
         }
     }
 }
 
-#pagefooter when($container = true) {
-    @include container-fixed;
-    padding-left: 0;
-    padding-right: 0;
-
-    @media (min-width: $screen-sm-min) {
-        width: $container-sm;
-    }
-
-    @media (min-width: $screen-md-min) {
-        width: $container-md;
-    }
-
-    @media (min-width: $screen-lg-min) {
-        width: $container-lg;
-    }
-
-    .container {
+#mainTable {
+    @if $container == true and $grid-gutter-width > 30 {
         @media (min-width: $screen-sm-min) {
-            width: ($container-sm - $grid-gutter-width);
+            width: ($container-sm - ($grid-gutter-width - 30));
         }
 
         @media (min-width: $screen-md-min) {
-            width: ($container-md - $grid-gutter-width);
+            width: ($container-md - ($grid-gutter-width - 30));
         }
 
         @media (min-width: $screen-lg-min) {
-            width: ($container-lg - $grid-gutter-width);
+            width: ($container-lg - ($grid-gutter-width - 30));
+        }
+
+        .container {
+            @media (min-width: $screen-sm-min) {
+                width: ($container-sm - (($grid-gutter-width - 30) + $grid-gutter-width));
+            }
+
+            @media (min-width: $screen-md-min) {
+                width: ($container-md - (($grid-gutter-width - 30) + $grid-gutter-width));
+            }
+
+            @media (min-width: $screen-lg-min) {
+                width: ($container-lg - (($grid-gutter-width - 30) + $grid-gutter-width));
+            }
         }
     }
 }
 
-#pagefooter when($container = true) and ($grid-gutter-width > 30) {
-    @media (min-width: $screen-sm-min) {
-        width: ($container-sm - ($grid-gutter-width - 30));
-    }
+#pagefooter {
+    @if $container == true {
+        @include container-fixed;
+        padding-left: 0;
+        padding-right: 0;
 
-    @media (min-width: $screen-md-min) {
-        width: ($container-md - ($grid-gutter-width - 30));
-    }
-
-    @media (min-width: $screen-lg-min) {
-        width: ($container-lg - ($grid-gutter-width - 30));
-    }
-
-    .container {
         @media (min-width: $screen-sm-min) {
-            width: ($container-sm - (($grid-gutter-width - 30) + $grid-gutter-width));
+            width: $container-sm;
         }
 
         @media (min-width: $screen-md-min) {
-            width: ($container-md - (($grid-gutter-width - 30) + $grid-gutter-width));
+            width: $container-md;
         }
 
         @media (min-width: $screen-lg-min) {
-            width: ($container-lg - (($grid-gutter-width - 30) + $grid-gutter-width));
+            width: $container-lg;
+        }
+
+        .container {
+            @media (min-width: $screen-sm-min) {
+                width: ($container-sm - $grid-gutter-width);
+            }
+
+            @media (min-width: $screen-md-min) {
+                width: ($container-md - $grid-gutter-width);
+            }
+
+            @media (min-width: $screen-lg-min) {
+                width: ($container-lg - $grid-gutter-width);
+            }
+        }
+    }
+}
+
+#pagefooter {
+    @if $container == true and $grid-gutter-width > 30 {
+        @media (min-width: $screen-sm-min) {
+            width: ($container-sm - ($grid-gutter-width - 30));
+        }
+
+        @media (min-width: $screen-md-min) {
+            width: ($container-md - ($grid-gutter-width - 30));
+        }
+
+        @media (min-width: $screen-lg-min) {
+            width: ($container-lg - ($grid-gutter-width - 30));
+        }
+
+        .container {
+            @media (min-width: $screen-sm-min) {
+                width: ($container-sm - (($grid-gutter-width - 30) + $grid-gutter-width));
+            }
+
+            @media (min-width: $screen-md-min) {
+                width: ($container-md - (($grid-gutter-width - 30) + $grid-gutter-width));
+            }
+
+            @media (min-width: $screen-lg-min) {
+                width: ($container-lg - (($grid-gutter-width - 30) + $grid-gutter-width));
+            }
         }
     }
 }
@@ -245,7 +255,7 @@
 .Site {
     .detail-container > .detail,
     .detail-container > .bookmarkPlacement {
-        @include container-fixed();
+        @include make-container();
 
         @media (min-width: $screen-sm-min) {
             width: $container-sm;
@@ -260,31 +270,35 @@
         }
     }
 
-    .detail-container > .detail when($grid-gutter-width > 30) {
-        @media (min-width: $screen-sm-min) {
-            width: ($container-sm - ($grid-gutter-width - 30));
-        }
+    .detail-container > .detail {
+        @if $grid-gutter-width > 30 {
+            @media (min-width: $screen-sm-min) {
+                width: ($container-sm - ($grid-gutter-width - 30));
+            }
 
-        @media (min-width: $screen-md-min) {
-            width: ($container-md - ($grid-gutter-width - 30));
-        }
+            @media (min-width: $screen-md-min) {
+                width: ($container-md - ($grid-gutter-width - 30));
+            }
 
-        @media (min-width: $screen-lg-min) {
-            width: ($container-lg - ($grid-gutter-width - 30));
+            @media (min-width: $screen-lg-min) {
+                width: ($container-lg - ($grid-gutter-width - 30));
+            }
         }
     }
 
-    .detail-container > .bookmarkPlacement when($grid-gutter-width > 30) {
-        @media (min-width: $screen-sm-min) {
-            width: ($container-sm - ($grid-gutter-width - 30));
-        }
+    .detail-container > .bookmarkPlacement {
+        @if $grid-gutter-width > 30 {
+            @media (min-width: $screen-sm-min) {
+                width: ($container-sm - ($grid-gutter-width - 30));
+            }
 
-        @media (min-width: $screen-md-min) {
-            width: ($container-md - ($grid-gutter-width - 30));
-        }
+            @media (min-width: $screen-md-min) {
+                width: ($container-md - ($grid-gutter-width - 30));
+            }
 
-        @media (min-width: $screen-lg-min) {
-            width: ($container-lg - ($grid-gutter-width - 30));
+            @media (min-width: $screen-lg-min) {
+                width: ($container-lg - ($grid-gutter-width - 30));
+            }
         }
     }
 

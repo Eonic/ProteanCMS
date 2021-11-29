@@ -54,7 +54,7 @@
         width: 50px;
         height: 50px;
         overflow: hidden;
-        opacity: @include 3;
+        opacity: 3;
         display: inline-block;
         background-size: cover;
         background-position: center;
@@ -145,7 +145,7 @@
     width: 50px;
     height: 50px;
     box-sizing: border-box;
-    transition: @include 2s;
+    transition: 2s;
 }
 
 #sp-prev {
