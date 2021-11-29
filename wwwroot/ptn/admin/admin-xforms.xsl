@@ -2511,8 +2511,8 @@
     <xsl:variable name="val" select="value/node()"/>
     <!--<xsl:variable name="class" select="../@class"/>-->
     <xsl:variable name="class" select="ancestor::*[name()='select' or name()='select1' ]/@class"/>
-    <span class="{$type} {$type}-primary list-group-item">
-      <input type="{$type}">
+    <div class="form-check form-check-inline">
+      <input type="{$type}" class="form-check-input">
         <xsl:choose>
           <xsl:when test="contains(../@class,'alwayson')">
             <xsl:attribute name="name">disabled</xsl:attribute>
@@ -2562,14 +2562,14 @@
       <label for="{$ref}_{$value}">
         <xsl:if test="not(contains($class,'multiline'))">
           <xsl:attribute name="class">
-            <xsl:text> radio-inline</xsl:text>
+            <xsl:text> form-check-label</xsl:text>
           </xsl:attribute>
         </xsl:if>
         <xsl:apply-templates select="label" mode="xform-label"/>
         <!-- needed to stop self closing -->
         <xsl:text> </xsl:text>
       </label>
-    </span>
+    </div>
     <xsl:if test="/Page/@ewCmd='EditXForm'">
       <xsl:if test="ancestor::Content/model/instance/results/answers/answer[@ref=$ref]/score[value/node()=$val]">
         <span>

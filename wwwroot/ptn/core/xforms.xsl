@@ -272,7 +272,7 @@
       <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
 
       <xsl:if test="count(submit) &gt; 0">
-        <div class="mb-3">
+        <div class="form-margin">
           <xsl:if test="descendant-or-self::*[contains(@class,'required')]">
             <label class="required">
               <span class="req">*</span>
@@ -626,7 +626,7 @@
                 <xsl:text>form-text</xsl:text>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:text>mb-3 </xsl:text>
+                <xsl:text>form-margin </xsl:text>
                 <xsl:if test="name()='input'">
                   <xsl:value-of select="name()"/>
                   <xsl:text>-containing </xsl:text>
@@ -2192,7 +2192,7 @@
     </xsl:variable>
     <xsl:variable name="dependantClass">
       <xsl:value-of select="translate($ref,'[]#=/','')"/>
-      <xsl:text>-dependant form-group</xsl:text>
+      <xsl:text>-dependant form-group form-margin</xsl:text>
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="name()='group'">
@@ -2212,7 +2212,7 @@
               </xsl:when>
               <xsl:otherwise>
 
-                <xsl:text>form-group </xsl:text>
+                <xsl:text>form-group form-margin </xsl:text>
               </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="not(contains(@class,'row'))">

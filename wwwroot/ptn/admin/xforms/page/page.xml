@@ -97,7 +97,7 @@
           </item>
         </select1>
         <select1 bind="cXcludeFromSiteNav" appearance="full" class="">
-          <label class="bold-label">Exclude from navigation</label>
+          <label class="form-label">Exclude from navigation</label>
           <item>
             <label>Yes</label>
             <value>true</value>
@@ -116,7 +116,7 @@
           </help>
         </select1>
         <select1 bind="cXcludeNav" appearance="full">
-          <label class="bold-label">Hide navigation bar on this page</label>
+          <label class="form-label">Hide navigation bar on this page</label>
           <item>
             <label>Yes</label>
             <value>true</value>
@@ -130,7 +130,7 @@
           </help>
         </select1>
         <select1 bind="cNavPadding" appearance="full">
-          <label class="bold-label">Padding below main menu</label>
+          <label class="form-label">Padding below main menu</label>
           <item>
             <label>Yes</label>
             <value>true</value>
@@ -144,7 +144,7 @@
           </help>
         </select1>
         <select1 bind="cXcludeFromSearchEngines" appearance="full">
-          <label class="bold-label">Exclude from search engines</label>
+          <label class="form-label">Exclude from search engines</label>
           <item>
             <label>Yes</label>
             <value>true</value>
@@ -158,7 +158,7 @@
           </help>
         </select1>
         <select1 bind="bParalaxLoad" appearance="full">
-          <label class="bold-label">Paralax Load</label>
+          <label class="form-label">Paralax Load</label>
           <item>
             <label>Yes</label>
             <value>true</value>
@@ -172,7 +172,7 @@
           </help>
         </select1>
         <select bind="Screens" appearance="full" class="multiline bs-only">
-          <label class="bold-label">Hide Page from Screens</label>
+          <label class="form-label">Hide Page from Screens</label>
           <item>
             <label>extra small (phones) under 768px</label>
             <value>xs</value>
