@@ -585,14 +585,12 @@ Partial Public Class Cms
                     'Submit the address form as per Cart > Apply > Billing
                     myCart.mcCartCmd = "Billing"
                     myCart.apply()
-                    'myCart.addressSubProcess(oElmt, "Billing Address")
-
-                    '' then set processID = 5 if we have shipping set otherwise processID = 4
-                    ''confirm myCart.moCartXml.SelectSingleNode("Order/Shipping") node in xml 
 
                     'assigning gateway
-                    If (myApi.moRequest("ewSubmitClone_cartBillAddress") IsNot Nothing) Then
-                        myCart.mcPaymentMethod = myApi.moRequest("ewSubmitClone_cartBillAddress")
+                    If (myApi.moRequest("paymentTypeValue") IsNot Nothing) Then
+                        myCart.mcPaymentMethod = myApi.moRequest("paymentTypeValue") 'JudoPay payment method
+                        myWeb.moSession.Remove("mcPaymentMethod")
+                        myWeb.moSession.Add("mcPaymentMethod", myApi.moRequest("paymentTypeValue"))
                     Else
                         Return "error"
                     End If
@@ -603,7 +601,7 @@ Partial Public Class Cms
                         myCart.mnProcessId = 5
                     End If
 
-                    'paymentform 
+                    'get updated cart
                     Dim moPageXml As XmlDocument
                     moPageXml = myWeb.moPageXml
                     Dim oCartXML As XmlDocument = moPageXml
@@ -612,14 +610,20 @@ Partial Public Class Cms
                     oContentElmt = myCart.CreateCartElement(oCartXML)
                     oElmt = oContentElmt.FirstChild
                     myCart.GetCart(oElmt)
-                    Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod)
-                    Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
-                    ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, myCart, oElmt)
-                    'moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt)
 
-                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(ccPaymentXform.moXformElmt, Newtonsoft.Json.Formatting.Indented)
-                    jsonString = jsonString.Replace("""@", """_")
-                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Dim jsonString As String = ""
+                    If (myCart.mcPaymentMethod = "JudoPay") Then
+                        'paymentform 
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod)
+                        Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
+                        ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, myCart, oElmt)
+                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(ccPaymentXform.moXformElmt, Newtonsoft.Json.Formatting.Indented)
+                        jsonString = jsonString.Replace("""@", """_")
+                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    ElseIf (myCart.mcPaymentMethod = "GooglePay") Then
+
+                    End If
+
                     Return jsonString
                     'Return "true"
                 Catch ex As Exception
