@@ -2502,8 +2502,7 @@
 
   </xsl:template>
 
-  <!-- Overload for Admin Mode -->
-  <xsl:template match="item[/Page/@adminMode='true' and not(toggle)]" mode="xform_radiocheck">
+  <xsl:template match="item[not(toggle)]" mode="xform_radiocheck">
     <xsl:param name="type"/>
     <xsl:param name="ref"/>
     <xsl:param name="selectedValue" />
