@@ -173,6 +173,7 @@
             <xsl:text> form-group li-</xsl:text>
             <xsl:value-of select="./@class"/>
           </xsl:for-each>
+          <xsl:text> row g-3</xsl:text>
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
@@ -667,6 +668,9 @@
             </xsl:if>
             <xsl:if test="alert">
               <xsl:text> alert-outer</xsl:text>
+            </xsl:if>
+            <xsl:if test="ancestor::group[contains(@class,'inline')]">
+              <xsl:text> col-md-6</xsl:text>
             </xsl:if>
           </xsl:attribute>
           <xsl:apply-templates select="." mode="xform"/>
