@@ -442,7 +442,7 @@
 
         <div class="absolute-admin-logo">
           <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo"/>
-          <div class="non-department">
+          <!--<div class="non-department">
             <span class="sectionName">
               <xsl:value-of select="MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/@name"/>
             </span>
@@ -459,9 +459,9 @@
                 <xsl:text> </xsl:text>
               </i>
             </span>
-          </div>
+          </div>-->
         </div>
-        <nav class="navbar navbar-inverse admin-department-menu admin-department-menu-js" role="navigation">
+        <nav class="navbar navbar-dark bg-dark admin-department-menu admin-department-menu-js" role="navigation">
 
           <xsl:if test="/Page[@ewCmd='AdmHome']">
             <xsl:attribute name="class">
@@ -599,7 +599,7 @@
             </xsl:apply-templates>
             <xsl:text> </xsl:text>
           </ul>-->
-            <ul class="nav navbar-nav navbar-right">
+            <!--<ul class="nav navbar-nav navbar-right">
               <li>
                 <a id="myaccount" href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={$page/User/@id}">
                   <i class="fa fa-user">
@@ -618,7 +618,7 @@
                   <span> LOG OFF</span>
                 </a>
               </li>
-            </ul>
+            </ul>-->
           </div>
           <!-- /.navbar-collapse -->
         </nav>
@@ -656,8 +656,8 @@
 
         <!-- SUB MENU WORKING-->
 
-        <nav class="navbar navbar-inverse admin-sub-menu not-visible-admin-xs" role="navigation">
-          <!-- Brand and toggle get grouped for better mobile display -->
+        <!--<nav class="navbar navbar-inverse admin-sub-menu not-visible-admin-xs" role="navigation">
+          --><!-- Brand and toggle get grouped for better mobile display --><!--
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-admin-navbar-collapse-2">
               <span class="sr-only">Toggle navigation</span>
@@ -678,7 +678,7 @@
             </a>
           </div>
 
-          <!-- Collect the nav links, forms, and other content for toggling -->
+          --><!-- Collect the nav links, forms, and other content for toggling --><!--
           <div class="collapse navbar-collapse" id="bs-admin-navbar-collapse-2">
             <xsl:if test="$page/@ewCmd!='MailingList'">
               <ul class="nav navbar-nav nav-add-more-auto">
@@ -688,17 +688,17 @@
                 <xsl:text> </xsl:text>
               </ul>
 
-              <!--<ul class="nav navbar-nav visible-xs">
+              --><!--<ul class="nav navbar-nav visible-xs">
             <xsl:apply-templates select="MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="adminItem2">
               <xsl:with-param name="level">1</xsl:with-param>
             </xsl:apply-templates>
             <xsl:text> </xsl:text>
-          </ul>-->
+          </ul>--><!--
             </xsl:if>
             <ul class="nav navbar-nav navbar-right">
               <li>
                 <xsl:if test="$page/@ewCmd='Normal'">
-                  <!--<span class="glyphicon glyphicon-eye-open"></span>-->
+                  --><!--<span class="glyphicon glyphicon-eye-open"></span>--><!--
                   <xsl:apply-templates select="MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="previewLink">
                     <xsl:with-param name="level">1</xsl:with-param>
                   </xsl:apply-templates>
@@ -707,8 +707,8 @@
               </li>
             </ul>
           </div>
-          <!-- /.navbar-collapse -->
-        </nav>
+          --><!-- /.navbar-collapse --><!--
+        </nav>-->
 
 
 
@@ -1125,14 +1125,26 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <li>
-        <xsl:apply-templates select="." mode="adminLink1">
-          <xsl:with-param name="level">
-            <xsl:value-of select="$level"/>
-          </xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:if test="MenuItem[@cmd=$contextCmd]">
-          <ul class="admin-sub-menu xs-admin-sub-menu visible-admin-xs">
+      <li class="nav-item">
+        <xsl:choose>
+          <xsl:when test="./MenuItem and not(@cmd='EditStructure')">
+            <xsl:attribute name="class">nav-item dropdown</xsl:attribute>
+            <xsl:apply-templates select="." mode="adminLink1dd">
+              <xsl:with-param name="level">
+                <xsl:value-of select="$level"/>
+              </xsl:with-param>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="." mode="adminLink1">
+              <xsl:with-param name="level">
+                <xsl:value-of select="$level"/>
+              </xsl:with-param>
+            </xsl:apply-templates>
+          </xsl:otherwise>
+        </xsl:choose>
+        <!--<xsl:if test="MenuItem[@cmd=$contextCmd]">-->
+          <ul class="dropdown-menu" aria-labelledby="@name-dd">
             <xsl:apply-templates select="MenuItem" mode="adminItem2">
               <xsl:with-param name="level">1</xsl:with-param>
             </xsl:apply-templates>
@@ -1142,7 +1154,7 @@
               </xsl:apply-templates>
             </li>
           </ul>
-        </xsl:if>
+        <!--</xsl:if>-->
       </li>
     </xsl:template>
     <!-- -->
@@ -1231,13 +1243,13 @@
             <xsl:value-of select="/Page/@id"/>
           </xsl:if>
         </xsl:variable>
-        <a href="{$href}" title="{Description}">
+        <a href="{$href}" title="{Description}" class="nav-link">
           <xsl:choose>
             <xsl:when test="@cmd=/Page/@ewCmd">
-              <xsl:attribute name="class">active</xsl:attribute>
+              <xsl:attribute name="class">nav-link active</xsl:attribute>
             </xsl:when>
             <xsl:when test="descendant-or-self::MenuItem/@cmd=/Page/@ewCmd and @cmd!='AdmHome'">
-              <xsl:attribute name="class">on</xsl:attribute>
+              <xsl:attribute name="class">nav-link on</xsl:attribute>
             </xsl:when>
           </xsl:choose>
           <!--<span class="adminSubMenu1TL">&#160;</span>
@@ -1260,6 +1272,35 @@
         </a>
       </xsl:if>
     </xsl:template>
+  <xsl:template match="MenuItem" mode="adminLink1dd">
+    <xsl:if test="@display='true'">
+      <xsl:variable name="href">
+        <xsl:value-of select="$appPath"/>
+        <xsl:text>?ewCmd=</xsl:text>
+        <xsl:value-of select="@cmd"/>
+        <xsl:if test="parent::MenuItem[@cmd!='AdmHome'] and @cmd!='MailingList'">
+          <xsl:text>&amp;pgid=</xsl:text>
+          <xsl:value-of select="/Page/@id"/>
+        </xsl:if>
+      </xsl:variable>
+      <a href="#" title="{Description}" class="nav-link dropdown-toggle" id="@name-dd" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <xsl:choose>
+          <xsl:when test="@cmd=/Page/@ewCmd">
+            <xsl:attribute name="class">nav-link dropdown-toggle active</xsl:attribute>
+          </xsl:when>
+          <xsl:when test="descendant-or-self::MenuItem/@cmd=/Page/@ewCmd and @cmd!='AdmHome'">
+            <xsl:attribute name="class">nav-link dropdown-toggle on</xsl:attribute>
+          </xsl:when>
+        </xsl:choose>
+        <i class="fa {@icon}">
+          <xsl:text> </xsl:text>
+        </i>
+        <span class="adminSubMenuText">
+          <xsl:value-of select="@name"/>
+        </span>
+      </a>
+    </xsl:if>
+  </xsl:template>
     <!-- -->
     <!-- -->
     <xsl:template match="MenuItem" mode="adminLink2">
@@ -1309,13 +1350,13 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <a href="{$href}" title="{Description}">
+        <a href="{$href}" title="{Description}" class="dropdown-item">
           <xsl:choose>
             <xsl:when test="self::MenuItem[@cmd=/Page/@ewCmd]">
-              <xsl:attribute name="class">active</xsl:attribute>
+              <xsl:attribute name="class">dropdown-item active</xsl:attribute>
             </xsl:when>
             <xsl:when test="descendant::MenuItem[@cmd=/Page/@ewCmd] and @cmd!='AdmHome'">
-              <xsl:attribute name="class">on</xsl:attribute>
+              <xsl:attribute name="class">dropdown-item on</xsl:attribute>
             </xsl:when>
           </xsl:choose>
           <span class="adminSubMenu2TL">&#160;</span>
@@ -1373,7 +1414,7 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <a href="{$href}" title="{Description}">
+        <a href="{$href}" title="{Description}" class="dropdown-item">
           <xsl:if test="/Page/@ewCmd='NormalMail'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -1507,9 +1548,9 @@
             </a>
           </xsl:when>
           <xsl:otherwise>
-            <a href="{$appPath}?ewCmd=NewPageVersion&amp;pgid={/Page/@id}&amp;vParId={/Page/@id}" title="{Description}">
+            <a href="{$appPath}?ewCmd=NewPageVersion&amp;pgid={/Page/@id}&amp;vParId={/Page/@id}" title="{Description}" class="dropdown-item">
               <xsl:if test="/Page[@ewCmd='NewPageVersion']">
-                <xsl:attribute name="class">active on</xsl:attribute>
+                <xsl:attribute name="class">dropdown-item active on</xsl:attribute>
               </xsl:if>
               <i class="fa {@icon} fa-large">
                 <xsl:text> </xsl:text>
@@ -11774,7 +11815,7 @@
           <i class="fa fa-eye">
             <xsl:text> </xsl:text>
           </i>
-          <xsl:text> </xsl:text>Preview
+          <xsl:text> </xsl:text>Preview 
         </a>
 
         <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">

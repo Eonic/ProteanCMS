@@ -1,4 +1,9 @@
-﻿body.ewAdmin {
+﻿.fa-file,
+.fa-image,
+.fa-check-square{
+    font-weight:400;
+}
+body.ewAdmin {
     background-color: $admin-bg;
 }
 
@@ -74,8 +79,7 @@ body.normalMode {
             line-height: 21px;
             color: $admin-header-color;
             display: block;
-
-            &:hover {
+            /*&:hover {
                 color: $admin-header-color-link;
                 background-color: transparent !important;
             }
@@ -83,7 +87,7 @@ body.normalMode {
             &:focus {
                 color: $admin-header-color-link;
                 background-color: transparent !important;
-            }
+            }*/
         }
 
         .add-more-dropdown > a {
@@ -277,7 +281,7 @@ body.normalMode {
         }
 
         .navbar-right {
-            float:right;
+            float: right;
         }
 
         .in {
@@ -373,7 +377,7 @@ body.normalMode {
             margin-left: 215px;
         }
 
-        font-size: 1.1em;
+        font-size: 14px;
         background-color: $admin-header-bg-light;
 
         @media(max-width:$admin-nav-breakpoint-max) {
@@ -404,16 +408,21 @@ body.normalMode {
         }
 
         a {
-            padding-top: 24px;
-            padding-bottom: 15px;
+            padding-top: 12px;
+            padding-bottom: 12px;
             line-height: 22px;
+        }
+
+        a:hover, a:focus, a.show {
+            background-color: $admin-header-bg ;
+            color: #fff ;
         }
 
         .on, .active {
             background-color: $admin-header-bg;
 
             &:hover {
-                background-color: $admin-header-bg !important;
+                background-color: $admin-header-bg ;
             }
         }
 
@@ -422,12 +431,21 @@ body.normalMode {
         }
 
         .dropdown-menu {
-            right: 0;
-            left: auto;
-            position: absolute;
-            top: 62px;
-            background: #545353;
+            background: $admin-header-bg;
             z-index: 9995;
+            position: absolute;
+            border-radius: 0;
+            font-size: 12px;
+            margin: 0;
+
+            a {
+                color: #fff;
+
+                &:hover, &.on, &.active {
+                    background: none;
+                    color: $admin-primary;
+                }
+            }
         }
         // - LOG OFF
         .navbar-right {

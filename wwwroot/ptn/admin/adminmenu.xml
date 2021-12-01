@@ -1,7 +1,7 @@
 <AdminMenu>
   <MenuItem name="Dashboard" cmd="AdmHome" display="true" icon="fas fa-tachometer-alt">
     <MenuItem name="Content" cmd="Content" display="true" plugin="Content" icon="fa-edit">
-      <MenuItem name="By Page" cmd="ByPage" display="true" icon="fa-edit">
+      <MenuItem name="Page" cmd="ByPage" display="true" icon="fa-file">
         <MenuItem name="Edit Page" cmd="Normal" display="true" icon="fa-edit">
           <MenuItem name="Edit Content" cmd="EditContent" display="false" icon="fa-edit"/>
           <MenuItem name="Add Module" cmd="AddModule" display="false" icon="fa-th-large"/>
@@ -18,10 +18,10 @@
           <MenuItem name="Rollback Content" cmd="RollbackContent" display="false" icon="fa-reply"/>
           <MenuItem name="Manage Poll Votes" cmd="ManagePollVotes" display="false" icon="fa-check-square"/>
         </MenuItem>
-        <MenuItem name="Page Settings" cmd="EditPage" display="true" icon="fa-gears"/>
+        <MenuItem name="Page Settings" cmd="EditPage" display="true" icon="fa-cog"/>
         <MenuItem name="SEO Settings" cmd="EditPageSEO" display="true" icon="fa-globe"/>
         <MenuItem name="Page Layout" cmd="EditPageLayout" display="true" icon="fa-columns"/>
-        <MenuItem name="Advanced" cmd="Advanced" display="true" icon="fa-pencil-square"/>
+        <MenuItem name="Advanced" cmd="Advanced" display="true" icon="fa-pen-square"/>
         <MenuItem name="Page Versions" cmd="PageVersions" display="true" feature="PageVersions" icon="fa-copy"/>
         <MenuItem name="New Page Version" cmd="NewPageVersion" display="false" feature="PageVersions" icon="fa-copy"/>
         <MenuItem name="Permissions" cmd="EditPagePermissions" display="true" feature="Membership" icon="fa-key"/>
@@ -29,18 +29,18 @@
         <MenuItem name="Preview" cmd="PreviewOn" display="true" icon="fa-eye"/>
         <MenuItem name="PopUp" cmd="PopUp" display="true" feature="PopUp" icon="fa-clone"/>
       </MenuItem>
-      <MenuItem name="Edit Menu" cmd="EditStructure" display="true" icon="fa-bars">
+      <MenuItem name="Menus" cmd="EditStructure" display="true" icon="fa-bars">
         <MenuItem name="Move Page" cmd="MovePage" display="false" icon="fa-mail-forward"/>
         <MenuItem name="Add Page" cmd="AddPage" display="false" icon="fa-plus-square"/>
         <MenuItem name="Copy Page" cmd="CopyPage" display="false" icon="fa-copy"/>
       </MenuItem>
-      <MenuItem name="Resource Library" cmd="ImageLib" display="true" icon="fa-picture-o">
-        <MenuItem name="Images" cmd="ImageLib" pgid="1" display="true" icon="fa-picture-o"/>
+      <MenuItem name="Library" cmd="ImageLib" display="true" icon="fa-image">
+        <MenuItem name="Images" cmd="ImageLib" pgid="1" display="true" icon="fa-image"/>
         <MenuItem name="Media" cmd="MediaLib" pgid="1" display="true" icon="fa-play-circle"/>
-        <MenuItem name="Documents" cmd="DocsLib" pgid="1" display="true" icon="fa-file"/>
+        <MenuItem name="Documents" cmd="DocsLib" pgid="1" display="true" icon="fa-file-alt"/>
       </MenuItem>
      
-      <MenuItem name="Awaiting Approval" cmd="AwaitingApproval" display="true" feature="VersionControl" icon="fa-check-square-o"/>
+      <MenuItem name="Awaiting Approval" cmd="AwaitingApproval" display="true" feature="VersionControl" icon="fa-check-square"/>
     </MenuItem>
     <MenuItem name="Membership" cmd="ListUsers" display="true" icon="fas fa-users">
       <MenuItem name="All Users" cmd="ListUsers" display="true" icon="fa-user"/>
