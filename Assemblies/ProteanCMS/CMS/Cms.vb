@@ -885,23 +885,18 @@ Public Class Cms
             gcMenuContentCountTypes = moConfig("MenuContentCountTypes")
             gcMenuContentBriefTypes = moConfig("MenuContentBriefTypes")
 
-
-
             ' Get referenced assembly info
             ' Given that assemblies are loaded at an application level, we can store the info we find in an application object
             If String.IsNullOrEmpty(CStr(goCache("GENERATOR"))) Then
                 Dim CodeGenerator As Assembly = Me.Generator()
                 gcGenerator = CodeGenerator.FullName()
                 gcCodebase = CodeGenerator.CodeBase()
-
                 For Each ReferencedAssembly As AssemblyName In Me.ReferencedAssemblies()
                     gcReferencedAssemblies &= ReferencedAssembly.Name & " (" & ReferencedAssembly.Version.ToString & "); "
                 Next
-
                 goCache("GENERATOR") = gcGenerator
                 goCache("CODEBASE") = gcCodebase
                 goCache("REFERENCED_ASSEMBLIES") = gcReferencedAssemblies
-
             Else
                 gcGenerator = goCache("GENERATOR")
                 gcCodebase = goCache("CODEBASE")
@@ -926,9 +921,7 @@ Public Class Cms
         'Date:          2005-03-09
 
         mcModuleName = "Protean.Cms"
-
         Dim cProcessInfo As String = ""
-
         msException = ""
 
         Try

@@ -1690,12 +1690,15 @@
 																	<b>{{result.Key}}</b>: {{result.Value}}<br/>
 																</h1>
 															</div>
-                              <div class="buttons" style="text-align: center;">
-                                <br/>
-                                <a href="{@url}" class="btn btn-default">
-                                  <xsl:value-of select="@name"/>
-                                </a>
-                              </div>
+	                              <div class="buttons" style="text-align: center;">
+				      	<xsl:if test="@url!=''">
+	                                <br/>
+	                                <a href="{@url}" class="btn btn-default">
+	                                  <xsl:value-of select="@name"/>
+	                                </a>   	
+					</xsl:if>
+	                              </div>
+			      	
                             </div>
 													</div>
 												</div>
