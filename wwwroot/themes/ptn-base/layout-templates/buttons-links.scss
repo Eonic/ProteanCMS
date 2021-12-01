@@ -139,9 +139,9 @@
         background: $background;
         border-radius: $radius;
         text-align: center;
-        @include flex-display;
-        @include align-items(center);
-        @include justify-content(center);
+        display:flex;
+        align-items:center;
+        justify-content:center;
     }
 
     .slick-prev:before,

@@ -453,7 +453,7 @@
     }
 
     .alert-action {
-        @include alert-variant($alert-action-bg, $alert-action-border, $alert-action-text );
+   //     @include alert-variant($alert-action-bg, $alert-action-border, $alert-action-text );
     }
 
     .panel-primary {

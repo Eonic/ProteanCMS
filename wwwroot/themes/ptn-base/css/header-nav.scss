@@ -218,8 +218,8 @@
             max-height: none;
 
             ul.navbar-nav {
-                @include flex-display;
-                @include justify-content(flex-end);
+                display:flex;
+                justify-content:flex-end;
                 @include main-navbar-spacing($navbar-padding-vertical-md,$navbar-padding-horizontal-md);
                 @include navbar-color-basic;
                 font-weight: $nav-weight;
@@ -243,11 +243,11 @@
 
         nav.navbar-collapse {
             @if $flex-nav == true {
-                @include flex-grow(3);
+                flex-grow:3;
 
                 ul.navbar-nav {
-                    @include flex-display;
-                    @include justify-content(flex-end);
+                    display:flex;
+                    justify-content:flex-end;
                 }
             }
         }
@@ -284,9 +284,9 @@
                 &:hover {
                     .dropdown-menu {
                         visibility: visible;
-                        @include animated;
+                        //@include animated;
                         animation-duration: 0.2s;
-                        @include fadeInDown;
+                        //@include fadeInDown;
                     }
                 }
             }
@@ -429,6 +429,13 @@
             display: block;
         }
     }
+    @mixin offcanvas {
+        display: none;
+
+        &.in {
+            display: block;
+        }
+    }
 
     .offcanvas-xs,
     .offcanvas-sm,
@@ -518,7 +525,7 @@
     .info-nav {
         @media(min-width:$grid-float-breakpoint) {
             li a {
-                @include pill-clean;
+               // @include pill-clean;
                 font-size: $info-link-size;
             }
 
@@ -596,7 +603,7 @@
         margin-right: ($header-item-spacing/2);
 
         .cartinfo > a {
-            @include flex-display;
+            display:flex;
             color: $text-color;
 
             &:hover {
@@ -802,14 +809,14 @@
     }
     //HEADER WITH DARK BACKGROUND
     .header {
-        @if luma($header-bg) < 50% {
+        /*@if luma($header-bg) < 50% {
             .navbar-header {
                 #cartBrief .cartinfo > a,
                 .strapline {
                     color: #fff
                 }
             }
-        }
+        }*/
     }
 
     nav.offcanvas-xs {
@@ -875,11 +882,11 @@
 
     .top-sub-menu {
         @if $flex-sub-nav == true {
-            @include flex-grow(3);
+            flex-grow:3;
 
             ul {
-                @include flex-display;
-                @include justify-content(flex-end);
+                display: flex;
+                justify-content:flex-end;
             }
         }
     }
@@ -1089,12 +1096,12 @@
         a {
             i,
             &.open i {
-                @include rotate(0deg);
+                transform: rotate(0deg);
             }
 
             &.accordion-load i,
             &.collapsed i {
-                @include rotate(-90deg);
+                transform: rotate(-90deg);
             }
         }
 

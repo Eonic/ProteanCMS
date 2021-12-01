@@ -60,8 +60,8 @@
     font-size: $size;
     width: $width;
     height: $height;
-    @include flex-display;
-    @include align-items(center);
+    display:flex;
+    align-items:center;
 
     &:before {
         margin: 0 auto;
@@ -70,8 +70,8 @@
 }
 
 @mixin icon-center() {
-    @include flex-display;
-    @include align-content(center);
-    @include align-items(center);
+    display: flex;
+    align-content:center;
+    align-items:center;
     text-align: center;
 }

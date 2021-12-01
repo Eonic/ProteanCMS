@@ -30,7 +30,7 @@ body {
     }
 
     .text-muted {
-        color: $gray
+        color: $gray;
     }
 
     .center-block {
@@ -73,7 +73,7 @@ body {
     //main title
     #mainTitle {
         h1 {
-            @include h1-style
+            @include h1-style;
         }
     }
     //section title
@@ -233,8 +233,8 @@ body {
     }
 
     .button {
-        @include btn;
-        @include btn-default;
+        //@include btn;
+        //@include btn-default;
     }
 
     button.btn-default,
@@ -285,7 +285,7 @@ body {
         margin-bottom: $line-height-computed;
 
         .btn-primary {
-            @include pull-right();
+            float:right;
         }
     }
 
@@ -430,8 +430,8 @@ body {
             min-height: 200px;
 
             @media(min-width:$screen-sm-min) {
-                @include flex-display();
-                @include align-items(center);
+                display: flex;
+                align-items:center;
                 min-height: 400px;
                 padding-top: $box-margin;
             }
@@ -447,7 +447,7 @@ body {
 //------------------------------------------------
 .Site {
     img {
-        @include img-responsive;
+       // @include img-responsive;
     }
 
     .responsive-lightbox {
@@ -573,8 +573,8 @@ body {
                 top: 0;
                 margin: 0;
                 width: 100%;
-                @include flex-display;
-                @include align-items(center);
+                display: flex;
+                align-items:center;
             }
 
             .item {
@@ -601,7 +601,7 @@ body {
                 }
             }
             //fade
-            .carousel-caption {
+            /*.carousel-caption {
                 animation-delay: 0.2s;
                 @include animated;
                 @include fadeInUp;
@@ -633,7 +633,7 @@ body {
                     @include animated;
                     @include fadeInUp;
                 }
-            }
+            }*/
         }
     }
     //advanced carousel
@@ -924,8 +924,8 @@ body {
 
             .thumbnail-wrapper,
             > a {
-                @include flex-display;
-                @include align-items(center);
+                display: flex;
+                align-items:center;
                 height: 100%;
                 width: 100%;
             }
@@ -987,7 +987,7 @@ body {
         }
 
         .strapline-detail p {
-            @include lead;
+           // @include lead;
         }
 
         h2 {
@@ -1175,6 +1175,32 @@ body {
 //------------------------------------------------
 //FOOTER
 //------------------------------------------------
+@mixin dev-link {
+    line-height: 28px;
+    overflow: hidden;
+
+    a {
+        font-size: 0.9em;
+    }
+
+    a.devLogo {
+        display: none !important;
+    }
+
+    a.devText {
+        font-weight: 400 !important;
+
+        &:after {
+            content: 'e';
+            font-family: eonic-logo1;
+            font-size: 64px;
+            padding-left: 10px;
+            vertical-align: middle;
+            padding-top: 3px;
+            display: inline-block;
+        }
+    }
+}
 #pagefooter {
     .footer-inner {
         padding-top: $box-margin;
@@ -1250,32 +1276,7 @@ body {
     }
 }
 
-.dev-link {
-    line-height: 28px;
-    overflow: hidden;
 
-    a {
-        font-size: 0.9em;
-    }
-
-    a.devLogo {
-        display: none !important;
-    }
-
-    a.devText {
-        font-weight: 400 !important;
-
-        &:after {
-            content: 'e';
-            font-family: eonic-logo1;
-            font-size: 64px;
-            padding-left: 10px;
-            vertical-align: middle;
-            padding-top: 3px;
-            display: inline-block;
-        }
-    }
-}
 //------------------------------------------------
 //COOKIE WARNING
 //------------------------------------------------
@@ -1320,230 +1321,7 @@ body .cc-cookies {
 
 
 
-@mixin remove-gradient() {
-    background: none;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false) !important;
-}
 
-@mixin box-content($background: $body-bg, $color: contrast($background,#fff,$text-color), $link: $link-color, $hover: darken($link-color,$link-hover-percentage) ) {
-    background: $background;
-    padding: $box-padding-vertical $box-padding-horizontal;
-    border-radius: $border-radius-base;
-    color: $color;
-}
-
-@mixin list-box-content($background: $body-bg, $color: contrast($background,#fff,$text-color), $link: $link-color, $hover: darken($link-color,$link-hover-percentage), $heading: $headings-color, $padding-vertical: $box-padding-vertical, $padding-horizontal: $box-padding-horizontal, $btn-height: 30px, $btn-align: $btn-align ) {
-    .listItem .lIinner {
-        background: $background;
-        padding: $padding-vertical $padding-horizontal ($padding-vertical + $btn-height);
-        border-radius: $border-radius-base;
-        color: $color;
-        height: 100%;
-        position: relative;
-
-        h1, h2, h3, h4, h5, h6 {
-            color: $color
-        }
-
-        .entryFooter .morelink {
-            position: absolute;
-            bottom: ($padding-vertical/2);
-            left: $padding-horizontal;
-            right: $padding-horizontal;
-            text-align: $btn-align;
-        }
-
-        h3.title,
-        h4.media-heading {
-            @include heading-color($color:$heading, $link: $heading );
-        }
-    }
-}
-
-@mixin list-btn-align($btn-height: 30px, $padding: 20px) {
-    height: 100%;
-    position: relative;
-    padding-bottom: ($btn-height + $padding);
-
-    .entryFooter .morelink {
-        position: absolute;
-        bottom: 10px;
-        left: 0;
-        right: 0;
-        text-align: $btn-align;
-    }
-}
-
-@mixin grid-spacing($space: ($grid-gutter-width*2), $vertical-space: $space ) {
-    .row {
-        margin-left: -($space/2);
-        margin-right: -($space/2);
-
-        > div {
-            padding-left: ($space/2);
-            padding-right: ($space/2);
-
-            .module {
-                margin-bottom: $vertical-space
-            }
-        }
-    }
-}
-
-@mixin list-grid-spacing($space: ($grid-gutter-width*2), $vertical-space: $space ) {
-    .cols {
-        margin-left: -($space/2) !important;
-        margin-right: -($space/2) !important;
-
-        .listItem {
-            padding: 0 ($space/2) !important;
-            margin-bottom: $vertical-space;
-        }
-    }
-}
-
-@mixin quote-clean {
-    blockquote {
-        padding: 0;
-        margin: 0;
-        border: 0;
-        font-size: $font-size-base;
-
-        footer {
-            &:before {
-                content: ''
-            }
-
-            cite {
-                font-size: $font-size-base;
-                color: $text-color;
-                line-height: $line-height-base;
-                font-style: normal;
-            }
-        }
-    }
-}
-
-@mixin quote-bubble($background: $brand-primary,$color: #fff,$radius: $border-radius-base,$size: 1.3em,$paddingv: $box-padding-vertical,$paddingh: $box-padding-horizontal,$triangle: 35px) {
-    margin-bottom: ($triangle + 10px) !important;
-
-    .lIinner {
-        padding: $paddingv $paddingh;
-        background: $background;
-        color: $color;
-        border-radius: $radius;
-        position: relative;
-
-        &:after {
-            content: ' ';
-            width: $triangle;
-            height: $triangle;
-            position: absolute;
-            bottom: -$triangle;
-            left: $paddingh;
-            border-left: $triangle solid $background;
-            border-bottom: $triangle solid transparent;
-        }
-
-        a {
-            color: $color;
-
-            &:hover,
-            &:focus {
-                color: fade($color,70%);
-            }
-        }
-
-        blockquote {
-            font-size: $size;
-
-            footer {
-                color: $color;
-                padding-top: 15px;
-                font-weight: 700;
-                font-size: 0.7em;
-                line-height: 1;
-
-                cite {
-                    color: $color;
-                    font-size: 1.2em;
-                }
-            }
-        }
-
-        .entryFooter .morelink {
-            position: static;
-
-            a {
-                @include btn-clean;
-                color: $color;
-
-                &:hover,
-                &:focus {
-                    color: fade($color,70%);
-                }
-            }
-        }
-    }
-}
-
-@mixin quote-border($background: $brand-primary,$color: #fff,$radius: $border-radius-base,$size: 1.3em,$paddingv: $box-padding-vertical,$paddingh: $box-padding-horizontal,$triangle: 35px) {
-    margin-bottom: ($triangle + 10px) !important;
-
-    .lIinner {
-        padding: $paddingv $paddingh;
-        border: 3px solid $background;
-        border-radius: $radius;
-        position: relative;
-
-        &:before {
-            content: ' ';
-            width: $triangle;
-            height: $triangle;
-            position: absolute;
-            bottom: -$triangle;
-            right: $paddingh;
-            border-right: $triangle solid $background;
-            border-bottom: $triangle solid transparent;
-        }
-
-        &:after {
-            content: ' ';
-            width: ($triangle - 6px);
-            height: ($triangle - 6px);
-            position: absolute;
-            bottom: -($triangle - 8px);
-            right: ($paddingh + 3px);
-            border-right: $triangle solid #fff;
-            border-bottom: $triangle solid transparent;
-        }
-
-        a {
-            color: $color;
-
-            &:hover,
-            &:focus {
-                color: fade($color,70%);
-            }
-        }
-
-
-
-        .entryFooter .morelink {
-            position: static;
-
-            a {
-                @include btn-clean;
-                color: $color;
-
-                &:hover,
-                &:focus {
-                    color: fade($color,70%);
-                }
-            }
-        }
-    }
-}
 //section.darkBG .NewsList{.list-box-content}
 .Site #site-alert {
     .alert,
