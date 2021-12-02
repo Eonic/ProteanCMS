@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <ContentTypeGroup name="Media">
+      <ContentType type="FLVMovie" name="FLV Movie">Display an FLV movie</ContentType>
+      <ContentType type="FlashMovie" name="Flash Movie">Displays a flash movie</ContentType>
+    </ContentTypeGroup>   
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Basic Content" icon="fa-pencil">
+    <Module type="Video" name="Video">Embed a video, either from a local file, YouTube, or Vimeo</Module>
+    </ModuleGroup>
+    
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="VideoList" name="Video List">List of Videos</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

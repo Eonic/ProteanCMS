@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+    <ContentTypes>
+    <ContentTypeGroup name="News And Events">
+      <ContentType type="NewsArticle" name="News Article">Piece of news information</ContentType>
+    </ContentTypeGroup>   
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="NewsList" name="News Articles List">List of News Articles</Module>
+      <Module type="NewsListDateMenu" name="News Date Menu">Menu which filters news articles by dates</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>
+

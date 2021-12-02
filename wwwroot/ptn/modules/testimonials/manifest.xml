@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <ContentTypeGroup name="Information">
+      <ContentType type="Testimonial" name="Testimonial">A Testimonial about your company</ContentType>
+    </ContentTypeGroup>   
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="TestimonialList" name="Testimonials List">List of Testimonials</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

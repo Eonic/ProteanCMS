@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <ContentTypeGroup name="Information">
+      <ContentType type="Organisation" name="Organisation">Organisation Details</ContentType>
+    </ContentTypeGroup>   
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="OrganisationList" name="Organisation List">Organisation List</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>
