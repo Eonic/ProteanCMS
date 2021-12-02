@@ -73,36 +73,9 @@ $(document).ready(function () {
         $(this).removeClass('accordion-open');
     });
 
-    $(".admin-department-menu-js").hide();
-    $(".absolute-admin-logo .department").hide();
-
-    $(".absolute-admin-logo").click(function () {
-        $(".admin-department-menu-js").toggle("slide");
-        $(".absolute-admin-logo .department").toggle();
-        $(".absolute-admin-logo .non-department").toggle();
-
-    });
-
-    //    $("#adminHeader .navbar-brand").click(function () {
-    //        $(".admin-department-menu-js").slideDown();
-    //        return false;
-    //    });
-
-    //    $(".admin-department-menu .navbar-brand").click(function () {
-    //        $(".admin-department-menu-js").slideUp();
-    //        return false;
-    //    });
-
-    $(".admin-main-menu .navbar-brand").hover(function () {
-        $(".admin-sub-menu .navbar-brand").addClass("brand-hover")
-    }, function () {
-        $(".admin-sub-menu .navbar-brand").removeClass("brand-hover")
-    });
-
-    $(".admin-sub-menu .navbar-brand").hover(function () {
-        $(".admin-main-menu .navbar-brand").addClass("brand-hover")
-    }, function () {
-        $(".admin-main-menu .navbar-brand").removeClass("brand-hover")
+    $(".navbar-brand").click(function () {
+        $('.admin-logo-dropdown').toggle();
+        return false;
     });
 
 
