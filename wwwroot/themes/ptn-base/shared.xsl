@@ -4,7 +4,8 @@
   <!-- ######################################## IMPORT ALL COMMON XSL's ########################################### -->
 
   <xsl:import href="../../ptn/core/core.xsl"/>
-  <xsl:import href="../../ptn/modules/modules.xsl"/>
+  <xsl:import href="../../ptn/admin/admin-wysiwyg.xsl"/>  
+  <xsl:import href="../../ptn/modules/modules.xsl"/>  
   <xsl:import href="../../xsl/InstalledModules.xsl"/>
   <xsl:import href="custom-box-styles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
