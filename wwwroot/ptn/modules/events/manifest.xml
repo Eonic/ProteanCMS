@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <ContentTypeGroup name="News And Events">
+      <ContentType type="Event" name="Event">An event in the future</ContentType>
+    </ContentTypeGroup>   
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="EventList" name="Event List">List of Events</Module>   
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

@@ -3,11 +3,9 @@
 
   <!-- ######################################## IMPORT ALL COMMON XSL's ########################################### -->
 
-  <xsl:import href="../../../../../ewcommon_v5-1/xsl/MinimalImports.xsl"/>
-  <xsl:import href="../../../../../ptn/core/core.xsl"/>
-  <xsl:import href="../../../../../ptn/modules/modules.xsl"/>
-  <!--<xsl:import href="../../xsl/InstalledModules.xsl"/>-->
-  <xsl:import href="D:\HostingSpaces\EonicSites\v5demo\wwwroot\xsl\InstalledModules.xsl"/>
+  <xsl:import href="../../ptn/core/core.xsl"/>
+  <xsl:import href="../../ptn/modules/modules.xsl"/>
+  <xsl:import href="../../xsl/InstalledModules.xsl"/>
   <xsl:import href="custom-box-styles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
 
@@ -69,34 +67,17 @@
   <!-- ############################################### THEME CSS's ################################################ -->
 
   <xsl:template match="Page" mode="siteStyle">
-    <xsl:choose>
-      <xsl:when test="$header-layout='header-flex1'">
         <xsl:call-template name="bundle-css">
           <xsl:with-param name="comma-separated-files">
-            <xsl:text>/ewThemes/</xsl:text>
+            <xsl:text>/themes/</xsl:text>
             <xsl:value-of select="$theme"/>
-            <xsl:text>/css/bootstrapBase2.less</xsl:text>
+            <xsl:text>/css/bootstrap.scss</xsl:text>
           </xsl:with-param>
           <xsl:with-param name="bundle-path">
             <xsl:text>~/Bundles/</xsl:text>
             <xsl:value-of select="$theme"/>
           </xsl:with-param>
         </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="bundle-css">
-          <xsl:with-param name="comma-separated-files">
-            <xsl:text>/ewThemes/</xsl:text>
-            <xsl:value-of select="$theme"/>
-            <xsl:text>/css/bootstrapBase.less</xsl:text>
-          </xsl:with-param>
-          <xsl:with-param name="bundle-path">
-            <xsl:text>~/Bundles/</xsl:text>
-            <xsl:value-of select="$theme"/>
-          </xsl:with-param>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
     <xsl:if test="$font-import-base!='none'">
       <link href='//fonts.googleapis.com/css?family={$font-import-base}' rel='stylesheet' type='text/css' />
     </xsl:if>

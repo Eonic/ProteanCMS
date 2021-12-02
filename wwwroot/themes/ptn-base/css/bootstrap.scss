@@ -44,6 +44,10 @@
 // Utilities
 @import "../../../ptn/core/bs5/scss/utilities/api";
 
+//Protean Modules
+@import "../../../ptn/core/modules/modules";
+@import "../../../ptn/modules/modules";
+
 //Theme specific
 @import "animate.css";
 @import "anim.css";

@@ -4,6 +4,6 @@
   <!-- ######################################## IMPORT ALL COMMON XSL's ########################################### -->
 
   <xsl:import href="../../ptn/admin/admin.xsl"/>
-  <xsl:import href="CustomBoxStyles.xsl"/>
+  <xsl:import href="custom-box-styles.xsl"/>
 
 </xsl:stylesheet>
