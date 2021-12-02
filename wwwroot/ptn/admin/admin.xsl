@@ -11,6 +11,8 @@
   <xsl:import href="../core/xforms.xsl"/>
   <xsl:import href="admin-xforms.xsl"/>
   <xsl:import href="../core/localisation.xsl"/>
+  <xsl:import href="admin-settings.xsl"/>
+  <xsl:import href="admin-header.xsl"/>
 
   <xsl:template name="initialiseSocialBookmarks"></xsl:template>
   <xsl:template match="Page" mode="googleMapJS"></xsl:template>
@@ -45,96 +47,6 @@
   <xsl:variable name="GoogleAPIKey">
     <xsl:value-of select="$page/Settings/add[@key='web.GoogleAPIKey']/@value"/>
   </xsl:variable>
-
-  <xsl:template name="eonicwebProductName">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>ProteanCMS</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="eonicwebCMSName">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebCMSName']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCMSName']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="eonicwebProductName"/>
-        <xsl:text> - Content Management System</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="eonicwebAdminSystemName">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebAdminSystemName']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebAdminSystemName']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="eonicwebProductName"/>
-        <xsl:text> admin system</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="eonicwebCopyright">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebCopyright']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCopyright']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        Eonic Digital LLP.
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="eonicwebSupportTelephone">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebSupportTelephone']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportTelephone']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        +44 (0)1892 534044
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="eonicwebWebsite">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebWebsite']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>eonic.com</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="eonicwebSupportEmail">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>support@eonic.com</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template name="eonicwebLogo">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebLogo']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>/ptn/admin/skin/images/ptn-logo.png</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 
   <xsl:variable name="appPath" select="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()"/>
   <!-- Used across this xsl to generate Admin menus and Breadcrumbs-->
