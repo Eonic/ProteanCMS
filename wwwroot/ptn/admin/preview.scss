@@ -1,1 +1,47 @@
-﻿
+﻿$admin-header-bg: #13181c;
+.ewAdmin #adminHeader {
+    background: $admin-header-bg;
+    color: #fff;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    #adminLogo {
+        padding: 8px;
+    }
+
+    a {
+        color: #fff;
+    }
+
+    .input-group {
+        width: 140px;
+
+        input {
+            font-size: 13px;
+            padding: 3px 10px;
+        }
+    }
+
+    #breadcrumb {
+        display: flex;
+        align-items: center;
+
+        @media (max-width: 767.98px) {
+            display: none;
+        }
+    }
+
+    .btn-default {
+        border-radius: 6px;
+        border: 2px solid #fff;
+        padding: 2px 10px;
+        font-size: 14px;
+        margin: 5px;
+
+        i {
+            margin-right: 3px;
+        }
+    }
+}

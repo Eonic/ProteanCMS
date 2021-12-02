@@ -92,6 +92,7 @@
   <xsl:template match="Page" mode="siteJs">
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
+        <xsl:apply-templates select="." mode="commonJsFiles" />
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/jquery.appear.js,</xsl:text>

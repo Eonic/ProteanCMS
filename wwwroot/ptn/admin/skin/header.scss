@@ -14,7 +14,7 @@ body.ewAdmin {
 }
 
 body.normalMode {
-    padding-top: 103px !important;
+    padding-top: 45px !important;
 }
 
 .normalMode .ewAdmin #adminHeader {
@@ -28,6 +28,10 @@ body.normalMode {
     font-family: $admin-header-font;
     font-weight: 300;
     padding: 0;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
 
     a {
         text-decoration: none;

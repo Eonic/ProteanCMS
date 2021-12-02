@@ -95,7 +95,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>/ewcommon/images/admin/skin/protean-admin-white.png</xsl:text>
+        <xsl:text>/ptn/admin/skin/images/ptn-logo.png</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

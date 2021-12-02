@@ -73,10 +73,7 @@ $(document).ready(function () {
         $(this).removeClass('accordion-open');
     });
 
-    $(".navbar-brand").click(function () {
-        $('.admin-logo-dropdown').toggle();
-        return false;
-    });
+    
 
 
     initialiseGeocoderButton();
