@@ -7,13 +7,13 @@
 .far {
     font-weight: 400;
 }
-//end 
+//end
 
 body.ewAdmin {
     background-color: $admin-bg;
 }
 
-body.normalMode {
+body.normalMode, #adminLayout {
     padding-top: 45px !important;
 }
 
@@ -28,10 +28,10 @@ body.normalMode {
     font-family: $admin-header-font;
     font-weight: 300;
     padding: 0;
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
 
     a {
         text-decoration: none;
@@ -53,8 +53,53 @@ body.normalMode {
     }
 
     .navbar-brand {
-        padding: 3px 11px 7px;
+        padding: 0;
         margin: 0;
+
+        &.highlight-logo-dd,
+        &:hover {
+            background-color: $admin-header-bg;
+        }
+
+        > a,
+        > button {
+            padding: 3px 11px 7px;
+            margin: 0;
+            min-height: 45px;
+            //display: block;
+            background: none;
+            border: 0;
+
+            &.highlight-logo-dd,
+            &:hover {
+                background-color: $admin-header-bg;
+            }
+
+            &:after {
+                margin-left: 0.3em;
+                vertical-align: 0.15em;
+                border-top: 0.2em solid #fff;
+                border-right: 0.2em solid transparent;
+                border-bottom: 0;
+                border-left: 0.2em solid transparent;
+            }
+        }
+    }
+
+    .navbar-brand.dropdown:hover {
+        .dropdown-menu {
+            @include media-breakpoint-down(xl) {
+                display: block;
+            }
+        }
+    }
+
+    .dropdown:hover {
+        .dropdown-menu {
+            @include media-breakpoint-up(xl) {
+                display: block;
+            }
+        }
     }
 
     .navbar-nav {
@@ -82,14 +127,50 @@ body.normalMode {
         }
     }
 
+    .dashboard-logo {
+        position: static;
+    }
+
+    .dashboard-logo a, .dashboard-logo button {
+        @include media-breakpoint-up(xl) {
+            position: static;
+
+            &:hover {
+                background: none;
+            }
+
+            &:after {
+                display: none;
+            }
+        }
+    }
+
     .admin-logo-dropdown {
-        display: none;
-        position: absolute;
-        top: 45px;
+        //display: none;
+        //position: absolute;
+        //top: 45px;
         background: $admin-header-bg;
-        left: 0;
-        z-index: 11;
+        //left: 0;
+        // z-index: 11;
         padding: 5px 0;
+        color: #fff;
+        padding-bottom: 0;
+        font-size: 14px;
+        border-radius: 0;
+
+        .dd-logo {
+            //border-bottom: 2px solid #464646;
+            font-size: 17px;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        .cms-logo-dd {
+            width: 17px;
+            margin: 8px 6px 10px 12px;
+        }
 
         ul {
             padding: 0;
@@ -102,20 +183,47 @@ body.normalMode {
                     padding: 10px 15px;
                     display: block;
 
-                    &.on, &.active {
+                    &.on, &.active, &:hover {
                         color: $admin-primary;
                     }
                 }
             }
         }
 
+        ul.department-menu-dd {
+            column-count: 2;
+            background: #212529;
+            padding-bottom: 5px;
+
+            li a {
+                display: inline-block;
+            }
+        }
+
+
+        a#logoff {
+            border-radius: 4px;
+            //border: 1px solid #fff;
+            display: inline-block;
+            margin: 3px 12px;
+            padding: 3px 14px 3px 7px;
+            float: right;
+            font-size: 12px;
+            background: #c9302c;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+
         i {
             min-width: 25px;
             text-align: center;
         }
 
+
+
         &.dashboard-menu {
-            @include media-breakpoint-up(lg) {
+            @include media-breakpoint-up(xl) {
                 display: block !important;
                 position: absolute;
                 top: 0;
@@ -124,9 +232,39 @@ body.normalMode {
                 padding: 0;
                 min-height: 45px;
                 background: none;
+                border: 0;
+
+                .department-menu-dd {
+                    column-count: 1 !important;
+                    padding-bottom: 0;
+                }
+
+                .dd-logo {
+                    float: right;
+                    margin-top: 6px;
+
+                    a#logoff {
+                        padding-top: 5px;
+                        padding-bottom: 5px;
+                    }
+
+                    > span {
+                        display: none;
+                    }
+                }
 
                 ul li {
                     float: left;
+
+                    a {
+                        padding-top: 12px;
+                        padding-bottom: 12px;
+
+                        &:hover {
+                            background-color: $admin-header-bg;
+                            color: #fff;
+                        }
+                    }
 
                     &:first-child {
                         a {
@@ -163,7 +301,7 @@ body.normalMode {
 
             .on, .active {
                 background-color: $admin-header-bg;
-
+                //font-weight: 600;
                 &:hover {
                     background-color: $admin-header-bg;
                 }

@@ -33,35 +33,64 @@
         <strong>Please upgrade your browser.</strong> The version of Internet Explorer you are currently using does not support all the features used in this Content Management System. If you do not upgrade your browser you may experience some problems using this system.
       </div>
     </xsl:if>
+    <!--<div class="dropdown" style="margin-top:50px;z-index:103">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Dropdown button
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+      </div>
+    </div>-->
     <div id="adminHeader" class="affix-top navbar-fixed-top">
-
+      
       <!-- MAIN MENU -->
       <nav class="navbar navbar-expand-xl navbar-dark bg-dark admin-main-menu" role="navigation">
+        
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo"/>
-          </a>
-          <div class="admin-logo-dropdown">
+          
+
+          <div class="navbar-brand dropdown">
             <xsl:if test="/Page[@ewCmd='AdmHome']">
-              <xsl:attribute name="class">admin-logo-dropdown dashboard-menu</xsl:attribute>
+              <xsl:attribute name="class">navbar-brand dashboard-logo dropdown</xsl:attribute>
             </xsl:if>
-            <ul>
-              <xsl:apply-templates select="MenuItem" mode="adminMenuItem">
-                <xsl:with-param name="level">1</xsl:with-param>
-              </xsl:apply-templates>
-              <xsl:apply-templates select="MenuItem/MenuItem" mode="adminMenuItem">
-                <xsl:with-param name="level">1</xsl:with-param>
-              </xsl:apply-templates>
-            </ul>
-            <ul>
-              <li>
-                <a id="myaccount" href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={$page/User/@id}">
-                  <i class="fa fa-user">
+            <button class="navbar-logo dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo"/>
+            </button>
+            <div class=" admin-logo-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <xsl:if test="/Page[@ewCmd='AdmHome']">
+                <xsl:attribute name="class">dropdown-menu admin-logo-dropdown dashboard-menu</xsl:attribute>
+              </xsl:if>
+              <div class="clearfix dd-logo">
+                <span>
+                  <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo-dd"/>
+                  <strong>Protean</strong>CMS
+                </span>
+                <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
+                  <i class="fa fa-power-off">
                     <xsl:text> </xsl:text>
                   </i>
-                  <xsl:value-of select="$page/User/@name"/>
+                  <span>Log Off </span>
                 </a>
-              </li>
+              </div>
+              <ul class="department-menu-dd">
+                <xsl:apply-templates select="MenuItem" mode="adminMenuItem">
+                  <xsl:with-param name="level">1</xsl:with-param>
+                </xsl:apply-templates>
+                <xsl:apply-templates select="MenuItem/MenuItem" mode="adminMenuItem">
+                  <xsl:with-param name="level">1</xsl:with-param>
+                </xsl:apply-templates>
+                <li>
+                  <a id="myaccount" href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={$page/User/@id}">
+                    <i class="fa fa-user">
+                      <xsl:text> </xsl:text>
+                    </i>
+                    <xsl:value-of select="$page/User/@name"/>
+                  </a>
+                </li>
+              </ul>
+              <!--<ul>
               <li>
                 <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
                   <i class="fa fa-power-off">
@@ -70,7 +99,8 @@
                   <span>Log Off </span>
                 </a>
               </li>
-            </ul>
+            </ul>-->
+            </div>
           </div>
 
           <xsl:if test="not(/Page[@ewCmd='AdmHome'])">
@@ -96,6 +126,7 @@
         <xsl:apply-templates select="/Page" mode="UserGuide"/>
       </div>
     </div>
+    
     <xsl:if test="not(/Page[@ewCmd='Normal'])">
       <xsl:apply-templates select="/" mode="adminBreadcrumb"/>
     </xsl:if>
