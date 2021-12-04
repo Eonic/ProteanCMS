@@ -51,14 +51,14 @@
         <div class="container-fluid">
           
 
-          <div class="navbar-brand dropdown">
+          <div class="admin-navbar-brand dropdown">
             <xsl:if test="/Page[@ewCmd='AdmHome']">
-              <xsl:attribute name="class">navbar-brand dashboard-logo dropdown</xsl:attribute>
+              <xsl:attribute name="class">admin-navbar-brand dashboard-logo dropdown</xsl:attribute>
             </xsl:if>
-            <button class="navbar-logo dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="navbar-logo dropdown-toggle" type="button" id="dropdownLogoButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo"/>
             </button>
-            <div class=" admin-logo-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div class=" admin-logo-dropdown dropdown-menu" aria-labelledby="dropdownLogoButton">
               <xsl:if test="/Page[@ewCmd='AdmHome']">
                 <xsl:attribute name="class">dropdown-menu admin-logo-dropdown dashboard-menu</xsl:attribute>
               </xsl:if>

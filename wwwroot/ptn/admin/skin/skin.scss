@@ -5,7 +5,8 @@ NEW BS ADMIN HEADER
 ---------------------------------5cbaf1-------62257d------9475a3----------------*/
 
 // VARIABLES FOR RESKINNING
-
+$secondary: $green;
+$theme-colors: ( secondary:$green );
 $admin-header-bg: #13181c;
 $admin-header-bg-light: lighten($admin-header-bg, 10%);
 $admin-header-color: #fff;
@@ -104,9 +105,14 @@ body.ewAdmin.layout-AdmHome {
         font-family: $admin-header-font;
         //color: #a5a7a9;
         text-align: right;
-        padding: 15px 30px !important;
+        padding: 15px 30px 0 15px;
         border-radius: 0;
         z-index: 10;
+        margin-top: 45px;
+        justify-content: flex-end;
+        font-size: 12.5px;
+        margin-bottom: 0 !important;
+        overflow: hidden;
 
         a {
             color: $admin-primary;
@@ -116,12 +122,6 @@ body.ewAdmin.layout-AdmHome {
                 text-decoration: none;
             }
         }
-
-        font-size: 12.5px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        padding-right: 20px;
-        margin-bottom: 0 !important;
 
         li:before {
             //    color: #a5a7a9 !important;
@@ -134,9 +134,6 @@ body.ewAdmin.layout-AdmHome {
                 content: '';
             }
         }
-
-        height: 60px;
-        overflow: hidden;
 
         ul {
             padding: 0;
@@ -200,11 +197,6 @@ body.ewAdmin.layout-AdmHome {
 
         .listbox a {
             color: darken($admin-header-color-link,30%)
-        }
-
-        .row {
-            margin-left: 0px;
-            margin-right: 0px;
         }
         /*.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
             padding-left: 0px;
@@ -535,35 +527,43 @@ body.ewAdmin.layout-AdmHome {
         }
     }
     //end #adminLayout
-
     #MenuTree {
         .list-group-item {
             paddin-left: 50px;
         }
+
         .level-2 {
             padding-left: 70px
         }
+
         .level-3 {
             padding-left: 80px
         }
+
         .level-4 {
             padding-left: 90px
         }
+
         .level-5 {
             padding-left: 100px
         }
+
         .level-6 {
             padding-left: 110px
         }
+
         .level-7 {
             padding-left: 120px
         }
+
         .level-8 {
             padding-left: 130px
         }
+
         .level-9 {
             padding-left: 140px
         }
+
         .level-10 {
             padding-left: 150px
         }
@@ -571,27 +571,34 @@ body.ewAdmin.layout-AdmHome {
         .level-11 {
             padding-left: 160px
         }
+
         .level-12 {
             padding-left: 170px
         }
+
         .level-13 {
             padding-left: 180px
         }
+
         .level-14 {
             padding-left: 190px
         }
+
         .level-15 {
             padding-left: 200px
         }
+
         i.hitarea {
             top: 13px;
             position: absolute;
             margin-left: -15px;
             cursor: pointer;
         }
+
         i.hitarea.fa-chevron-down {
             margin-left: -18px;
         }
+
         div.pageCell {
             i {
                 top: 17px;

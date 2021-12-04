@@ -14,9 +14,10 @@ body.ewAdmin {
 }
 
 body.normalMode, #adminLayout {
-    padding-top: 45px !important;
+    @include media-breakpoint-up(md) {
+        padding-top: 45px !important;
+    }
 }
-
 .normalMode .ewAdmin #adminHeader {
     z-index: 9990;
 }
@@ -52,7 +53,7 @@ body.normalMode, #adminLayout {
         }
     }
 
-    .navbar-brand {
+    .admin-navbar-brand {
         padding: 0;
         margin: 0;
 
@@ -86,7 +87,7 @@ body.normalMode, #adminLayout {
         }
     }
 
-    .navbar-brand.dropdown:hover {
+    .admin-navbar-brand.dropdown:hover {
         .dropdown-menu {
             @include media-breakpoint-down(xl) {
                 display: block;

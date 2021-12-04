@@ -173,7 +173,7 @@
             <xsl:text> form-group li-</xsl:text>
             <xsl:value-of select="./@class"/>
           </xsl:for-each>
-          <xsl:text> row g-3</xsl:text>
+          <xsl:text> </xsl:text>
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
@@ -775,7 +775,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-success</xsl:text>
+        <xsl:text> btn-secondary</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -804,7 +804,7 @@
           <xsl:value-of select="@icon"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>fa-check</xsl:text>
+          <xsl:text> </xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -862,7 +862,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-success</xsl:text>
+        <xsl:text> btn-secondary</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -888,7 +888,7 @@
           <xsl:value-of select="@icon"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>fa-check</xsl:text>
+          <xsl:text> </xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -923,7 +923,7 @@
 
   <xsl:template match="submit[@class='principle' and @ref!='']" mode="xform">
     <xsl:variable name="class">
-      <xsl:text>btn btn-success</xsl:text>
+      <xsl:text>btn btn-secondary</xsl:text>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
         <xsl:value-of select="@class"/>
@@ -948,7 +948,7 @@
           <xsl:value-of select="@icon"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>fa-check</xsl:text>
+          <xsl:text> </xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -3170,8 +3170,8 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
-    &#160;
-    <a data-contentwrapper="#popover-{$ref2}" data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}">
+    <xsl:text>&#160;</xsl:text>
+    <a data-contentwrapper="#popover-{$ref2}" data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
       <i class="fas fa-info-circle">
         <xsl:text> </xsl:text>
       </i>
@@ -3443,7 +3443,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-success</xsl:text>
+        <xsl:text> btn-secondary</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -3472,7 +3472,7 @@
           <xsl:value-of select="@icon"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>fa-check</xsl:text>
+          <xsl:text> </xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>

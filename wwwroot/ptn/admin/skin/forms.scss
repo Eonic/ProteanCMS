@@ -1,4 +1,5 @@
-﻿form.xform {
+﻿
+form.xform {
     .principle {
         float: right;
     }
@@ -9,5 +10,34 @@
 
     .form-margin {
         margin-bottom:1rem;
+    }
+}
+.ewAdmin #adminLayout {
+
+    .form-2-col {
+        @include make-row();
+
+        > div {
+            @include make-col-ready();
+
+            @include media-breakpoint-up(sm) {
+                @include make-col(6);
+            }
+        }
+    }
+
+    a.form-tip {
+        color: lighten($admin-header-font-color,10%);
+        padding-left: 3px;
+    }
+
+    .form-check-input:checked {
+        background-color: lighten($admin-header-font-color,10%);
+        border-color: lighten($admin-header-font-color,10%);
+    }
+
+    .btn-secondary {
+        background: $secondary;
+        border-color: $secondary;
     }
 }

@@ -213,8 +213,8 @@
         </input>
       </group>
     </group>
-    <group class="col2">
-      <group class="inline">
+    <group>
+      <group class="form-2-col">
         <!--<label>Page Names</label>-->
         <input bind="cStructName" class="required">
           <label>Page name</label>
