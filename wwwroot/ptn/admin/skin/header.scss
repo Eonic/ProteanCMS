@@ -53,7 +53,7 @@ body.normalMode, #adminLayout {
         }
     }
 
-    .admin-navbar-brand {
+    .navbar-brand {
         padding: 0;
         margin: 0;
 
@@ -87,7 +87,7 @@ body.normalMode, #adminLayout {
         }
     }
 
-    .admin-navbar-brand.dropdown:hover {
+    .navbar-brand.dropdown:hover {
         .dropdown-menu {
             @include media-breakpoint-down(xl) {
                 display: block;
