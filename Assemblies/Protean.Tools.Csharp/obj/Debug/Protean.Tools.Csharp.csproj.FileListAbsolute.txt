@@ -281,3 +281,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Too
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET.Core.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-AnyCPU.dll

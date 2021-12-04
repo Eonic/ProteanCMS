@@ -4497,7 +4497,7 @@ processFlow:
                 If Not bBillingSet Then
                     contactId = setCurrentBillingAddress(myWeb.mnUserId, 0)
                 Else
-                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 order by cContactType ASC"
+                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 AND (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC"
                     oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 End If
 

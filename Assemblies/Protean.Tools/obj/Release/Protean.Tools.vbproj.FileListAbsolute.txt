@@ -141,8 +141,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.pd
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.Security.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.ConnectionInfo.dll
@@ -174,8 +172,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Cs
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Newtonsoft.Json.xml
