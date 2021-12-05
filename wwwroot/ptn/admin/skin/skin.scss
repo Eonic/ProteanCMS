@@ -5,8 +5,6 @@ NEW BS ADMIN HEADER
 ---------------------------------5cbaf1-------62257d------9475a3----------------*/
 
 // VARIABLES FOR RESKINNING
-$secondary: $green;
-$theme-colors: ( secondary:$green );
 $admin-header-bg: #13181c;
 $admin-header-bg-light: lighten($admin-header-bg, 10%);
 $admin-header-color: #fff;
@@ -29,6 +27,9 @@ $admin-body-font: 'Open Sans', sans-serif;
 $admin-font-size-base: 15px;
 $admin-gutter-width: 30px;
 
+$secondary: $admin-primary;
+$theme-colors: ( secondary:$admin-primary );
+$admin-info: #212529;
 //Please review this and change to the bootstrap5 methodology
 //Numbers corrected by Vic 24/11/21
 $screen-xs-max: 767px;
@@ -493,7 +494,7 @@ body.ewAdmin.layout-AdmHome {
                 font-size: 1em;
             }
 
-            ;
+            
             text-decoration: none !important;
         }
 
@@ -976,7 +977,6 @@ body.ewAdmin.layout-AdmHome {
     }
 
     .btn, .btn-sm, .btn-xs {
-        border-radius: $admin-header-border-radius;
         margin-right: 1px;
     }
 
@@ -1012,8 +1012,7 @@ body.ewAdmin.layout-AdmHome {
         }
     }
 
-    .btn-primary,
-    .btn-info {
+    .btn-primary {
         background: $admin-primary !important;
         border-color: darken($admin-header-color-link, 10%) !important;
         color: $admin-header-color !important;
@@ -1031,9 +1030,27 @@ body.ewAdmin.layout-AdmHome {
         }
     }
 
+    .btn-info {
+        background: $admin-info !important;
+        border-color: $admin-info !important;
+        color: #fff !important;
+
+        &:hover {
+            background: lighten($admin-info, 7%) !important;
+        }
+        //border-width: 0px;
+        &:focus {
+            outline: none;
+        }
+
+        i {
+            margin: 0;
+        }
+    }
+
     .btn-default {
         background: lighten($admin-primary, 30%);
-        border: 1px solid $admin-primary!important;
+        border: 1px solid $admin-primary !important;
         color: $admin-primary;
 
         &:hover {
@@ -1237,16 +1254,16 @@ body.ewAdmin.layout-AdmHome {
 // - GUIDE
 #btnHelpEditing {
     background: $admin-header-color-link;
-    border-radius: $admin-header-border-radius 0 0 $admin-header-border-radius;
-    border-left: 2px solid #fff;
-    border-top: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    border-right: 0;
+    border-radius: 3px 0 0 3px;
+    //border-left: 2px solid #fff;
+    //border-top: 2px solid #fff;
+    //border-bottom: 2px solid #fff;
+    border: 0;
     position: fixed;
     right: 0px;
     width: 34px;
-    height: 180px;
-    top: 40%;
+    height: 36px;
+    top: 5px !important;
     cursor: pointer;
     z-index: 5000;
     outline: none;
@@ -1262,6 +1279,7 @@ body.ewAdmin.layout-AdmHome {
         vertical-align: top;
         padding: 0px;
         font-weight: 300;
+        display: none;
     }
 
     &:hover {
@@ -1270,6 +1288,10 @@ body.ewAdmin.layout-AdmHome {
 
     i {
         padding: 0 !important
+    }
+
+    i.fa-chevron-left {
+        display:none;
     }
 }
 
