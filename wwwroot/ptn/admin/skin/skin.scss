@@ -161,6 +161,11 @@ body.ewAdmin.layout-AdmHome {
             height: auto;
             z-index: 1050;
         }
+
+        &.breadcrumb-message {
+            color: #939393;
+            padding-top: 17px;
+        }
     }
 
     #adminLayout {
@@ -179,7 +184,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .status.active, .status.activeParent {
-            color: $admin-success;
+            color: $admin-primary;
         }
 
         .status.inactive {
@@ -528,44 +533,86 @@ body.ewAdmin.layout-AdmHome {
     }
     //end #adminLayout
     #MenuTree {
+
         .list-group-item {
-            paddin-left: 50px;
+            padding-left: 50px;
         }
 
         .level-2 {
-            padding-left: 70px
+            padding-left: 70px;
+
+            div.pageCell {
+                width: 210px;
+            }
         }
 
         .level-3 {
-            padding-left: 80px
+            padding-left: 80px;
+
+            div.pageCell {
+                width: 200px;
+            }
         }
 
         .level-4 {
-            padding-left: 90px
+            padding-left: 90px;
+
+            div.pageCell {
+                width: 190px;
+            }
         }
 
         .level-5 {
-            padding-left: 100px
+            padding-left: 100px;
+
+            div.pageCell {
+                width: 180px;
+            }
         }
 
         .level-6 {
-            padding-left: 110px
+            padding-left: 110px;
+
+
+            div.pageCell {
+                width: 170px;
+            }
         }
 
         .level-7 {
-            padding-left: 120px
+            padding-left: 120px;
+
+
+            div.pageCell {
+                width: 170px;
+            }
         }
 
         .level-8 {
-            padding-left: 130px
+            padding-left: 130px;
+
+
+            div.pageCell {
+                width: 160px;
+            }
         }
 
         .level-9 {
-            padding-left: 140px
+            padding-left: 140px;
+
+
+            div.pageCell {
+                width: 150px;
+            }
         }
 
         .level-10 {
-            padding-left: 150px
+            padding-left: 150px;
+
+
+            div.pageCell {
+                width: 140px;
+            }
         }
 
         .level-11 {
@@ -589,10 +636,11 @@ body.ewAdmin.layout-AdmHome {
         }
 
         i.hitarea {
-            top: 13px;
+            top: 18px;
             position: absolute;
             margin-left: -15px;
             cursor: pointer;
+            font-size: 11px;
         }
 
         i.hitarea.fa-chevron-down {
@@ -600,6 +648,12 @@ body.ewAdmin.layout-AdmHome {
         }
 
         div.pageCell {
+            display: inline-block;
+            width: 230px;
+            max-width: 100%;
+            margin: 0px;
+            font-weight: 600;
+
             i {
                 top: 17px;
                 position: absolute;
@@ -609,11 +663,6 @@ body.ewAdmin.layout-AdmHome {
                 position: inherit;
             }
 
-            display: inline-block;
-            width: 230px;
-            max-width: 100%;
-            margin: 0px;
-
             .pageName {
                 display: inline-block;
                 padding-left: 25px;
@@ -621,8 +670,16 @@ body.ewAdmin.layout-AdmHome {
         }
 
         div.optionButtons {
-            display: inline-block;
             margin: 0px;
+
+            @include media-breakpoint-up(lg) {
+                display: inline-block;
+            }
+
+            @include media-breakpoint-down(lg) {
+                margin: 11px -10px 0;
+            }
+
 
             .checkbox {
                 margin-top: 0px;
@@ -632,6 +689,24 @@ body.ewAdmin.layout-AdmHome {
 
         .list-group-item {
             border-bottom: 1px solid lighten($admin-header-bg,75%);
+        }
+
+        .optionButtons .btn {
+            border: 0 !important;
+            background: none !important;
+            color: #4a4a4a !important;
+            font-weight: 600;
+            font-size: 15px;
+
+            &:hover {
+                border: 0 !important;
+                background: none !important;
+            }
+
+            i {
+                color: #4a4a4a !important;
+                font-size: 13px;
+            }
         }
     }
 }
@@ -798,9 +873,9 @@ body.ewAdmin.layout-AdmHome {
     .ewAdmin > .dropdown > .btn-primary,
     .ewAdmin > .dropdown > .btn-default {
         //padding: 0px 3px 3px 5px !important;
-        font-weight: 400 !important;
-        border-radius: 3px !important;
-        border: 0px !important;
+        font-weight: 400 ;
+        border-radius: 3px ;
+        border: 0px ;
     }
 
     .ewAdmin > .ui-draggable-handle i {
@@ -817,16 +892,16 @@ body.ewAdmin.layout-AdmHome {
 
     .ewAdmin > .btn-default,
     .ewAdmin > .dropdown > .btn-default {
-        background: lighten($admin-header-color-link, 25%) !important;
-        border-color: lighten($admin-header-color-link, 5%) !important;
+        background: lighten($admin-header-color-link, 25%) ;
+        border-color: lighten($admin-header-color-link, 5%) ;
         border: 1px !important;
         color: $admin-header-color-link !important;
 
         &:hover {
-            background: lighten($admin-header-color-link, 32%) !important;
+            background: lighten($admin-header-color-link, 32%) ;
         }
 
-        font-family: $admin-header-font !important;
+        font-family: $admin-header-font ;
         text-shadow: none;
         border-width: 1px;
         letter-spacing: 0;
@@ -957,17 +1032,15 @@ body.ewAdmin.layout-AdmHome {
     }
 
     .btn-default {
-        background: lighten($admin-primary, 30%) !important;
-        border-color: $admin-primary;
-        color: $admin-primary !important;
-        border-width: 1px !important;
-        border-style: solid;
+        background: lighten($admin-primary, 30%);
+        border: 1px solid $admin-primary!important;
+        color: $admin-primary;
 
         &:hover {
-            background: lighten($admin-primary, 32%) !important;
+            background: lighten($admin-primary, 32%);
         }
 
-        font-family: $admin-header-font !important;
+        font-family: $admin-header-font;
         text-shadow: none;
         border-width: 0px;
         letter-spacing: 0;
@@ -979,34 +1052,34 @@ body.ewAdmin.layout-AdmHome {
     }
 
     .btn-danger {
-        background: $admin-danger !important;
-        border-color: darken($admin-danger, 10%) !important;
+        background: $admin-danger;
+        border-color: darken($admin-danger, 10%);
         color: $admin-header-color !important;
 
         &:hover {
-            background: lighten($admin-danger, 7%) !important;
+            background: lighten($admin-danger, 7%);
         }
 
         border-width: 1px;
     }
 
     .btn-success {
-        background: $admin-success !important;
+        background: $admin-success;
         // border-width: 0px;
-        color: $admin-header-color !important;
+        color: $admin-header-color;
 
         &:hover {
-            background: lighten($admin-success, 7%) !important;
+            background: lighten($admin-success, 7%);
         }
     }
 
     .btn-warning {
-        background: $admin-warning !important;
-        border-color: darken($admin-warning, 10%) !important;
+        background: $admin-warning;
+        border-color: darken($admin-warning, 10%);
         color: $admin-header-color !important;
 
         &:hover {
-            background: lighten($admin-warning, 7%) !important;
+            background: lighten($admin-warning, 7%);
         }
 
         border-width: 1px;

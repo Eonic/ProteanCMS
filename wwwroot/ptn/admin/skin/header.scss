@@ -62,6 +62,11 @@ body.normalMode, #adminLayout {
             background-color: $admin-header-bg;
         }
 
+        &.show .admin-logo-dropdown,
+        &.show-click .admin-logo-dropdown {
+            display: block;
+        }
+
         > a,
         > button {
             padding: 3px 11px 7px;
@@ -77,6 +82,8 @@ body.normalMode, #adminLayout {
             }
 
             &:after {
+                content: '';
+                display: inline-block;
                 margin-left: 0.3em;
                 vertical-align: 0.15em;
                 border-top: 0.2em solid #fff;
@@ -87,13 +94,13 @@ body.normalMode, #adminLayout {
         }
     }
 
-    .navbar-brand.dropdown:hover {
-        .dropdown-menu {
-            @include media-breakpoint-down(xl) {
+    /*.navbar-brand:hover {
+        .admin-logo-dropdown {
+            @include media-breakpoint-up(xl) {
                 display: block;
             }
         }
-    }
+    }*/
 
     .dropdown:hover {
         .dropdown-menu {
@@ -147,17 +154,19 @@ body.normalMode, #adminLayout {
     }
 
     .admin-logo-dropdown {
-        //display: none;
-        //position: absolute;
-        //top: 45px;
+        display: none;
+        position: absolute;
+        top: 45px;
         background: $admin-header-bg;
-        //left: 0;
-        // z-index: 11;
+        left: 0;
+        z-index: 11;
         padding: 5px 0;
         color: #fff;
         padding-bottom: 0;
         font-size: 14px;
         border-radius: 0;
+
+
 
         .dd-logo {
             //border-bottom: 2px solid #464646;

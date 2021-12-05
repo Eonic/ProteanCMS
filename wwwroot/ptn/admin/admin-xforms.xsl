@@ -2333,7 +2333,9 @@
   <xsl:template match="item" mode="xform_PickIcon">
     <xsl:param name="ref"/>
     <div data-value="{value/node()}">
-      <i class="fa {value/node()} fa-lg">&#160;</i>
+      <i class="fa {value/node()} fa-lg">
+        <xsl:text> </xsl:text>
+      </i>
     </div>
   </xsl:template>
 

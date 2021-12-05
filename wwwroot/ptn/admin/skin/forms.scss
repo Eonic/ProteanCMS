@@ -13,7 +13,6 @@ form.xform {
     }
 }
 .ewAdmin #adminLayout {
-
     .form-2-col {
         @include make-row();
 
@@ -39,5 +38,70 @@ form.xform {
     .btn-secondary {
         background: $secondary;
         border-color: $secondary;
+    }
+    //hide extra headers
+    .adminTemplate > form > .card-header,
+    .admin-page > .card > .card-header {
+        display: none;
+    }
+    //icon dropdown
+    .bfh-selectbox-options {
+        right: 0;
+        padding: 0;
+    }
+
+    .bfh-selectbox-toggle {
+        height: 38px;
+
+        .bfh-selectbox-option {
+            height: 23px;
+        }
+        /*&:after {
+            content: '';
+            display: inline-block;
+            margin-left: 0.3em;
+            vertical-align: 0.15em;
+            border-top: 0.3em solid #666;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+            position: absolute;
+            top: 17px;
+        }*/
+        &:after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 11px;
+            right: 13px;
+            color: #3e4246;
+            font-size: 13px;
+        }
+    }
+
+    .bfh-selectbox .bfh-selectbox-options ul {
+        height: 140px;
+        max-height: 140px;
+        background: #e3e1e1;
+        margin: 0;
+
+        li {
+            float: left;
+
+            > a {
+                margin: 2px;
+                width: 38px;
+                text-align: center;
+                background: #fff;
+                display: block;
+                padding: 5px;
+                border-radius: 4px;
+
+                i {
+                    display: inline-block;
+                }
+            }
+        }
     }
 }
