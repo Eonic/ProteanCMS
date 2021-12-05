@@ -47,6 +47,7 @@ body.normalMode, #adminLayout {
         padding: 0;
         background-color: $admin-header-bg;
         border-color: $admin-header-bg;
+        padding-right: 35px;
 
         .container-fluid {
             padding: 0;
@@ -93,7 +94,6 @@ body.normalMode, #adminLayout {
             }
         }
     }
-
     /*.navbar-brand:hover {
         .admin-logo-dropdown {
             @include media-breakpoint-up(xl) {
@@ -101,7 +101,6 @@ body.normalMode, #adminLayout {
             }
         }
     }*/
-
     .dropdown:hover {
         .dropdown-menu {
             @include media-breakpoint-up(xl) {
@@ -222,6 +221,7 @@ body.normalMode, #adminLayout {
             background: #c9302c;
             text-transform: uppercase;
             font-weight: 700;
+            margin-right:45px;
         }
 
 
