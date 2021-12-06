@@ -926,6 +926,7 @@
 
   <!-- Javascripts that can be brought in in the footer of the HTML document, e.g. asynchronous scripts -->
   <xsl:template match="Page" mode="footerJs">
+    
     <!-- common javascript -->
     <xsl:if test="$ScriptAtBottom='on' or $adminMode">
       <xsl:apply-templates select="." mode="js"/>
@@ -935,7 +936,7 @@
     <xsl:apply-templates select="." mode="jQuery" />
     <!-- page specific javascripts -->
     <xsl:apply-templates select="." mode="pageJs"/>
-
+    
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
@@ -944,12 +945,13 @@
         <xsl:apply-templates select="/Page/Contents/Content" mode="contentJS"/>
       </xsl:otherwise>
     </xsl:choose>
-
+    
     <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
 
     <!-- GOOGLE MAPS -->
-    <xsl:apply-templates select="." mode="googleMapJS" />
+    <!--xsl:apply-templates select="." mode="googleMapJS" /-->
     <!-- Includes initialisation template if at least one method is in use: -->
+
     <xsl:if test="$page/Contents/Content[(@type='SocialNetworkingSettings' and Bookmarks/Methods/@*='true') or (@moduleType='NewsList' and not(@commentPlatform='' or @commentPlatform='none'))]">
       <xsl:call-template name="initialiseSocialBookmarks"/>
     </xsl:if>
@@ -1014,7 +1016,7 @@
     </xsl:choose>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
-
+    
     <xsl:apply-templates select="." mode="BingTrackingCode"/>
     <xsl:apply-templates select="." mode="FacebookTrackingCode"/>
     <xsl:apply-templates select="." mode="FeedOptimiseCode"/>

@@ -2166,7 +2166,7 @@
     </xsl:variable>
     <!--<xsl:attribute name="class">pickByImage</xsl:attribute>-->
     <!--<input type="hidden" name="{$ref}" value="{value/node()}"/>-->
-    <div class="pickByImage" id="accordion">
+    <div class="accordion" id="pick-by-image">
       <xsl:apply-templates select="item | choices" mode="xform_imageClick">
         <xsl:with-param name="type">radio</xsl:with-param>
         <xsl:with-param name="ref" select="$ref"/>
@@ -2179,37 +2179,22 @@
     <xsl:param name="ref"/>
     <xsl:variable name="makeClass" select="translate(label, ' ', '_')"/>
 
-    <div class="panel panel-default">
-      <a class="accordion-toggle accordion-load" data-toggle="collapse" data-parent="#accordion" href="#collapse{$makeClass}">
-        <div class="panel-heading">
-          <h6 class="panel-title">
-            <i class="fa fa-angle-down fa-lg">
-              <xsl:text> </xsl:text>
-            </i>
-            <xsl:text> </xsl:text>
-            <xsl:if test="label/@icon">
-              <i class="fa {label/@icon}">
-                <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>
-            </xsl:if>
-
-            <xsl:apply-templates select="label" mode="xform_legend"/>
-          </h6>
-        </div>
-      </a>
-      <div id="collapse{$makeClass}">
+    <div class="accordion-item">
+      <h5 class="accordion-header" id="heading{$makeClass}">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{$makeClass}" aria-expanded="true" aria-controls="collapse{$makeClass}"> 
+         <xsl:apply-templates select="label" mode="xform_legend"/>
+      </button>
+      </h5>
+      <div id="collapse{$makeClass}"  aria-labelledby="heading{$makeClass}" data-bs-parent="#pick-by-image">
         <xsl:attribute name="class">
-          <xsl:text>panel-collapse collapse panel-body</xsl:text>
+          <xsl:text>accordion-collapse collapse row </xsl:text>
           <xsl:if test="position()=1">
             <xsl:text> in</xsl:text>
           </xsl:if>
         </xsl:attribute>
-        <div class=" row choices">
           <xsl:apply-templates select="item" mode="xform_imageClick">
             <xsl:with-param name="ref" select="$ref"/>
           </xsl:apply-templates>
-        </div>
       </div>
     </div>
   </xsl:template>
@@ -2239,9 +2224,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="col-md-4">
-      <button name="{$ref}" value="{value/node()}" class="imageSelect panel panel-default {$isSelected}">
-        <img src="{$imageURL}" class="pull-left"/>
+    <div class="col-md-2 card card-default ">
+      <button name="{$ref}" value="{value/node()}" class="{$isSelected}">
+        <img src="{$imageURL}" class="card-img-top"/>
         <h5>
           <xsl:value-of select="label/node()"/>
         </h5>

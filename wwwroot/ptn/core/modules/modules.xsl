@@ -4,5 +4,6 @@
   <xsl:import href="columns/columns.xsl"/>
   <xsl:import href="formattedtext/formattedtext.xsl"/>
   <xsl:import href="image/image.xsl"/>
+  <xsl:import href="socialbookmarks/socialbookmarks.xsl"/>
   
 </xsl:stylesheet>
