@@ -484,7 +484,7 @@
 
   <xsl:template match="Page[@ewCmd='CopyPage']" mode="adminBreadcrumb">
     <xsl:if test="/Page/@id != ''">
-      <ol class="breadcrumb admin-breadcrumb">
+      <ol class="breadcrumb admin-breadcrumb breadcrumb-message">
         <xsl:apply-templates select="/Page/Menu/MenuItem" mode="breadcrumb"/>
       </ol>
     </xsl:if>
@@ -492,11 +492,15 @@
   </xsl:template>
 
   <xsl:template match="Page[@ewCmd='MoveContent']" mode="adminBreadcrumb">
-    <xsl:text>[Move Content]</xsl:text>
+    <div class="breadcrumb admin-breadcrumb breadcrumb-message">
+      <xsl:text>[Move Content]</xsl:text>
+    </div>
   </xsl:template>
 
   <xsl:template match="Page[@ewCmd='AddPage']" mode="adminBreadcrumb">
-    <xsl:text>Adding New Page below : </xsl:text>
+    <div class="breadcrumb admin-breadcrumb breadcrumb-message">
+      <xsl:text>Adding New Page below: </xsl:text>
+    </div>
   </xsl:template>
 
 

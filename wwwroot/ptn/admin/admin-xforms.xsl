@@ -251,14 +251,12 @@
       <xsl:apply-templates select="value/img" mode="jsNiceImage"/>
     </xsl:variable>
     <xsl:apply-templates select="self::node()[not(item[toggle])]" mode="xform_legend"/>
-    <div class="input-group" id="editImage_{$ref}">
-      <span class="input-group-btn">
-        <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-default">
-          <i class="fa fa-times fa-white">
-            <xsl:text> </xsl:text>
-          </i>
-        </a>
-      </span>
+    <div class="input-group form-margin" id="editImage_{$ref}">
+      <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-info input-group-btn">
+        <i class="fa fa-times">
+          <xsl:text> </xsl:text>
+        </i>
+      </a>
       <textarea name="{$ref}" id="{$ref}" readonly="readonly">
         <xsl:attribute name="class">
           <xsl:text>form-control pickImageInput </xsl:text>
@@ -284,24 +282,20 @@
     </script>-->
       <xsl:choose>
         <xsl:when test="value/img/@src!=''">
-          <span class="input-group-btn editpick">
-            <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
-            <a class="btn btn-primary editImage">
-              <i class="fa fa-picture-o fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Edit
-            </a>
-          </span>
+          <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
+          <a class="btn btn-info input-group-btn editImage">
+            <i class="fas fa-image">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Edit
+          </a>
         </xsl:when>
         <xsl:otherwise>
-          <span class="input-group-btn editpick">
-            <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary">
-              <i class="fa fa-picture-o fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Pick
-            </a>
-          </span>
+          <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
+          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-info input-group-btn">
+            <i class="fas fa-image">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Pick
+          </a>
         </xsl:otherwise>
       </xsl:choose>
     </div>
@@ -388,25 +382,23 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </input>
-      <span class="input-group-btn">
-        <xsl:choose>
-          <xsl:when test="value!=''">
-            <a href="#" onclick="xfrmClearImgFile('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the file path" class="btn btn-danger">
-              <i class="fa fa-trash-o fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Clear
-            </a>
+      <xsl:choose>
+        <xsl:when test="value!=''">
+          <a href="#" onclick="xfrmClearImgFile('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the file path" class="btn btn-danger">
+            <i class="fa fa-trash-o fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Clear
+          </a>
 
-          </xsl:when>
-          <xsl:otherwise>
-            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-primary">
-              <i class="fa fa-picture-o fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Pick
-            </a>
-          </xsl:otherwise>
-        </xsl:choose>
-      </span>
+        </xsl:when>
+        <xsl:otherwise>
+          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-info input-group-btn">
+            <i class="fas fa-image">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Pick
+          </a>
+        </xsl:otherwise>
+      </xsl:choose>
     </div>
 
   </xsl:template>
@@ -440,7 +432,7 @@
           </xsl:when>
           <xsl:otherwise>
             <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=DocsLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-primary">
-              <i class="fa fa-file-o fa-white">
+              <i class="fas fa-file">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Pick
             </a>
@@ -1761,8 +1753,8 @@
 
     </xsl:if>
   </xsl:template>
-  
-   <xsl:template match="relatedContent[@type='filter']" mode="xform">
+
+  <xsl:template match="relatedContent[@type='filter']" mode="xform">
     <xsl:param name="contentType" select="@type"/>
     <xsl:param name="relationType" select="@relationType"/>
     <xsl:param name="rcCount" select="count(ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType])"/>
@@ -1782,121 +1774,124 @@
       </xsl:choose>
     </xsl:variable>
     <!--This way we get the type of content we relate to dynamically-->
-      
-              <xsl:value-of select="$relationType"/>
-        <label for="Related_{$relationType}">
-          <xsl:choose>
-            <xsl:when test="label/node()!=''">
-              <xsl:value-of select="label/node()"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:if test="$relationType!=''">
-              <xsl:value-of select="$relationType"/>
+
+    <xsl:value-of select="$relationType"/>
+    <label for="Related_{$relationType}">
+      <xsl:choose>
+        <xsl:when test="label/node()!=''">
+          <xsl:value-of select="label/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="$relationType!=''">
+            <xsl:value-of select="$relationType"/>
           </xsl:if>
-            </xsl:otherwise>
-          </xsl:choose>
-          
-          <!--<small>-->
+        </xsl:otherwise>
+      </xsl:choose>
 
-          <xsl:choose>
-            <xsl:when test="contains(@direction,'1way')">
-              <xsl:text> (1 Way Relationship)</xsl:text>
-            </xsl:when>
-            <xsl:when test="contains(@direction,'2way')">
-              <xsl:text> (2 Way Relationship)</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text> (2 Way Relationship)</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:value-of select="$relationType"/>
-          <!--</small>-->
-        </label>
-          <xsl:choose>
-            <xsl:when test="ancestor::Content/model/instance/ContentRelations[@copyRelations='true']">
-              Copy the following relationships
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:variable name="contentCount" select="count(ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType])"/>
-              <!-- Limit Number of Related Content-->
-              <xsl:if test="contains(@search,'pick')">
-                <xsl:variable name="valueList">
-                  <list>
-                    <xsl:for-each select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
-                      <item><xsl:value-of select="@id"/></item>
-                    </xsl:for-each>
-                  </list>
-                </xsl:variable>
-                <xsl:variable name="value" select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')][1]/@id"/>
-                  <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control">
-                    <xsl:if test="@maxRelationNo &gt; 1">
-                      <xsl:attribute name="multiple">multiple</xsl:attribute>
-                    </xsl:if>
-                    <xsl:if test="@size &gt; 1">
-                      <xsl:attribute name="size">
-                        <xsl:value-of select="@size"/>
-                      </xsl:attribute>
-                    </xsl:if>
-                    <xsl:variable name="reationPickList">
-                      <xsl:call-template name="getSelectOptionsFunction">
-                        <xsl:with-param name="query">
-                          <xsl:text>Content.</xsl:text>
-                          <xsl:value-of select="$contentType"/>
-                        </xsl:with-param>
-                      </xsl:call-template>
-                    </xsl:variable>
-                    <option value="">None  </option>
-                    <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
-                      <xsl:with-param name="selectedValues" select="$valueList"/>
-                    </xsl:apply-templates>
-                  </select>
-                <xsl:if test="@maxRelationNo &gt; 1">
-                  <div class="alert alert-info">
-                    <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option</div>
-                </xsl:if>
-                  <xsl:if test="contains(@search,'add')">
-                    <span class="input-group-btn pull-right">
-                      <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
-                        <i class="fa fa-plus fa-white">
-                          <xsl:text> </xsl:text>
-                        </i> Add
-                      </button>
-                    </span>
-                  </xsl:if>
-              </xsl:if>
-              <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
-                <xsl:if test="contains(@search,'find')">
-                  <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
-                    <i class="fa fa-search fa-white">
-                      <xsl:text> </xsl:text>
-                    </i> Find Existing <xsl:value-of select="$contentType"/>
-                  </button>
-                </xsl:if>
-                <xsl:if test="contains(@search,'add')">
-                  <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
-                    <i class="fa fa-plus fa-white">
-                      <xsl:text> </xsl:text>
-                    </i> Add New
-                  </button>
-                </xsl:if>
-              </xsl:if>
-            </xsl:otherwise>
-          </xsl:choose>
+      <!--<small>-->
 
-      <xsl:if test="not(contains(@search,'pick'))">
-        
-        <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
-          <xsl:sort select="@status" data-type="number" order="descending"/>
-          <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
-          <xsl:with-param name="formName" select="$formName" />
-          <xsl:with-param name="relationType" select="$relationType" />
-          <xsl:with-param name="relationDirection" select="$RelType" />
-        </xsl:apply-templates>
-        
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="contains(@direction,'1way')">
+          <xsl:text> (1 Way Relationship)</xsl:text>
+        </xsl:when>
+        <xsl:when test="contains(@direction,'2way')">
+          <xsl:text> (2 Way Relationship)</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text> (2 Way Relationship)</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:value-of select="$relationType"/>
+      <!--</small>-->
+    </label>
+    <xsl:choose>
+      <xsl:when test="ancestor::Content/model/instance/ContentRelations[@copyRelations='true']">
+        Copy the following relationships
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="contentCount" select="count(ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType])"/>
+        <!-- Limit Number of Related Content-->
+        <xsl:if test="contains(@search,'pick')">
+          <xsl:variable name="valueList">
+            <list>
+              <xsl:for-each select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
+                <item>
+                  <xsl:value-of select="@id"/>
+                </item>
+              </xsl:for-each>
+            </list>
+          </xsl:variable>
+          <xsl:variable name="value" select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')][1]/@id"/>
+          <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control">
+            <xsl:if test="@maxRelationNo &gt; 1">
+              <xsl:attribute name="multiple">multiple</xsl:attribute>
+            </xsl:if>
+            <xsl:if test="@size &gt; 1">
+              <xsl:attribute name="size">
+                <xsl:value-of select="@size"/>
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:variable name="reationPickList">
+              <xsl:call-template name="getSelectOptionsFunction">
+                <xsl:with-param name="query">
+                  <xsl:text>Content.</xsl:text>
+                  <xsl:value-of select="$contentType"/>
+                </xsl:with-param>
+              </xsl:call-template>
+            </xsl:variable>
+            <option value="">None  </option>
+            <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
+              <xsl:with-param name="selectedValues" select="$valueList"/>
+            </xsl:apply-templates>
+          </select>
+          <xsl:if test="@maxRelationNo &gt; 1">
+            <div class="alert alert-info">
+              <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option
+            </div>
+          </xsl:if>
+          <xsl:if test="contains(@search,'add')">
+            <span class="input-group-btn pull-right">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+                <i class="fa fa-plus fa-white">
+                  <xsl:text> </xsl:text>
+                </i> Add
+              </button>
+            </span>
+          </xsl:if>
+        </xsl:if>
+        <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
+          <xsl:if test="contains(@search,'find')">
+            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
+              <i class="fa fa-search fa-white">
+                <xsl:text> </xsl:text>
+              </i> Find Existing <xsl:value-of select="$contentType"/>
+            </button>
+          </xsl:if>
+          <xsl:if test="contains(@search,'add')">
+            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
+              <i class="fa fa-plus fa-white">
+                <xsl:text> </xsl:text>
+              </i> Add New
+            </button>
+          </xsl:if>
+        </xsl:if>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:if test="not(contains(@search,'pick'))">
+
+      <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
+        <xsl:sort select="@status" data-type="number" order="descending"/>
+        <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
+        <xsl:with-param name="formName" select="$formName" />
+        <xsl:with-param name="relationType" select="$relationType" />
+        <xsl:with-param name="relationDirection" select="$RelType" />
+      </xsl:apply-templates>
+
+    </xsl:if>
   </xsl:template>
-  
-   <xsl:template match="relatedContent[@type='filter']" mode="xform">
+
+  <xsl:template match="relatedContent[@type='filter']" mode="xform">
     <xsl:param name="contentType" select="@type"/>
     <xsl:param name="relationType" select="@relationType"/>
     <xsl:param name="rcCount" select="count(ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType])"/>
@@ -1916,118 +1911,121 @@
       </xsl:choose>
     </xsl:variable>
     <!--This way we get the type of content we relate to dynamically-->
-      
-              <xsl:value-of select="$relationType"/>
-        <label for="Related_{$relationType}">
-          <xsl:choose>
-            <xsl:when test="label/node()!=''">
-              <xsl:value-of select="label/node()"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:if test="$relationType!=''">
-              <xsl:value-of select="$relationType"/>
+
+    <xsl:value-of select="$relationType"/>
+    <label for="Related_{$relationType}">
+      <xsl:choose>
+        <xsl:when test="label/node()!=''">
+          <xsl:value-of select="label/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="$relationType!=''">
+            <xsl:value-of select="$relationType"/>
           </xsl:if>
-            </xsl:otherwise>
-          </xsl:choose>
-          
-          <!--<small>-->
+        </xsl:otherwise>
+      </xsl:choose>
 
-          <xsl:choose>
-            <xsl:when test="contains(@direction,'1way')">
-              <xsl:text> (1 Way Relationship)</xsl:text>
-            </xsl:when>
-            <xsl:when test="contains(@direction,'2way')">
-              <xsl:text> (2 Way Relationship)</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text> (2 Way Relationship)</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:value-of select="$relationType"/>
-          <!--</small>-->
-        </label>
-          <xsl:choose>
-            <xsl:when test="ancestor::Content/model/instance/ContentRelations[@copyRelations='true']">
-              Copy the following relationships
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:variable name="contentCount" select="count(ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType])"/>
-              <!-- Limit Number of Related Content-->
-              <xsl:if test="contains(@search,'pick')">
-                <xsl:variable name="valueList">
-                  <list>
-                    <xsl:for-each select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
-                      <item><xsl:value-of select="@id"/></item>
-                    </xsl:for-each>
-                  </list>
-                </xsl:variable>
-                <xsl:variable name="value" select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')][1]/@id"/>
-                  <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control">
-                    <xsl:if test="@maxRelationNo &gt; 1">
-                      <xsl:attribute name="multiple">multiple</xsl:attribute>
-                    </xsl:if>
-                    <xsl:if test="@size &gt; 1">
-                      <xsl:attribute name="size">
-                        <xsl:value-of select="@size"/>
-                      </xsl:attribute>
-                    </xsl:if>
-                    <xsl:variable name="reationPickList">
-                      <xsl:call-template name="getSelectOptionsFunction">
-                        <xsl:with-param name="query">
-                          <xsl:text>Content.</xsl:text>
-                          <xsl:value-of select="$contentType"/>
-                        </xsl:with-param>
-                      </xsl:call-template>
-                    </xsl:variable>
-                    <option value="">None  </option>
-                    <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
-                      <xsl:with-param name="selectedValues" select="$valueList"/>
-                    </xsl:apply-templates>
-                  </select>
-                <xsl:if test="@maxRelationNo &gt; 1">
-                  <div class="alert alert-info">
-                    <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option</div>
-                </xsl:if>
-                  <xsl:if test="contains(@search,'add')">
-                    <span class="input-group-btn pull-right">
-                      <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
-                        <i class="fa fa-plus fa-white">
-                          <xsl:text> </xsl:text>
-                        </i> Add
-                      </button>
-                    </span>
-                  </xsl:if>
-              </xsl:if>
-              <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
-                <xsl:if test="contains(@search,'find')">
-                  <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
-                    <i class="fa fa-search fa-white">
-                      <xsl:text> </xsl:text>
-                    </i> Find Existing <xsl:value-of select="$contentType"/>
-                  </button>
-                </xsl:if>
-                <xsl:if test="contains(@search,'add')">
-                  <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
-                    <i class="fa fa-plus fa-white">
-                      <xsl:text> </xsl:text>
-                    </i> Add New
-                  </button>
-                </xsl:if>
-              </xsl:if>
-            </xsl:otherwise>
-          </xsl:choose>
+      <!--<small>-->
 
-      <xsl:if test="not(contains(@search,'pick'))">
-        
-        <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
-          <xsl:sort select="@status" data-type="number" order="descending"/>
-          <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
-          <xsl:with-param name="formName" select="$formName" />
-          <xsl:with-param name="relationType" select="$relationType" />
-          <xsl:with-param name="relationDirection" select="$RelType" />
-        </xsl:apply-templates>
-        
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="contains(@direction,'1way')">
+          <xsl:text> (1 Way Relationship)</xsl:text>
+        </xsl:when>
+        <xsl:when test="contains(@direction,'2way')">
+          <xsl:text> (2 Way Relationship)</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text> (2 Way Relationship)</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:value-of select="$relationType"/>
+      <!--</small>-->
+    </label>
+    <xsl:choose>
+      <xsl:when test="ancestor::Content/model/instance/ContentRelations[@copyRelations='true']">
+        Copy the following relationships
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="contentCount" select="count(ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType])"/>
+        <!-- Limit Number of Related Content-->
+        <xsl:if test="contains(@search,'pick')">
+          <xsl:variable name="valueList">
+            <list>
+              <xsl:for-each select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
+                <item>
+                  <xsl:value-of select="@id"/>
+                </item>
+              </xsl:for-each>
+            </list>
+          </xsl:variable>
+          <xsl:variable name="value" select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')][1]/@id"/>
+          <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control">
+            <xsl:if test="@maxRelationNo &gt; 1">
+              <xsl:attribute name="multiple">multiple</xsl:attribute>
+            </xsl:if>
+            <xsl:if test="@size &gt; 1">
+              <xsl:attribute name="size">
+                <xsl:value-of select="@size"/>
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:variable name="reationPickList">
+              <xsl:call-template name="getSelectOptionsFunction">
+                <xsl:with-param name="query">
+                  <xsl:text>Content.</xsl:text>
+                  <xsl:value-of select="$contentType"/>
+                </xsl:with-param>
+              </xsl:call-template>
+            </xsl:variable>
+            <option value="">None  </option>
+            <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
+              <xsl:with-param name="selectedValues" select="$valueList"/>
+            </xsl:apply-templates>
+          </select>
+          <xsl:if test="@maxRelationNo &gt; 1">
+            <div class="alert alert-info">
+              <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option
+            </div>
+          </xsl:if>
+          <xsl:if test="contains(@search,'add')">
+            <span class="input-group-btn pull-right">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+                <i class="fa fa-plus fa-white">
+                  <xsl:text> </xsl:text>
+                </i> Add
+              </button>
+            </span>
+          </xsl:if>
+        </xsl:if>
+        <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
+          <xsl:if test="contains(@search,'find')">
+            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
+              <i class="fa fa-search fa-white">
+                <xsl:text> </xsl:text>
+              </i> Find Existing <xsl:value-of select="$contentType"/>
+            </button>
+          </xsl:if>
+          <xsl:if test="contains(@search,'add')">
+            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
+              <i class="fa fa-plus fa-white">
+                <xsl:text> </xsl:text>
+              </i> Add New
+            </button>
+          </xsl:if>
+        </xsl:if>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:if test="not(contains(@search,'pick'))">
+
+      <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
+        <xsl:sort select="@status" data-type="number" order="descending"/>
+        <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
+        <xsl:with-param name="formName" select="$formName" />
+        <xsl:with-param name="relationType" select="$relationType" />
+        <xsl:with-param name="relationDirection" select="$RelType" />
+      </xsl:apply-templates>
+
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="Content" mode="relatedRow">
@@ -2333,7 +2331,9 @@
   <xsl:template match="item" mode="xform_PickIcon">
     <xsl:param name="ref"/>
     <div data-value="{value/node()}">
-      <i class="fa {value/node()} fa-lg">&#160;</i>
+      <i class="fa {value/node()} fa-lg">
+        <xsl:text> </xsl:text>
+      </i>
     </div>
   </xsl:template>
 
@@ -2856,10 +2856,10 @@
               </fieldset>
             </div>
             <div>
-                <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick(this.value);">301 Permanant Redirect</button>
-                <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">302 Temporary Redirect</button>
-                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>
-             </div>
+              <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick(this.value);">301 Permanant Redirect</button>
+              <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">302 Temporary Redirect</button>
+              <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>
+            </div>
 
             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
               <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
@@ -2870,7 +2870,7 @@
             <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
             <input name="type" type="hidden"  class="hiddenType" />
-             <input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
+            <input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
           </div>
         </div>
       </div>
@@ -2894,10 +2894,10 @@
           </div>
         </div>
         <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
-            <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
-            <input name="IsParent" type="hidden" class="hiddenParentCheck" />
-            <input name="pageId" type="hidden"  class="hiddenPageId" />
-      <input  name="redirectOption" type="textbox" class="hiddenRedirectType" />
+        <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
+        <input name="IsParent" type="hidden" class="hiddenParentCheck" />
+        <input name="pageId" type="hidden"  class="hiddenPageId" />
+        <input  name="redirectOption" type="textbox" class="hiddenRedirectType" />
       </div>
     </div>
   </xsl:template>
@@ -2979,10 +2979,12 @@
         </button>
       </xsl:when>
       <xsl:otherwise>
-        <div class="alert alert-warning">For geo-coding to work you require a Google API Key in the <a href="?ewCmd=WebSettings">config settings</a></div>
+        <div class="alert alert-warning">
+          For geo-coding to work you require a Google API Key in the <a href="?ewCmd=WebSettings">config settings</a>
+        </div>
       </xsl:otherwise>
     </xsl:choose>
-    
+
   </xsl:template>
 
 
