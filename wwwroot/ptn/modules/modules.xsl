@@ -9,6 +9,9 @@
   <xsl:import href="contacts/Contacts.xsl"/>
   <xsl:import href="organisations/Organisations.xsl"/>
   <xsl:import href="videos/Videos.xsl"/>
-  
+  <xsl:import href="documents/Documents.xsl"/>
+  <xsl:import href="trainingcourse/TrainingCourse.xsl"/>
+  <xsl:import href="taglist/TagList.xsl"/>
+  <xsl:import href="tagcloud/TagCloud.xsl"/>
   
 </xsl:stylesheet>
