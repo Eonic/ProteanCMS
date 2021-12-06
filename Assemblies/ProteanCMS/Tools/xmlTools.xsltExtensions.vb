@@ -939,7 +939,7 @@ Partial Public Module xmlTools
         Public Function GenerateHashFromEncryptedPassword(ByVal encryptionKey As String, ByVal sPassword As String) As String
             Try
                 'Decrypt password using provided key.
-                Dim sPlainPassword As String = Protean.Tools.Csharp.Encryption.DecryptData(encryptionKey, sPassword)
+                Dim sPlainPassword As String = Protean.Tools.Encryption.DecryptData(encryptionKey, sPassword)
                 'Encrypt using the protean.
                 sPassword = EncryptPassword(sPlainPassword)
 
