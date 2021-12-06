@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.IO;
 using System.Security;
-using System.Text;
-using Microsoft.VisualBasic;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 
-namespace Protean.Tools.Csharp
+namespace Protean.Tools
 {
     public static class Encryption
     {
