@@ -19,7 +19,7 @@ tinymce.PluginManager.add('ew-image', function (editor, url) {
     });
 
     // Adds a menu item to the tools menu
-    editor.addMenuItem('ew-image', {
+    editor.ui.registry.addMenuItem('ew-image', {
         text: 'Example plugin',
         context: 'tools',
         onclick: function () {
