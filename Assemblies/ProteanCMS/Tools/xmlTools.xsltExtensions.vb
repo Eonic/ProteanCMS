@@ -1501,10 +1501,14 @@ Partial Public Module xmlTools
             End Try
 
         End Function
-
+        ''' <summary>
+        ''' Its a m
+        ''' </summary>
+        ''' <returns></returns>
         Public Function GetFilterButtons() As Object
             Try
                 Dim oXformDoc As XmlDocument = New XmlDocument()
+
                 Dim oChoices As XmlElement
                 Dim buttonName As String = ""
                 Dim projectPath As String = ""
@@ -1516,12 +1520,14 @@ Partial Public Module xmlTools
                 For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/FilterTypes/Filter")
                     Dim buttonElement As XmlElement = oXformDoc.CreateElement("button")
                     buttonElement.InnerText = oChoices.InnerText
+                    buttonElement.SetAttribute("name", oChoices.InnerText)
+                    ' buttonElement.SetAttribute("type", oChoices.G)
                     xmlButtons.AppendChild(buttonElement)
 
                 Next
-                Return xmlButtons.OuterXml
+                Return xmlButtons
             Catch ex As Exception
-                Return "Error - Changed Position" & ex.Message
+                Return "Error - Filter Buttons" & ex.Message
             End Try
 
 

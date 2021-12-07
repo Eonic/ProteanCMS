@@ -9860,9 +9860,9 @@
 
   </xsl:template>
 
-  <xsl:template match="getFilterButtons" mode="getFilterButtons">
-
-      <!--  <xsl:copy-of select="ew:GetFilterButtons()"/> -->
+  <xsl:template  name="getFilterButtons">
+    
+     <xsl:copy-of select="ew:GetFilterButtons()"/>
     
   </xsl:template>
 

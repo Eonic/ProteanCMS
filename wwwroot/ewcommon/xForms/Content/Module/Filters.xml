@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content action="Protean.Cms+Content+Modules.NewsByDate"  moduleType="NewsListDateMenu" contentType="NewsArticle" box="" title="" position="" actionOnDetail="true"/>
+          <Content action="Protean.Cms+Content+Modules.Filters"  moduleType="Filters" contentType="NewsArticle" box="" title="" position="" actionOnDetail="true"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <cBlockedSchemaType>NewsArticle</cBlockedSchemaType>
@@ -63,7 +63,7 @@
       <group>
         <label>Content</label>
         <input bind="cModuleTitle" class="long">
-          <label>Title or name</label>
+          <label>Title </label>
         </input>
         <getFilterButtons/>
       </group>

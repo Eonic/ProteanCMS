@@ -2367,7 +2367,7 @@ Partial Public Class Cms
                 Dim cProcessInfo As String = ""
                 Dim oCRNode As XmlElement
                 Dim cModuleType As String = ""
-
+                Dim cFilterType As String = ""
                 ' Location specific scopes
                 Dim oLocationSelects As XmlNodeList = Nothing
                 Dim oMenuItemsFromSelect As XmlNodeList = Nothing
@@ -2407,6 +2407,12 @@ Partial Public Class Cms
                                     cModuleType = oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/@moduleType").Value
                                 End If
                             End If
+                            If cContentSchemaName = "Filter" Then
+                                If Not oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/@filterType") Is Nothing Then
+                                    cFilterType = oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/@filterType").Value
+                                End If
+                            End If
+
                             If moRequest("type") <> "" Then cContentSchemaName = moRequest("type")
                         End If
 

@@ -102,28 +102,18 @@
         </input>
         <group>
           <label>Filters</label>
-          <group>
-            <repeat bind="cFilterRpt" class="horizontal">
-              <input bind="cFilterType" class="short">
-                <label>Option</label>
-              </input>
-              <trigger>
-                <label>Del</label>
-                <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
-              </trigger>
-            </repeat>
-          </group>
-          <trigger>
+            <group class="getFilterButtons" />
+          <!--<trigger>
             <label>Add Filter</label>
             <insert position="after" bind="cFilterRpt" at="index('cFilterRpt')" class="add"/>
-          </trigger>
+          </trigger>-->
         </group>
       </group>
-      <group class="inline">
-        <label>Display Settings</label>
-      </group>
+     
     </group>
   </group>
+  
+  
   <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">
       <label>Save Product Filter</label>
