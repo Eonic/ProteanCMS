@@ -104,6 +104,7 @@
         <xsl:text>~/ptn/core/vue/protean-vue.js,</xsl:text>
         <xsl:text>~/ptn/core/tinymce/jquery.tinymce.min.js,</xsl:text>
         <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text>
+        <xsl:text>~/ptn/admin/jqueryui/jquery-ui.js,</xsl:text>
         <xsl:text>~/ptn/admin/admin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">

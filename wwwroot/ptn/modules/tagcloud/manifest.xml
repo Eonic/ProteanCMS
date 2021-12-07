@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+
+      <Module type="TagCloud" name="Tag Cloud">Tag Cloud</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>
