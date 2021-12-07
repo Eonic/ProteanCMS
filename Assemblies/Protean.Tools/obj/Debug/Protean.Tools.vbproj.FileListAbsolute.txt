@@ -506,8 +506,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
@@ -534,8 +532,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csh
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.xml
@@ -565,8 +561,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
@@ -598,8 +592,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csha
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.xml

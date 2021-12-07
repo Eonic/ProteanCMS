@@ -1475,3 +1475,11 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\QRCoder.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\QRCoder.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET.Core.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET.Core.xml

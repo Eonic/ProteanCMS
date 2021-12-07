@@ -320,10 +320,8 @@
 
           </div>
           <xsl:if test="*/alert or */hint or */help">
-
             <div class="pt-row">
               <xsl:if test="label">
-
                 <div class="pt-col ">&#160;</div>
               </xsl:if>
               <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt"/>
@@ -734,7 +732,11 @@
             </xsl:if>
             <xsl:if test="alert">
               <span class="input-group-btn">
-                <xsl:apply-templates select="." mode="alertButton"/>
+                <button type="button" class="btn btn-danger" title="{label/node()}">
+                  <i class="fa fa-exclamation-triangle">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </button>
               </span>
             </xsl:if>
           </div>
@@ -743,7 +745,12 @@
           <xsl:apply-templates select="." mode="xform_control"/>
         </xsl:otherwise>
       </xsl:choose>
-
+      <xsl:if test="alert">
+        <div class="invalid-feedback text-warning small">
+          <xsl:value-of select="alert/node()"/>
+          <xsl:value-of select="label/node()"/>
+        </div>
+      </xsl:if>
     </div>
 
     <xsl:if test="not(contains(@class,'pickImage'))">

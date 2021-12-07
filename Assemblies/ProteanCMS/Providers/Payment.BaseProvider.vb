@@ -190,8 +190,12 @@ Namespace Providers
                         If oOrder.GetAttribute("payableType") = "" Then
                             oEwProv.mnPaymentAmount = oOrder.GetAttribute("total")
                         Else
-                            oEwProv.mnPaymentAmount = oOrder.GetAttribute("payableAmount")
-                            oEwProv.mnPaymentMaxAmount = oOrder.GetAttribute("total")
+                            If oOrder.GetAttribute("payableAmount") = "" Then
+                                oEwProv.mnPaymentAmount = oOrder.GetAttribute("total")
+                            Else
+                                oEwProv.mnPaymentAmount = oOrder.GetAttribute("payableAmount")
+                                oEwProv.mnPaymentMaxAmount = oOrder.GetAttribute("total")
+                            End If
                             oEwProv.mcPaymentType = oOrder.GetAttribute("payableType")
                         End If
                         oEwProv.mnCartId = oCart.mnCartId

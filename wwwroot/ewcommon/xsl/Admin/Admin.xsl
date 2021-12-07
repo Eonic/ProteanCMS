@@ -171,15 +171,14 @@
 			<xsl:with-param name="comma-separated-files">
 				<xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js,</xsl:text>
-			
+				<xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
 				<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
-				<xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-      	<xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
+				<xsl:text>~/ewcommon/js/vuejs/protean-vue.js</xsl:text>
 			</xsl:with-param>
 			<xsl:with-param name="bundle-path">
 				<xsl:text>~/Bundles/Admin</xsl:text>
@@ -1691,9 +1690,19 @@
 																	<b>{{result.Key}}</b>: {{result.Value}}<br/>
 																</h1>
 															</div>
-														</div>
+	                              <div class="buttons" style="text-align: center;">
+				      	<xsl:if test="@url!=''">
+	                                <br/>
+	                                <a href="{@url}" class="btn btn-default">
+	                                  <xsl:value-of select="@name"/>
+	                                </a>   	
+					</xsl:if>
+	                              </div>
+			      	
+                            </div>
 													</div>
 												</div>
+
 											</xsl:if>
 										</xsl:for-each>
 									</div>
@@ -6566,6 +6575,7 @@
               </i>
               <xsl:text> </xsl:text>Activity</a>
           </xsl:if>
+          <xsl:apply-templates select="." mode="bespokeUserButtons"/>
           <xsl:choose>
             <xsl:when test="Status='0'">
               <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
@@ -6585,6 +6595,10 @@
         </td>
       </tr>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="user" mode="bespokeUserButtons">
+    
   </xsl:template>
   
   <xsl:template match="company" mode="list">
@@ -12082,22 +12096,49 @@
           <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
             <tr>
               <xsl:for-each select="*">
-                <xsl:if test="local-name()!='cCartXml' and local-name()!='Currency_Symbol'">
+                <xsl:if test="local-name()!='cCartXml' and local-name()!='Currency_Symbol' and local-name()!='Total_Cost'">
                   <td>
                     <xsl:value-of select="node()"/>
                   </td>
                 </xsl:if>
-                <!--<xsl:if test="local-name()='cCartXml'">
-              <td>
-                <xsl:apply-templates select="." mode="WELLARDSOVERRIDE"/>
-              </td>
-            </xsl:if>-->
+                <xsl:if test="local-name()='Total_Cost'">
+                  <td>
+                    <xsl:call-template name="formatPrice">
+                      <xsl:with-param name="price" select="node()"/>
+                      <xsl:with-param name="currency" select="following-sibling::Currency_Symbol/node()"/>
+                    </xsl:call-template>
+                  </td>
+                </xsl:if>
               </xsl:for-each>
               <td align="right">
-                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
+                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="btn btn-default">view order</a>
               </td>
             </tr>
           </span>
+          <xsl:if test="position()=last()">
+            <tr>
+              <xsl:for-each select="*">
+                <xsl:choose>
+                  <xsl:when test="local-name()='Quantity'">
+                    <th>
+                      Total:<br/><xsl:value-of select="sum(ancestor::Report/Item/Quantity)"/>
+                    </th>
+                  </xsl:when>
+                  <xsl:when test="local-name()='Total_Cost'">
+                    <th>
+                      Total:<br/><xsl:value-of select="sum(ancestor::Report/Item/Total_Cost)"/>
+                    </th>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <th>
+                      &#160;
+                    </th>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:for-each>
+              <th>&#160;</th>
+            </tr>
+          </xsl:if>
         </xsl:for-each>
       </table>
     </div>
