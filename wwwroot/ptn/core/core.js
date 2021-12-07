@@ -1,5 +1,8 @@
 ﻿$(document).ready(function () {
-    $(".navbar-brand").click(function () {
+    //$(".navbar-brand").click(function () {
+    //    $(this).toggleClass('show-click');
+    //});
+    $(".navbar-brand").on('click', function () {
         $(this).toggleClass('show-click');
     });
 });
