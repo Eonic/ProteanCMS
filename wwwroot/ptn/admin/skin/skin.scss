@@ -97,7 +97,7 @@ body.ewAdmin.layout-AdmHome {
 .ewAdmin {
     .admin-breadcrumb {
         position: relative;
-
+        background:#fff;
         @media(min-width:$screen-sm-min) {
             position: absolute;
             right: 0px;
@@ -147,7 +147,7 @@ body.ewAdmin.layout-AdmHome {
 
         .all-breadcrumb,
         .less-breadcrumb {
-            background: #516677;
+            background: #fff;
             bottom: 0;
             right: 0;
             position: absolute;

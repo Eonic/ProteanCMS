@@ -10,7 +10,7 @@
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
       <xsl:attribute name="class">
-        <xsl:text>ewXform panel panel-default</xsl:text>
+        <xsl:text>ewXform container-fluid</xsl:text>
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>
@@ -41,20 +41,20 @@
         <xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*[name()!='submit']) = 0">
           <xsl:for-each select="group[1]">
             <xsl:if test="label[position()=1]">
-              <div class="panel-heading">
-                <h3 class="panel-title">
+              <div class="">
+                <h3 class="">
                   <xsl:copy-of select="label/node()"/>
                 </h3>
               </div>
             </xsl:if>
-            <div class="panel-body">
+            <div class="">
               <xsl:apply-templates select="." mode="xform"/>
               <!--xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/-->
             </div>
           </xsl:for-each>
           <xsl:for-each select="group[2]">
             <xsl:if test="count(submit) &gt; 0">
-              <div class="panel-footer navbar-fixed-bottom">
+              <div class="navbar-fixed-bottom">
                 <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
                   <span class="required">
                     <span class="req">*</span>
@@ -69,18 +69,18 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:if test="label[position()=1]">
-            <div class="panel-heading">
-              <h3 class="panel-title">
+            <div class="">
+              <h3 class="">
                 <xsl:copy-of select="label/node()"/>
               </h3>
             </div>
           </xsl:if>
-          <div class="panel-body">
+          <div class="">
             <xsl:apply-templates select="group | repeat " mode="xform"/>
             <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
           </div>
           <xsl:if test="count(submit) &gt; 0">
-            <div class="panel-footer clearfix">
+            <div class="clearfix">
               <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
                 <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
                 <span class="required">
@@ -2215,18 +2215,57 @@
     </xsl:variable>
 
     <xsl:variable name="imageURL">
-      <xsl:choose>
+      <!--<xsl:choose>
         <xsl:when test="$ifExists='1'">
           <xsl:value-of select="translate(img/@src,' ','-')"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>/ewcommon/images/pagelayouts/tempImage.gif</xsl:text>
         </xsl:otherwise>
+      </xsl:choose>-->
+      <xsl:choose>
+        <xsl:when test="value='FormattedText'">
+          <xsl:text>fas fa-align-left</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='Image'">
+          <xsl:text>far fa-image</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='Video'">
+          <xsl:text>fas fa-play</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='EmailForm'">
+          <xsl:text>fas fa-envelope</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='ContactList'">
+          <xsl:text>far fa-user</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='DocumentList'">
+          <xsl:text>far fa-file-alt</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='EventList'">
+          <xsl:text>far fa-calendar</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='NewsList'">
+          <xsl:text>fas fa-newspaper</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='OrganisationList'">
+          <xsl:text>far fa-building</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='TrainingCourseList'">
+          <xsl:text>fas fa-graduation-cap</xsl:text>
+        </xsl:when>
+        <xsl:when test="value='TestimonialList'">
+          <xsl:text>far fa-comments</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>fas fa-puzzle-piece</xsl:text>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="col-md-2 card card-default ">
+    <div class="col-md-2">
       <button name="{$ref}" value="{value/node()}" class="{$isSelected}">
-        <img src="{$imageURL}" class="card-img-top"/>
+        <!--<img src="{$imageURL}" class="card-img-top"/>-->
+        <i class="fas fa-3x {$imageURL}"> </i>
         <h5>
           <xsl:value-of select="label/node()"/>
         </h5>

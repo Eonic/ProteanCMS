@@ -1,5 +1,6 @@
 ﻿
-form.xform {
+form.xform,
+form.ewXform {
     .principle {
         float: right;
     }
@@ -9,7 +10,11 @@ form.xform {
     }
 
     .form-margin {
-        margin-bottom:1rem;
+        margin-bottom: 1rem;
+    }
+
+    label {
+        font-weight:300;
     }
 }
 .ewAdmin #adminLayout {
@@ -101,6 +106,47 @@ form.xform {
                 i {
                     display: inline-block;
                 }
+            }
+        }
+    }
+}
+#pick-by-image {
+    .accordion-button:not(.collapsed) {
+        background: #fff;
+    }
+
+    .accordion-collapse {
+        padding: 20px 20px 0 20px;
+
+        .col-md-2 {
+            padding-bottom: 20px;
+        }
+
+        button {
+            //border: 0;
+            border: 2px solid $admin-primary;
+            border-radius: 4px;
+            color: darken($admin-primary,10%);
+            background: none;
+            width: 100%;
+            padding: 10px;
+            font-size: 0.8rem;
+            height: 100%;
+            margin-bottom: 10px;
+            line-height: 1.2;
+
+            h5 {
+                font-size: 1.1rem;
+                margin-bottom: 3px;
+            }
+
+            i {
+                margin-bottom: 5px;
+            }
+
+            &:hover {
+                border-color: lighten($admin-primary,10%);
+                color: $admin-primary;
             }
         }
     }
