@@ -452,7 +452,7 @@
           </xsl:if>
           <xsl:if test="@twitterURL!=''">
             <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
-              <i class="fa fa-2x fa-twitter">
+              <i class="fab fa-2x fa-twitter">
                 <xsl:text> </xsl:text>
               </i>
             </a>
@@ -503,7 +503,7 @@
           </xsl:if>
           <xsl:if test="@twitterURL!=''">
             <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
-              <i class="fa fa-3x fa-twitter-square">
+              <i class="fab fa-3x fa-twitter-square">
                 <xsl:text> </xsl:text>
               </i>
             </a>
@@ -563,7 +563,7 @@
                 <i class="fa fa-circle fa-stack-2x">
                   <xsl:text> </xsl:text>
                 </i>
-                <i class="fa fa-twitter fa-stack-1x fa-inverse">
+                <i class="fab fa-twitter fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
                 </i>
               </span>
@@ -640,7 +640,7 @@
           </xsl:if>
           <xsl:if test="@twitterURL!=''">
             <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
-              <i class="fa fa-twitter">
+              <i class="fab fa-twitter">
                 <xsl:text> </xsl:text>
               </i>
             </a>
@@ -774,7 +774,7 @@
           </xsl:if>
           <xsl:if test="@twitterURL!=''">
             <a href="{@twitterURL}" title="{$myName} on Twitter" id="social-id-tw">
-              <i class="fa fa-2x fa-twitter">
+              <i class="fab fa-2x fa-twitter">
                 <xsl:text> </xsl:text>
               </i>
             </a>
@@ -825,7 +825,7 @@
           </xsl:if>
           <xsl:if test="@twitterURL!=''">
             <a href="{@twitterURL}" title="{$myName} on Twitter" id="social-id-tw">
-              <i class="fa fa-3x fa-twitter-square">
+              <i class="fab fa-3x fa-twitter-square">
                 <xsl:text> </xsl:text>
               </i>
             </a>
@@ -892,7 +892,7 @@
                 <i class="fa fa-circle fa-stack-2x">
                   <xsl:text> </xsl:text>
                 </i>
-                <i class="fa fa-twitter fa-stack-1x fa-inverse">
+                <i class="fab fa-twitter fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
                 </i>
               </span>
@@ -974,56 +974,56 @@
         <xsl:when test="$iconSet='plain'">
           <xsl:if test="@facebookURL!=''">
             <a href="{@facebookURL}" title="{$myName} on Facebook" class="social-id-fb">
-              <i class="fa fa-facebook">
+              <i class="fab fa-facebook">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
           <xsl:if test="@twitterURL!=''">
             <a href="{@twitterURL}" title="{$myName} on Twitter" class="social-id-tw">
-              <i class="fa fa-twitter">
+              <i class="fab fa-twitter">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
           <xsl:if test="@linkedInURL!=''">
             <a href="{@linkedInURL}" title="{$myName} on LinkedIn" class="social-id-li">
-              <i class="fa fa-linkedin">
+              <i class="fab fa-linkedin">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
           <xsl:if test="@googlePlusURL!=''">
             <a href="{@googlePlusURL}" title="{$myName} on Google+" class="social-id-gp">
-              <i class="fa fa-google-plus">
+              <i class="fab fa-google-plus">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
           <xsl:if test="@pinterestURL!=''">
             <a href="{@pinterestURL}" title="{$myName} on Pinterest" class="social-id-pi">
-              <i class="fa fa-pinterest">
+              <i class="fab fa-pinterest">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
           <xsl:if test="@youtubeURL!=''">
             <a href="{@youtubeURL}" title="{$myName} on Youtube" class="social-id-yt">
-              <i class="fa fa-youtube ">
+              <i class="fab fa-youtube ">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
           <xsl:if test="@instagramURL!=''">
             <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
-              <i class="fa fa-instagram">
+              <i class="fab fa-instagram">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:if>
           <xsl:if test="@spotifyURL!=''">
             <a href="{@spotifyURL}" title="{$myName} on Spotify" id="social-id-ig">
-              <i class="fa fa-spotify">
+              <i class="fab fa-spotify">
                 <xsl:text> </xsl:text>
               </i>
             </a>

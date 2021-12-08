@@ -4,8 +4,8 @@
   <!-- ######################################## IMPORT ALL COMMON XSL's ########################################### -->
 
   <xsl:import href="../../ptn/core/core.xsl"/>
-  <xsl:import href="../../ptn/admin/admin-wysiwyg.xsl"/>  
-  <xsl:import href="../../ptn/modules/modules.xsl"/>  
+  <xsl:import href="../../ptn/admin/admin-wysiwyg.xsl"/>
+  <xsl:import href="../../ptn/modules/modules.xsl"/>
   <xsl:import href="../../xsl/InstalledModules.xsl"/>
   <xsl:import href="custom-box-styles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
@@ -15,16 +15,16 @@
 
   <xsl:variable name="theme">ptn-base</xsl:variable>
   <!--menu below header-->
-  <xsl:variable name="header-layout">header-menu-below</xsl:variable>
+  <xsl:variable name="header-layout">header-basic</xsl:variable>
   <!--menu within header-->
   <!--<xsl:variable name="header-layout">header-menu-right</xsl:variable>-->
-  
+
   <xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
   <xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
   <xsl:variable name="HomeInfo">false</xsl:variable>
   <xsl:variable name="HomeNav">true</xsl:variable>
   <xsl:variable name="NavFix">false</xsl:variable>
-  <xsl:variable name="nav-dropdown">true</xsl:variable>
+  <xsl:variable name="nav-dropdown">false</xsl:variable>
   <!--true/false/hover-->
   <xsl:variable name="SideSubWidth">3</xsl:variable>
   <xsl:variable name="SideSubWidthCustom"></xsl:variable>
@@ -33,12 +33,12 @@
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
   <xsl:variable name="thWidth">500</xsl:variable>
   <xsl:variable name="thHeight">350</xsl:variable>
-
+  <!-- forced on, needs fixing-->
   <xsl:variable name="membership">
     <xsl:choose>
       <xsl:when test="$page/User">on</xsl:when>
       <xsl:when test="$page/Contents/Content[@name='UserLogon']">on</xsl:when>
-      <xsl:otherwise>off</xsl:otherwise>
+      <xsl:otherwise>on</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
 
@@ -48,11 +48,11 @@
       <xsl:otherwise>off</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-
+  <!-- forced on, needs fixing-->
   <xsl:variable name="search">
     <xsl:choose>
       <xsl:when test="$page/Search">on</xsl:when>
-      <xsl:otherwise>off</xsl:otherwise>
+      <xsl:otherwise>on</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
 
@@ -68,17 +68,17 @@
   <!-- ############################################### THEME CSS's ################################################ -->
 
   <xsl:template match="Page" mode="siteStyle">
-        <xsl:call-template name="bundle-css">
-          <xsl:with-param name="comma-separated-files">
-            <xsl:text>/themes/</xsl:text>
-            <xsl:value-of select="$theme"/>
-            <xsl:text>/css/bootstrap.scss</xsl:text>
-          </xsl:with-param>
-          <xsl:with-param name="bundle-path">
-            <xsl:text>~/Bundles/</xsl:text>
-            <xsl:value-of select="$theme"/>
-          </xsl:with-param>
-        </xsl:call-template>
+    <xsl:call-template name="bundle-css">
+      <xsl:with-param name="comma-separated-files">
+        <xsl:text>/themes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/css/bootstrap.scss</xsl:text>
+      </xsl:with-param>
+      <xsl:with-param name="bundle-path">
+        <xsl:text>~/Bundles/</xsl:text>
+        <xsl:value-of select="$theme"/>
+      </xsl:with-param>
+    </xsl:call-template>
     <xsl:if test="$font-import-base!='none'">
       <link href='//fonts.googleapis.com/css?family={$font-import-base}' rel='stylesheet' type='text/css' />
     </xsl:if>
@@ -96,9 +96,9 @@
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/jquery.appear.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
+        <!--<xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js/offcanvas.js,</xsl:text>
+        <xsl:text>/js/offcanvas.js,</xsl:text>-->
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/responsive-tabs.js,</xsl:text>
@@ -238,6 +238,30 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="/" mode="cartSimple">
+    <div id="cartBrief">
+      <div class="cartinfo">
+        <a href="{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
+          <div class="cart-icon">
+            <i class="fa fa-shopping-basket">
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:choose>
+              <xsl:when test="/Page/Cart/Order/@itemCount &gt; 0">
+                <span id="itemCount">
+                  <xsl:value-of select="/Page/Cart/Order/@itemCount"/>
+                </span>
+              </xsl:when>
+              <xsl:otherwise>
+                <span id="itemCount">0</span>
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
+        </a>
+      </div>
+    </div>
+  </xsl:template>
+
   <!-- ############################################ SEARCH ############################################### -->
   <xsl:template match="/" mode="searchBrief">
     <div class="searchBrief">
@@ -263,6 +287,21 @@
       </i>
       <span class="sr-only">Expand search section</span>
     </a>
+  </xsl:template>
+
+  <xsl:template match="/" mode="searchSimple">
+    <form method="post" action="/information/search" id="searchInputxs" class="d-flex">
+      <input type="hidden" name="searchMode" value="REGEX" />
+      <input type="hidden" name="contentType" value="Product" />
+      <input type="hidden" name="searchFormId" value="8923" />
+      <input type="text" class="form-control CTAsearch" name="searchString" id="searchStringxs" value="" placeholder="Search" />
+      <button type="submit" class="btn btn-outline-primary" name="Search" value="Submit">
+        <i class="fa fa-search">
+          <xsl:text> </xsl:text>
+        </i>
+        <span class="sr-only">Search</span>
+      </button>
+    </form>
   </xsl:template>
 
   <!-- ############################################ LOGIN ############################################### -->
@@ -293,6 +332,15 @@
         </xsl:choose>
       </a>
     </li>
+  </xsl:template>
+
+  <xsl:template match="/" mode="loginSimple">
+    <a class="nav-link login-btn" data-toggle="modal" data-target="#LoginModal">
+      <xsl:choose>
+        <xsl:when test="/Page/User">My Account</xsl:when>
+        <xsl:otherwise>Log in</xsl:otherwise>
+      </xsl:choose>
+    </a>
   </xsl:template>
 
   <!-- ########################################## MEMBERSHIP TEMPLATES ############################################ -->
@@ -336,7 +384,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
- 
+
 
   <!-- ############################################# BESPOKE ############################################### -->
 

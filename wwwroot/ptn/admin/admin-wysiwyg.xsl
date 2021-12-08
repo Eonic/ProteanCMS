@@ -1023,7 +1023,7 @@
 
               </xsl:variable>
               <div class="dropdown pull-right">
-                <a href="#" class="btn btn-default btn-xs" data-toggle="dropdown">
+                <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-plus">&#160;</i>&#160;
                   Add&#160;
                   <i class="fa fa-caret-down">&#160;</i>
@@ -1270,7 +1270,7 @@
         </xsl:attribute>
         <xsl:if test="@type='Module' and not(starts-with(@position,'column1') and $page/@layout='Modules_Masonary')">
           <a href="#" class="btn btn-primary btn-xs drag pull-right">
-            <i class="fa fa-arrows">&#160;</i>
+            <i class="fas fa-arrows-alt">&#160;</i>
             <span>Move in page</span>
           </a>
         </xsl:if>
@@ -1316,13 +1316,13 @@
           </div>
         </xsl:if>
         <div class="dropdown pull-right">
-          <a href="#" class="btn btn-primary btn-xs" data-toggle="dropdown">
+          <a href="#" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
             <xsl:choose>
               <xsl:when test="@contentType!=''">
-                <i class="fa fa-gears fa-lg">&#160;</i>&#160;
+                <i class="fas fa-cog fa-lg">&#160;</i>&#160;
               </xsl:when>
               <xsl:otherwise>
-                <i class="fa fa-pencil-square-o fa-lg">&#160;</i>&#160;
+                <i class="far fa-edit">&#160;</i>&#160;
               </xsl:otherwise>
             </xsl:choose>
 
@@ -1337,7 +1337,7 @@
             <xsl:if test="@status=4">
               <xsl:text>&#160;[preview]</xsl:text>
             </xsl:if>
-            <i class="fa fa-caret-down">&#160;</i>
+            <i class="fas fa-caret-down">&#160;</i>
           </a>
 
           <ul class="dropdown-menu">
@@ -1403,7 +1403,7 @@
               <xsl:otherwise>
                 <li>
                   <a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}" title="Click here to edit this content">
-                    <i class="fa fa-pencil-square">&#160;</i>&#160;Edit
+                    <i class="fas fa-edit">&#160;</i>&#160;Edit
                   </a>
                 </li>
               </xsl:otherwise>
@@ -1420,14 +1420,14 @@
               <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='MoveContent']">
                 <li>
                   <a href="?ewCmd=MoveContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to move to another page">
-                    <i class="fa fa-mail-forward">&#160;</i>&#160;Move
+                    <i class="fas fa-share">&#160;</i>&#160;Move
                   </a>
                 </li>
               </xsl:if>
               <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='LocateContent']">
                 <li>
                   <a href="?ewCmd=LocateContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to locate on other pages">
-                    <i class="fa fa-mail-reply-all fa-flip-horizontal">&#160;</i>&#160;Locations
+                    <i class="fas fa-angle-double-right">&#160;</i>&#160;Locations
                   </a>
                 </li>
               </xsl:if>
@@ -1510,7 +1510,7 @@
             <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='AwaitingApproval']">
               <li>
                 <a href="?ewCmd=ContentVersions&amp;pgid={/Page/@id}&amp;id={@id}{$subTypeOption}" title="Click here to view version history">
-                  <i class="fa fa-copy">&#160;</i>&#160;Version History -<xsl:value-of select="$sortBy"/>
+                  <i class="fa fa-history">&#160;</i>&#160;Version History -<xsl:value-of select="$sortBy"/>
                 </a>
               </li>
             </xsl:if>

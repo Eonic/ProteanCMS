@@ -680,7 +680,7 @@
 
   <xsl:template match="Content" mode="marginBelow">
     <xsl:if test="@marginBelow='false'">
-      <xsl:text> margin-bottom-0 </xsl:text>
+      <xsl:text> mb-0 </xsl:text>
     </xsl:if>
   </xsl:template>
 
