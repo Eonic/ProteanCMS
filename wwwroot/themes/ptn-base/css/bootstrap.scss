@@ -1,5 +1,6 @@
 ﻿// scss-docs-start import-stack
 // Configuration
+@import "variables";
 @import "../../../ptn/core/bs5/scss/functions";
 @import "../../../ptn/core/bs5/scss/variables";
 @import "../../../ptn/core/bs5/scss/mixins";
@@ -51,7 +52,7 @@
 //Theme specific
 @import "animate.css";
 @import "anim.css";
-//@import "variables";
+@import "variables";
 //@import "product-carousel";
 //@import "../layout-templates/utility";
 //@import "../layout-templates/templates";
