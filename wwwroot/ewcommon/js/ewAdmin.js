@@ -849,8 +849,6 @@ Original preload function has been kept but is unused.
                     $(this).expandToLevel(settings);
                 }
 
-
-
                 // Add the control classes to the tree
                 $(this).find('li').each(function () {
                     // alert($(this).attr('id') + '==' + 'node' + $(this).next().data("tree-parent"))
