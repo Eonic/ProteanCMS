@@ -7,7 +7,7 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="EventList" name="Event List">List of Events</Module>   
+      <Module type="events/event-list" name="Event List">List of Events</Module>   
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
