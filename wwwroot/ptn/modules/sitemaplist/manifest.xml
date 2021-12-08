@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  
+  <ModuleTypes>
+    <ModuleGroup name="Navigation and Links" icon="fa-link">
+      <Module type="SiteMapList" name="Site Map">Sitemap - a simple sitemap tree</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+  
+</PageLayouts>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+        <cContentResponsibities/>
+				<cContentSchemaName>Job</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content showRelated="Tag">
+						<JobTitle/>
+            <JobIndustry/>
+            <JobOccupation ref="" name="" description=""/>
+            <Salary currency="" figure=""/>
+            <JobHours/>
+            <ContractType/>
+						<Summary/>
+						<Location/>
+						<ApplyBy/>
+						<Ref/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>  
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail> 
+          <Content>
+            <JobTitle/>
+            <JobIndustry/>
+            <JobOccupation ref="" name="" description=""/>
+            <Salary currency="" figure="" />
+            <JobHours/>
+            <ContractType/>
+            <Summary/>
+            <Location/>
+            <ApplyBy/>
+            <Ref/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>           
+          	<Description/>
+            <Responsibities/>
+            <Skills/>
+            <EducationRequirements/>
+            <ExperienceRequirements/>
+            <Qualifications/>
+            <Incentives/>
+            <JobIndustry/>
+          </Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind nodeset="tblContent">
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="cChangeNotes" nodeset="cDescription" required="false()" type="string"/>
+      <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+      <bind id="cContentJobTitle" nodeset="cContentName" required="true()" type="string"/>
+      <bind nodeset="cContentXmlBrief/Content">
+        <bind id="cContentJobTitle" nodeset="JobTitle" required="true()" type="string"/>
+        <bind id="cJobIndustry" nodeset="JobIndustry" required="false()" type="string"/>
+        <bind nodeset="JobOccupation">
+          <bind id="cJobSelect" nodeset="@ref" required="false()" type="string"/>
+          <bind id="cJobOccupationName" nodeset="@name" required="false()" type="string"/>
+          <bind id="cJobOccupationDesc" nodeset="@description" required="false()" type="string"/>
+        </bind>
+        <bind id="cBaseSalary" nodeset="Salary" required="false()" type="string"/>
+        <bind nodeset="Salary">
+          <bind id="cSalaryCurrency" nodeset="@currency" required="false()" type="string"/>
+          <bind id="nSalaryFigure" nodeset="@figure" required="false()" type="number"/>
+        </bind>
+        <bind id="cJobHours" nodeset="JobHours" required="false()" type="string"/>
+        <bind id="cContentContractType" nodeset="ContractType" required="false()" type="string"/>
+        <bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
+        <bind id="cContentLocation" nodeset="Location" required="false()" type="string"/>
+        <bind id="dApplyBy" nodeset="ApplyBy" required="false()" type="string"/>
+        <bind id="cContentJobRef" nodeset="Ref" required="false()" type="string"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+      </bind>
+      <bind nodeset="cContentXmlDetail/Content">
+          <bind id="cContentJobTitle" nodeset="JobTitle" required="true()" type="string"/>
+          <bind id="cJobIndustry" nodeset="JobIndustry" required="false()" type="string"/>
+          <bind nodeset="JobOccupation">
+            <bind id="cJobSelect" nodeset="@ref" required="false()" type="string"/>
+            <bind id="cJobOccupationName" nodeset="@name" required="false()" type="string"/>
+            <bind id="cJobOccupationDesc" nodeset="@description" required="false()" type="string"/>
+          </bind>
+         <bind id="cBaseSalary" nodeset="Salary" required="false()" type="string"/>
+         <bind nodeset="Salary">
+          <bind id="cSalaryCurrency" nodeset="@currency" required="false()" type="string"/>
+          <bind id="nSalaryFigure" nodeset="@figure" required="false()" type="number"/>
+        </bind>
+          <bind id="cJobHours" nodeset="JobHours" required="false()" type="string"/>
+          <bind id="cContentContractType" nodeset="ContractType" required="false()" type="string"/>
+          <bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
+          <bind id="cContentLocation" nodeset="Location" required="false()" type="string"/>
+          <bind id="dApplyBy" nodeset="ApplyBy" required="false()" type="string"/>
+          <bind id="cContentJobRef" nodeset="Ref" required="false()" type="string"/>
+          <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+          <bind id="clocations" nodeset="Locations" required="false()" type="string"/>
+          <bind id="cDescription" nodeset="Description" required="false()" type="string"/>
+          <bind id="cResponsibities" nodeset="Responsibities" required="false()" type="string"/>
+          <bind id="cSkills" nodeset="Skills" required="false()" type="string"/>
+          <bind id="cEducationRequirements" nodeset="EducationRequirements" required="false()" type="string"/>
+          <bind id="cExperienceRequirements" nodeset="ExperienceRequirements" required="false()" type="string"/>
+          <bind id="cQualifications" nodeset="Qualifications" required="false()" type="string"/>
+          <bind id="cIncentives" nodeset="Incentives" required="false()" type="string"/>
+          <bind id="cContentBody" nodeset="Description" required="false()" type="string"/>
+          <bind id="cJobIndustry" nodeset="JobIndustry" required="false()" type="string"/>
+        </bind>         
+      </bind>  
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Job</label>
+    <group>
+      <input bind="nContentKey" class="hidden">
+        <label>ContentId</label>
+      </input>
+      <label>Settings</label>
+      <input bind="dPublishDate" class="calendar short">
+        <label>Publish Date</label>
+      </input>
+      <input bind="dExpireDate" class="calendar short">
+        <label>Expire Date</label>
+      </input>
+      <select1 bind="nStatus" appearance="full" class="required">
+        <label>Status</label>
+        <item>
+          <label>Live</label>
+          <value>1</value>
+        </item>
+        <item>
+          <label>Hidden</label>
+          <value>0</value>
+        </item>
+      </select1>
+      <input bind="cChangeNotes" class="short">
+        <label>Change Notes</label>
+      </input>
+    <group class="Content">
+      <label>Images</label>
+      <input bind="cContentFullSizePicture" class="short pickImage">
+        <label>Job image</label>
+        <help class="inline">
+          <p>
+            This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+          </p>
+          <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+          <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+        </help>
+      </input>
+      <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
+    </group>
+    <group>
+      <label>Sectors</label>
+      <relatedContent search="find add" type="Tag" relationType="Tag" direction="2way">
+        <label>Description Tags</label>
+      </relatedContent>
+    </group>
+    </group>
+    <group ref="mainContent" class="mainContent">
+      <label>Job Title</label>
+      <input bind="cContentJobTitle" class="required"></input>
+      <input bind="cContentJobRef" class="short">
+        <label>Job Reference</label>
+      </input>
+      <group>
+        <label>Contract Type</label>
+        <select1 bind="cContentContractType" appearance="full" class="short ">
+          <item>
+            <label>Full time</label>
+            <value>Full Time</value>
+          </item>
+          <item>
+            <label>Part time</label>
+            <value>Part Time</value>
+          </item>
+          <item>
+            <label>Contract</label>
+            <value>Contract</value>
+          </item>
+        </select1>
+      </group>
+      <group>
+        <label>Job Description</label>
+        <textarea bind="cContentBody" class="TextArea xhtml " rows="10" cols="70"> </textarea>
+      </group>
+      <group class="inline">
+        <input bind="dApplyBy" class="calendar short">
+          <label>Apply By</label>
+        </input>
+        <input bind="cJobIndustry" class="">
+          <label>Industry</label>
+        </input>
+        <select1 bind="cJobSelect" class="jobOccupationDropdown ">
+          <label>Occupational Category</label>
+        </select1>
+        <input bind="cJobOccupationName" class="readonly jobOccupationDropdownName ">
+          <label>Occupation Name</label>
+        </input>
+        <input bind="cJobOccupationDesc" class="readonly jobOccupationDropdownDesc">
+          <label>Occupation Description</label>
+        </input>
+        <input bind="cContentLocation" class="short">
+          <label>Job Location</label>
+        </input>
+        <input bind="cJobHours" class="">
+          <label>Work Hours</label>
+        </input>
+        <input bind="cBaseSalary" class="short">
+          <label>Base Salary</label>
+        </input>
+        <input bind="cSalaryCurrency" class="short">
+          <label>Currency</label>
+        </input>
+        <input bind="nSalaryFigure" class="short">
+          <label>Salary Figure (for sorting - number only)</label>
+        </input>
+      </group>
+      <group>
+        <label>Job Responsibilities </label>
+        <textarea bind="cResponsibities" class="TextArea xhtml" rows="10" cols="70"> </textarea>
+      </group>
+      <group>
+        <label>Education Requirements</label>
+        <textarea bind="cEducationRequirements" class="TextArea xhtml" rows="10" cols="70"></textarea>
+      </group>
+      <group>
+        <label>Experience Requirements</label>
+        <textarea bind="cExperienceRequirements" class="TextArea xhtml" rows="10" cols="70"></textarea>
+      </group>
+      <group>
+        <label>Skills </label>
+        <textarea bind="cSkills" class="TextArea xhtml" rows="10" cols="70"> </textarea>
+      </group>
+      <group>
+        <label>Qualifications</label>
+        <textarea bind="cQualifications" class="TextArea xhtml" rows="10" cols="70"></textarea>
+      </group>
+      <group>
+        <label>Incentives</label>
+        <textarea bind="cIncentives" class="TextArea xhtml" rows="10" cols="70"></textarea>
+      </group>
+      <group>
+        <label>Summary</label>
+        <textarea bind="cContentSummary" class="TextArea xhtml" rows="10"></textarea>
+        
+      </group>
+  </group>     
+  
+  </group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+				<label>Save Job Vacancy</label>
+			</submit>
+	</group>
+</Content>

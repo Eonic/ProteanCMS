@@ -13,5 +13,23 @@
   <xsl:import href="trainingcourse/TrainingCourse.xsl"/>
   <xsl:import href="taglist/TagList.xsl"/>
   <xsl:import href="tagcloud/TagCloud.xsl"/>
-  
+  <xsl:import href="flashmovie/FlashMovie.xsl"/>
+  <xsl:import href="subpagegrid/SubPageGrid.xsl"/>
+  <xsl:import href="subpagelist/SubPageList.xsl"/>
+  <xsl:import href="subpagemenu/SubPageMenu.xsl"/>
+  <xsl:import href="googlead/GoogleAd.xsl"/>
+  <xsl:import href="googleadvertbank/GoogleAdvertBank.xsl"/>
+  <xsl:import href="googlemapv3/GoogleMapV3.xsl"/>
+  <xsl:import href="emailform/EmailForm.xsl"/>
+  <xsl:import href="sitemaplist/SiteMapList.xsl"/>
+  <xsl:import href="sitemaplarge/SiteMapLarge.xsl"/>
+  <xsl:import href="poll/Poll.xsl"/>
+  <xsl:import href="joblist/JobList.xsl"/>
+  <xsl:import href="recipelist/RecipeList.xsl"/>
+  <xsl:import href="recipegrid/RecipeGrid.xsl"/>
+  <xsl:import href="productgallery/ProductGallery.xsl"/>
+  <xsl:import href="productlist/ProductList.xsl"/>
+
+
+
 </xsl:stylesheet>
