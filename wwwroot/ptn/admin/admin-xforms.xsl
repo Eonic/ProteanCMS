@@ -2265,7 +2265,7 @@
     <div class="col-md-2">
       <button name="{$ref}" value="{value/node()}" class="{$isSelected}">
         <!--<img src="{$imageURL}" class="card-img-top"/>-->
-        <i class="fas fa-2x {$imageURL}"> </i>
+        <i class="fas fa-3x {$imageURL}"> </i>
         <h5>
           <xsl:value-of select="label/node()"/>
         </h5>

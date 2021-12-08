@@ -111,21 +111,42 @@ form.ewXform {
     }
 }
 #pick-by-image {
+    .accordion-button:not(.collapsed) {
+        background: #fff;
+    }
 
     .accordion-collapse {
-        padding-top: 20px;
-        padding-bottom: 20px;
+        padding: 20px 20px 0 20px;
+
+        .col-md-2 {
+            padding-bottom: 20px;
+        }
 
         button {
-            border: 0;
+            //border: 0;
+            border: 2px solid $admin-primary;
+            border-radius: 4px;
+            color: darken($admin-primary,10%);
             background: none;
             width: 100%;
-            padding-top: 10px;
-            font-size: 0.9rem;
+            padding: 10px;
+            font-size: 0.8rem;
+            height: 100%;
+            margin-bottom: 10px;
+            line-height: 1.2;
 
             h5 {
                 font-size: 1.1rem;
-                margin-bottom:0;
+                margin-bottom: 3px;
+            }
+
+            i {
+                margin-bottom: 5px;
+            }
+
+            &:hover {
+                border-color: lighten($admin-primary,10%);
+                color: $admin-primary;
             }
         }
     }
