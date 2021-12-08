@@ -3873,8 +3873,9 @@
     <xsl:param name="homeLink"/>
     <xsl:param name="span"/>
     <xsl:variable name="liClass">
+      <xsl:text>nav-item </xsl:text>
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
-        <xsl:text>active </xsl:text>
+        <xsl:text> active </xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'lg')">
         <xsl:text> hidden-lg-nav</xsl:text>
@@ -3888,19 +3889,11 @@
       <xsl:if test="contains(DisplayName/@screens,'xs')">
         <xsl:text> hidden-xs-nav</xsl:text>
       </xsl:if>
-      <xsl:choose>
-        <xsl:when test="position()=1">
-          <!-- If there is no Home link in the menu the first MenuItem in the menu should have a class of 'first' -->
-          <xsl:text> first</xsl:text>
-        </xsl:when>
-        <xsl:when test="position()=last()">
-          <xsl:text> last</xsl:text>
-        </xsl:when>
-      </xsl:choose>
     </xsl:variable>
     <li class="{$liClass}">
       <xsl:apply-templates select="self::MenuItem" mode="menuLink">
         <xsl:with-param name="span" select="$span" />
+        <xsl:with-param name="class">nav-link</xsl:with-param>
       </xsl:apply-templates>
     </li>
   </xsl:template>
@@ -9970,7 +9963,7 @@
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
               <xsl:if test="@marginBelow='false'">
-                <xsl:text> margin-bottom-0 </xsl:text>
+                <xsl:text> mb-0 </xsl:text>
               </xsl:if>
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>

@@ -73,6 +73,12 @@
             <xsl:with-param name="social-links">true</xsl:with-param>
           </xsl:apply-templates>
         </xsl:when>
+        <xsl:when test="$header-layout='header-basic'">
+          <xsl:apply-templates select="." mode="header-basic1">
+            <xsl:with-param name="nav-collapse">false</xsl:with-param>
+            <xsl:with-param name="social-links">true</xsl:with-param>
+          </xsl:apply-templates>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="." mode="header-menu-below">
             <xsl:with-param name="nav-collapse">false</xsl:with-param>
@@ -135,10 +141,10 @@
       </xsl:if>
 
       <!--~~~~~~~~~~~~~~ MAIN CONTENT ~~~~~~~~~~~~~~ -->
-      <div class="container-wrapper side-nav-layout {$detail-heading} {$home-class}">
+      <div class="container-wrapper {$detail-heading} {$home-class}">
         <xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
           <xsl:attribute name="class">
-            container-wrapper side-nav-layout fixed-nav-content <xsl:value-of select="$nav-padding"/> <xsl:value-of select="$detail-heading"/> <xsl:value-of select="$home-class"/>
+            container-wrapper fixed-nav-content <xsl:value-of select="$nav-padding"/> <xsl:value-of select="$detail-heading"/> <xsl:value-of select="$home-class"/>
           </xsl:attribute>
         </xsl:if>
         <div id="mainLayout" class="fullwidth activateAppearAnimation">
