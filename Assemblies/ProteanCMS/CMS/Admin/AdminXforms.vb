@@ -2512,9 +2512,8 @@ Partial Public Class Cms
                     If AlternateFormName <> "" Then cXformName = AlternateFormName
                     If cModuleType <> "" Then cXformName = cXformName & "/" & cModuleType
                     Dim formPath As String = "/xforms/content/"
-
                     If goConfig("cssFramework") = "bs5" Then
-                        formPath = "/modules/" & cXformName & "/"
+                        formPath = "/modules/"
                     End If
 
                     If Not MyBase.load(formPath & cXformName & ".xml", myWeb.maCommonFolders) Then
