@@ -72,10 +72,114 @@
     <bind id="cDescription" nodeset="tblContentStructure/cDescription" required="false()" type="string"/>
   </model>
   <label>Add/Edit Page</label>
-  <group ref="EditPage" class="2col">
-    <group>
+  <group ref="EditPage" class="accordion accordion-form-container">
+
+    <group class="accordion-item">
+      <div class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Page Names
+        </button>
+      </div>
+      <group class="form-2-col">
+        <input bind="cStructName" class="required">
+          <label>Page name</label>
+          <help class="inline">
+            <p>
+              <strong>Required. </strong>
+              <span>Name of the page that is also used to make up the URL of the page.</span>
+            </p>
+            <p>
+              Cannot contain any special characters such as; <strong>&amp; $ £ " ! % ^ * ( )</strong> etc...
+            </p>
+            <p>e.g. For a terms and conditions page enter;</p>
+            <p>
+              "Terms <strong>and</strong> Conditions" in Page name,<br/>and<br/>"Terms <strong>&amp;</strong> Conditions" in Display name
+            </p>
+          </help>
+        </input>
+        <input bind="cDisplayName">
+          <label>Display name</label>
+          <help class="inline">
+            <p>
+              <strong>Optional. </strong>Only needs to be used if;
+            </p>
+            <ul>
+              <li>Page name contains non-web safe characters</li>
+              <li>You want the name that appears in the site's navigation to differ to the page name</li>
+            </ul>
+          </help>
+        </input>
+        <select1 bind="cVersionLang" class="ewQuery" query="Language">
+          <label>Language</label>
+        </select1>
+      </group>
       <group>
-        <!--<label>Page Settings</label>-->
+        <label>Page Navigation and Links</label>
+        <select1 bind="cLinkType" appearance="full">
+          <label>Type of link</label>
+          <item>
+            <label>Internal</label>
+            <value>internal</value>
+            <toggle case="cLinkType_1" event="DOMActivate"/>
+            <help class="inline">
+              <p>
+                <strong>Internal</strong>
+              </p>
+              <p>
+                Leave as 'Not Specified' for normal behaviour.<br/>Or select a different page for this page to link to
+              </p>
+            </help>
+          </item>
+          <item>
+            <label>External (Link to another website)</label>
+            <value>external</value>
+            <toggle case="cLinkType_2" event="DOMActivate"/>
+            <help class="inline">
+              <p>
+                <strong>External</strong>
+              </p>
+              <p>Links for this page will open up another URL in a new window</p>
+            </help>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cLinkType_1">
+            <select1 bind="cUrl" class="siteTree">
+              <label>Redirect this page to</label>
+            </select1>
+          </case>
+          <case id="cLinkType_2">
+            <input bind="cUrl" class="long">
+              <label>URL</label>
+            </input>
+          </case>
+        </switch>
+        <input bind="cLinkTitle" class="long keep_empty">
+          <label>Link title text</label>
+          <help class="inline">
+            <p>The title text for a link is the little hint that appears when the user mouses over a hyperlink.</p>
+            <p>Configuring what appears here can aid user direction, and sometimes offer SEO advantages.</p>
+            <p>If left blank, the page name or display name acts as the title text.</p>
+          </help>
+        </input>
+      </group>
+      <group>
+        <label>Page Description</label>
+        <textarea bind="cStructDescription" class="xhtml" rows="10">
+          <label>Description</label>
+        </textarea>
+      </group>
+    </group>
+    <group class="accordion-item">
+      <div class="accordion-header" id="headingTwo">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+          Page Names
+        </button>
+      </div>
+      <group>
+        <div class="accordion-header">
+          <label>Page Settings</label>
+        </div>
         <input bind="nStructParId" class="hidden">
           <label>ParId</label>
         </input>
@@ -211,98 +315,6 @@
           <label>Upload icon from file</label>
           <value></value>
         </input>
-      </group>
-    </group>
-    <group>
-      <group class="form-2-col">
-        <!--<label>Page Names</label>-->
-        <input bind="cStructName" class="required">
-          <label>Page name</label>
-          <help class="inline">
-            <p>
-              <strong>Required. </strong>
-              <span>Name of the page that is also used to make up the URL of the page.</span>
-            </p>
-            <p>
-              Cannot contain any special characters such as; <strong>&amp; $ £ " ! % ^ * ( )</strong> etc...
-            </p>
-            <p>e.g. For a terms and conditions page enter;</p>
-            <p>
-              "Terms <strong>and</strong> Conditions" in Page name,<br/>and<br/>"Terms <strong>&amp;</strong> Conditions" in Display name
-            </p>
-          </help>
-        </input>
-        <input bind="cDisplayName">
-          <label>Display name</label>
-          <help class="inline">
-            <p>
-              <strong>Optional. </strong>Only needs to be used if;
-            </p>
-            <ul>
-              <li>Page name contains non-web safe characters</li>
-              <li>You want the name that appears in the site's navigation to differ to the page name</li>
-            </ul>
-          </help>
-        </input>
-        <select1 bind="cVersionLang" class="ewQuery" query="Language">
-          <label>Language</label>
-        </select1>
-      </group>
-      <group>
-        <label>Page Navigation and Links</label>
-        <select1 bind="cLinkType" appearance="full">
-          <label>Type of link</label>
-          <item>
-            <label>Internal</label>
-            <value>internal</value>
-            <toggle case="cLinkType_1" event="DOMActivate"/>
-            <help class="inline">
-              <p>
-                <strong>Internal</strong>
-              </p>
-              <p>
-                Leave as 'Not Specified' for normal behaviour.<br/>Or select a different page for this page to link to
-              </p>
-            </help>
-          </item>
-          <item>
-            <label>External (Link to another website)</label>
-            <value>external</value>
-            <toggle case="cLinkType_2" event="DOMActivate"/>
-            <help class="inline">
-              <p>
-                <strong>External</strong>
-              </p>
-              <p>Links for this page will open up another URL in a new window</p>
-            </help>
-          </item>
-        </select1>
-        <switch class="disable">
-          <case id="cLinkType_1">
-            <select1 bind="cUrl" class="siteTree">
-              <label>Redirect this page to</label>
-            </select1>
-          </case>
-          <case id="cLinkType_2">
-            <input bind="cUrl" class="long">
-              <label>URL</label>
-            </input>
-          </case>
-        </switch>
-        <input bind="cLinkTitle" class="long keep_empty">
-          <label>Link title text</label>
-          <help class="inline">
-            <p>The title text for a link is the little hint that appears when the user mouses over a hyperlink.</p>
-            <p>Configuring what appears here can aid user direction, and sometimes offer SEO advantages.</p>
-            <p>If left blank, the page name or display name acts as the title text.</p>
-          </help>
-        </input>
-      </group>
-      <group>
-        <label>Page Description</label>
-        <textarea bind="cStructDescription" class="xhtml" rows="10">
-          <label>Description</label>
-        </textarea>
       </group>
     </group>
     <group class="conditional-modal" id="namechange" showonsubmitwhenchanged="cStructName ">
