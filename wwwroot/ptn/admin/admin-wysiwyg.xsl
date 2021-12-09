@@ -251,15 +251,15 @@
 
       <div class="ewAdmin options">
         <div class="dropdown pull-right">
-          <a href="#" class="btn btn-primary btn-xs" data-toggle="dropdown">
-            <i class="fa fa-pencil-square-o fa-lg">&#160;</i>&#160;
+          <button href="#" class="btn btn-primary btn-xs" data-toggle="dropdown">
+            <i class="fas fa-edit fa-lg">&#160;</i>&#160;
             <xsl:if test="@status=0">[hidden]</xsl:if>
             <i class="fa fa-caret-down">&#160;</i>
-          </a>
+          </button>
           <ul class="dropdown-menu">
             <li>
               <a href="?ewCmd=EditPage&amp;pgid={@id}" title="Click here to edit this page">
-                <i class="fa fa-pencil-square-o">&#160;</i>&#160;
+                <i class="fa fa-edit">&#160;</i>&#160;
                 Edit Page Settings
               </a>
             </li>
@@ -1316,13 +1316,13 @@
           </div>
         </xsl:if>
         <div class="dropdown pull-right">
-          <a href="#" class="btn btn-primary btn-xs" data-toggle="dropdown">
+          <button href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown" aria-expanded="false">
             <xsl:choose>
               <xsl:when test="@contentType!=''">
-                <i class="fa fa-gears fa-lg">&#160;</i>&#160;
+                <i class="fas fa-gears fa-lg">&#160;</i>&#160;
               </xsl:when>
               <xsl:otherwise>
-                <i class="fa fa-pencil-square-o fa-lg">&#160;</i>&#160;
+                <i class="fas fa-edit fa-lg">&#160;</i>&#160;
               </xsl:otherwise>
             </xsl:choose>
 
@@ -1338,7 +1338,7 @@
               <xsl:text>&#160;[preview]</xsl:text>
             </xsl:if>
             <i class="fa fa-caret-down">&#160;</i>
-          </a>
+          </button>
 
           <ul class="dropdown-menu">
             <xsl:choose>
@@ -1638,7 +1638,7 @@
       </xsl:attribute>
       <div class="ewAdmin dropdown options pull-right">
         <a href="#" class="btn btn-primary btn-xs pull-right" data-toggle="dropdown">
-          <i class="fa fa-pencil-square-o fa-lg">&#160;</i>&#160;
+          <i class="fas fa-edit fa-lg">&#160;</i>&#160;
           <xsl:if test="@status=0">[hidden]</xsl:if>
           <i class="fa fa-caret-down">&#160;</i>
         </a>

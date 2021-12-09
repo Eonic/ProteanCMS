@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" moduleType="Image" box="" title="" link="" linkType="internal" resize="false" constrain="true" width="" height="" crop="" stretch="false" responsiveImg="true">
+            <img class="image"/>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cResizeImage" nodeset="@resize" required="false()" type="string"/>
+      <bind id="cImageHeight" nodeset="@height" required="false()" type="string" />
+      <bind id="cImageWidth" nodeset="@width" required="false()" type="string"/>
+      <bind id="cResponsiveImg" nodeset="@responsiveImg" required="false()" type="string"/>
+      <bind id="cConstrainProportions" nodeset="@constrain" required="false()" type="string"/>
+      <bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
+      <bind id="cStretch" nodeset="@stretch" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
+      <bind id="cContentImageDetail" nodeset="@imgDetail" required="false()" type="string"/>
+    </bind>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <bind id="cContentImage" nodeset="tblContent/cContentXmlBrief/Content/img" required="false()" type="xml-replace"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Image Module</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Image Title</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or Name</label>
+        </input>
+      </group>
+      <group>
+        <label>Image Settings</label>
+        <input bind="cContentImage" class="short pickImage">
+          <label>Image</label>
+        </input>
+        <select bind="cLightbox" appearance="full" class="multiline bs-only">
+          <item>
+            <label>Add Lightbox</label>
+            <value>true</value>
+          </item>
+           </select>
+        <input bind="cContentImageDetail" class="pickImageFile bs-only">
+          <label>Lightbox Image</label>
+          <value></value>
+          <hint>If you add a larger image here, the original image can be clicked on and the larger image will then be displayed</hint>
+        </input>
+        <group>
+          <select1 bind="cResizeImage" appearance="full">
+            <label>Resize image</label>
+            <item>
+              <label>Keep original size</label>
+              <value>false</value>
+              <toggle case="cResizeImage_1" event="DOMActivate"/>
+            </item>
+            <item>
+              <label>Resize image</label>
+              <value>true</value>
+              <toggle case="cResizeImage_2" event="DOMActivate"/>
+            </item>
+            <!--<item>
+              <label>Auto Adjust (responsive sites only)</label>
+              <value>true</value>
+              <toggle case="cResonsiveImg" event="DOMActivate"/>
+            </item>-->
+          </select1>
+          <switch class="disable">
+            <case id="cResizeImage_1"/>
+            <case id="cResizeImage_2">
+              <group class="inline">
+                <input bind="cImageWidth" class="short keep_empty">
+                  <label>Width</label>
+                </input>
+                <input bind="cImageHeight" class="short keep_empty">
+                  <label>Height</label>
+                </input>
+              </group>
+              <group class="inline-4col">
+                <select bind="cConstrainProportions" appearance="full">
+                  <item>
+                    <label>Constrain proportions</label>
+                    <value>true</value>
+                  </item>
+                </select>
+                <script type="text/javascript">initialiseConstrainProportions('cConstrainProportions','cResizeImage_2','cImageWidth','cImageHeight','cContentImage');</script>
+                <select bind="cCrop" appearance="full">
+                  <item>
+                    <label>Crop</label>
+                    <value>true</value>
+                  </item>
+                  <help class="inline">If selected, will clip or crop the image top and bottom or left and right to match the exact image dimensions specified above.</help>
+                </select>
+                <select bind="cStretch" appearance="full">
+                  <item>
+                    <label>Stretch</label>
+                    <value>true</value>
+                  </item>
+                  <help class="inline">If the original image is smaller than the dimensions you have specified, ticking this will stretch the image up to the required size.  Otherwise will not resize.</help>
+                </select>
+              </group>
+            </case>
+          </switch>
+          <!--<select bind="cResponsiveImg" appearance="full" class="bs-only">
+            <item>
+              <label class="bs-only">Auto adjust to fit space</label>
+              <value>true</value>
+            </item>
+            <help class="inline">If selected, the image will shrink to fit the space available, and will automatically adjust if the space changes. It will not become larger than the original size of the image, so make sure the image you use is at least as big as you would like it to appear.</help>
+          </select>-->
+        </group>
+      </group>
+      <group>
+        <label>Module Links</label>
+        <select1 bind="cLinkType" appearance="full">
+          <label>Type of link</label>
+          <item>
+            <label>Internal (Going to a page on this site)</label>
+            <value>internal</value>
+            <toggle case="cLinkType_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>External (Going to another site)</label>
+            <value>external</value>
+            <toggle case="cLinkType_2" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cLinkType_1">
+            <select1 bind="cModuleLink" class="siteTree">
+              <label>Link to page</label>
+            </select1>
+          </case>
+          <case id="cLinkType_2">
+            <input bind="cModuleLink" class="short">
+              <label>Link to URL</label>
+            </input>
+          </case>
+        </switch>
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Image</label>
+    </submit>
+  </group>
+</Content>

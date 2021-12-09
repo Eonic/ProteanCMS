@@ -6,7 +6,7 @@
     </ContentTypeGroup>
    </ContentTypes>
   <ModuleTypes>
-	  <ModuleGroup name="Ecommerce controls">
+	  <ModuleGroup name="Ecommerce controls" icon="fas fa-shopping-cart">
 		  <Module type="EcommerceListOrders" name="List Orders">List Orders [requires membership]</Module>
       <Module type="VoucherList" name="List Vouchers">List Vouchers to purchase</Module>
       <Module type="MyVouchers" name="My Vouchers">My Vouchers</Module>

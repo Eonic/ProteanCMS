@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ModuleTypes>
-    <ModuleGroup name="Navigation and Links" icon="fa-link">
-      <Module type="SubPageList" name="SubPage Listing">SubPage Listing</Module>
+    <ModuleGroup name="Navigation and Links" icon="fas fa-link">
+      <Module type="SubPageList" icon="fas fa-list" name="SubPage Listing">SubPage Listing</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

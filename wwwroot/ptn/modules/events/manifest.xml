@@ -2,12 +2,12 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="News And Events">
-      <ContentType type="Event" name="Event">An event in the future</ContentType>
+      <ContentType type="Event" formPath="events/event" name="Event">An event in the future</ContentType>
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="events/event-list" name="Event List">List of Events</Module>   
+      <Module type="EventList" formPath="events/event-list" icon="far fa-calendar" name="Event List">List of Events</Module>   
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

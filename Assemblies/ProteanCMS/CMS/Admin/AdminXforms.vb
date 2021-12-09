@@ -2263,73 +2263,7 @@ Partial Public Class Cms
 
                         oSelElmt = MyBase.addSelect1(oFrmElmt, "cModuleType", True, "", "PickByImage", xForm.ApperanceTypes.Full)
 
-                        Dim PathPrefix = "ewcommon/xsl/"
-                        If goConfig("cssFramework") = "bs5" Then
-                            PathPrefix = "ptn\"
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "core\modules", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
-                            Dim fld As DirectoryInfo
-                            For Each fld In rootFolder.GetDirectories
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            Next
-                            If myWeb.moConfig("ClientCommonFolder") <> "" Then
-                                EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            End If
-                            EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
-
-                            If myWeb.moConfig("Search") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            End If
-                            If myWeb.moConfig("Membership") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            End If
-                            If myWeb.moConfig("Cart") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            End If
-                            If myWeb.moConfig("Quote") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            End If
-                            If myWeb.moConfig("MailingList") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            End If
-                            If myWeb.moConfig("Subscriptions") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                            End If
-
-                        Else
-
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
-
-                            '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
-
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
-
-                            If myWeb.moConfig("ClientCommonFolder") <> "" Then
-                                EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
-                            End If
-                            EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
-                            If myWeb.moConfig("Search") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Search", "ModuleTypes/ModuleGroup", "Module", False)
-                            End If
-                            If myWeb.moConfig("Membership") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Membership", "ModuleTypes/ModuleGroup", "Module", False)
-                            End If
-                            If myWeb.moConfig("Cart") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Cart", "ModuleTypes/ModuleGroup", "Module", False)
-                            End If
-                            If myWeb.moConfig("Quote") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Quote", "ModuleTypes/ModuleGroup", "Module", False)
-                            End If
-                            If myWeb.moConfig("MailingList") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Mailer", "ModuleTypes/ModuleGroup", "Module", False)
-                            End If
-                            If myWeb.moConfig("Subscriptions") = "on" Then
-                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
-                            End If
-                        End If
-
-
-
+                        GetModuleOptions(oSelElmt)
 
                         If MyBase.isSubmitted Or goRequest.Form("ewsubmit.x") <> "" Or goRequest.Form("cModuleType") <> "" Then
                             MyBase.updateInstanceFromRequest()
@@ -2356,6 +2290,95 @@ Partial Public Class Cms
                     Return Nothing
                 End Try
             End Function
+
+            Protected Function GetModuleFormPath(ByVal SchemaName As String) As String
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim ModuleList As XmlElement = moPageXML.CreateElement("Select")
+                    GetModuleOptions(ModuleList)
+                    Dim thisModule As XmlElement = ModuleList.SelectSingleNode("descendant-or-self::item[@type='" & SchemaName & "']")
+                    If thisModule Is Nothing Then
+                        Return SchemaName
+                    Else
+                        Return thisModule.SelectSingleNode("value").InnerText
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            Protected Sub GetModuleOptions(ByRef oSelElmt As XmlElement)
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim PathPrefix = "ewcommon/xsl/"
+                    If goConfig("cssFramework") = "bs5" Then
+                        PathPrefix = "ptn\"
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "core\modules", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                        Dim fld As DirectoryInfo
+                        For Each fld In rootFolder.GetDirectories
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        Next
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                    Else
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
+
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Search", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Membership", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Cart", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Quote", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Mailer", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Sub
+
 
             Protected Sub EnumberateManifestOptions(ByRef oSelectElmt As XmlElement, ByVal filepath As String, ByVal groupName As String, ByVal optionName As String, ByVal bIgnoreIfNotFound As Boolean, Optional ByVal manifestFilename As String = "LayoutManifest.xml")
 
@@ -2388,10 +2411,18 @@ Partial Public Class Cms
                                 End If
                                 For Each oItem In oChoices.SelectNodes(optionName)
                                     If oItem.GetAttribute("targetCssFramework") = "" Or (Not (myWeb.moConfig("cssFramework") Is Nothing) And oItem.GetAttribute("targetCssFramework").Contains("" & myWeb.moConfig("cssFramework"))) Then
-                                        oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("type"))
+                                        Dim FormPath As String = oItem.GetAttribute("type")
+                                        If oItem.GetAttribute("formPath") <> "" Then
+                                            FormPath = oItem.GetAttribute("formPath")
+                                        End If
+                                        oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), FormPath)
                                         'lets add an image tag
+                                        oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
                                         oDescElmt = moPageXML.CreateElement("img")
                                         oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
+                                        If oItem.GetAttribute("icon") <> "" Then
+                                            oDescElmt.SetAttribute("icon", oItem.GetAttribute("icon"))
+                                        End If
                                         oOptElmt.AppendChild(oDescElmt)
                                         'lets insert a description html tag
                                         If oItem.InnerXml <> "" Then
@@ -2509,8 +2540,14 @@ Partial Public Class Cms
                     ''''''' if contentSchemeaName starts with "filter|" then modify the path...
 
                     Dim cXformName As String = cContentSchemaName
+
                     If AlternateFormName <> "" Then cXformName = AlternateFormName
-                    If cModuleType <> "" Then cXformName = cXformName & "/" & cModuleType
+                    If cModuleType <> "" Then
+                        cXformName = cXformName & "/" & cModuleType
+                        If goConfig("cssFramework") = "bs5" Then
+                            cXformName = GetModuleFormPath(cModuleType)
+                        End If
+                    End If
                     Dim formPath As String = "/xforms/content/"
                     If goConfig("cssFramework") = "bs5" Then
                         formPath = "/modules/"

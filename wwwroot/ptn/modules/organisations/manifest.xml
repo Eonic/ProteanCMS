@@ -6,7 +6,7 @@
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>
-    <ModuleGroup name="Content Lists" icon="fa-th-list">
+    <ModuleGroup name="Content Lists" icon="fas fa-th-list">
       <Module type="OrganisationList" name="Organisation List">Organisation List</Module>
     </ModuleGroup>
   </ModuleTypes>

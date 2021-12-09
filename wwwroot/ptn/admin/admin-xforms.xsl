@@ -2182,7 +2182,10 @@
     <div class="accordion-item">
       <h5 class="accordion-header" id="heading{$makeClass}">
       <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{$makeClass}" aria-expanded="true" aria-controls="collapse{$makeClass}"> 
-         <xsl:apply-templates select="label" mode="xform_legend"/>
+        <xsl:if test="label/@icon!=''">
+          <i class="{label/@icon}">&#160;</i>&#160;
+        </xsl:if> 
+        <xsl:apply-templates select="label" mode="xform_legend"/>
       </button>
       </h5>
       <div id="collapse{$makeClass}"  aria-labelledby="heading{$makeClass}" data-bs-parent="#pick-by-image">
@@ -2214,48 +2217,10 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:variable name="imageURL">
-      <!--<xsl:choose>
-        <xsl:when test="$ifExists='1'">
-          <xsl:value-of select="translate(img/@src,' ','-')"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>/ewcommon/images/pagelayouts/tempImage.gif</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>-->
+    <xsl:variable name="icon">
       <xsl:choose>
-        <xsl:when test="value='FormattedText'">
-          <xsl:text>fas fa-align-left</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='Image'">
-          <xsl:text>far fa-image</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='Video'">
-          <xsl:text>fas fa-play</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='EmailForm'">
-          <xsl:text>fas fa-envelope</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='ContactList'">
-          <xsl:text>far fa-user</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='DocumentList'">
-          <xsl:text>far fa-file-alt</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='EventList'">
-          <xsl:text>far fa-calendar</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='NewsList'">
-          <xsl:text>fas fa-newspaper</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='OrganisationList'">
-          <xsl:text>far fa-building</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='TrainingCourseList'">
-          <xsl:text>fas fa-graduation-cap</xsl:text>
-        </xsl:when>
-        <xsl:when test="value='TestimonialList'">
-          <xsl:text>far fa-comments</xsl:text>
+        <xsl:when test="img/@icon!=''">
+          <xsl:value-of select="img/@icon"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>fas fa-puzzle-piece</xsl:text>
@@ -2265,7 +2230,7 @@
     <div class="col-md-2">
       <button name="{$ref}" value="{value/node()}" class="{$isSelected}">
         <!--<img src="{$imageURL}" class="card-img-top"/>-->
-        <i class="fas fa-3x {$imageURL}"> </i>
+        <i class="fas fa-3x {$icon}"> </i>
         <h5>
           <xsl:value-of select="label/node()"/>
         </h5>
