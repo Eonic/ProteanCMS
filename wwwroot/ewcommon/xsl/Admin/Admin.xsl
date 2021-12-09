@@ -1701,7 +1701,6 @@
                             </div>
 													</div>
 												</div>
-
 											</xsl:if>
 										</xsl:for-each>
 									</div>
