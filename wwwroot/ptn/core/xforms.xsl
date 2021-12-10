@@ -442,6 +442,34 @@
       </div>
     </div>
   </xsl:template>
+  
+  <!-- -->
+  <!-- ========================== GROUP In Accordian ========================== -->
+  <xsl:template match="group[contains(@class,'accordion')]" mode="xform">
+    <div class="accordian" id="accordian-{@ref}">
+            <xsl:apply-templates select="*" mode="xform"/>
+    </div>
+  </xsl:template>
+  
+   <xsl:template match="group[parent::group[contains(@class,'accordion')]]" mode="xform">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading{position()}">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{position()}" aria-expanded="true" aria-controls="collapse{position()}">
+        <xsl:apply-templates select="label">
+        <xsl:with-param name="cLabel">
+          <xsl:value-of select="@ref"/>
+        </xsl:with-param>
+      </xsl:apply-templates>
+      </button>
+    </h2>
+    <div id="collapse{position()}" class="accordion-collapse collapse show" aria-labelledby="heading{position()}" data-bs-parent="#accordion-{@ref}">
+      <div class="accordion-body">
+        <xsl:apply-templates select="*" mode="xform"/>
+      </div>
+    </div>
+            
+    </div>
+  </xsl:template>
 
   <xsl:template match="group[contains(@class,'input-group')]" mode="xform">
     <div class="input-group">
@@ -2343,96 +2371,6 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- -->
-  <xsl:template match="select1[@appearance='full' and @class='PickByImage']" mode="xform_control">
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-    <!--<xsl:attribute name="class">pickByImage</xsl:attribute>-->
-    <input type="hidden" name="{$ref}" value="{value/node()}"/>
-    <div class="adminList" id="accordion">
-      <xsl:apply-templates select="item | choices" mode="xform_imageClick">
-        <xsl:with-param name="type">radio</xsl:with-param>
-        <xsl:with-param name="ref" select="$ref"/>
-      </xsl:apply-templates>
-    </div>
-  </xsl:template>
-
-
-  <xsl:template match="choices" mode="xform_imageClick">
-    <xsl:param name="type"/>
-    <xsl:param name="ref"/>
-    <xsl:variable name="makeClass" select="translate(label, ' ', '_')"/>
-    <div class="header">
-      <h6>
-        <xsl:apply-templates select="label" mode="xform_legend"/>
-      </h6>
-    </div>
-    <div class="choices">
-      <xsl:apply-templates select="item" mode="xform_imageClick">
-        <xsl:with-param name="ref" select="$ref"/>
-      </xsl:apply-templates>
-    </div>
-  </xsl:template>
-
-  <xsl:template match="item" mode="xform_imageClick">
-    <xsl:param name="ref"/>
-    <xsl:variable name="value" select="value/node()"/>
-
-    <xsl:variable name="ifExists">
-      <xsl:call-template name="virtual-file-exists">
-        <xsl:with-param name="path" select="translate(img/@src,' ','-')"/>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name="imageURL">
-      <xsl:choose>
-        <xsl:when test="$ifExists='1'">
-          <xsl:value-of select="translate(img/@src,' ','-')"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>/ewcommon/images/pagelayouts/tempImage.gif</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <div class="item">
-      <xsl:if test="ancestor::select1/value/node()=$value">
-        <xsl:attribute name="class">selected</xsl:attribute>
-      </xsl:if>
-      <div class="ItemThumbnail">
-        <input type="image" onclick="this.form.{$ref}.value='{value/node()}'" src="{$imageURL}" name="ewsubmit"/>
-      </div>
-      <h5>
-        <xsl:value-of select="label/node()"/>
-      </h5>
-      <xsl:copy-of select="div"/>
-
-    </div>
-  </xsl:template>
-
-  <xsl:template match="item[label/Theme]" mode="xform_imageClick">
-    <xsl:param name="ref"/>
-    <xsl:variable name="value" select="label/Theme/RootXslt/@src"/>
-    <div class="item ThemeButton">
-      <xsl:if test="ancestor::select1/value/node()=$value">
-        <xsl:attribute name="class">selected</xsl:attribute>
-        <xsl:attribute name="disabled">disabled</xsl:attribute>
-      </xsl:if>
-      <div class="ItemThumbnail">
-        <input type="image" onclick="this.form.{$ref}.value='{$value}';this.form.ewSiteTheme.value='{label/Theme/@name}'" src="{translate(label/Theme/Images/img[@class='thumbnail']/@src,' ','-')}" name="ewsubmit"/>
-      </div>
-      <h5>
-        <xsl:value-of select="label/Theme/@name"/>
-      </h5>
-      <div>
-        <xsl:apply-templates select="label/Theme/Description/node()" mode="cleanXhtml"/>
-        <!--<small>-->
-        <xsl:apply-templates select="label/Theme/Attribution/node()" mode="cleanXhtml"/>
-        <!--</small>-->
-      </div>
-    </div>
-  </xsl:template>
 
   <!-- -->
   <xsl:template match="select[@appearance='minimal'] | select" mode="xform_control">

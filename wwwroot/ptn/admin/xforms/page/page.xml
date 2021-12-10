@@ -72,14 +72,9 @@
     <bind id="cDescription" nodeset="tblContentStructure/cDescription" required="false()" type="string"/>
   </model>
   <label>Add/Edit Page</label>
-  <group ref="EditPage" class="accordion accordion-form-container">
-
-    <group class="accordion-item">
-      <div class="accordion-header" id="headingOne">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Page Names
-        </button>
-      </div>
+  <group ref="EditPage" class="accordion">
+    <group>
+      <label>Basic Page Settings</label>
       <group class="form-2-col">
         <input bind="cStructName" class="required">
           <label>Page name</label>
@@ -170,12 +165,8 @@
         </textarea>
       </group>
     </group>
-    <group class="accordion-item">
-      <div class="accordion-header" id="headingTwo">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
-          Page Names
-        </button>
-      </div>
+    <group>
+      <label>Advanced Settings</label>
       <group>
         <div class="accordion-header">
           <label>Page Settings</label>
@@ -317,14 +308,14 @@
         </input>
       </group>
     </group>
+  </group>
     <group class="conditional-modal" id="namechange" showonsubmitwhenchanged="cStructName ">
 
+    </group>
+    <group class="redirect-modal">
+      <input type="hidden" bind=""></input>
     </group>
     <submit submission="" ref="submit" class="principle">
       <label>Save Page</label>
     </submit>
-    <group class="redirect-modal">
-      <input type="hidden" bind=""></input>
-    </group>
-  </group>
 </Content>

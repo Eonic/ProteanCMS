@@ -2189,7 +2189,7 @@
 
 
   <!-- -->
-  <xsl:template match="select1[@appearance='full' and @class='PickByImage'][ancestor::Page[@adminMode='true']]" mode="xform_control">
+  <xsl:template match="select1[@appearance='full' and @class='PickByImage']" mode="xform_control">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
@@ -3004,6 +3004,5 @@
     </xsl:choose>
 
   </xsl:template>
-
 
 </xsl:stylesheet>

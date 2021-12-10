@@ -3,8 +3,8 @@
 
   
   <ModuleTypes>
-    <ModuleGroup name="Basic Content" icon="fa-pencil">
-      <Module type="GoogleMapv3" name="Google Map">NEW IMPROVED Google Map using latest integration</Module>
+    <ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
+      <Module type="GoogleMapv3" formPath="googlemapv3/googlemapv3" icon="fas fa-map-marked" name="Google Map">NEW IMPROVED Google Map using latest integration</Module>
     </ModuleGroup>
   </ModuleTypes>
   
