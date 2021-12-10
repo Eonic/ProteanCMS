@@ -8,7 +8,7 @@ NEW BS ADMIN HEADER
 $admin-header-bg: #13181c;
 $admin-header-bg-light: lighten($admin-header-bg, 10%);
 $admin-header-color: #fff;
-$admin-header-color-link: #5cbaf1;
+$admin-header-color-link: $primary;
 $admin-header-color-warning: #d10404;
 $admin-header-logo: transparent;
 $admin-header-font: 'Open Sans', sans-serif;
@@ -115,14 +115,6 @@ body.ewAdmin.layout-AdmHome {
         margin-bottom: 0 !important;
         overflow: hidden;
 
-        a {
-            color: $admin-primary;
-
-            &:hover {
-                color: $admin-header-color-link;
-                text-decoration: none;
-            }
-        }
 
         li:before {
             //    color: #a5a7a9 !important;
@@ -175,14 +167,6 @@ body.ewAdmin.layout-AdmHome {
         padding-left: 0px;
         padding-right: 0px;
 
-        a {
-            color: $admin-primary;
-        }
-
-        a:hover {
-            text-decoration: none;
-            color: lighten($admin-primary,20%);
-        }
 
         .status.active, .status.activeParent {
             color: $admin-primary;
@@ -222,7 +206,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .admin-page {
-            .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+            /*.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
 
                 > .panel-default,
                 > .ewXform .panel-default {
@@ -231,7 +215,7 @@ body.ewAdmin.layout-AdmHome {
                         padding-right: $admin-gutter-width;
                     }
                 }
-            }
+            }*/
 
             h1.page-header {
                 padding-left: 15px;
@@ -246,7 +230,7 @@ body.ewAdmin.layout-AdmHome {
                 font-size: 20px;
             }
 
-            > .panel-default {
+            /*> .panel-default {
                 margin-bottom: 0;
 
                 > .panel-heading {
@@ -285,9 +269,9 @@ body.ewAdmin.layout-AdmHome {
                     padding-left: $admin-gutter-width;
                     padding-right: $admin-gutter-width;
                 }
-            }
+            }*/
 
-            #accordion {
+            /*#accordion {
                 .panel-default .panel-heading {
                     border-bottom: 4px solid lighten($admin-header-bg,30%);
                     padding-bottom: 15px;
@@ -334,20 +318,20 @@ body.ewAdmin.layout-AdmHome {
                     border-color: #fff;
                     height: 100% !important;
                 }
-            }
+            }*/
         }
 
         #tpltEditStructure {
             margin-left: 0px;
             margin-right: 0px;
 
-            .btn-primary {
+            /*.btn-primary {
                 border: 1px solid $admin-primary
             }
 
             .btn-success {
                 border: 1px solid $admin-success
-            }
+            }*/
 
             .list-group-item {
                 border-bottom: 1px solid lighten($admin-header-bg,75%);
@@ -369,7 +353,7 @@ body.ewAdmin.layout-AdmHome {
             .ui-accordion {
                 padding-top: 2px;
 
-                .panel {
+                /*.panel {
                     margin-top: 0px;
                 }
 
@@ -378,7 +362,7 @@ body.ewAdmin.layout-AdmHome {
                     border-bottom: 1px solid #ddd;
                     padding-bottom: 10px;
                     padding-top: 11px;
-                }
+                }*/
 
                 border-right: 1px solid #ddd;
                 border-left: 1px solid #ddd;
@@ -404,7 +388,7 @@ body.ewAdmin.layout-AdmHome {
                 }
             }
 
-            .panel-heading .pull-right {
+            /*.panel-heading .pull-right {
                 position: relative;
                 top: -5px;
             }
@@ -414,7 +398,7 @@ body.ewAdmin.layout-AdmHome {
                 position: relative;
                 top: -18px;
                 right: 30px;
-            }
+            }*/
 
 
             .list-controls {
@@ -483,7 +467,7 @@ body.ewAdmin.layout-AdmHome {
             z-index: 1060;
         }
 
-        .listItem .ewAdmin .btn,
+        /*.listItem .ewAdmin .btn,
         .panel .list-group .ewAdmin .btn,
         .panel .listItem .ewAdmin .btn {
             padding-left: 5px !important;
@@ -496,7 +480,7 @@ body.ewAdmin.layout-AdmHome {
 
             
             text-decoration: none !important;
-        }
+        }*/
 
         .table-striped-2 > tbody > tr:nth-of-type(4n+0) {
             background-color: #f9f9f9;
@@ -520,11 +504,11 @@ body.ewAdmin.layout-AdmHome {
             margin-bottom: 0px;
         }
 
-        .panel-heading .principle {
+        /*.panel-heading .principle {
             margin-right: 5px;
             top: -10px;
             position: relative;
-        }
+        }*/
 
         .panel-heading-buttons {
             .bulk-action {
@@ -712,228 +696,9 @@ body.ewAdmin.layout-AdmHome {
     }
 }
 
-.ewAdmin .open,
-#mainTable .ewAdmin,
-#pagefooter .ewAdmin {
-    .dropdown {
-        width: auto;
 
-        a.btn-primary,
-        a:visited.btn-primary {
-            color: #fff !important;
-            letter-spacing: normal;
-        }
 
-        a.btn:focus,
-        a.btn:hover {
-            outline: none;
-            text-decoration: none;
-        }
-    }
 
-    .dropdown-menu {
-        text-align: left;
-        background: $admin-header-bg-light;
-        letter-spacing: normal;
-
-        li {
-            width: 100%;
-        }
-
-        li a {
-            color: $admin-header-color !important;
-
-            &:hover {
-                color: $admin-header-color-link !important;
-                background: transparent;
-            }
-
-            padding: 3px 20px !important;
-            background-image: none !important;
-            background: none !important;
-            text-transform: none !important;
-            height: auto !important;
-            letter-spacing: normal;
-            text-decoration: none !important;
-            font-size: 13px !important;
-            font-weight: 400 !important;
-        }
-
-        li.mansonary-size a.btn {
-            -moz-border-bottom-colors: none;
-            -moz-border-left-colors: none;
-            -moz-border-right-colors: none;
-            -moz-border-top-colors: none;
-            background-image: -moz-linear-gradient(center top, #FFFFFF, #E6E6E6);
-            border-image: none;
-            border-style: solid;
-            border-width: 1px;
-            box-shadow: inset 0px 1px 0px rgba(255,255,255,0.2), 0px 1px 2px rgba(0,0,0,0.05);
-            display: inline-block;
-            font-size: 14px;
-            line-height: 20px;
-            margin-bottom: 0px;
-            padding: 4px 8px;
-            text-align: center;
-            text-shadow: 0px 1px 1px rgba(255,255,255,0.75);
-            vertical-align: middle;
-        }
-
-        li.updown a {
-            padding: 0 !important;
-        }
-
-        li.mansonary-size a {
-            padding: 3px 5px !important;
-        }
-
-        li.title {
-            font-size: 12px;
-            color: darken($admin-header-color, 30%) !important;
-        }
-
-        .divider {
-            background-color: darken($admin-header-color, 80%) !important;
-            margin: 5px 0;
-        }
-    }
-}
-
-.normalMode {
-    a:hover {
-        text-decoration: none;
-    }
-
-    .slick-list .ewAdmin .btn-primary {
-        z-index: 10;
-    }
-
-    .ewAdmin > .btn-default,
-    .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown > .btn-primary,
-    .ewAdmin > .dropdown .dropdown-menu a {
-        font-family: $admin-header-font;
-
-        i {
-            font-size: 13px !important;
-            color: $admin-header-color !important;
-            border: 0 !important;
-            width: auto !important;
-            height: auto !important;
-            display: inline-block !important;
-
-            &:before {
-                display: inline !important;
-            }
-        }
-    }
-
-    .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown .btn-primary {
-        margin-left: 3px;
-    }
-
-    .ewAdmin > .dropdown .dropdown-menu li {
-        display: block;
-        text-align: left;
-
-        a {
-            border: 0;
-            text-align: left;
-        }
-    }
-
-    .grid-item > .ewAdmin {
-        margin-top: 3px;
-    }
-
-    span.editable {
-        .ewAdmin {
-            display: inline-block;
-            float: right;
-        }
-    }
-
-    .ewAdmin > .dropdown .dropdown-menu {
-        a {
-            margin: 0 !important;
-        }
-
-        .updown,
-        .divider {
-            clear: both
-        }
-    }
-
-    .ewAdmin > .btn-default i {
-        color: $admin-header-color-link !important;
-    }
-
-    .ewAdmin > .btn-default,
-    .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown > .btn-primary,
-    .ewAdmin > .dropdown > .btn-default {
-        //padding: 0px 3px 3px 5px !important;
-        font-weight: 400 ;
-        border-radius: 3px ;
-        border: 0px ;
-    }
-
-    .ewAdmin > .ui-draggable-handle i {
-        top: 2px;
-        position: relative;
-    }
-
-    .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown > .btn-primary {
-        background: $admin-header-color-link !important;
-        border: 0px !important;
-        color: #fff !important;
-    }
-
-    .ewAdmin > .btn-default,
-    .ewAdmin > .dropdown > .btn-default {
-        background: lighten($admin-header-color-link, 25%) ;
-        border-color: lighten($admin-header-color-link, 5%) ;
-        border: 1px !important;
-        color: $admin-header-color-link !important;
-
-        &:hover {
-            background: lighten($admin-header-color-link, 32%) ;
-        }
-
-        font-family: $admin-header-font ;
-        text-shadow: none;
-        border-width: 1px;
-        letter-spacing: 0;
-        text-transform: none !important;
-        letter-spacing: normal !important;
-
-        i {
-            margin: 0;
-        }
-    }
-
-    a.arrowbutton span, a.drag span {
-        display: none;
-    }
-
-    .btn-primary,
-    .btn-info,
-    .btn-default {
-        &:after {
-            content: none !important
-        }
-
-        &:before {
-            content: none !important
-        }
-    }
-
-    .editable > div.ewAdmin.options {
-        position: relative
-    }
-}
 
 .moduleDrag {
     @include clearfix;
@@ -976,15 +741,15 @@ body.ewAdmin.layout-AdmHome {
         height: 175px;
     }
 
-    .btn, .btn-sm, .btn-xs {
+    /*.btn, .btn-sm, .btn-xs {
         margin-right: 1px;
-    }
+    }*/
 
     a.arrowbutton span, a.drag span {
         display: none;
     }
 
-    .btn-xs {
+    /*.btn-xs {
         padding: 4px 10px;
     }
 
@@ -994,13 +759,13 @@ body.ewAdmin.layout-AdmHome {
 
     .btn-primary i {
         color: $admin-header-color !important;
-    }
+    }*/
 
     .btn-toolbar {
         padding-bottom: 10px;
     }
 
-    .btn-primary,
+    /*.btn-primary,
     .btn-info,
     .btn-default {
         &:after {
@@ -1100,7 +865,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         border-width: 1px;
-    }
+    }*/
 
 
     .dropdown {
@@ -1139,7 +904,7 @@ body.ewAdmin.layout-AdmHome {
         color: #333333;
     }
 
-    .panel-heading {
+    /*.panel-heading {
         legend {
             border-bottom: 0;
             margin-bottom: 0;
@@ -1150,11 +915,11 @@ body.ewAdmin.layout-AdmHome {
             margin-bottom: 10px;
             font-size: 18px;
         }
-    }
+    }*/
 
-    .panel-body > .alert:last-child {
+    /*.panel-body > .alert:last-child {
         margin-bottom: 0;
-    }
+    }*/
 
     table.manage-lookups .buttonCell {
         min-width: 210px;
@@ -1211,44 +976,7 @@ body.ewAdmin.layout-AdmHome {
     font-size: 13px !important;
 }
 
-.ewAdmin .open .dropdown-menu {
-    background-color: $admin-header-bg-light;
-    font-size: 1em !important;
-    margin-top: -1px;
-    min-width: 160px !important;
 
-    &:before,
-    &:after {
-        display: none !important
-    }
-
-    > li > a {
-        color: $admin-header-color;
-
-        &:hover,
-        &:focus {
-            color: $admin-header-color-link;
-            background-color: transparent;
-        }
-    }
-
-    li {
-        list-style: none !important;
-        margin-left: 0 !important;
-        background: none !important;
-        padding: 0px;
-        float: none !important;
-    }
-
-    > .active > a {
-        &,
-        &:hover,
-        &:focus {
-            color: $admin-header-color;
-            background-color: transparent;
-        }
-    }
-}
 
 
 // - GUIDE
@@ -1348,9 +1076,6 @@ body.ewAdmin.layout-AdmHome {
     }
 }
 
-.ewAdmin #template_ListDirectory .btn {
-    margin-bottom: 3px;
-}
 
 
 .ewAdmin form#UserLogon h3.panel-title {
@@ -1361,163 +1086,7 @@ body.ewAdmin.layout-AdmHome {
     width: auto;
 }
 
-//ACCORDIONS
-.normalMode .panel-group .panel {
-    overflow: visible;
-}
 
-
-// - In site edit button styling
-.Site, .Email {
-    .addmodule {
-        @include clearfix();
-    }
-
-    .ewAdmin.options.addmodule {
-        border-color: lighten($admin-header-color-link, 10%) !important;
-    }
-
-    .conditional-block {
-        border-color: lighten($admin-header-color-warning, 10%) !important;
-    }
-
-    .conditional-note {
-        color: lighten($admin-header-color-warning, 10%) !important;
-        font-size: 11px;
-        font-weight: 400;
-        padding: 3px;
-        letter-spacing: normal;
-    }
-
-    .ewAdmin {
-        .dropdown-menu a:hover {
-            background: $admin-header-color-link;
-            color: $admin-header-color;
-        }
-
-        .addHere {
-            color: lighten($admin-header-color-link, 10%);
-        }
-    }
-
-    .dragging {
-        padding: 3px;
-        margin-bottom: 3px;
-        border: dashed 1px;
-        -moz-border-radius: 0px;
-        border-radius: 0px;
-        border-color: lighten($admin-header-color-link, 10%) !important;
-        z-index: 10000;
-    }
-
-    .ewAdmin .dropdown-menu li.title {
-        margin: 3px 5px 2px 20px !important;
-        color: rgba(0,0,0,0.4);
-        padding: 0;
-    }
-
-    #mainTitle .ewAdmin .dropdown-menu {
-        li a,
-        li.title {
-            font-size: 14px;
-        }
-    }
-
-    .ewAdmin.options.addmodule, .conditional-block {
-        padding: 3px;
-        margin-bottom: 3px;
-        border: dashed 1px;
-        -moz-border-radius: 0px;
-        border-radius: 0px;
-    }
-
-    .ewAdmin.options.addmodule a.btn {
-        margin-right: 0;
-        margin-left: 4px;
-    }
-
-    .ewAdmin .dropdown {
-        font-weight: normal;
-        font-size: 13px !important;
-        line-height: 20px !important;
-        text-decoration: none;
-        -moz-border-radius: 0px;
-        border-radius: 0px;
-        height: auto !important;
-    }
-}
-
-.ewAdmin .dropdown-menu li.updown {
-    margin: 9px 5px 4px 20px !important;
-    min-width: 133px;
-    @include clearfix();
-}
-
-.ewAdmin .dropdown-menu li.updown a {
-    display: block;
-    margin: 0;
-    background: none !important;
-    border: 0;
-    float: left;
-    clear: none;
-    padding: 0 !important;
-}
-
-.ewAdmin .dropdown-menu li.updown a i {
-    vertical-align: middle;
-    text-align: center;
-    width: 10px;
-    display: block;
-    float: left;
-    margin-right: 27px;
-}
-
-.ewAdmin .dropdown-menu li.updown a i.fa-step-backward,
-.ewAdmin .dropdown-menu li.updown a i.fa-step-forward {
-    padding-top: 2px;
-}
-
-.ewAdmin .dropdown-menu li.updown a i.fa-step-forward {
-    margin-right: 0;
-}
-
-.Site, .Email {
-    .ewAdmin .btn, .ewAdmin .dropdown {
-        font-weight: normal;
-        font-size: 13px !important;
-        line-height: 20px !important;
-        text-decoration: none;
-        -moz-border-radius: 0px;
-        border-radius: 0px;
-        height: auto !important;
-        text-decoration: none !important;
-    }
-
-    .ewAdmin .btn-xs {
-        padding: 1px 5px;
-    }
-
-    .ewAdmin .addHere {
-        font-size: 11px;
-        font-weight: 400;
-        padding: 3px;
-        letter-spacing: normal;
-    }
-
-    #isotope-module .editable {
-        position: relative;
-        display: block;
-    }
-
-    #isotope-module div.options {
-        position: relative;
-        display: block;
-    }
-
-    .ewAdmin .masonary-size .dropdown-menu li a {
-        padding: 3px 5px !important;
-    }
-}
 
 form#AddModule {
     div.panel {
