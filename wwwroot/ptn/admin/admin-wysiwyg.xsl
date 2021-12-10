@@ -364,344 +364,9 @@
     </xsl:choose>
   </xsl:template>
 
-  <!---->
-  <xsl:template match="Page" mode="addModule">
-    <xsl:param name="text"/>
-    <xsl:param name="position"/>
-    <xsl:param name="class"/>
-    <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
-      <xsl:attribute name="class">
-        <xsl:text>moduleContainer</xsl:text>
-        <xsl:if test="$class!=''">
-          <xsl:text> </xsl:text>
-          <xsl:value-of select="$class"/>
-        </xsl:if>
-      </xsl:attribute>
-      <div class="ewAdmin options">
-        <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
-          <i class="fa fa-th-large">&#160;</i>&#160;
-          <xsl:value-of select="$text"/>
-        </a>
-      </div>
-      <div class="addHere">
-        <xsl:text>Add a Module Here </xsl:text>
-        <xsl:value-of select="$position"/>
-      </div>
-    </xsl:if>
-
-    <xsl:choose>
-      <xsl:when test="/Page/Contents/Content[@position = $position]">
-        <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <!-- if no contnet, need a space for the compiling of the XSL. -->
-        <xsl:text>&#160;</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 
 
-
-
-
-  <xsl:template match="Page" mode="addModule">
-    <xsl:param name="text"/>
-    <xsl:param name="position"/>
-    <xsl:param name="class"/>
-    <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
-      <xsl:attribute name="class">
-        <xsl:text>moduleContainer</xsl:text>
-        <xsl:if test="$class!=''">
-          <xsl:text> </xsl:text>
-          <xsl:value-of select="$class"/>
-        </xsl:if>
-      </xsl:attribute>
-      <div class="ewAdmin options addmodule">
-        <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
-          <i class="fa fa-th-large">&#160;</i>&#160;
-          <xsl:value-of select="$text"/>
-        </a>
-        <div class="addHere">
-          <xsl:text>Add a Module Here </xsl:text>
-          <xsl:value-of select="$position"/>
-        </div>
-      </div>
-    </xsl:if>
-    <xsl:choose>
-      <xsl:when test="/Page/Contents/Content[@position = $position]">
-        <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <!-- if no contnet, need a space for the compiling of the XSL. -->
-        <xsl:text>&#160;</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
-  <xsl:template match="Page[@cssFramework='bs3']" mode="addModule">
-    <xsl:param name="text"/>
-    <xsl:param name="position"/>
-    <xsl:param name="class"/>
-    <xsl:choose>
-      <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">
-        <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
-          <section>
-            <xsl:if test="$class='container'">
-              <xsl:attribute name="class">wrapper-sm</xsl:attribute>
-            </xsl:if>
-            <div id="{$position}" class="{$class} moduleContainer">
-              <div class="ewAdmin options addmodule">
-                <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
-                  <i class="fa fa-th-large">&#160;</i>&#160;
-                  <xsl:value-of select="$text"/>
-                </a>
-                <div class="addHere">
-                  <strong>
-                    <xsl:value-of select="$position"/>
-                  </strong>
-                  <xsl:text> - drag a module here </xsl:text>
-                </div>
-              </div>
-            </div>
-          </section>
-        </xsl:if>
-        <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
-          <xsl:variable name="backgroundResized">
-            <xsl:if test="@backgroundImage!=''">
-              <xsl:call-template name="resize-image">
-                <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="1920"/>
-                <xsl:with-param name="max-height" select="1920"/>
-                <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-1920</xsl:text>
-                  <xsl:text>/~bg-</xsl:text>
-                </xsl:with-param>
-                <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
-                <xsl:with-param name="crop" select="false()" />
-                <xsl:with-param name="no-stretch" select="true()" />
-                <xsl:with-param name="forceResize" select="false()" />
-              </xsl:call-template>
-            </xsl:if>
-          </xsl:variable>
-          <xsl:variable name="backgroundResized-xs">
-            <xsl:if test="@backgroundImage!=''">
-              <xsl:call-template name="resize-image">
-                <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="575"/>
-                <xsl:with-param name="max-height" select="575"/>
-                <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-575</xsl:text>
-                  <xsl:text>/~bg-</xsl:text>
-                </xsl:with-param>
-                <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
-                <xsl:with-param name="crop" select="false()" />
-                <xsl:with-param name="no-stretch" select="true()" />
-                <xsl:with-param name="forceResize" select="false()" />
-              </xsl:call-template>
-            </xsl:if>
-          </xsl:variable>
-          <xsl:variable name="backgroundResized-sm">
-            <xsl:if test="@backgroundImage!=''">
-              <xsl:call-template name="resize-image">
-                <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="767"/>
-                <xsl:with-param name="max-height" select="767"/>
-                <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-767</xsl:text>
-                  <xsl:text>/~bg-</xsl:text>
-                </xsl:with-param>
-                <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
-                <xsl:with-param name="crop" select="false()" />
-                <xsl:with-param name="no-stretch" select="true()" />
-                <xsl:with-param name="forceResize" select="false()" />
-              </xsl:call-template>
-            </xsl:if>
-          </xsl:variable>
-          <xsl:variable name="backgroundResized-md">
-            <xsl:if test="@backgroundImage!=''">
-              <xsl:call-template name="resize-image">
-                <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="991"/>
-                <xsl:with-param name="max-height" select="991"/>
-                <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-991</xsl:text>
-                  <xsl:text>/~bg-</xsl:text>
-                </xsl:with-param>
-                <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
-                <xsl:with-param name="crop" select="false()" />
-                <xsl:with-param name="no-stretch" select="true()" />
-                <xsl:with-param name="forceResize" select="false()" />
-              </xsl:call-template>
-            </xsl:if>
-          </xsl:variable>
-          <xsl:variable name="backgroundResized-lg">
-            <xsl:if test="@backgroundImage!=''">
-              <xsl:call-template name="resize-image">
-                <xsl:with-param name="path" select="@backgroundImage"/>
-                <xsl:with-param name="max-width" select="1199"/>
-                <xsl:with-param name="max-height" select="1199"/>
-                <xsl:with-param name="file-prefix">
-                  <xsl:text>~bg-1199</xsl:text>
-                  <xsl:text>/~bg-</xsl:text>
-                </xsl:with-param>
-                <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
-                <xsl:with-param name="crop" select="false()" />
-                <xsl:with-param name="no-stretch" select="true()" />
-                <xsl:with-param name="forceResize" select="false()" />
-              </xsl:call-template>
-            </xsl:if>
-          </xsl:variable>
-          <xsl:variable name="backgroundResized-webp" select="ew:CreateWebP($backgroundResized)"/>
-          <xsl:variable name="backgroundResized-xs-webp" select="ew:CreateWebP($backgroundResized-xs)"/>
-          <xsl:variable name="backgroundResized-sm-webp" select="ew:CreateWebP($backgroundResized-sm)"/>
-          <xsl:variable name="backgroundResized-md-webp" select="ew:CreateWebP($backgroundResized-md)"/>
-          <xsl:variable name="backgroundResized-lg-webp" select="ew:CreateWebP($backgroundResized-lg)"/>
-          <xsl:variable name="backgroundResized-xxl-webp" select="ew:CreateWebP(@backgroundImage)"/>
-          <section class="wrapper-sm {@background}">
-            <xsl:attribute name="class">
-              <xsl:text>wrapper-sm </xsl:text>
-              <xsl:value-of select="@background"/>
-              <xsl:apply-templates select="." mode="hideScreens" />
-              <xsl:if test="@marginBelow='false'">
-                <xsl:text> margin-bottom-0 </xsl:text>
-              </xsl:if>
-              <xsl:if test="@data-stellar-background-ratio!='10'">
-                <xsl:text> parallax-wrapper </xsl:text>
-              </xsl:if>
-            </xsl:attribute>
-            <xsl:if test="@data-stellar-background-ratio!='10'">
-              <xsl:attribute name="data-parallax-speed">
-                <xsl:if test="@data-stellar-background-ratio&lt;'5'">
-                  <xsl:text>1.3</xsl:text>
-                </xsl:if>
-                <xsl:if test="@data-stellar-background-ratio&gt;='5' and @data-stellar-background-ratio&lt;'10'">
-                  <xsl:text>1.6</xsl:text>
-                </xsl:if>
-                <xsl:if test="@data-stellar-background-ratio&gt;='10' and @data-stellar-background-ratio&lt;'15'">
-                  <xsl:text>2</xsl:text>
-                </xsl:if>
-                <xsl:if test="@data-stellar-background-ratio&gt;='15' and @data-stellar-background-ratio&lt;'20'">
-                  <xsl:text>3</xsl:text>
-                </xsl:if>
-                <xsl:if test="@data-stellar-background-ratio&gt;='20' and @data-stellar-background-ratio&lt;'25'">
-                  <xsl:text>4</xsl:text>
-                </xsl:if>
-                <xsl:if test="@data-stellar-background-ratio&gt;='25'">
-                  <xsl:text>5</xsl:text>
-                </xsl:if>
-              </xsl:attribute>
-            </xsl:if>
-            <xsl:if test="@data-stellar-background-ratio!='0'">
-              <!--<xsl:attribute name="data-stellar-background-ratio">
-                <xsl:value-of select="(@data-stellar-background-ratio div 10)"/>
-              </xsl:attribute>-->
-            </xsl:if>
-            <xsl:if test="@backgroundImage!=''">
-              <xsl:choose>
-                <xsl:when test="@data-stellar-background-ratio!='0'">
-                  <xsl:choose>
-                    <xsl:when test="@data-stellar-background-ratio!='10'">
-                      <xsl:attribute name="style">
-                        <xsl:if test="@minHeight!=''">
-                          <xsl:text>min-height:</xsl:text>
-                          <xsl:value-of select="@minHeight"/>
-                          <xsl:text>px;</xsl:text>
-                        </xsl:if>
-                      </xsl:attribute>
-                      <div class="parallax"
-                           data-parallax-image="{$backgroundResized}"  data-parallax-image-webp="{$backgroundResized-webp}"
-                           data-parallax-image-xs="{$backgroundResized-xs}"  data-parallax-image-xs-webp="{$backgroundResized-xs-webp}"
-                           data-parallax-image-sm="{$backgroundResized-sm}"  data-parallax-image-sm-webp="{$backgroundResized-sm-webp}"
-                           data-parallax-image-md="{$backgroundResized-md}"  data-parallax-image-md-webp="{$backgroundResized-md-webp}"
-                           data-parallax-image-lg="{$backgroundResized-lg}"  data-parallax-image-lg-webp="{$backgroundResized-lg-webp}"
-                           data-parallax-image-xxl="{@backgroundImage}">
-                        <xsl:text> </xsl:text>
-                      </div>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:attribute name="style">
-                        <xsl:text>background-image: url('</xsl:text>
-                        <xsl:value-of select="@backgroundImage"/>
-                        <xsl:text>');</xsl:text>
-                        <xsl:if test="@minHeight!=''">
-                          <xsl:text>min-height:</xsl:text>
-                          <xsl:value-of select="@minHeight"/>
-                          <xsl:text>px;</xsl:text>
-                        </xsl:if>
-                      </xsl:attribute>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:attribute name="style">
-                    <xsl:text>background-image: url('</xsl:text>
-                    <xsl:value-of select="@backgroundImage"/>
-                    <xsl:text>');</xsl:text>
-                    <xsl:if test="@minHeight!=''">
-                      <xsl:text>min-height:</xsl:text>
-                      <xsl:value-of select="@minHeight"/>
-                      <xsl:text>px;</xsl:text>
-                    </xsl:if>
-                  </xsl:attribute>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:if>
-            <xsl:choose>
-              <xsl:when test="@fullWidth='true'">
-                <div class="fullwidthContainer">
-                  <xsl:apply-templates select="." mode="displayModule"/>
-                  <xsl:text> </xsl:text>
-                </div>
-              </xsl:when>
-              <xsl:otherwise>
-                <div class="{$class} content">
-                  <xsl:apply-templates select="." mode="displayModule"/>
-                  <xsl:text> </xsl:text>
-                </div>
-              </xsl:otherwise>
-            </xsl:choose>
-          </section>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
-          <xsl:attribute name="class">
-            <xsl:text>moduleContainer</xsl:text>
-            <xsl:if test="$class!=''">
-              <xsl:text> </xsl:text>
-              <xsl:value-of select="$class"/>
-            </xsl:if>
-          </xsl:attribute>
-          <div class="ewAdmin options addmodule">
-            <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
-              <i class="fa fa-th-large">&#160;</i>&#160;<xsl:value-of select="$text"/>
-            </a>
-            <div class="addHere">
-              <strong>
-                <xsl:value-of select="$position"/>
-              </strong>
-              <xsl:text> - drag a module here </xsl:text>
-            </div>
-          </div>
-        </xsl:if>
-        <xsl:choose>
-          <xsl:when test="/Page/Contents/Content[@position = $position]">
-            <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <!-- if no contnet, need a space for the compiling of the XSL. -->
-            <xsl:text>&#160;</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
+  
 
 
   <!---->
@@ -1023,7 +688,7 @@
 
               </xsl:variable>
               <div class="dropdown pull-right">
-                <a href="#" class="btn btn-default btn-xs" data-toggle="dropdown">
+                <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-plus">&#160;</i>&#160;
                   Add&#160;
                   <i class="fa fa-caret-down">&#160;</i>
@@ -1270,7 +935,7 @@
         </xsl:attribute>
         <xsl:if test="@type='Module' and not(starts-with(@position,'column1') and $page/@layout='Modules_Masonary')">
           <a href="#" class="btn btn-primary btn-xs drag pull-right">
-            <i class="fa fa-arrows">&#160;</i>
+            <i class="fas fa-arrows-alt">&#160;</i>
             <span>Move in page</span>
           </a>
         </xsl:if>
@@ -1316,13 +981,13 @@
           </div>
         </xsl:if>
         <div class="dropdown pull-right">
-          <button href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown" aria-expanded="false">
+          <a href="#" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
             <xsl:choose>
               <xsl:when test="@contentType!=''">
-                <i class="fas fa-gears fa-lg">&#160;</i>&#160;
+                <i class="fas fa-cog fa-lg">&#160;</i>&#160;
               </xsl:when>
               <xsl:otherwise>
-                <i class="fas fa-edit fa-lg">&#160;</i>&#160;
+                <i class="far fa-edit">&#160;</i>&#160;
               </xsl:otherwise>
             </xsl:choose>
 
@@ -1337,8 +1002,8 @@
             <xsl:if test="@status=4">
               <xsl:text>&#160;[preview]</xsl:text>
             </xsl:if>
-            <i class="fa fa-caret-down">&#160;</i>
-          </button>
+            <i class="fas fa-caret-down">&#160;</i>
+          </a>
 
           <ul class="dropdown-menu">
             <xsl:choose>
@@ -1403,7 +1068,7 @@
               <xsl:otherwise>
                 <li>
                   <a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}" title="Click here to edit this content">
-                    <i class="fa fa-pencil-square">&#160;</i>&#160;Edit
+                    <i class="fas fa-edit">&#160;</i>&#160;Edit
                   </a>
                 </li>
               </xsl:otherwise>
@@ -1420,14 +1085,14 @@
               <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='MoveContent']">
                 <li>
                   <a href="?ewCmd=MoveContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to move to another page">
-                    <i class="fa fa-mail-forward">&#160;</i>&#160;Move
+                    <i class="fas fa-share">&#160;</i>&#160;Move
                   </a>
                 </li>
               </xsl:if>
               <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='LocateContent']">
                 <li>
                   <a href="?ewCmd=LocateContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to locate on other pages">
-                    <i class="fa fa-mail-reply-all fa-flip-horizontal">&#160;</i>&#160;Locations
+                    <i class="fas fa-angle-double-right">&#160;</i>&#160;Locations
                   </a>
                 </li>
               </xsl:if>
@@ -1510,7 +1175,7 @@
             <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='AwaitingApproval']">
               <li>
                 <a href="?ewCmd=ContentVersions&amp;pgid={/Page/@id}&amp;id={@id}{$subTypeOption}" title="Click here to view version history">
-                  <i class="fa fa-copy">&#160;</i>&#160;Version History -<xsl:value-of select="$sortBy"/>
+                  <i class="fa fa-history">&#160;</i>&#160;Version History -<xsl:value-of select="$sortBy"/>
                 </a>
               </li>
             </xsl:if>

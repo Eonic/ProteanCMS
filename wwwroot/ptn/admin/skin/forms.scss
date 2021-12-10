@@ -109,6 +109,10 @@ form.ewXform {
             }
         }
     }
+
+    .alert-info {
+        color:#fff;
+    }
 }
 #pick-by-image {
     .accordion-button:not(.collapsed) {
@@ -148,6 +152,22 @@ form.ewXform {
                 border-color: lighten($admin-primary,10%);
                 color: $admin-primary;
             }
+        }
+    }
+}
+.membership-user-list {
+    .col-sm-1 {
+        width: 70px;
+        text-align: center;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .membership-controls {
+        a {
+            padding:0px 5px
         }
     }
 }

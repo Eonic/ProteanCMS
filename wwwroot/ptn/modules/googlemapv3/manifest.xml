@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  
+  <ModuleTypes>
+    <ModuleGroup name="Basic Content" icon="fa-pencil">
+      <Module type="GoogleMapv3" name="Google Map">NEW IMPROVED Google Map using latest integration</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+  
+</PageLayouts>

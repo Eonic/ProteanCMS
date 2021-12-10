@@ -181,6 +181,17 @@
                 </xsl:for-each>
               </div>
             </xsl:when>
+            <!--<xsl:when test="contains(@class,'accordion-form-container') ">
+              --><!--<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">--><!--
+                <xsl:for-each select="group | repeat">
+                  <xsl:apply-templates select="." mode="xform">
+                    <xsl:with-param name="class">
+                      <xsl:text>accordion-collapse collapse show</xsl:text>
+                    </xsl:with-param>
+                  </xsl:apply-templates>
+                </xsl:for-each>
+              
+            </xsl:when>-->
             <xsl:otherwise>
               <xsl:apply-templates select="group | repeat " mode="xform"/>
             </xsl:otherwise>
@@ -206,6 +217,8 @@
     </form>
     <xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
   </xsl:template>
+
+  
 
   <xsl:template match="group[(contains(@class,'2col') or contains(@class,'2Col')) and ancestor::Page[@adminMode='true']]" mode="xform">
     <xsl:if test="label and not(parent::Content)">
@@ -237,6 +250,22 @@
         </xsl:for-each>
       </div>
     </fieldset>
+  </xsl:template>
+
+  <xsl:template match="group[(contains(@class,'accordion-form-container'))]" mode="xform">
+
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <xsl:for-each select="group">
+          <xsl:apply-templates select="." mode="xform">
+            <xsl:with-param name="class">
+              <xsl:text> </xsl:text>
+
+            </xsl:with-param>
+          </xsl:apply-templates>
+        </xsl:for-each>
+      </div>
+      </div>
   </xsl:template>
 
 

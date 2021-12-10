@@ -1,222 +1,222 @@
 ﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
   <!-- ############## News Articles ##############   -->
-<!-- NewsArticle Module -->
-<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
-  <!-- Set Variables -->
-  <xsl:variable name="contentType" select="@contentType" />
-  <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-  <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-  <xsl:variable name="contentList">
-    <xsl:apply-templates select="." mode="getContent">
-      <xsl:with-param name="contentType" select="$contentType" />
-      <xsl:with-param name="startPos" select="$startPos" />
-    </xsl:apply-templates>
-  </xsl:variable>
-  <xsl:variable name="totalCount">
-    <xsl:choose>
-      <xsl:when test="@display='related'">
-        <xsl:value-of select="count(Content[@type=$contentType])"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-  <!--responsive columns variables-->
-  <xsl:variable name="xsColsToShow">
-    <xsl:choose>
-      <xsl:when test="@xsCol='2'">2</xsl:when>
-      <xsl:otherwise>1</xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-  <xsl:variable name="smColsToShow">
-    <xsl:choose>
-      <xsl:when test="@smCol and @smCol!=''">
-        <xsl:value-of select="@smCol"/>
-      </xsl:when>
-      <xsl:otherwise>2</xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-  <xsl:variable name="mdColsToShow">
-    <xsl:choose>
-      <xsl:when test="@mdCol and @mdCol!=''">
-        <xsl:value-of select="@mdCol"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="@cols"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-  <!--end responsive columns variables-->
-  <!-- Output Module -->
-  <div class="clearfix NewsList">
-    <xsl:if test="@carousel='true'">
-      <xsl:attribute name="class">
-        <xsl:text>clearfix NewsList content-scroller</xsl:text>
-      </xsl:attribute>
-    </xsl:if>
-    <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
-      <!--responsive columns-->
-      <xsl:attribute name="class">
-        <xsl:text>cols</xsl:text>
-        <xsl:choose>
-          <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
-          <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="@smCol and @smCol!=''">
-          <xsl:text> sm-content-</xsl:text>
-          <xsl:value-of select="@smCol"/>
-        </xsl:if>
-        <xsl:if test="@mdCol and @mdCol!=''">
-          <xsl:text> md-content-</xsl:text>
-          <xsl:value-of select="@mdCol"/>
-        </xsl:if>
-        <xsl:text> cols</xsl:text>
-        <xsl:value-of select="@cols"/>
-        <xsl:if test="@mdCol and @mdCol!=''">
-          <xsl:text> content-cols-responsive</xsl:text>
-        </xsl:if>
-      </xsl:attribute>
-      <!--end responsive columns-->
-      <xsl:if test="@autoplay !=''">
-        <xsl:attribute name="data-autoplay">
-          <xsl:value-of select="@autoplay"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="@autoPlaySpeed !=''">
-        <xsl:attribute name="data-autoPlaySpeed">
-          <xsl:value-of select="@autoPlaySpeed"/>
-        </xsl:attribute>
-      </xsl:if>
-      <!-- If Stepper, display Stepper -->
+  <!-- NewsArticle Module -->
+  <xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
+    <!-- Set Variables -->
+    <xsl:variable name="contentType" select="@contentType" />
+    <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+    <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+    <xsl:variable name="contentList">
+      <xsl:apply-templates select="." mode="getContent">
+        <xsl:with-param name="contentType" select="$contentType" />
+        <xsl:with-param name="startPos" select="$startPos" />
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="totalCount">
       <xsl:choose>
-        <xsl:when test="@linkArticle='true'">
-          <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-            <xsl:with-param name="sortBy" select="@sortBy"/>
-          </xsl:apply-templates>
+        <xsl:when test="@display='related'">
+          <xsl:value-of select="count(Content[@type=$contentType])"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-            <xsl:with-param name="sortBy" select="@sortBy"/>
-          </xsl:apply-templates>
+          <xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:if test="@stepCount != '0'">
-        <div class="terminus">&#160;</div>
-        <xsl:apply-templates select="/" mode="genericStepper">
-          <xsl:with-param name="articleList" select="$contentList"/>
-          <xsl:with-param name="noPerPage" select="@stepCount"/>
-          <xsl:with-param name="startPos" select="$startPos"/>
-          <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-          <xsl:with-param name="totalCount" select="$totalCount"/>
-        </xsl:apply-templates>
+    </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
+    <!-- Output Module -->
+    <div class="clearfix NewsList">
+      <xsl:if test="@carousel='true'">
+        <xsl:attribute name="class">
+          <xsl:text>clearfix NewsList content-scroller</xsl:text>
+        </xsl:attribute>
       </xsl:if>
-      <xsl:text> </xsl:text>
+      <div class="row cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>row cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
+        <xsl:if test="@autoplay !=''">
+          <xsl:attribute name="data-autoplay">
+            <xsl:value-of select="@autoplay"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@autoPlaySpeed !=''">
+          <xsl:attribute name="data-autoPlaySpeed">
+            <xsl:value-of select="@autoPlaySpeed"/>
+          </xsl:attribute>
+        </xsl:if>
+        <!-- If Stepper, display Stepper -->
+        <xsl:choose>
+          <xsl:when test="@linkArticle='true'">
+            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+              <xsl:with-param name="sortBy" select="@sortBy"/>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+              <xsl:with-param name="sortBy" select="@sortBy"/>
+            </xsl:apply-templates>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="@stepCount != '0'">
+          <div class="terminus">&#160;</div>
+          <xsl:apply-templates select="/" mode="genericStepper">
+            <xsl:with-param name="articleList" select="$contentList"/>
+            <xsl:with-param name="noPerPage" select="@stepCount"/>
+            <xsl:with-param name="startPos" select="$startPos"/>
+            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+            <xsl:with-param name="totalCount" select="$totalCount"/>
+          </xsl:apply-templates>
+        </xsl:if>
+        <xsl:text> </xsl:text>
+      </div>
     </div>
-  </div>
-</xsl:template>
+  </xsl:template>
 
-<xsl:template match="Content[@type='Module' and @moduleType='NewsListDateMenu']" mode="displayBrief">
-  <xsl:variable name="contentType" select="@contentType" />
-  <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-  <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-  <xsl:variable name="dateQuery" select="@dateQuery"/>
-  <div class="NewsListDateMenu" id="subMenu">
-    <ul class="nav nav-pills nav-stacked">
-      <xsl:apply-templates select="Menu/MenuItem" mode="submenuitem2"/>
-    </ul>
-  </div>
-</xsl:template>
+  <xsl:template match="Content[@type='Module' and @moduleType='NewsListDateMenu']" mode="displayBrief">
+    <xsl:variable name="contentType" select="@contentType" />
+    <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+    <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+    <xsl:variable name="dateQuery" select="@dateQuery"/>
+    <div class="NewsListDateMenu" id="subMenu">
+      <ul class="nav nav-pills nav-stacked">
+        <xsl:apply-templates select="Menu/MenuItem" mode="submenuitem2"/>
+      </ul>
+    </div>
+  </xsl:template>
 
-<xsl:template match="Content[@type='Module' and @title='NewsListDateMenu']" mode="moduleTitle">
-  <xsl:variable name="dateQuery" select="$page/Contents/Content[@type='Module' and @moduleType='NewsListDateMenu']/@dateQuery"/>
-  <xsl:variable name="dateTitle">
-    <xsl:for-each select="$page/Contents/Content[@type='Module' and @moduleType='NewsListDateMenu']/Menu/MenuItem[@id=$dateQuery]">
-      <xsl:value-of select="@name"/>
-    </xsl:for-each>
-  </xsl:variable>
-  <xsl:variable name="title">
-    <span>
-      <xsl:value-of select="$dateTitle"/>
-      <xsl:text> </xsl:text>
-    </span>
-  </xsl:variable>
-  <xsl:choose>
-    <xsl:when test="@iconStyle='Centre'">
-      <div class="center-block">
+  <xsl:template match="Content[@type='Module' and @title='NewsListDateMenu']" mode="moduleTitle">
+    <xsl:variable name="dateQuery" select="$page/Contents/Content[@type='Module' and @moduleType='NewsListDateMenu']/@dateQuery"/>
+    <xsl:variable name="dateTitle">
+      <xsl:for-each select="$page/Contents/Content[@type='Module' and @moduleType='NewsListDateMenu']/Menu/MenuItem[@id=$dateQuery]">
+        <xsl:value-of select="@name"/>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="title">
+      <span>
+        <xsl:value-of select="$dateTitle"/>
+        <xsl:text> </xsl:text>
+      </span>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="@iconStyle='Centre'">
+        <div class="center-block">
+          <xsl:if test="@icon!=''">
+            <i>
+              <xsl:attribute name="class">
+                <xsl:text>fa fa-3x center-block </xsl:text>
+                <xsl:value-of select="@icon"/>
+              </xsl:attribute>
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
+          </xsl:if>
+          <xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
+            <span class="upload-icon">
+              <img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+            </span>
+          </xsl:if>
+          <xsl:if test="@title!=''">
+            <span>
+              <xsl:copy-of select="ms:node-set($title)" />
+              <xsl:text> </xsl:text>
+            </span>
+          </xsl:if>
+        </div>
+      </xsl:when>
+      <xsl:otherwise>
         <xsl:if test="@icon!=''">
           <i>
             <xsl:attribute name="class">
-              <xsl:text>fa fa-3x center-block </xsl:text>
+              <xsl:text>fa </xsl:text>
               <xsl:value-of select="@icon"/>
             </xsl:attribute>
             <xsl:text> </xsl:text>
           </i>
-          <xsl:text> </xsl:text>
+          <span class="space">&#160;</span>
         </xsl:if>
-        <xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
-          <span class="upload-icon">
-            <img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
-          </span>
+        <xsl:if test="@uploadIcon!='' and @uploadIcon!='_'  and @uploadIcon!=' '">
+          <img src="{@uploadIcon}" alt="icon"/>
         </xsl:if>
-        <xsl:if test="@title!=''">
-          <span>
-            <xsl:copy-of select="ms:node-set($title)" />
-            <xsl:text> </xsl:text>
-          </span>
-        </xsl:if>
-      </div>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:if test="@icon!=''">
-        <i>
-          <xsl:attribute name="class">
-            <xsl:text>fa </xsl:text>
-            <xsl:value-of select="@icon"/>
-          </xsl:attribute>
-          <xsl:text> </xsl:text>
-        </i>
-        <span class="space">&#160;</span>
-      </xsl:if>
-      <xsl:if test="@uploadIcon!='' and @uploadIcon!='_'  and @uploadIcon!=' '">
-        <img src="{@uploadIcon}" alt="icon"/>
-      </xsl:if>
-      <xsl:copy-of select="ms:node-set($title)" />
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
+        <xsl:copy-of select="ms:node-set($title)" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
-<xsl:template match="MenuItem" mode="submenuitem2">
-  <xsl:variable name="dateQuery" select="ancestor::Content/@dateQuery"/>
-  <li>
-    <xsl:variable name="class">
-      <xsl:if test="position()=1">
-        <xsl:text>first </xsl:text>
+  <xsl:template match="MenuItem" mode="submenuitem2">
+    <xsl:variable name="dateQuery" select="ancestor::Content/@dateQuery"/>
+    <li>
+      <xsl:variable name="class">
+        <xsl:if test="position()=1">
+          <xsl:text>first </xsl:text>
+        </xsl:if>
+        <xsl:if test="position()=last()">
+          <xsl:text>last </xsl:text>
+        </xsl:if>
+        <xsl:if test="@id=$dateQuery">
+          <xsl:text>active </xsl:text>
+        </xsl:if>
+        <xsl:if test="descendant::MenuItem[@id=$dateQuery] and @url!='/'">
+          <xsl:text>active </xsl:text>
+        </xsl:if>
+      </xsl:variable>
+      <xsl:apply-templates select="self::MenuItem" mode="menuLink">
+        <xsl:with-param name="class" select="$class"/>
+      </xsl:apply-templates>
+      <xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">
+        <ul>
+          <xsl:attribute name="class">
+            <xsl:text>nav nav-pills</xsl:text>
+            <!--TS Theme specfic setting must not be here - Moved to Layout XSL -->
+          </xsl:attribute>
+          <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
+        </ul>
       </xsl:if>
-      <xsl:if test="position()=last()">
-        <xsl:text>last </xsl:text>
-      </xsl:if>
-      <xsl:if test="@id=$dateQuery">
-        <xsl:text>active </xsl:text>
-      </xsl:if>
-      <xsl:if test="descendant::MenuItem[@id=$dateQuery] and @url!='/'">
-        <xsl:text>active </xsl:text>
-      </xsl:if>
-    </xsl:variable>
-    <xsl:apply-templates select="self::MenuItem" mode="menuLink">
-      <xsl:with-param name="class" select="$class"/>
-    </xsl:apply-templates>
-    <xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">
-      <ul>
-        <xsl:attribute name="class">
-          <xsl:text>nav nav-pills</xsl:text>
-          <!--TS Theme specfic setting must not be here - Moved to Layout XSL -->
-        </xsl:attribute>
-        <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
-      </ul>
-    </xsl:if>
-  </li>
-</xsl:template>
+    </li>
+  </xsl:template>
 
   <!-- NewsArticle Brief -->
   <xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
@@ -225,12 +225,12 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem list-group-item newsarticle">
+    <div class="col listItem newsarticle">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item NewsArticle'"/>
+        <xsl:with-param name="class" select="'col listItem newsarticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <div class="lIinner media">
+      <div class="lIinner">
         <xsl:if test="Images/img/@src!=''">
           <a href="{$parentURL}" title="Read More - {Headline/node()}">
             <xsl:apply-templates select="." mode="displayThumbnail"/>
@@ -238,54 +238,51 @@
           <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
           <span class="hidden">|</span>
         </xsl:if>
-        <div class="media-body">
-          <h4 class="media-heading" itemprop="headline">
-            <a href="{$parentURL}" title="Read More - {Headline/node()}">
-              <xsl:apply-templates select="." mode="getDisplayName"/>
-            </a>
-          </h4>
-          <span class="hidden" itemtype="Organization" itemprop="publisher">
-            <span itemprop="name">
-              <xsl:value-of select="$sitename"/>
-            </span>
+        <h3 class="title" itemprop="headline">
+          <a href="{$parentURL}" title="Read More - {Headline/node()}">
+            <xsl:apply-templates select="." mode="getDisplayName"/>
+          </a>
+        </h3>
+        <span class="hidden" itemtype="Organization" itemprop="publisher">
+          <span itemprop="name">
+            <xsl:value-of select="$sitename"/>
           </span>
-          <xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
-          <xsl:if test="@publish!=''">
-            <p class="date" itemprop="datePublished">
-              <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-              <xsl:call-template name="DisplayDate">
-                <xsl:with-param name="date" select="@publish"/>
-              </xsl:call-template>
-            </p>
-          </xsl:if>
-          <xsl:if test="@update!=''">
-            <p class="hidden" itemprop="dateModified">
-              <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-              <xsl:call-template name="DisplayDate">
-                <xsl:with-param name="date" select="@update"/>
-              </xsl:call-template>
-            </p>
-          </xsl:if>
+        </span>
+        <xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
+        <xsl:if test="@publish!=''">
+          <p class="date" itemprop="datePublished">
+            <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+            <xsl:call-template name="DisplayDate">
+              <xsl:with-param name="date" select="@publish"/>
+            </xsl:call-template>
+          </p>
+        </xsl:if>
+        <xsl:if test="@update!=''">
+          <p class="hidden" itemprop="dateModified">
+            <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+            <xsl:call-template name="DisplayDate">
+              <xsl:with-param name="date" select="@update"/>
+            </xsl:call-template>
+          </p>
+        </xsl:if>
 
-          <xsl:if test="Strapline/node()!=''">
-            <div class="summary" itemprop="description">
-              <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-            </div>
-          </xsl:if>
-          <div class="entryFooter">
-            <xsl:apply-templates select="." mode="displayTags"/>
-            <xsl:apply-templates select="." mode="moreLink">
-              <xsl:with-param name="link" select="$parentURL"/>
-              <xsl:with-param name="altText">
-                <xsl:value-of select="Headline/node()"/>
-              </xsl:with-param>
-            </xsl:apply-templates>
-            <xsl:text> </xsl:text>
+        <xsl:if test="Strapline/node()!=''">
+          <div class="summary" itemprop="description">
+            <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
           </div>
+        </xsl:if>
+        <div class="entryFooter">
+          <xsl:apply-templates select="." mode="displayTags"/>
+          <xsl:apply-templates select="." mode="moreLink">
+            <xsl:with-param name="link" select="$parentURL"/>
+            <xsl:with-param name="altText">
+              <xsl:value-of select="Headline/node()"/>
+            </xsl:with-param>
+          </xsl:apply-templates>
+          <xsl:text> </xsl:text>
         </div>
-        <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus">&#160;</div>
       </div>
+      <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
     </div>
   </xsl:template>
 

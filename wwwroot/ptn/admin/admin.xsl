@@ -278,13 +278,13 @@
     </xsl:choose>
   </xsl:template>
 
-  
+
 
   <xsl:template name="otherwise">
     <xsl:text>No help available. If you think there should be a help section available here or if you need help using this section please contact support.</xsl:text>
   </xsl:template>
 
-  
+
   <!-- -->
   <!--   ################################################   User Guide  ##################################################   -->
   <!-- -->
@@ -566,9 +566,9 @@
     </div>
   </xsl:template>
   <!-- -->
-  
 
-  
+
+
   <!-- -->
   <!--   ##############################   submenu for Advanced Mode   ##############################   -->
   <!-- -->
@@ -5520,66 +5520,57 @@
           </div>
         </div>
       </div>
-      <table cellpadding="0" cellspacing="0" class="table table-striped card-body">
-        <thead>
-          <tr>
-            <th>Status</th>
-            <xsl:choose>
-              <xsl:when test="ContentDetail/directory/@itemType = 'User'">
-                <th>Name</th>
-                <th>Username</th>
-                <th>
-                  <!--Member Of-->
-                </th>
-                <!--<th>Roles</th>-->
-              </xsl:when>
-              <xsl:otherwise>
-                <th>
-                  <xsl:value-of select="ContentDetail/directory/@itemType"/>
-                </th>
-                <th>
-                  <xsl:value-of select="ContentDetail/directory/@parType"/>
-                </th>
-              </xsl:otherwise>
-            </xsl:choose>
-            <th>
-              <div align="right" class="btn-group">
-
-
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
+      <div class="container-fluid faux-table membership-user-list">
+        <div class="row">
+          <div class="col-sm-1">
+            Status
+          </div>
           <xsl:choose>
-            <xsl:when test="/Page/Request/QueryString/Item[@name='LastNameStarts']">
-              <xsl:choose>
-                <xsl:when test="ContentDetail/directory/@itemType='User'">
-                  <xsl:apply-templates select="ContentDetail/directory/*[starts-with(translate(User/LastName, $alphabetLo, $alphabet),/Page/Request/QueryString/Item[@name='LastNameStarts']/node())]" mode="list">
-                    <xsl:sort select="User/LastName"/>
-                    <xsl:with-param name="startPos" select="$startPos"/>
-                    <xsl:with-param name="noOnPage" select="$itemCount"/>
-                  </xsl:apply-templates>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:apply-templates select="ContentDetail/directory/*[starts-with(translate(Name, $alphabetLo, $alphabet),/Page/Request/QueryString/Item[@name='LastNameStarts']/node())]" mode="list">
-                    <xsl:sort select="@name"/>
-                    <xsl:with-param name="startPos" select="$startPos"/>
-                    <xsl:with-param name="noOnPage" select="$itemCount"/>
-                  </xsl:apply-templates>
-                </xsl:otherwise>
-              </xsl:choose>
+            <xsl:when test="ContentDetail/directory/@itemType = 'User'">
+              <div class="col-sm-2">Name</div>
+              <div class="col-sm-2">Username</div>
+
+              <!--<th>Roles</th>-->
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="ContentDetail/directory/*" mode="list">
-                <xsl:sort select="name"/>
-                <xsl:with-param name="startPos" select="$startPos"/>
-                <xsl:with-param name="noOnPage" select="$itemCount"/>
-              </xsl:apply-templates>
+              <div class="col-sm-2">
+                <xsl:value-of select="ContentDetail/directory/@itemType"/>
+              </div>
+              <div class="col-sm-2">
+                <xsl:value-of select="ContentDetail/directory/@parType"/>
+              </div>
             </xsl:otherwise>
           </xsl:choose>
-        </tbody>
-      </table>
+        </div>
+
+        <xsl:choose>
+          <xsl:when test="/Page/Request/QueryString/Item[@name='LastNameStarts']">
+            <xsl:choose>
+              <xsl:when test="ContentDetail/directory/@itemType='User'">
+                <xsl:apply-templates select="ContentDetail/directory/*[starts-with(translate(User/LastName, $alphabetLo, $alphabet),/Page/Request/QueryString/Item[@name='LastNameStarts']/node())]" mode="list">
+                  <xsl:sort select="User/LastName"/>
+                  <xsl:with-param name="startPos" select="$startPos"/>
+                  <xsl:with-param name="noOnPage" select="$itemCount"/>
+                </xsl:apply-templates>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="ContentDetail/directory/*[starts-with(translate(Name, $alphabetLo, $alphabet),/Page/Request/QueryString/Item[@name='LastNameStarts']/node())]" mode="list">
+                  <xsl:sort select="@name"/>
+                  <xsl:with-param name="startPos" select="$startPos"/>
+                  <xsl:with-param name="noOnPage" select="$itemCount"/>
+                </xsl:apply-templates>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="ContentDetail/directory/*" mode="list">
+              <xsl:sort select="name"/>
+              <xsl:with-param name="startPos" select="$startPos"/>
+              <xsl:with-param name="noOnPage" select="$itemCount"/>
+            </xsl:apply-templates>
+          </xsl:otherwise>
+        </xsl:choose>
+      </div>
       <div class="card-body">
         <div class="row">
           <div class="col-md-12">
@@ -5625,114 +5616,121 @@
     <xsl:param name="startPos"/>
     <xsl:param name="noOnPage"/>
     <xsl:if test="position() > $startPos and position() &lt;= ($startPos + $noOnPage)">
-      <tr class="midRow">
-        <xsl:apply-templates select="Status" mode="reportCell"/>
-        <xsl:apply-templates select="User" mode="reportCell"/>
-        <xsl:apply-templates select="Username" mode="reportCell"/>
-        <td>
-          <xsl:choose>
-            <xsl:when test="Companies/node()!=''">
-              <xsl:apply-templates select="Companies/node()" mode="cleanXhtml"/>
-            </xsl:when>
-            <xsl:otherwise>
-              &#160;
-            </xsl:otherwise>
-          </xsl:choose>
-        </td>
-        <td>
-          <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
-            <i class="fa fa-user fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Edit
-          </a>
-          <a href="{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="btn btn-xs btn-success">
-            <i class="fa fa-repeat fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Reset Pwd
-          </a>
-          <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-xs btn-success">
-            <i class="fa fa-user-secret fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Impersonate
-          </a>
-          <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-xs btn-primary">
-            <i class="fa fa-cog fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Roles
-          </a>
-          <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListGroups']">
-            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-glass fa-white">
-                <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Groups
-            </a>
-            <a href="{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-lock fa-white">
-                <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Permissions
-            </a>
-          </xsl:if>
-          <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListCompanies']">
-            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-building-o fa-white">
-                <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Companies
-            </a>
+      
+        <div class="row">
+          <div class="col-sm-1">
+            <xsl:apply-templates select="Status" mode="reportCell"/>
+          </div>
+          <div class="col-xs-4 col-sm-2">
+            <xsl:apply-templates select="User" mode="reportCell"/>
+          </div>
+          <div class="col-xs-4 col-sm-2">
+            <xsl:apply-templates select="Username" mode="reportCell"/>
+            <xsl:choose>
+              <xsl:when test="Companies/node()!=''">
+                <xsl:apply-templates select="Companies/node()" mode="cleanXhtml"/>
+              </xsl:when>
+              <xsl:otherwise>
+                &#160;
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
 
-            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-group fa-white">
+          <div class="col-md-6 membership-controls">
+            <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="">
+              <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Dept
+              </i><xsl:text> </xsl:text>Edit
             </a>
-          </xsl:if>
-
-          <xsl:if test="/Page[@userIntegrations='true']">
-            <a href="{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-random fa-white">
+            <a href="{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="">
+              <i class="fa fa-redo fa-white">
                 <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Integrations
+              </i><xsl:text> </xsl:text>Reset Pwd
             </a>
-          </xsl:if>
-          <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
-            <a href="{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-map-marker fa-white">
+            <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="">
+              <i class="fa fa-user-secret fa-white">
                 <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Addresses
+              </i><xsl:text> </xsl:text>Impersonate
             </a>
-          </xsl:if>
-          <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
-            <a href="{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-signal fa-white">
+            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="">
+              <i class="fa fa-cog fa-white">
                 <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Activity
+              </i><xsl:text> </xsl:text>Roles
             </a>
-          </xsl:if>
-          <xsl:choose>
-            <xsl:when test="Status='0'">
-              <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
-                <i class="fa fa-trash-o fa-white">
+            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListGroups']">
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="">
+                <i class="fa fa-glass fa-white">
                   <xsl:text> </xsl:text>
                 </i>
-                <xsl:text> </xsl:text>Delete
+                <xsl:text> </xsl:text>Groups
               </a>
-            </xsl:when>
-            <xsl:otherwise>
-              <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
-                <i class="fa fa-ban fa-white">
+              <a href="{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="">
+                <i class="fa fa-lock fa-white">
                   <xsl:text> </xsl:text>
                 </i>
-                <xsl:text> </xsl:text>Disable
+                <xsl:text> </xsl:text>Permissions
               </a>
-            </xsl:otherwise>
-          </xsl:choose>
-        </td>
-      </tr>
+            </xsl:if>
+            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListCompanies']">
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="">
+                <i class="fa fa-building-o fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Companies
+              </a>
+
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="">
+                <i class="fa fa-group fa-white">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Dept
+              </a>
+            </xsl:if>
+
+            <xsl:if test="/Page[@userIntegrations='true']">
+              <a href="{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="">
+                <i class="fa fa-random fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Integrations
+              </a>
+            </xsl:if>
+            <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
+              <a href="{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="">
+                <i class="fa fa-map-marker fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Addresses
+              </a>
+            </xsl:if>
+            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
+              <a href="{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="">
+                <i class="fa fa-signal fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Activity
+              </a>
+            </xsl:if>
+            <xsl:choose>
+              <xsl:when test="Status='0'">
+                <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="">
+                  <i class="fa fa-trash-o fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <xsl:text> </xsl:text>Delete
+                </a>
+              </xsl:when>
+              <xsl:otherwise>
+                <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="">
+                  <i class="fa fa-ban fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <xsl:text> </xsl:text>Disable
+                </a>
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
+        </div>
+      
     </xsl:if>
   </xsl:template>
 
@@ -12061,13 +12059,12 @@
   </xsl:template>
 
   <xsl:template match="User" mode="reportCell">
-    <td>
+    
       <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::user/@id}">
-        <span class="btn btn-primary btn-xs">
+        
           <i class="fa fa-user fa-white">
             <xsl:text> </xsl:text>
           </i>
-        </span>
         &#160;<xsl:choose>
           <xsl:when test="FirstName and LastName">
             <xsl:value-of select="LastName"/>, <xsl:value-of select="FirstName"/>
@@ -12080,22 +12077,22 @@
           </xsl:otherwise>
         </xsl:choose>
       </a>
-    </td>
+    
   </xsl:template>
 
 
   <xsl:template match="Name[ancestor::company]" mode="reportCell">
-    <td>
+    
       <a href="/{$appPath}?ewCmd=Profile&amp;DirType=Company&amp;id={ancestor::company/@id}">
-        <span class="btn btn-primary btn-xs">
+        
           <i class="fa fa-building fa-white">
             <xsl:text> </xsl:text>
           </i>
-        </span>
+        
         &#160;
         <xsl:value-of select="node()"/>
       </a>
-    </td>
+    
   </xsl:template>
 
   <xsl:template match="UserXml" mode="reportCell">

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Product</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<Name/>
+						<StockCode/>
+						<Manufacturer/>
+						<Options>
+							<OptGroup type="Options1" selectType="DropDown">
+								<option/>
+								<option/>
+								<option/>
+							</OptGroup>
+							<OptGroup type="Options2" selectType="DropDown">
+								<option/>
+								<option/>
+								<option/>
+							</OptGroup>
+						</Options>
+						<Prices>
+							<Price currency="GBP" validGroup="all"/>
+						</Prices>
+						<Stock/>
+						<Images>
+							<img class="thumbnail"/>
+						</Images>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content>
+						<Name/>
+						<StockCode/>
+						<Manufacturer/>
+						<Options>
+							<OptGroup type="Options1" selectType="DropDown">
+								<option/>
+								<option/>
+								<option/>
+							</OptGroup>
+							<OptGroup type="Options2" selectType="DropDown">
+								<option/>
+								<option/>
+								<option/>
+							</OptGroup>
+						</Options>
+						<Prices>
+							<Price currency="GBP" validGroup="all"/>
+						</Prices>
+						<ShippingWeight/>
+						<Stock/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<Body/>
+						<SpecificationDocument/>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentProductName" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind nodeset="Options/OptGroup[@type='Options1']">
+					<bind id="cOptName1" nodeset="@name" required="false()" type="string"/>
+					<bind id="cOptType1" nodeset="@selectType" required="false()" type="string"/>
+					<bind id="cOptRpt1" nodeset="option">
+						<bind id="cOpt1" nodeset="@name" required="false()" type="string"/>
+					</bind>
+				</bind>
+				<bind nodeset="Options/OptGroup[@type='Options2']">
+					<bind id="cOptName2" nodeset="@name" required="false()" type="string"/>
+					<bind id="cOptType2" nodeset="@selectType" required="false()" type="string"/>
+					<bind id="cOptRpt2" nodeset="option">
+						<bind id="cOpt2" nodeset="@name" required="false()" type="string"/>
+					</bind>
+				</bind>
+				<bind id="cContentProductName" nodeset="Name" required="true()" type="string"/>
+				<bind id="cContentManufacturer" nodeset="Manufacturer" required="false()" type="string"/>
+				<bind id="cContentStockCode" nodeset="StockCode" required="false()" type="string"/>
+				<bind id="cContentPrice" nodeset="Prices/Price" required="false()" type="string"/>
+				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+
+				<bind nodeset="Options/OptGroup[@type='Options1']">
+					<bind id="cOptName1" nodeset="@name" required="false()" type="string"/>
+					<bind id="cOptType1" nodeset="@selectType" required="false()" type="string"/>
+					<bind id="cOptRpt1" nodeset="option">
+						<bind id="cOpt1" nodeset="@name" required="false()" type="string"/>
+					</bind>
+				</bind>
+
+				<bind nodeset="Options/OptGroup[@type='Options2']">
+					<bind id="cOptName2" nodeset="@name" required="false()" type="string"/>
+					<bind id="cOptType2" nodeset="@selectType" required="false()" type="string"/>
+					<bind id="cOptRpt2" nodeset="option">
+						<bind id="cOpt2" nodeset="@name" required="false()" type="string"/>
+					</bind>
+				</bind>
+
+				<bind id="cContentProductName" nodeset="Name" required="true()" type="string"/>
+				<bind id="cContentManufacturer" nodeset="Manufacturer" required="false()" type="string"/>
+				<bind id="cContentPrice" nodeset="Prices/Price" required="false()" type="string"/>
+				<bind id="cContentStock" nodeset="Stock" required="false()" type="string"/>
+				<bind id="cContentStockCode" nodeset="StockCode" required="false()" type="string"/>
+				<bind id="cContentShippingWeight" nodeset="ShippingWeight" required="false()" type="format:^[-+]?[0-9]*\.?[0-9]+$">
+					<alert type="type">Shipping weight must have only numeric characters</alert>
+				</bind>
+				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+				<bind id="cContentPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+				<bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+				<bind id="cContentSpecificationDocument" nodeset="SpecificationDocument" required="false()" type="string"/>
+				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent" class="2col">
+		<label> Edit Product</label>
+		<group class="xFormContainer">
+
+			<group class="Content">
+				<label>Settings</label>
+				<input bind="dPublishDate" class="calendar short">
+					<label>Publish Date</label>
+				</input>
+				<input bind="dExpireDate" class="calendar short">
+					<label>Expire Date</label>
+				</input>
+				<select1 bind="nStatus" appearance="full" class="required vshort">
+					<label>Status</label>
+					<item>
+						<label>Live</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>Hidden</label>
+						<value>0</value>
+					</item>
+				</select1>
+				<input bind="cDescription" class="short">
+					<label>Change Notes</label>
+				</input>
+			</group>
+
+			<group class="Content">
+				<label>Images and Files</label>
+				<input bind="cContentThumbnail" class="short pickImage">
+					<label>Thumbnail</label>
+				</input>
+				<input bind="cContentPicture" class="short pickImage">
+					<label>Picture</label>
+				</input>
+				<input bind="cContentFullSizePicture" class="short pickImage">
+					<label>Full Size</label>
+				</input>
+				<input bind="cContentSpecificationDocument" class="short pickDocument">
+					<label>Specification Document</label>
+				</input>
+			</group>
+
+			<group>
+				<label>Product Options 1</label>
+				<input bind="cOptName1" class="short">
+					<label>Option Name</label>
+				</input>
+				<select1 bind="cOptType1">
+					<label>Option Type</label>
+					<item>
+						<label>Drop Down (select 1)</label>
+						<value>DropDown</value>
+					</item>
+					<item>
+						<label>Radio Buttons (select 1)</label>
+						<value>Radio</value>
+					</item>
+					<item>
+						<label>Check Boxes (select many)</label>
+						<value>CheckBoxes</value>
+					</item>
+				</select1>
+				<repeat bind="cOptRpt1" class="horizontal">
+					<input bind="cOpt1" class="short">
+						<label>Option</label>
+					</input>
+					<trigger>
+						<label>Del</label>
+						<delete bind="cOptRpt1" at="index('cOptRpt1')"/>
+					</trigger>
+				</repeat>
+				<trigger>
+					<label>Add Option</label>
+					<insert position="after" bind="cOptRpt1" at="index('cOptRpt1')" class="add"/>
+				</trigger>
+			</group>
+
+			<group>
+				<label>Product Options 2</label>
+				<input bind="cOptName2" class="short">
+					<label>Option Name</label>
+				</input>
+				<select1 bind="cOptType2">
+					<label>Option Type</label>
+					<item>
+						<label>Drop Down (select 1)</label>
+						<value>DropDown</value>
+					</item>
+					<item>
+						<label>Radio Buttons (select 1)</label>
+						<value>Radio</value>
+					</item>
+					<item>
+						<label>Check Boxes (select many)</label>
+						<value>CheckBoxes</value>
+					</item>
+				</select1>
+				<repeat bind="cOptRpt2" class="horizontal">
+					<input bind="cOpt2" class="short">
+						<label>Option</label>
+					</input>
+					<trigger>
+						<label>Del</label>
+						<delete bind="cOptRpt2" at="index('cOptRpt2')"/>
+					</trigger>
+				</repeat>
+				<trigger>
+					<label>Add Option</label>
+					<insert position="after" bind="cOptRpt2" at="index('cOptRpt2')" class="add"/>
+				</trigger>
+			</group>
+
+		</group>
+		<!-- End of Column 1-->
+
+		<group ref="Content" class="xFormContainer">
+
+			<group class="Content">
+				<label>Product Name *</label>
+				<input bind="cContentProductName" class="required long">
+				</input>
+			</group>
+			<group class="Content">
+				<label>Product Details</label>
+				<input bind="cContentStockCode" class="short">
+					<label>Stock Code</label>
+				</input>
+				<input bind="cContentStock" class="short">
+					<label>Stock Level</label>
+				</input>
+				<input bind="cContentManufacturer" class="short">
+					<label>Manufacturer</label>
+				</input>
+				<input bind="cContentPrice" class="short">
+					<label>Price</label>
+					<hint>Numeric only (e.g. 0.00)</hint>
+				</input>
+				<input bind="cContentShippingWeight" class="short">
+					<label>Shipping Weight</label>
+					<hint>Numeric only (e.g. 0.00)</hint>
+				</input>
+			</group>
+			<group ref="mainContent" class="Content">
+				<label>Product Description</label>
+				<textarea bind="cContentBody" class="TextArea xhtml" rows="15"/>
+			</group>
+			
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Product</label>
+		</submit>
+	</group>
+</Content>
