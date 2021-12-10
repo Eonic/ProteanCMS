@@ -5383,86 +5383,86 @@
           </xsl:with-param>
         </xsl:apply-templates>
         <div class="row">
-          <div class="col-md-8">
-            <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType={ContentDetail/directory/@itemType}&amp;parid={/Page/@parId}" class="btn btn-sm btn-success">
-              <i class="fa fa-plus fa-white">
+          <div class="col-md-8 ">
+            <div class="btn-spacing">
+              <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType={ContentDetail/directory/@itemType}&amp;parid={/Page/@parId}" class="btn btn-sm btn-primary">
+                <i class="fa fa-plus">
+                  <xsl:text> </xsl:text>
+                </i>
                 <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>
-              Add New <xsl:value-of select="ContentDetail/directory/@itemType"/>&#160;<xsl:if test="ContentDetail/directory/@parId">
-                to <xsl:value-of select="ContentDetail/directory/@parType"/>&#160;<xsl:value-of select="ContentDetail/directory/@parName"/>
-              </xsl:if>
-            </a>
-            <xsl:if test="ContentDetail/directory/@itemType = 'User'">
-              <xsl:choose>
-                <xsl:when test="/Page/Request/QueryString/Item[@name='status']">
-                  <a href="{$appPath}?ewCmd=ListUsers&amp;parid={/Page/Request/QueryString/Item[@name='parid']/node()}" class="btn btn-sm btn-primary" >
-                    <i class="fa fa-user fa-white">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>List All Users
-                  </a>
-                </xsl:when>
-                <xsl:otherwise>
-                  <a href="{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=1" class="btn btn-sm btn-primary" >
-                    <i class="fa fa-check-circle-o fa-white">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>
-                    <xsl:text>List </xsl:text>
-                    <xsl:value-of select="count(ContentDetail/directory/user[Status = '1' or Status = '-1'] )"/>
-                    <xsl:text> Active Users</xsl:text>
-                  </a>
-                  <a href="{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=0" class="btn btn-sm btn-primary" >
-                    <i class="fa fa-ban fa-white">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>
-                    <xsl:text>List </xsl:text>
-                    <xsl:value-of select="count(ContentDetail/directory/user[Status != '1' and Status != '-1'])"/>
-                    <xsl:text> Inactive Users</xsl:text>
-                  </a>
-                  <xsl:if test="count(ContentDetail/directory/user[Status = '3']) &gt; 0">
-                    <a href="{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=3" class="btn btn-sm btn-info" >
-                      <i class="fa fa-exclaimation-sign fa-white">
+                Add New <xsl:value-of select="ContentDetail/directory/@itemType"/>&#160;<xsl:if test="ContentDetail/directory/@parId">
+                  to <xsl:value-of select="ContentDetail/directory/@parType"/>&#160;<xsl:value-of select="ContentDetail/directory/@parName"/>
+                </xsl:if>
+              </a>
+              <xsl:if test="ContentDetail/directory/@itemType = 'User'">
+                <xsl:choose>
+                  <xsl:when test="/Page/Request/QueryString/Item[@name='status']">
+                    <a href="{$appPath}?ewCmd=ListUsers&amp;parid={/Page/Request/QueryString/Item[@name='parid']/node()}" class="btn btn-sm btn-primary" >
+                      <i class="fas fa-user">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <xsl:text> </xsl:text>List All Users
+                    </a>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <a href="{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=1" class="btn btn-sm btn-primary" >
+                      <i class="fa fa-check-circle">
                         <xsl:text> </xsl:text>
                       </i>
                       <xsl:text> </xsl:text>
                       <xsl:text>List </xsl:text>
-                      <xsl:value-of select="count(ContentDetail/directory/user[Status = '3'])"/>
-                      <xsl:text> Awaiting Approval Users</xsl:text>
+                      <xsl:value-of select="count(ContentDetail/directory/user[Status = '1' or Status = '-1'] )"/>
+                      <xsl:text> Active Users</xsl:text>
                     </a>
-                  </xsl:if>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:if>
-            <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-sm btn-primary" target="_new">
-              <i class="fa fa-th-list fa-white">
+                    <a href="{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=0" class="btn btn-sm btn-primary" >
+                      <i class="fa fa-ban">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <xsl:text> </xsl:text>
+                      <xsl:text>List </xsl:text>
+                      <xsl:value-of select="count(ContentDetail/directory/user[Status != '1' and Status != '-1'])"/>
+                      <xsl:text> Inactive Users</xsl:text>
+                    </a>
+                    <xsl:if test="count(ContentDetail/directory/user[Status = '3']) &gt; 0">
+                      <a href="{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=3" class="btn btn-sm btn-info" >
+                        <i class="fa fa-exclaimation-sign">
+                          <xsl:text> </xsl:text>
+                        </i>
+                        <xsl:text> </xsl:text>
+                        <xsl:text>List </xsl:text>
+                        <xsl:value-of select="count(ContentDetail/directory/user[Status = '3'])"/>
+                        <xsl:text> Awaiting Approval Users</xsl:text>
+                      </a>
+                    </xsl:if>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:if>
+              <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-sm btn-primary" target="_new">
+                <i class="far fa-file-excel">
+                  <xsl:text> </xsl:text>
+                </i>
                 <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>
-              Excel Download
-            </a>
-
-            <xsl:if test="ContentDetail/directory/@parType='Group' and ContentDetail/directory/@parId and not(ContentDetail/directory/@itemType='User')">
-              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type={ContentDetail/directory/@itemType}&amp;id={/Page/@parId}&amp;relateAs=children" class="btn btn-sm btn-primary principle">
-                Edit <xsl:value-of select="ContentDetail/directory/@itemType"/>&#160;members of <xsl:value-of select="ContentDetail/directory/@parType"/>&#160;<xsl:value-of select="ContentDetail/directory/@parName"/>
+                Excel Download
               </a>
-            </xsl:if>
+
+              <xsl:if test="ContentDetail/directory/@parType='Group' and ContentDetail/directory/@parId and not(ContentDetail/directory/@itemType='User')">
+                <a href="{$appPath}?ewCmd=MaintainRelations&amp;type={ContentDetail/directory/@itemType}&amp;id={/Page/@parId}&amp;relateAs=children" class="btn btn-sm btn-primary principle">
+                  Edit <xsl:value-of select="ContentDetail/directory/@itemType"/>&#160;members of <xsl:value-of select="ContentDetail/directory/@parType"/>&#160;<xsl:value-of select="ContentDetail/directory/@parName"/>
+                </a>
+              </xsl:if>
+            </div>
           </div>
           <xsl:if test="ContentDetail/directory/@parType='User'">
             <form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
               <div class="input-group">
                 <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
-                <span class="input-group-btn">
-                  <button type="submit" name="previous" value="Search" class="btn btn-success principle">
-                    User Search
-                    <xsl:text> </xsl:text>
-                    <i class="fa fa-search fa-white">
+                  <button type="submit" name="previous" value="Search" class="btn btn-primary">
+                    <i class="fa fa-search">
                       <xsl:text> </xsl:text>
                     </i>
+                    <xsl:text> </xsl:text>User Search
+                    
                   </button>
-                </span>
               </div>
             </form>
           </xsl:if>
@@ -5471,12 +5471,12 @@
               <div class="input-group">
                 <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
                 <span class="input-group-btn">
-                  <button type="submit" name="previous" value="Search" class="btn btn-success principle">
-                    Company Search
-                    <xsl:text> </xsl:text>
-                    <i class="fa fa-search fa-white">
+                  <button type="submit" name="previous" value="Search" class="btn btn-primary">
+                    <i class="fa fa-search">
                       <xsl:text> </xsl:text>
                     </i>
+                    <xsl:text> </xsl:text>Company Search
+                    
                   </button>
                 </span>
               </div>

@@ -1,4 +1,27 @@
-﻿
+﻿//Sticky footer
+html, body {
+    height:100%!important;
+}
+body {
+    justify-content: space-between;
+    flex-direction: column !important;
+    height: 100% !important;
+    display: flex !important;
+}
+//end sticky footer
+@mixin btn-spacing($space:4px) {
+    margin-left: -$space;
+    margin-right: -$space;
+
+    .btn {
+        margin-left: $space;
+        margin-right: $space;
+        margin-bottom: $space*2;
+    }
+}
+.btn-spacing {
+    @include btn-spacing();
+}
 form.xform,
 form.ewXform {
     .principle {
