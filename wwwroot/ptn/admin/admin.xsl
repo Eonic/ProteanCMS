@@ -32,9 +32,9 @@
     <xsl:if test="$theme!=''">
       <xsl:call-template name="bundle-css">
         <xsl:with-param name="comma-separated-files">
-          <xsl:text>/ewThemes/</xsl:text>
+          <xsl:text>/themes/</xsl:text>
           <xsl:value-of select="$theme"/>
-          <xsl:text>/css/bootstrapBase.less</xsl:text>
+          <xsl:text>/css/bootstrap.scss</xsl:text>
         </xsl:with-param>
         <xsl:with-param name="bundle-path">
           <xsl:text>~/Bundles/</xsl:text>

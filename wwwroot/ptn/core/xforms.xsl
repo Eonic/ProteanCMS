@@ -448,29 +448,35 @@
   <xsl:template match="group[contains(@class,'accordion')]" mode="xform">
     <div class="accordian" id="accordian-{@ref}">
             <xsl:apply-templates select="*" mode="xform"/>
+      </div>
+    </xsl:template>
+  
+     <xsl:template match="group[parent::group[contains(@class,'accordion')]]" mode="xform">
+       <xsl:variable name="isopen">
+         <xsl:if test="position()=1">
+           <xsl:text>show</xsl:text>
+         </xsl:if>       </xsl:variable>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading{position()}">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{position()}" aria-expanded="true" aria-controls="collapse{position()}">
+            <xsl:apply-templates select="label">
+              <xsl:with-param name="cLabel">
+                <xsl:value-of select="@ref"/>
+              </xsl:with-param>
+            </xsl:apply-templates>
+          </button>
+        </h2>
+        <div id="collapse{position()}" class="accordion-collapse collapse {$isopen}" aria-labelledby="heading{position()}" data-bs-parent="#accordion-{@ref}">
+          <div class="accordion-body">
+            <xsl:apply-templates select="*" mode="xform"/>
+          </div>
+        </div>
     </div>
   </xsl:template>
   
-   <xsl:template match="group[parent::group[contains(@class,'accordion')]]" mode="xform">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="heading{position()}">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{position()}" aria-expanded="true" aria-controls="collapse{position()}">
-        <xsl:apply-templates select="label">
-        <xsl:with-param name="cLabel">
-          <xsl:value-of select="@ref"/>
-        </xsl:with-param>
-      </xsl:apply-templates>
-      </button>
-    </h2>
-    <div id="collapse{position()}" class="accordion-collapse collapse show" aria-labelledby="heading{position()}" data-bs-parent="#accordion-{@ref}">
-      <div class="accordion-body">
-        <xsl:apply-templates select="*" mode="xform"/>
-      </div>
-    </div>
-            
-    </div>
-  </xsl:template>
-
+  <!-- -->
+  <!-- ========================== Input Group ========================== -->
+  
   <xsl:template match="group[contains(@class,'input-group')]" mode="xform">
     <div class="input-group">
       <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>

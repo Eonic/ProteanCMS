@@ -2564,39 +2564,6 @@ Partial Public Class Cms
                         oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "EditContent", "2Col", "Edit Content")
                         MyBase.addNote("EditContent", xForm.noteTypes.Alert, "We do not have an XForm for this type of content - this is the default form")
 
-                        MyBase.addInput(oFrmElmt, "nContentKey", True, "ContentId", "hidden")
-                        MyBase.addBind("nStructParId", "tblContent/nContentKey", "true()")
-
-                        MyBase.addInput(oFrmElmt, "cContentSchemaName", True, "cContentSchemaName", "hidden")
-                        MyBase.addBind("cContentSchemaName", "tblContent/cContentSchemaName", "true()")
-
-                        oGrp1Elmt = MyBase.addGroup(oFrmElmt, "Settings", "", "Content Settings")
-                        oGrp2Elmt = MyBase.addGroup(oFrmElmt, "Content", "", "Full XML")
-
-                        MyBase.addInput(oGrp1Elmt, "cContentName", True, "Page Name")
-                        MyBase.addBind("cContentName", "tblContent/cContentName", "true()")
-
-                        MyBase.addTextArea(oGrp2Elmt, "cContentXmlBrief", True, "Content Brief", "TextAreaBrief")
-                        MyBase.addBind("cContentXmlBrief", "tblContent/cContentXmlBrief", "false()")
-
-                        MyBase.addTextArea(oGrp2Elmt, "cContentXmlDetail", True, "Content Detail", "TextAreaDetail")
-                        MyBase.addBind("cContentXmlDetail", "tblContent/cContentXmlDetail", "false()")
-
-                        MyBase.addInput(oGrp1Elmt, "dPublishDate", True, "Publish Date", "calendar short")
-                        MyBase.addBind("dPublishDate", "tblContentStructure/dPublishDate", "false()")
-
-                        MyBase.addInput(oGrp1Elmt, "dExpireDate", True, "Expire Date", "calendar short")
-                        MyBase.addBind("dExpireDate", "tblContentStructure/dExpireDate", "false()")
-
-                        oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nStatus", True, "Status", "", ApperanceTypes.Minimal)
-                        MyBase.addOption(oSelElmt, "Live", 1)
-                        MyBase.addOption(oSelElmt, "Hidden", 0)
-                        MyBase.addBind("nStatus", "tblContentStructure/nStatus", "true()")
-
-                        MyBase.addInput(oGrp1Elmt, "cDescription", True, "Change Notes")
-                        MyBase.addBind("cDescription", "tblContentStructure/cDescription", "false()")
-
-                        MyBase.addSubmit(oFrmElmt, "", "Save Content")
                     End If
 
                     If id > 0 Then
