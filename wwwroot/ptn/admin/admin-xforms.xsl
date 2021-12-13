@@ -81,13 +81,13 @@
           </div>
           <xsl:if test="count(submit) &gt; 0">
             <div class="clearfix">
-              <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
-                <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
+              <!--<xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
+                --><!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">--><!--
                 <span class="required">
                   <xsl:call-template name="msg_required"/>
                   <span class="req">*</span>
                 </span>
-              </xsl:if>
+              </xsl:if>-->
               <xsl:apply-templates select="submit" mode="xform"/>
               <!--<div class="clearfix">&#160;</div>-->
             </div>
