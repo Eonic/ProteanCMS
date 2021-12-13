@@ -699,15 +699,24 @@ Partial Public Class Cms
                             oPriceElmt.SetAttribute("TotalSaving", 0)
                             oItemLoop.AppendChild(oPriceElmt)
                         End If
+
+                        Dim AmountToDiscount As Decimal
                         'loop through the basic money discounts'
                         For Each oDiscountLoop In oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=0 and @nDiscountCat=1 and not(@Applied='1')]")
                             'now work out new unit prices etc
 
                             Dim nNewPrice As Decimal = oPriceElmt.GetAttribute("UnitPrice")
-                            Dim AmountToDiscount As Decimal = oDiscountLoop.GetAttribute("nDiscountValue")
+                            AmountToDiscount = oDiscountLoop.GetAttribute("nDiscountValue")
                             If oDiscountLoop.GetAttribute("nDiscountRemaining") <> "" Then
                                 AmountToDiscount = oDiscountLoop.GetAttribute("nDiscountRemaining")
                             End If
+                            'if freegiftbox is applied and discount is there then do not give discount from basket, reduce it from experience
+                            'If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
+                            '    nNewPrice = nNewPrice
+                            'Else
+                            '    nNewPrice = nNewPrice - (AmountToDiscount / oItemLoop.GetAttribute("quantity"))
+                            'End If
+
                             nNewPrice = nNewPrice - (AmountToDiscount / oItemLoop.GetAttribute("quantity"))
 
                             If nNewPrice > 0 And bApplyOnTotal = False Then 'only apply it if its not gonna go below 0
@@ -787,7 +796,6 @@ Partial Public Class Cms
                                             If (AmountToDiscount = 0) Then
                                                 bApplyOnTotal = True
                                             Else
-
                                                 bApplyOnTotal = False
                                                 oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - RemainingAmountToDiscount)
                                             End If
@@ -801,8 +809,9 @@ Partial Public Class Cms
 
 
                         'set packaging option to giftbox after applied promocode
+
                         If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
-                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value)
+                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value, AmountToDiscount)
                         End If
                     Next
                 Catch ex As Exception

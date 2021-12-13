@@ -439,6 +439,20 @@ Partial Public Class Cms
                 End Try
             End Function
 
+
+            Public Function UpdatePackagingForRemovingFreeGiftDiscount(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    'update packaging while removing giftbox promocode
+                    myCart.updatePackagingForRemovingFreeGiftDiscount(jObj("CartOrderId"), jObj("AmountToDiscount"))
+
+                    Return "True"
+
+                Catch ex As Exception
+
+                End Try
+            End Function
+
             Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
 
@@ -592,7 +606,7 @@ Partial Public Class Cms
                         myWeb.moSession.Remove("mcPaymentMethod")
                         myWeb.moSession.Add("mcPaymentMethod", myApi.moRequest("paymentTypeValue"))
                     Else
-                        Return "error"
+                        Return "Error"
                     End If
 
                     If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
