@@ -2291,6 +2291,23 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Protected Function GetContentFormPath(ByVal SchemaName As String) As String
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim ModuleList As XmlElement = moPageXML.CreateElement("Select")
+                    GetContentOptions(ModuleList)
+                    Dim thisModule As XmlElement = ModuleList.SelectSingleNode("descendant-or-self::item[@type='" & SchemaName & "']")
+                    If thisModule Is Nothing Then
+                        Return SchemaName
+                    Else
+                        Return thisModule.SelectSingleNode("value").InnerText
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Protected Function GetModuleFormPath(ByVal SchemaName As String) As String
                 Dim cProcessInfo As String = ""
                 Try
@@ -2307,6 +2324,77 @@ Partial Public Class Cms
                     Return Nothing
                 End Try
             End Function
+
+            Protected Sub GetContentOptions(ByRef oSelElmt As XmlElement)
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim PathPrefix = "ewcommon/xsl/"
+                    If goConfig("cssFramework") = "bs5" Then
+                        PathPrefix = "ptn\"
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "core\modules", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                        Dim fld As DirectoryInfo
+                        For Each fld In rootFolder.GetDirectories
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        Next
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                    Else
+                        ' EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
+
+                        ' EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        '  If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                        '  EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '  EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
+                        '  If myWeb.moConfig("Search") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Search", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Membership") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Membership", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Cart") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Cart", "ModuleTypes/ModuleGroup", "Module", False)
+                        ' End If
+                        '   If myWeb.moConfig("Quote") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Quote", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '    If myWeb.moConfig("MailingList") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Mailer", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Subscriptions") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Sub
 
             Protected Sub GetModuleOptions(ByRef oSelElmt As XmlElement)
                 Dim cProcessInfo As String = ""
@@ -2539,26 +2627,32 @@ Partial Public Class Cms
 
                     ''''''' if contentSchemeaName starts with "filter|" then modify the path...
 
-                    Dim cXformName As String = cContentSchemaName
+                    Dim cXformPath As String = cContentSchemaName
 
-                    If AlternateFormName <> "" Then cXformName = AlternateFormName
+                    If AlternateFormName <> "" Then cXformPath = AlternateFormName
+
                     If cModuleType <> "" Then
-                        cXformName = cXformName & "/" & cModuleType
+                        cXformPath = cXformPath & "/" & cModuleType
                         If goConfig("cssFramework") = "bs5" Then
-                            cXformName = GetModuleFormPath(cModuleType)
+                            cXformPath = GetModuleFormPath(cModuleType)
+                        End If
+                    Else
+                        If goConfig("cssFramework") = "bs5" Then
+                            cXformPath = GetContentFormPath(cContentSchemaName)
                         End If
                     End If
-                    Dim formPath As String = "/xforms/content/"
+
                     If goConfig("cssFramework") = "bs5" Then
-                        formPath = "/modules/"
+                        cXformPath = "/modules/" & cXformPath
+                    Else
+                        cXformPath = "/xforms/content/" & cXformPath
                     End If
 
-                    If Not MyBase.load(formPath & cXformName & ".xml", myWeb.maCommonFolders) Then
+                    If Not MyBase.load(cXformPath & ".xml", myWeb.maCommonFolders) Then
                         ' load a default content xform if no alternative.
-                        cProcessInfo = formPath & cXformName & ".xml - Not Found"
+                        cProcessInfo = cXformPath & ".xml - Not Found"
 
                         MyBase.NewFrm("EditContent")
-
                         MyBase.submission("EditContent", "", "post", "form_check(this)")
 
                         oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "EditContent", "2Col", "Edit Content")
