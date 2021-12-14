@@ -773,12 +773,15 @@ Check:
 
                         ' ok lets load in an xform from the file location.
                         If FormXML = "" Then
-                            If Not MyBase.load("/xforms/directory/" & cXformName & ".xml", myWeb.maCommonFolders) Then
-                                ' load a default content xform if no alternative.
-
+                            Dim formPath As String = "/xforms/directory/" & cXformName & ".xml"
+                            If myWeb.moConfig("cssFramework") = "bs5" Then
+                                formPath = "/admin" & formPath
                             End If
-                        Else
-                            MyBase.NewFrm(cXformName)
+                            If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
+                                ' load a default content xform if no alternative.
+                            End If
+                            Else
+                                MyBase.NewFrm(cXformName)
                             MyBase.loadtext(FormXML)
 
                         End If

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" contentType="Module" moduleType="2Columns8316" background="" title="" link="" linkType="internal" linkText="Read more" data-stellar-background-ratio="10"/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
+      <bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
+      <bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>
+    </bind>
+    <ewInclude filePath="/ewcommon/xforms/content/module/1column.xml" xPath="descendant-or-self::bind[@id='columnPresentationBinds']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit 2 Column Module 83/16</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+
+        <!-- end of hidden fields -->
+        <ewInclude filePath="/ewcommon/xforms/content/module/1column.xml" xPath="descendant-or-self::group[@id='columnPresentation']"/>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or Name</label>
+        </input>
+      </group>
+
+      <group class="inline-4col">
+        <label>Layout options for smaller screens</label>
+        <select1 bind="lgCol" class="readonly">
+          <label>Desktop</label>
+          <value>2</value>
+          <item>
+            <label>2 (83/16)</label>
+            <value>2</value>
+          </item>
+          <help class="inline">
+            <p>The number of columns on larger screens (≥1200px) is determind by the module selected, and therefore cannot be changed</p>
+          </help>
+        </select1>
+        <select1 bind="mdCol">
+          <label>Laptop</label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2 (83/16)</label>
+            <value>2</value>
+          </item>
+          <item>
+            <label>2 equal columns</label>
+            <value>2equal</value>
+          </item>
+          <help class="inline">
+            <p>Medium devices (≥992px), typically laptops, large tablets and small desktop monitors</p>
+          </help>
+        </select1>
+        <select1 bind="smCol">
+          <label>Tablet</label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2 (83/16)</label>
+            <value>2</value>
+          </item>
+          <item>
+            <label>2 equal columns</label>
+            <value>2equal</value>
+          </item>
+          <help class="inline">
+            <p>Small devices (≥768px), typically small tablets</p>
+          </help>
+        </select1>
+        <select1 bind="xsCol">
+          <label>Lrg Mobile</label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2 equal columns</label>
+            <value>2</value>
+          </item>
+          <help class="inline">
+            <p>Extra small devices (≥576px), typically small tablets. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
+          </help>
+        </select1>
+      </group>
+      <group>
+        <label>Module Links</label>
+        <select1 bind="cLinkType" appearance="full" class="required">
+          <label>Type of link</label>
+          <item>
+            <label>Internal (Going to a page on this site)</label>
+            <value>internal</value>
+            <toggle case="cLinkType_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>External (Going to another site)</label>
+            <value>external</value>
+            <toggle case="cLinkType_2" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cLinkType_1">
+            <select1 bind="cModuleLink" class="siteTree">
+              <label>Link to page</label>
+            </select1>
+          </case>
+          <case id="cLinkType_2">
+            <input bind="cModuleLink" class="short">
+              <label>Link to URL</label>
+            </input>
+          </case>
+        </switch>
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save 2 Columns Module</label>
+    </submit>
+  </group>
+</Content>
