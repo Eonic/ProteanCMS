@@ -7,7 +7,7 @@
   </ContentTypes-->
   <ModuleTypes>
     <ModuleGroup name="Navigation and Links" icon="fa-link">
-      <Module type="LinkList" name="Link List">Link List</Module>
+      <Module type="LinkList" formPath="linklist/link-list" icon="fas fa-link" name="Link List">Link List</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

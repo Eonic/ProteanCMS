@@ -2,12 +2,12 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="Information">
-      <ContentType type="Job" name="Job">A Job vacancy</ContentType>
+      <ContentType type="Job" formPath="joblist/job" name="Job">A Job vacancy</ContentType>
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="VacanciesList" name="Vacancies List">List of Vacancies</Module>
+      <Module type="VacanciesList" formPath="joblist/vacancies-list" icon="fas fa-hands-helping" name="Vacancies List">List of Vacancies</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

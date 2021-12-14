@@ -2,13 +2,13 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="Purchaseables">
-      <ContentType type="Product" name="Product">A simple product that users can buy</ContentType>
+      <ContentType type="Product" formPath="productlist/product" name="Product">A simple product that users can buy</ContentType>
       <ContentType type="SKU" name="SKU">A simple product that users can buy</ContentType>
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="ProductList" name="Product List">List of Products</Module>
+      <Module type="ProductList" formPath="productlist/product-list" icon="fas fa-cart-plus" name="Product List">List of Products</Module>
       <!--Module type="ProductGallery" name="Product Gallery">Gallery of Products</Module>
       <Module type="ProductFilter" name="Product Filter">Product Filtering</Module-->
     </ModuleGroup>

@@ -8,8 +8,8 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
-      <Module type="NewsList" formPath="news/newslist" icon="far fa-newspaper" name="News Articles List">List of News Articles</Module>
-      <Module type="NewsListDateMenu" name="News Date Menu">Menu which filters news articles by dates</Module>
+      <Module type="NewsList" formPath="news/news-list" icon="far fa-newspaper" name="News Articles List">List of News Articles</Module>
+      <Module type="NewsListDateMenu" formPath="news/news-list-date-menu" icon="far fa-calendar-alt" name="News Date Menu">Menu which filters news articles by dates</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

@@ -8,7 +8,7 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
-      <Module type="VideoList" name="Video List">List of Videos</Module>
+      <Module type="VideoList" formPath="videos/video-list" icon="far fa-file-video" name="Video List">List of Videos</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

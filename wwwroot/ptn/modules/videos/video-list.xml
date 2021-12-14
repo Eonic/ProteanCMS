@@ -107,7 +107,7 @@
         <switch class="disable">
           <case id="cDisplay_1">
             <group>
-              <label>3rd party commenting</label>
+              <label>Third-Party Commenting</label>
               <select1 bind="cCommentPlatform" appearance="full">
                 <label>Select Platform</label>
                 <item>
@@ -136,7 +136,7 @@
                   <toggle case="cCommentPlatform_ID" event="DOMActivate"/>
                 </item>
                 <item>
-                  <label>EonicWeb</label>
+                  <label>ProteanCMS</label>
                   <value>eonicweb</value>
                   <toggle case="cCommentPlatform_EW" event="DOMActivate"/>
                 </item>

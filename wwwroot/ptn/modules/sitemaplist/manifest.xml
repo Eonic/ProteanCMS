@@ -4,7 +4,7 @@
   
   <ModuleTypes>
     <ModuleGroup name="Navigation and Links" icon="fa-link">
-      <Module type="SiteMapList" name="Site Map">Sitemap - a simple sitemap tree</Module>
+      <Module type="SiteMapList" formPath="sitemaplist/site-map-list" icon="fas fa-sitemap" name="Site Map">Sitemap - a simple sitemap tree</Module>
     </ModuleGroup>
   </ModuleTypes>
   

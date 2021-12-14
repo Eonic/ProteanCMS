@@ -2,12 +2,12 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="Information">
-      <ContentType type="Testimonial" name="Testimonial">A Testimonial about your company</ContentType>
+      <ContentType type="Testimonial" formPath="testimonials/testimonial" name="Testimonial">A Testimonial about your company</ContentType>
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
-      <Module type="TestimonialList" name="Testimonials List">List of Testimonials</Module>
+      <Module type="TestimonialList" formPath="testimonials/testimonial-list" icon="far fa-comment-alt" name="Testimonials List">List of Testimonials</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

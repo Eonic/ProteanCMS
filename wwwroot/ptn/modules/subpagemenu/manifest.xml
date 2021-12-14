@@ -2,7 +2,7 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ModuleTypes>
     <ModuleGroup name="Navigation and Links" icon="fas fa-link">
-      <Module type="SubPageMenu" icon="fas fa-list" name="SubPage Menu">Sub Page Menu</Module>
+      <Module type="SubPageMenu" formPath="subpagemenu/sub-page-menu" icon="fas fa-list" name="SubPage Menu">Sub Page Menu</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
