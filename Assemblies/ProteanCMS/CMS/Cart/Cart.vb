@@ -4497,7 +4497,7 @@ processFlow:
                 If Not bBillingSet Then
                     contactId = setCurrentBillingAddress(myWeb.mnUserId, 0)
                 Else
-                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 order by cContactType ASC"
+                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 AND (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC"
                     oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 End If
 
@@ -8255,7 +8255,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Public Function CartReports(ByVal dBegin As Date, ByVal dEnd As Date, Optional ByVal bSplit As Integer = 0, Optional ByVal cProductType As String = "", Optional ByVal nProductId As Integer = 0, Optional ByVal cCurrencySymbol As String = "", Optional ByVal nOrderStatus1 As Integer = 6, Optional ByVal nOrderStatus2 As Integer = 9, Optional ByVal cOrderType As String = "ORDER") As XmlElement
+        Public Function CartReports(ByVal dBegin As Date, ByVal dEnd As Date, Optional ByVal bSplit As Integer = 0, Optional ByVal cProductType As String = "", Optional ByVal nProductId As Integer = 0, Optional ByVal cCurrencySymbol As String = "", Optional ByVal nOrderStatus As String = "6,9,17", Optional ByVal cOrderType As String = "ORDER") As XmlElement
             Try
                 Dim cSQL As String = "exec "
                 Dim cCustomParam As String = ""
@@ -8279,9 +8279,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 cSQL &= Protean.Tools.Database.SqlDate(dBegin) & ","
                 cSQL &= Protean.Tools.Database.SqlDate(dEnd) & ","
                 cSQL &= cCustomParam & ","
-                cSQL &= "'" & cCurrencySymbol & "',"
-                cSQL &= nOrderStatus1 & ","
-                cSQL &= nOrderStatus2 & ","
+                cSQL &= "'" & cCurrencySymbol & "','"
+                cSQL &= nOrderStatus & "',"
                 cSQL &= "'" & cOrderType & "'"
 
                 Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report")
@@ -8302,8 +8301,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 oReturnElmt.SetAttribute("cProductType", cProductType)
                 oReturnElmt.SetAttribute("nProductId", nProductId)
                 oReturnElmt.SetAttribute("cCurrencySymbol", cCurrencySymbol)
-                oReturnElmt.SetAttribute("nOrderStatus1", nOrderStatus1)
-                oReturnElmt.SetAttribute("nOrderStatus2", nOrderStatus2)
+                oReturnElmt.SetAttribute("nOrderStatus", nOrderStatus)
                 oReturnElmt.SetAttribute("cOrderType", cOrderType)
                 Return oRptElmt
             Catch ex As Exception

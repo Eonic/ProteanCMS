@@ -34,6 +34,14 @@ Partial Public Class Cms
 
             End Sub
 
+            Public Sub Filters(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
+                Try
+
+                Catch ex As Exception
+
+                End Try
+            End Sub
+
             Public Sub NewsByDate(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Try
                     Dim datestring As String = ""

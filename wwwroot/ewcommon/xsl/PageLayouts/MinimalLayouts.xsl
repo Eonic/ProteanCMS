@@ -2462,6 +2462,13 @@
         </xsl:variable>
 
         <a href="{$href}" title="{$title}">
+          <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($href,'.pdf')">
+              <xsl:attribute name="onclick">
+                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                <xsl:value-of select="$href"/>
+                <xsl:text>');</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
           <xsl:choose>
             <xsl:when test="img[contains(@src,'.svg')]">
               <svg id="svg-{@position}" width="{img/@width}" height="{img/@height}" viewbox="0 0 {img/@width} {img/@height}" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -2929,11 +2936,11 @@
     <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
       <xsl:variable name="apiKey">
         <xsl:choose>
-          <xsl:when test="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey!=''">
-            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+          <xsl:when test="$GoogleAPIKey!=''">
+            <xsl:value-of select="$GoogleAPIKey"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="$GoogleAPIKey"/>
+            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
            </xsl:otherwise>
         </xsl:choose>
        </xsl:variable>

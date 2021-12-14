@@ -5452,6 +5452,11 @@
             Gets or sets a the maximum font pointsize (caption:max-pointsize).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.CaptionReadDefines.StartFontPointsize">
+            <summary>
+            Gets or sets a the start font pointsize (caption:start-pointsize).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.CaptionReadDefines.Defines">
             <summary>
             Gets the defines that should be set as a define on an image.
@@ -5543,6 +5548,51 @@
             Gets the defines that should be set as a define on an image.
             </summary>
         </member>
+        <member name="T:ImageMagick.Formats.DngInterpolation">
+            <summary>
+            Defines the dng interpolation quality.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Disabled">
+            <summary>
+            Interpolation will be disabled.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Linear">
+            <summary>
+            Linear interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Vng">
+            <summary>
+            VNG interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Ppg">
+            <summary>
+            PPG interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Ahd">
+            <summary>
+            AHD interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Dcb">
+            <summary>
+            DCB interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Dht">
+            <summary>
+            DHT interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.ModifiedAhd">
+            <summary>
+            Modified AHD interpolation (by Anton Petrusevich).
+            </summary>
+        </member>
         <member name="T:ImageMagick.Formats.DngOutputColor">
             <summary>
             Defines the dng output colors.
@@ -5598,6 +5648,11 @@
             Gets or sets a value indicating wether auto brightness should be used (dng:no-auto-bright).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.DngReadDefines.InterpolationQuality">
+            <summary>
+            Gets or sets a value indicating the interpolation quality (dng:interpolation-quality).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.OutputColor">
             <summary>
             Gets or sets the output color (dng:output-color).
@@ -5610,12 +5665,12 @@
         </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.UseAutoWhitebalance">
             <summary>
-            Gets or sets a value indicating wether auto whitebalance should be used (dng:use_auto_wb).
+            Gets or sets a value indicating wether auto whitebalance should be used (dng:use-auto-wb).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.UseCameraWhitebalance">
             <summary>
-            Gets or sets a value indicating wether the whitebalance of the camera should be used (dng:use_camera_wb).
+            Gets or sets a value indicating wether the whitebalance of the camera should be used (dng:use-camera-wb).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.Defines">
