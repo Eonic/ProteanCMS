@@ -48,8 +48,8 @@
       </bind>
     </bind>
     <bind nodeset="tblContent/cContentXmlBrief/Content" id="columnBind">
-      <bind id="xlCol" nodeset="@mdCol" required="false()" type="string"/>
-      <bind id="lgCol" nodeset="@mdCol" required="false()" type="string"/>
+      <bind id="xlCol" nodeset="@xlCol" required="false()" type="string"/>
+      <bind id="lgCol" nodeset="@lgCol" required="false()" type="string"/>
       <bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
       <bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
       <bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>

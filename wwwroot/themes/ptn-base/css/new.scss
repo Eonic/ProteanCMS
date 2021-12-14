@@ -1,3 +1,9 @@
-﻿.hidden {
+﻿//utilities
+.hidden {
     display:none;
+}
+.module-centred {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

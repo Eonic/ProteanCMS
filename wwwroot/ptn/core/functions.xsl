@@ -598,9 +598,9 @@
 
 
   <xsl:template match="Page" mode="js">
-    <xsl:apply-templates select="." mode="siteJs"/>   
+    <xsl:apply-templates select="." mode="siteJs"/>
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
-    
+
     <!-- IF IE6 apply PNG Fix as standard -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
@@ -926,7 +926,7 @@
 
   <!-- Javascripts that can be brought in in the footer of the HTML document, e.g. asynchronous scripts -->
   <xsl:template match="Page" mode="footerJs">
-    
+
     <!-- common javascript -->
     <xsl:if test="$ScriptAtBottom='on' or $adminMode">
       <xsl:apply-templates select="." mode="js"/>
@@ -936,7 +936,7 @@
     <xsl:apply-templates select="." mode="jQuery" />
     <!-- page specific javascripts -->
     <xsl:apply-templates select="." mode="pageJs"/>
-    
+
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
@@ -945,7 +945,7 @@
         <xsl:apply-templates select="/Page/Contents/Content" mode="contentJS"/>
       </xsl:otherwise>
     </xsl:choose>
-    
+
     <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
 
     <!-- GOOGLE MAPS -->
@@ -1016,7 +1016,7 @@
     </xsl:choose>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
-    
+
     <xsl:apply-templates select="." mode="BingTrackingCode"/>
     <xsl:apply-templates select="." mode="FacebookTrackingCode"/>
     <xsl:apply-templates select="." mode="FeedOptimiseCode"/>
@@ -1099,9 +1099,8 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="metadata">
-    <xsl:if test="@cssFramework='bs3' or $adminMode">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    </xsl:if>
+  
 
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
       <xsl:apply-templates select="." mode="getMetaDescription"/>
@@ -1172,7 +1171,7 @@
     <xsl:if test="Contents/Content[@name='fb-pages_id']">
       <meta property="fb:pages" content="{Contents/Content[@name='fb-pages_id']}"/>
     </xsl:if>
-    
+
     <!--LUKE 05.10.21-->
     <!--Open Graph-->
     <!-- xsl:if test="Contents/Content[@name='ogTitle']">
@@ -1199,7 +1198,7 @@
     <xsl:if test="Contents/Content[@name='ogtype']">
       <meta property="og:type" content="{Contents/Content[@name='ogtype']}"/>
     </xsl:if -->
- 
+
     <!--Twitter-->
     <xsl:if test="Contents/Content[@name='twittercard']">
       <meta name="twitter:card" content="{Contents/Content[@name='twittercard']}"/>
@@ -1222,7 +1221,7 @@
     </xsl:if>
 
     <!--LinkedIn-->
-    
+
     <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
       <script type="text/javascript">
         <xsl:text>_linkedin_partner_id = "</xsl:text>
@@ -1234,12 +1233,12 @@
       </script>
       <noscript>
         <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
-      </noscript>       
+      </noscript>
     </xsl:if>
     <!-- End Linked In Insight Tag Code -->
-    
+
     <!--END-->
-    
+
     <xsl:if test="Contents/Content[@name='pinterestVerify']">
       <meta name="p:domain_verify" content="{Contents/Content[@name='pinterestVerify']}"/>
     </xsl:if>
@@ -2396,12 +2395,12 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="BingTrackingCode">
-   
-      <xsl:if test="$BingTrackingID!=''">
-        <script>
-          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
-        </script>
-         <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+
+    <xsl:if test="$BingTrackingID!=''">
+      <script>
+        (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
+      </script>
+      <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
         <script>
           window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' });
         </script>
@@ -2946,7 +2945,6 @@
           </a>
         </xsl:if>
       </xsl:if>
-      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -4067,7 +4065,6 @@
         <xsl:with-param name="span" select="$span"/>
       </xsl:apply-templates>
     </ul>
-    <div class="terminus">&#160;</div>
   </xsl:template>
 
   <!-- -->
@@ -4106,7 +4103,6 @@
         <xsl:with-param name="homeLink" select="true()"/>
       </xsl:apply-templates>
     </ul>
-    <div class="terminus">&#160;</div>
   </xsl:template>
   <!-- -->
 
@@ -4238,7 +4234,6 @@
     <ul>
       <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem_topnav"/>
     </ul>
-    <div class="terminus">&#160;</div>
   </xsl:template>
   <!-- -->
   <xsl:template match="MenuItem" mode="submenuitem_topnav">
@@ -4294,57 +4289,28 @@
     <xsl:param name="linkText"/>
     <xsl:param name="altText"/>
     <xsl:param name="linkType"/>
-    <xsl:choose>
-      <xsl:when test="$page[@cssFramework='bs3']">
-        <div class="morelink">
-          <span>
-            <a href="{$link}" title="{$altText}" class="btn btn-default btn-sm" itemprop="mainEntityOfPage">
-              <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
-                <xsl:attribute name="rel">external</xsl:attribute>
-                <xsl:attribute name="class">extLink</xsl:attribute>
-              </xsl:if>
-              <xsl:choose>
-                <xsl:when test="$linkText!=''">
-                  <xsl:value-of select="$linkText"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:call-template name="term2042" />
-                </xsl:otherwise>
-              </xsl:choose>
-              <span class="hidden">
-                <xsl:text>about </xsl:text>
-                <xsl:value-of select="$altText"/>
-              </span>
-            </a>
+    <div class="morelink">
+      <span>
+        <a href="{$link}" title="{$altText}" class="btn btn-primary" itemprop="mainEntityOfPage">
+          <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
+            <xsl:attribute name="rel">external</xsl:attribute>
+            <xsl:attribute name="class">extLink</xsl:attribute>
+          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="$linkText!=''">
+              <xsl:value-of select="$linkText"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:call-template name="term2042" />
+            </xsl:otherwise>
+          </xsl:choose>
+          <span class="d-none">
+            <xsl:text>about </xsl:text>
+            <xsl:value-of select="$altText"/>
           </span>
-        </div>
-      </xsl:when>
-      <xsl:otherwise>
-        <div class="morelink">
-          <span>
-            <a href="{$link}" title="{$altText}" itemprop="mainEntityOfPage">
-              <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
-                <xsl:attribute name="rel">external</xsl:attribute>
-                <xsl:attribute name="class">extLink</xsl:attribute>
-              </xsl:if>
-              <xsl:choose>
-                <xsl:when test="$linkText!=''">
-                  <xsl:value-of select="$linkText"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:call-template name="term2042" />
-                </xsl:otherwise>
-              </xsl:choose>
-              <span class="hidden">
-                <xsl:text>about </xsl:text>
-                <xsl:value-of select="$altText"/>
-              </span>
-              <span class="gtIcon">&#160;&gt;</span>
-            </a>
-          </span>
-        </div>
-      </xsl:otherwise>
-    </xsl:choose>
+        </a>
+      </span>
+    </div>
   </xsl:template>
 
   <xsl:template match="Content[@type='Module']" mode="moreLink">
@@ -4356,94 +4322,57 @@
           <xsl:with-param name="var" select="$link"/>
         </xsl:call-template>
       </xsl:variable>
-      <xsl:choose>
-        <xsl:when test="$page[@cssFramework='bs3']">
-          <div class="morelink">
-            <span>
-              <a title="{@linkText}" class="btn btn-default btn-sm">
+      <div class="morelink">
+        <span>
+          <a title="{@linkText}" class="btn btn-primary">
+            <xsl:choose>
+              <xsl:when test="$numbertest = 'number'">
+                <xsl:variable name="pageId" select="@link"/>
+                <xsl:attribute name="href">
+                  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+                </xsl:attribute>
+              </xsl:when>
+              <xsl:otherwise>
                 <xsl:choose>
-                  <xsl:when test="$numbertest = 'number'">
-                    <xsl:variable name="pageId" select="@link"/>
+                  <xsl:when test="contains($link,'#')">
+                    <xsl:attribute name="class">
+                      <xsl:text>btn btn-default scroll-to-anchor</xsl:text>
+                    </xsl:attribute>
                     <xsl:attribute name="href">
-                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+                      <xsl:value-of select="$link"/>
                     </xsl:attribute>
                   </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:choose>
-                      <xsl:when test="contains($link,'#')">
-                        <xsl:attribute name="class">
-                          <xsl:text>btn btn-default btn-sm scroll-to-anchor</xsl:text>
-                        </xsl:attribute>
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                      </xsl:when>
-                      <xsl:when test="contains($link,'http')">
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="rel">external</xsl:attribute>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <xsl:attribute name="href">
-                          <xsl:text>http://</xsl:text>
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="rel">external</xsl:attribute>
-                      </xsl:otherwise>
-                    </xsl:choose>
-
-                  </xsl:otherwise>
-                </xsl:choose>
-
-                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
-                  <xsl:attribute name="onclick">
-                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-                    <xsl:value-of select="$link"/>
-                    <xsl:text>');</xsl:text>
-                  </xsl:attribute>
-                </xsl:if>
-
-                <xsl:value-of select="@linkText"/>
-              </a>
-            </span>
-          </div>
-        </xsl:when>
-        <xsl:otherwise>
-          <div class="morelink">
-            <span>
-              <a title="{@linkText}">
-                <xsl:choose>
-                  <xsl:when test="$numbertest = 'number'">
-                    <xsl:variable name="pageId" select="@link"/>
+                  <xsl:when test="contains($link,'http')">
                     <xsl:attribute name="href">
-                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+                      <xsl:value-of select="$link"/>
                     </xsl:attribute>
+                    <xsl:attribute name="rel">external</xsl:attribute>
                   </xsl:when>
                   <xsl:otherwise>
-                    <xsl:choose>
-                      <xsl:when test="contains($link,'http')">
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <xsl:attribute name="href">
-                          <xsl:text>http://</xsl:text>
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                      </xsl:otherwise>
-                    </xsl:choose>
+                    <xsl:attribute name="href">
+                      <xsl:text>http://</xsl:text>
+                      <xsl:value-of select="$link"/>
+                    </xsl:attribute>
                     <xsl:attribute name="rel">external</xsl:attribute>
                   </xsl:otherwise>
                 </xsl:choose>
-                <xsl:value-of select="@linkText"/>
-                <!--<span class="gtIcon">&#160;&gt;</span>-->
-              </a>
-            </span>
-          </div>
-        </xsl:otherwise>
-      </xsl:choose>
+
+              </xsl:otherwise>
+            </xsl:choose>
+
+            <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+              <xsl:attribute name="onclick">
+                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                <xsl:value-of select="$link"/>
+                <xsl:text>');</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
+
+            <xsl:value-of select="@linkText"/>
+          </a>
+        </span>
+      </div>
+
     </xsl:if>
   </xsl:template>
 
@@ -4464,11 +4393,10 @@
   <xsl:template match="Content[@type='Link']" mode="moreLink">
     <xsl:param name="link"/>
     <xsl:param name="altText"/>
-    <xsl:choose>
-      <xsl:when test="$page[@cssFramework='bs3']">
+    
         <div class="morelink">
           <span>
-            <a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-default btn-sm">
+            <a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-primary">
               <xsl:if test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
                 <xsl:attribute name="rel">external</xsl:attribute>
               </xsl:if>
@@ -4487,7 +4415,7 @@
                 <xsl:otherwise>
                   <xsl:call-template name="term2042" />
                   <xsl:text> </xsl:text>
-                  <span class="hidden">
+                  <span class="d-none">
                     <xsl:text>about </xsl:text>
                     <xsl:value-of select="altText"/>
                   </span>
@@ -4496,39 +4424,7 @@
             </a>
           </span>
         </div>
-      </xsl:when>
-      <xsl:otherwise>
-        <span>
-          <a href="{$link}" title="Click here to go to {link}" class="extLink">
-            <xsl:if test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
-              <xsl:attribute name="rel">external</xsl:attribute>
-            </xsl:if>
-            <xsl:choose>
-              <xsl:when test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
-                <xsl:choose>
-                  <xsl:when test="string-length($altText) &gt; 70">
-                    <xsl:value-of select="substring($altText,1,60)"/> ......
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:value-of select="$altText"/>
-
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:call-template name="term2042" />
-                <xsl:text> </xsl:text>
-                <span class="hidden">
-                  <xsl:text>about </xsl:text>
-                  <xsl:value-of select="altText"/>
-                </span>
-                <span class="gtIcon">&#160;&gt;</span>
-              </xsl:otherwise>
-            </xsl:choose>
-          </a>
-        </span>
-      </xsl:otherwise>
-    </xsl:choose>
+      
   </xsl:template>
 
   <xsl:template match="*" mode="backLink">
@@ -4567,7 +4463,7 @@
             </xsl:otherwise>
           </xsl:choose>
           <xsl:if test="$altText !=''">
-            <span class="hidden">
+            <span class="d-none">
               <!-- about -->
               <xsl:call-template name="term2023" />
               <xsl:text>&#160;</xsl:text>
@@ -8024,7 +7920,7 @@
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">300</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">400</xsl:template>
 
-  
+
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
 
@@ -8043,7 +7939,7 @@
 
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
-  
+
   <!-- To fit 800x600 - fits nicely inside any screen ratio -->
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeWidth">750</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeHeight">550</xsl:template>
@@ -8247,7 +8143,7 @@
         </xsl:when>
         <xsl:otherwise>descending</xsl:otherwise>
       </xsl:choose>
-    </xsl:param> 
+    </xsl:param>
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -9623,8 +9519,8 @@
 
   <xsl:template match="getFilterButtons" mode="getFilterButtons">
 
-      <!--  <xsl:copy-of select="ew:GetFilterButtons()"/> -->
-    
+    <!--  <xsl:copy-of select="ew:GetFilterButtons()"/> -->
+
   </xsl:template>
 
   <xsl:template name="getSelectOptionsFunction">
@@ -9934,7 +9830,7 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
-    
+
     <!-- THIS IS OVERRIDDEN IN ADMIN MODE BY TEMPLATE IN ADMINWYSIWYG-->
     <xsl:choose>
       <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">

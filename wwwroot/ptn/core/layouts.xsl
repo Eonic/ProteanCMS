@@ -490,7 +490,6 @@
                 </xsl:with-param>
               </xsl:apply-templates>
             </div>
-            <div class="terminus">&#160;</div>
           </div>
         </div>
       </section>
@@ -595,8 +594,6 @@
           </div>
         </div>
       </section>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
@@ -655,8 +652,6 @@
                 </xsl:with-param>
               </xsl:apply-templates>
             </div>
-            <!-- Terminus class fix to floating columns -->
-            <div class="terminus">&#160;</div>
           </div>
         </div>
       </section>
@@ -679,10 +674,7 @@
           <xsl:with-param name="position">column1-1col</xsl:with-param>
           <xsl:with-param name="class">column1-1col</xsl:with-param>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
       </div>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
@@ -884,7 +876,6 @@
           <xsl:if test="@rss and @rss!='false'">
             <xsl:apply-templates select="." mode="rssLink" />
           </xsl:if>
-          <div class="terminus">&#160;</div>
           <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
             <div class="panel-image">
               <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
@@ -914,7 +905,6 @@
               <xsl:text> </xsl:text>
             </div>
           </xsl:if>
-          <div class="terminus">&#160;</div>
         </div>
       </xsl:otherwise>
     </xsl:choose>
