@@ -1,5 +1,8 @@
 ﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
   <!-- ############## News Articles ##############   -->
+  
+    
+  
   <!-- NewsArticle Module -->
   <xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
     <!-- Set Variables -->
@@ -73,14 +76,11 @@
           <xsl:text>clearfix NewsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="row cols" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-lgcols="{$lgColsToShow}" data-xlcols="{$xlColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-lgcols="{$lgColsToShow}" data-xlcols="{$xlColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
         <!--responsive columns-->
         <xsl:attribute name="class">
-          <xsl:text>row cols</xsl:text>
-          <xsl:choose>
-            <xsl:when test="@xsCol='2'"> row-cols-sm-2</xsl:when>
-            <xsl:otherwise> row-cols-1</xsl:otherwise>
-          </xsl:choose>
+          <xsl:text>row cols g-2 row-cols-1</xsl:text>
+          <xsl:if test="@xsCol='2'"> row-cols-2</xsl:if>
           <xsl:if test="@smCol and @smCol!=''">
             <xsl:text> row-cols-sm-</xsl:text>
             <xsl:value-of select="@smCol"/>
@@ -101,9 +101,6 @@
             <xsl:text> row-cols-xxl-</xsl:text>
             <xsl:value-of select="@cols"/>
           </xsl:if>
-          <!--<xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> content-cols-responsive</xsl:text>
-          </xsl:if>-->
         </xsl:attribute>
         <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">

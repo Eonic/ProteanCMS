@@ -121,9 +121,9 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <div class="listItem list-group-item hproduct">
+    <div class="listItem hproduct">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item hproduct'"/>
+        <xsl:with-param name="class" select="'listItem hproduct'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
@@ -422,7 +422,7 @@
               </xsl:choose>
             </h4>
 
-            <div class="list-group">
+            <div class="">
               <xsl:apply-templates select="/" mode="List_Related_Products">
                 <xsl:with-param name="parProductID" select="@id"/>
               </xsl:apply-templates>

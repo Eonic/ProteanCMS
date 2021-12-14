@@ -165,13 +165,12 @@
         <div class="clearfix footer-main">
           <div class="container">
             <xsl:if test="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
-              <ul class="nav nav-pills footer-nav hidden-print">
+              <ul class="nav footer-nav">
                 <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem[not(DisplayName/@exclude='true')]">
-                  <li>
-                    <xsl:if test="position()=last()">
-                      <xsl:attribute name="class">last</xsl:attribute>
-                    </xsl:if>
-                    <xsl:apply-templates select="." mode="menuLink"/>
+                  <li class="nav-link">
+                    <xsl:apply-templates select="." mode="menuLink">
+                      <xsl:with-param name="class">nav-link</xsl:with-param>
+                    </xsl:apply-templates>
                   </li>
                 </xsl:for-each>
               </ul>

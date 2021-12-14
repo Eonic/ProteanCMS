@@ -454,7 +454,7 @@
         </div>
         <!--NAV TOGGLE (MOBILE)-->
         <xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"> </span>
           </button>
         </xsl:if>

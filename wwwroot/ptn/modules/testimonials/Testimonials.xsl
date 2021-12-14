@@ -103,7 +103,6 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@stepCount != '0'">
-          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -124,9 +123,9 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem list-group-item">
+    <div class="listItem">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item'"/>
+        <xsl:with-param name="class" select="'listItem'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
@@ -169,8 +168,6 @@
             </xsl:if>
           </footer>
         </blockquote>
-        <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -217,8 +214,6 @@
               <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
             </div>
           </xsl:if>
-          <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-          <div class="terminus">&#160;</div>
         </div>
       </a>
     </div>
@@ -242,7 +237,6 @@
       <div class="entry-content">
         <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
       </div>
-      <div class="terminus">&#160;</div>
       <div class="source">
         <p>
           <xsl:if test="SourceName/node()!=''">
@@ -256,8 +250,6 @@
           </xsl:if>
         </p>
       </div>
-      <!-- Terminus class fix to floating content -->
-      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
