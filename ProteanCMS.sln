@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.352
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wwwroot", "wwwroot\", "{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}"
 	ProjectSection(WebsiteProperties) = preProject
@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProteanCMS.IntegrationTests
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wiki", "wiki\", "{1D896BB0-1F17-4D1E-9752-87C6AA70CD61}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_61668"
 		Debug.AspNetCompiler.PhysicalPath = "wiki\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61668\"

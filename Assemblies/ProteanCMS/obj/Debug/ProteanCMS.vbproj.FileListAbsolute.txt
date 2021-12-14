@@ -747,7 +747,6 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.MicrosoftAjax.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ClearScript.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\CMPCDotNet.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\EcmaScript.NET.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Facebook.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Fonet.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Google.Protobuf.dll
@@ -772,14 +771,12 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\PreMailer.Net.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Buffers.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Net.FtpClient.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\WebGrease.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll.config
@@ -824,7 +821,6 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Msie.resources.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
@@ -854,7 +850,6 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bi
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.MicrosoftAjax.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\CMPCDotNet.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\EcmaScript.NET.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Facebook.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Fonet.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Google.Protobuf.dll
@@ -879,14 +874,12 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bi
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\PreMailer.Net.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Renci.SshNet.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Buffers.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Net.FtpClient.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\WebGrease.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll.config
@@ -931,7 +924,6 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bi
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Msie.resources.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
@@ -1257,14 +1249,6 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JudoPayDotNet.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.pdb
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll.config
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JudoPayDotNet.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.pdb
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\tidy.x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\tidy.x86.dll
@@ -1475,3 +1459,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\QRCoder.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\QRCoder.dll
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\QRCoder.dll
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\QRCoder.dll
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
