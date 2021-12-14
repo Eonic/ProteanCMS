@@ -46,12 +46,13 @@
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
     <xsl:if test="$ref!=''">
-    <script>
-      $(function () {
-      <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
-      <xsl:text>-btn').popover('show');</xsl:text>
-      });
-    </script></xsl:if>
+      <script>
+        $(function () {
+        <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
+        <xsl:text>-btn').popover('show');</xsl:text>
+        });
+      </script>
+    </xsl:if>
   </xsl:template>
 
   <!-- -->
@@ -123,13 +124,13 @@
   <xsl:template match="group[parent::Content]" mode="xform">
     <xsl:param name="class"/>
     <div class="card card-default {@class}">
-        <xsl:if test=" @id!='' ">
-          <xsl:attribute name="id">
-            <xsl:value-of select="@id"/>
-          </xsl:attribute>
-        </xsl:if>
+      <xsl:if test=" @id!='' ">
+        <xsl:attribute name="id">
+          <xsl:value-of select="@id"/>
+        </xsl:attribute>
+      </xsl:if>
       <div class="card-header">
-          <xsl:apply-templates select="label[position()=1]" mode="legend"/>
+        <xsl:apply-templates select="label[position()=1]" mode="legend"/>
       </div>
       <fieldset class="card-body">
         <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
@@ -152,7 +153,7 @@
       </xsl:if>
     </div>
   </xsl:template>
-  
+
 
   <xsl:template match="group | repeat" mode="xform">
     <xsl:param name="class"/>
@@ -241,7 +242,7 @@
           <xsl:apply-templates select="submit" mode="xform"/>
         </div>
       </div>
-            
+
     </fieldset>
   </xsl:template>
 
@@ -442,41 +443,47 @@
       </div>
     </div>
   </xsl:template>
-  
+
   <!-- -->
   <!-- ========================== GROUP In Accordian ========================== -->
   <xsl:template match="group[contains(@class,'accordion')]" mode="xform">
     <div class="accordian" id="accordian-{@ref}">
-            <xsl:apply-templates select="*" mode="xform"/>
-      </div>
-    </xsl:template>
-  
-     <xsl:template match="group[parent::group[contains(@class,'accordion')]]" mode="xform">
-       <xsl:variable name="isopen">
-         <xsl:if test="position()=1">
-           <xsl:text>show</xsl:text>
-         </xsl:if>       </xsl:variable>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="heading{position()}">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{position()}" aria-expanded="true" aria-controls="collapse{position()}">
-            <xsl:apply-templates select="label">
-              <xsl:with-param name="cLabel">
-                <xsl:value-of select="@ref"/>
-              </xsl:with-param>
-            </xsl:apply-templates>
-          </button>
-        </h2>
-        <div id="collapse{position()}" class="accordion-collapse collapse {$isopen}" aria-labelledby="heading{position()}" data-bs-parent="#accordion-{@ref}">
-          <div class="accordion-body">
-            <xsl:apply-templates select="*" mode="xform"/>
-          </div>
-        </div>
+      <xsl:apply-templates select="*" mode="xform"/>
     </div>
   </xsl:template>
-  
+
+  <xsl:template match="group[parent::group[contains(@class,'accordion')]]" mode="xform">
+    <xsl:variable name="isopen">
+      <xsl:if test="position()=1">
+        <xsl:text>show</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="isclosed">
+      <xsl:if test="not(position()=1)">
+        <xsl:text>collapsed</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading{position()}">
+        <button class="accordion-button {$isclosed}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{position()}" aria-expanded="true" aria-controls="collapse{position()}">
+          <xsl:apply-templates select="label">
+            <xsl:with-param name="cLabel">
+              <xsl:value-of select="@ref"/>
+            </xsl:with-param>
+          </xsl:apply-templates>
+        </button>
+      </h2>
+      <div id="collapse{position()}" class="accordion-collapse collapse {$isopen}" aria-labelledby="heading{position()}" data-bs-parent="#accordion-{@ref}">
+        <div class="accordion-body">
+          <xsl:apply-templates select="*" mode="xform"/>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+
   <!-- -->
   <!-- ========================== Input Group ========================== -->
-  
+
   <xsl:template match="group[contains(@class,'input-group')]" mode="xform">
     <div class="input-group">
       <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
@@ -524,7 +531,7 @@
 
   <!-- -->
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_pt">
-    
+
     <div class="pt-col form-group">
       <span class="pt-label">
         <xsl:value-of select="label"/>
@@ -537,7 +544,7 @@
 
   <xsl:template match="trigger" mode="xform_cols_pt">
     <div class="pt-col">
-    <span class="pt-label">&#160;</span>
+      <span class="pt-label">&#160;</span>
       <xsl:apply-templates select="." mode="xform"/>
     </div>
   </xsl:template>
@@ -718,14 +725,14 @@
 
     <!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
     <xsl:if test="not($nolabel!='')">
-    <xsl:apply-templates select="label">
-      <xsl:with-param name="cLabel">
-        <xsl:apply-templates select="." mode="getRefOrBind"/>
-      </xsl:with-param>
-      <xsl:with-param name="bRequired">
-        <xsl:if test="contains(@class,'required') and count(item)!=1">true</xsl:if>
-      </xsl:with-param>
-    </xsl:apply-templates>
+      <xsl:apply-templates select="label">
+        <xsl:with-param name="cLabel">
+          <xsl:apply-templates select="." mode="getRefOrBind"/>
+        </xsl:with-param>
+        <xsl:with-param name="bRequired">
+          <xsl:if test="contains(@class,'required') and count(item)!=1">true</xsl:if>
+        </xsl:with-param>
+      </xsl:apply-templates>
     </xsl:if>
     <xsl:variable name="fmhz">
       <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
@@ -737,43 +744,43 @@
 
     </xsl:variable>
 
-   
-      <xsl:choose>
-        <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!='' or help or hint">
-          <div class="input-group">
-            <xsl:if test="@prefixIcon!=''">
-              <span class="input-group-addon">
-                <i class="{@prefixIcon}">&#160;</i>
-              </span>
-            </xsl:if>
-            <xsl:if test="@prefix!=''">
-              <div class="input-group-addon">
-                <xsl:value-of select="@prefix"/>
-              </div>
-            </xsl:if>
 
-            <xsl:apply-templates select="." mode="xform_control"/>
-            <xsl:if test="@suffix!=''">
-              <div class="input-group-addon">
-                <xsl:value-of select="@suffix"/>
-              </div>
-            </xsl:if>
-            <xsl:if test="@suffixIcon!=''">
-              <span class="input-group-addon">
-                <i class="{@suffixIcon}">&#160;</i>
-              </span>
-            </xsl:if>
-            <xsl:if test="hint">
-              <span class="input-group-btn">
-                <xsl:apply-templates select="." mode="hintButton"/>
-              </span>
-            </xsl:if>
-          </div>
-        </xsl:when>
-        <xsl:otherwise>
+    <xsl:choose>
+      <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!='' or help or hint">
+        <div class="input-group">
+          <xsl:if test="@prefixIcon!=''">
+            <span class="input-group-addon">
+              <i class="{@prefixIcon}">&#160;</i>
+            </span>
+          </xsl:if>
+          <xsl:if test="@prefix!=''">
+            <div class="input-group-addon">
+              <xsl:value-of select="@prefix"/>
+            </div>
+          </xsl:if>
+
           <xsl:apply-templates select="." mode="xform_control"/>
-        </xsl:otherwise>
-      </xsl:choose>
+          <xsl:if test="@suffix!=''">
+            <div class="input-group-addon">
+              <xsl:value-of select="@suffix"/>
+            </div>
+          </xsl:if>
+          <xsl:if test="@suffixIcon!=''">
+            <span class="input-group-addon">
+              <i class="{@suffixIcon}">&#160;</i>
+            </span>
+          </xsl:if>
+          <xsl:if test="hint">
+            <span class="input-group-btn">
+              <xsl:apply-templates select="." mode="hintButton"/>
+            </span>
+          </xsl:if>
+        </div>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="." mode="xform_control"/>
+      </xsl:otherwise>
+    </xsl:choose>
 
 
     <xsl:if test="not(contains(@class,'pickImage'))">
@@ -1147,15 +1154,16 @@
       <xsl:if test="contains(@autofocus,'autofocus')">
         <xsl:attribute name="autofocus">autofocus</xsl:attribute>
       </xsl:if>
-        <xsl:attribute name="class">
-           <xsl:text>form-control</xsl:text>
-            <xsl:if test="@class!=''">
-              <xsl:text> </xsl:text><xsl:value-of select="@class"/>
-            </xsl:if>
-          <xsl:if test="alert">
-            <xsl:text> is-invalid</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
+      <xsl:attribute name="class">
+        <xsl:text>form-control</xsl:text>
+        <xsl:if test="@class!=''">
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="@class"/>
+        </xsl:if>
+        <xsl:if test="alert">
+          <xsl:text> is-invalid</xsl:text>
+        </xsl:if>
+      </xsl:attribute>
       <xsl:if test="@data-fv-not-empty='true'">
         <xsl:attribute name="required">
           <xsl:text>required</xsl:text>
@@ -1187,9 +1195,9 @@
       </xsl:if>
     </input>
     <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-    <div class="invalid-feedback">
-      <xsl:value-of select="@data-fv-not-empty___message"/>
-    </div>
+      <div class="invalid-feedback">
+        <xsl:value-of select="@data-fv-not-empty___message"/>
+      </div>
     </xsl:if>
     <xsl:if test="alert">
       <div class="invalid-feedback">
@@ -1199,7 +1207,7 @@
   </xsl:template>
 
   <xsl:template match="*" mode="getRefOrBind">
-   
+
   </xsl:template>
 
   <!-- CREATE THE NAME attribute for an input field -->
@@ -1651,12 +1659,12 @@
       <div class="input-group">
         <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
         <input type="text" name="{$ref}-alt" id="{$ref}-alt" value="{$displayDate}" class="jqDatePicker input-small form-control" placeholder="{$inlineHint}"/>
-        
-          <label for="{$ref}-alt" class="input-group-addon btn btn-info input-group-btn">
-            <i class="fas fa-calendar">
-              <xsl:text> </xsl:text>
-            </i>
-          </label>
+
+        <label for="{$ref}-alt" class="input-group-addon btn btn-info input-group-btn">
+          <i class="fas fa-calendar">
+            <xsl:text> </xsl:text>
+          </i>
+        </label>
       </div>
     </div>
 
@@ -1790,31 +1798,31 @@
     <!-- HOURS -->
 
     <div class="input-group">
-    <select name="{$ref}" id="{$ref}">
-      <xsl:attribute name="class">
-        <xsl:value-of select="@class"/>
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="@class"/>
-        <xsl:text>hours form-select</xsl:text>
-      </xsl:attribute>
-      <xsl:call-template name="getHourOptions">
-        <xsl:with-param name="value" select="$hValue"/>
-      </xsl:call-template>
-    </select>
-    <xsl:text> : </xsl:text>
-    <!-- MINUTES -->
-    <select name="{$ref}" id="{$ref}">
-      <xsl:attribute name="class">
-        <xsl:value-of select="@class"/>
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="@class"/>
-        <xsl:text>minutes form-select</xsl:text>
-      </xsl:attribute>
-      <xsl:call-template name="getMinuteOptions">
-        <xsl:with-param name="value" select="$mValue"/>
-      </xsl:call-template>
-    </select>
-      </div>
+      <select name="{$ref}" id="{$ref}">
+        <xsl:attribute name="class">
+          <xsl:value-of select="@class"/>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="@class"/>
+          <xsl:text>hours form-select</xsl:text>
+        </xsl:attribute>
+        <xsl:call-template name="getHourOptions">
+          <xsl:with-param name="value" select="$hValue"/>
+        </xsl:call-template>
+      </select>
+      <xsl:text> : </xsl:text>
+      <!-- MINUTES -->
+      <select name="{$ref}" id="{$ref}">
+        <xsl:attribute name="class">
+          <xsl:value-of select="@class"/>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="@class"/>
+          <xsl:text>minutes form-select</xsl:text>
+        </xsl:attribute>
+        <xsl:call-template name="getMinuteOptions">
+          <xsl:with-param name="value" select="$mValue"/>
+        </xsl:call-template>
+      </select>
+    </div>
   </xsl:template>
   <!-- -->
   <!-- ========================== CONTROL : Time ========================== -->
@@ -3069,7 +3077,7 @@
           <span class="req">*</span>
         </xsl:if>
       </label>
-        <xsl:apply-templates select="parent::*[help]" mode="infoButton"/>
+      <xsl:apply-templates select="parent::*[help]" mode="infoButton"/>
     </xsl:if>
   </xsl:template>
 
@@ -3481,8 +3489,8 @@
       <xsl:text> </xsl:text>
     </script>
   </xsl:template>
-  
-<xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
+
+  <xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
     <xsl:variable name="label_low">
       <xsl:apply-templates select="label" mode="lowercase"/>
     </xsl:variable>
@@ -3524,34 +3532,34 @@
         </xsl:otherwise>
       </xsl:choose>
     </input>
-  
-  <input type="hidden" name="{$ref}-CountryCode" id="{$ref}-CountryCode">
-  </input>
-   
+
+    <input type="hidden" name="{$ref}-CountryCode" id="{$ref}-CountryCode">
+    </input>
+
   </xsl:template>
-  
- <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
+
+  <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
     <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css" />
     <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
       <xsl:text> </xsl:text>
     </script>
-     <script>
+    <script>
       $(document).ready(function () {
       <xsl:for-each select="descendant::input[contains(@class,'telephone')]">
-       <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-      const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
- 
-      window.intlTelInput(telinput, {
-      initialCountry: "auto",
-      preferredCountries: ["gb"],
-         separateDialCode: true,
-      utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
-      hiddenInput: "<xsl:value-of select="$ref"/>"
+        <xsl:variable name="ref">
+          <xsl:apply-templates select="." mode="getRefOrBind"/>
+        </xsl:variable>
+        const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
+
+        window.intlTelInput(telinput, {
+        initialCountry: "auto",
+        preferredCountries: ["gb"],
+        separateDialCode: true,
+        utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
+        hiddenInput: "<xsl:value-of select="$ref"/>"
         });
 
-       telinput.addEventListener("countrychange", function() {
+        telinput.addEventListener("countrychange", function() {
         var countryCode = $("div.iti__selected-dial-code")[0].innerText;
         $(".<xsl:value-of select="$ref"/>-CountryCode").val(countryCode);
         });
@@ -3559,8 +3567,8 @@
 
       </xsl:for-each>
       });
-      
-   
+
+
     </script>
 
   </xsl:template>

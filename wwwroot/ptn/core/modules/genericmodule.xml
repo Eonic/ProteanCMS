@@ -48,6 +48,8 @@
       </bind>
     </bind>
     <bind nodeset="tblContent/cContentXmlBrief/Content" id="columnBind">
+      <bind id="xlCol" nodeset="@mdCol" required="false()" type="string"/>
+      <bind id="lgCol" nodeset="@mdCol" required="false()" type="string"/>
       <bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
       <bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
       <bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>
@@ -86,7 +88,7 @@
             <help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
           </select>
           <select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
-            <label class="label-border-top">Icon</label>
+            <label>Icon</label>
             <item>
               <label>None</label>
               <value>false</value>
@@ -120,6 +122,85 @@
             </item>
           </select1>
         </group>
+        <group id="animate">
+          <label>Animate</label>
+          <select1 bind="cModAnim" appearance="minimal">
+            <label>Animate</label>
+            <item>
+              <label>Fade In</label>
+              <value>fadeIn</value>
+            </item>
+            <item>
+              <label>Fade In Up</label>
+              <value>fadeInUp</value>
+            </item>
+            <item>
+              <label>Fade In Down</label>
+              <value>fadeInDown</value>
+            </item>
+            <item>
+              <label>Fade In Left</label>
+              <value>fadeInLeft</value>
+            </item>
+            <item>
+              <label>Fade In Right</label>
+              <value>fadeInRight</value>
+            </item>
+            <item>
+              <label>fade In Up Big</label>
+              <value>fadeInUpBig</value>
+            </item>
+            <item>
+              <label>Fade In Down Big</label>
+              <value>fadeInDownBig</value>
+            </item>
+            <item>
+              <label>Fade In Left Big</label>
+              <value>fadeInLeftBig</value>
+            </item>
+            <item>
+              <label>Fade In Right Big</label>
+              <value>fadeInRightBig</value>
+            </item>
+            <item>
+              <label>Slide In Down</label>
+              <value>slideInDown</value>
+            </item>
+            <item>
+              <label>Slide In Left</label>
+              <value>slideInLeft</value>
+            </item>
+            <item>
+              <label>Slide In Right</label>
+              <value>slideInRight</value>
+            </item>
+            <item>
+              <label>Bounce In</label>
+              <value>bounceIn</value>
+            </item>
+            <item>
+              <label>Bounce In Up</label>
+              <value>bounceInUp</value>
+            </item>
+            <item>
+              <label>Bounce In Down</label>
+              <value>bounceInDown</value>
+            </item>
+            <item>
+              <label>Bounce In Left</label>
+              <value>bounceInLeft</value>
+            </item>
+            <item>
+              <label>Bounce In Right</label>
+              <value>bounceInRight</value>
+            </item>
+          </select1>
+
+          <range bind="cModAnimDelay" start="0" end="500" step="10">
+            <label>Delay</label>
+          </range>
+
+        </group>
         <group id="publish">
           <label>Publish Settings</label>
           <input bind="cPosition" class="readonly">
@@ -132,7 +213,7 @@
             <label>Expire Date</label>
           </input>
           <select1 bind="nStatus" appearance="full" class="vshort">
-            <label class="label-border-top label-heading">Status</label>
+            <label>Status</label>
             <item>
               <label>Live</label>
               <value>1</value>
@@ -158,7 +239,7 @@
             <help class="inline">This module will be shown on every child of the current page. If you use this feature when adding a module to the home page, the module will appear on every page.</help>
           </select>
           <select1 bind="marginBelow" appearance="full">
-            <label class="bold-label">Margin Below Module</label>
+            <label>Margin Below Module</label>
             <item>
               <label>Yes</label>
               <value>true</value>
@@ -174,27 +255,35 @@
           <select bind="Screens" appearance="full" class="multiline bs-only">
             <label>Hide from Screens</label>
             <item>
-              <label>Extra small (phones) under 768px</label>
+              <label>Extra small under 576px</label>
               <value>xs</value>
             </item>
             <item>
-              <label>Small (tablets) 768px or over</label>
+              <label>Small 576px-767px</label>
               <value>sm</value>
             </item>
             <item>
-              <label>Medium (desktops) 992px or over </label>
+              <label>Medium 768px-991px </label>
               <value>md</value>
             </item>
             <item>
-              <label>Large (desktops) 1200px or over </label>
+              <label>Large 992px-1199px </label>
               <value>lg</value>
+            </item>
+            <item>
+              <label>Extra Large 1200px-1399px </label>
+              <value>xl</value>
+            </item>
+            <item>
+              <label>Extra Extra Large 1400px and up </label>
+              <value>xxl</value>
             </item>
           </select>
         </group>
         <group id="columns" class="inline-4col">
           <label>Number of columns</label>
           <select1 bind="nColumns">
-            <label>Desktop</label>
+            <label>XXL</label>
             <item>
               <label>1</label>
               <value>1</value>
@@ -220,11 +309,71 @@
               <value>6</value>
             </item>
             <help class="inline">
-              <p>Large devices (≥1200px), typically desktop computers</p>
+              <p>Very large devices (1400px), typically larger desktop monitors</p>
+            </help>
+          </select1>
+          <select1 bind="xlCol">
+            <label>XL</label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Larger devices (1200px-1399px), typically desktop computers</p>
+            </help>
+          </select1>
+          <select1 bind="lgCol">
+            <label>LG</label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Larger devices (992px-1199px), typically laptops, large tablets and small desktop monitors</p>
             </help>
           </select1>
           <select1 bind="mdCol">
-            <label>Laptop</label>
+            <label>MD</label>
             <item>
               <label>1</label>
               <value>1</value>
@@ -250,11 +399,11 @@
               <value>6</value>
             </item>
             <help class="inline">
-              <p>Medium devices (≥992px), typically laptops, large tablets and small desktop monitors</p>
+              <p>Medium sized devices (768px-991px), typically small tablets</p>
             </help>
           </select1>
           <select1 bind="smCol">
-            <label>Tablet</label>
+            <label>SM</label>
             <item>
               <label>1</label>
               <value>1</value>
@@ -280,11 +429,11 @@
               <value>6</value>
             </item>
             <help class="inline">
-              <p>Small devices (≥768px), typically small tablets</p>
+              <p>Small devices (576px-767px), typically large phones.</p>
             </help>
           </select1>
           <select1 bind="xsCol">
-            <label>Lrg Mobile</label>
+            <label>XS</label>
             <item>
               <label>1</label>
               <value>1</value>
@@ -294,7 +443,7 @@
               <value>2</value>
             </item>
             <help class="inline">
-              <p>Extra small devices (≥576px), typically small tablets. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
+              <p>Extra small devices (under 576px), typically small phones. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
             </help>
           </select1>
         </group>

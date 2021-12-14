@@ -41,6 +41,8 @@ form.ewXform {
     }
 }
 .ewAdmin #adminLayout {
+    padding-bottom: 28px;
+
     .form-2-col {
         @include make-row();
 
@@ -134,7 +136,7 @@ form.ewXform {
     }
 
     .alert-info {
-        color:#fff;
+        color: #fff;
     }
 }
 #pick-by-image {
@@ -193,4 +195,23 @@ form.ewXform {
             padding:0px 5px
         }
     }
+}
+.navbar-fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: #f1f1f1;
+    padding: 7px;
+    border-top: 1px solid #ccc;
+    z-index: 10;
+}
+//buttons and colour overrides
+.ewAdmin #adminLayout {
+    .btn-info {
+        @include button-variant($admin-info,$admin-info);
+    }
+}
+.accordion-body > label:first-child {
+    display:none;
 }

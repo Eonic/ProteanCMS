@@ -34,13 +34,31 @@
         <xsl:when test="@smCol and @smCol!=''">
           <xsl:value-of select="@smCol"/>
         </xsl:when>
-        <xsl:otherwise>2</xsl:otherwise>
+        <xsl:otherwise>1</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="mdColsToShow">
       <xsl:choose>
         <xsl:when test="@mdCol and @mdCol!=''">
           <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="lgColsToShow">
+      <xsl:choose>
+        <xsl:when test="@lgCol and @lgCol!=''">
+          <xsl:value-of select="@lgCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="xlColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xlCol and @xlCol!=''">
+          <xsl:value-of select="@xlCol"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="@cols"/>
@@ -55,27 +73,37 @@
           <xsl:text>clearfix NewsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="row cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div class="row cols" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-lgcols="{$lgColsToShow}" data-xlcols="{$xlColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
         <!--responsive columns-->
         <xsl:attribute name="class">
           <xsl:text>row cols</xsl:text>
           <xsl:choose>
-            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
-            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+            <xsl:when test="@xsCol='2'"> row-cols-sm-2</xsl:when>
+            <xsl:otherwise> row-cols-1</xsl:otherwise>
           </xsl:choose>
           <xsl:if test="@smCol and @smCol!=''">
-            <xsl:text> sm-content-</xsl:text>
+            <xsl:text> row-cols-sm-</xsl:text>
             <xsl:value-of select="@smCol"/>
           </xsl:if>
           <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> md-content-</xsl:text>
+            <xsl:text> row-cols-md-</xsl:text>
             <xsl:value-of select="@mdCol"/>
           </xsl:if>
-          <xsl:text> cols</xsl:text>
-          <xsl:value-of select="@cols"/>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> content-cols-responsive</xsl:text>
+          <xsl:if test="@lgCol and @lgCol!=''">
+            <xsl:text> row-cols-lg-</xsl:text>
+            <xsl:value-of select="@lgCol"/>
           </xsl:if>
+          <xsl:if test="@xlCol and @xlCol!=''">
+            <xsl:text> row-cols-xl-</xsl:text>
+            <xsl:value-of select="@xlCol"/>
+          </xsl:if>
+          <xsl:if test="@cols and @cols!=''">
+            <xsl:text> row-cols-xxl-</xsl:text>
+            <xsl:value-of select="@cols"/>
+          </xsl:if>
+          <!--<xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>-->
         </xsl:attribute>
         <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">

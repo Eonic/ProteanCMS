@@ -2210,7 +2210,7 @@
 
     <div class="accordion-item">
       <h5 class="accordion-header" id="heading{$makeClass}">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{$makeClass}" aria-expanded="true" aria-controls="collapse{$makeClass}"> 
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{$makeClass}" aria-expanded="true" aria-controls="collapse{$makeClass}"> 
         <xsl:if test="label/@icon!=''">
           <i class="{label/@icon}">&#160;</i>&#160;
         </xsl:if> 
