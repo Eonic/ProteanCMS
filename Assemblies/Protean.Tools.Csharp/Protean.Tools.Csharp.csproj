@@ -129,9 +129,9 @@
   <ItemGroup>
     <Compile Include="Calendar.cs" />
     <Compile Include="Encryption.cs" />
+    <Compile Include="Errors.cs" />
     <Compile Include="MySqlDatabase.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="Errors.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="IdentityModel\Tokens\JwtHelper.cs" />
     <Compile Include="Number.cs" />
