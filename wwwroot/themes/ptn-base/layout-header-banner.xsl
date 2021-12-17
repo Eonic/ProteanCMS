@@ -18,7 +18,7 @@
   <xsl:variable name="themeLayout">layout-header-banner</xsl:variable>
   <xsl:template match="Page" mode="bodyDisplay">
     <xsl:variable name="nav-padding">
-      <xsl:if test="$currentPage/DisplayName[@navpad='false'] and not($cartPage)">nav-no-padding</xsl:if>
+      <xsl:if test="$currentPage/DisplayName[@navpad='false'] and not($cartPage)">mt-0</xsl:if>
     </xsl:variable>
     <xsl:variable name="detail-heading">
       <xsl:if test="$page/ContentDetail">detail-heading</xsl:if>
@@ -141,7 +141,7 @@
       </xsl:if>
 
       <!--~~~~~~~~~~~~~~ MAIN CONTENT ~~~~~~~~~~~~~~ -->
-      <div class="container-wrapper {$detail-heading} {$home-class}">
+      <div class="container-wrapper {$detail-heading} {$nav-padding} {$home-class}">
         <xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
           <xsl:attribute name="class">
             container-wrapper fixed-nav-content <xsl:value-of select="$nav-padding"/> <xsl:value-of select="$detail-heading"/> <xsl:value-of select="$home-class"/>

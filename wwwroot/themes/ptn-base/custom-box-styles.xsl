@@ -35,8 +35,8 @@
       </xsl:if>
       <xsl:text>Brand colour background</xsl:text>
     </option>
-    <option value="bg-dark text-white">
-      <xsl:if test="$value='bg-dark text-white'">
+    <option value="bg-dark">
+      <xsl:if test="$value='bg-dark'">
         <xsl:attribute name="selected">selected</xsl:attribute>
       </xsl:if>
       <xsl:text>Dark background</xsl:text>

@@ -130,7 +130,7 @@
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
               <xsl:if test="@marginBelow='false'">
-                <xsl:text> margin-bottom-0 </xsl:text>
+                <xsl:text> mb-0 </xsl:text>
               </xsl:if>
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>
