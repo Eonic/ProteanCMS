@@ -7,7 +7,7 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="RecipeGrid" formPath="recipegrid/recipe-grid" icon="fas fa-utensils" name="Recipe Grid">Grid of Recipes</Module>
+      <Module type="RecipeGrid" formPath="recipegrid/recipe-grid" icon="fas fa-pizza-slice" name="Recipe Grid">Grid of Recipes</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
