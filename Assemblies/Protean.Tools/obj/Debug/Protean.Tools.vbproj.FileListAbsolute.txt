@@ -565,11 +565,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.Op
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Management.Sdk.Sfc.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Smo.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SmoExtended.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Owin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csharp.dll
