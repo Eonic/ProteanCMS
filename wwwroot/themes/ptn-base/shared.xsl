@@ -385,7 +385,52 @@
     </xsl:choose>
   </xsl:template>
 
-
+  <!-- ############################################# FOOTER ############################################### -->
+  <xsl:template match="Page" mode="footer1">
+    <div id="pagefooter" class="Site clearfix">
+      <div class="footer-inner">
+        <div class="clearfix footer-main">
+          <div class="container">
+            <xsl:if test="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+              <div class="footer-nav-wrapper" role="navigation">
+                <ul class="nav footer-nav">
+                  <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem[not(DisplayName/@exclude='true')]">
+                    <li class="nav-item">
+                      <xsl:apply-templates select="." mode="menuLink">
+                        <xsl:with-param name="class">nav-link</xsl:with-param>
+                      </xsl:apply-templates>
+                    </li>
+                  </xsl:for-each>
+                </ul>
+              </div>
+            </xsl:if>
+            <div id="sitefooter">
+              <xsl:apply-templates select="/Page" mode="addModule">
+                <xsl:with-param name="text">Add Module</xsl:with-param>
+                <xsl:with-param name="position">sitefooter</xsl:with-param>
+                <xsl:with-param name="class">footer-main</xsl:with-param>
+              </xsl:apply-templates>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix footer-utility">
+          <div class="container">
+            <div class="clearfix footer-utility-inner">
+              <div id="copyright">
+                <xsl:apply-templates select="/Page" mode="addModule">
+                  <xsl:with-param name="text">Copyright</xsl:with-param>
+                  <xsl:with-param name="position">copyright</xsl:with-param>
+                </xsl:apply-templates>
+              </div>
+              <div class="credit">
+                <xsl:apply-templates select="/" mode="developerLink"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
   <!-- ############################################# BESPOKE ############################################### -->
 
 </xsl:stylesheet>
