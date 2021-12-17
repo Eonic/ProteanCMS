@@ -439,7 +439,7 @@
         <xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top</xsl:attribute>
       </xsl:if>
       <!--LOGO-->
-      <div class="container-fluid">
+      <div class="container">
         <div class="navbar-brand">
           <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
             <xsl:with-param name="type">Image</xsl:with-param>

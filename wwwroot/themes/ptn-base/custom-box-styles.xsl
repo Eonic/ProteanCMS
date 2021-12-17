@@ -29,23 +29,23 @@
   <xsl:template match="*[ancestor::Page[@cssFramework='bs3' or @adminMode='true']]" mode="siteBGStyles">
     <xsl:param name="value" />
     <!-- EXAMPLE BESPOKE BOX-->
-    <option value="primaryBG">
-      <xsl:if test="$value='primaryBG'">
+    <option value="bg-primary text-white">
+      <xsl:if test="$value='bg-primary text-white'">
         <xsl:attribute name="selected">selected</xsl:attribute>
       </xsl:if>
-      <xsl:text>brand colour background</xsl:text>
+      <xsl:text>Brand colour background</xsl:text>
     </option>
-    <option value="darkBG">
-      <xsl:if test="$value='darkBG'">
+    <option value="bg-dark">
+      <xsl:if test="$value='bg-dark'">
         <xsl:attribute name="selected">selected</xsl:attribute>
       </xsl:if>
-      <xsl:text>dark background</xsl:text>
+      <xsl:text>Dark background</xsl:text>
     </option>
     <option value="whiteBG">
       <xsl:if test="$value='whiteBG'">
         <xsl:attribute name="selected">selected</xsl:attribute>
       </xsl:if>
-      <xsl:text>white background</xsl:text>
+      <xsl:text>White background</xsl:text>
     </option>
   </xsl:template>
   <!-- ############################################ TinyMCE styles ############################################### -->

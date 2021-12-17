@@ -130,7 +130,7 @@
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
               <xsl:if test="@marginBelow='false'">
-                <xsl:text> margin-bottom-0 </xsl:text>
+                <xsl:text> mb-0 </xsl:text>
               </xsl:if>
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>
@@ -847,29 +847,41 @@
                 <xsl:apply-templates select="." mode="inlinePopupOptions" />
                 <xsl:text> </xsl:text>
                 <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
-                  <h3 class="title">
-                    <xsl:if test="@contentType='Module'">
-                      <xsl:attribute name="class">title layout-title</xsl:attribute>
-                    </xsl:if>
-                    <xsl:if test="@icon!='' or @uploadIcon!=''">
-                      <xsl:attribute name="class">title module-with-icon</xsl:attribute>
-                    </xsl:if>
-                    <xsl:apply-templates select="." mode="moduleLink"/>
-                  </h3>
+                  <xsl:choose>
+                    <xsl:when test="@contentType='Module'">
+                      <h2 class="layout-title">
+                        <xsl:apply-templates select="." mode="moduleLink"/>
+                      </h2>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <h3 class="title">
+                        <xsl:if test="@icon!='' or @uploadIcon!=''">
+                          <xsl:attribute name="class">title module-with-icon</xsl:attribute>
+                        </xsl:if>
+                        <xsl:apply-templates select="." mode="moduleLink"/>
+                      </h3>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </xsl:if>
               </div>
             </xsl:when>
             <xsl:otherwise>
               <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
-                <h3 class="title">
-                  <xsl:if test="@contentType='Module'">
-                    <xsl:attribute name="class">title layout-title</xsl:attribute>
-                  </xsl:if>
-                  <xsl:if test="@icon!='' or @uploadIcon!=''">
-                    <xsl:attribute name="class">title module-with-icon</xsl:attribute>
-                  </xsl:if>
-                  <xsl:apply-templates select="." mode="moduleLink"/>
-                </h3>
+                <xsl:choose>
+                  <xsl:when test="@contentType='Module'">
+                    <h2 class="layout-title">
+                      <xsl:apply-templates select="." mode="moduleLink"/>
+                    </h2>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <h3 class="title">
+                      <xsl:if test="@icon!='' or @uploadIcon!=''">
+                        <xsl:attribute name="class">title module-with-icon</xsl:attribute>
+                      </xsl:if>
+                      <xsl:apply-templates select="." mode="moduleLink"/>
+                    </h3>
+                  </xsl:otherwise>
+                </xsl:choose>
               </xsl:if>
             </xsl:otherwise>
           </xsl:choose>

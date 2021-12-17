@@ -1,4 +1,18 @@
-﻿//utilities
+﻿html {
+    height: 100%;
+}
+body {
+    display:flex;
+    flex-direction:column;
+    height:100%;
+}
+#mainTable {
+    flex-shrink:0;
+}
+a {
+    text-decoration:none;
+}
+//utilities
 .hidden {
     display:none;
 }
@@ -7,3 +21,155 @@
     flex-direction: column;
     align-items: center;
 }
+.module-with-icon > .center-block{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.align-btn-footer {
+    .lIinner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .entryFooter {
+            margin-top: auto;
+        }
+    }
+}
+//end utilities
+.bannerless-page {
+    padding-top:$top-padding;
+}
+.container-wrapper {
+    margin-top: $top-padding;
+}
+.layout-title {
+    text-align: center;
+}
+
+// BACKGROUNDS
+.section-spacing {
+    padding-top:$section-padding;
+    padding-bottom:$section-padding - $grid-gutter-y;
+    margin-bottom:$grid-gutter-y;
+}
+section.bg-light, 
+section.bg-dark,
+section.bg-primary {
+    @extend .section-spacing;
+}
+section.bg-dark,
+section.bg-primary {
+    @extend .text-white;
+}
+section.bg-primary {
+    .btn-primary {
+        @extend .btn-dark;
+    }
+
+    a {
+        @extend .link-light;
+    }
+}
+// LIST ITEMS
+.listItem {
+    margin-bottom: $grid-gutter-width;
+
+    @if $content-btn-align==true {
+        @extend .align-btn-footer;
+    }
+}
+// DETAIL PAGES
+
+.imageEnlarge {
+    i {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        content: '\f00e';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        padding:5px;
+    }
+
+    span {
+        @extend .visually-hidden;
+    }
+}
+.detail-container > .detail {
+    @extend .container;
+
+    .picture {
+        float: none;
+        position: relative;
+        margin-bottom: $spacer;
+
+        @include media-breakpoint-up(sm) {
+            margin-left: $spacer;
+            max-width: 50%;
+            float: right;
+        }
+    }
+}
+.socialBookmarks {
+    @include clearfix;
+    @extend .container;
+
+    span.bookmark {
+        display: block;
+        float: left;
+        padding-right: 25px;
+        min-height: 40px;
+        line-height: 1;
+
+        &:last-child {
+            padding-right: 0;
+        }
+    }
+    //span.google-bookmark{padding-right:0;}
+}
+
+.bottom-left .socialBookmarks,
+.bottom-right .socialBookmarks {
+    margin-top: $grid-gutter-y;
+}
+
+.top-left .socialBookmarks,
+.top-right .socialBookmarks {
+    margin-bottom: $grid-gutter-y;
+}
+
+.align-Right .socialLinks {
+    text-align: right;
+}
+
+.bottom-right .socialBookmarks,
+.top-right .socialBookmarks {
+    float: right;
+}
+.backlink {
+    margin-bottom: 0.5rem;
+
+    a {
+        &:before {
+            content: '\f053';
+            font-family: 'Font Awesome 5 Free';
+            padding-right: 5px;
+            font-weight: 700;
+            font-size: 0.7rem;
+        }
+    }
+}
+// FOOTER
+#pagefooter {
+    margin-top: auto;
+    background: $footer-bg;
+    padding-top: $spacer;
+
+    .footer-nav {
+        margin-left:-1rem;
+        margin-right:-1rem;
+    }
+}
+

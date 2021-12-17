@@ -816,7 +816,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-secondary</xsl:text>
+        <xsl:text> btn-primary</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -903,7 +903,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-secondary</xsl:text>
+        <xsl:text> btn-primary</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -964,7 +964,7 @@
 
   <xsl:template match="submit[@class='principle' and @ref!='']" mode="xform">
     <xsl:variable name="class">
-      <xsl:text>btn btn-secondary</xsl:text>
+      <xsl:text>btn btn-primary</xsl:text>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
         <xsl:value-of select="@class"/>
