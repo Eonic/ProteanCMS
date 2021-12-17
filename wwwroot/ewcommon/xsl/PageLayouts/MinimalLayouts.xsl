@@ -6419,16 +6419,16 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:attribute name="class">col-md-12</xsl:attribute>
-              <div class="col-md-5 pull-right">
+              
               <xsl:apply-templates select="." mode="displayDetailImage"/>
-                <xsl:if test="@bookingURL!=''">
+                <!--<xsl:if test="@bookingURL!=''">
                   <xsl:text> </xsl:text>
                   <a href="{@bookingURL}" class="btn btn-success btn-block">
                     Book Here&#160;&#160;<i class="fa fa-mouse-pointer">&#160;</i>
                   </a>
                 </xsl:if>
-                <xsl:apply-templates select="Content[@type='Contact']" mode="displayContributor"/>
-              </div>
+                <xsl:apply-templates select="Content[@type='Contact']" mode="displayContributor"/>-->
+              
             </xsl:otherwise>
           </xsl:choose>
           <xsl:if test="StartDate!=''">
