@@ -166,5 +166,10 @@ section.bg-primary {
     margin-top: auto;
     background: $footer-bg;
     padding-top: $spacer;
+
+    .footer-nav {
+        margin-left:-1rem;
+        margin-right:-1rem;
+    }
 }
 

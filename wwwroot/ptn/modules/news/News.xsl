@@ -64,7 +64,6 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@stepCount != '0'">
-          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -295,8 +294,6 @@
                   <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
                 </div>
               </xsl:if>
-              <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-              <div class="terminus">&#160;</div>
             </div>
           </div>
         </xsl:when>
@@ -330,8 +327,6 @@
                 </div>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayTagsNoLink"/>
-              <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-              <div class="terminus">&#160;</div>
             </div>
           </a>
         </xsl:otherwise>
@@ -383,8 +378,6 @@
           </xsl:apply-templates>
         </div>
       </xsl:if>
-      <!-- Terminus class fix to floating content -->
-      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
