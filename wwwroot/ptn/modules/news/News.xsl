@@ -79,7 +79,7 @@
       <div data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-lgcols="{$lgColsToShow}" data-xlcols="{$xlColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
         <!--responsive columns-->
         <xsl:attribute name="class">
-          <xsl:text>row cols g-2 row-cols-1</xsl:text>
+          <xsl:text>row cols row-cols-1</xsl:text>
           <xsl:if test="@xsCol='2'"> row-cols-2</xsl:if>
           <xsl:if test="@smCol and @smCol!=''">
             <xsl:text> row-cols-sm-</xsl:text>

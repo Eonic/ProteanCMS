@@ -1,0 +1,20 @@
+﻿.socialLinks.iconset-plain {
+    a {
+        padding-left: 8px;
+        padding-right: 8px;
+        font-size: $header-icon-size;
+    }
+}
+#cartBrief {
+    .cart-icon {
+        position: relative;
+        font-size: $header-icon-size;
+
+        #itemCount {
+            position: absolute;
+            top: -0.2rem;
+            right: -0.2rem;
+            font-size: 0.6rem;
+        }
+    }
+}

@@ -7,3 +7,14 @@
     flex-direction: column;
     align-items: center;
 }
+//end utilities
+.layout-title {
+    text-align:center;
+}
+.listItem {
+    margin-bottom:$grid-gutter-width;
+}
+#pagefooter {
+    background:$footer-bg;
+    padding-top:$spacer;
+}
