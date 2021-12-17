@@ -3,7 +3,7 @@
 
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="TagList" name="Tag List">Tag List</Module>
+      <Module type="TagList" formPath="taglist/tag-list" icon="fas fa-tags" name="Tag List">Tag List</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

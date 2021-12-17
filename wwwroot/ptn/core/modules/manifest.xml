@@ -16,16 +16,16 @@
   <ContentTypes>
     <ContentTypeGroup name="Text/HTML">
       <ContentType type="Module" name="Module">A block of content</ContentType>
-      <ContentType type="FormattedText" name="Formatted Text">Plain text that can be formatted into HTML using a simple word processor interface</ContentType>
+      <ContentType type="FormattedText" name="Formatted Text">Add text formatted into HTML</ContentType>
       <ContentType type="PlainText" name="Plain Text">Plain unformatted text</ContentType>
-      <ContentType type="Image" name="Image">An Image to display</ContentType>
+      <ContentType type="Image" name="Image">Add an image</ContentType>
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
       <Module type="FormattedText" formPath="formattedtext/formattedtext" icon="fas fa-align-right" name="Formatted Text">Text formatted in HTML editor</Module>
       <Module type="Image" formPath="image/image" icon="fas fa-image" name="Image">An Image, with option to add a link to it.</Module>
-      <Module type="Video" formPath="video/video" icon="fab fa-youtube" name="Video">Embed a video, either from a local file, YouTube, or Vimeo</Module>
+      <Module type="Video" formPath="video/video" icon="fab fa-youtube" name="Video">Embed an uploaded or external video</Module>
       <Module type="EmailForm" formPath="emailform/emailform" icon="fab fa-wpforms"  name="Email Form">Email Response Form</Module>
       <Module type="SocialBookmarks" formPath="socialbookmarks/socialbookmarks" icon="fab fa-facebook-square"  name="Social Bookmarks">Social Bookmarks</Module>
     </ModuleGroup>

@@ -3,7 +3,7 @@
 
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="TrainingCourseList" name="Training Course List">Training Course List</Module>
+      <Module type="TrainingCourseList" formPath="trainingcourse/training-course-list" icon="fas fa-user-friends" name="Training Course List">Training Course List</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

@@ -2,7 +2,7 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ModuleTypes>
     <ModuleGroup name="Search features" icon="fa fa-search">
-      <Module type="Search" name="Search">Search Module - Can be custimised, several types of search available</Module>
+      <Module type="Search" icon="fas fa-search" name="Search">Add a search module</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

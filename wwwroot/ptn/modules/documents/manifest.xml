@@ -2,12 +2,12 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="Media">
-      <ContentType type="Document" name="Document">A Document for visitors to download</ContentType>
+      <ContentType type="Document" formPath="documents/document" name="Document">A Document for visitors to download</ContentType>
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="DocumentList" name="Document List">List of Documents</Module>
+      <Module type="DocumentList" formPath="documents/document-list" icon="fas fa-file" name="Document List">List of Documents</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

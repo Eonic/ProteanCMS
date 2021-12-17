@@ -4,7 +4,7 @@
   
   <ModuleTypes>
     <ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
-      <Module type="GoogleMapv3" formPath="googlemapv3/googlemapv3" icon="fas fa-map-marked" name="Google Map">NEW IMPROVED Google Map using latest integration</Module>
+      <Module type="GoogleMapv3" formPath="googlemapv3/google-map-v3" icon="fas fa-map-marked" name="Google Map">Google Map</Module>
     </ModuleGroup>
   </ModuleTypes>
   

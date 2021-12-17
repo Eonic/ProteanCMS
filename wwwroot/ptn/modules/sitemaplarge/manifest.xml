@@ -4,7 +4,7 @@
 
   <ModuleTypes>
     <ModuleGroup name="Navigation and Links" icon="fa-link">
-      <Module type="SiteMapLarge" name="Sitemap large">A sitemap more suited to large websites</Module>
+      <Module type="SiteMapLarge" formPath="sitemaplarge/site-map-large" icon="fas fa-sitemap" name="Sitemap large">A sitemap more suited to large websites</Module>
     </ModuleGroup>
     
   </ModuleTypes>

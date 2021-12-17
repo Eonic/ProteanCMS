@@ -3,8 +3,7 @@
 
   <ModuleTypes>
     <ModuleGroup name="Basic Content" icon="fa-pencil">
-      <Module type="EmailForm" name="Email Form">Email Response Form</Module>
+      <Module type="EmailForm" formPath="emailform/email-form" icon="far fa-envelope" name="Email Form">Email Response Form</Module>
     </ModuleGroup>
   </ModuleTypes>
-  
 </PageLayouts>
