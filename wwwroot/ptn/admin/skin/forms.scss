@@ -115,7 +115,11 @@ form.ewXform {
         max-height: 140px;
         background: #e3e1e1;
         margin: 0;
+        width:100%;
+        max-width:none;
+    }
 
+    .bfh-selectbox.pickIcon .bfh-selectbox-options ul {
         li {
             float: left;
 

@@ -1284,13 +1284,8 @@
     <xsl:for-each select="ms:node-set($styles)/*/*">
       <!-- EXAMPLE BESPOKE BOX-->
       <div data-value="{node()}">
-        <div class="panel {node()}">
-          <div class="panel-heading">
+        <div class="{node()}">
             <xsl:value-of select="node()"/>
-          </div>
-          <div class="panel-body">
-            Example Text
-          </div>
         </div>
       </div>
     </xsl:for-each>
@@ -1300,100 +1295,154 @@
   <!-- -->
   <xsl:template match="*" mode="bootstrapBoxStyles">
     <xsl:param name="value" />
-    <div data-value="panel-primary">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-primary</h6>
+    <div data-value="bg-primary">
+      <div class="card bg-primary">
+        <div class="card-header">
+          <h5 class="card-title">card primary</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="panel-success">
-      <div class="panel panel-success">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-success</h6>
+    <div data-value="bg-secondary">
+      <div class="card bg-secondary">
+        <div class="card-header">
+          <h5 class="card-title">card secondary</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="panel-info">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-info</h6>
+    <div data-value="bg-info">
+      <div class="card bg-info">
+        <div class="card-header">
+          <h5 class="card-title">card info</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="panel-warning">
-      <div class="panel panel-warning">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-warning</h6>
+    <div data-value="bg-light">
+      <div class="card bg-light">
+        <div class="card-header">
+          <h5 class="card-title">card light</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="panel-danger">
-      <div class="panel panel-danger">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-danger</h6>
+    <div data-value="bg-dark">
+      <div class="card bg-dark">
+        <div class="card-header">
+          <h5 class="card-title">card dark</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="alert-action">
-      <div class="alert alert-action">
-        alert-action
+    <div data-value="border-primary">
+      <div class="card border-primary">
+        <div class="card-header">
+          <h5 class="card-title">card border primary</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
       </div>
     </div>
-    <div data-value="alert-success">
-      <div class="alert alert-success">
-        alert-success
+    <div data-value="border-secondary">
+      <div class="card border-secondary">
+        <div class="card-header">
+          <h5 class="card-title">card border secondary</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="border-info">
+      <div class="card border-info">
+        <div class="card-header">
+          <h5 class="card-title">card border info</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="border-light">
+      <div class="card border-light">
+        <div class="card-header">
+          <h5 class="card-title">card border light</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="border-dark">
+      <div class="card border-dark">
+        <div class="card-header">
+          <h5 class="card-title">card border dark</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="card-info">
+      <div class="card bg-info">
+        <div class="card-header">
+          <h5 class="card-title">card info</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="alert-primary">
+      <div class="alert alert-primary">
+        alert primary
+      </div>
+    </div>
+    <div data-value="alert-secondary">
+      <div class="alert alert-secondary">
+        alert secondary
       </div>
     </div>
     <div data-value="alert-info">
       <div class="alert alert-info">
-        alert-info
+        alert info
+      </div>
+    </div>
+    <div data-value="alert-light">
+      <div class="alert alert-light">
+        alert light
+      </div>
+    </div>
+    <div data-value="alert-dark">
+      <div class="alert alert-dark">
+        alert dark
+      </div>
+    </div>
+    <div data-value="alert-success">
+      <div class="alert alert-success">
+        alert success
       </div>
     </div>
     <div data-value="alert-warning">
       <div class="alert alert-warning">
-        alert-warning
+        alert warning
       </div>
     </div>
     <div data-value="alert-danger">
       <div class="alert alert-danger">
-        alert-danger
-      </div>
-    </div>
-    <div data-value="well">
-      <div class="well">
-        well
-      </div>
-    </div>
-    <div data-value="well-lg">
-      <div class="well well-lg">
-        well-lg
-      </div>
-    </div>
-    <div data-value="well-sm">
-      <div class="well well-sm">
-        well-sm
-      </div>
-    </div>
-    <div data-value="jumbotron">
-      <div class="jumbotron">
-        <h1>jumbotron</h1>
-        <div>Example Text</div>
+        alert danger
       </div>
     </div>
   </xsl:template>
