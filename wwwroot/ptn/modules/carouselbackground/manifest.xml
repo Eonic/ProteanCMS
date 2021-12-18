@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  
+  <ModuleTypes>
+    <ModuleGroup name="Image Galleries" icon="fa-picture-o">
+      <Module type="BackgroundCarousel" formPath="carouselbackground/background-carousel" icon="fas fa-images" name="Background Carousel" targetCssFramework="bs3">Create a carousel of background images with optional captions and links</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

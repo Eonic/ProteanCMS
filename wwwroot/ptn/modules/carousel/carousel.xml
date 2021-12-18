@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content moduleType="Carousel" contentType="LibraryImageWithLink" interval="5000" box="" title="" link="" linkType="internal" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="related" rss="false" position="" commentPlatform="none" fbCommentsWidth="500"/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cInterval" nodeset="@interval" required="false()" type="string"/>
+      <bind id="cBullets" nodeset="@bullets" required="false()" type="string"/>
+      <bind id="cArrows" nodeset="@arrows" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+      <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+      <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+      <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+      <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
+      <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      <bind id="cContentRSSFeed" nodeset="@rss" required="false()" type="string"/>
+      <bind id="cCommentPlatform" nodeset="@commentPlatform" required="false()" type="string"/>
+      <bind id="cDisqusShortname" nodeset="@disqusShortname" required="false()" type="string"/>
+      <bind id="livefyreID" nodeset="@livefyreID" required="false()" type="string"/>
+      <bind id="intensedebateID" nodeset="@intenseDebateID" required="false()" type="string"/>
+      <bind id="nWidthInPixels" nodeset="@fbCommentWidth" required="false()" type="string"/>
+      <bind id="nMaxDisplay" nodeset="@maxDisplay" required="false()" type="string"/>
+      <bind id="grabberRoot" nodeset="@grabberRoot" required="false()" type="string"/>
+      <bind id="grabberItems" nodeset="@grabberItems" required="false()" type="string"/>
+      <bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
+    </bind>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Carousel Module</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+        <!-- end of hidden fields -->
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Carousel Settings</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or name</label>
+        </input>
+      </group>
+      <group class="inline">
+        <select bind="cBullets" appearance="full" class="multiline">
+          <item>
+            <label>Hide bullets</label>
+            <value>true</value>
+          </item>
+        </select>
+        <select bind="cArrows" appearance="full" class="multiline">
+          <item>
+            <label>Hide arrows</label>
+            <value>true</value>
+          </item>
+        </select>
+        <input bind="cInterval" class="short">
+          <label>Interval</label>
+          <help class="inline">The amount of time in milliseconds to delay between automatically cycling an item</help>
+        </input>
+      </group>
+      <group>
+        <label>Images</label>
+        <relatedContent search="find add" type="LibraryImageWithLink" relationType="" direction="1way">
+          <label>Slides</label>
+        </relatedContent>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Carousel</label>
+    </submit>
+  </group>
+</Content>
