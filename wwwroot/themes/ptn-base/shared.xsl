@@ -9,6 +9,7 @@
   <xsl:import href="../../xsl/InstalledModules.xsl"/>
   <xsl:import href="custom-box-styles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
+  <xsl:import href="../../ptn/features/cart/cart.xsl"/>
 
 
   <!-- ############################################ THEME VARIABLES ############################################### -->
@@ -93,6 +94,7 @@
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
         <xsl:apply-templates select="." mode="commonJsFiles" />
+        <xsl:text>/ptn/core/jquery/common.js,</xsl:text>
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/jquery.appear.js,</xsl:text>
@@ -102,16 +104,16 @@
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/responsive-tabs.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
+        <!--<xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js/bootstrap-hover-dropdown.min.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
-        <xsl:value-of select="$theme"/>
-        <xsl:text>/js/theme-specific.js,</xsl:text>
+        <xsl:text>/js/bootstrap-hover-dropdown.min.js,</xsl:text>-->
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/smoothproducts.js,</xsl:text>
-        <xsl:text>~/ewCommon/js/newcart.js</xsl:text>
+        <xsl:text>~/ewCommon/js/newcart.js,</xsl:text>
+        <xsl:text>~/ewThemes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/js/theme-specific.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/site</xsl:text>

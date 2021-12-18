@@ -649,7 +649,7 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+        <script src="/ptn/core/jquery/slick.min.js">/* */</script>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="@layout='Modules_Masonary'">
@@ -663,7 +663,7 @@
           <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
         </xsl:if>
         <xsl:if test="//Content[@carousel='true']">
-          <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+          <script src="/ptn/core/jquery/slick.min.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
@@ -675,7 +675,6 @@
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
-
     <xsl:if test="//Content[@moduleType='Audio']/Path/node()!=''">
       <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.min.js">/* */</script>
       <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.inspector.js">/* */</script>

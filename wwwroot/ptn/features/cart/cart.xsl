@@ -1630,17 +1630,19 @@
         </xsl:choose>
         <xsl:text>&#160;</xsl:text>
       </label>
-      <input type="text" name="qty_{@id}" id="qty_{@id}" value="1" size="3" class="qtybox form-control"/>
-      <button class="btn btn-action qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">
-        <i class="fa fa-minus">
-          <xsl:text> </xsl:text>
-        </i>
-      </button>
-      <button class="btn btn-action qty-plus" type="button" value="+" onClick="incrementQuantity('qty_{@id}','+')">
-        <i class="fa fa-plus">
-          <xsl:text> </xsl:text>
-        </i>
-      </button>
+      <div class="input-group">
+        <button class="btn btn-info qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">
+          <i class="fa fa-minus">
+            <xsl:text> </xsl:text>
+          </i>
+        </button>
+        <input type="text" name="qty_{@id}" id="qty_{@id}" value="1" size="3" class="qtybox form-control"/>
+        <button class="btn btn-info qty-plus" type="button" value="+" onClick="incrementQuantity('qty_{@id}','+')">
+          <i class="fa fa-plus">
+            <xsl:text> </xsl:text>
+          </i>
+        </button>
+      </div>
     </div>
   </xsl:template>
   
@@ -2112,7 +2114,7 @@
         <xsl:call-template name="term3058" />
       </button>
     </xsl:if>
-    <button type="submit" name="cartAdd" class="btn btn-action">
+    <button type="submit" name="cartAdd" class="btn btn-primary">
       <xsl:attribute name="value">
         <!--Add to Cart-->
         <xsl:call-template name="term3058" />
