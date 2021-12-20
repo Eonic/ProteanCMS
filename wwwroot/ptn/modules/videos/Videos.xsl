@@ -23,32 +23,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <!--responsive columns variables-->
-    <xsl:variable name="xsColsToShow">
-      <xsl:choose>
-        <xsl:when test="@xsCol='2'">2</xsl:when>
-        <xsl:otherwise>1</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="smColsToShow">
-      <xsl:choose>
-        <xsl:when test="@smCol and @smCol!=''">
-          <xsl:value-of select="@smCol"/>
-        </xsl:when>
-        <xsl:otherwise>2</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="mdColsToShow">
-      <xsl:choose>
-        <xsl:when test="@mdCol and @mdCol!=''">
-          <xsl:value-of select="@mdCol"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@cols"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <!--end responsive columns variables-->
+    
     <!-- Output Module -->
     <div class="clearfix VideoList">
       <xsl:if test="@carousel='true'">
@@ -56,29 +31,8 @@
           <xsl:text>clearfix VideoList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1">
-        <!--responsive columns-->
-        <xsl:attribute name="class">
-          <xsl:text>cols</xsl:text>
-          <xsl:choose>
-            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
-            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
-          </xsl:choose>
-          <xsl:if test="@smCol and @smCol!=''">
-            <xsl:text> sm-content-</xsl:text>
-            <xsl:value-of select="@smCol"/>
-          </xsl:if>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> md-content-</xsl:text>
-            <xsl:value-of select="@mdCol"/>
-          </xsl:if>
-          <xsl:text> cols</xsl:text>
-          <xsl:value-of select="@cols"/>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> content-cols-responsive</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
-        <!--end responsive columns-->
+      <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1">
+        <xsl:apply-templates select="." mode="contentColumns"/>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -102,7 +56,6 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -153,9 +106,9 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="list-group-item listItem Video">
+    <div class="listItem video">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'list-group-item listItem Video'"/>
+        <xsl:with-param name="class" select="'listItem video'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
@@ -163,7 +116,7 @@
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </a>
         <a href="{$parentURL}">
-          <h3 class="title content-title">
+          <h3 class="title">
             <xsl:value-of select="Title/node()"/>
           </h3>
         </a>
@@ -209,7 +162,7 @@
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
     <div id="Video{@id}" class="detail Video">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4">
           <h1 class="title content-title">
             <xsl:value-of select="Title/node()"/>
           </h1>
@@ -252,9 +205,8 @@
               </xsl:with-param>
             </xsl:apply-templates>
           </div>
-          <div class="terminus">&#160;</div>
         </div>
-        <div class="col-md-8">
+        <div class="col-lg-8">
           <xsl:apply-templates select="." mode="VideoDetailDisplay">
             <xsl:with-param name="classes" select="'col-md-8'"/>
           </xsl:apply-templates>

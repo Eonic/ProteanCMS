@@ -88,6 +88,28 @@ section.bg-primary {
         @extend .link-light;
     }
 }
+#header-banner .container {
+    display: flex;
+    min-height: 140px;
+    align-items: center;
+    color: #fff;
+    text-shadow: 1px 1px #000;
+}
+// CONTENT LISTS
+.date,
+.dtstamp {
+    font-size: 0.75rem;
+
+    &:before {
+        content: '\f073';
+        font-family: 'Font Awesome 5 Free';
+        color: $primary;
+        padding-right: 5px;
+    }
+}
+.entryFooter .tags {
+    margin-bottom:$spacer;
+}
 // LIST ITEMS
 .listItem {
     margin-bottom: $grid-gutter-width;
@@ -124,6 +146,7 @@ section.bg-primary {
         float: none;
         position: relative;
         margin-bottom: $spacer;
+        display: block;
 
         @include media-breakpoint-up(sm) {
             margin-left: $spacer;
@@ -132,17 +155,42 @@ section.bg-primary {
         }
     }
 
+    .author {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 0.8rem;
+
+        img {
+            float: left;
+            width: 55px;
+            margin-right: 15px;
+        }
+
+        p {
+            margin-bottom: 0;
+        }
+
+        .author-role {
+        }
+    }
+
     .socialLinks {
         $social-spacing-detail: 0.5rem;
-        margin-left: -$social-spacing-detail;
-        margin-right: -$social-spacing-detail;
+        //margin-left: -$social-spacing-detail;
+        //margin-right: -$social-spacing-detail;
+        display:flex;
 
         a {
             padding-left: $social-spacing-detail;
             padding-right: $social-spacing-detail;
             padding-bottom: $social-spacing-detail;
-            display:block;
-            float:left;
+            display: block;
+            float: left;
+
+            &:first-child {
+                padding-left:0;
+            }
         }
     }
 }

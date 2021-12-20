@@ -78,7 +78,7 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <div class="listItem hproduct">
+    <div class="listItem product">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem hproduct'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
@@ -89,7 +89,7 @@
             <xsl:apply-templates select="." mode="displayThumbnail"/>
           </a>
         </xsl:if>
-        <h3 class="fn title">
+        <h3 class="title">
           <xsl:variable name="title">
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </xsl:variable>
@@ -165,7 +165,7 @@
     </xsl:variable>
     <div class="listItem sku">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem hproduct'"/>
+        <xsl:with-param name="class" select="'listItem sku'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
@@ -238,9 +238,9 @@
   <xsl:template match="Content[@type='Product']" mode="ContentDetail">
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
     <xsl:variable name="parId" select="@parId" />
-    <div class="hproduct product detail">
+    <div class="detail product-detail">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'hproduct product detail'"/>
+        <xsl:with-param name="class" select="'detail product-detail'"/>
       </xsl:apply-templates>
       <xsl:choose>
         <!-- Test whether product has SKU's -->
@@ -504,14 +504,14 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <div class="hproduct">
+    <div class="listItem product">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'hproduct'"/>
+        <xsl:with-param name="class" select="'listItem product'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
         <xsl:if test="Images/img/@src!=''">
-          <a href="{$parentURL}" class="url pull-left">
+          <a href="{$parentURL}" class="url list-image-link">
             <xsl:apply-templates select="." mode="displayThumbnail">
               <xsl:with-param name="width">125</xsl:with-param>
               <xsl:with-param name="height">125</xsl:with-param>
@@ -519,14 +519,14 @@
             </xsl:apply-templates>
           </a>
         </xsl:if>
-        <h5 class="fn title">
+        <h3 class="title">
           <xsl:variable name="title">
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </xsl:variable>
           <a href="{$parentURL}" title="{$title}">
             <xsl:value-of select="$title"/>
           </a>
-        </h5>
+        </h3>
         <xsl:if test="Manufacturer/node()!=''">
           <p class="manufacturer">
             <xsl:if test="/Page/Contents/Content[@name='makeLabel']">
@@ -561,7 +561,7 @@
             <xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
           </div>
         </xsl:if>
-        <div class="entryFooter text-right">
+        <div class="entryFooter">
           <xsl:if test="/Page/Cart">
             <xsl:apply-templates select="." mode="addToCartButton">
               <xsl:with-param name="actionURL" select="$parentURL"/>

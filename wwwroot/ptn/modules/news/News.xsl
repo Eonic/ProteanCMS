@@ -186,9 +186,9 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="col listItem newsarticle">
+    <div class="listItem newsarticle">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'col listItem newsarticle'"/>
+        <xsl:with-param name="class" select="'listItem newsarticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
@@ -256,9 +256,9 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem list-group-item newsarticle">
+    <div class="listItem newsarticle">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item newsarticle'"/>
+        <xsl:with-param name="class" select="'listItem newsarticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
 
       </xsl:apply-templates>

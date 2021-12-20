@@ -247,9 +247,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div itemscope="" itemtype="{Organization/@itemtype}" class="detail organisation-detail">
+    <div itemscope="" itemtype="{Organization/@itemtype}" class="detail organisation">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'detail organisation-detail'"/>
+        <xsl:with-param name="class" select="'detail organisation'"/>
         <xsl:with-param name="editLabel" select="@type"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>

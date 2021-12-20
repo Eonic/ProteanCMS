@@ -7262,7 +7262,7 @@
                         </xsl:attribute>
                       </xsl:if>
                     </img>
-                    <div class="text-muted">
+                    <div class="imageEnlarge">
                       <xsl:apply-templates select="self::Content" mode="imageEnlarge"/>
                     </div>
                   </a>
