@@ -84,6 +84,11 @@
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
+        <xsl:if test="Images/img/@src!=''">
+          <a href="{$parentURL}" class="url list-image-link">
+            <xsl:apply-templates select="." mode="displayThumbnail"/>
+          </a>
+        </xsl:if>
         <h3 class="fn title">
           <xsl:variable name="title">
             <xsl:apply-templates select="." mode="getDisplayName"/>
@@ -92,11 +97,6 @@
             <xsl:value-of select="$title"/>
           </a>
         </h3>
-        <xsl:if test="Images/img/@src!=''">
-          <a href="{$parentURL}" class="url">
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
-          </a>
-        </xsl:if>
         <xsl:if test="Manufacturer/node()!=''">
           <p class="manufacturer">
             <xsl:if test="/Page/Contents/Content[@name='makeLabel']">

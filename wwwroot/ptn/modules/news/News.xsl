@@ -193,7 +193,7 @@
       </xsl:apply-templates>
       <div class="lIinner">
         <xsl:if test="Images/img/@src!=''">
-          <a href="{$parentURL}" title="Read More - {Headline/node()}">
+          <a href="{$parentURL}" title="Read More - {Headline/node()}" class="list-image-link">
             <xsl:apply-templates select="." mode="displayThumbnail"/>
           </a>
           <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
