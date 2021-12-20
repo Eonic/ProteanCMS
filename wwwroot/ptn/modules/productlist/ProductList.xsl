@@ -46,7 +46,6 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <xsl:if test="@stepCount != '0'">
-          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -141,8 +140,6 @@
           </xsl:apply-templates>
           <xsl:text> </xsl:text>
         </div>
-        <!-- Terminus class fix to floating columns -->
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -219,8 +216,6 @@
             <xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
           </div>
         </xsl:if>
-        <!-- Terminus class fix to floating columns -->
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -316,7 +311,6 @@
           <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
         </div>
       </xsl:if>
-      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <xsl:if test="Content[@type='Tag']">
           <div class="tags">
@@ -332,7 +326,6 @@
         </xsl:apply-templates>
         <xsl:text> </xsl:text>
       </div>
-      <div class="terminus">&#160;</div>
       <xsl:if test="Content[@type='LibraryImage']">
         <h2>
           <xsl:call-template name="term2073" />
@@ -340,7 +333,7 @@
         <div id="productScroller">
           <table id="productScrollerInner">
             <tr>
-              <xsl:apply-templates select="Content[@type='LibraryImage']" mode="scollerImage"/>
+              <xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
             </tr>
           </table>
         </div>
@@ -389,10 +382,9 @@
         </xsl:if>
       </xsl:if>
     </div>
-    <div class="terminus">&#160;</div>
   </xsl:template>
 
-  <xsl:template match="Content" mode="scollerImage">
+  <xsl:template match="Content" mode="scrollerImage">
     <xsl:param name="showImage"/>
     <xsl:variable name="imgId">
       <xsl:text>picture_</xsl:text>
@@ -577,8 +569,6 @@
           </xsl:if>
           <xsl:text> </xsl:text>
         </div>
-        <!-- Terminus class fix to floating columns -->
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>

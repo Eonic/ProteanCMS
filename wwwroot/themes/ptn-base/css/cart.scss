@@ -1,0 +1,12 @@
+﻿.qty-product {
+    float: left;
+    margin-right: 10px;
+
+    .qty-label {
+        @extend .visually-hidden;
+    }
+
+    .input-group {
+        max-width: 120px;
+    }
+}

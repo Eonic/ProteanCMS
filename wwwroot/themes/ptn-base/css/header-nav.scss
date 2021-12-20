@@ -1,11 +1,12 @@
-﻿.not-xs {
-    @include media-breakpoint-down(lg) {
+﻿$nav-breakpoint:lg;
+.not-xs {
+    @include media-breakpoint-down($nav-breakpoint) {
         display: none;
     }
 }
 
 .xs-only {
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up($nav-breakpoint) {
         display: none;
     }
 }
@@ -13,7 +14,7 @@
 .navbar-content {
     .header-tier1,
     .header-tier2 {
-        @include media-breakpoint-up(lg) {
+        @include media-breakpoint-up($nav-breakpoint) {
             display: flex;
             float: right;
             margin-right: -($header-spacing/2);
@@ -22,12 +23,16 @@
 }
 
 .info-nav {
+    $info-nav-spacing: 0.7rem;
+    margin: 0 ($header-spacing/2) - $info-nav-spacing;
+
     .nav-link {
-        padding: 0.5rem 0.7rem;
+        padding: 0.5rem $info-nav-spacing;
     }
 }
 
 .login-btn {
+    white-space:nowrap;
     &:before {
         content: '\f007';
         font-family: 'Font Awesome 5 Free';

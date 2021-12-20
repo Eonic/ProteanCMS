@@ -4386,10 +4386,8 @@
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
-          <xsl:attribute name="class">btn btn-default btn-xs pull-left</xsl:attribute>
-            <i class="fa fa-chevron-left">
-              <xsl:text> </xsl:text>
-            </i>&#160;
+          <xsl:attribute name="class">back-link</xsl:attribute>
+          <span class="visually-hidden">&#160;</span>
           <xsl:choose>
             <xsl:when test="$linkText!=''">
               <xsl:value-of select="$linkText"/>
