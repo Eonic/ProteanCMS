@@ -122,6 +122,26 @@ section.bg-primary {
         margin-bottom: $image-spacer;
     }
 }
+// GRIDS
+.Grid {
+    .grid-item a {
+        @extend .bg-light;
+        display: block;
+        margin-bottom: $grid-gutter-y;
+
+        .caption {
+            padding: 10px;
+            text-align:center;
+
+            h4 {
+                margin:0;
+                font-size:1.1rem;
+                color:$dark;
+            }
+        }
+    }
+}
+
 // DETAIL PAGES
 .imageEnlarge {
     i {

@@ -28,7 +28,8 @@
           <xsl:text>clearfix ProductGallery Grid content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+        <xsl:apply-templates select="." mode="contentColumns"/>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>

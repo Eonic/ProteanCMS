@@ -1009,10 +1009,10 @@
             </div>
           </xsl:if>
           <xsl:if test="@listGroup='true'">
-            <div class="list-group">
+            <div class="card-body">
               <xsl:if test="not(@title!='')">
                 <xsl:apply-templates select="." mode="inlinePopupOptions">
-                  <xsl:with-param name="class" select="'list-group'"/>
+                  <xsl:with-param name="class" select="'card-body'"/>
                 </xsl:apply-templates>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayBrief"/>
@@ -1116,10 +1116,10 @@
             </div>
           </xsl:if>
           <xsl:if test="@listGroup='true'">
-            <div class="list-group">
+            <div class="card-body">
               <xsl:if test="not(@title!='')">
                 <xsl:apply-templates select="." mode="inlinePopupOptions">
-                  <xsl:with-param name="class" select="'list-group'"/>
+                  <xsl:with-param name="class" select="'card-body'"/>
                 </xsl:apply-templates>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayBrief"/>
@@ -1213,17 +1213,17 @@
         </div>
       </xsl:if>
       <xsl:if test="@listGroup='true'">
-        <div class="list-group">
+        <div class="card-body">
           <xsl:if test="not(@title!='')">
             <xsl:apply-templates select="." mode="inlinePopupOptions">
-              <xsl:with-param name="class" select="'list-group'"/>
+              <xsl:with-param name="class" select="'card-body'"/>
             </xsl:apply-templates>
           </xsl:if>
           <xsl:apply-templates select="." mode="displayBrief"/>
         </div>
       </xsl:if>
       <xsl:if test="@linkText!='' and @link!=''">
-        <div class="panel-footer">
+        <div class="card-footer">
           <xsl:if test="@iconStyle='Centre'">
             <xsl:attribute name="class">panel-footer center-block-footer</xsl:attribute>
           </xsl:if>
