@@ -50,7 +50,11 @@
   </model>
   <group ref="EditContent" class="accordion">
     <group>
-      <label>Content</label>
+      <label>
+        <i class="fas fa-pen"> </i>
+        <span class="space"> </span>
+        <span>Content</span>
+      </label>
       <group>
         <input bind="cModuleTitle" class="long">
           <label>Title or Name</label>
@@ -61,7 +65,11 @@
 
     </group>
     <group>
-      <label>Footer Links</label>
+      <label>
+        <i class="fas fa-link"> </i>
+        <span class="space"> </span>
+        <span>Footer Links</span>
+      </label>
       <group>
         <select1 bind="cLinkType" appearance="full">
           <label>Type of link</label>
@@ -101,12 +109,16 @@
       </select>
     </group>
     <group>
-      <label>Image</label>
+      <label>
+        <i class="fas fa-image"> </i>
+        <span class="space"> </span>
+        <span>Image</span>
+      </label>
       <input bind="panelImage" class="pickImageFile label-border-top bs-only">
         <label>Choose Image</label>
         <value></value>
       </input>
-      <select1 bind="imagePosition" appearance="full">
+      <select1 bind="imagePosition" appearance="full" class="inline-items">
         <label>Place image above or below heading?</label>
         <item>
           <label>above</label>
@@ -118,10 +130,28 @@
         </item>
       </select1>
     </group>
-    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
-    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
     <group>
-      <label>Advanced Settings</label>
+      <label>
+        <i class="fas fa-brush"> </i>
+        <span class="space"> </span>
+        <span>Presentation</span>
+      </label>
+      <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+    </group>
+    <group>
+      <label>
+        <i class="fas fa-tachometer-alt"> </i>
+        <span class="space"> </span>
+        <span>Animate</span>
+      </label>
+      <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+    </group>
+    <group>
+      <label>
+        <i class="fas fa-cog"> </i>
+        <span class="space"> </span>
+        <span>Advanced Settings</span>
+      </label>
       <group>
         <!-- These hidden fields and bindings are required for the component-->
         <input bind="nContentKey" class="hidden">
@@ -132,7 +162,7 @@
         </input>
         <!-- end of hidden fields -->
 
-        
+
         <input bind="maxWidth" class="bs-only">
           <label>Max Width</label>
           <value></value>

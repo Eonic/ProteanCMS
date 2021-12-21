@@ -1649,7 +1649,7 @@
         <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
         <input type="text" name="{$ref}-alt" id="{$ref}-alt" value="{$displayDate}" class="jqDatePicker input-small form-control" placeholder="{$inlineHint}"/>
 
-        <label for="{$ref}-alt" class="input-group-addon btn btn-info input-group-btn">
+        <label for="{$ref}-alt" class="input-group-addon btn btn-primary input-group-btn">
           <i class="fas fa-calendar">
             <xsl:text> </xsl:text>
           </i>
@@ -1682,7 +1682,7 @@
       <div class="input-group">
         <input type="text" name="{$ref}" id="{$ref}" value="{$displayDate}" class="input-small form-control"  readonly="readonly"/>
         <span class="input-group-btn">
-          <label for="{$ref}-alt" class="input-group-addon btn btn-info"  readonly="readonly">
+          <label for="{$ref}-alt" class="input-group-addon btn btn-primary"  readonly="readonly">
             <i class="fas fa-calendar">
               <xsl:text> </xsl:text>
             </i>
@@ -1754,7 +1754,7 @@
       <div class="input-group">
         <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="input-small jqDOBPicker form-control" placeholder="{$inlineHint}"/>
 
-        <label for="{$ref}" class="input-group-addon btn btn-info">
+        <label for="{$ref}" class="input-group-addon btn btn-primary">
           <i class="fas fa-calendar">
             <xsl:text> </xsl:text>
           </i>
@@ -2966,7 +2966,7 @@
               </xsl:if>
             </xsl:for-each>
           </input>
-          <span class="btn btn-info btn-file">
+          <span class="btn btn-primary btn-file">
             <input type="file" name="{$ref}" id="{$ref}">
               <xsl:if test="@class!=''">
                 <xsl:attribute name="class">

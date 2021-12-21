@@ -131,11 +131,10 @@
           </group>
         </group>
         <group id="animate" class="row">
-          <label>Animate</label>
           <group class="row">
             <group class="col-lg-6">
               <select1 bind="cModAnim" appearance="minimal">
-                <label>Animate</label>
+                <label>Animation Style</label>
                 <item>
                   <label>Fade In</label>
                   <value>fadeIn</value>

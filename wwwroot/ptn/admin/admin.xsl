@@ -29,7 +29,7 @@
   </xsl:variable>
 
   <xsl:template match="Page" mode="siteStyle">
-    <xsl:if test="$theme!=''">
+    <!--<xsl:if test="$theme!=''">
       <xsl:call-template name="bundle-css">
         <xsl:with-param name="comma-separated-files">
           <xsl:text>/themes/</xsl:text>
@@ -41,7 +41,7 @@
           <xsl:value-of select="$theme"/>
         </xsl:with-param>
       </xsl:call-template>
-    </xsl:if>
+    </xsl:if>-->
   </xsl:template>
 
   <xsl:variable name="GoogleAPIKey">

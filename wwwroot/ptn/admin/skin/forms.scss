@@ -67,11 +67,12 @@ form.ewXform {
         .accordion-button {
             background: $admin-primary;
             color: #fff;
+            border-bottom: 1px solid #0089a7;
+            border-bottom: 1px solid darken($admin-primary,5%);
 
-            &:after {
-                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+            i {
+                min-width: 1.5rem;
             }
-
 
             label {
                 margin-bottom: 0;
@@ -116,8 +117,8 @@ form.ewXform {
     }
 
     .form-check-input:checked {
-        background-color: lighten($admin-header-font-color,10%);
-        border-color: lighten($admin-header-font-color,10%);
+        // background-color: lighten($admin-header-font-color,10%);
+        // border-color: lighten($admin-header-font-color,10%);
     }
 
     .btn-secondary {
@@ -170,8 +171,8 @@ form.ewXform {
         max-height: 140px;
         background: #e3e1e1;
         margin: 0;
-        width:100%;
-        max-width:none;
+        width: 100%;
+        max-width: none;
     }
 
     .bfh-selectbox.pickIcon .bfh-selectbox-options ul {
@@ -197,13 +198,14 @@ form.ewXform {
     .alert-info {
         color: #fff;
     }
+
+    .principle {
+        @extend .btn-info;
+    }
 }
 #pick-by-image {
-    .accordion-button:not(.collapsed) {
-        background: #fff;
-    }
 
-    .accordion-collapse {
+    /*.accordion-collapse {
         padding: 20px 20px 0 20px;
 
         .col-md-2 {
@@ -237,7 +239,7 @@ form.ewXform {
                 color: $admin-primary;
             }
         }
-    }
+    }*/
 }
 .membership-user-list {
     .col-sm-1 {

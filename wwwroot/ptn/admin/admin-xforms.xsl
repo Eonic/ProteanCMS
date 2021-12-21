@@ -281,7 +281,7 @@
     </xsl:variable>
     <xsl:apply-templates select="self::node()[not(item[toggle])]" mode="xform_legend"/>
     <div class="input-group form-margin" id="editImage_{$ref}">
-      <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-info input-group-btn">
+      <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-primary input-group-btn">
         <i class="fa fa-times">
           <xsl:text> </xsl:text>
         </i>
@@ -312,7 +312,7 @@
       <xsl:choose>
         <xsl:when test="value/img/@src!=''">
           <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
-          <a class="btn btn-info input-group-btn editImage">
+          <a class="btn btn-primary input-group-btn editImage">
             <i class="fas fa-image">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Edit
@@ -320,7 +320,7 @@
         </xsl:when>
         <xsl:otherwise>
           <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-info input-group-btn">
+          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary input-group-btn">
             <i class="fas fa-image">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Pick
@@ -421,7 +421,7 @@
 
         </xsl:when>
         <xsl:otherwise>
-          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-info input-group-btn">
+          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-primary input-group-btn">
             <i class="fas fa-image">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Pick
@@ -1792,7 +1792,7 @@
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
             <span class="input-group-btn pull-right">
-              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
@@ -1802,14 +1802,14 @@
         </xsl:if>
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <xsl:if test="contains(@search,'find')">
-            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
+            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();" >
               <i class="fa fa-search fa-white">
                 <xsl:text> </xsl:text>
               </i> Find Existing <xsl:value-of select="$contentType"/>
             </button>
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
-            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
+            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i> Add New
@@ -1929,7 +1929,7 @@
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
             <span class="input-group-btn pull-right">
-              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
@@ -1939,14 +1939,14 @@
         </xsl:if>
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <xsl:if test="contains(@search,'find')">
-            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
+            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();" >
               <i class="fa fa-search fa-white">
                 <xsl:text> </xsl:text>
               </i> Find Existing <xsl:value-of select="$contentType"/>
             </button>
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
-            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
+            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i> Add New
@@ -2066,7 +2066,7 @@
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
             <span class="input-group-btn pull-right">
-              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
@@ -2076,14 +2076,14 @@
         </xsl:if>
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <xsl:if test="contains(@search,'find')">
-            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
+            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();" >
               <i class="fa fa-search fa-white">
                 <xsl:text> </xsl:text>
               </i> Find Existing <xsl:value-of select="$contentType"/>
             </button>
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
-            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
+            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i> Add New
