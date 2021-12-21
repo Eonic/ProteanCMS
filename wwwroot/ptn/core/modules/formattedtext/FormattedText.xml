@@ -48,7 +48,7 @@
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
-  <group ref="EditContent" class="accordion">
+  <group ref="EditContent" class="tabs">
     <group>
       <label>
         <i class="fas fa-pen"> </i>
@@ -62,7 +62,6 @@
         <textarea bind="cContentBody" class="TextArea xhtml" rows="25" cols="70">
         </textarea>
       </group>
-
     </group>
     <group>
       <label>

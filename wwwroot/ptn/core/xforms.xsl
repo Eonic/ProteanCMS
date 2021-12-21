@@ -467,6 +467,59 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="group[contains(@class,'tabs')]" mode="xform">
+    <div class="row">
+      <div class="col-lg-3">
+        <div class=" nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <xsl:apply-templates select="*" mode="xform-tab-list"/>
+        </div>
+      </div>
+      <div class="col-lg-9">
+        <div class="tab-content">
+          <div class="tabs" id="tabs-{@ref}">
+            <xsl:apply-templates select="*" mode="xform"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+  <xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform-tab-list">
+    <xsl:variable name="isopen">
+      <xsl:if test="position()=1">
+        <xsl:text>show</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="isclosed">
+      <xsl:if test="not(position()=1)">
+        <xsl:text>collapsed</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <button class="nav-link {$isclosed}" id="heading{position()}" data-bs-toggle="pill" data-bs-target="#heading{position()}" type="button" role="tab" aria-controls="heading{position()}" aria-selected="true">
+      <xsl:apply-templates select="label">
+        <xsl:with-param name="cLabel">
+          <xsl:value-of select="@ref"/>
+        </xsl:with-param>
+      </xsl:apply-templates>
+    </button>
+  </xsl:template>
+  <xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform">
+    <xsl:variable name="isopen">
+      <xsl:if test="position()=1">
+        <xsl:text>show</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="isclosed">
+      <xsl:if test="not(position()=1)">
+        <xsl:text> </xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <div class="tab-item">
+      <div id="collapse{position()}" class="tab-pane {$isopen}" role="tabpanel" aria-labelledby="heading{position()}">
+        <xsl:apply-templates select="*" mode="xform"/>
+      </div>
+    </div>
+  </xsl:template>
+
   <!-- -->
   <!-- ========================== Input Group ========================== -->
 
@@ -2551,7 +2604,7 @@
     <span>
       <xsl:attribute name="class">
         <xsl:text>form-check</xsl:text>
-        
+
         <xsl:if test="contains($class,'multiline')">
           <xsl:text> multiline</xsl:text>
         </xsl:if>
