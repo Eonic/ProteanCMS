@@ -489,11 +489,11 @@
           <div class="header-tier2">
             <!--NAV TOGGLE (MOBILE)-->
             <xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <button class="navbar-toggler" type="button" data-toggle="offcanvas"  data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
             </xsl:if>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse navmenu-fixed-left offcanvas" id="navbarSupportedContent" role="navigation">
               <!-- MENU -->
               <ul class="navbar-nav">
                 <xsl:if test="$HomeNav='true' or $HomeInfo='true'">
@@ -543,7 +543,7 @@
               </xsl:if>
               <!--SOCIAL-->
               <xsl:if test="$social-links='true'">
-                <div class="socialLinksHeader not-xs" id="socialLinksHeader">
+                <div class="socialLinksHeader xs-only" id="socialLinksHeader">
                   <!--<xsl:apply-templates select="Contents/Content[@name='socialLinks']" mode="displayBrief"/>-->
                   <xsl:apply-templates select="/Page" mode="addSingleModule">
                     <xsl:with-param name="text">Add Social Links</xsl:with-param>
@@ -553,6 +553,17 @@
                 </div>
               </xsl:if>
             </div>
+            <!--SOCIAL-->
+            <xsl:if test="$social-links='true'">
+              <div class="socialLinksHeader not-xs" id="socialLinksHeader">
+                <!--<xsl:apply-templates select="Contents/Content[@name='socialLinks']" mode="displayBrief"/>-->
+                <xsl:apply-templates select="/Page" mode="addSingleModule">
+                  <xsl:with-param name="text">Add Social Links</xsl:with-param>
+                  <xsl:with-param name="position">socialLinksHeader</xsl:with-param>
+                  <xsl:with-param name="class">socialLinksHeader</xsl:with-param>
+                </xsl:apply-templates>
+              </div>
+            </xsl:if>
           </div>
         </div>
       </div>

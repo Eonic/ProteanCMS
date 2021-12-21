@@ -25,8 +25,7 @@
   <xsl:variable name="HomeInfo">false</xsl:variable>
   <xsl:variable name="HomeNav">true</xsl:variable>
   <xsl:variable name="NavFix">false</xsl:variable>
-  <xsl:variable name="nav-dropdown">false</xsl:variable>
-  <!--true/false/hover-->
+  <xsl:variable name="nav-dropdown">true</xsl:variable>
   <xsl:variable name="SideSubWidth">3</xsl:variable>
   <xsl:variable name="SideSubWidthCustom"></xsl:variable>
   <xsl:variable name="themeBreadcrumb">false</xsl:variable>
@@ -98,9 +97,9 @@
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/jquery.appear.js,</xsl:text>
-        <!--<xsl:text>~/ewThemes/</xsl:text>
+        <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js/offcanvas.js,</xsl:text>-->
+        <xsl:text>/js/offcanvas.js,</xsl:text>
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/responsive-tabs.js,</xsl:text>

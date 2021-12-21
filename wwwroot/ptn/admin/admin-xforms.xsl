@@ -10,7 +10,7 @@
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
       <xsl:attribute name="class">
-        <xsl:text>ewXform container-fluid</xsl:text>
+        <xsl:text>ewXform container</xsl:text>
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>
@@ -80,7 +80,7 @@
             <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
           </div>
           <xsl:if test="count(submit) &gt; 0">
-            <div class="clearfix">
+            <div class="clearfix navbar-fixed-bottom">
               <!--<xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
                 --><!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">--><!--
                 <span class="required">
@@ -404,7 +404,7 @@
     <xsl:variable name="scriptRef">
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
-    <div class="input-group" id="editImageFile_{$ref}">
+    <div class="input-group form-margin" id="editImageFile_{$ref}">
       <input name="{$ref}" id="{$ref}" value="{value/node()}" >
         <xsl:attribute name="class">
           <xsl:text>form-control </xsl:text>
@@ -2578,7 +2578,10 @@
     <xsl:variable name="val" select="value/node()"/>
     <!--<xsl:variable name="class" select="../@class"/>-->
     <xsl:variable name="class" select="ancestor::*[name()='select' or name()='select1' ]/@class"/>
-    <div class="form-check form-check-inline">
+    <div class="form-check">
+      <xsl:if test="ancestor::*[contains(@class,'inline-items')]">
+        <xsl:attribute name="class">form-check form-check-inline</xsl:attribute>
+      </xsl:if>
       <input type="{$type}" class="form-check-input">
         <xsl:choose>
           <xsl:when test="contains(../@class,'alwayson')">

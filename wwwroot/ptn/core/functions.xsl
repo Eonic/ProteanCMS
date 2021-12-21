@@ -3861,17 +3861,23 @@
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text> active </xsl:text>
       </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xxl')">
+        <xsl:text> d-xxl-none</xsl:text>
+      </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xl')">
+        <xsl:text> d-xl-none</xsl:text>
+      </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'lg')">
-        <xsl:text> hidden-lg-nav</xsl:text>
+        <xsl:text> d-lg-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'md')">
-        <xsl:text> hidden-md-nav</xsl:text>
+        <xsl:text> d-md-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'sm')">
-        <xsl:text> hidden-sm-nav</xsl:text>
+        <xsl:text> d-sm-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'xs')">
-        <xsl:text> hidden-xs-nav</xsl:text>
+        <xsl:text> d-xs-none</xsl:text>
       </xsl:if>
     </xsl:variable>
     <li class="{$liClass}">
@@ -3888,34 +3894,33 @@
     <xsl:param name="homeLink"/>
     <xsl:param name="span"/>
     <xsl:variable name="liClass">
+      <xsl:text>nav-item </xsl:text>
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text>active </xsl:text>
       </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xxl')">
+        <xsl:text> d-xxl-none</xsl:text>
+      </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xl')">
+        <xsl:text> d-xl-none</xsl:text>
+      </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'lg')">
-        <xsl:text> hidden-lg-nav</xsl:text>
+        <xsl:text> d-lg-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'md')">
-        <xsl:text> hidden-md-nav</xsl:text>
+        <xsl:text> d-md-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'sm')">
-        <xsl:text> hidden-sm-nav</xsl:text>
+        <xsl:text> d-sm-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'xs')">
-        <xsl:text> hidden-xs-nav</xsl:text>
+        <xsl:text> d-xs-none</xsl:text>
       </xsl:if>
-      <xsl:choose>
-        <xsl:when test="position()=1">
-          <!-- If there is no Home link in the menu the first MenuItem in the menu should have a class of 'first' -->
-          <xsl:text> first</xsl:text>
-        </xsl:when>
-        <xsl:when test="position()=last()">
-          <xsl:text> last</xsl:text>
-        </xsl:when>
-      </xsl:choose>
     </xsl:variable>
     <li class="{$liClass}">
       <xsl:apply-templates select="self::MenuItem" mode="menuLink">
         <xsl:with-param name="span" select="$span" />
+        <xsl:with-param name="class">nav-link </xsl:with-param>
       </xsl:apply-templates>
     </li>
   </xsl:template>
@@ -3927,33 +3932,32 @@
     <xsl:param name="mobileDD"/>
     <xsl:param name="overviewLink"/>
     <xsl:variable name="liClass">
+      <xsl:text>nav-item </xsl:text>
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text>active </xsl:text>
       </xsl:if>
       <xsl:if test="descendant::MenuItem[@id=/Page/@id]">
         <xsl:text>on </xsl:text>
       </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xxl')">
+        <xsl:text> d-xxl-none</xsl:text>
+      </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xl')">
+        <xsl:text> d-xl-none</xsl:text>
+      </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'lg')">
-        <xsl:text> hidden-lg-nav</xsl:text>
+        <xsl:text> d-lg-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'md')">
-        <xsl:text> hidden-md-nav</xsl:text>
+        <xsl:text> d-md-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'sm')">
-        <xsl:text> hidden-sm-nav</xsl:text>
+        <xsl:text> d-sm-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'xs')">
-        <xsl:text> hidden-xs-nav</xsl:text>
+        <xsl:text> d-xs-none</xsl:text>
       </xsl:if>
-      <xsl:choose>
-        <xsl:when test="position()=1">
-          <!-- If there is no Home link in the menu the first MenuItem in the menu should have a class of 'first' -->
-          <xsl:text> first</xsl:text>
-        </xsl:when>
-        <xsl:when test="position()=last()">
-          <xsl:text> last</xsl:text>
-        </xsl:when>
-      </xsl:choose>
+      
     </xsl:variable>
 
     <li class="{$liClass} dropdown">
@@ -3964,16 +3968,10 @@
         </xsl:attribute>
       </xsl:if>
       <a href="{@url}" id="mainNavDD{@id}">
-        <xsl:choose>
-          <xsl:when test="$hover='true'">
-            <xsl:attribute name="data-hover">dropdown</xsl:attribute>
-            <xsl:attribute name="data-close-others">true</xsl:attribute>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:attribute name="data-toggle">dropdown</xsl:attribute>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:attribute name="data-toggle">dropdown</xsl:attribute>
+        
         <xsl:attribute name="class">
+          <xsl:text>nav-link dropdown-toggle </xsl:text>
           <xsl:choose>
             <xsl:when test="self::MenuItem[@id=/Page/@id]">
               <xsl:text>active</xsl:text>

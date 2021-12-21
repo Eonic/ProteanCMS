@@ -24,6 +24,10 @@ body {
 }
 form.xform,
 form.ewXform {
+    legend {
+        font-size: 1.25rem;
+    }
+
     .principle {
         float: right;
     }
@@ -37,7 +41,53 @@ form.ewXform {
     }
 
     label {
-        font-weight:300;
+        font-weight: 300;
+    }
+
+    label.form-label {
+        font-weight: 400;
+    }
+
+    .readonlyvalue {
+        margin-left: 5px;
+    }
+
+    .inline-select > legend {
+        font-size: 1rem;
+    }
+
+    .accordion {
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+        margin-top: 8px;
+
+        > .form-label {
+            display: none;
+        }
+
+        .accordion-button {
+            background: $admin-primary;
+            color: #fff;
+
+            label {
+                margin-bottom: 0;
+                font-weight: 400;
+                font-size: 1.2rem;
+            }
+        }
+
+        .accordion-item {
+            border: 0;
+        }
+    }
+}
+.ewXform > div:first-child > h3 {
+    text-align: center;
+    font-size: 1.3rem;
+    margin-bottom: 23px;
+    font-weight: 400;
+
+    @include media-breakpoint-up(sm) {
+        margin-top: -38px;
     }
 }
 .ewAdmin #adminLayout {
@@ -218,4 +268,10 @@ form.ewXform {
 }
 .accordion-body > label:first-child {
     display:none;
+}
+.inline-select .form-margin{
+    width:auto;
+    float:left;
+    margin-right:10px;
+    
 }

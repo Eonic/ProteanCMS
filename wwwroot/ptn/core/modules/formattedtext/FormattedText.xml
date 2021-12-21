@@ -62,34 +62,36 @@
     </group>
     <group>
       <label>Footer Links</label>
-      <select1 bind="cLinkType" appearance="full">
-        <label>Type of link</label>
-        <item>
-          <label>Internal (Going to a page on this site)</label>
-          <value>internal</value>
-          <toggle case="cLinkType_1" event="DOMActivate"/>
-        </item>
-        <item>
-          <label>External (Going to another site)</label>
-          <value>external</value>
-          <toggle case="cLinkType_2" event="DOMActivate"/>
-        </item>
-      </select1>
-      <switch class="disable">
-        <case id="cLinkType_1">
-          <select1 bind="cModuleLink" class="siteTree">
-            <label>Link to page</label>
-          </select1>
-        </case>
-        <case id="cLinkType_2">
-          <input bind="cModuleLink" class="short">
-            <label>Link to URL</label>
-          </input>
-        </case>
-      </switch>
-      <input bind="cModuleLinkText" class="long">
-        <label>Module footer link text</label>
-      </input>
+      <group>
+        <select1 bind="cLinkType" appearance="full">
+          <label>Type of link</label>
+          <item>
+            <label>Internal (Going to a page on this site)</label>
+            <value>internal</value>
+            <toggle case="cLinkType_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>External (Going to another site)</label>
+            <value>external</value>
+            <toggle case="cLinkType_2" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cLinkType_1">
+            <select1 bind="cModuleLink" class="siteTree">
+              <label>Link to page</label>
+            </select1>
+          </case>
+          <case id="cLinkType_2">
+            <input bind="cModuleLink" class="short">
+              <label>Link to URL</label>
+            </input>
+          </case>
+        </switch>
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
+      </group>
       <select bind="bLinkBox" appearance="full" class="multiline bs-only">
         <item>
           <label>Link entire box</label>
