@@ -457,12 +457,15 @@
         <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
       </group>
     </group>
-
-    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+    <group>
+      <label>Animate</label>
+      <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+    </group>
     <group>
       <label>Publish Settings</label>
       <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
     </group>
+  
   </group>
   <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">

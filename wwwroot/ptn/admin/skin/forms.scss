@@ -9,6 +9,9 @@ body {
     display: flex !important;
 }
 //end sticky footer
+.hidden {
+    display:none;
+}
 @mixin btn-spacing($space:4px) {
     margin-left: -$space;
     margin-right: -$space;
