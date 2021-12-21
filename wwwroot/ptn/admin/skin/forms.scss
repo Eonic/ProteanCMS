@@ -205,7 +205,7 @@ form.ewXform {
 }
 #pick-by-image {
 
-    /*.accordion-collapse {
+    .accordion-collapse {
         padding: 20px 20px 0 20px;
 
         .col-md-2 {
@@ -216,7 +216,7 @@ form.ewXform {
             //border: 0;
             border: 2px solid $admin-primary;
             border-radius: 4px;
-            color: darken($admin-primary,10%);
+            color: $admin-primary;
             background: none;
             width: 100%;
             padding: 10px;
@@ -239,7 +239,7 @@ form.ewXform {
                 color: $admin-primary;
             }
         }
-    }*/
+    }
 }
 .membership-user-list {
     .col-sm-1 {
