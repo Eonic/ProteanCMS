@@ -123,33 +123,26 @@
   <!-- -->
   <xsl:template match="group[parent::Content]" mode="xform">
     <xsl:param name="class"/>
-    <div class="card card-default {@class}">
+    <div class="{@class}">
       <xsl:if test=" @id!='' ">
         <xsl:attribute name="id">
           <xsl:value-of select="@id"/>
         </xsl:attribute>
       </xsl:if>
-      <div class="card-header">
-        <xsl:apply-templates select="label[position()=1]" mode="legend"/>
-      </div>
-      <fieldset class="card-body">
-        <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
-      </fieldset>
+      <xsl:apply-templates select="label[position()=1]" mode="legend"/>
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <xsl:if test="count(submit) &gt; 0">
-
-        <div class="card-footer">
-          <xsl:if test="not(submit[contains(@class,'hideRequired')])">
-            <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
-              <label class="required">
-                <span class="req">*</span>
-                <xsl:text> </xsl:text>
-                <xsl:call-template name="msg_required"/>
-              </label>
-            </xsl:if>
+        <xsl:if test="not(submit[contains(@class,'hideRequired')])">
+          <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+            <label class="required required-message">
+              <span class="req">*</span>
+              <xsl:text> </xsl:text>
+              <xsl:call-template name="msg_required"/>
+            </label>
           </xsl:if>
-          <!-- For xFormQuiz change how these buttons work -->
-          <xsl:apply-templates select="submit" mode="xform"/>
-        </div>
+        </xsl:if>
+        <!-- For xFormQuiz change how these buttons work -->
+        <xsl:apply-templates select="submit" mode="xform"/>
       </xsl:if>
     </div>
   </xsl:template>
@@ -174,6 +167,9 @@
             <xsl:text> form-group li-</xsl:text>
             <xsl:value-of select="./@class"/>
           </xsl:for-each>
+          <xsl:if test="contains(@class,'inline-2-col') or contains(@class,'inline-3-col')">
+            <xsl:text> row</xsl:text>
+          </xsl:if>
           <xsl:text> </xsl:text>
         </xsl:attribute>
       </xsl:if>
@@ -183,11 +179,6 @@
         <xsl:choose>
           <xsl:when test="contains(@class,'form-inline')">
             <xsl:apply-templates select="submit" mode="xform"/>
-            <!-- Terminus needed for CHROME ! -->
-            <!-- Terminus needed for BREAKS IE 7! -->
-            <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus">&#160;</div>
-            </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <div class="form-actions">
@@ -202,11 +193,6 @@
               </xsl:if>
               <!-- For xFormQuiz change how these buttons work -->
               <xsl:apply-templates select="submit" mode="xform"/>
-              <!-- Terminus needed for CHROME ! -->
-              <!-- Terminus needed for BREAKS IE 7! -->
-              <xsl:if test="$browserVersion!='MSIE 7.0'">
-                <div class="terminus">&#160;</div>
-              </xsl:if>
             </div>
           </xsl:otherwise>
         </xsl:choose>
@@ -445,9 +431,9 @@
   </xsl:template>
 
   <!-- -->
-  <!-- ========================== GROUP In Accordian ========================== -->
+  <!-- ========================== GROUP In Accordion ========================== -->
   <xsl:template match="group[contains(@class,'accordion')]" mode="xform">
-    <div class="accordian" id="accordian-{@ref}">
+    <div class="accordion" id="accordion-{@ref}">
       <xsl:apply-templates select="*" mode="xform"/>
     </div>
   </xsl:template>
@@ -479,6 +465,55 @@
         </div>
       </div>
     </div>
+  </xsl:template>
+
+  <xsl:template match="group[contains(@class,'tabs')]" mode="xform">
+    <div class="row form-tab-wrapper">
+      <div class="col-1 col-lg-3 col-xl-2 form-tab-nav-wrapper">
+        <div class=" nav flex-column nav-pills tab-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <xsl:apply-templates select="*" mode="xform-tab-list"/>
+        </div>
+      </div>
+      <div class="col-11 col-lg-9 col-xl-10 form-tab-content-wrapper">
+        <div class="tab-content" id="tabs-{@ref}">
+          <xsl:apply-templates select="*" mode="xform"/>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+  <xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform-tab-list">
+    <xsl:variable name="isopen">
+      <xsl:if test="position()=1">
+        <xsl:text>active</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="isclosed">
+      <xsl:choose>
+        <xsl:when test="position()=1">
+          <xsl:text> true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text> false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <button class="nav-link {$isopen}" id="tab{position()}" data-bs-toggle="pill" data-bs-target="#heading{position()}" type="button" role="tab" aria-controls="heading{position()}" aria-selected="{$isclosed}">
+      <xsl:apply-templates select="label">
+        <xsl:with-param name="cLabel">
+          <xsl:value-of select="@ref"/>
+        </xsl:with-param>
+      </xsl:apply-templates>
+    </button>
+  </xsl:template>
+  <xsl:template match="group[parent::group[contains(@class,'tabs')]]" mode="xform">
+    <xsl:variable name="isopen">
+      <xsl:if test="position()=1">
+        <xsl:text>show active</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+      <div id="heading{position()}" class="tab-pane fade {$isopen}" role="tabpanel" aria-labelledby="tab{position()}">
+        <xsl:apply-templates select="*" mode="xform"/>
+      </div>
   </xsl:template>
 
   <!-- -->
@@ -710,8 +745,11 @@
             <xsl:if test="alert">
               <xsl:text> alert-outer</xsl:text>
             </xsl:if>
-            <xsl:if test="ancestor::group[contains(@class,'inline')]">
-              <xsl:text> col-md-6</xsl:text>
+            <xsl:if test="ancestor::group[contains(@class,'inline-2-col')] and not(name()='div')">
+              <xsl:text> col-lg-6 2-col-inline</xsl:text>
+            </xsl:if>
+            <xsl:if test="ancestor::group[contains(@class,'inline-3-col')] and not(name()='div')">
+              <xsl:text> col-lg-4 3-col-inline</xsl:text>
             </xsl:if>
           </xsl:attribute>
           <xsl:apply-templates select="." mode="xform"/>
@@ -816,7 +854,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-secondary</xsl:text>
+        <xsl:text> btn-primary</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -903,7 +941,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-secondary</xsl:text>
+        <xsl:text> btn-primary</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
@@ -964,7 +1002,7 @@
 
   <xsl:template match="submit[@class='principle' and @ref!='']" mode="xform">
     <xsl:variable name="class">
-      <xsl:text>btn btn-secondary</xsl:text>
+      <xsl:text>btn btn-primary</xsl:text>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>
         <xsl:value-of select="@class"/>
@@ -1660,7 +1698,7 @@
         <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
         <input type="text" name="{$ref}-alt" id="{$ref}-alt" value="{$displayDate}" class="jqDatePicker input-small form-control" placeholder="{$inlineHint}"/>
 
-        <label for="{$ref}-alt" class="input-group-addon btn btn-info input-group-btn">
+        <label for="{$ref}-alt" class="input-group-addon btn btn-primary input-group-btn">
           <i class="fas fa-calendar">
             <xsl:text> </xsl:text>
           </i>
@@ -1693,7 +1731,7 @@
       <div class="input-group">
         <input type="text" name="{$ref}" id="{$ref}" value="{$displayDate}" class="input-small form-control"  readonly="readonly"/>
         <span class="input-group-btn">
-          <label for="{$ref}-alt" class="input-group-addon btn btn-default"  readonly="readonly">
+          <label for="{$ref}-alt" class="input-group-addon btn btn-primary"  readonly="readonly">
             <i class="fas fa-calendar">
               <xsl:text> </xsl:text>
             </i>
@@ -1764,13 +1802,13 @@
     <div class="controls">
       <div class="input-group">
         <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="input-small jqDOBPicker form-control" placeholder="{$inlineHint}"/>
-        <span class="input-group-btn">
-          <label for="{$ref}" class="input-group-addon btn btn-default">
-            <i class="fas fa-calendar">
-              <xsl:text> </xsl:text>
-            </i>
-          </label>
-        </span>
+
+        <label for="{$ref}" class="input-group-addon btn btn-primary">
+          <i class="fas fa-calendar">
+            <xsl:text> </xsl:text>
+          </i>
+        </label>
+
       </div>
     </div>
 
@@ -2561,14 +2599,84 @@
     <xsl:variable name="class" select="ancestor::*[name()='select' or name()='select1' ]/@class"/>
     <span>
       <xsl:attribute name="class">
-        <xsl:text>radiocheckbox checkbox</xsl:text>
+        <xsl:text>form-check</xsl:text>
+
         <xsl:if test="contains($class,'multiline')">
           <xsl:text> multiline</xsl:text>
         </xsl:if>
       </xsl:attribute>
+      <input type="{$type}" class="form-check-input">
+        <xsl:if test="$ref!=''">
+          <xsl:attribute name="name">
+            <xsl:value-of select="$ref"/>
+          </xsl:attribute>
+          <xsl:attribute name="id">
+            <xsl:value-of select="$ref"/>_<xsl:value-of select="$value"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:attribute name="value">
+          <xsl:value-of select="value"/>
+        </xsl:attribute>
+        <xsl:attribute name="title">
+          <xsl:value-of select="@title"/>
+        </xsl:attribute>
+        <xsl:attribute name="onclick">
+          <xsl:value-of select="@onclick"/>
+        </xsl:attribute>
+
+        <!-- Check Radio adminButton is selected -->
+        <xsl:if test="$selectedValue=$value">
+          <xsl:attribute name="checked">checked</xsl:attribute>
+        </xsl:if>
+
+        <!-- Check checkbox should be selected -->
+        <xsl:if test="contains($type,'checkbox')">
+          <!-- Run through CSL to see if this should be checked -->
+          <xsl:variable name="valueMatch">
+            <xsl:call-template name="checkValueMatch">
+              <xsl:with-param name="CSLValue" select="$selectedValue"/>
+              <xsl:with-param name="value" select="$value"/>
+              <xsl:with-param name="seperator" select="','"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:if test="$valueMatch='true'">
+            <xsl:attribute name="checked">checked</xsl:attribute>
+          </xsl:if>
+        </xsl:if>
+        <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
+          <xsl:attribute name="data-fv-notempty">
+            <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
+          </xsl:attribute>
+          <xsl:attribute name="data-fv-notempty-message">
+            <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="ancestor::select/item[1]/value/node() = $value">
+          <xsl:attribute name="data-fv-choice">
+            <xsl:value-of select="ancestor::select/@data-fv-choice"/>
+          </xsl:attribute>
+          <xsl:attribute name="data-fv-choice-min">
+            <xsl:value-of select="ancestor::select/@data-fv-choice-min"/>
+          </xsl:attribute>
+          <xsl:attribute name="data-fv-choice-max">
+            <xsl:value-of select="ancestor::select/@data-fv-choice-max"/>
+          </xsl:attribute>
+          <xsl:attribute name="data-fv-choice-message">
+            <xsl:value-of select="ancestor::select/@data-fv-choice-message"/>
+          </xsl:attribute>
+          <xsl:if test="ancestor::select/@data-fv-notempty">
+            <xsl:attribute name="data-fv-notempty">
+              <xsl:value-of select="ancestor::select/@data-fv-notempty"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-notempty-message">
+              <xsl:value-of select="ancestor::select/@data-fv-notempty-message"/>
+            </xsl:attribute>
+          </xsl:if>
+        </xsl:if>
+      </input>
       <label for="{$ref}_{$value}">
         <xsl:attribute name="class">
-          <xsl:text>radio</xsl:text>
+          <xsl:text>form-check-label</xsl:text>
           <xsl:if test="label/@class and label/@class!=''">
             <xsl:text> </xsl:text>
             <xsl:value-of select="label/@class"/>
@@ -2579,75 +2687,6 @@
           </xsl:if>
         </xsl:attribute>
         <!-- for payform to have cc classes-->
-        <input type="{$type}">
-          <xsl:if test="$ref!=''">
-            <xsl:attribute name="name">
-              <xsl:value-of select="$ref"/>
-            </xsl:attribute>
-            <xsl:attribute name="id">
-              <xsl:value-of select="$ref"/>_<xsl:value-of select="$value"/>
-            </xsl:attribute>
-          </xsl:if>
-          <xsl:attribute name="value">
-            <xsl:value-of select="value"/>
-          </xsl:attribute>
-          <xsl:attribute name="title">
-            <xsl:value-of select="@title"/>
-          </xsl:attribute>
-          <xsl:attribute name="onclick">
-            <xsl:value-of select="@onclick"/>
-          </xsl:attribute>
-
-          <!-- Check Radio adminButton is selected -->
-          <xsl:if test="$selectedValue=$value">
-            <xsl:attribute name="checked">checked</xsl:attribute>
-          </xsl:if>
-
-          <!-- Check checkbox should be selected -->
-          <xsl:if test="contains($type,'checkbox')">
-            <!-- Run through CSL to see if this should be checked -->
-            <xsl:variable name="valueMatch">
-              <xsl:call-template name="checkValueMatch">
-                <xsl:with-param name="CSLValue" select="$selectedValue"/>
-                <xsl:with-param name="value" select="$value"/>
-                <xsl:with-param name="seperator" select="','"/>
-              </xsl:call-template>
-            </xsl:variable>
-            <xsl:if test="$valueMatch='true'">
-              <xsl:attribute name="checked">checked</xsl:attribute>
-            </xsl:if>
-          </xsl:if>
-          <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
-            <xsl:attribute name="data-fv-notempty">
-              <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
-            </xsl:attribute>
-            <xsl:attribute name="data-fv-notempty-message">
-              <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
-            </xsl:attribute>
-          </xsl:if>
-          <xsl:if test="ancestor::select/item[1]/value/node() = $value">
-            <xsl:attribute name="data-fv-choice">
-              <xsl:value-of select="ancestor::select/@data-fv-choice"/>
-            </xsl:attribute>
-            <xsl:attribute name="data-fv-choice-min">
-              <xsl:value-of select="ancestor::select/@data-fv-choice-min"/>
-            </xsl:attribute>
-            <xsl:attribute name="data-fv-choice-max">
-              <xsl:value-of select="ancestor::select/@data-fv-choice-max"/>
-            </xsl:attribute>
-            <xsl:attribute name="data-fv-choice-message">
-              <xsl:value-of select="ancestor::select/@data-fv-choice-message"/>
-            </xsl:attribute>
-            <xsl:if test="ancestor::select/@data-fv-notempty">
-              <xsl:attribute name="data-fv-notempty">
-                <xsl:value-of select="ancestor::select/@data-fv-notempty"/>
-              </xsl:attribute>
-              <xsl:attribute name="data-fv-notempty-message">
-                <xsl:value-of select="ancestor::select/@data-fv-notempty-message"/>
-              </xsl:attribute>
-            </xsl:if>
-          </xsl:if>
-        </input>
         <xsl:apply-templates select="label" mode="xform-label"/>
         <xsl:text> </xsl:text>
       </label>
@@ -2668,85 +2707,88 @@
     <xsl:variable name="class" select="../@class"/>
     <span>
       <xsl:attribute name="class">
-        <xsl:text>radiocheckbox checkbox</xsl:text>
+        <xsl:text>form-check</xsl:text>
+        <xsl:if test="ancestor::group[contains(@class,'inline-items')]">
+          <xsl:text> form-check-inline</xsl:text>
+        </xsl:if>
         <xsl:if test="contains($class,'multiline')">
           <xsl:text> multiline</xsl:text>
         </xsl:if>
       </xsl:attribute>
-      <label for="{$ref}_{position()}" class="radio {translate(value/node(),'/ ','')}">
-        <input type="{$type}">
-          <xsl:if test="$ref!=''">
-            <xsl:attribute name="name">
-              <xsl:value-of select="$ref"/>
+      <input type="{$type}" class="form-check-input">
+        <xsl:if test="$ref!=''">
+          <xsl:attribute name="name">
+            <xsl:value-of select="$ref"/>
 
-            </xsl:attribute>
-            <xsl:attribute name="id">
-              <xsl:value-of select="$ref"/>_<xsl:value-of select="position()"/>
-            </xsl:attribute>
-          </xsl:if>
-          <xsl:attribute name="value">
-            <xsl:value-of select="value"/>
           </xsl:attribute>
+          <xsl:attribute name="id">
+            <xsl:value-of select="$ref"/>_<xsl:value-of select="position()"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:attribute name="value">
+          <xsl:value-of select="value"/>
+        </xsl:attribute>
 
-          <!-- Check Radio adminButton is selected -->
-          <xsl:if test="../value/node()=$value">
+        <!-- Check Radio adminButton is selected -->
+        <xsl:if test="../value/node()=$value">
+          <xsl:attribute name="checked">checked</xsl:attribute>
+        </xsl:if>
+
+        <!-- Check checkbox should be selected -->
+        <xsl:if test="contains($class,'checkboxes')">
+          <!-- Run through CSL to see if this should be checked -->
+          <xsl:variable name="valueMatch">
+            <xsl:call-template name="checkValueMatch">
+              <xsl:with-param name="CSLValue" select="../value/node()"/>
+              <xsl:with-param name="value" select="$value"/>
+              <xsl:with-param name="seperator" select="','"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:if test="$valueMatch='true'">
             <xsl:attribute name="checked">checked</xsl:attribute>
           </xsl:if>
+        </xsl:if>
 
-          <!-- Check checkbox should be selected -->
-          <xsl:if test="contains($class,'checkboxes')">
-            <!-- Run through CSL to see if this should be checked -->
-            <xsl:variable name="valueMatch">
-              <xsl:call-template name="checkValueMatch">
-                <xsl:with-param name="CSLValue" select="../value/node()"/>
-                <xsl:with-param name="value" select="$value"/>
-                <xsl:with-param name="seperator" select="','"/>
-              </xsl:call-template>
-            </xsl:variable>
-            <xsl:if test="$valueMatch='true'">
-              <xsl:attribute name="checked">checked</xsl:attribute>
-            </xsl:if>
-          </xsl:if>
-
-          <xsl:attribute name="onclick">
-            <xsl:text>showDependant('</xsl:text>
-            <xsl:value-of select="translate(toggle/@case,'[]#=/','')"/>
-            <xsl:text>-dependant','</xsl:text>
-            <xsl:value-of select="$dependantClass"/>
-            <xsl:text>');</xsl:text>
+        <xsl:attribute name="onclick">
+          <xsl:text>showDependant('</xsl:text>
+          <xsl:value-of select="translate(toggle/@case,'[]#=/','')"/>
+          <xsl:text>-dependant','</xsl:text>
+          <xsl:value-of select="$dependantClass"/>
+          <xsl:text>');</xsl:text>
+        </xsl:attribute>
+        <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
+          <xsl:attribute name="data-fv-notempty">
+            <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
           </xsl:attribute>
-          <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
+          <xsl:attribute name="data-fv-notempty-message">
+            <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="ancestor::select/item[1]/value/node() = $value">
+          <xsl:attribute name="data-fv-choice">
+            <xsl:value-of select="ancestor::select/@data-fv-choice"/>
+          </xsl:attribute>
+          <xsl:attribute name="data-fv-choice-min">
+            <xsl:value-of select="ancestor::select/@data-fv-choice-min"/>
+          </xsl:attribute>
+          <xsl:attribute name="data-fv-choice-max">
+            <xsl:value-of select="ancestor::select/@data-fv-choice-max"/>
+          </xsl:attribute>
+          <xsl:attribute name="data-fv-choice-message">
+            <xsl:value-of select="ancestor::select/@data-fv-choice-message"/>
+          </xsl:attribute>
+          <xsl:if test="ancestor::select/@data-fv-notempty">
             <xsl:attribute name="data-fv-notempty">
-              <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
+              <xsl:value-of select="ancestor::select/@data-fv-notempty"/>
             </xsl:attribute>
             <xsl:attribute name="data-fv-notempty-message">
-              <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
+              <xsl:value-of select="ancestor::select/@data-fv-notempty-message"/>
             </xsl:attribute>
           </xsl:if>
-          <xsl:if test="ancestor::select/item[1]/value/node() = $value">
-            <xsl:attribute name="data-fv-choice">
-              <xsl:value-of select="ancestor::select/@data-fv-choice"/>
-            </xsl:attribute>
-            <xsl:attribute name="data-fv-choice-min">
-              <xsl:value-of select="ancestor::select/@data-fv-choice-min"/>
-            </xsl:attribute>
-            <xsl:attribute name="data-fv-choice-max">
-              <xsl:value-of select="ancestor::select/@data-fv-choice-max"/>
-            </xsl:attribute>
-            <xsl:attribute name="data-fv-choice-message">
-              <xsl:value-of select="ancestor::select/@data-fv-choice-message"/>
-            </xsl:attribute>
-            <xsl:if test="ancestor::select/@data-fv-notempty">
-              <xsl:attribute name="data-fv-notempty">
-                <xsl:value-of select="ancestor::select/@data-fv-notempty"/>
-              </xsl:attribute>
-              <xsl:attribute name="data-fv-notempty-message">
-                <xsl:value-of select="ancestor::select/@data-fv-notempty-message"/>
-              </xsl:attribute>
-            </xsl:if>
-          </xsl:if>
-        </input>
-        &#160;
+        </xsl:if>
+      </input>
+      <label for="{$ref}_{position()}" class="form-check-label {translate(value/node(),'/ ','')}">
+        <span class="visually-hidden">&#160;</span>
         <xsl:value-of select="label/node()"/>
       </label>
     </span>
@@ -2899,7 +2941,7 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
-    <input type="text" id="{$ref}" name="{$ref}" class="slider form-control">
+    <input type="range" id="{$ref}" name="{$ref}" class="form-range">
       <xsl:if test="@size!=''">
         <xsl:attribute name="size">
           <xsl:value-of select="@size"/>
@@ -2919,7 +2961,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </input>
-    <div class="slider">
+    <!--<div class="slider">
       <span class="max">
         <xsl:value-of select="@end"/>
       </span>
@@ -2942,8 +2984,7 @@
       <span class="ref">
         <xsl:value-of select="$ref"/>
       </span>
-    </div>
-    <div class="terminus">&#160;</div>
+    </div>-->
   </xsl:template>
   <!-- -->
   <!-- ========================== CONTROL : UPLOAD ========================== -->
@@ -2974,33 +3015,31 @@
               </xsl:if>
             </xsl:for-each>
           </input>
-          <span class="input-group-btn">
-            <span class="btn btn-primary btn-file">
-              <input type="file" name="{$ref}" id="{$ref}">
-                <xsl:if test="@class!=''">
-                  <xsl:attribute name="class">
-                    <xsl:value-of select="@class"/>
-                  </xsl:attribute>
-                </xsl:if>
-                <xsl:if test="value!=''">
-                  <xsl:attribute name="value">
-                    <xsl:value-of select="value"/>
-                  </xsl:attribute>
-                </xsl:if>
-              </input>
-              <i class="fa fa-file-o">
-                <xsl:text> </xsl:text>
-              </i>
+          <span class="btn btn-primary btn-file">
+            <input type="file" name="{$ref}" id="{$ref}">
+              <xsl:if test="@class!=''">
+                <xsl:attribute name="class">
+                  <xsl:value-of select="@class"/>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:if test="value!=''">
+                <xsl:attribute name="value">
+                  <xsl:value-of select="value"/>
+                </xsl:attribute>
+              </xsl:if>
+            </input>
+            <i class="fa fa-file-o">
               <xsl:text> </xsl:text>
-              <xsl:choose>
-                <xsl:when test="@buttonText!=''">
-                  <xsl:value-of select="@buttonText"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:call-template name="term5006"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </span>
+            </i>
+            <xsl:text> </xsl:text>
+            <xsl:choose>
+              <xsl:when test="@buttonText!=''">
+                <xsl:value-of select="@buttonText"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:call-template name="term5006"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </span>
         </div>
       </xsl:otherwise>

@@ -39,7 +39,6 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sort"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -47,12 +46,12 @@
   <!-- Display Poll -->
   <xsl:template match="Content[@type='Poll']" mode="displayBrief">
     <xsl:param name="sortBy"/>
-    <div class="clearfix list list-group-item listItem poll">
+    <div class="clearfix listItem poll">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'clearfix list list-group-item listItem poll'"/>
+        <xsl:with-param name="class" select="'clearfix listItem poll'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <div class="list-item lIinner">
+      <div class="lIinner">
         <h3 class="title">
           <xsl:value-of select="Title/node()"/>
         </h3>
@@ -145,7 +144,7 @@
             <xsl:value-of select="Status/@validationError"/>
           </span>
         </xsl:if>
-        <button type="submit" name="pollsubmit-{@id}" value="Submit Vote" class="btn btn-default principle"  onclick="disableButton(this);">Submit Vote</button>
+        <button type="submit" name="pollsubmit-{@id}" value="Submit Vote" class="btn btn-primary"  onclick="disableButton(this);">Submit Vote</button>
       </div>
     </form>
     <!-- IN ADMIN SHOW RESULTS -->
@@ -330,7 +329,7 @@
       <p>
         <xsl:value-of select="Title/node()"/> - <xsl:value-of select="$percentageVote"/>%
       </p>
-      <div class="pollBar">
+      <div class="bg-primary pollBar">
         <xsl:attribute name="style">
           <xsl:text>width:</xsl:text>
           <xsl:value-of select="$percentageVote"/>

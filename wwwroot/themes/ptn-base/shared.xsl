@@ -9,23 +9,23 @@
   <xsl:import href="../../xsl/InstalledModules.xsl"/>
   <xsl:import href="custom-box-styles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
+  <xsl:import href="../../ptn/features/cart/cart.xsl"/>
 
 
   <!-- ############################################ THEME VARIABLES ############################################### -->
 
   <xsl:variable name="theme">ptn-base</xsl:variable>
   <!--menu below header-->
-  <xsl:variable name="header-layout">header-basic</xsl:variable>
+  <!--<xsl:variable name="header-layout">header-basic</xsl:variable>-->
   <!--menu within header-->
-  <!--<xsl:variable name="header-layout">header-menu-right</xsl:variable>-->
+  <xsl:variable name="header-layout">header-menu-right</xsl:variable>
 
   <xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
   <xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
   <xsl:variable name="HomeInfo">false</xsl:variable>
   <xsl:variable name="HomeNav">true</xsl:variable>
   <xsl:variable name="NavFix">false</xsl:variable>
-  <xsl:variable name="nav-dropdown">false</xsl:variable>
-  <!--true/false/hover-->
+  <xsl:variable name="nav-dropdown">true</xsl:variable>
   <xsl:variable name="SideSubWidth">3</xsl:variable>
   <xsl:variable name="SideSubWidthCustom"></xsl:variable>
   <xsl:variable name="themeBreadcrumb">false</xsl:variable>
@@ -93,25 +93,26 @@
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
         <xsl:apply-templates select="." mode="commonJsFiles" />
+        <xsl:text>/ptn/core/jquery/common.js,</xsl:text>
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/jquery.appear.js,</xsl:text>
-        <!--<xsl:text>~/ewThemes/</xsl:text>
+        <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js/offcanvas.js,</xsl:text>-->
+        <xsl:text>/js/offcanvas.js,</xsl:text>
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/responsive-tabs.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
+        <!--<xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js/bootstrap-hover-dropdown.min.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
-        <xsl:value-of select="$theme"/>
-        <xsl:text>/js/theme-specific.js,</xsl:text>
+        <xsl:text>/js/bootstrap-hover-dropdown.min.js,</xsl:text>-->
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/smoothproducts.js,</xsl:text>
-        <xsl:text>~/ewCommon/js/newcart.js</xsl:text>
+        <xsl:text>~/ewCommon/js/newcart.js,</xsl:text>
+        <xsl:text>~/ewThemes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/js/theme-specific.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/site</xsl:text>
@@ -385,7 +386,52 @@
     </xsl:choose>
   </xsl:template>
 
-
+  <!-- ############################################# FOOTER ############################################### -->
+  <xsl:template match="Page" mode="footer1">
+    <div id="pagefooter" class="Site clearfix">
+      <div class="footer-inner">
+        <div class="clearfix footer-main">
+          <div class="container">
+            <xsl:if test="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+              <div class="footer-nav-wrapper" role="navigation">
+                <ul class="nav footer-nav">
+                  <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Footer']/MenuItem[not(DisplayName/@exclude='true')]">
+                    <li class="nav-item">
+                      <xsl:apply-templates select="." mode="menuLink">
+                        <xsl:with-param name="class">nav-link</xsl:with-param>
+                      </xsl:apply-templates>
+                    </li>
+                  </xsl:for-each>
+                </ul>
+              </div>
+            </xsl:if>
+            <div id="sitefooter">
+              <xsl:apply-templates select="/Page" mode="addModule">
+                <xsl:with-param name="text">Add Module</xsl:with-param>
+                <xsl:with-param name="position">sitefooter</xsl:with-param>
+                <xsl:with-param name="class">footer-main</xsl:with-param>
+              </xsl:apply-templates>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix footer-utility">
+          <div class="container">
+            <div class="clearfix footer-utility-inner">
+              <div id="copyright">
+                <xsl:apply-templates select="/Page" mode="addModule">
+                  <xsl:with-param name="text">Copyright</xsl:with-param>
+                  <xsl:with-param name="position">copyright</xsl:with-param>
+                </xsl:apply-templates>
+              </div>
+              <div class="credit">
+                <xsl:apply-templates select="/" mode="developerLink"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
   <!-- ############################################# BESPOKE ############################################### -->
 
 </xsl:stylesheet>

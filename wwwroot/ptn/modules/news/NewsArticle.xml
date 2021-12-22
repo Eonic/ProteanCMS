@@ -163,7 +163,7 @@
         <relatedContent search="find add" type="Tag" relationType="Tag" direction="2way">
           <label>Related Tags</label>
         </relatedContent>
-	<relatedContent search="find add" type="NewsArticle" relationType="NewsArticle" direction="2way">
+        <relatedContent search="find add" type="NewsArticle" relationType="NewsArticle" direction="2way">
           <label>Related Articles</label>
         </relatedContent>
       </group>

@@ -70,8 +70,8 @@
               <value>false</value>
             </item>
             <item>
-              <label>Alternative</label>
-              <value>bg-alt</value>
+              <label>Light</label>
+              <value>bg-light</value>
             </item>
           </select1>
           <input bind="backgroundImage" class="pickImageFile bs-only">

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  
+  <ModuleTypes>
+    <ModuleGroup name="Image Galleries" icon="fas fa-image">
+      <Module type="SlideCarousel" formPath="carouselslide/slide-carousel" icon="fas fa-images" name="Slide Carousel">Not suitable for responsive websites. Please use only one slide carousel per page</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

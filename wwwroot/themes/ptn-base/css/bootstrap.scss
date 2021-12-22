@@ -52,8 +52,8 @@
 //Theme specific
 @import "animate.css";
 @import "anim.css";
-//@import "variables";
-//@import "product-carousel";
+@import "variables2";
+@import "product-carousel";
 //@import "../layout-templates/utility";
 //@import "../layout-templates/templates";
 //@import "../layout-templates/header-menu-below";
@@ -65,4 +65,8 @@
 //@import "panels";
 //@import "header-nav";
 //@import "theme-custom";
+@import "cards";
+@import "forms";
+@import "cart";
+@import "header-nav";
 @import "new";

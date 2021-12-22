@@ -23,32 +23,6 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <!--responsive columns variables-->
-    <xsl:variable name="xsColsToShow">
-      <xsl:choose>
-        <xsl:when test="@xsCol='2'">2</xsl:when>
-        <xsl:otherwise>1</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="smColsToShow">
-      <xsl:choose>
-        <xsl:when test="@smCol and @smCol!=''">
-          <xsl:value-of select="@smCol"/>
-        </xsl:when>
-        <xsl:otherwise>2</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="mdColsToShow">
-      <xsl:choose>
-        <xsl:when test="@mdCol and @mdCol!=''">
-          <xsl:value-of select="@mdCol"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@cols"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <!--end responsive columns variables-->
     <!-- Output Module -->
     <div class="clearfix VacancyList">
       <xsl:if test="@carousel='true'">
@@ -56,28 +30,9 @@
           <xsl:text>clearfix VacancyList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
         <!--responsive columns-->
-        <xsl:attribute name="class">
-          <xsl:text>cols</xsl:text>
-          <xsl:choose>
-            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
-            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
-          </xsl:choose>
-          <xsl:if test="@smCol and @smCol!=''">
-            <xsl:text> sm-content-</xsl:text>
-            <xsl:value-of select="@smCol"/>
-          </xsl:if>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> md-content-</xsl:text>
-            <xsl:value-of select="@mdCol"/>
-          </xsl:if>
-          <xsl:text> cols</xsl:text>
-          <xsl:value-of select="@cols"/>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> content-cols-responsive</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
+        <xsl:apply-templates select="." mode="contentColumns"/>
         <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
@@ -124,19 +79,19 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem list-group-item">
+    <div class="listItem">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item'"/>
+        <xsl:with-param name="class" select="'listItem'"/>
       </xsl:apply-templates>
       <div class="lIinner">
+        <a href="{$parentURL}" title="Read More - {Headline/node()}" class="list-image-link vacancy-image">
+          <xsl:apply-templates select="." mode="displayThumbnail"/>
+        </a>
         <h3 class="title">
           <a href="{$parentURL}" title="{JobTitle/node()}">
             <xsl:value-of select="JobTitle/node()"/>
           </a>
         </h3>
-        <a href="{$parentURL}" title="Read More - {Headline/node()}" class="vacancy-image">
-          <xsl:apply-templates select="." mode="displayThumbnail"/>
-        </a>
         <div class="vacancy-intro">
           <dl class="dl-horizontal">
             <xsl:if test="@publish and @publish!=''">
@@ -231,9 +186,9 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem list-group-item">
+    <div class="listItem">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item'"/>
+        <xsl:with-param name="class" select="'listItem'"/>
       </xsl:apply-templates>
       <a href="{$parentURL}" title="{JobTitle/node()}">
         <div class="lIinner">
@@ -329,9 +284,9 @@
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'detail vacancy'"/>
       </xsl:apply-templates>
-      <h1 class="content-title" itemprop="title">
+      <h2 class="content-title" itemprop="title">
         <xsl:value-of select="JobTitle/node()"/>
-      </h1>
+      </h2>
       <div class="vacancy-intro">
         <dl class="dl-horizontal">
           <xsl:if test="@publish and @publish!=''">

@@ -22,58 +22,16 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <!--responsive columns variables-->
-    <xsl:variable name="xsColsToShow">
-      <xsl:choose>
-        <xsl:when test="@xsCol='2'">2</xsl:when>
-        <xsl:otherwise>1</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="smColsToShow">
-      <xsl:choose>
-        <xsl:when test="@smCol and @smCol!=''">
-          <xsl:value-of select="@smCol"/>
-        </xsl:when>
-        <xsl:otherwise>2</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="mdColsToShow">
-      <xsl:choose>
-        <xsl:when test="@mdCol and @mdCol!=''">
-          <xsl:value-of select="@mdCol"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@cols"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    
     <div class="clearfix ProductList">
       <xsl:if test="@carousel='true'">
         <xsl:attribute name="class">
           <xsl:text>clearfix ProductList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
-        <xsl:attribute name="class">
-          <xsl:text>cols</xsl:text>
-          <xsl:choose>
-            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
-            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
-          </xsl:choose>
-          <xsl:if test="@smCol and @smCol!=''">
-            <xsl:text> sm-content-</xsl:text>
-            <xsl:value-of select="@smCol"/>
-          </xsl:if>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> md-content-</xsl:text>
-            <xsl:value-of select="@mdCol"/>
-          </xsl:if>
-          <xsl:text> cols</xsl:text>
-          <xsl:value-of select="@cols"/>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> content-cols-responsive</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
+      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+
+        <xsl:apply-templates select="." mode="contentColumns"/>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -88,7 +46,6 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <xsl:if test="@stepCount != '0'">
-          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -121,13 +78,18 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <div class="listItem hproduct">
+    <div class="listItem product">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem hproduct'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
-        <h3 class="fn title">
+        <xsl:if test="Images/img/@src!=''">
+          <a href="{$parentURL}" class="url list-image-link">
+            <xsl:apply-templates select="." mode="displayThumbnail"/>
+          </a>
+        </xsl:if>
+        <h3 class="title">
           <xsl:variable name="title">
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </xsl:variable>
@@ -135,11 +97,6 @@
             <xsl:value-of select="$title"/>
           </a>
         </h3>
-        <xsl:if test="Images/img/@src!=''">
-          <a href="{$parentURL}" class="url">
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
-          </a>
-        </xsl:if>
         <xsl:if test="Manufacturer/node()!=''">
           <p class="manufacturer">
             <xsl:if test="/Page/Contents/Content[@name='makeLabel']">
@@ -183,8 +140,6 @@
           </xsl:apply-templates>
           <xsl:text> </xsl:text>
         </div>
-        <!-- Terminus class fix to floating columns -->
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -210,7 +165,7 @@
     </xsl:variable>
     <div class="listItem sku">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem hproduct'"/>
+        <xsl:with-param name="class" select="'listItem sku'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
@@ -261,8 +216,6 @@
             <xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
           </div>
         </xsl:if>
-        <!-- Terminus class fix to floating columns -->
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -285,9 +238,9 @@
   <xsl:template match="Content[@type='Product']" mode="ContentDetail">
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
     <xsl:variable name="parId" select="@parId" />
-    <div class="hproduct product detail">
+    <div class="detail product-detail">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'hproduct product detail'"/>
+        <xsl:with-param name="class" select="'detail product-detail'"/>
       </xsl:apply-templates>
       <xsl:choose>
         <!-- Test whether product has SKU's -->
@@ -358,7 +311,6 @@
           <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
         </div>
       </xsl:if>
-      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <xsl:if test="Content[@type='Tag']">
           <div class="tags">
@@ -374,7 +326,6 @@
         </xsl:apply-templates>
         <xsl:text> </xsl:text>
       </div>
-      <div class="terminus">&#160;</div>
       <xsl:if test="Content[@type='LibraryImage']">
         <h2>
           <xsl:call-template name="term2073" />
@@ -382,7 +333,7 @@
         <div id="productScroller">
           <table id="productScrollerInner">
             <tr>
-              <xsl:apply-templates select="Content[@type='LibraryImage']" mode="scollerImage"/>
+              <xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
             </tr>
           </table>
         </div>
@@ -431,10 +382,9 @@
         </xsl:if>
       </xsl:if>
     </div>
-    <div class="terminus">&#160;</div>
   </xsl:template>
 
-  <xsl:template match="Content" mode="scollerImage">
+  <xsl:template match="Content" mode="scrollerImage">
     <xsl:param name="showImage"/>
     <xsl:variable name="imgId">
       <xsl:text>picture_</xsl:text>
@@ -554,14 +504,14 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <div class="hproduct">
+    <div class="listItem product">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'hproduct'"/>
+        <xsl:with-param name="class" select="'listItem product'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
         <xsl:if test="Images/img/@src!=''">
-          <a href="{$parentURL}" class="url pull-left">
+          <a href="{$parentURL}" class="url list-image-link">
             <xsl:apply-templates select="." mode="displayThumbnail">
               <xsl:with-param name="width">125</xsl:with-param>
               <xsl:with-param name="height">125</xsl:with-param>
@@ -569,14 +519,14 @@
             </xsl:apply-templates>
           </a>
         </xsl:if>
-        <h5 class="fn title">
+        <h3 class="title">
           <xsl:variable name="title">
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </xsl:variable>
           <a href="{$parentURL}" title="{$title}">
             <xsl:value-of select="$title"/>
           </a>
-        </h5>
+        </h3>
         <xsl:if test="Manufacturer/node()!=''">
           <p class="manufacturer">
             <xsl:if test="/Page/Contents/Content[@name='makeLabel']">
@@ -611,7 +561,7 @@
             <xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
           </div>
         </xsl:if>
-        <div class="entryFooter text-right">
+        <div class="entryFooter">
           <xsl:if test="/Page/Cart">
             <xsl:apply-templates select="." mode="addToCartButton">
               <xsl:with-param name="actionURL" select="$parentURL"/>
@@ -619,8 +569,6 @@
           </xsl:if>
           <xsl:text> </xsl:text>
         </div>
-        <!-- Terminus class fix to floating columns -->
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>

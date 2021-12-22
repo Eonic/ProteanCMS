@@ -10,7 +10,7 @@
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
       <xsl:attribute name="class">
-        <xsl:text>ewXform container-fluid</xsl:text>
+        <xsl:text>ewXform container</xsl:text>
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>
@@ -55,14 +55,24 @@
           <xsl:for-each select="group[2]">
             <xsl:if test="count(submit) &gt; 0">
               <div class="navbar-fixed-bottom">
-                <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
-                  <span class="required">
-                    <span class="req">*</span>
-                    <xsl:text> </xsl:text>
-                    <xsl:call-template name="msg_required"/>
-                  </span>
-                </xsl:if>
-                <xsl:apply-templates select="submit" mode="xform"/>
+                <div class="container">
+                  <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
+                    <span class="required">
+                      <span class="req">*</span>
+                      <xsl:text> </xsl:text>
+                      <xsl:call-template name="msg_required"/>
+                    </span>
+                  </xsl:if>
+                  <xsl:apply-templates select="submit" mode="xform"/>
+                  <div class="footer-status">
+                    <span>
+                      <i class="fas fa-eye"> </i> Live 
+                    </span>
+                    <span class="text-muted hidden">
+                      <i class="fas fa-eye-slash"> </i> Hidden
+                    </span>
+                  </div>
+                </div>
               </div>
             </xsl:if>
           </xsl:for-each>
@@ -80,9 +90,11 @@
             <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
           </div>
           <xsl:if test="count(submit) &gt; 0">
-            <div class="clearfix">
+            <div class="clearfix navbar-fixed-bottom">
               <!--<xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
-                --><!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">--><!--
+                -->
+              <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
+              <!--
                 <span class="required">
                   <xsl:call-template name="msg_required"/>
                   <span class="req">*</span>
@@ -182,7 +194,9 @@
               </div>
             </xsl:when>
             <!--<xsl:when test="contains(@class,'accordion-form-container') ">
-              --><!--<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">--><!--
+              -->
+            <!--<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">-->
+            <!--
                 <xsl:for-each select="group | repeat">
                   <xsl:apply-templates select="." mode="xform">
                     <xsl:with-param name="class">
@@ -218,7 +232,7 @@
     <xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
   </xsl:template>
 
-  
+
 
   <xsl:template match="group[(contains(@class,'2col') or contains(@class,'2Col')) and ancestor::Page[@adminMode='true']]" mode="xform">
     <xsl:if test="label and not(parent::Content)">
@@ -265,7 +279,7 @@
           </xsl:apply-templates>
         </xsl:for-each>
       </div>
-      </div>
+    </div>
   </xsl:template>
 
 
@@ -281,7 +295,7 @@
     </xsl:variable>
     <xsl:apply-templates select="self::node()[not(item[toggle])]" mode="xform_legend"/>
     <div class="input-group form-margin" id="editImage_{$ref}">
-      <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-info input-group-btn">
+      <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-primary input-group-btn">
         <i class="fa fa-times">
           <xsl:text> </xsl:text>
         </i>
@@ -312,7 +326,7 @@
       <xsl:choose>
         <xsl:when test="value/img/@src!=''">
           <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
-          <a class="btn btn-info input-group-btn editImage">
+          <a class="btn btn-primary input-group-btn editImage">
             <i class="fas fa-image">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Edit
@@ -320,7 +334,7 @@
         </xsl:when>
         <xsl:otherwise>
           <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-info input-group-btn">
+          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary input-group-btn">
             <i class="fas fa-image">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Pick
@@ -404,7 +418,7 @@
     <xsl:variable name="scriptRef">
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
-    <div class="input-group" id="editImageFile_{$ref}">
+    <div class="input-group form-margin" id="editImageFile_{$ref}">
       <input name="{$ref}" id="{$ref}" value="{value/node()}" >
         <xsl:attribute name="class">
           <xsl:text>form-control </xsl:text>
@@ -421,7 +435,7 @@
 
         </xsl:when>
         <xsl:otherwise>
-          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-info input-group-btn">
+          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-primary input-group-btn">
             <i class="fas fa-image">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Pick
@@ -1284,13 +1298,8 @@
     <xsl:for-each select="ms:node-set($styles)/*/*">
       <!-- EXAMPLE BESPOKE BOX-->
       <div data-value="{node()}">
-        <div class="panel {node()}">
-          <div class="panel-heading">
-            <xsl:value-of select="node()"/>
-          </div>
-          <div class="panel-body">
-            Example Text
-          </div>
+        <div class="{node()}">
+          <xsl:value-of select="node()"/>
         </div>
       </div>
     </xsl:for-each>
@@ -1300,100 +1309,154 @@
   <!-- -->
   <xsl:template match="*" mode="bootstrapBoxStyles">
     <xsl:param name="value" />
-    <div data-value="panel-primary">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-primary</h6>
+    <div data-value="bg-primary">
+      <div class="card bg-primary">
+        <div class="card-header">
+          <h5 class="card-title">card primary</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="panel-success">
-      <div class="panel panel-success">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-success</h6>
+    <div data-value="bg-secondary">
+      <div class="card bg-secondary">
+        <div class="card-header">
+          <h5 class="card-title">card secondary</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="panel-info">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-info</h6>
+    <div data-value="bg-info">
+      <div class="card bg-info">
+        <div class="card-header">
+          <h5 class="card-title">card info</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="panel-warning">
-      <div class="panel panel-warning">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-warning</h6>
+    <div data-value="bg-light">
+      <div class="card bg-light">
+        <div class="card-header">
+          <h5 class="card-title">card light</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="panel-danger">
-      <div class="panel panel-danger">
-        <div class="panel-heading">
-          <h6 class="panel-title">panel-danger</h6>
+    <div data-value="bg-dark">
+      <div class="card bg-dark">
+        <div class="card-header">
+          <h5 class="card-title">card dark</h5>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <xsl:text>Example Text </xsl:text>
         </div>
       </div>
     </div>
-    <div data-value="alert-action">
-      <div class="alert alert-action">
-        alert-action
+    <div data-value="border-primary">
+      <div class="card border-primary">
+        <div class="card-header">
+          <h5 class="card-title">card border primary</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
       </div>
     </div>
-    <div data-value="alert-success">
-      <div class="alert alert-success">
-        alert-success
+    <div data-value="border-secondary">
+      <div class="card border-secondary">
+        <div class="card-header">
+          <h5 class="card-title">card border secondary</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="border-info">
+      <div class="card border-info">
+        <div class="card-header">
+          <h5 class="card-title">card border info</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="border-light">
+      <div class="card border-light">
+        <div class="card-header">
+          <h5 class="card-title">card border light</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="border-dark">
+      <div class="card border-dark">
+        <div class="card-header">
+          <h5 class="card-title">card border dark</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="card-info">
+      <div class="card bg-info">
+        <div class="card-header">
+          <h5 class="card-title">card info</h5>
+        </div>
+        <div class="card-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+    <div data-value="alert-primary">
+      <div class="alert alert-primary">
+        alert primary
+      </div>
+    </div>
+    <div data-value="alert-secondary">
+      <div class="alert alert-secondary">
+        alert secondary
       </div>
     </div>
     <div data-value="alert-info">
       <div class="alert alert-info">
-        alert-info
+        alert info
+      </div>
+    </div>
+    <div data-value="alert-light">
+      <div class="alert alert-light">
+        alert light
+      </div>
+    </div>
+    <div data-value="alert-dark">
+      <div class="alert alert-dark">
+        alert dark
+      </div>
+    </div>
+    <div data-value="alert-success">
+      <div class="alert alert-success">
+        alert success
       </div>
     </div>
     <div data-value="alert-warning">
       <div class="alert alert-warning">
-        alert-warning
+        alert warning
       </div>
     </div>
     <div data-value="alert-danger">
       <div class="alert alert-danger">
-        alert-danger
-      </div>
-    </div>
-    <div data-value="well">
-      <div class="well">
-        well
-      </div>
-    </div>
-    <div data-value="well-lg">
-      <div class="well well-lg">
-        well-lg
-      </div>
-    </div>
-    <div data-value="well-sm">
-      <div class="well well-sm">
-        well-sm
-      </div>
-    </div>
-    <div data-value="jumbotron">
-      <div class="jumbotron">
-        <h1>jumbotron</h1>
-        <div>Example Text</div>
+        alert danger
       </div>
     </div>
   </xsl:template>
@@ -1743,7 +1806,7 @@
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
             <span class="input-group-btn pull-right">
-              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
@@ -1753,14 +1816,14 @@
         </xsl:if>
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <xsl:if test="contains(@search,'find')">
-            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
+            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();" >
               <i class="fa fa-search fa-white">
                 <xsl:text> </xsl:text>
               </i> Find Existing <xsl:value-of select="$contentType"/>
             </button>
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
-            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
+            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i> Add New
@@ -1880,7 +1943,7 @@
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
             <span class="input-group-btn pull-right">
-              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
@@ -1890,14 +1953,14 @@
         </xsl:if>
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <xsl:if test="contains(@search,'find')">
-            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
+            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();" >
               <i class="fa fa-search fa-white">
                 <xsl:text> </xsl:text>
               </i> Find Existing <xsl:value-of select="$contentType"/>
             </button>
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
-            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
+            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i> Add New
@@ -2017,7 +2080,7 @@
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
             <span class="input-group-btn pull-right">
-              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
@@ -2027,14 +2090,14 @@
         </xsl:if>
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <xsl:if test="contains(@search,'find')">
-            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
+            <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();" >
               <i class="fa fa-search fa-white">
                 <xsl:text> </xsl:text>
               </i> Find Existing <xsl:value-of select="$contentType"/>
             </button>
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
-            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
+            <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i> Add New
@@ -2210,12 +2273,12 @@
 
     <div class="accordion-item">
       <h5 class="accordion-header" id="heading{$makeClass}">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{$makeClass}" aria-expanded="true" aria-controls="collapse{$makeClass}"> 
-        <xsl:if test="label/@icon!=''">
-          <i class="{label/@icon}">&#160;</i>&#160;
-        </xsl:if> 
-        <xsl:apply-templates select="label" mode="xform_legend"/>
-      </button>
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{$makeClass}" aria-expanded="true" aria-controls="collapse{$makeClass}">
+          <xsl:if test="label/@icon!=''">
+            <i class="{label/@icon}">&#160;</i>&#160;
+          </xsl:if>
+          <xsl:apply-templates select="label" mode="xform_legend"/>
+        </button>
       </h5>
       <div id="collapse{$makeClass}"  aria-labelledby="heading{$makeClass}" data-bs-parent="#pick-by-image">
         <xsl:attribute name="class">
@@ -2224,9 +2287,9 @@
             <xsl:text> in</xsl:text>
           </xsl:if>
         </xsl:attribute>
-          <xsl:apply-templates select="item" mode="xform_imageClick">
-            <xsl:with-param name="ref" select="$ref"/>
-          </xsl:apply-templates>
+        <xsl:apply-templates select="item" mode="xform_imageClick">
+          <xsl:with-param name="ref" select="$ref"/>
+        </xsl:apply-templates>
       </div>
     </div>
   </xsl:template>
@@ -2256,7 +2319,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="col-md-2">
+    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-2">
       <button name="{$ref}" value="{value/node()}" class="{$isSelected}">
         <!--<img src="{$imageURL}" class="card-img-top"/>-->
         <i class="fas fa-3x {$icon}"> </i>
@@ -2529,7 +2592,10 @@
     <xsl:variable name="val" select="value/node()"/>
     <!--<xsl:variable name="class" select="../@class"/>-->
     <xsl:variable name="class" select="ancestor::*[name()='select' or name()='select1' ]/@class"/>
-    <div class="form-check form-check-inline">
+    <div class="form-check">
+      <xsl:if test="ancestor::*[contains(@class,'inline-items')]">
+        <xsl:attribute name="class">form-check form-check-inline</xsl:attribute>
+      </xsl:if>
       <input type="{$type}" class="form-check-input">
         <xsl:choose>
           <xsl:when test="contains(../@class,'alwayson')">

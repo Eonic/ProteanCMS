@@ -26,48 +26,7 @@
       </xsl:choose>
     </xsl:variable>
     <!--responsive columns variables-->
-    <xsl:variable name="xsColsToShow">
-      <xsl:choose>
-        <xsl:when test="@xsCol='2'">2</xsl:when>
-        <xsl:otherwise>1</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="smColsToShow">
-      <xsl:choose>
-        <xsl:when test="@smCol and @smCol!=''">
-          <xsl:value-of select="@smCol"/>
-        </xsl:when>
-        <xsl:otherwise>1</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="mdColsToShow">
-      <xsl:choose>
-        <xsl:when test="@mdCol and @mdCol!=''">
-          <xsl:value-of select="@mdCol"/>
-        </xsl:when>
-        <xsl:otherwise>1</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="lgColsToShow">
-      <xsl:choose>
-        <xsl:when test="@lgCol and @lgCol!=''">
-          <xsl:value-of select="@lgCol"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@cols"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="xlColsToShow">
-      <xsl:choose>
-        <xsl:when test="@xlCol and @xlCol!=''">
-          <xsl:value-of select="@xlCol"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@cols"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    
     <!--end responsive columns variables-->
     <!-- Output Module -->
     <div class="clearfix NewsList">
@@ -76,32 +35,10 @@
           <xsl:text>clearfix NewsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-lgcols="{$lgColsToShow}" data-xlcols="{$xlColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
         <!--responsive columns-->
-        <xsl:attribute name="class">
-          <xsl:text>row cols g-2 row-cols-1</xsl:text>
-          <xsl:if test="@xsCol='2'"> row-cols-2</xsl:if>
-          <xsl:if test="@smCol and @smCol!=''">
-            <xsl:text> row-cols-sm-</xsl:text>
-            <xsl:value-of select="@smCol"/>
-          </xsl:if>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> row-cols-md-</xsl:text>
-            <xsl:value-of select="@mdCol"/>
-          </xsl:if>
-          <xsl:if test="@lgCol and @lgCol!=''">
-            <xsl:text> row-cols-lg-</xsl:text>
-            <xsl:value-of select="@lgCol"/>
-          </xsl:if>
-          <xsl:if test="@xlCol and @xlCol!=''">
-            <xsl:text> row-cols-xl-</xsl:text>
-            <xsl:value-of select="@xlCol"/>
-          </xsl:if>
-          <xsl:if test="@cols and @cols!=''">
-            <xsl:text> row-cols-xxl-</xsl:text>
-            <xsl:value-of select="@cols"/>
-          </xsl:if>
-        </xsl:attribute>
+        <xsl:apply-templates select="." mode="contentColumns"/>
+        
         <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
@@ -127,7 +64,6 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@stepCount != '0'">
-          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -250,14 +186,14 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="col listItem newsarticle">
+    <div class="listItem newsarticle">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'col listItem newsarticle'"/>
+        <xsl:with-param name="class" select="'listItem newsarticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
         <xsl:if test="Images/img/@src!=''">
-          <a href="{$parentURL}" title="Read More - {Headline/node()}">
+          <a href="{$parentURL}" title="Read More - {Headline/node()}" class="list-image-link">
             <xsl:apply-templates select="." mode="displayThumbnail"/>
           </a>
           <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
@@ -320,9 +256,9 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem list-group-item newsarticle">
+    <div class="listItem newsarticle">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item newsarticle'"/>
+        <xsl:with-param name="class" select="'listItem newsarticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
 
       </xsl:apply-templates>
@@ -358,8 +294,6 @@
                   <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
                 </div>
               </xsl:if>
-              <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-              <div class="terminus">&#160;</div>
             </div>
           </div>
         </xsl:when>
@@ -393,8 +327,6 @@
                 </div>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayTagsNoLink"/>
-              <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-              <div class="terminus">&#160;</div>
             </div>
           </a>
         </xsl:otherwise>
@@ -446,8 +378,6 @@
           </xsl:apply-templates>
         </div>
       </xsl:if>
-      <!-- Terminus class fix to floating content -->
-      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>

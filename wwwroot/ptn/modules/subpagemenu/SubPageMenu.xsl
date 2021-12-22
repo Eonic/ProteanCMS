@@ -62,10 +62,10 @@
             <xsl:with-param name="totalCount" select="$totalCount" />
           </xsl:apply-templates>
         </xsl:if>
-        <ul class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}">
+        <ul data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}">
           <!--responsive columns-->
           <xsl:attribute name="class">
-            <xsl:text>cols</xsl:text>
+            <xsl:text>nav flex-column cols</xsl:text>
             <xsl:choose>
               <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
               <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
@@ -110,13 +110,10 @@
       <xsl:apply-templates select="." mode="getDisplayName"/>
     </xsl:variable>
     <xsl:if test="@name!='Information'">
-      <li>
-        <xsl:attribute name="class">
-          <xsl:if test="position()=last()">
-            <xsl:text>last</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
-        <xsl:apply-templates select="." mode="menuLink"/>
+      <li class="nav-item">
+        <xsl:apply-templates select="." mode="menuLink">
+          <xsl:with-param name="class">nav-link</xsl:with-param>
+        </xsl:apply-templates>
       </li>
     </xsl:if>
   </xsl:template>

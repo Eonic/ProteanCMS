@@ -577,12 +577,10 @@
       </xsl:if>
     </xsl:if>
     <xsl:apply-templates select="." mode="resellerStyle"/>
-    <xsl:if test="@cssFramework='bs3'">
       <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 8') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 7') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0')">
         <script src="/ewcommon/js/respond.min.js">/* */</script>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js">/* */</script>
       </xsl:if>
-    </xsl:if>
   </xsl:template>
 
   <xsl:template match="Page" mode="resellerStyle">
@@ -632,14 +630,6 @@
             <xsl:text>~/ewcommon/js/jquery/isotope/jquery.isotope.min.js,</xsl:text>
             <xsl:text>~/ewcommon/js/jquery/innerFade/jquery.innerfade.js,</xsl:text>
             <xsl:text>~/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js,</xsl:text>
-            <xsl:choose>
-              <xsl:when test="@cssFramework='bs3'">
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:text>~/ewcommon/js/jquery/SlideCarousel/jquery.mousewheel.min.js,</xsl:text>
-                <xsl:text>~/ewcommon/js/jquery/SlideCarousel/jquery.carousel-1.1.min.js,</xsl:text>
-              </xsl:otherwise>
-            </xsl:choose>
             <xsl:text>~/ewcommon/js/ace/src-noconflict/ace.js,</xsl:text>
             <xsl:text>~/ewcommon/js/ace/src-noconflict/theme-mono_industrial.js,</xsl:text>
             <xsl:text>~/ewcommon/js/ace/src-noconflict/mode-xml.js,</xsl:text>
@@ -649,7 +639,7 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+        <script src="/ptn/core/jquery/slick.min.js">/* */</script>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="@layout='Modules_Masonary'">
@@ -663,7 +653,7 @@
           <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
         </xsl:if>
         <xsl:if test="//Content[@carousel='true']">
-          <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+          <script src="/ptn/core/jquery/slick.min.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
@@ -675,7 +665,6 @@
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
-
     <xsl:if test="//Content[@moduleType='Audio']/Path/node()!=''">
       <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.min.js">/* */</script>
       <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.inspector.js">/* */</script>
@@ -2743,7 +2732,7 @@
 
   </xsl:template>
 
-  <xsl:template match="MenuItem[ancestor::Page[@cssFramework='bs3']]" mode="breadcrumb">
+  <xsl:template match="MenuItem" mode="breadcrumb">
     <xsl:param name="separator"></xsl:param>
 
     <!-- if not excluded from Nav -->
@@ -2768,7 +2757,7 @@
 
   </xsl:template>
 
-  <xsl:template match="MenuItem[ancestor::Page[@cssFramework='bs3']]" mode="breadcrumbLink">
+  <xsl:template match="MenuItem" mode="breadcrumbLink">
     <xsl:param name="span" select="false()"/>
     <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
       <xsl:choose>
@@ -3539,10 +3528,7 @@
   <xsl:template match="/" mode="getMainTitle">
     <xsl:variable name="titleText">
       <xsl:choose>
-        <xsl:when test="/Page/ContentDetail and /Page[@cssFramework!='bs3']">
-          <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getDisplayName" />
-        </xsl:when>
-        <xsl:when test="/Page/ContentDetail and /Page[@cssFramework='bs3']">
+        <xsl:when test="/Page/ContentDetail">
           <xsl:text> </xsl:text>
         </xsl:when>
         <xsl:when test="/Page/Contents/Content[@name='title']">
@@ -3875,17 +3861,23 @@
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text> active </xsl:text>
       </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xxl')">
+        <xsl:text> d-xxl-none</xsl:text>
+      </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xl')">
+        <xsl:text> d-xl-none</xsl:text>
+      </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'lg')">
-        <xsl:text> hidden-lg-nav</xsl:text>
+        <xsl:text> d-lg-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'md')">
-        <xsl:text> hidden-md-nav</xsl:text>
+        <xsl:text> d-md-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'sm')">
-        <xsl:text> hidden-sm-nav</xsl:text>
+        <xsl:text> d-sm-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'xs')">
-        <xsl:text> hidden-xs-nav</xsl:text>
+        <xsl:text> d-xs-none</xsl:text>
       </xsl:if>
     </xsl:variable>
     <li class="{$liClass}">
@@ -3902,34 +3894,33 @@
     <xsl:param name="homeLink"/>
     <xsl:param name="span"/>
     <xsl:variable name="liClass">
+      <xsl:text>nav-item </xsl:text>
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text>active </xsl:text>
       </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xxl')">
+        <xsl:text> d-xxl-none</xsl:text>
+      </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xl')">
+        <xsl:text> d-xl-none</xsl:text>
+      </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'lg')">
-        <xsl:text> hidden-lg-nav</xsl:text>
+        <xsl:text> d-lg-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'md')">
-        <xsl:text> hidden-md-nav</xsl:text>
+        <xsl:text> d-md-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'sm')">
-        <xsl:text> hidden-sm-nav</xsl:text>
+        <xsl:text> d-sm-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'xs')">
-        <xsl:text> hidden-xs-nav</xsl:text>
+        <xsl:text> d-xs-none</xsl:text>
       </xsl:if>
-      <xsl:choose>
-        <xsl:when test="position()=1">
-          <!-- If there is no Home link in the menu the first MenuItem in the menu should have a class of 'first' -->
-          <xsl:text> first</xsl:text>
-        </xsl:when>
-        <xsl:when test="position()=last()">
-          <xsl:text> last</xsl:text>
-        </xsl:when>
-      </xsl:choose>
     </xsl:variable>
     <li class="{$liClass}">
       <xsl:apply-templates select="self::MenuItem" mode="menuLink">
         <xsl:with-param name="span" select="$span" />
+        <xsl:with-param name="class">nav-link </xsl:with-param>
       </xsl:apply-templates>
     </li>
   </xsl:template>
@@ -3941,33 +3932,32 @@
     <xsl:param name="mobileDD"/>
     <xsl:param name="overviewLink"/>
     <xsl:variable name="liClass">
+      <xsl:text>nav-item </xsl:text>
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text>active </xsl:text>
       </xsl:if>
       <xsl:if test="descendant::MenuItem[@id=/Page/@id]">
         <xsl:text>on </xsl:text>
       </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xxl')">
+        <xsl:text> d-xxl-none</xsl:text>
+      </xsl:if>
+      <xsl:if test="contains(DisplayName/@screens,'xl')">
+        <xsl:text> d-xl-none</xsl:text>
+      </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'lg')">
-        <xsl:text> hidden-lg-nav</xsl:text>
+        <xsl:text> d-lg-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'md')">
-        <xsl:text> hidden-md-nav</xsl:text>
+        <xsl:text> d-md-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'sm')">
-        <xsl:text> hidden-sm-nav</xsl:text>
+        <xsl:text> d-sm-none</xsl:text>
       </xsl:if>
       <xsl:if test="contains(DisplayName/@screens,'xs')">
-        <xsl:text> hidden-xs-nav</xsl:text>
+        <xsl:text> d-xs-none</xsl:text>
       </xsl:if>
-      <xsl:choose>
-        <xsl:when test="position()=1">
-          <!-- If there is no Home link in the menu the first MenuItem in the menu should have a class of 'first' -->
-          <xsl:text> first</xsl:text>
-        </xsl:when>
-        <xsl:when test="position()=last()">
-          <xsl:text> last</xsl:text>
-        </xsl:when>
-      </xsl:choose>
+      
     </xsl:variable>
 
     <li class="{$liClass} dropdown">
@@ -3978,16 +3968,10 @@
         </xsl:attribute>
       </xsl:if>
       <a href="{@url}" id="mainNavDD{@id}">
-        <xsl:choose>
-          <xsl:when test="$hover='true'">
-            <xsl:attribute name="data-hover">dropdown</xsl:attribute>
-            <xsl:attribute name="data-close-others">true</xsl:attribute>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:attribute name="data-toggle">dropdown</xsl:attribute>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:attribute name="data-toggle">dropdown</xsl:attribute>
+        
         <xsl:attribute name="class">
+          <xsl:text>nav-link dropdown-toggle </xsl:text>
           <xsl:choose>
             <xsl:when test="self::MenuItem[@id=/Page/@id]">
               <xsl:text>active</xsl:text>
@@ -4113,8 +4097,6 @@
   </xsl:template>
 
   <xsl:template match="MenuItem[parent::Menu]" mode="mainmenu_sidenavtree">
-    <xsl:choose>
-      <xsl:when test="$page[@cssFramework='bs3']">
         <ul class="nav nav-pills nav-stacked">
           <li>
             <xsl:attribute name="class">
@@ -4125,19 +4107,6 @@
           </li>
           <xsl:apply-templates select="MenuItem[@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')]" mode="submenuitem"/>
         </ul>
-      </xsl:when>
-      <xsl:otherwise>
-        <ul>
-          <li>
-            <xsl:attribute name="class">
-              <xsl:text>first</xsl:text>
-            </xsl:attribute>
-            <xsl:apply-templates select="self::MenuItem" mode="menuLink"/>
-          </li>
-          <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
-        </ul>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
 
@@ -4145,8 +4114,6 @@
 				second and all subsequent levels of navigation nested  -->
   <xsl:template match="MenuItem" mode="submenu">
     <xsl:param name="sectionHeading"/>
-    <xsl:choose>
-      <xsl:when test="$page[@cssFramework='bs3']">
         <xsl:if test="$sectionHeading='true'">
           <h4>
             <xsl:apply-templates select="self::MenuItem" mode="menuLink" />
@@ -4158,20 +4125,11 @@
           </xsl:attribute>
           <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
         </ul>
-      </xsl:when>
-      <xsl:otherwise>
-        <ul>
-          <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
-        </ul>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
   <!-- -->
 
 
   <xsl:template match="MenuItem" mode="submenuitem">
-    <xsl:choose>
-      <xsl:when test="$page[@cssFramework='bs3']">
         <li>
           <xsl:attribute name="class">
             <xsl:if test="position()=1">
@@ -4201,28 +4159,6 @@
             </ul>
           </xsl:if>
         </li>
-      </xsl:when>
-      <xsl:otherwise>
-        <li>
-          <xsl:if test="position()=1">
-            <xsl:attribute name="class">
-              <xsl:text>first</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-          <xsl:if test="position()=last()">
-            <xsl:attribute name="class">
-              <xsl:text>last</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-          <xsl:apply-templates select="self::MenuItem" mode="menuLink"/>
-          <xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">
-            <ul>
-              <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
-            </ul>
-          </xsl:if>
-        </li>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
 
@@ -4314,6 +4250,7 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='Module']" mode="moreLink">
+    <xsl:param name="class"/>
     <xsl:variable name="link" select="@link"/>
     <xsl:if test="$link!=''">
       <xsl:variable name="numbertest">
@@ -4324,7 +4261,7 @@
       </xsl:variable>
       <div class="morelink">
         <span>
-          <a title="{@linkText}" class="btn btn-primary">
+          <a title="{@linkText}" class="btn btn-primary {$class}">
             <xsl:choose>
               <xsl:when test="$numbertest = 'number'">
                 <xsl:variable name="pageId" select="@link"/>
@@ -4447,12 +4384,8 @@
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
-          <xsl:if test="$page[@cssFramework='bs3']">
-            <xsl:attribute name="class">btn btn-default btn-xs pull-left</xsl:attribute>
-            <i class="fa fa-chevron-left">
-              <xsl:text> </xsl:text>
-            </i>&#160;
-          </xsl:if>
+          <xsl:attribute name="class">back-link</xsl:attribute>
+          <span class="visually-hidden">&#160;</span>
           <xsl:choose>
             <xsl:when test="$linkText!=''">
               <xsl:value-of select="$linkText"/>
@@ -4872,8 +4805,6 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="self::Content" mode="getHref"/>
     </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="/Page[@cssFramework='bs3']">
         <ul class="pager">
           <xsl:choose>
             <xsl:when test="/Page/Contents/Content[contains(@name,$prevItem)]">
@@ -4900,29 +4831,6 @@
             </xsl:otherwise>
           </xsl:choose>
         </ul>
-      </xsl:when>
-      <xsl:otherwise>
-        <div class="stepper">
-          <xsl:choose>
-            <xsl:when test="/Page/Contents/Content[contains(@name,$prevItem)]">
-              <a href="{$parentURL}?curPg={number($curPg) - 1}" title="go to the previous page">&lt; previous</a>
-            </xsl:when>
-            <xsl:otherwise>
-              <span class="ghosted">&lt; previous</span>
-            </xsl:otherwise>
-          </xsl:choose> |
-          <xsl:choose>
-            <xsl:when test="/Page/Contents/Content[contains(@name,$nextItem)]">
-              <a href="{$parentURL}?curPg={number($curPg) + 1}" title="go to the next page">next &gt;</a>
-            </xsl:when>
-            <xsl:otherwise>
-              <span class="ghosted">next &gt;</span>
-            </xsl:otherwise>
-          </xsl:choose>
-        </div>
-      </xsl:otherwise>
-    </xsl:choose>
-
   </xsl:template>
 
   <!-- -->
@@ -4955,8 +4863,7 @@
       </xsl:choose>
 
     </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="/Page[@cssFramework='bs3']">
+      
         <div class="col-md-12">
           <ul class="pager">
 
@@ -5023,81 +4930,7 @@
             </li>
           </ul>
         </div>
-      </xsl:when>
-      <xsl:otherwise>
-        <div class="stepper">
-          <p class="stepLinks">
-            <!-- Back Button-->
-            <xsl:choose>
-              <xsl:when test="$startPos - $noPerPage='0' and $startPos &gt; ($noPerPage - 1)">
-                <xsl:variable name="origURL">
-                  <xsl:apply-templates select="$currentPage" mode="getHref"/>
-                </xsl:variable>
-                <a href="{$origURL}" title="click here to view the previous page in sequence">&lt; Back</a> |
-              </xsl:when>
-              <xsl:when test="$startPos &gt; ($noPerPage - 1)">
-                <a href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">&lt; Back</a> |
-              </xsl:when>
-              <xsl:otherwise>
-                <span class="ghosted">&lt; Back | </span>
-              </xsl:otherwise>
-            </xsl:choose>
-            <!-- Dividers -->
-            <!--<xsl:for-each select="ms:node-set($contentList)/*">
-          <xsl:choose>
-            <xsl:when test="position()-$noPerPage=$startPos">
-              <xsl:value-of select="position() div $noPerPage"/> |
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:if test="(position() ) mod $noPerPage = '0'">
-                <a href="{$thisURL}={position()-$noPerPage}">
-                  <xsl:value-of select="position() div $noPerPage"/>
-                </a> |
-              </xsl:if>
-              <xsl:if test="(position()) = (count(/Page/Contents/Content[@type=$contentType]) + count(/Page/ContentDetail/Content[@type=$contentType]) + count(/Page/Contents/Contact[@type=$contentType])) and ceiling(position() div $noPerPage)!=(position() div $noPerPage)">
-                <xsl:choose>
-                  <xsl:when test="$startPos+$noPerPage=(ceiling((position()) div $noPerPage)*$noPerPage)">
-                    <span class="active">
-                      <xsl:value-of select="ceiling(position() div $noPerPage)"/>
-                    </span> |
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <a href="{$thisURL}={position()-(position() mod $noPerPage)}">
-                      <xsl:value-of select="ceiling(position() div $noPerPage)"/>
-                    </a> |
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:if>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:for-each-->
-            <!-- Next Button-->
-
-            <xsl:choose>
-              <xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
-                <a href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">Next &gt;</a>
-              </xsl:when>
-              <xsl:otherwise>
-                <span class="ghosted">Next &gt;</span>
-              </xsl:otherwise>
-            </xsl:choose>
-          </p>
-          <!-- ### to ### of ### (At the top) -->
-          <p class="itemInfo">
-            <xsl:if test="$noPerPage!=1">
-              <xsl:value-of select="$startPos + 1"/>
-              <xsl:text> to </xsl:text>
-            </xsl:if>
-            <xsl:if test="$totalCount &gt;= ($startPos +$noPerPage)">
-              <xsl:value-of select="$startPos + $noPerPage"/>
-            </xsl:if>
-            <xsl:if test="$totalCount &lt; ($startPos + $noPerPage)">
-              <xsl:value-of select="$totalCount"/>
-            </xsl:if> of <xsl:value-of select="$totalCount"/>
-          </p>
-        </div>
-      </xsl:otherwise>
-    </xsl:choose>
+     
   </xsl:template>
 
   <!-- Retrieves the additional Params from the URL -->
@@ -7409,8 +7242,7 @@
 
         <xsl:choose>
           <xsl:when test="$detailSrc!=''">
-            <xsl:choose>
-              <xsl:when test="$page/@cssFramework='bs3'">
+            
                 <span class="picture {$class}">
                   <xsl:if test="$showImage = 'noshow'">
                     <xsl:attribute name="class">
@@ -7428,49 +7260,12 @@
                         </xsl:attribute>
                       </xsl:if>
                     </img>
-                    <div class="text-muted">
+                    <div class="imageEnlarge">
                       <xsl:apply-templates select="self::Content" mode="imageEnlarge"/>
                     </div>
                   </a>
                 </span>
-              </xsl:when>
-              <xsl:otherwise>
-                <span class="picture {$class}">
-                  <xsl:if test="$showImage = 'noshow'">
-                    <xsl:attribute name="class">
-                      <xsl:text>picture hidden</xsl:text>
-                    </xsl:attribute>
-                  </xsl:if>
-                  <a href="{$detailSrc}" class="lightbox" rel="lightbox">
-                    <xsl:if test="$parId != ''">
-                      <xsl:attribute name="rel">
-                        <xsl:text>lightbox[</xsl:text>
-                        <xsl:value-of select="$parId"/>
-                        <xsl:text>]</xsl:text>
-                      </xsl:attribute>
-                    </xsl:if>
-                    <xsl:attribute name="title">
-                      <xsl:value-of select="$alt"/>
-                    </xsl:attribute>
-                    <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
-                    <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
-                    <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
-                      <xsl:if test="$imgId != ''">
-                        <xsl:attribute name="id">
-                          <xsl:value-of select="$imgId"/>
-                        </xsl:attribute>
-                      </xsl:if>
-                    </img>
-                    <span class="imageEnlarge">
-                      <xsl:apply-templates select="self::Content" mode="imageEnlarge"/>
-                    </span>
-                  </a>
-                </span>
-
-              </xsl:otherwise>
-
-            </xsl:choose>
+              
 
           </xsl:when>
           <xsl:otherwise>
@@ -9826,7 +9621,7 @@
   </xsl:template>
 
 
-  <xsl:template match="Page[@cssFramework='bs3']" mode="addModule">
+  <xsl:template match="Page" mode="addModule">
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>

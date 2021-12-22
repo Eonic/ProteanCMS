@@ -48,97 +48,137 @@
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
-  <group ref="EditContent" class="accordion">
-    <group>
-      <label>Content</label>
+  <group ref="EditContent">
+    <label>Formatted Text</label>
+    <group  class="tabs">
       <group>
-        <input bind="cModuleTitle" class="long">
-          <label>Title or Name</label>
-        </input>
-        <textarea bind="cContentBody" class="TextArea xhtml" rows="25" cols="70">
-        </textarea>
-      </group>
-
-    </group>
-    <group>
-      <label>Footer Links</label>
-      <select1 bind="cLinkType" appearance="full">
-        <label>Type of link</label>
-        <item>
-          <label>Internal (Going to a page on this site)</label>
-          <value>internal</value>
-          <toggle case="cLinkType_1" event="DOMActivate"/>
-        </item>
-        <item>
-          <label>External (Going to another site)</label>
-          <value>external</value>
-          <toggle case="cLinkType_2" event="DOMActivate"/>
-        </item>
-      </select1>
-      <switch class="disable">
-        <case id="cLinkType_1">
-          <select1 bind="cModuleLink" class="siteTree">
-            <label>Link to page</label>
-          </select1>
-        </case>
-        <case id="cLinkType_2">
-          <input bind="cModuleLink" class="short">
-            <label>Link to URL</label>
+        <label>
+          <i class="fas fa-pen"> </i>
+          <span class="space"> </span>
+          <span>Content</span>
+        </label>
+        <group>
+          <input bind="cModuleTitle" class="long">
+            <label>Title or Name</label>
           </input>
-        </case>
-      </switch>
-      <input bind="cModuleLinkText" class="long">
-        <label>Module footer link text</label>
-      </input>
-      <select bind="bLinkBox" appearance="full" class="multiline bs-only">
-        <item>
-          <label>Link entire box</label>
-          <value>true</value>
-        </item>
-        <help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
-      </select>
-    </group>
-    <group>
-      <label>Image</label>
-      <input bind="panelImage" class="pickImageFile label-border-top bs-only">
-        <label>Choose Image</label>
-        <value></value>
-      </input>
-      <select1 bind="imagePosition" appearance="full">
-        <label>Place image above or below heading?</label>
-        <item>
-          <label>above</label>
-          <value>above</value>
-        </item>
-        <item>
-          <label>below</label>
-          <value>below</value>
-        </item>
-      </select1>
-    </group>
-    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
-    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
-    <group>
-      <label>Advanced Settings</label>
-      <group>
-        <!-- These hidden fields and bindings are required for the component-->
-        <input bind="nContentKey" class="hidden">
-          <label>ContentId</label>
-        </input>
-        <input bind="cModuleType" class="hidden">
-          <label>ModuleType</label>
-        </input>
-        <!-- end of hidden fields -->
-
-        
-        <input bind="maxWidth" class="bs-only">
-          <label>Max Width</label>
-          <value></value>
-          <help class="inline">Add a value ending either px or %.</help>
-        </input>
-        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+          <textarea bind="cContentBody" class="TextArea xhtml" rows="25" cols="70">
+          </textarea>
+        </group>
       </group>
+      <group>
+        <label>
+          <i class="fas fa-link"> </i>
+          <span class="space"> </span>
+          <span>Footer Links</span>
+        </label>
+        <group>
+          <select1 bind="cLinkType" appearance="full">
+            <label>Type of link</label>
+            <item>
+              <label>Internal (Going to a page on this site)</label>
+              <value>internal</value>
+              <toggle case="cLinkType_1" event="DOMActivate"/>
+            </item>
+            <item>
+              <label>External (Going to another site)</label>
+              <value>external</value>
+              <toggle case="cLinkType_2" event="DOMActivate"/>
+            </item>
+          </select1>
+          <switch class="disable">
+            <case id="cLinkType_1">
+              <select1 bind="cModuleLink" class="siteTree">
+                <label>Link to page</label>
+              </select1>
+            </case>
+            <case id="cLinkType_2">
+              <input bind="cModuleLink" class="short">
+                <label>Link to URL</label>
+              </input>
+            </case>
+          </switch>
+          <input bind="cModuleLinkText" class="long">
+            <label>Module footer link text</label>
+          </input>
+          <select bind="bLinkBox" appearance="full" class="multiline bs-only">
+            <item>
+              <label>Link entire box</label>
+              <value>true</value>
+            </item>
+            <help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
+          </select>
+        </group>
 
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-image"> </i>
+          <span class="space"> </span>
+          <span>Image</span>
+        </label>
+        <group>
+          <input bind="panelImage" class="pickImageFile label-border-top bs-only">
+            <label>Choose Image</label>
+            <value></value>
+          </input>
+          <select1 bind="imagePosition" appearance="full" class="inline-items">
+            <label>Place image above or below heading?</label>
+            <item>
+              <label>above</label>
+              <value>above</value>
+            </item>
+            <item>
+              <label>below</label>
+              <value>below</value>
+            </item>
+          </select1>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-brush"> </i>
+          <span class="space"> </span>
+          <span>Presentation</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <group>
+          <input bind="maxWidth" class="col-lg-6">
+            <label>Max Width</label>
+            <value></value>
+            <help class="inline">Add a value ending either px or %.</help>
+          </input>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-tachometer-alt"> </i>
+          <span class="space"> </span>
+          <span>Animate</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-cog"> </i>
+          <span class="space"> </span>
+          <span>Advanced Settings</span>
+        </label>
+        <group>
+          <!-- These hidden fields and bindings are required for the component-->
+          <input bind="nContentKey" class="hidden">
+            <label>ContentId</label>
+          </input>
+          <input bind="cModuleType" class="hidden">
+            <label>ModuleType</label>
+          </input>
+          <!-- end of hidden fields -->
+
+
+          
+          <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+        </group>
+
+      </group>
     </group>
   </group>
   <group ref="submit" class="contentSubmit">

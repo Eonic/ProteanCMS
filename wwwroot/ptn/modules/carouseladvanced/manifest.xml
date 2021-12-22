@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  
+  <ModuleTypes>
+    <ModuleGroup name="Image Galleries" icon="fa-picture-o">
+      <Module type="AdvancedCarousel" formPath="carouseladvanced/advanced-carousel" icon="fas fa-photo-video" name="Advanced Carousel" targetCssFramework="bs3">Create all singing and dancing animations.</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

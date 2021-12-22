@@ -3,20 +3,7 @@
         fakewaffle.responsiveTabs(['xs', 'sm']);
     })(jQuery);
 
-    var footer_height = $('#pagefooter').height();
-
-    $('#pagefooter').css('height', footer_height);
-    $('#mainTable').css('margin-bottom', -footer_height);
-    $('#mainTable').css('padding-bottom', footer_height);
-
-    $(window).resize(function () {
-        $('#pagefooter').css('height', 'auto');
-        var footer_height = $('#pagefooter').height();
-
-        $('#pagefooter').css('height', footer_height);
-        $('#mainTable').css('margin-bottom', -footer_height);
-        $('#mainTable').css('padding-bottom', footer_height);
-    });
+    
     $('.mobile-dd-control').click(function () {
         $(this).parent().find(".dropdown-menu").toggle();
         $(this).parent().find(".fa-angle-up").toggle();
