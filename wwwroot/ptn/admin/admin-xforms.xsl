@@ -2319,7 +2319,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="col-md-2">
+    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-2">
       <button name="{$ref}" value="{value/node()}" class="{$isSelected}">
         <!--<img src="{$imageURL}" class="card-img-top"/>-->
         <i class="fas fa-3x {$icon}"> </i>

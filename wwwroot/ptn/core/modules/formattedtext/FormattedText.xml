@@ -141,6 +141,13 @@
           <span>Presentation</span>
         </label>
         <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <group>
+          <input bind="maxWidth" class="col-lg-6">
+            <label>Max Width</label>
+            <value></value>
+            <help class="inline">Add a value ending either px or %.</help>
+          </input>
+        </group>
       </group>
       <group>
         <label>
@@ -167,11 +174,7 @@
           <!-- end of hidden fields -->
 
 
-          <input bind="maxWidth" class="bs-only">
-            <label>Max Width</label>
-            <value></value>
-            <help class="inline">Add a value ending either px or %.</help>
-          </input>
+          
           <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
         </group>
 

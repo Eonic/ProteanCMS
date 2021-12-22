@@ -288,7 +288,7 @@ form.ewXform {
     .accordion-collapse {
         padding: 20px 20px 0 20px;
 
-        .col-md-2 {
+        .col-sm-6 {
             padding-bottom: 20px;
         }
 
@@ -333,7 +333,18 @@ form.ewXform {
 
     .membership-controls {
         a {
-            padding:0px 5px
+            padding: 0px 5px
+        }
+    }
+
+    .faux-row {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        border-top: 1px solid rgba(0, 0, 0, 0.125);
+
+        .btn-group {
+            padding-top:5px;
+            padding-bottom:5px;
         }
     }
 }
