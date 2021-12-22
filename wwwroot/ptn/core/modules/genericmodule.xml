@@ -111,10 +111,10 @@
                 </item>
                 <help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
               </select>
-              
+
             </group>
             <group class="col-lg-6">
-              
+
               <select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
                 <label>Icon</label>
                 <item>
@@ -126,7 +126,7 @@
                 <label>Upload icon from file</label>
                 <value></value>
               </input>
-              
+
             </group>
           </group>
         </group>
@@ -216,7 +216,7 @@
           <input bind="cPosition" class="readonly">
             <label>Page Position</label>
           </input>
-          
+
           <group class="col-lg-4">
             <select1 bind="nStatus" appearance="full" class="vshort inline-items">
               <label>Status</label>
@@ -263,29 +263,51 @@
             <select bind="Screens" appearance="full" class="multiline bs-only">
               <label>Hide from Screens</label>
               <item>
-                <label>Extra small under 576px</label>
+                <label>
+                  <i class="fas fa-mobile-alt"> </i> Extra small
+                </label>
                 <value>xs</value>
               </item>
               <item>
-                <label>Small 576px-767px</label>
+                <label>
+                  <i class="fas fa-mobile-alt"> </i> Small
+                </label>
                 <value>sm</value>
               </item>
               <item>
-                <label>Medium 768px-991px </label>
+                <label>
+                  <i class="fas fa-tablet-alt"> </i> Medium
+                </label>
                 <value>md</value>
               </item>
               <item>
-                <label>Large 992px-1199px </label>
+                <label>
+                  <i class="fas fa-laptop"> </i> Large
+                </label>
                 <value>lg</value>
               </item>
               <item>
-                <label>Extra Large 1200px-1399px </label>
+                <label>
+                  <i class="fas fa-desktop"> </i> Extra Large
+                </label>
                 <value>xl</value>
               </item>
               <item>
-                <label>Extra Extra Large 1400px and up </label>
+                <label>
+                  <i class="fas fa-desktop"> </i> XXL
+                </label>
                 <value>xxl</value>
               </item>
+              <help class="inline">
+                <ul>
+                  <li>Extra small means screens under 576px wide</li>
+                  <li>Small screens are 576px-767px</li>
+                  <li>Medium screens are 768px-991px</li>
+                  <li>Large screens are 992px-1199px</li>
+                  <li>Extra large screens are 1200px-1399px</li>
+                  <li>Extra extra large screens are 1400px and up</li>
+                </ul>
+              </help>
             </select>
           </group>
           <group class="col-lg-4">
@@ -298,171 +320,187 @@
           </group>
         </group>
         <group id="columns" class="inline-select">
-          <label>Number of columns</label>
-          <select1 bind="nColumns">
-            <label>XXL</label>
-            <item>
-              <label>1</label>
-              <value>1</value>
-            </item>
-            <item>
-              <label>2</label>
-              <value>2</value>
-            </item>
-            <item>
-              <label>3</label>
-              <value>3</value>
-            </item>
-            <item>
-              <label>4</label>
-              <value>4</value>
-            </item>
-            <item>
-              <label>5</label>
-              <value>5</value>
-            </item>
-            <item>
-              <label>6</label>
-              <value>6</value>
-            </item>
-            <help class="inline">
-              <p>Very large devices (1400px), typically larger desktop monitors</p>
-            </help>
-          </select1>
-          <select1 bind="xlCol">
-            <label>XL</label>
-            <item>
-              <label>1</label>
-              <value>1</value>
-            </item>
-            <item>
-              <label>2</label>
-              <value>2</value>
-            </item>
-            <item>
-              <label>3</label>
-              <value>3</value>
-            </item>
-            <item>
-              <label>4</label>
-              <value>4</value>
-            </item>
-            <item>
-              <label>5</label>
-              <value>5</value>
-            </item>
-            <item>
-              <label>6</label>
-              <value>6</value>
-            </item>
-            <help class="inline">
-              <p>Larger devices (1200px-1399px), typically desktop computers</p>
-            </help>
-          </select1>
-          <select1 bind="lgCol">
-            <label>LG</label>
-            <item>
-              <label>1</label>
-              <value>1</value>
-            </item>
-            <item>
-              <label>2</label>
-              <value>2</value>
-            </item>
-            <item>
-              <label>3</label>
-              <value>3</value>
-            </item>
-            <item>
-              <label>4</label>
-              <value>4</value>
-            </item>
-            <item>
-              <label>5</label>
-              <value>5</value>
-            </item>
-            <item>
-              <label>6</label>
-              <value>6</value>
-            </item>
-            <help class="inline">
-              <p>Larger devices (992px-1199px), typically laptops, large tablets and small desktop monitors</p>
-            </help>
-          </select1>
-          <select1 bind="mdCol">
-            <label>MD</label>
-            <item>
-              <label>1</label>
-              <value>1</value>
-            </item>
-            <item>
-              <label>2</label>
-              <value>2</value>
-            </item>
-            <item>
-              <label>3</label>
-              <value>3</value>
-            </item>
-            <item>
-              <label>4</label>
-              <value>4</value>
-            </item>
-            <item>
-              <label>5</label>
-              <value>5</value>
-            </item>
-            <item>
-              <label>6</label>
-              <value>6</value>
-            </item>
-            <help class="inline">
-              <p>Medium sized devices (768px-991px), typically small tablets</p>
-            </help>
-          </select1>
-          <select1 bind="smCol">
-            <label>SM</label>
-            <item>
-              <label>1</label>
-              <value>1</value>
-            </item>
-            <item>
-              <label>2</label>
-              <value>2</value>
-            </item>
-            <item>
-              <label>3</label>
-              <value>3</value>
-            </item>
-            <item>
-              <label>4</label>
-              <value>4</value>
-            </item>
-            <item>
-              <label>5</label>
-              <value>5</value>
-            </item>
-            <item>
-              <label>6</label>
-              <value>6</value>
-            </item>
-            <help class="inline">
-              <p>Small devices (576px-767px), typically large phones.</p>
-            </help>
-          </select1>
-          <select1 bind="xsCol">
-            <label>XS</label>
-            <item>
-              <label>1</label>
-              <value>1</value>
-            </item>
-            <item>
-              <label>2</label>
-              <value>2</value>
-            </item>
-            <help class="inline">
-              <p>Extra small devices (under 576px), typically small phones. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
-            </help>
-          </select1>
+          <label>
+            Number of columns
+          </label>
+          <group class="row">
+            <select1 bind="xsCol" class="col">
+              <label>
+                <i class="fas fa-mobile-alt"> </i> XS
+              </label>
+              <item>
+                <label>1</label>
+                <value>1</value>
+              </item>
+              <item>
+                <label>2</label>
+                <value>2</value>
+              </item>
+              <help class="inline">
+                <p>Extra small devices (under 576px), typically small phones. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
+              </help>
+            </select1>
+            <select1 bind="smCol" class="col">
+              <label>
+                <i class="fas fa-mobile-alt"> </i> Small
+              </label>
+              <item>
+                <label>1</label>
+                <value>1</value>
+              </item>
+              <item>
+                <label>2</label>
+                <value>2</value>
+              </item>
+              <item>
+                <label>3</label>
+                <value>3</value>
+              </item>
+              <item>
+                <label>4</label>
+                <value>4</value>
+              </item>
+              <item>
+                <label>5</label>
+                <value>5</value>
+              </item>
+              <item>
+                <label>6</label>
+                <value>6</value>
+              </item>
+              <help class="inline">
+                <p>Small devices (576px-767px), typically large phones.</p>
+              </help>
+            </select1>
+            <select1 bind="mdCol" class="col">
+              <label>
+                <i class="fas fa-tablet-alt"> </i> Medium
+              </label>
+              <item>
+                <label>1</label>
+                <value>1</value>
+              </item>
+              <item>
+                <label>2</label>
+                <value>2</value>
+              </item>
+              <item>
+                <label>3</label>
+                <value>3</value>
+              </item>
+              <item>
+                <label>4</label>
+                <value>4</value>
+              </item>
+              <item>
+                <label>5</label>
+                <value>5</value>
+              </item>
+              <item>
+                <label>6</label>
+                <value>6</value>
+              </item>
+              <help class="inline">
+                <p>Medium sized devices (768px-991px), typically small tablets</p>
+              </help>
+            </select1>
+            <select1 bind="lgCol" class="col">
+              <label>
+                <i class="fas fa-laptop"> </i> Large
+              </label>
+              <item>
+                <label>1</label>
+                <value>1</value>
+              </item>
+              <item>
+                <label>2</label>
+                <value>2</value>
+              </item>
+              <item>
+                <label>3</label>
+                <value>3</value>
+              </item>
+              <item>
+                <label>4</label>
+                <value>4</value>
+              </item>
+              <item>
+                <label>5</label>
+                <value>5</value>
+              </item>
+              <item>
+                <label>6</label>
+                <value>6</value>
+              </item>
+              <help class="inline">
+                <p>Larger devices (992px-1199px), typically laptops, large tablets and small desktop monitors</p>
+              </help>
+            </select1>
+            <select1 bind="xlCol" class="col">
+              <label>
+                <i class="fas fa-desktop"> </i> XL
+              </label>
+              <item>
+                <label>1</label>
+                <value>1</value>
+              </item>
+              <item>
+                <label>2</label>
+                <value>2</value>
+              </item>
+              <item>
+                <label>3</label>
+                <value>3</value>
+              </item>
+              <item>
+                <label>4</label>
+                <value>4</value>
+              </item>
+              <item>
+                <label>5</label>
+                <value>5</value>
+              </item>
+              <item>
+                <label>6</label>
+                <value>6</value>
+              </item>
+              <help class="inline">
+                <p>Larger devices (1200px-1399px), typically desktop computers</p>
+              </help>
+            </select1>
+            <select1 bind="nColumns" class="col">
+              <label>
+                <i class="fas fa-desktop"> </i> XXL
+              </label>
+              <item>
+                <label>1</label>
+                <value>1</value>
+              </item>
+              <item>
+                <label>2</label>
+                <value>2</value>
+              </item>
+              <item>
+                <label>3</label>
+                <value>3</value>
+              </item>
+              <item>
+                <label>4</label>
+                <value>4</value>
+              </item>
+              <item>
+                <label>5</label>
+                <value>5</value>
+              </item>
+              <item>
+                <label>6</label>
+                <value>6</value>
+              </item>
+              <help class="inline">
+                <p>Very large devices (1400px), typically larger desktop monitors</p>
+              </help>
+            </select1>
+          </group>
         </group>
       </group>
     </group>

@@ -55,14 +55,24 @@
           <xsl:for-each select="group[2]">
             <xsl:if test="count(submit) &gt; 0">
               <div class="navbar-fixed-bottom">
-                <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
-                  <span class="required">
-                    <span class="req">*</span>
-                    <xsl:text> </xsl:text>
-                    <xsl:call-template name="msg_required"/>
-                  </span>
-                </xsl:if>
-                <xsl:apply-templates select="submit" mode="xform"/>
+                <div class="container">
+                  <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
+                    <span class="required">
+                      <span class="req">*</span>
+                      <xsl:text> </xsl:text>
+                      <xsl:call-template name="msg_required"/>
+                    </span>
+                  </xsl:if>
+                  <xsl:apply-templates select="submit" mode="xform"/>
+                  <div class="footer-status">
+                    <span>
+                      <i class="fas fa-eye"> </i> Live 
+                    </span>
+                    <span class="text-muted hidden">
+                      <i class="fas fa-eye-slash"> </i> Hidden
+                    </span>
+                  </div>
+                </div>
               </div>
             </xsl:if>
           </xsl:for-each>
@@ -82,7 +92,9 @@
           <xsl:if test="count(submit) &gt; 0">
             <div class="clearfix navbar-fixed-bottom">
               <!--<xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
-                --><!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">--><!--
+                -->
+              <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
+              <!--
                 <span class="required">
                   <xsl:call-template name="msg_required"/>
                   <span class="req">*</span>
@@ -182,7 +194,9 @@
               </div>
             </xsl:when>
             <!--<xsl:when test="contains(@class,'accordion-form-container') ">
-              --><!--<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">--><!--
+              -->
+            <!--<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">-->
+            <!--
                 <xsl:for-each select="group | repeat">
                   <xsl:apply-templates select="." mode="xform">
                     <xsl:with-param name="class">
@@ -218,7 +232,7 @@
     <xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
   </xsl:template>
 
-  
+
 
   <xsl:template match="group[(contains(@class,'2col') or contains(@class,'2Col')) and ancestor::Page[@adminMode='true']]" mode="xform">
     <xsl:if test="label and not(parent::Content)">
@@ -265,7 +279,7 @@
           </xsl:apply-templates>
         </xsl:for-each>
       </div>
-      </div>
+    </div>
   </xsl:template>
 
 
@@ -1285,7 +1299,7 @@
       <!-- EXAMPLE BESPOKE BOX-->
       <div data-value="{node()}">
         <div class="{node()}">
-            <xsl:value-of select="node()"/>
+          <xsl:value-of select="node()"/>
         </div>
       </div>
     </xsl:for-each>
@@ -2259,12 +2273,12 @@
 
     <div class="accordion-item">
       <h5 class="accordion-header" id="heading{$makeClass}">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{$makeClass}" aria-expanded="true" aria-controls="collapse{$makeClass}"> 
-        <xsl:if test="label/@icon!=''">
-          <i class="{label/@icon}">&#160;</i>&#160;
-        </xsl:if> 
-        <xsl:apply-templates select="label" mode="xform_legend"/>
-      </button>
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{$makeClass}" aria-expanded="true" aria-controls="collapse{$makeClass}">
+          <xsl:if test="label/@icon!=''">
+            <i class="{label/@icon}">&#160;</i>&#160;
+          </xsl:if>
+          <xsl:apply-templates select="label" mode="xform_legend"/>
+        </button>
       </h5>
       <div id="collapse{$makeClass}"  aria-labelledby="heading{$makeClass}" data-bs-parent="#pick-by-image">
         <xsl:attribute name="class">
@@ -2273,9 +2287,9 @@
             <xsl:text> in</xsl:text>
           </xsl:if>
         </xsl:attribute>
-          <xsl:apply-templates select="item" mode="xform_imageClick">
-            <xsl:with-param name="ref" select="$ref"/>
-          </xsl:apply-templates>
+        <xsl:apply-templates select="item" mode="xform_imageClick">
+          <xsl:with-param name="ref" select="$ref"/>
+        </xsl:apply-templates>
       </div>
     </div>
   </xsl:template>

@@ -58,7 +58,7 @@ form.ewXform {
     .inline-select > legend {
         font-size: 1rem;
     }
-
+    //ACCORDION FORM
     .accordion {
         box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
         margin-top: 8px;
@@ -88,6 +88,73 @@ form.ewXform {
             border: 0;
         }
     }
+    //TABBED FORM
+    .tab-nav {
+        button {
+            text-align: left;
+
+            @include media-breakpoint-down(md) {
+                padding: 5px;
+            }
+
+            label {
+                margin-bottom: 0;
+
+                i {
+                    @include media-breakpoint-up(sm) {
+                        min-width: 1.5rem;
+                    }
+                }
+
+                @include media-breakpoint-down(lg) {
+                    span {
+                        @include visually-hidden;
+                    }
+                }
+            }
+        }
+    }
+
+    .form-tab-wrapper {
+        box-shadow: 0px 2px 11px rgba(0, 0, 0, 0.3);
+        margin: 0;
+    }
+
+    .form-tab-content-wrapper {
+        padding: 0;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-tab-nav-wrapper {
+        padding: 0;
+
+        .nav-pills .nav-link.active {
+            border-radius:0;
+        }
+    }
+
+    .tab-content {
+        margin-top: -38px;
+    }
+
+    .tab-pane {
+        //box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+
+        > label:first-child {
+            background: $admin-primary;
+            color: #fff;
+            font-weight: 400;
+            font-size: 1.1rem;
+            width: 100%;
+            padding: 13px 20px;
+            border-radius: 3px 3px 0 0;
+        }
+
+        > fieldset {
+            padding: 0 20px 20px;
+        }
+    }
 }
 .ewXform > div:first-child > h3 {
     text-align: center;
@@ -98,9 +165,11 @@ form.ewXform {
     @include media-breakpoint-up(sm) {
         margin-top: -38px;
     }
+    display:none;
 }
 .ewAdmin #adminLayout {
     padding-bottom: 28px;
+    flex-grow: 1;
 
     .form-2-col {
         @include make-row();
@@ -168,7 +237,7 @@ form.ewXform {
             font-size: 13px;
         }
     }
-
+    // FAUX DROPDOWN
     .bfh-selectbox .bfh-selectbox-options ul {
         height: 140px;
         max-height: 140px;
@@ -198,16 +267,20 @@ form.ewXform {
         }
     }
 
-    .alert-info {
-        color: #fff;
-    }
+    
 
     .principle {
-        @extend .btn-info;
+        //@extend .btn-info;
+        &:before {
+            content: '\f0c7';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-right: 8px;
+        }
     }
 }
+// MODULE PICKER 
 #pick-by-image {
-
     .accordion-collapse {
         padding: 20px 20px 0 20px;
 
@@ -280,9 +353,11 @@ form.ewXform {
 .accordion-body > label:first-child {
     display:none;
 }
-.inline-select .form-margin{
-    width:auto;
+.inline-select .form-margin {
+    min-width: 120px;
+    max-width: 161px;
+}
+.footer-status {
+    margin-top:7px;
     float:left;
-    margin-right:10px;
-    
 }
