@@ -5692,7 +5692,7 @@ processFlow:
                             If IsDBNull(oRow("nShippingTotal")) Then
                                 cHidden = " hidden"
                                 bHideDelivery = True
-                            ElseIf oRow("nShippingTotal") = 0 Then
+                            ElseIf oRow("nShippingTotal") = 0 And oRow("bCollection") = 0 Then
                                 cHidden = " hidden"
                                 bHideDelivery = True
                             Else
@@ -5890,10 +5890,10 @@ processFlow:
 
                     ' Adjust the group title
                     If bAdjustTitle Then
-                        Dim cGroupTitle As String = "Choose Delivery Type and Payment Method"
+                        Dim cGroupTitle As String = "Select Delivery and Payment Option'"
                         If bHideDelivery And bHidePayment Then cGroupTitle = "Terms and Conditions"
-                        If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Choose Payment Method"
-                        If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Choose Delivery Type"
+                        If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Select Payment Option"
+                        If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Select Shipping Option"
                         Dim labelElmt As XmlElement = oGrpElmt.SelectSingleNode("label")
                         labelElmt.InnerText = cGroupTitle
                         labelElmt.SetAttribute("class", "term3019")

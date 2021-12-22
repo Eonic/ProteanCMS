@@ -15077,8 +15077,8 @@
       <xsl:with-param name="contentType" select="@contentType"/>
     </xsl:apply-templates>
   </xsl:template>
-
-  <xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="contentJS">
+	<xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery')]" mode="contentJS">
+		<!--xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="contentJS"-->
     <!--Moved so we can use within Event / Product templates too-->
     <xsl:apply-templates select="."  mode="displaySlideGalleryJS"/>
   </xsl:template>

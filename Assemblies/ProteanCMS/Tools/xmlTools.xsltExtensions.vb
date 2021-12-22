@@ -1244,7 +1244,7 @@ Partial Public Module xmlTools
                         If VirtualFileExists(webpFileName) = 0 Then
                             Using bitMap As New Bitmap(goServer.MapPath(cVirtualPath))
                                 Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
-                                    Dim encoder As New SimpleEncoder
+                                    Dim encoder As New Imazen.WebP.SimpleEncoder
                                     encoder.Encode(bitMap, saveImageStream, 100)
                                 End Using
                             End Using

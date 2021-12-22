@@ -1932,15 +1932,16 @@ Public Class Cms
                         ' If the current page is a cloned page
                         oPageElmt.SetAttribute("clone", "true")
                     End If
-                Else
-                    'Invalid Licence
-                    mnProteanCMSError = 1008
-                    If mnProteanCMSError > 0 Then
-                        GetErrorXml(oPageElmt)
-                    End If
-
                 End If
+            Else
+                'Invalid Licence
+                mnProteanCMSError = 1008
+                If mnProteanCMSError > 0 Then
+                    GetErrorXml(oPageElmt)
+                End If
+
             End If
+
 
             Return moPageXml
 

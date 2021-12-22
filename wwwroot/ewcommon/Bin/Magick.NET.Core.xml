@@ -16780,6 +16780,12 @@
             Gets or sets the height.
             </summary>
         </member>
+        <member name="P:ImageMagick.IMagickReadSettings`1.SyncImageWithExifProfile">
+            <summary>
+            Gets or sets a value indicating whether the exif profile should be used to update some of the
+            properties of the image (e.g. <see cref="P:ImageMagick.IMagickImage.Density"/>, <see cref="P:ImageMagick.IMagickImage.Orientation"/>).
+            </summary>
+        </member>
         <member name="P:ImageMagick.IMagickReadSettings`1.UseMonochrome">
             <summary>
             Gets or sets a value indicating whether the monochrome reader shoul be used. This is
