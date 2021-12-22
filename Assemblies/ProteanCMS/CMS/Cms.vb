@@ -529,7 +529,7 @@ Public Class Cms
                 End If
             Else
 
-                    If Not moSession Is Nothing Then
+                If Not moSession Is Nothing Then
                     If moSession("adminMode") = "true" Then
                         mbAdminMode = True
                         moDbHelper.gbAdminMode = mbAdminMode
@@ -883,23 +883,18 @@ Public Class Cms
             gcMenuContentCountTypes = moConfig("MenuContentCountTypes")
             gcMenuContentBriefTypes = moConfig("MenuContentBriefTypes")
 
-
-
             ' Get referenced assembly info
             ' Given that assemblies are loaded at an application level, we can store the info we find in an application object
             If String.IsNullOrEmpty(CStr(goCache("GENERATOR"))) Then
                 Dim CodeGenerator As Assembly = Me.Generator()
                 gcGenerator = CodeGenerator.FullName()
                 gcCodebase = CodeGenerator.CodeBase()
-
                 For Each ReferencedAssembly As AssemblyName In Me.ReferencedAssemblies()
                     gcReferencedAssemblies &= ReferencedAssembly.Name & " (" & ReferencedAssembly.Version.ToString & "); "
                 Next
-
                 goCache("GENERATOR") = gcGenerator
                 goCache("CODEBASE") = gcCodebase
                 goCache("REFERENCED_ASSEMBLIES") = gcReferencedAssemblies
-
             Else
                 gcGenerator = goCache("GENERATOR")
                 gcCodebase = goCache("CODEBASE")
@@ -926,9 +921,7 @@ Public Class Cms
         'Date:          2005-03-09
 
         mcModuleName = "Protean.Cms"
-
         Dim cProcessInfo As String = ""
-
         msException = ""
 
         Try
@@ -1940,15 +1933,16 @@ Public Class Cms
                         ' If the current page is a cloned page
                         oPageElmt.SetAttribute("clone", "true")
                     End If
-                Else
-                    'Invalid Licence
-                    mnProteanCMSError = 1008
-                    If mnProteanCMSError > 0 Then
-                        GetErrorXml(oPageElmt)
-                    End If
-
                 End If
+            Else
+                'Invalid Licence
+                mnProteanCMSError = 1008
+                If mnProteanCMSError > 0 Then
+                    GetErrorXml(oPageElmt)
+                End If
+
             End If
+
 
             Return moPageXml
 

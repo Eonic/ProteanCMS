@@ -766,7 +766,7 @@
           <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
-        <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
+        <xsl:if test="//Content[@moduleType='SliderGallery' or @moduleType='Carousel'] and not(/Page/@adminMode)">
           <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
         </xsl:if>
         <!-- code formatting plugin -->
@@ -4127,9 +4127,9 @@
                   <xsl:when test="self::MenuItem[@id=/Page/@id]">
                     <xsl:text>active</xsl:text>
                   </xsl:when>
-                  <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+                  <!--<xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
                     <xsl:text>on</xsl:text>
-                  </xsl:when>
+                  </xsl:when>-->
                 </xsl:choose>
               </xsl:attribute>
               <xsl:text>Overview</xsl:text>
@@ -5842,7 +5842,16 @@
           </xsl:choose>
 
         </xsl:attribute>
+
       </xsl:for-each>
+      
+      <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains(@href,'.pdf')">
+        <xsl:attribute name="onclick">
+          <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+          <xsl:value-of select="@href"/>
+          <xsl:text>');</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
 
       <xsl:apply-templates mode="cleanXhtml"/>
 
@@ -6464,7 +6473,7 @@
     
     <xsl:if test="Images/img[@src and @src!='']">
       <xsl:call-template  name="displayResponsiveImage">
-        <xsl:with-param name="crop" select="true()"/>
+        <xsl:with-param name="crop" select="$crop"/>
         <xsl:with-param name="width" select="$max-width"/>
         <xsl:with-param name="height" select="$max-height"/>
         <xsl:with-param name="max-width-xxs" select="$max-width-xxs"/>
@@ -6488,7 +6497,7 @@
   </xsl:template>
   
  <xsl:template name="displayResponsiveImage">
-		<xsl:param name="crop" select="false()" />
+		<xsl:param name="crop"/>
 		<xsl:param name="no-stretch" select="true()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
@@ -8361,7 +8370,20 @@
     <xsl:variable name="newimageSize" select="ew:ImageSize($newSrc)"/>
     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-    <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
+	  <xsl:choose>
+		  <xsl:when test="$EnableWebP='on' ">
+			  <xsl:variable name="webpPath" select="ew:CreateWebP(concat($rootpath,$newSrc))"/>
+
+			  <picture>
+				  <source srcset="{$webpPath}" type="image/webp"/>
+				  <source srcset="{$rootpath}{$newSrc}" type="image/png"/>
+				  <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
+			  </picture>
+		  </xsl:when>
+		  <xsl:otherwise>
+			  <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
+		  </xsl:otherwise>
+	  </xsl:choose>
 
   </xsl:template>
 
