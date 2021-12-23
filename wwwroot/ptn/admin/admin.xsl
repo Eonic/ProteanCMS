@@ -4168,20 +4168,21 @@
 		
       <xsl:text>
         done: function (e, data) {
+alert('done');
         $.each(data.files, function (index, file) {
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
         var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
         <xsl:apply-templates select="." mode="newItemScript"/>
         $('#files').prepend(newItem);
         $('#files .item-image .panel').prepareLibImages();
-      $("[data-toggle=popover]").popover({
-      html: true,
-      container: '#files',
-      trigger: 'hover',
-      viewport: '#files',
-      content: function () {
-      return $(this).prev('.popoverContent').html();
-      }
+          $("[data-toggle=popover]").popover({
+              html: true,
+              container: '#files',
+              trigger: 'hover',
+              viewport: '#files',
+              content: function () {
+              return $(this).prev('.popoverContent').html();
+          }
       });
       if ($('.pickImageModal').exists()) {
       $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
@@ -4263,7 +4264,21 @@
               <xsl:choose>
                 <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp' or $Extension='.tif' or $Extension='.webp'">
                   <xsl:if test="@root">
-                    <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
+               
+                    <a data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top">
+                      <xsl:choose>
+                        <xsl:when test="@width&gt;125 and @height&gt;125">
+                          <img class="lazy" src="/ewcommon/images/loadingImage.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <div class="img-overflow">
+                            <img src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}" class=""  alt=""/>
+                          </div>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </a>
+					  
+					<div class="popover-content" id="imgpopover{position()}" role="tooltip">
                       <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                       <div class="popup-description">
                         <span class="image-description-name">
@@ -4277,18 +4292,6 @@
                         </xsl:if>
                       </div>
                     </div>
-                    <a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover{position()}" data-placement="top">
-                      <xsl:choose>
-                        <xsl:when test="@width&gt;125 and @height&gt;125">
-                          <img class="lazy" src="/ewcommon/images/loadingImage.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <div class="img-overflow">
-                            <img src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}" class=""  alt=""/>
-                          </div>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </a>
                   </xsl:if>
                 </xsl:when>
                 <xsl:when test="$Extension='.svg'">
@@ -4336,19 +4339,19 @@
                 <xsl:otherwise>
                   <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
                     <a class="btn btn-xs btn-primary" href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
-                      <i class="fa fa-arrows fa-white">
+                      <i class="fas fa-arrow-right fa-white">
                         <xsl:text> </xsl:text>
                       </i>
                       <span class="sr-only"> Move</span>
                     </a>
                     <a href="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="btn btn-xs btn-warning" download="{@name}">
-                      <i class="fa fa-download fa-white">
+                      <i class="fas fa-download fa-white">
                         <xsl:text> </xsl:text>
                       </i>
                       <span class="sr-only"> Download</span>
                     </a>
                     <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
-                      <i class="fa fa-trash-o fa-white">
+                      <i class="fas fa-trash fa-white">
                         <xsl:text> </xsl:text>
                       </i>
                       <span class="sr-only">Delete</span>

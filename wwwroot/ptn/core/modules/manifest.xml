@@ -30,21 +30,21 @@
     </ModuleGroup>
     <ModuleGroup name="Column Layouts" icon="fas fa-columns">
       <Module type="1Column" formPath="columns/1column" name="1 Column">1 column layout to allow alternative backgrounds to be used without multiple columns</Module>
-      <Module type="2Columns5050" formPath="columns/2column5050" icon="fas fa-columns" name="2 Columns 50 50">2 equal columns</Module>
-      <Module type="2Columns4060" formPath="columns/2column4060" name="2 Columns 40 60">2 columns, 2/5 and 3/5</Module>
-      <Module type="2Columns6040" formPath="columns/2column6040" name="2 Columns 60 40">2 columns, 3/5 and 2/5</Module>
-      <Module type="2Columns3366" formPath="columns/2column3366"  name="2 Columns 33 66">2 columns, 1/3 and 2/3</Module>
-      <Module type="2Columns6633" formPath="columns/2column6633" name="2 Columns 66 33">2 columns, 2/3 and 1/3</Module>
+      <Module type="2Columns5050" formPath="columns/2columns5050" icon="fas fa-columns" name="2 Columns 50 50">2 equal columns</Module>
+      <Module type="2Columns4060" formPath="columns/2columns4060" name="2 Columns 40 60">2 columns, 2/5 and 3/5</Module>
+      <Module type="2Columns6040" formPath="columns/2columns6040" name="2 Columns 60 40">2 columns, 3/5 and 2/5</Module>
+      <Module type="2Columns3366" formPath="columns/2columns3366"  name="2 Columns 33 66">2 columns, 1/3 and 2/3</Module>
+      <Module type="2Columns6633" formPath="columns/2columns6633" name="2 Columns 66 33">2 columns, 2/3 and 1/3</Module>
       <Module type="2Columns2575" formPath="columns/2Columns2575" name="2 Columns 25 75">2 columns, 1/4 and 3/4</Module>
       <Module type="2Columns7525" formPath="columns/2Columns7525" name="2 Columns 75 25">2 columns, 3/4 and 1/4</Module>
       <Module type="2Columns1683" formPath="columns/2Columns1683" name="2 Columns 16 83">2 columns, 1/6 and 5/6</Module>
       <Module type="2Columns8316" formPath="columns/2Columns8316" name="2 Columns 83 16">2 columns, 5/6 and 1/6</Module>
       <Module type="2Columns2080" formPath="columns/2Columns2080" name="2 Columns 20 80">2 columns, 1/5 and 4/5</Module>
       <Module type="2Columns8020" formPath="columns/2Columns8020" name="2 Columns 80 20">2 columns, 4/5 and 1/5</Module>
-      <Module type="3Columns" formPath="columns/3column" name="3 Columns">3 equal column</Module>
-      <Module type="4Columns" formPath="columns/4column" name="4 Columns">4 equal columns</Module>
-      <Module type="5Columns" formPath="columns/5column" name="5 Columns">5 equal columns</Module>
-      <Module type="6Columns" formPath="columns/6column" name="6 Columns">6 equal columns</Module>
+      <Module type="3Columns" formPath="columns/3columns" name="3 Columns">3 equal column</Module>
+      <Module type="4Columns" formPath="columns/4columns" name="4 Columns">4 equal columns</Module>
+      <Module type="5Columns" formPath="columns/5columns" name="5 Columns">5 equal columns</Module>
+      <Module type="6Columns" formPath="columns/6columns" name="6 Columns">6 equal columns</Module>
       <Module type="Accordion" formPath="columns/Accordion"  name="Accordion Layout">Accordion layout offers stacked sections which expand and collapse</Module>
       <Module type="Tabbed" formPath="columns/Tabbed" name="Tabbed Layout">Tabbed navigation at the top of this module allows you to navigate through the content</Module>
 

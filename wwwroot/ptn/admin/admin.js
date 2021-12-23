@@ -59,10 +59,10 @@ $(document).ready(function () {
         $(".all-breadcrumb").show();
 
     };
-    $("[data-toggle=popover]").popover({
+    $("[data-bs-toggle=popover]").popover({
         html: true,
         content: function () {
-            return $(this).prev('.popoverContent').html();
+            return $(this).next('.popover-content').html();
         }
     });
 

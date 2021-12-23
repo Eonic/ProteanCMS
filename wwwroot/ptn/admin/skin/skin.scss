@@ -97,7 +97,8 @@ body.ewAdmin.layout-AdmHome {
 .ewAdmin {
     .admin-breadcrumb {
         position: relative;
-        background:#fff;
+        background: #fff;
+
         @media(min-width:$screen-sm-min) {
             position: absolute;
             right: 0px;
@@ -229,7 +230,6 @@ body.ewAdmin.layout-AdmHome {
                 border: 0;
                 font-size: 20px;
             }
-
             /*> .panel-default {
                 margin-bottom: 0;
 
@@ -270,7 +270,6 @@ body.ewAdmin.layout-AdmHome {
                     padding-right: $admin-gutter-width;
                 }
             }*/
-
             /*#accordion {
                 .panel-default .panel-heading {
                     border-bottom: 4px solid lighten($admin-header-bg,30%);
@@ -324,7 +323,6 @@ body.ewAdmin.layout-AdmHome {
         #tpltEditStructure {
             margin-left: 0px;
             margin-right: 0px;
-
             /*.btn-primary {
                 border: 1px solid $admin-primary
             }
@@ -352,7 +350,6 @@ body.ewAdmin.layout-AdmHome {
         #tpltAdvancedMode {
             .ui-accordion {
                 padding-top: 2px;
-
                 /*.panel {
                     margin-top: 0px;
                 }
@@ -387,7 +384,6 @@ body.ewAdmin.layout-AdmHome {
                     display: inline-block;
                 }
             }
-
             /*.panel-heading .pull-right {
                 position: relative;
                 top: -5px;
@@ -463,10 +459,13 @@ body.ewAdmin.layout-AdmHome {
             }
         }
 
+        .popover-content{
+            display:none;
+        }
+        
         .popover {
             z-index: 1060;
         }
-
         /*.listItem .ewAdmin .btn,
         .panel .list-group .ewAdmin .btn,
         .panel .listItem .ewAdmin .btn {
@@ -503,7 +502,6 @@ body.ewAdmin.layout-AdmHome {
         .header-panels .panel, .header-panels .form-group {
             margin-bottom: 0px;
         }
-
         /*.panel-heading .principle {
             margin-right: 5px;
             top: -10px;

@@ -3161,12 +3161,12 @@
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
     <xsl:text>&#160;</xsl:text>
-    <a data-contentwrapper="#popover-{$ref2}" data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
+    <a data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
       <i class="fas fa-info-circle">
         <xsl:text> </xsl:text>
       </i>
     </a>
-    <div id="popover-{$ref2}" class="popover-{$ref2} popoverContent" role="tooltip">
+    <div class="popover-content" role="tooltip">
       <xsl:copy-of select="help/node()"/>
     </div>
   </xsl:template>
