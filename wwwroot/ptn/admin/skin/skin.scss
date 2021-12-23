@@ -1017,8 +1017,108 @@ body.ewAdmin.layout-AdmHome {
     }
 
     i.fa-chevron-left {
+        display: none;
+    }
+
+
+}
+#template_FileSystem .progress {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    position: relative;
+
+    .overlay {
+        padding: 5px 10px;
+        position: absolute;
+    }
+
+    .loading-counter {
+        right: 0;
         display:none;
     }
+
+    height: 2rem;
+}
+.ewAdmin #files {
+
+
+    .item.item-image {
+        .panel {
+            position: relative;
+            margin-bottom: 10px;
+            background-color: #ddd;
+
+            img {
+                display: block;
+                margin: auto;
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        .description {
+            padding: 5px;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            word-break: break-word;
+            background-color: rgba(255,255,255,0.5);
+            text-align: right;
+            display: none;
+        }
+    }
+
+    .popoverContent {
+        width: 500px;
+
+        img {
+            border: 1px solid #ddd;
+            background-color: #ddd;
+        }
+    }
+
+    .image-thumbnail {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 165px;
+        overflow: hidden;
+
+        .img-overflow {
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .img-description {
+        .image-description-name {
+            display: block;
+            width: 120px;
+            height: 33px;
+            overflow: hidden;
+            padding-bottom: 5px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .item-image {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    margin-left: -5px;
+    margin-right: -5px;
 }
 
 #btnHelpEditing.open .fa-chevron-left {

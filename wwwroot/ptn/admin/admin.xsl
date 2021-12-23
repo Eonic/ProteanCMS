@@ -3965,7 +3965,7 @@
                       <xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
                     </xsl:attribute>
                   </xsl:if>
-                  <i class="fa fa-folder-open fa-white">
+                  <i class="fas fa-folder-open fa-white">
                     <xsl:text> </xsl:text>
                   </i>&#160;New Folder
                 </a>
@@ -3980,19 +3980,20 @@
                   <!-- The file input field used as target for the file upload widget -->
                   <input id="fileupload" type="file" name="files[]" multiple="" class="fileUploadCheck"/>
                 </span>
-                <span class="fileupload-loading">
-                  <xsl:text> </xsl:text>
-                </span>
+				  <div id="progress">
+					  <div class="bar" style="width: 0%;"></div>
+				  </div>
 
                 <!--not for popup window or for root..!-->
                 <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
+					<xsl:if test="parent::folder">
 
                   <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-danger">
-                    <i class="fa fa-trash-o fa-white">
+                    <i class="fas fa-trash fa-white">
                       <xsl:text> </xsl:text>
                     </i>
                     Delete Folder
-                  </a>
+                  </a></xsl:if>
 
                 </xsl:if>
               </xsl:if>
@@ -4001,11 +4002,15 @@
           <div id="uploadFiles">
             <xsl:choose>
               <xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
-                <div id="progress" class="progress progress-success progress-striped">
+                <div id="progress" class="progress">
                   <div class="overlay">
                     <i class="fas fa-mouse-pointer">&#160;</i> and drop files here to upload
                   </div>
-                  <div class="bar">
+					<div class="overlay loading-counter">
+						&#160;loading
+						<span class="count">0</span>%
+					</div>
+                  <div class="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
 
                   </div>
                 </div>
@@ -4111,8 +4116,8 @@
 
 		<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 		<script src="/ptn/admin/fileupload/js/vendor/jquery.ui.widget.js">/* */</script>
-		<!-- The Templates plugin is included to render the upload/download listings -->
-		<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js">/* */</script>
+		<!-- The Templates plugin is included to render the upload/download listings
+		<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js">/* */</script> -->
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
 		<script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
 		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
@@ -4123,18 +4128,18 @@
 		<script src="/ptn/admin/fileupload/js/jquery.iframe-transport.js">/* */</script>
 		<!-- The basic File Upload plugin -->
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload.js">/* */</script>
-		<!-- The File Upload processing plugin -->
+		<!-- The File Upload processing plugin --><!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-process.js">/* */</script>
-		<!-- The File Upload image preview & resize plugin -->
+		--><!-- The File Upload image preview & resize plugin --><!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-image.js">/* */</script>
-		<!-- The File Upload audio preview plugin -->
+		--><!-- The File Upload audio preview plugin --><!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-audio.js">/* */</script>
-		<!-- The File Upload video preview plugin -->
+		--><!-- The File Upload video preview plugin --><!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-video.js">/* */</script>
-		<!-- The File Upload validation plugin -->
+		--><!-- The File Upload validation plugin --><!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-validate.js">/* */</script>
-		<!-- The File Upload user interface plugin -->
-		<script src="/ptn/admin/fileupload/js/jquery.fileupload-ui.js">/* */</script>
+		--><!-- The File Upload user interface plugin --><!--
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-ui.js">/* */</script>-->
 		
       <!-- The Load Image plugin is included for the preview images and image resizing functionality 
       <script src="/ptn/admin/fileupload/js/load-image.all.min.js">/* */</script>-->
@@ -4168,7 +4173,6 @@
 		
       <xsl:text>
         done: function (e, data) {
-alert('done');
         $.each(data.files, function (index, file) {
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
         var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
@@ -4189,26 +4193,26 @@ alert('done');
       ev.preventDefault();
       $('.modal-dialog').addClass('loading')
       $('.modal-body').html('<p class="text-center">  <h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
-      var target = $(this).attr("href");
-      // load the url and show modal on success
-      var currentModal = $('.pickImageModal')
-      currentModal.load(target, function () {
-      $('.modal-dialog').removeClass('loading')
-      currentModal.modal("show");
-      });
-      });
-      };
-      });
-      },
-      progressall: function (e, data) {
-      var progress = parseInt(data.loaded / data.total * 100, 10);
-      $('#progress .bar').css(
-      'width',
-      progress + '%'
-      );
-      }
-      });
-    </script>
+		var target = $(this).attr("href");
+		// load the url and show modal on success
+		var currentModal = $('.pickImageModal')
+		currentModal.load(target, function () {
+		$('.modal-dialog').removeClass('loading')
+		currentModal.modal("show");
+		});
+		});
+		};
+		});
+		},
+		progressall: function (e, data) {
+		var progress = parseInt(data.loaded / data.total * 100, 10);
+		    $('.progress .progress-bar').css('width',progress + '%');
+		    $('.progress .progress-bar').attr('aria-valuenow',progress);
+		    $('.progress .loading-counter').css('display','block');
+		    $('.progress .loading-counter .count').html(progress);
+		}
+		});
+	</script>
 
     <script>
       $(function() {
@@ -4568,13 +4572,13 @@ alert('done');
       <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
         <i>
           <xsl:attribute name="class">
-            <xsl:text>fa fa-lg</xsl:text>
+            <xsl:text>fas fa-lg</xsl:text>
             <xsl:choose>
               <xsl:when test="@active='true'">
-                <xsl:text> fa-folder-open-o</xsl:text>
+                <xsl:text> fa-folder-open</xsl:text>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:text> fa-folder-o</xsl:text>
+                <xsl:text> fa-folder</xsl:text>
               </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="folder"> activeParent</xsl:if>

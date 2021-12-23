@@ -3361,8 +3361,8 @@ AfterProcessFlow:
                         End If
                     Case "FolderSettings"
 
-                    Case "FileUpload"
 
+                    Case "FileUpload"
                         Dim oFS As New fsHelper(myWeb.moCtx)
                         oFS.UploadRequest(myWeb.moCtx)
                         oFS = Nothing
