@@ -1,0 +1,15 @@
+﻿@mixin btn-clean($color: $link-color, $hover: $link-hover-color) {
+    background: none;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    color: $color;
+
+    &:hover,
+    &:focus{
+        color: $hover;
+        background: none;
+        border: none;
+        outline:none;
+    }
+}

@@ -146,6 +146,9 @@
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">600</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">600</xsl:template>
 
+  <xsl:template match="Item" mode="cartThumbWidth">150</xsl:template>
+  <xsl:template match="Item" mode="cartThumbHeight">150</xsl:template>
+
 
   <!-- ############################################ CART ############################################### -->
   <xsl:template match="/" mode="cartBrief">
