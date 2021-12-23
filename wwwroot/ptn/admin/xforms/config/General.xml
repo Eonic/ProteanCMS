@@ -34,7 +34,6 @@
         <add key="ControlPanelTypes" value="" />
         <add key="Debug" value="on" />
         <add key="CompiledTransform" value="off" />
-        <add key="ScriptAtBottom" value="off" />
         <add key="SiteAdminName" value="Webmaster" />
         <add key="SiteAdminEmail" value="support@eonic.co.uk" />
         <add key="Subscriptions" value="off" />
@@ -79,7 +78,6 @@
         <add key="TrailingSlash" value="off" />
         <add key="LowerCaseUrl" value="off" />
         <add key="ExcludeCategoryFromSearch" value="off" />
-        <add key="EnableWebP" value="off" />
         <add key="EnableRetina" value="off" />
         <add key="EmailOverride" value="" />
         <add key="OverrideFromEmail" value="" />
@@ -107,7 +105,6 @@
     <bind id="ewBaseUrl" nodeset="web/add[@key='BaseUrl']/@value" required="false()" type="string" />
     <bind id="ewDebug" nodeset="web/add[@key='Debug']/@value" required="true()" type="string" />
     <bind id="ewCompiledTransform" nodeset="web/add[@key='CompiledTransform']/@value" required="true()" type="string" />
-    <bind id="ewScriptAtBottom" nodeset="web/add[@key='ScriptAtBottom']/@value" required="true()" type="string" />
     <bind id="ewImageRootPath" nodeset="web/add[@key='ImageRootPath']/@value" required="true()" type="string" />
     <bind id="ewDocRootPath" nodeset="web/add[@key='DocRootPath']/@value" required="true()" type="string" />
     <bind id="ewMediaRootPath" nodeset="web/add[@key='MediaRootPath']/@value" required="true()" type="string" />
@@ -162,7 +159,6 @@
     <bind id="ewCheckDetailPath" nodeset="web/add[@key='CheckDetailPath']/@value" required="false()" type="string" />
     <bind id="ewTrailingSlash" nodeset="web/add[@key='TrailingSlash']/@value" required="false()" type="string" />
     <bind id="ewLowerCaseUrl" nodeset="web/add[@key='LowerCaseUrl']/@value" required="false()" type="string" />
-    <bind id="ewEnableWebP" nodeset="web/add[@key='EnableWebP']/@value" required="false()" type="string" />
     <bind id="ewEnableRetina" nodeset="web/add[@key='EnableRetina']/@value" required="false()" type="string" />
     <bind id="EmailOverride" nodeset="web/add[@key='EmailOverride']/@value" required="false()" type="email" />
 
@@ -235,18 +231,6 @@
     </group>
     <group ref="Image" class="inline">
       <label>Image Handling</label>
-      <select1 bind="ewEnableWebP" appearance="full">
-        <label>Enable WebP</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value>on</value>
-      </select1>
       <select1 bind="ewEnableRetina" appearance="full">
         <label>Enable Retina Images</label>
         <item>
@@ -490,18 +474,7 @@
          </item>
          <value>off</value>
        </select1>
-       <select1 bind="ewScriptAtBottom" appearance="full">
-         <label>Script at bottom</label>
-         <item>
-           <label>On</label>
-           <value>on</value>
-         </item>
-         <item>
-           <label>Off</label>
-           <value>off</value>
-         </item>
-         <value>off</value>
-       </select1>    
+         
     <select1 bind="ewActivityLogging" appearance="full">
       <label>Activity Logging</label>
        <item>

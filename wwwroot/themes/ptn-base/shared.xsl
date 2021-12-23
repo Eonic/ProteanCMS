@@ -9,7 +9,6 @@
   <xsl:import href="../../xsl/InstalledModules.xsl"/>
   <xsl:import href="custom-box-styles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
-  <xsl:import href="../../ptn/features/cart/cart.xsl"/>
 
 
   <!-- ############################################ THEME VARIABLES ############################################### -->
@@ -19,7 +18,6 @@
   <!--<xsl:variable name="header-layout">header-basic</xsl:variable>-->
   <!--menu within header-->
   <xsl:variable name="header-layout">header-menu-right</xsl:variable>
-
   <xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
   <xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
   <xsl:variable name="HomeInfo">false</xsl:variable>
@@ -33,6 +31,7 @@
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
   <xsl:variable name="thWidth">500</xsl:variable>
   <xsl:variable name="thHeight">350</xsl:variable>
+	
   <!-- forced on, needs fixing-->
   <xsl:variable name="membership">
     <xsl:choose>
@@ -48,6 +47,7 @@
       <xsl:otherwise>off</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+	
   <!-- forced on, needs fixing-->
   <xsl:variable name="search">
     <xsl:choose>
@@ -93,26 +93,24 @@
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
         <xsl:apply-templates select="." mode="commonJsFiles" />
-        <xsl:text>/ptn/core/jquery/common.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
+        <xsl:text>~/themes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/jquery.appear.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
+        <xsl:text>~/themes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/offcanvas.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
+        <xsl:text>~/themes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/responsive-tabs.js,</xsl:text>
-        <!--<xsl:text>~/ewThemes/</xsl:text>
-        <xsl:value-of select="$theme"/>
-        <xsl:text>/js/bootstrap-hover-dropdown.min.js,</xsl:text>-->
-        <xsl:text>~/ewThemes/</xsl:text>
+        <xsl:text>~/themes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/smoothproducts.js,</xsl:text>
-        <xsl:text>~/ewCommon/js/newcart.js,</xsl:text>
-        <xsl:text>~/ewThemes/</xsl:text>
+        <xsl:text>~/themes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js/theme-specific.js</xsl:text>
+        <xsl:text>/js/theme-specific.js,</xsl:text>
+		<xsl:if test="$cart='on'">
+			<xsl:text>/ptn/features/cart/cart.js</xsl:text>
+		</xsl:if>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/site</xsl:text>
@@ -139,6 +137,7 @@
   <xsl:template match="Content | MenuItem" mode="getThWidth">
     <xsl:value-of select="$thWidth"/>
   </xsl:template>
+	
   <xsl:template match="Content | MenuItem" mode="getThHeight">
     <xsl:value-of select="$thHeight"/>
   </xsl:template>
@@ -148,7 +147,6 @@
 
   <xsl:template match="Item" mode="cartThumbWidth">150</xsl:template>
   <xsl:template match="Item" mode="cartThumbHeight">150</xsl:template>
-
 
   <!-- ############################################ CART ############################################### -->
   <xsl:template match="/" mode="cartBrief">
@@ -195,7 +193,7 @@
   <xsl:template match="/" mode="cartBriefxs">
     <div id="cartBriefxs">
       <div class="dropdown">
-        <a data-toggle="dropdown" href="#">
+        <a data-bs-toggle="dropdown" href="#">
           <i class="fa fa-shopping-basket">
             <xsl:text> </xsl:text>
           </i>
@@ -313,7 +311,7 @@
 
   <xsl:template match="/" mode="loginTop">
     <div id="signin">
-      <a class="loginText login-btn" data-toggle="modal" data-target="#LoginModal">
+      <a class="loginText login-btn" data-bs-toggle="modal" data-target="#LoginModal">
         <xsl:if test="/Page/User[@id!='']">
           <xsl:attribute name="class">
             <xsl:text>loginText login-btn logged-in-btn</xsl:text>
@@ -329,7 +327,7 @@
 
   <xsl:template match="/" mode="loginTopxs">
     <li id="loginBriefxs" >
-      <a class="loginText login-small" data-toggle="modal" data-target="#LoginModal">
+      <a class="loginText login-small" data-bs-toggle="modal" data-target="#LoginModal">
         <xsl:choose>
           <xsl:when test="/Page/User">My Account</xsl:when>
           <xsl:otherwise>Log in</xsl:otherwise>
@@ -339,7 +337,7 @@
   </xsl:template>
 
   <xsl:template match="/" mode="loginSimple">
-    <a class="nav-link login-btn" data-toggle="modal" data-target="#LoginModal">
+    <a class="nav-link login-btn" data-bs-toggle="modal" data-target="#LoginModal">
       <xsl:choose>
         <xsl:when test="/Page/User">My Account</xsl:when>
         <xsl:otherwise>Log in</xsl:otherwise>

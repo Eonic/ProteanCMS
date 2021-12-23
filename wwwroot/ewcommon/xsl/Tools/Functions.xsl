@@ -6492,7 +6492,6 @@
         <xsl:with-param name="class" select="$class"/>
         <xsl:with-param name="style" select="$style"/>
       </xsl:call-template>
-
     </xsl:if>
   </xsl:template>
   
