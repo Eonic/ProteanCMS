@@ -10,7 +10,12 @@
       "ProjectGuid": "6bba9f62-876f-4bb2-a4bb-502d696ead6c",
       "DisplayName": "wwwroot",
       "ColorIndex": 0
+    },
+    "7d93fd23-f739-4f09-a1b0-f5a8d0451533": {
+      "ProjectGuid": "7d93fd23-f739-4f09-a1b0-f5a8d0451533",
+      "DisplayName": "ProteanCMS",
+      "ColorIndex": 1
     }
   },
-  "NextColorIndex": 1
+  "NextColorIndex": 2
 }

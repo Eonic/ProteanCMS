@@ -1093,7 +1093,7 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
-    <div id="uploadFiles">
+    <div id="uploadFiles">test
       <xsl:choose>
         <xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
           <div class="drophere">Drag and drop files here to upload them</div>

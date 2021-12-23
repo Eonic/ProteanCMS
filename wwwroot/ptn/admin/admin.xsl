@@ -4107,20 +4107,41 @@
     </xsl:variable>
 
     <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
-      <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-      <script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
-      <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-      <script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
+
+
+		<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+		<script src="/ptn/admin/fileupload/js/vendor/jquery.ui.widget.js">/* */</script>
+		<!-- The Templates plugin is included to render the upload/download listings -->
+		<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js">/* */</script>
+		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+		<script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
+		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+		<script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
+		<!-- blueimp Gallery script -->
+		<script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js">/* */</script>
+		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+		<script src="/ptn/admin/fileupload/js/jquery.iframe-transport.js">/* */</script>
+		<!-- The basic File Upload plugin -->
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload.js">/* */</script>
+		<!-- The File Upload processing plugin -->
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-process.js">/* */</script>
+		<!-- The File Upload image preview & resize plugin -->
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-image.js">/* */</script>
+		<!-- The File Upload audio preview plugin -->
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-audio.js">/* */</script>
+		<!-- The File Upload video preview plugin -->
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-video.js">/* */</script>
+		<!-- The File Upload validation plugin -->
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-validate.js">/* */</script>
+		<!-- The File Upload user interface plugin -->
+		<script src="/ptn/admin/fileupload/js/jquery.fileupload-ui.js">/* */</script>
+		
+      <!-- The Load Image plugin is included for the preview images and image resizing functionality 
+      <script src="/ptn/admin/fileupload/js/load-image.all.min.js">/* */</script>-->
+      <!-- The Canvas to Blob plugin is included for image resizing functionality
+      <script src="/ptn/admin/fileupload/js/loadimage/vendor/canvas-to-blob.js">/* */</script> -->
       <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
-      <!-- The basic File Upload plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
-      <!-- The File Upload processing plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
-      <!-- The File Upload image preview & resize plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
-      <!-- The Image Lazy load plugin -->
-      <script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
+		<script src="/ptn/core/lazy/jquery.lazy.min.js">/* */</script>
     </xsl:if>
 
     <script>
@@ -4133,7 +4154,7 @@
         dataType: 'json',
         sequentialUploads: true,
         dropZone:$('#uploadFiles'),
-</xsl:text>
+        </xsl:text>
       <xsl:if test="$MaxUploadWidth!='0'">
         <xsl:text>disableImageResize: /Android(?!.*Chrome)|Opera/.test(navigator.userAgent),</xsl:text>
         <xsl:text>imageMaxWidth: </xsl:text>
@@ -4144,19 +4165,15 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:apply-templates select="." mode="fileTypeScript"/>
+		
       <xsl:text>
         done: function (e, data) {
-
-
         $.each(data.files, function (index, file) {
-
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
-      var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
-      <xsl:apply-templates select="." mode="newItemScript"/>
-      $('#files').prepend(newItem);
-
-      $('#files .item-image .panel').prepareLibImages();
-
+        var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
+        <xsl:apply-templates select="." mode="newItemScript"/>
+        $('#files').prepend(newItem);
+        $('#files .item-image .panel').prepareLibImages();
       $("[data-toggle=popover]").popover({
       html: true,
       container: '#files',
@@ -4170,11 +4187,7 @@
       $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
       ev.preventDefault();
       $('.modal-dialog').addClass('loading')
-      $('.modal-body').html('<p class="text-center">
-        <h4>
-          <i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...
-        </h4>
-      </p>');
+      $('.modal-body').html('<p class="text-center">  <h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
       var target = $(this).attr("href");
       // load the url and show modal on success
       var currentModal = $('.pickImageModal')
@@ -4184,8 +4197,6 @@
       });
       });
       };
-
-
       });
       },
       progressall: function (e, data) {
@@ -4203,8 +4214,6 @@
       $('.lazy').lazy();
       });
     </script>
-
-
   </xsl:template>
 
 
@@ -4216,40 +4225,13 @@
     acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i,
   </xsl:template>
 
-
-
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-
-    var newItem = '<div class="item item-image col-md-2 col-sm-4">
-      <div class="panel">
-        <div class="image-thumbnail">
-          <div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
-            <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
-            <div class="popover-description">
-              <span class="image-description-name">' + file.name + '</span>
-              <br/>
-            </div>
-          </div>
-          <a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
-            <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
-          </a>
-        </div>'
-        newItem = newItem + '<div class="description">
-          '
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
-            <i class="fa fa-trash-o fa-white">
-              <xsl:text> </xsl:text>
-            </i>Delete
-          </a>';
-          newItem = newItem + '
-        </div><div class="img-description">
-          <span class="image-description-name">' + file.name + '</span>
-          <br/>
-        </div>';
-        newItem = newItem + '
-      </div>
-    </div>';
+    var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
+    newItem = newItem + '<div class="description">'
+    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
+    newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
+    newItem = newItem + '</div></div>';
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
