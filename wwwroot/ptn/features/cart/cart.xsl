@@ -120,10 +120,11 @@
       <xsl:call-template name="term3005a" />
     </h2>
     <form method="post" id="cart" class="ewXform">
-      <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue pull-left">
+      <button type="submit" name="cartBrief" value="Continue Shopping" class="continue">
         <i class="fa fa-chevron-left">
           <xsl:text> </xsl:text>
-        </i><xsl:text> </xsl:text>
+        </i>
+        <xsl:text> </xsl:text>
         <xsl:call-template name="term3060" />
       </button>
     </form>
@@ -144,7 +145,7 @@
     <xsl:apply-templates select="." mode="orderItems"/>
   </xsl:template>
 
-    <!--#-->
+  <!--#-->
   <!--############################## Quote Procees - Currency ################################-->
   <!--#-->
   <xsl:template match="Order[@cmd='Currency']" mode="orderProcessTitle">
@@ -160,7 +161,7 @@
       <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='Currency']" mode="xform"/>
     </div>
   </xsl:template>
-  
+
   <!--#-->
   <!--##############################Order Addresses ################################-->
   <!--#-->
@@ -240,7 +241,9 @@
               <xsl:when test="@type = 'Billing Address'">
                 <xsl:call-template name="term4033"/>
               </xsl:when>
-              <xsl:when test="@type = 'Delivery Address'"><xsl:call-template name="term4034"/></xsl:when>
+              <xsl:when test="@type = 'Delivery Address'">
+                <xsl:call-template name="term4034"/>
+              </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="@type"/>
               </xsl:otherwise>
@@ -353,7 +356,7 @@
           <!-- Error No. 1000+ : Bespoke errors can be put here-->
         </xsl:choose>
       </div>
-      
+
     </xsl:if>
     <xsl:if test="error/msg">
       <p class="errorMessage">
@@ -367,13 +370,13 @@
       </p>
     </xsl:if>
   </xsl:template>
-  
+
   <!--   ################   New Cart  ###############   -->
 
   <xsl:template match="Order[@cmd='Add' or @cmd='Cart' or @cmd='Confirm']" mode="orderProcessTitle">
     <!--<h2>-->
-      <!--Your Order -->
-      <!--xsl:call-template name="term3007" /-->
+    <!--Your Order -->
+    <!--xsl:call-template name="term3007" /-->
     <!--</h2>-->
   </xsl:template>
 
@@ -382,47 +385,52 @@
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <xsl:apply-templates select="." mode="orderAddresses"/>
     <div class="terminus">&#160;</div>
-    <div class="basket"> 
-    <xsl:if test="@cmd='Add' or @cmd='Cart'">
-      <xsl:apply-templates select="." mode="suggestedItems"/>
-    </xsl:if>
+    <div class="basket">
+      <xsl:if test="@cmd='Add' or @cmd='Cart'">
+        <xsl:apply-templates select="." mode="suggestedItems"/>
+      </xsl:if>
       <form method="post" id="cart" class="ewXform">
         <div class="cart-btns-top clearfix">
           <xsl:apply-templates select="." mode="principleButton">
-            <xsl:with-param name="buttonClass">btn-action</xsl:with-param>
+            <xsl:with-param name="buttonClass">btn-primary</xsl:with-param>
           </xsl:apply-templates>
-          <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
+          <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-primary continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>
             <xsl:call-template name="term3060" />
           </button>
-          <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
+          
+        <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Update Order
           </button>-->
-          <!--<button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
+        <!--
+          -->
+        <!--<button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
             <i class="fa fa-trash-o">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Empty Order
           </button>-->
+        
         </div>
         <xsl:apply-templates select="." mode="orderItems">
           <xsl:with-param name="editQty">true</xsl:with-param>
         </xsl:apply-templates>
-     
+
         <div class="cart-btns-btm clearfix">
-        <xsl:apply-templates select="." mode="principleButton">
-          <xsl:with-param name="buttonClass">btn-action</xsl:with-param>
-        </xsl:apply-templates>
-        <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
-          <i class="fa fa-chevron-left">
+          <xsl:apply-templates select="." mode="principleButton">
+            <xsl:with-param name="buttonClass">btn-primary</xsl:with-param>
+          </xsl:apply-templates>
+          <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-primary continue">
+            <i class="fa fa-chevron-left">
+              <xsl:text> </xsl:text>
+            </i>
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
-          <xsl:call-template name="term3060" />
-        </button>
-        <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
+            <xsl:call-template name="term3060" />
+          </button>
+          <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
           <i class="fa fa-refresh">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Update Order
@@ -432,7 +440,7 @@
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Empty Order
         </button>-->
-          </div>
+        </div>
       </form>
     </div>
   </xsl:template>
@@ -550,7 +558,7 @@
   <!--#-->
   <xsl:template match="Order[@cmd='Logon']" mode="orderProcessTitle">
   </xsl:template>
-  
+
   <xsl:template match="Order[@cmd='Logon']" mode="orderProcess">
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
@@ -569,11 +577,11 @@
           <div class="account-btns-top clearfix">
             <xsl:if test="not($page/Cart/Order/Item/productDetail/UserGroups)">
               <!--Remove for subscritpions-->
-               <a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn pull-right btn-action">
-                  Continue with my order <i class="fa fa-chevron-right">
-                    <xsl:text> </xsl:text>
-                  </i>
-                </a>
+              <a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn pull-right btn-action">
+                Continue with my order <i class="fa fa-chevron-right">
+                  <xsl:text> </xsl:text>
+                </i>
+              </a>
             </xsl:if>
           </div>
         </xsl:if>
@@ -605,19 +613,22 @@
         <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
           <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3060" />
         </button>
         <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
           <i class="fa fa-refresh">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3061" />
         </button>
         <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3062" />
         </button>
         <xsl:apply-templates select="." mode="orderItems">
@@ -660,19 +671,22 @@
         <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
           <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3060" />
         </button>
         <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
           <i class="fa fa-refresh">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3061" />
         </button>
         <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3062" />
         </button>
         <!--</div>-->
@@ -684,19 +698,22 @@
         <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
           <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3060" />
         </button>
         <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
           <i class="fa fa-refresh">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3061" />
         </button>
         <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>
+          </i>
+          <xsl:text> </xsl:text>
           <xsl:call-template name="term3062" />
         </button>
         <!--</div>-->
@@ -711,8 +728,8 @@
       <xsl:call-template name="term3008" />
     </h2>
   </xsl:template>
-  
-  
+
+
 
   <xsl:template match="Order[@cmd='Discounts']" mode="orderProcess">
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
@@ -730,19 +747,22 @@
           <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3060" />
           </button>
           <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3061" />
           </button>
           <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
             <i class="fa fa-trash-o">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
           </button>
           <div class="terminus">&#160;</div>
@@ -756,19 +776,22 @@
           <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3060" />
           </button>
           <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3061" />
           </button>
           <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
             <i class="fa fa-trash-o">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
           </button>
           <div class="terminus">&#160;</div>
@@ -813,19 +836,22 @@
           <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3060" />
           </button>
           <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3061" />
           </button>
           <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
             <i class="fa fa-trash-o">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
           </button>
           <div class="terminus">&#160;</div>
@@ -843,7 +869,7 @@
   <xsl:template match="Order[(@cmd='EnterPaymentDetails' or @cmd='SubmitPaymentDetails') and /Page/Contents/Content[@type='xform' and (@name='Secure3D' or @name='Secure3DReturn')]]" mode="orderProcessTitle">
 
   </xsl:template>
-  
+
   <xsl:template match="Order[@cmd='EnterPaymentDetails' or @cmd='SubmitPaymentDetails']" mode="orderProcess">
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <div class="panel panel-default ccForm">
@@ -933,31 +959,31 @@
     </xsl:variable>
     <xsl:if test="Notes/Notes/node()!='' or Notes/PromotionalCode/node()!=''">
       <xsl:if test="Notes/Notes/node()!=''">
-    
-        <div class="alert alert-success notes">
-         
-            <xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
 
-              <xsl:if test="not(@readonly) and not(@cartCmd='') and Notes/Notes/node()!=''">
-                <a href="{$parentURL}?cartCmd=Notes" class="btn btn-primary pull-right">
-                  <i class="fa fa-pencil">&#160;</i>&#160;
-                  <xsl:attribute name="title">
-                    <!--Click here to edit the notes on this order.-->
-                    <xsl:call-template name="term3012" />
-                  </xsl:attribute>
-                  <!--Edit Notes-->
-                  <xsl:call-template name="term3013" />
-                </a>
-              </xsl:if>
-            </xsl:if>    
-            <h4 class="alert-title">
-              <!--Additional information for Your Order-->
-              <xsl:call-template name="term3010" />
-            </h4>
-            
-       
-            <xsl:apply-templates select="Notes/Notes/node()" mode="cleanXhtml"/>
-       
+        <div class="alert alert-success notes">
+
+          <xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
+
+            <xsl:if test="not(@readonly) and not(@cartCmd='') and Notes/Notes/node()!=''">
+              <a href="{$parentURL}?cartCmd=Notes" class="btn btn-primary pull-right">
+                <i class="fa fa-pencil">&#160;</i>&#160;
+                <xsl:attribute name="title">
+                  <!--Click here to edit the notes on this order.-->
+                  <xsl:call-template name="term3012" />
+                </xsl:attribute>
+                <!--Edit Notes-->
+                <xsl:call-template name="term3013" />
+              </a>
+            </xsl:if>
+          </xsl:if>
+          <h4 class="alert-title">
+            <!--Additional information for Your Order-->
+            <xsl:call-template name="term3010" />
+          </h4>
+
+
+          <xsl:apply-templates select="Notes/Notes/node()" mode="cleanXhtml"/>
+
         </div>
       </xsl:if>
       <xsl:if test="Notes/PromotionalCode/node()!=''">
@@ -968,7 +994,7 @@
           <xsl:apply-templates select="Notes/PromotionalCode/node()" mode="cleanXhtml"/>
         </p>
       </xsl:if>
-    
+
     </xsl:if>
   </xsl:template>
 
@@ -986,7 +1012,7 @@
       <xsl:value-of select="node()"/>
     </p>
   </xsl:template>
-  
+
   <xsl:template match="Item" mode="displayNoteLine">
     <p>
       <xsl:value-of select="@name"/>
@@ -1220,21 +1246,21 @@
     <xsl:if test="$page/ContentDetail/Content/Content[@type='Product' and @id!=$page/Cart/Order/Item/@contentId]">
       <div class="relatedcontent panel panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title">Recommended with this purchase</h3>
+          <h3 class="panel-title">Recommended with this purchase</h3>
         </div>
         <div class="panel-body">
-        <xsl:for-each select="$page/ContentDetail/Content/Content[@type='Product' and @id!=$page/Cart/Order/Item/@contentId]">
-          <xsl:apply-templates select="." mode="displayBriefRelated"/>
-        </xsl:for-each>
+          <xsl:for-each select="$page/ContentDetail/Content/Content[@type='Product' and @id!=$page/Cart/Order/Item/@contentId]">
+            <xsl:apply-templates select="." mode="displayBriefRelated"/>
+          </xsl:for-each>
         </div>
       </div>
     </xsl:if>
   </xsl:template>
-  
+
   <xsl:template match="Order" mode="suggestedItems">
-    
+
   </xsl:template>
-  
+
   <xsl:template match="Item" mode="CartProductName">
     <xsl:value-of select="Name"/>
   </xsl:template>
@@ -1253,7 +1279,10 @@
       <xsl:with-param name="date" select="productDetail/StartDate/node()"/>
     </xsl:call-template>
   </xsl:template>
-  
+
+  <xsl:template match="Item" mode="cartThumbWidth">50</xsl:template>
+  <xsl:template match="Item" mode="cartThumbHeight">50</xsl:template>
+
   <xsl:template match="Item" mode="orderItem">
     <xsl:param name="editQty"/>
     <xsl:variable name="parentURL">
@@ -1265,15 +1294,26 @@
     <xsl:variable name="siteURL">
       <xsl:call-template name="getSiteURL"/>
     </xsl:variable>
+    <xsl:variable name="cartThumbWidth">
+      <xsl:apply-templates select="." mode="cartThumbWidth"/>
+    </xsl:variable>
+    <xsl:variable name="cartThumbHeight">
+      <xsl:apply-templates select="." mode="cartThumbHeight"/>
+    </xsl:variable>
     <!--<xsl:if test="Images/img[@class='detail']/@src and Images/img[@class='detail']/@src!=''">-->
-      <div class="cart-thumbnail">
-        <xsl:apply-templates select="productDetail" mode="displayThumbnail">
-          <xsl:with-param name="forceResize">true</xsl:with-param>
-<xsl:with-param name="crop">true</xsl:with-param>
-	  <xsl:with-param name="width">50</xsl:with-param>
-    		<xsl:with-param name="height">50</xsl:with-param>
-        </xsl:apply-templates>
-      </div>
+
+    <div class="cart-thumbnail">
+      <xsl:apply-templates select="productDetail" mode="displayThumbnail">
+        <xsl:with-param name="forceResize">true</xsl:with-param>
+        <xsl:with-param name="crop">true</xsl:with-param>
+        <xsl:with-param name="width">
+          <xsl:value-of select="$cartThumbWidth" />
+        </xsl:with-param>
+        <xsl:with-param name="height">
+          <xsl:value-of select="$cartThumbHeight" />
+        </xsl:with-param>
+      </xsl:apply-templates>
+    </div>
     <!--</xsl:if>-->
     <div class="description">
 
@@ -1294,9 +1334,9 @@
           <xsl:for-each select="Item">
             <xsl:value-of select="Name"/>
             <xsl:apply-templates select="option" mode="optionDetail"/>
-          <xsl:if test="not(position()=last())">
-            <xsl:text> / </xsl:text>
-          </xsl:if>
+            <xsl:if test="not(position()=last())">
+              <xsl:text> / </xsl:text>
+            </xsl:if>
           </xsl:for-each>
           <!-- <xsl:if test="@price!=0">
 							  Remmed by Rob
@@ -1309,7 +1349,7 @@
 							  </xsl:apply-templates>
 						  </xsl:if>-->
         </span>
-        </xsl:if>
+      </xsl:if>
       <!-- ################################# Line Discount Info ################################# -->
       <xsl:if test="Discount">
         <xsl:for-each select="DiscountPrice/DiscountPriceLine[@UnitSaving &gt; 0]">
@@ -1366,7 +1406,9 @@
             <xsl:value-of select="@nDiscountKey"/>
           </xsl:variable>
           <div class="discount">
-            <strong>DISCOUNT:<xsl:text> </xsl:text><xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/></strong>
+            <strong>
+              DISCOUNT:<xsl:text> </xsl:text><xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/>
+            </strong>
             <xsl:text> </xsl:text>
             (<xsl:value-of select="@oldUnits - @Units"/>&#160;Item<xsl:if test="(@oldUnits - @Units) > 1">s</xsl:if>)
             <!-- Remmed by Rob 
@@ -1379,7 +1421,7 @@
               <xsl:with-param name="price" select="@TotalSaving"/>
               <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
             </xsl:apply-templates>
-            
+
           </div>
         </xsl:for-each>
       </xsl:if>
@@ -1400,6 +1442,7 @@
           <xsl:otherwise>
             <xsl:choose>
               <xsl:when test="@quantity&lt;'10'">
+                <label>Qty:</label>
                 <select value="{@quantity}" class="cart-quantity" name="itemId-{@id}">
                   <option value="1">
                     <xsl:if test="@quantity=1">
@@ -1413,10 +1456,12 @@
                     </xsl:if>
                     <xsl:text>2</xsl:text>
                   </option>
-                  <option value="3"> <xsl:if test="@quantity=3">
+                  <option value="3">
+                    <xsl:if test="@quantity=3">
                       <xsl:attribute name="selected">selected</xsl:attribute>
                     </xsl:if>
-                    <xsl:text>3</xsl:text></option>
+                    <xsl:text>3</xsl:text>
+                  </option>
                   <option value="4">
                     <xsl:if test="@quantity=4">
                       <xsl:attribute name="selected">selected</xsl:attribute>
@@ -1455,7 +1500,7 @@
                   </option>
                   <option value="10">10+</option>
                 </select>
-              
+
                 <button type="submit" name="cartUpdate" value="Update Order" id="updateQty" class="btn btn-info btn-xs update hidden">
                   <i class="fa fa-refresh">
                     <xsl:text> </xsl:text>
@@ -1486,7 +1531,7 @@
             <a href="{$parentURL}?cartCmd=Remove&amp;id={@id}" title="click here to remove this item from the list" class="text-danger delete-link">
               <!--BJR - This either doesnt work or is wrong so i have changed it for the moment to work-->
               <!--<img src="{$secureURL}/ewCommon/images/icons/trash.gif" alt="delete icon - click here to remove this item from the list"/>-->
-              <i class="fa fa-trash-o">
+              <i class="fa fa-trash-alt">
                 <xsl:text> </xsl:text>
               </i>
               <span> Delete</span>
@@ -1496,78 +1541,88 @@
       </div>
     </div>
     <xsl:if test="not(/Page/Cart/@displayPrice='false')">
-      <div class="linePrice">
-        <xsl:variable name="itemPrice" select="@itemTotal div @quantity"/>
-        <xsl:if test="DiscountPrice/@OriginalUnitPrice &gt; $itemPrice">
-          <strike>
-            <!-- Remmed by Rob 
+      <div class="cart-prices">
+        <div class="lineTotal">
+          <xsl:choose>
+            <xsl:when test="@itemTotal">
+              <!--<xsl:value-of select="format-number(@itemTotal,'#0.00')"/>-->
+              <xsl:apply-templates select="/Page" mode="formatPrice">
+                <xsl:with-param name="price" select="@itemTotal"/>
+                <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+              </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+              <!--<xsl:value-of select="format-number((@price +(sum(*/@price)))* @quantity,'#0.00')"/>-->
+              <xsl:apply-templates select="/Page" mode="formatPrice">
+                <xsl:with-param name="price" select="(@price +(sum(*/@price)))* @quantity"/>
+                <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+              </xsl:apply-templates>
+            </xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="nDepositAmount&gt;0">
+            <div class="deposit">
+              Deposit: <xsl:apply-templates select="/Page" mode="formatPrice">
+                <xsl:with-param name="price" select="(nDepositAmount/node())* @quantity"/>
+                <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+              </xsl:apply-templates>
+            </div>
+          </xsl:if>
+        </div>
+        <xsl:if test="@quantity!='1'">
+          <div class="linePrice">
+            <span class="open-braket-cart">
+              <xsl:text>(</xsl:text>
+            </span>
+            <xsl:variable name="itemPrice" select="@itemTotal div @quantity"/>
+            <xsl:if test="DiscountPrice/@OriginalUnitPrice &gt; $itemPrice">
+              <strike>
+                <!-- Remmed by Rob 
 					  <xsl:value-of select="$currency"/>
                       <xsl:value-of select="format-number(DiscountPrice/@OriginalUnitPrice,'#0.00')"/>
 					-->
-            <xsl:apply-templates select="/Page" mode="formatPrice">
-              <xsl:with-param name="price" select="DiscountPrice/@OriginalUnitPrice"/>
-              <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-            </xsl:apply-templates>
-          </strike>
-          <br/>
-        </xsl:if>
-        <!-- Remmed by Rob
+                <xsl:apply-templates select="/Page" mode="formatPrice">
+                  <xsl:with-param name="price" select="DiscountPrice/@OriginalUnitPrice"/>
+                  <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+                </xsl:apply-templates>
+              </strike>
+              <br/>
+            </xsl:if>
+            <!-- Remmed by Rob
 				  <xsl:value-of select="$currency"/>
                   <xsl:value-of select="format-number(@price,'#0.00')"/>
 				  -->
-        
-        <xsl:apply-templates select="/Page" mode="formatPrice">
-          <xsl:with-param name="price" select="$itemPrice"/>
-          <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-        </xsl:apply-templates>
-        <xsl:for-each select="Item[@price &gt; 0]">
-          <br/>
-          <span class="optionList">
-            <!-- Remmed by Rob 
+
+            <xsl:apply-templates select="/Page" mode="formatPrice">
+              <xsl:with-param name="price" select="$itemPrice"/>
+              <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+            </xsl:apply-templates>
+            <xsl:for-each select="Item[@price &gt; 0]">
+              <br/>
+              <span class="optionList">
+                <!-- Remmed by Rob 
 					  <xsl:value-of select="$currency"/>
                       <xsl:value-of select="format-number(@price,'#0.00')"/>
 					  -->
-            <xsl:apply-templates select="/Page" mode="formatPrice">
-              <xsl:with-param name="price" select="@price"/>
-              <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-            </xsl:apply-templates>
-          </span>
-        </xsl:for-each>
-      </div>
-      
-      <div class="lineTotal">
-        <xsl:choose>
-          <xsl:when test="@itemTotal">
-					  <!--<xsl:value-of select="format-number(@itemTotal,'#0.00')"/>-->
-            <xsl:apply-templates select="/Page" mode="formatPrice">
-              <xsl:with-param name="price" select="@itemTotal"/>
-              <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-            </xsl:apply-templates>
-          </xsl:when>
-          <xsl:otherwise>
-          	<!--<xsl:value-of select="format-number((@price +(sum(*/@price)))* @quantity,'#0.00')"/>-->
-            <xsl:apply-templates select="/Page" mode="formatPrice">
-              <xsl:with-param name="price" select="(@price +(sum(*/@price)))* @quantity"/>
-              <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-            </xsl:apply-templates>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="nDepositAmount&gt;0">
-          <div class="deposit">
-            Deposit: <xsl:apply-templates select="/Page" mode="formatPrice">
-              <xsl:with-param name="price" select="(nDepositAmount/node())* @quantity"/>
-              <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-            </xsl:apply-templates>
+                <xsl:apply-templates select="/Page" mode="formatPrice">
+                  <xsl:with-param name="price" select="@price"/>
+                  <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+                </xsl:apply-templates>
+              </span>
+            </xsl:for-each>
+            <xsl:text> each</xsl:text>
+            <span class="close-braket-cart">
+              <xsl:text>)</xsl:text>
+            </span>
           </div>
         </xsl:if>
       </div>
     </xsl:if>
-    
-    
+
+
   </xsl:template>
 
-  
-  
+
+
   <xsl:template match="Order" mode="principleButton">
     <xsl:param name="buttonTitle"/>
     <!-- Optional, defaults to Proceed -->
@@ -1596,11 +1651,8 @@
     </xsl:variable>
     <xsl:if test="not(@errorMsg &gt; 0 or error/msg)">
       <!-- Only show button if no errors present -->
-      <button type="submit" name="{$bCmd}" value="{$bTitle}" class="btn btn-action pull-right {$buttonClass}">
+      <button type="submit" name="{$bCmd}" value="{$bTitle}" class="btn {$buttonClass} principle">
         <xsl:value-of select="$bTitle" />
-        &#160;<i class="fa fa-chevron-right">
-          <xsl:text> </xsl:text>
-        </i>
       </button>
     </xsl:if>
   </xsl:template>
@@ -1645,7 +1697,7 @@
       </div>
     </div>
   </xsl:template>
-  
+
   <!--#-->
   <!--############################## Order Process - 3DSecureReturn  ################################-->
   <!--#-->
@@ -1658,7 +1710,7 @@
       </div>
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
-    
+
   </xsl:template>
 
   <xsl:template match="Order[@cmd='Redirect3ds']" mode="orderProcessTitle">
@@ -1718,9 +1770,9 @@
     <iframe name="threeDS" id="threeDS"></iframe>
 
   </xsl:template>
-  
+
   <xsl:template match="Content[@name='Secure3D']" mode="contentJS">
-      <script type="text/javascript">$(document).ready(function () {$('#Secure3D .buttons').hide();$('#Secure3D').submit();});</script>
+    <script type="text/javascript">$(document).ready(function () {$('#Secure3D .buttons').hide();$('#Secure3D').submit();});</script>
   </xsl:template>
 
   <xsl:template match="Content[@name='Secure3DReturn']" mode="xform">
@@ -1763,11 +1815,11 @@
       </div>
     </form>
   </xsl:template>
-  
+
   <xsl:template match="Content[@name='Secure3DReturn']" mode="contentJS">
     <script type="text/javascript">$(document).ready(function () {$('#Secure3DReturn .buttons').hide();$('#Secure3DReturn').submit();});</script>
   </xsl:template>
-    
+
   <xsl:template match="Content[@name='Redirect3ds']" mode="xform">
     <form method="{model/submission/@method}" action="" target="_top">
       <xsl:attribute name="class">
@@ -1823,7 +1875,7 @@
   <xsl:template match="Content[@name='Redirect3ds']" mode="contentJS">
     <script type="text/javascript">$(document).ready(function () {$('#Secure3DReturn').submit();});</script>
   </xsl:template>
-  
+
 
   <xsl:template match="group | repeat" mode="xform2">
     <xsl:param name="class"/>
@@ -1929,8 +1981,8 @@
         </xsl:for-each>
         <div class="terminus">&#160;</div>
       </div>
-      
-      
+
+
     </xsl:if>
   </xsl:template>
 
@@ -2131,7 +2183,7 @@
       <xsl:call-template name="term3021" />
     </h2>
   </xsl:template>
-  
+
   <xsl:template match="Order[@cmd='ShowInvoice' or @cmd='ShowCallbackInvoice']" mode="orderProcess">
     <xsl:variable name="parentURL">
       <xsl:call-template name="getContentParURL"/>
@@ -2191,8 +2243,9 @@
           <!--Final Payment Reference-->
           <xsl:call-template name="term3025" />
           <xsl:text>:&#160;</xsl:text>
-          <strong><a href="{$secureURL}?cartCmd=Settlement&amp;settlementRef={@settlementID}">
-            <xsl:value-of select="@settlementID" />
+          <strong>
+            <a href="{$secureURL}?cartCmd=Settlement&amp;settlementRef={@settlementID}">
+              <xsl:value-of select="@settlementID" />
             </a>
           </strong>
         </p>
@@ -2268,8 +2321,8 @@
             <xsl:call-template name="term3042" />
           </div>
           <div class="lineTotal">
-          <xsl:call-template name="term3043" />
-        </div>
+            <xsl:call-template name="term3043" />
+          </div>
         </div>
         <xsl:for-each select="Item">
           <div class="clearfix cart-item">
@@ -2278,7 +2331,7 @@
             </xsl:apply-templates>
           </div>
         </xsl:for-each>
-   <xsl:if test="@shippingType &gt; 0">
+        <xsl:if test="@shippingType &gt; 0">
           <div class="shipping">
             <strong>
               <xsl:choose>
@@ -2387,55 +2440,55 @@
             </span>
           </div>
           <xsl:choose>
-          <xsl:when test="@paymentMade &gt; 0">
-            <div class="cart-row">
-              <div class="total">
-                <xsl:choose>
-                  <xsl:when test="@transStatus">
-                    <!--Transaction Made-->
-                    <xsl:call-template name="term3049" />
-                  </xsl:when>
-                  <xsl:when test="@payableType='settlement' and not(@transStatus)">
-                    <!--Payment Received-->
-                    <xsl:call-template name="term3050" />
-                  </xsl:when>
-                </xsl:choose>
+            <xsl:when test="@paymentMade &gt; 0">
+              <div class="cart-row">
+                <div class="total">
+                  <xsl:choose>
+                    <xsl:when test="@transStatus">
+                      <!--Transaction Made-->
+                      <xsl:call-template name="term3049" />
+                    </xsl:when>
+                    <xsl:when test="@payableType='settlement' and not(@transStatus)">
+                      <!--Payment Received-->
+                      <xsl:call-template name="term3050" />
+                    </xsl:when>
+                  </xsl:choose>
+                </div>
+                <div class="total amount">
+                  <xsl:value-of select="$currency"/>
+                  <xsl:value-of select="format-number(@paymentMade, '0.00')"/>
+                </div>
               </div>
-              <div class="total amount">
-                <xsl:value-of select="$currency"/>
-                <xsl:value-of select="format-number(@paymentMade, '0.00')"/>
-              </div>
-            </div>
-          </xsl:when>
-          <xsl:otherwise>
-             <xsl:if test="@payableAmount &gt; 0">
-          <div class="totals-row">
-          <div class="payable-amount">
-            <span>
-              <xsl:choose>
-                <xsl:when test="@payableType='deposit' and not(@transStatus)">
-                  <!--Deposit Payable-->
-                  <xsl:call-template name="term3051" />:
-                </xsl:when>
-                <xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">
-                  <!--Amount Outstanding-->
-                  <xsl:call-template name="term3052" />
-                </xsl:when>
-              </xsl:choose>
-            </span>
-            <span class="total amount">
-              <xsl:value-of select="$currency"/>
-              <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
-            </span>
-          </div>
-          </div>
-        </xsl:if>
-          
-          </xsl:otherwise>
-          </xsl:choose>       
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:if test="@payableAmount &gt; 0">
+                <div class="totals-row">
+                  <div class="payable-amount">
+                    <span>
+                      <xsl:choose>
+                        <xsl:when test="@payableType='deposit' and not(@transStatus)">
+                          <!--Deposit Payable-->
+                          <xsl:call-template name="term3051" />:
+                        </xsl:when>
+                        <xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">
+                          <!--Amount Outstanding-->
+                          <xsl:call-template name="term3052" />
+                        </xsl:when>
+                      </xsl:choose>
+                    </span>
+                    <span class="total amount">
+                      <xsl:value-of select="$currency"/>
+                      <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
+                    </span>
+                  </div>
+                </div>
+              </xsl:if>
+
+            </xsl:otherwise>
+          </xsl:choose>
         </div>
 
-       
+
       </div>
     </xsl:if>
     <!--<xsl:if test="/Page/Contents/Content[@name='cartMessage']">
