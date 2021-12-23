@@ -859,10 +859,9 @@ Partial Public Class Cms
                     Dim oRow As DataRow
                     oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                     For Each oRow In oDs.Tables("Order").Rows
-                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Payment Failed) " & vbLf & "comment: " & " Declined " & vbLf & "Full Response:' " & errorMessage & "'"
+                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": " & errorMessage & "'"
                     Next
                     myWeb.moDbHelper.updateDataset(oDs, "Order")
-
                     Return True
 
                 Catch ex As Exception

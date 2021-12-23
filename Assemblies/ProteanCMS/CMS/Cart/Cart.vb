@@ -4497,7 +4497,7 @@ processFlow:
                 If Not bBillingSet Then
                     contactId = setCurrentBillingAddress(myWeb.mnUserId, 0)
                 Else
-                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 order by cContactType ASC"
+                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 AND (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC"
                     oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 End If
 
@@ -5692,7 +5692,7 @@ processFlow:
                             If IsDBNull(oRow("nShippingTotal")) Then
                                 cHidden = " hidden"
                                 bHideDelivery = True
-                            ElseIf oRow("nShippingTotal") = 0 Then
+                            ElseIf oRow("nShippingTotal") = 0 And oRow("bCollection") = 0 Then
                                 cHidden = " hidden"
                                 bHideDelivery = True
                             Else
@@ -5890,10 +5890,10 @@ processFlow:
 
                     ' Adjust the group title
                     If bAdjustTitle Then
-                        Dim cGroupTitle As String = "Choose Delivery Type and Payment Method"
+                        Dim cGroupTitle As String = "Select Delivery and Payment Option'"
                         If bHideDelivery And bHidePayment Then cGroupTitle = "Terms and Conditions"
-                        If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Choose Payment Method"
-                        If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Choose Delivery Type"
+                        If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Select Payment Option"
+                        If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Select Shipping Option"
                         Dim labelElmt As XmlElement = oGrpElmt.SelectSingleNode("label")
                         labelElmt.InnerText = cGroupTitle
                         labelElmt.SetAttribute("class", "term3019")
@@ -8255,7 +8255,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Public Function CartReports(ByVal dBegin As Date, ByVal dEnd As Date, Optional ByVal bSplit As Integer = 0, Optional ByVal cProductType As String = "", Optional ByVal nProductId As Integer = 0, Optional ByVal cCurrencySymbol As String = "", Optional ByVal nOrderStatus1 As Integer = 6, Optional ByVal nOrderStatus2 As Integer = 9, Optional ByVal cOrderType As String = "ORDER") As XmlElement
+        Public Function CartReports(ByVal dBegin As Date, ByVal dEnd As Date, Optional ByVal bSplit As Integer = 0, Optional ByVal cProductType As String = "", Optional ByVal nProductId As Integer = 0, Optional ByVal cCurrencySymbol As String = "", Optional ByVal nOrderStatus As String = "6,9,17", Optional ByVal cOrderType As String = "ORDER") As XmlElement
             Try
                 Dim cSQL As String = "exec "
                 Dim cCustomParam As String = ""
@@ -8279,9 +8279,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 cSQL &= Protean.Tools.Database.SqlDate(dBegin) & ","
                 cSQL &= Protean.Tools.Database.SqlDate(dEnd) & ","
                 cSQL &= cCustomParam & ","
-                cSQL &= "'" & cCurrencySymbol & "',"
-                cSQL &= nOrderStatus1 & ","
-                cSQL &= nOrderStatus2 & ","
+                cSQL &= "'" & cCurrencySymbol & "','"
+                cSQL &= nOrderStatus & "',"
                 cSQL &= "'" & cOrderType & "'"
 
                 Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report")
@@ -8302,8 +8301,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 oReturnElmt.SetAttribute("cProductType", cProductType)
                 oReturnElmt.SetAttribute("nProductId", nProductId)
                 oReturnElmt.SetAttribute("cCurrencySymbol", cCurrencySymbol)
-                oReturnElmt.SetAttribute("nOrderStatus1", nOrderStatus1)
-                oReturnElmt.SetAttribute("nOrderStatus2", nOrderStatus2)
+                oReturnElmt.SetAttribute("nOrderStatus", nOrderStatus)
                 oReturnElmt.SetAttribute("cOrderType", cOrderType)
                 Return oRptElmt
             Catch ex As Exception

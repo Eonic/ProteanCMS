@@ -6,6 +6,66 @@ Protean.Tools
 </name>
 </assembly>
 <members>
+<member name="T:Protean.Tools.Conversion">
+ <summary>
+   <para>   Protean.Tools.Conversion is designed to covert from one data source to another (e.g. Excel to Xml)</para>
+   <example>
+     <para>Exmaple usage to convert an Excel file to XML</para>
+     <code>Dim c As New Conversion(Conversion.Type.Excel, Conversion.Type.Xml, "c:\text.xls")</code>
+     <code>c.Convert()</code>
+     <code>If c.State = Status.Succeeded Then Response.Write c.Output.OuterXml Else Response.Write c.Message</code>
+   </example>
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Tools.CounterCollection.Add(System.String)">
+ <summary>
+ Creates a counter by counter name and adds it to the collection
+ </summary>
+ <param name="counterName">The name of the counter</param>
+ <returns>Returns the actual Counter object</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Tools.CounterCollection.Add(Protean.Tools.Counter)">
+ <summary>
+ Adds a counter by object
+ </summary>
+ <param name="value">The counter object to add</param>
+ <returns>The index of counter in the collection</returns>
+ <remarks></remarks>
+</member>
+<member name="T:Protean.Tools.DelegateWrappers.PredicateWrapperDelegate`2">
+ <summary>
+ 
+ </summary>
+ <typeparam name="T"></typeparam>
+ <typeparam name="A"></typeparam>
+ <param name="item"></param>
+ <param name="argument"></param>
+ <returns></returns>
+ <remarks>From http://www.paulstovell.com/vb-anonymous-methods</remarks>
+</member>
+<member name="M:Protean.Tools.Dictionary.getSimpleHashTable(System.String)">
+ <summary>
+     Creates a hashtable based on a colon and comma separated list of key/value string pairs.
+ </summary>
+ <param name="cCSVString">Format is "key1:value1,key2:value2,key3:value3 etc.</param>
+ <returns>Hashtable</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Tools.Dictionary.hashtableToCSV(System.Collections.Hashtable@,Protean.Tools.Dictionary.Dimension,System.Char)">
+ <summary>
+    Creates a CSV from a hashtable.
+    If the key/value cannot be converted to a string, then this will fail.
+    If the key/value contains the separator then it will be removed.
+    
+ </summary>
+ <param name="hashTableToConvert">The hashtable to convert</param>
+ <param name="dimension">Determines whether to use the keys or values in the list </param>
+ <param name="separator">The separator character</param>
+ <returns>A CSV list of the hastable key or values</returns>
+ <remarks></remarks>
+</member>
 <member name="T:Protean.Tools.IFilter.IFilterReturnCodes">
  
  IFilter return codes
@@ -110,277 +170,6 @@ Protean.Tools
  
  Convenience class which provides static methods to extract text from files using installed IFilters
  
-</member>
-<member name="T:Protean.Tools.GnuPG.GnuPGException">
- <summary>
- Specific exception thrown whenever a PGP error occurs.
- 
- <p/>This class is a simple derivation from the Exception class.
- </summary>
-</member>
-<member name="M:Protean.Tools.GnuPG.GnuPGException.#ctor(System.String)">
- <summary>
- Constructor
- </summary>
- <param name="message">error message associated with exception</param>
-</member>
-<member name="T:Protean.Tools.GnuPG.Commands">
- <summary>
- List (enum) of available commands (sign, encrypt, sign and encrypt, etc...)
- </summary>
-</member>
-<member name="F:Protean.Tools.GnuPG.Commands.Sign">
- <summary>
- Make a signature
- </summary>
-</member>
-<member name="F:Protean.Tools.GnuPG.Commands.Encrypt">
- <summary>
- Encrypt  data
- </summary>
-</member>
-<member name="F:Protean.Tools.GnuPG.Commands.SignAndEncrypt">
- <summary>
- Sign and encrypt data
- </summary>
-</member>
-<member name="F:Protean.Tools.GnuPG.Commands.Decrypt">
- <summary>
- Decrypt data
- </summary>
-</member>
-<member name="F:Protean.Tools.GnuPG.Commands.Verify">
- <summary>
- Assume that input is a signature and verify it without generating any output
- </summary>
-</member>
-<member name="T:Protean.Tools.GnuPG.VerboseLevel">
- <summary>
- List (enum) of available verbose levels (NoVerbose, Verbose, VeryVerbose)
- </summary>
-</member>
-<member name="F:Protean.Tools.GnuPG.VerboseLevel.NoVerbose">
- <summary>
- Reset verbose level to 0 (no information shown during processing)
- </summary>
-</member>
-<member name="F:Protean.Tools.GnuPG.VerboseLevel.Verbose">
- <summary>
- Give more information during processing.
- </summary>
-</member>
-<member name="F:Protean.Tools.GnuPG.VerboseLevel.VeryVerbose">
- <summary>
- Give full information during processing (the input data is listed in detail).
- </summary>
-</member>
-<member name="T:Protean.Tools.GnuPG.GnuPGWrapper">
- <summary>
- This class is a wrapper class for GNU Privacy Guard (GnuPG). It execute the command 
- line program (gpg.exe) in an different process, redirects standard input (stdin),
- standard output (stdout) and standard error (stderr) streams, and monitors the 
- streams to fetch the results of the encryption/signing operation.<p/>
- 
- Please note that you must have INSTALLED GnuPG AND generated/imported the 
- appropriate keys before using this class.<p/>
- 
- GnuPG stands for GNU Privacy Guard and is GNU's tool for secure communication and 
- data storage. It can be used to encrypt data and to create digital signatures. It 
- includes an advanced key management facility and is compliant with the proposed 
- OpenPGP Internet standard as described in RFC 2440. As such, GnuPG is a complete 
- and free replacement for PGP.<p/>
- 
- This class has been developed and tested with GnuPG v1.2.0 (MingW32)<p/>
- 
- For more about GNU, please refer to http://www.gnu.org <br/>
- For more about GnuPG, please refer to http://www.gnupg.org <br/>
- For more about OpenPGP (RFC 2440), please refer to http://www.gnupg.org/rfc2440.html <br/>
- </summary>
-</member>
-<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.#ctor">
- <summary>
- Default constructor
- </summary>
-</member>
-<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.#ctor(System.String)">
- <summary>
- Constructor
- </summary>
- <param name="homeDirectory__1">home directory for GnuPG (where keyrings AND gpg.exe are located)</param>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.command">
- <summary>
- Command property: set the type of command to execute (sign, encrypt...)
- 
- <p/>Defaults to SignAndEncrypt.
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.armor">
- <summary>
- Boolean flag: if true, GnuPG creates ASCII armored output (text output). 
- 
- <p/>Defaults to true (ASCII ouput).
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.recipient">
- <summary>
- Recipient email address - mandatory when <see cref="P:Protean.Tools.GnuPG.GnuPGWrapper.command">command</see> is Encrypt or SignAndEncrypt
- 
- <p/>GnuPG uses this parameter to find the associated public key. You must have imported 
- this public key in your keyring before.
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.originator">
- <summary>
- Originator email address - recommended when <see cref="P:Protean.Tools.GnuPG.GnuPGWrapper.command">command</see> is Sign or SignAndEncrypt
- 
- <p/>GnuPG uses this parameter to find the associated secret key. You must have imported 
- this secret key in your keyring before. Otherwise, GnuPG uses the first secret key 
- in your keyring to sign messages. This property is mapped to the "--default-key" option.
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.yes">
- <summary>
- Boolean flag; if true, GnuPG assumes "yes" on most questions.
- 
- <p/>Defaults to true.
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.batch">
- <summary>
- Boolean flag; if true, GnuPG uses batch mode (Never ask, do not allow 
- interactive commands).
- 
- <p/>Defaults to true.
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.passphrase">
- <summary>
- Passphrase for using your private key - mandatory when 
- <see cref="P:Protean.Tools.GnuPG.GnuPGWrapper.command">command</see> is Sign or SignAndEncrypt.
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.homedirectory">
- <summary>
- name of the home directory (where keyrings AND gpg.exe are located)
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.passphrasefd">
- <summary>
- File descriptor for entering passphrase - defaults to 0 (standard input).
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.exitcode">
- <summary>
- Exit code from GnuPG process (0 = success; otherwise an error occured)
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.verbose">
- <summary>
- Verbose level (NoVerbose, Verbose, VeryVerbose). 
- 
- <p/>Defaults to NoVerbose.
- </summary>
-</member>
-<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.ProcessTimeOutMilliseconds">
- <summary>
- Timeout for GnuPG process, in milliseconds.
- 
- <p/>If the process doesn't exit before the end of the timeout period, the process is terminated (killed).
- 
- <p/>Defaults to 10000 (10 seconds).
- </summary>
-</member>
-<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.BuildOptions">
- <summary>
- Generate a string of GnuPG command line arguments, based on the properties
- set in this object (e.g. if the <see cref="P:Protean.Tools.GnuPG.GnuPGWrapper.armor">armor</see> property is true, 
- this method generates the "--armor" argument).
- </summary>
- <returns>GnuPG command line arguments</returns>
-</member>
-<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.ExecuteCommand(System.String,System.String)">
- <summary>
- Execute the GnuPG command defined by all parameters/options/properties.
- 
- <p/>Raise a GnuPGException whenever an error occurs.
- </summary>
- <param name="inputText"></param>
- <param name="outputText"></param>
-</member>
-<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.StandardOutputReader">
- <summary>
- Reader thread for standard output
- 
- <p/>Updates the private variable _outputString (locks it first)
- </summary>
-</member>
-<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.StandardErrorReader">
- <summary>
- Reader thread for standard error
- 
- <p/>Updates the private variable _errorString (locks it first)
- </summary>
-</member>
-<member name="T:Protean.Tools.Conversion">
- <summary>
-   <para>   Protean.Tools.Conversion is designed to covert from one data source to another (e.g. Excel to Xml)</para>
-   <example>
-     <para>Exmaple usage to convert an Excel file to XML</para>
-     <code>Dim c As New Conversion(Conversion.Type.Excel, Conversion.Type.Xml, "c:\text.xls")</code>
-     <code>c.Convert()</code>
-     <code>If c.State = Status.Succeeded Then Response.Write c.Output.OuterXml Else Response.Write c.Message</code>
-   </example>
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Tools.CounterCollection.Add(System.String)">
- <summary>
- Creates a counter by counter name and adds it to the collection
- </summary>
- <param name="counterName">The name of the counter</param>
- <returns>Returns the actual Counter object</returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Tools.CounterCollection.Add(Protean.Tools.Counter)">
- <summary>
- Adds a counter by object
- </summary>
- <param name="value">The counter object to add</param>
- <returns>The index of counter in the collection</returns>
- <remarks></remarks>
-</member>
-<member name="T:Protean.Tools.DelegateWrappers.PredicateWrapperDelegate`2">
- <summary>
- 
- </summary>
- <typeparam name="T"></typeparam>
- <typeparam name="A"></typeparam>
- <param name="item"></param>
- <param name="argument"></param>
- <returns></returns>
- <remarks>From http://www.paulstovell.com/vb-anonymous-methods</remarks>
-</member>
-<member name="M:Protean.Tools.Dictionary.getSimpleHashTable(System.String)">
- <summary>
-     Creates a hashtable based on a colon and comma separated list of key/value string pairs.
- </summary>
- <param name="cCSVString">Format is "key1:value1,key2:value2,key3:value3 etc.</param>
- <returns>Hashtable</returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Tools.Dictionary.hashtableToCSV(System.Collections.Hashtable@,Protean.Tools.Dictionary.Dimension,System.Char)">
- <summary>
-    Creates a CSV from a hashtable.
-    If the key/value cannot be converted to a string, then this will fail.
-    If the key/value contains the separator then it will be removed.
-    
- </summary>
- <param name="hashTableToConvert">The hashtable to convert</param>
- <param name="dimension">Determines whether to use the keys or values in the list </param>
- <param name="separator">The separator character</param>
- <returns>A CSV list of the hastable key or values</returns>
- <remarks></remarks>
 </member>
 <member name="T:Protean.Tools.Encryption.Hash">
  <summary>
@@ -960,6 +749,217 @@ Protean.Tools
  <param name="hex"></param>
  <returns></returns>
  <remarks></remarks>
+</member>
+<member name="T:Protean.Tools.GnuPG.GnuPGException">
+ <summary>
+ Specific exception thrown whenever a PGP error occurs.
+ 
+ <p/>This class is a simple derivation from the Exception class.
+ </summary>
+</member>
+<member name="M:Protean.Tools.GnuPG.GnuPGException.#ctor(System.String)">
+ <summary>
+ Constructor
+ </summary>
+ <param name="message">error message associated with exception</param>
+</member>
+<member name="T:Protean.Tools.GnuPG.Commands">
+ <summary>
+ List (enum) of available commands (sign, encrypt, sign and encrypt, etc...)
+ </summary>
+</member>
+<member name="F:Protean.Tools.GnuPG.Commands.Sign">
+ <summary>
+ Make a signature
+ </summary>
+</member>
+<member name="F:Protean.Tools.GnuPG.Commands.Encrypt">
+ <summary>
+ Encrypt  data
+ </summary>
+</member>
+<member name="F:Protean.Tools.GnuPG.Commands.SignAndEncrypt">
+ <summary>
+ Sign and encrypt data
+ </summary>
+</member>
+<member name="F:Protean.Tools.GnuPG.Commands.Decrypt">
+ <summary>
+ Decrypt data
+ </summary>
+</member>
+<member name="F:Protean.Tools.GnuPG.Commands.Verify">
+ <summary>
+ Assume that input is a signature and verify it without generating any output
+ </summary>
+</member>
+<member name="T:Protean.Tools.GnuPG.VerboseLevel">
+ <summary>
+ List (enum) of available verbose levels (NoVerbose, Verbose, VeryVerbose)
+ </summary>
+</member>
+<member name="F:Protean.Tools.GnuPG.VerboseLevel.NoVerbose">
+ <summary>
+ Reset verbose level to 0 (no information shown during processing)
+ </summary>
+</member>
+<member name="F:Protean.Tools.GnuPG.VerboseLevel.Verbose">
+ <summary>
+ Give more information during processing.
+ </summary>
+</member>
+<member name="F:Protean.Tools.GnuPG.VerboseLevel.VeryVerbose">
+ <summary>
+ Give full information during processing (the input data is listed in detail).
+ </summary>
+</member>
+<member name="T:Protean.Tools.GnuPG.GnuPGWrapper">
+ <summary>
+ This class is a wrapper class for GNU Privacy Guard (GnuPG). It execute the command 
+ line program (gpg.exe) in an different process, redirects standard input (stdin),
+ standard output (stdout) and standard error (stderr) streams, and monitors the 
+ streams to fetch the results of the encryption/signing operation.<p/>
+ 
+ Please note that you must have INSTALLED GnuPG AND generated/imported the 
+ appropriate keys before using this class.<p/>
+ 
+ GnuPG stands for GNU Privacy Guard and is GNU's tool for secure communication and 
+ data storage. It can be used to encrypt data and to create digital signatures. It 
+ includes an advanced key management facility and is compliant with the proposed 
+ OpenPGP Internet standard as described in RFC 2440. As such, GnuPG is a complete 
+ and free replacement for PGP.<p/>
+ 
+ This class has been developed and tested with GnuPG v1.2.0 (MingW32)<p/>
+ 
+ For more about GNU, please refer to http://www.gnu.org <br/>
+ For more about GnuPG, please refer to http://www.gnupg.org <br/>
+ For more about OpenPGP (RFC 2440), please refer to http://www.gnupg.org/rfc2440.html <br/>
+ </summary>
+</member>
+<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.#ctor">
+ <summary>
+ Default constructor
+ </summary>
+</member>
+<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.#ctor(System.String)">
+ <summary>
+ Constructor
+ </summary>
+ <param name="homeDirectory__1">home directory for GnuPG (where keyrings AND gpg.exe are located)</param>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.command">
+ <summary>
+ Command property: set the type of command to execute (sign, encrypt...)
+ 
+ <p/>Defaults to SignAndEncrypt.
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.armor">
+ <summary>
+ Boolean flag: if true, GnuPG creates ASCII armored output (text output). 
+ 
+ <p/>Defaults to true (ASCII ouput).
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.recipient">
+ <summary>
+ Recipient email address - mandatory when <see cref="P:Protean.Tools.GnuPG.GnuPGWrapper.command">command</see> is Encrypt or SignAndEncrypt
+ 
+ <p/>GnuPG uses this parameter to find the associated public key. You must have imported 
+ this public key in your keyring before.
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.originator">
+ <summary>
+ Originator email address - recommended when <see cref="P:Protean.Tools.GnuPG.GnuPGWrapper.command">command</see> is Sign or SignAndEncrypt
+ 
+ <p/>GnuPG uses this parameter to find the associated secret key. You must have imported 
+ this secret key in your keyring before. Otherwise, GnuPG uses the first secret key 
+ in your keyring to sign messages. This property is mapped to the "--default-key" option.
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.yes">
+ <summary>
+ Boolean flag; if true, GnuPG assumes "yes" on most questions.
+ 
+ <p/>Defaults to true.
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.batch">
+ <summary>
+ Boolean flag; if true, GnuPG uses batch mode (Never ask, do not allow 
+ interactive commands).
+ 
+ <p/>Defaults to true.
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.passphrase">
+ <summary>
+ Passphrase for using your private key - mandatory when 
+ <see cref="P:Protean.Tools.GnuPG.GnuPGWrapper.command">command</see> is Sign or SignAndEncrypt.
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.homedirectory">
+ <summary>
+ name of the home directory (where keyrings AND gpg.exe are located)
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.passphrasefd">
+ <summary>
+ File descriptor for entering passphrase - defaults to 0 (standard input).
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.exitcode">
+ <summary>
+ Exit code from GnuPG process (0 = success; otherwise an error occured)
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.verbose">
+ <summary>
+ Verbose level (NoVerbose, Verbose, VeryVerbose). 
+ 
+ <p/>Defaults to NoVerbose.
+ </summary>
+</member>
+<member name="P:Protean.Tools.GnuPG.GnuPGWrapper.ProcessTimeOutMilliseconds">
+ <summary>
+ Timeout for GnuPG process, in milliseconds.
+ 
+ <p/>If the process doesn't exit before the end of the timeout period, the process is terminated (killed).
+ 
+ <p/>Defaults to 10000 (10 seconds).
+ </summary>
+</member>
+<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.BuildOptions">
+ <summary>
+ Generate a string of GnuPG command line arguments, based on the properties
+ set in this object (e.g. if the <see cref="P:Protean.Tools.GnuPG.GnuPGWrapper.armor">armor</see> property is true, 
+ this method generates the "--armor" argument).
+ </summary>
+ <returns>GnuPG command line arguments</returns>
+</member>
+<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.ExecuteCommand(System.String,System.String)">
+ <summary>
+ Execute the GnuPG command defined by all parameters/options/properties.
+ 
+ <p/>Raise a GnuPGException whenever an error occurs.
+ </summary>
+ <param name="inputText"></param>
+ <param name="outputText"></param>
+</member>
+<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.StandardOutputReader">
+ <summary>
+ Reader thread for standard output
+ 
+ <p/>Updates the private variable _outputString (locks it first)
+ </summary>
+</member>
+<member name="M:Protean.Tools.GnuPG.GnuPGWrapper.StandardErrorReader">
+ <summary>
+ Reader thread for standard error
+ 
+ <p/>Updates the private variable _errorString (locks it first)
+ </summary>
 </member>
 <member name="M:Protean.Tools.FileHelper.GetMIMEType(System.String)">
  <summary>

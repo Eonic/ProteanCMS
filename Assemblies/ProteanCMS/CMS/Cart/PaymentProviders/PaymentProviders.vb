@@ -4398,7 +4398,7 @@ Partial Public Class Cms
                         oXform.Instance.AppendChild(oFrmInstance)
 
                         ' If payment type is deposit then the payment amount can be adjusted
-                        If mcPaymentType = "deposit" Then
+                        If mcPaymentType = "deposit" And moCartConfig("AdjustDeposit") = "on" Then
                             oXform.Instance.FirstChild.AppendChild(oXform.moPageXML.CreateElement("amount"))
                             oXform.Instance.FirstChild.LastChild.InnerText = CStr(mnPaymentAmount)
                         End If
@@ -4436,7 +4436,7 @@ Partial Public Class Cms
                     End Select
 
                     ' If payment type is deposit then the payment amount can be adjusted
-                    If mcPaymentType = "deposit" Then
+                    If mcPaymentType = "deposit" And moCartConfig("AdjustDeposit") = "on" Then
                         Dim cCurrencyLabel As String = ""
                         If mcCurrency <> "" Then cCurrencyLabel = " (" & mcCurrency & ")"
                         oXform.addInput(oFrmGroup, "creditCard/amount", False, "Amount to be paid" & cCurrencyLabel, "textbox required")
@@ -4458,7 +4458,7 @@ Partial Public Class Cms
                     Next
                     Dim oGroup As XmlElement
                     Select Case myWeb.moConfig("cssFramework")
-                        Case "bs3"
+                        Case "bs3", "bs5"
                             oXform.addInput(oFrmGroup, "creditCard/number", False, "Card Number", "textbox required", "cc-number")
                             '  oGroup = oXform.addGroup(oFrmGroup, "cardDetails", "inline cardDetails")
                             oXform.addInput(oFrmGroup, "creditCard/expireDate", False, "Expire Date", "ccExpire required", "cc-exp")
@@ -4516,7 +4516,7 @@ Partial Public Class Cms
                             ' If we're in deposit mode, we need to validate the payment amount
 
                             ' If we're in deposit mode, check if the values submitted are valid
-                            If mcPaymentType = "deposit" Then
+                            If mcPaymentType = "deposit" And moCartConfig("AdjustDeposit") = "on" Then
                                 If Not (IsNumeric(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText)) Then
                                     oXform.addNote("creditCard/amount", noteTypes.Alert, "<span class=""note-trans-dpnan"">The amount entered was not a number.  Please ensure that you do not enter any symbols, such as currency symbols.</span>")
                                     oXform.AddValidationError("The amount entered was not a number.")

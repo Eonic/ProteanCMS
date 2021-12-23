@@ -251,7 +251,7 @@
 
       <div class="ewAdmin options">
         <div class="dropdown pull-right">
-          <button href="#" class="btn btn-primary btn-xs" data-toggle="dropdown">
+          <button href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
             <i class="fas fa-edit fa-lg">&#160;</i>&#160;
             <xsl:if test="@status=0">[hidden]</xsl:if>
             <i class="fa fa-caret-down">&#160;</i>
@@ -259,7 +259,7 @@
           <ul class="dropdown-menu">
             <li>
               <a href="?ewCmd=EditPage&amp;pgid={@id}" title="Click here to edit this page">
-                <i class="fa fa-edit">&#160;</i>&#160;
+                <i class="far fa-edit">&#160;</i>&#160;
                 Edit Page Settings
               </a>
             </li>
@@ -474,7 +474,7 @@
       <xsl:choose>
         <xsl:when test="contains($type,',')">
           <div class="dropdown pull-right ewAdmin options addmodule">
-            <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
+            <a href="#" class="btn btn-default btn-xs pull-right" data-bs-toggle="dropdown">
               <i class="fa fa-plus">&#160;</i>&#160;
               <xsl:value-of select="$text"/>&#160;
               <i class="fa fa-caret-down">&#160;</i>
@@ -489,7 +489,7 @@
         </xsl:when>
         <xsl:when test="$type='Module'">
           <div class="dropdown">
-            <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
+            <a href="#" class="btn btn-default btn-xs pull-right" data-bs-toggle="dropdown">
               <i class="fa fa-plus">&#160;</i>&#160;
               <xsl:value-of select="$text"/>&#160;
               <i class="fa fa-caret-down">&#160;</i>
@@ -506,7 +506,7 @@
         <xsl:when test="contains($find,'true')">
           <div class="ewAdmin options">
             <div class="dropdown pull-right">
-              <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
+              <a href="#" class="btn btn-default btn-xs pull-right" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
                 <xsl:value-of select="$text"/>&#160;
                 <i class="fa fa-caret-down">&#160;</i>
@@ -529,7 +529,7 @@
         <xsl:when test="contains($find,'only')">
           <div class="ewAdmin options">
             <div class="dropdown pull-right">
-              <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
+              <a href="#" class="btn btn-default btn-xs pull-right" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
                 <xsl:value-of select="$text"/>&#160;
                 <i class="fa fa-caret-down">&#160;</i>
@@ -594,7 +594,7 @@
     <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
       <div class="ewAdmin options">
         <div class="dropdown pull-right">
-          <a href="#" class="btn btn-primary btn-xs" data-toggle="dropdown">
+          <a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
             <i class="fa fa-plus">&#160;</i>
             &#160;<xsl:value-of select="$text"/>&#160;
             <i class="fa fa-caret-down">&#160;</i>
@@ -641,7 +641,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <div class="dropdown pull-right">
-                    <a href="#" class="btn btn-default btn-xs" data-toggle="dropdown">
+                    <a href="#" class="btn btn-default btn-xs" data-bs-toggle="dropdown">
                       <i class="fa fa-plus">&#160;</i>&#160;
                       Add&#160;
                       <i class="fa fa-caret-down">&#160;</i>
@@ -688,7 +688,7 @@
 
               </xsl:variable>
               <div class="dropdown pull-right">
-                <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#" class="btn btn-default btn-xs dropdown-toggle" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-plus">&#160;</i>&#160;
                   Add&#160;
                   <i class="fa fa-caret-down">&#160;</i>
@@ -755,7 +755,7 @@
         <xsl:otherwise>
           <div class="ewAdmin options">
             <div class="dropdown pull-right">
-              <a href="#" class="btn btn-primary btn-xs" data-toggle="dropdown">
+              <a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>
                 &#160;<xsl:value-of select="$text"/>&#160;
                 <i class="fa fa-caret-down">&#160;</i>
@@ -792,7 +792,7 @@
     <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
       <xsl:if test="not(Content[@type=$type]) and not(Contnet[@name=$name])">
         <div class="ewAdmin options">
-          <a href="#" class="btn btn-default edit pull-right" data-toggle="dropdown">
+          <a href="#" class="btn btn-default edit pull-right" data-bs-toggle="dropdown">
             <i class="fa fa-plus">&#160;</i>&#160;
             <xsl:value-of select="$text"/>&#160;
             <i class="fa fa-caret-down">&#160;</i>
@@ -941,7 +941,7 @@
         </xsl:if>
         <xsl:if test="starts-with(@position,'column1') and $page/@layout='Modules_Masonary'">
           <div class="dropdown pull-right">
-            <a href="#" class="btn btn-primary btn-xs" data-toggle="dropdown">
+            <a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
               <i class="fa fa-crop fa-lg">&#160;</i>&#160;
               <i class="fa fa-caret-down">&#160;</i>
             </a>
@@ -981,7 +981,7 @@
           </div>
         </xsl:if>
         <div class="dropdown pull-right">
-          <a href="#" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
+          <a href="#" class="btn btn-primary btn-xs dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
             <xsl:choose>
               <xsl:when test="@contentType!=''">
                 <i class="fas fa-cog fa-lg">&#160;</i>&#160;
@@ -1053,7 +1053,7 @@
               <xsl:when test="false()">
                 <li>
                   <a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}" title="Click here to edit this content">
-                    <i class="fa fa-pencil-square-o">&#160;</i>&#160;
+                    <i class="fas fa-edit">&#160;</i>&#160;
                     Edit
                   </a>
                 </li>
@@ -1302,7 +1302,7 @@
         <xsl:text> editable</xsl:text>
       </xsl:attribute>
       <div class="ewAdmin dropdown options pull-right">
-        <a href="#" class="btn btn-primary btn-xs pull-right" data-toggle="dropdown">
+        <a href="#" class="btn btn-primary btn-xs pull-right" data-bs-toggle="dropdown">
           <i class="fas fa-edit fa-lg">&#160;</i>&#160;
           <xsl:if test="@status=0">[hidden]</xsl:if>
           <i class="fa fa-caret-down">&#160;</i>
@@ -1317,7 +1317,7 @@
               </li>
               <li>
                 <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to edit this content">
-                  <i class="fa fa-pencil-square-o">&#160;</i>&#160;
+                  <i class="fas fa-edit">&#160;</i>&#160;
                   <xsl:text>Edit</xsl:text>
                 </a>
               </li>
@@ -1331,7 +1331,7 @@
               </li>
               <li>
                 <a href="?ewCmd=EditContent&amp;pgid={/Page/Contents/Content[@name=$name]/@parId}&amp;id={@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name]/@parId]/@name}">
-                  <i class="fa fa-pencil-square-o">&#160;</i>&#160;
+                  <i class="fas fa-edit">&#160;</i>&#160;
                   <xsl:text>Edit</xsl:text>
                 </a>
               </li>

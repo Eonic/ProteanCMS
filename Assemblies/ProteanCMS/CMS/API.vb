@@ -167,35 +167,39 @@ Public Class API
             Dim seperatorIndex As Integer
             Dim username As String = String.Empty
             Dim password As String = String.Empty
-            Dim nUserId As Integer
+            Dim nUserId As Integer = 0
             Dim sValidResponse As String = String.Empty
 
             Try
-                'HttpContext httpContext = HttpContext.Current;
-                If myWeb.moCtx.Request.Headers IsNot Nothing Then
-                    If myWeb.moCtx.Request.Headers("Authorization") IsNot Nothing Then
-                        authHeader = myWeb.moCtx.Request.Headers("Authorization")
-                        If authHeader.Substring("Basic ".Length).Trim().Length <> 0 Then
-                            encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim()
-                            usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword))
-                            seperatorIndex = usernamePassword.IndexOf(":")
-                            username = usernamePassword.Substring(0, seperatorIndex)
-                            password = usernamePassword.Substring(seperatorIndex + 1)
-                            sValidResponse = myWeb.moDbHelper.validateUser(username, password)
-                            If IsNumeric(sValidResponse) Then
-                                nUserId = CLng(sValidResponse)
-                                bIsAuthorized = myWeb.moDbHelper.checkUserRole(sGroupName, cSchemaName, nUserId)
-                                If (bIsAuthorized) Then
-                                    myWeb.mnUserId = nUserId
+
+                If myWeb.mnUserId <> 0 Then
+                    nUserId = myWeb.mnUserId
+                Else
+                    'HttpContext httpContext = HttpContext.Current;
+                    If myWeb.moCtx.Request.Headers IsNot Nothing Then
+                        If myWeb.moCtx.Request.Headers("Authorization") IsNot Nothing Then
+                            authHeader = myWeb.moCtx.Request.Headers("Authorization")
+                            If authHeader.Substring("Basic ".Length).Trim().Length <> 0 Then
+                                encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim()
+                                usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword))
+                                seperatorIndex = usernamePassword.IndexOf(":")
+                                username = usernamePassword.Substring(0, seperatorIndex)
+                                password = usernamePassword.Substring(seperatorIndex + 1)
+                                sValidResponse = myWeb.moDbHelper.validateUser(username, password)
+                                If IsNumeric(sValidResponse) Then
+                                    nUserId = CLng(sValidResponse)
                                 End If
                             End If
-                        Else
-                            bIsAuthorized = False
                         End If
-
-                    Else
-                        bIsAuthorized = False
                     End If
+                End If
+                If nUserId <> 0 Then
+                    bIsAuthorized = myWeb.moDbHelper.checkUserRole(sGroupName, cSchemaName, nUserId)
+                    If (bIsAuthorized) Then
+                        myWeb.mnUserId = nUserId
+                    End If
+                Else
+                    bIsAuthorized = False
                 End If
 
 

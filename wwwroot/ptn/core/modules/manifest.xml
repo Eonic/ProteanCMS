@@ -16,9 +16,9 @@
   <ContentTypes>
     <ContentTypeGroup name="Text/HTML">
       <ContentType type="Module" name="Module">A block of content</ContentType>
-      <ContentType type="FormattedText" name="Formatted Text">Add text formatted into HTML</ContentType>
-      <ContentType type="PlainText" name="Plain Text">Plain unformatted text</ContentType>
-      <ContentType type="Image" name="Image">Add an image</ContentType>
+      <ContentType type="FormattedText" formPath="formattedtext/formattedtext" name="Formatted Text">Add text formatted into HTML</ContentType>
+      <ContentType type="PlainText" formPath="plaintext/plaintext" name="Plain Text">Plain unformatted text</ContentType>
+      <ContentType type="Image" formPath="image/image" name="Image">Add an image</ContentType>
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>
