@@ -27,6 +27,8 @@ body {
 }
 form.xform,
 form.ewXform {
+
+
     legend {
         font-size: 1.25rem;
     }
@@ -142,7 +144,7 @@ form.ewXform {
         border-radius: 3px;
 
         i {
-            padding-right:6px;
+            padding-right: 6px;
         }
 
         > label:first-child {
@@ -171,6 +173,29 @@ form.ewXform {
     }
     display:none;
 }
+
+.ui-datepicker {
+    @extend .popover;
+    button {
+        @extend .btn;
+        @extend .btn-primary;
+    }
+    .ui-state-default {
+        @extend .badge;
+        color: #000;
+        font-size: 1em;
+        font-weight: 500;
+        text-align: right;
+        display: block;
+    }
+    button.ui-state-default {
+       color: #fff;
+    }
+    .ui-state-hover {
+        @extend .bg-primary;
+    }
+}
+
 .ewAdmin #adminLayout {
     padding-bottom: 28px;
     flex-grow: 1;

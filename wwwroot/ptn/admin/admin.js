@@ -646,6 +646,52 @@ $.fn.prepareAdminXform = function () {
     //     }
     //  });
 
+    //---------------------- Datepicker ----------------------------
+
+    $(this).find('input.hasDatepicker').datepicker('destroy');
+    $(this).find('input.hasDatepicker').removeClass('hasDatepicker');
+
+
+    //---------------------- DOBpicker ----------------------------
+    if ($(this).find('input.jqDOBPicker').exists()) {
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        $(this).find('input.jqDOBPicker').each(function (i) {
+
+            $(this).datepicker({
+                closeAtTop: false,
+
+                closeText: 'x',
+                showButtonPanel: true,
+                showOn: "focus",
+                dateFormat: 'd M yy',
+                altField: '#' + $(this).attr('id').replace('-alt', ''),
+                altFormat: 'yy-mm-dd',
+                mandatory: $(this).hasClass('required'),
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '-95:+0'
+            });
+        });
+    };
+
+    //    var datePickerSettings = ;
+
+    if ($(this).find('input.jqDatePicker').exists()) {
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        $(this).find('input.jqDatePicker').each(function (i) {
+            $(this).datepicker({
+                closeAtTop: false,
+                closeText: 'x',
+                showButtonPanel: true,
+                showOn: "focus",
+                dateFormat: 'd M yy',
+                altField: '#' + $(this).attr('id').replace('-alt', ''),
+                altFormat: 'yy-mm-dd',
+                mandatory: $(this).hasClass('required')
+            });
+        });
+    };
 };
 
 function passImgToForm(targetForm, targetField) {

@@ -1695,14 +1695,13 @@
     </xsl:variable>
     <div class="controls">
       <div class="input-group">
-        <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
+		  <label for="{$ref}-alt" class="input-group-addon btn btn-primary input-group-btn">
+			  <i class="fas fa-calendar">
+				  <xsl:text> </xsl:text>
+			  </i>
+		  </label>       
         <input type="text" name="{$ref}-alt" id="{$ref}-alt" value="{$displayDate}" class="jqDatePicker input-small form-control" placeholder="{$inlineHint}"/>
-
-        <label for="{$ref}-alt" class="input-group-addon btn btn-primary input-group-btn">
-          <i class="fas fa-calendar">
-            <xsl:text> </xsl:text>
-          </i>
-        </label>
+		<input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
       </div>
     </div>
 
@@ -1729,14 +1728,15 @@
     </xsl:variable>
     <div class="controls">
       <div class="input-group">
-        <input type="text" name="{$ref}" id="{$ref}" value="{$displayDate}" class="input-small form-control"  readonly="readonly"/>
-        <span class="input-group-btn">
+		  <span class="input-group-btn">
           <label for="{$ref}-alt" class="input-group-addon btn btn-primary"  readonly="readonly">
             <i class="fas fa-calendar">
               <xsl:text> </xsl:text>
             </i>
           </label>
         </span>
+        <input type="text" name="{$ref}" id="{$ref}" value="{$displayDate}" class="input-small form-control"  readonly="readonly"/>
+       
       </div>
     </div>
 
