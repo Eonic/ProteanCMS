@@ -812,6 +812,7 @@ Partial Public Class Cms
 
                         If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
                             myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value, AmountToDiscount)
+                            myCart.updateGCgetValidShippingOptionsDS("65")
                         End If
                     Next
                 Catch ex As Exception
