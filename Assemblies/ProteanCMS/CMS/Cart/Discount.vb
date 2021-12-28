@@ -812,7 +812,15 @@ Partial Public Class Cms
 
                         If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
                             myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value, AmountToDiscount)
-                            myCart.updateGCgetValidShippingOptionsDS("65")
+                            'when shipping is Evoucher and giftbox promo is applied then change shipping to First class 
+                            Dim sSql As String
+                            Dim strSQL As New Text.StringBuilder
+                            Dim oDs As DataSet
+                            sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
+                            oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                            If (oDs.Tables(0).Rows(0)("nShippingMethodId") = "1") Then
+                                myCart.updateGCgetValidShippingOptionsDS("65")
+                            End If
                         End If
                     Next
                 Catch ex As Exception
