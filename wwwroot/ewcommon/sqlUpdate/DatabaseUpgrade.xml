@@ -454,11 +454,12 @@
       <Sub2 Number="52">
         <Sub3 Number="0">
           <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/IncreaseLengthChangeOfDiscountcode.sql"/>
-          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityLowLevel.sql"/>
-          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityMedLevel.sql"/>
-          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityPagesPeriod.sql"/>
-          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityTopLevel.sql"/>
-        </Sub3>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityLowLevel.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityMedLevel.sql"/>
+          <Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityPagesPeriod.sql"/>
+          <Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityTopLevel.sql"/>
+		  <Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spPurchasersLast2Years.sql"/>			
+		</Sub3>
       </Sub2>
     </Sub1>
   </Version>

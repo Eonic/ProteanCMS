@@ -1747,7 +1747,7 @@ processFlow:
                 Select Case PayableType
                     Case "deposit"
 
-                        Dim outstandingAmount As Double = CDbl(oCartElmt.GetAttribute("total")) - CDbl(oCartElmt.GetAttribute("payableAmount"))
+                        Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - CDbl("0" + oCartElmt.GetAttribute("payableAmount"))
                         mcDepositAmount = oCartElmt.GetAttribute("payableAmount")
                         ' Let's update the cart element
                         oCartElmt.SetAttribute("paymentMade", mcDepositAmount)
@@ -1766,7 +1766,7 @@ processFlow:
 
                         oCartElmt.SetAttribute("settlementID", cUniqueLink)
                         oCartElmt.SetAttribute("transStatus", "Complete")
-                        UpdateCartDeposit(oCartElmt, mcDepositAmount, PayableType)
+                        UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
                         mnProcessId = 10
 
                     Case "settlement"
@@ -4435,7 +4435,7 @@ processFlow:
                 ' Changed this so it gets any
 
                 'Check if updated primiary billing address, (TS added order by reverse order added)
-                cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 order by cContactType ASC, nContactKey DESC"
+                cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 and (cContactType = 'Billing Address' or cContactType = 'Delivery Address')  order by cContactType ASC, nContactKey DESC"
                 oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 For Each oDr In oDs.Tables("tblCartContact").Rows
                     If billingAddId = 0 Then billingAddId = oDr.Item("nContactKey")
@@ -4497,7 +4497,7 @@ processFlow:
                 If Not bBillingSet Then
                     contactId = setCurrentBillingAddress(myWeb.mnUserId, 0)
                 Else
-                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 AND (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC"
+                    cSql = "Select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " And nContactCartId = 0 And (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC"
                     oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 End If
 
