@@ -1624,7 +1624,7 @@
             </button>
           </xsl:when>
           <xsl:otherwise>
-            <button type="submit" name="RelateFind_{PageFilter}_{$RelType}_{$relationType}" class="btn btn-primary">
+            <button type="submit" name="RelateAdd_PageFilter_1Way_~inactive" class="btn btn-primary">
               Add <xsl:value-of select="$buttonName"/>
             </button>
           </xsl:otherwise>
@@ -2159,7 +2159,8 @@
       </xsl:if>
     </span>
   </xsl:template>
-
+	
+	
   <xsl:template match="Content[@type='NewsArticle']" mode="relatedBrief">
     <xsl:apply-templates select="." mode="getDisplayName" />
     <br/>
@@ -2170,6 +2171,7 @@
     </xsl:call-template>
     <!--</small>-->
   </xsl:template>
+
 
   <xsl:template match="Content[@type='LibraryImage']" mode="relatedBrief">
     <xsl:apply-templates select="." mode="displayThumbnail">
@@ -2878,7 +2880,7 @@
             <div>
                 <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick(this.value);">301 Permanant Redirect</button>
                 <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">302 Temporary Redirect</button>
-                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>
+                <!--<button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>-->
              </div>
 
             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">

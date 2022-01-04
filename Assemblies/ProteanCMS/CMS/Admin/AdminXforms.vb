@@ -2455,6 +2455,7 @@ Partial Public Class Cms
                     Dim cXformName As String = cContentSchemaName
                     If AlternateFormName <> "" Then cXformName = AlternateFormName
                     If cModuleType <> "" Then cXformName = cXformName & "/" & cModuleType
+                    If cFilterType <> "" Then cXformName = cXformName & "/" & cFilterType
 
                     If Not MyBase.load("/xforms/content/" & cXformName & ".xml", myWeb.maCommonFolders) Then
                         ' load a default content xform if no alternative.

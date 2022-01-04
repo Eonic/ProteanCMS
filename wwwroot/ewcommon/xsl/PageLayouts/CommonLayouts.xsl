@@ -3577,8 +3577,11 @@
   <xsl:template match="Content[@type='xform']" mode="ContentDetail">
     <xsl:apply-templates select="." mode="xform"/>
   </xsl:template>
+	
 
-  <!-- ############## News Articles ##############   -->
+	
+
+	<!-- ############## News Articles ##############   -->
 
   
   <!-- NewsArticle Module -->
@@ -3771,7 +3774,10 @@
         </li>
   </xsl:template>
 
-
+	<xsl:template match="Content[@type='PageFilter']" mode="displayBrief">
+		Hello
+	</xsl:template>
+	
 
   <!-- NewsArticle Brief -->
   <xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">

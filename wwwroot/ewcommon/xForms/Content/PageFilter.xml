@@ -7,7 +7,7 @@
 				<nContentPrimaryId/>
 				<nVersion/>
 				<cContentForiegnRef/>
-        <cContentName>PageFilter</cContentName>
+				<cContentName>PageFilter</cContentName>
 				<cContentSchemaName>PageFilter</cContentSchemaName>
 				<cContentXmlBrief>
 					<Content filterType="PageFilter" parentPageId=""/>
@@ -75,7 +75,7 @@
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Text</label>
+			<label>Save Page Filter</label>
 		</submit>
 	</group>
 </Content>
