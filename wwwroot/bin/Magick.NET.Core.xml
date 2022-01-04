@@ -2249,6 +2249,11 @@
             DWAB.
             </summary>
         </member>
+        <member name="F:ImageMagick.CompressionMethod.BC7">
+            <summary>
+            BC7.
+            </summary>
+        </member>
         <member name="T:ImageMagick.DensityUnit">
             <summary>
             Units of image resolution.
