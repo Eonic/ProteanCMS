@@ -1513,6 +1513,7 @@
               </xsl:attribute>-->
             </xsl:if>
             <xsl:if test="@backgroundImage!=''">
+
               <xsl:choose>
                 <xsl:when test="@data-stellar-background-ratio!='0'">
                   <xsl:choose>

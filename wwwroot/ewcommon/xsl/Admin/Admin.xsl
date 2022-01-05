@@ -214,8 +214,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<!-- Not Needed - Pulled into Admin.js 
-    <script src="/ewcommon/js/jquery/ajaxtreeview/jquery.ajaxtreeview.js" type="text/javascript">&#160;</script>-->
+
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
 		<script type="text/javascript" src="/ewcommon/js/jQuery/simplemodal/jquery.simplemodal-1.4.4.min.js">&#160;</script>
@@ -1702,7 +1701,6 @@
                             </div>
 													</div>
 												</div>
-
 											</xsl:if>
 										</xsl:for-each>
 									</div>
@@ -3379,8 +3377,7 @@
 				</xsl:choose>
 			</div>
 		</li>
-		<xsl:if test="descendant-or-self::MenuItem[@id=/Page/@id]/@id">
-
+		<xsl:if test="descendant-or-self::MenuItem[@id=/Page/@id]/@id or /Page/Request/QueryString/Item[@name='contentType']/node()='ajaxadmin'">
 			<xsl:apply-templates select="MenuItem" mode="movePage">
 				<xsl:with-param name="level">
 					<xsl:value-of select="$level + 1"/>
@@ -8371,7 +8368,6 @@
       <xsl:if test="TreeItem"> collapsable</xsl:if>
     </xsl:variable>
     <li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::TreeItem/@id}" class="list-group-item level-{$level} {$class}">
-
           <div class="pageCell">
               <xsl:apply-templates select="." mode="status_legend"/>
               <xsl:value-of select="@Name"/>

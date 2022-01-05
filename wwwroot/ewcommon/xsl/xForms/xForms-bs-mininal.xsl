@@ -3541,7 +3541,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[descendant::input[contains(@class,'recaptcha')]]" mode="contentJS">
+  <xsl:template match="Content[descendant::input[contains(@class,'recaptcha')]][1]" mode="contentJS">
     <script src="https://www.google.com/recaptcha/api.js" async="" defer="">
       <xsl:text> </xsl:text>
     </script>
