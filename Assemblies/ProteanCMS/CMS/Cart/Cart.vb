@@ -2994,6 +2994,9 @@ processFlow:
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                         oCartElmt.SetAttribute("paymentMade", "0")
                                     End If
+                                    If nPayable = nTotalAmount Then
+                                        oCartElmt.SetAttribute("payableType", "full")
+                                    End If
                                 End If
                             Else
                                 ' A deposit has been paid - should I check if it's the same as the total amount?
@@ -3016,12 +3019,13 @@ processFlow:
 
 
                             If nPayable = 0 Then
-                                    oCartElmt.SetAttribute("ReadOnly", "On")
-                                End If
+                                oCartElmt.SetAttribute("ReadOnly", "On")
                             End If
+                        End If
 
-                            'Add Any Client Notes
-                            If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
+
+                        'Add Any Client Notes
+                        If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
                             oElmt = moPageXml.CreateElement("Notes")
                             oElmt.InnerXml = oRow("cClientNotes")
                             If oElmt.FirstChild.Name = "Notes" Then

@@ -5860,9 +5860,9 @@ Partial Public Class Cms
                         End If
                         If (xdoc.InnerXml <> "") Then
 
-                            Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
+                            ' Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
                             Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance")
-                            If (xn IsNot Nothing And xnInstance IsNot Nothing) Then
+                            If (xnInstance IsNot Nothing) Then
                                 amount = xnInstance.Attributes("AmountPaid").InnerText
                             End If
                         End If
@@ -5899,9 +5899,10 @@ Partial Public Class Cms
 
                                 Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
                                 IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, refundAmount)
-                                If (IsRefund Is Nothing) Then
-                                    MyBase.addNote("Refund", noteTypes.Alert, "Refund Failed")
-                                    myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
+                                If IsRefund.StartsWith("Error") Then
+                                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Refund Failed:" & IsRefund)
+                                    'myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
+                                    MyBase.valid = False
                                 End If
                                 'Update Seller Notes:
                                 Dim sSql As String = "select * from tblCartOrder where nCartOrderKey = " & nOrderId
@@ -5912,7 +5913,7 @@ Partial Public Class Cms
                                     If (IsRefund IsNot Nothing) Then
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
                                     Else
-                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
+                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And Error is: " & IsRefund & "'"
                                     End If
                                 Next
                                 myWeb.moDbHelper.updateDataset(oDs, "Order")

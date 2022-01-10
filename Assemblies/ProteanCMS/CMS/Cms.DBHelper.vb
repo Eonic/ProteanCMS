@@ -10312,7 +10312,11 @@ ReturnMe:
             Try
 
                 oInstance.InnerXml = Me.getObjectInstance(targetTable, keyValue, whereStmt)
-                oInstance.SelectSingleNode("*/" & fieldName).InnerText = value
+                If value.StartsWith("<") And value.EndsWith(">") Then
+                    oInstance.SelectSingleNode("*/" & fieldName).InnerXml = value
+                Else
+                    oInstance.SelectSingleNode("*/" & fieldName).InnerText = value
+                End If
                 Me.setObjectInstance(targetTable, oInstance, keyValue)
 
             Catch ex As Exception
