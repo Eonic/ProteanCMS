@@ -815,7 +815,7 @@ function showDependant(dependant, allDependants) {
     })
 
     // Make all now hidden fields inactive so values are lost when submitted.
-    $("." + allDependants).find(":input").not(':submit').each(function () {
+    $("." + allDependants).find(":input").not(':button').not(':submit').each(function () {
         var fieldName = $(this).attr('name');
         var tempFieldName = fieldName + '~inactive';
         //    alert("hide as " + tempFieldName);
@@ -833,12 +833,13 @@ function showDependant(dependant, allDependants) {
     });
 
     // Find all inactive inputs, and re-activate,
-    $("#" + dependant).find(":input").not(':submit').each(function () {
+    $("#" + dependant).find(":input").not(':button').not(':submit').each(function () {
         var fieldName = $(this).attr('name');
         var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
         $(this).attr('name', tempFieldName);
 
         var fieldId = $(this).attr('id');
+        alert(fieldId);
         var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
         $(this).attr('id', tempFieldId);
         //  alert("enable " + tempFieldName);

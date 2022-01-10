@@ -219,6 +219,26 @@ function matchHeight(oGroup) {
     });
 }
 
+var disableButtonMessage = "Please wait..."
+
+function disableButton(oBtn, disableMessage) {
+
+    var oElem, i;
+    var oForm = oBtn.form
+    if (disableMessage) {
+        disableButtonMessage = disableMessage
+    }
+
+    // Create a hidden input field spoofing the information of the submit button
+    var oNewElem = document.createElement('input')
+    oNewElem.type = 'hidden'
+    oNewElem.id = 'ewSubmitClone_' + oBtn.id
+    oNewElem.name = 'ewSubmitClone_' + oBtn.name
+    oNewElem.value = oBtn.value
+    oForm.appendChild(oNewElem)
+
+}
+
 /*
 ---------------------- Handle Eonic Xforms-------------------------
 */
