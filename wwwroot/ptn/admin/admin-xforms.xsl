@@ -10,7 +10,7 @@
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
       <xsl:attribute name="class">
-        <xsl:text>ewXform container</xsl:text>
+        <xsl:text>xform container</xsl:text>
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>
@@ -334,7 +334,7 @@
         </xsl:when>
         <xsl:otherwise>
           <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary input-group-btn">
+          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-bs-target="#modal-{$ref}" class="btn btn-primary input-group-btn">
             <i class="fas fa-image">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Pick
@@ -360,7 +360,13 @@
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
     <div id="modal-{$ref}" class="modal fade pickImageModal">
-      <xsl:text> </xsl:text>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+            <xsl:text>Loading... </xsl:text>
+				</div>
+			</div>
+		</div>
     </div>
   </xsl:template>
 
@@ -368,7 +374,7 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
-    <div id="modal-{$ref}" class="modal fade pickImageModal">
+    <div id="modal-{$ref}" class="modal fade pickImageModal" aria-hidden="true">
       <xsl:text> </xsl:text>
     </div>
   </xsl:template>
@@ -435,7 +441,7 @@
 
         </xsl:when>
         <xsl:otherwise>
-          <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-primary input-group-btn">
+          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary input-group-btn">
             <i class="fas fa-image">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Pick
@@ -474,7 +480,7 @@
 
           </xsl:when>
           <xsl:otherwise>
-            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=DocsLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-primary">
+            <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=DocsLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
               <i class="fas fa-file">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Pick
@@ -587,7 +593,7 @@
 
           </xsl:when>
           <xsl:otherwise>
-            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=MediaLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-target="#modal-{$scriptRef}" class="btn btn-primary">
+            <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=MediaLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
               <i class="fa fa-music fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Pick
@@ -1129,7 +1135,7 @@
       <xsl:text> </xsl:text>
     </div>
     <table role="presentation" class="table table-striped">
-      <tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
+      <tbody class="files" data-bs-toggle="modal-gallery" data-bs-target="#modal-gallery">
         <xsl:text> </xsl:text>
       </tbody>
     </table>

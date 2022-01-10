@@ -1211,7 +1211,9 @@ form#AddModule {
 }
 
 .pickImageModal {
-    font-family: $admin-header-font;
+    .modal-dialog{
+    max-width:80%;
+}
 }
 
 #RedirectPage .scolling-pane {

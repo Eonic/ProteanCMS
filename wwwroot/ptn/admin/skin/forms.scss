@@ -25,8 +25,7 @@ body {
 .btn-spacing {
     @include btn-spacing();
 }
-form.xform,
-form.ewXform {
+form.xform {
 
 
     legend {
