@@ -14,6 +14,7 @@ $(window).on("load", function () {
   //  $('.matchHeight-body .listItem').matchHeight();
     PageContentActions();
     matchHeightResponsive();
+    $('form.xform').prepareXform();
 })
 
 $(window).resize(function () {
@@ -217,3 +218,265 @@ function matchHeight(oGroup) {
         }
     });
 }
+
+var disableButtonMessage = "Please wait..."
+
+function disableButton(oBtn, disableMessage) {
+
+    var oElem, i;
+    var oForm = oBtn.form
+    if (disableMessage) {
+        disableButtonMessage = disableMessage
+    }
+
+    // Create a hidden input field spoofing the information of the submit button
+    var oNewElem = document.createElement('input')
+    oNewElem.type = 'hidden'
+    oNewElem.id = 'ewSubmitClone_' + oBtn.id
+    oNewElem.name = 'ewSubmitClone_' + oBtn.name
+    oNewElem.value = oBtn.value
+    oForm.appendChild(oNewElem)
+
+}
+
+/*
+---------------------- Handle Eonic Xforms-------------------------
+*/
+$.fn.prepareXform = function () {
+
+    //---- Hide feilds using Javascript
+
+    $(this).find('input.jsHide').each(function () {
+        $(this).parent().addClass('hidden');
+    });
+
+    $(this).find('div.jsHide').each(function () {
+        $(this).addClass('hidden');
+    });
+
+
+    //---------------------- Datepicker ----------------------------
+
+    $(this).find('input.hasDatepicker').datepicker('destroy');
+    $(this).find('input.hasDatepicker').removeClass('hasDatepicker');
+
+
+    //---------------------- DOBpicker ----------------------------
+    if ($(this).find('input.jqDOBPicker').exists()) {
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        $(this).find('input.jqDOBPicker').each(function (i) {
+
+            $(this).datepicker({
+                closeAtTop: false,
+
+                closeText: 'x',
+                showButtonPanel: true,
+                showOn: "focus",
+                dateFormat: 'd M yy',
+                altField: '#' + $(this).attr('id').replace('-alt', ''),
+                altFormat: 'yy-mm-dd',
+                mandatory: $(this).hasClass('required'),
+                changeMonth: true,
+                changeYear: true,
+                yearRange: '-95:+0'
+            });
+        });
+    };
+
+    //    var datePickerSettings = ;
+
+    if ($(this).find('input.jqDatePicker').exists()) {
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        $(this).find('input.jqDatePicker').each(function (i) {
+            $(this).datepicker({
+                closeAtTop: false,
+                closeText: 'x',
+                showButtonPanel: true,
+                showOn: "focus",
+                dateFormat: 'd M yy',
+                altField: '#' + $(this).attr('id').replace('-alt', ''),
+                altFormat: 'yy-mm-dd',
+                mandatory: $(this).hasClass('required')
+            });
+        });
+    };
+
+    if ($(this).find('.btn-file').exists()) {
+
+        $(document).on('change', '.btn-file :file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        $(document).ready(function () {
+            $('.btn-file :file').on('fileselect', function (event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if (input.length) {
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
+            });
+        });
+    };
+
+    //---------------------- Slider ----------------------------
+
+    $(this).find('div.slider').each(function (i) {
+        $(this).slider({
+            range: 'min',
+            value: parseInt($(this).children('span.val').text()),
+            min: parseInt($(this).children('span.min').text()),
+            max: parseInt($(this).children('span.max').text()),
+            step: parseInt($(this).children('span.step').text()),
+            slide: function (event, ui) {
+                $("#" + $(this).children('span.ref').text()).val(ui.value);
+            }
+        });
+    });
+
+    /*----------------------Colourpicker----------------------------*/
+
+    if ($(this).find('input.colorPicker').exists()) {
+        $(this).find('input.colorPicker').ColorPickerSliders({
+            hsvpanel: true,
+            previewformat: 'hex',
+            placement: 'bottom',
+            size: 'large'
+        });
+    }
+    /*----------------------GoogleProductCategories----------------------------*/
+
+
+    $(this).find('textarea[maxlength]').keyup(function () {
+        //get textarea text and maxlength attribute value
+        var t = $(this);
+        var text = t.val();
+        var limit = t.attr('maxlength');
+        //if textarea text is greater than maxlength limit, truncate and re-set text
+        if (text.length > limit) {
+            text = text.substring(0, limit);
+            t.val(text);
+        }
+    });
+
+    $(this).find("textarea[class^='maxwords-'],textarea[class*=' maxwords-']").each(function () {
+        var t = $(this);
+        var sClass = t.attr('class');
+        var maxwords = parseInt(/maxwords-(\d+)/.exec(sClass)[1], 10);
+        $(this).textareaCounter({
+            limit: maxwords
+        });
+    })
+
+    /*----------------------StrongPasswords----------------------------*/
+    if (typeof password_strength == 'function') {
+        var myPSPlugin = $("input.strongPassword").password_strength();
+    }
+
+    $(this).find("input.strongPassword").closest("form").find(".button").click(function () {
+
+        if (myPSPlugin.metReq()) {
+            return true;
+        }
+        else {
+            //alert("Password not strong engough!")
+            displayErrorMessage('Password not strong engough!', 'fa fa-info-circle');
+            return false;
+        }
+        //return myPSPlugin.metReq(); //return true or false
+    });
+
+    $(this).find("[id$='passwordPolicy']").click(function (event) {
+        var width = 200, height = 400, left = (screen.width / 2) - (width / 2),
+            top = (screen.height / 2) - (height / 2);
+        window.open("/ewcommon/tools/passwordpolicydisplay.ashx", 'Password_policy', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+        event.preventDefault();
+        return false;
+    });
+
+    if ($(this).find('input#onLoad').exists()) {
+        $(this).find('input#onLoad').each(function (i) {
+            var t = $(this);
+            var text = t.val();
+            // alert(text);
+            eval(text);
+        });
+    };
+
+    if ($(this).find('select.submit-on-select').exists()) {
+        $(this).find('select.submit-on-select').each(function (i) {
+            $(this).change(function () {
+                $(this).closest('form').submit();
+            });
+        });
+    }
+
+    if ($(this).find('.contentLocations').exists()) {
+        $(this).find('.contentLocations').each(function (i) {
+            var classString = $(this).attr('class').match(/([^\?]*)pickLimit\-(\d*)/);
+            var cbLimit = classString[2];
+            //  alert(cbLimit);
+            $(this).accordion({
+                header: 'legend',
+                collapsible: true,
+                autoHeight: false
+            });
+            $(this).prepend('<div class="selectedValues"></div>');
+            var $checkboxes_to_limit = $('input', this);
+            $('input', this).each(function (i) {
+                if ($(this).is(':checked')) {
+                    // add to selected values
+                    $(this).parent().children('label').clone().insertAfter($(this).closest('.contentLocations').children('.selectedValues').children('h4'))
+
+                    if (cbLimit > 0) {
+                        if ($checkboxes_to_limit.filter(":checked").length >= cbLimit) {
+                            $checkboxes_to_limit.not(":checked").attr("disabled", "disabled");
+                        }
+                        else {
+                            $checkboxes_to_limit.removeAttr("disabled");
+                        }
+                    }
+                }
+                $(this).click(function (i) {
+                    //alert($(this).clone().wrap('<div></div>').parent().html());
+                    //$(this).closest('.contentLocations').prepend($(this).parent().clone().wrap('<div></div>').parent().html())
+                    if ($(this).is(':checked')) {
+                        // add to selected values
+                        $(this).parent().children('label').clone().insertAfter($(this).closest('.contentLocations').children('.selectedValues').children('h4'))
+                        if (cbLimit > 0) {
+                            if ($checkboxes_to_limit.filter(":checked").length >= cbLimit) {
+                                $checkboxes_to_limit.not(":checked").attr("disabled", "disabled");
+                            }
+                            else {
+                                $checkboxes_to_limit.removeAttr("disabled");
+                            }
+                        }
+                    }
+                    else {
+                        // remove from selectedValues
+                        var forValue = $(this).parent().children('label').attr('for');
+                        //alert(forValue);
+                        $(this).closest('.contentLocations').children('.selectedValues').children('label[for*="' + forValue + '"]').remove();
+                        if (cbLimit > 0) {
+                            if ($checkboxes_to_limit.filter(":checked").length >= cbLimit) {
+                                $checkboxes_to_limit.not(":checked").attr("disabled", "disabled");
+                            }
+                            else {
+                                $checkboxes_to_limit.removeAttr("disabled");
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    };
+
+};

@@ -122,13 +122,12 @@
                 </input>
               </group>
               <group class="inline-4col">
-                <select bind="cConstrainProportions" appearance="full">
+                <select bind="cConstrainProportions" appearance="full" class="constrain-proportions">
                   <item>
                     <label>Constrain proportions</label>
                     <value>true</value>
                   </item>
                 </select>
-                <script type="text/javascript">initialiseConstrainProportions('cConstrainProportions','cResizeImage_2','cImageWidth','cImageHeight','cContentImage');</script>
                 <select bind="cCrop" appearance="full">
                   <item>
                     <label>Crop</label>

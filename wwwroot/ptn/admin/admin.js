@@ -78,7 +78,7 @@ $(document).ready(function () {
 
     initialiseGeocoderButton();
 
-    $('form.ewXform').prepareAdminXform();
+    $('form.xform').prepareAdminXform();
 
     //$(document).prepareEditable();
 
@@ -372,8 +372,6 @@ $(document).ready(function () {
 
     setEditImage();
 
-
-
     $('.update-content-value-dd').each(function () {
 
         $(this).find('li a').click(function () {
@@ -440,6 +438,13 @@ $(document).ready(function () {
         } else {
             $(".select-all").prop('checked', false);
         }
+    });
+
+    $('a[data-bs-toggle="modal"]').on('click', function (e) {
+        e.preventDefault();
+        var link = $(this)
+        var content = $(link.attr('data-bs-target') + " .modal-content");
+        content.load(link.attr("href"));
     });
 
 });
@@ -584,7 +589,6 @@ $.fn.prepareAdminXform = function () {
         });
     }
 
-
     if ($(this).find('select.fontSelect').exists()) {
         $(this).find('select.fontSelect').each(function (i) {
 
@@ -633,18 +637,11 @@ $.fn.prepareAdminXform = function () {
         });
     }
 
-    // $('.ewXform label').each(function () {
-    //     if ($(this).parent().is('span.radiocheckbox')) {
-
-    //      }
-    //     else {
-    // think of a better method, this screws design when there is HTML in a label, 
-    //typically: 
-    //      <p>TEXT</p>
-    //      :
-    //$(this).append(':')
-    //     }
-    //  });
+    if ($(this).find('input.constrain-proportions').exists()) {
+        $(this).find('input.constrain-proportions').each(function (i) {
+            initialiseConstrainProportions('cConstrainProportions', 'cResizeImage_2', 'cImageWidth', 'cImageHeight', 'cContentImage');
+        });
+    }
 
     //---------------------- Datepicker ----------------------------
 
@@ -674,8 +671,6 @@ $.fn.prepareAdminXform = function () {
             });
         });
     };
-
-    //    var datePickerSettings = ;
 
     if ($(this).find('input.jqDatePicker').exists()) {
         $.datepicker.setDefaults($.datepicker.regional['']);
@@ -807,6 +802,194 @@ function updatePreviewImage(formRef, fieldRef) {
     previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + fieldRef + '();return false" title="edit an image from the image library" class="btn btn-sm btn-primary"><i class="fa-picture-o fa-white"> </i> Edit</a>' + imgtag;
 }
 
+/*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */
+function showDependant(dependant, allDependants) {
+
+    // Hide unwanted Dependants
+    $("." + allDependants).addClass('hidden');
+
+    // Make required inactive to avoid JS validation
+    $("." + allDependants).find('.required').each(function () {
+        $(this).removeClass('required');
+        $(this).addClass('reqinactive');
+    })
+
+    // Make all now hidden fields inactive so values are lost when submitted.
+    $("." + allDependants).find(":input").not(':button').not(':submit').each(function () {
+        var fieldName = $(this).attr('name');
+        var tempFieldName = fieldName + '~inactive';
+        //    alert("hide as " + tempFieldName);
+        $(this).attr('name', tempFieldName);
+        //   $(this).attr('id', $(this).attr('id') + '~inactive');
+    });
+
+    // Show wanted Dependants
+    $("#" + dependant).removeClass('hidden');
+
+    // Find all inactive required fields and make required again for JS Validation
+    $("#" + dependant).find('.reqinactive').each(function () {
+        $(this).removeClass('reqinactive');
+        $(this).addClass('required');
+    });
+
+    // Find all inactive inputs, and re-activate,
+    $("#" + dependant).find(":input").not(':button').not(':submit').each(function () {
+        var fieldName = $(this).attr('name');
+        var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('name', tempFieldName);
+
+        var fieldId = $(this).attr('id');
+        alert(fieldId);
+        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('id', tempFieldId);
+        //  alert("enable " + tempFieldName);
+        //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
+    });
+
+    $("#" + dependant).prepareXform();
+    $("#" + dependant).trigger('bespokeXform');
+
+
+
+}
+
+/*  USED IN ALL EW:xFORMS - To re-enable radio button functionality when renaming a radio button */
+function psuedoRadioButtonControl(sBindName, sBindToName, sBindToValue) {
+
+    $("input[id^='" + sBindName + "']").click(function () {
+
+        // Remove all checked
+        $("input[id^='" + sBindName + "']").attr('checked', '');
+
+        // Make selected checked
+        $(this).attr('checked', 'checked');
+
+        // If Pseudo radio clicked
+        if ($(this).val() == sBindToValue) {
+
+            // Assign value to hidden field
+            $("input[name='" + sBindToName + "'][type='hidden']").val(sBindToValue);
+
+            // Make pseudo input inactive, to avoid CSL with hidden input 
+            var fieldName = $(this).attr('name');
+            var tempFieldName = fieldName + '~inactive';
+            $(this).attr('name', tempFieldName);
+
+        }
+
+        // Else not Pseudo radio
+        else {
+
+            // Empty Hidden field
+            $("input[name='" + sBindToName + "'][type='hidden']").val('');
+
+            // re-activate pseudo radio
+            var fieldName = $("input[name^='" + sBindToName + "']").attr('name');
+            var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+            $("input[name^='" + sBindToName + "']").attr('name', tempFieldName);
+
+        }
+
+    });
+
+};
+
+
+/*  ==  Contrain proportions control on forms ================================================ */
+// sControlId = name of constrain control
+// sCaseID = id of switch
+// sWidthId = Input id of width value
+// sHeightId = Input id of height value
+// sImageFieldId - Input of the image that is being resized
+
+function initialiseConstrainProportions(sControlId, sCaseID, sWidthId, sHeightId, sImageFieldId) {
+    // set global var
+    window.bDimensionsConstrain = false;
+    window.nImageDimensionsRatio = 1;
+    if ($("input[name='" + sControlId + "']").is(":checked")) {
+        bDimensionsConstrain = true;
+        recalculateDimensionsRatio(sWidthId, sHeightId);
+    }
+    if ($("input[name^='" + sWidthId + "']").val() != '') {
+        recalculateDimensionsRatio(sWidthId, sHeightId);
+    }
+
+    // listeners for contrain tick
+    $("input[name^='" + sControlId + "']").change(function () {
+        if ($(this).is(":checked")) {
+            bDimensionsConstrain = true;
+            // reset ratio
+            recalculateDimensionsRatio(sWidthId, sHeightId);
+        } else {
+            bDimensionsConstrain = false;
+        }
+
+    });
+
+    // if resize values are empty, fill with existing image sizes
+    var bEmpty = true;
+    $("#" + sCaseID).change(function () {
+        bEmpty = true;
+        if ($("input[name^='" + sWidthId + "']").val() != '') {
+            bEmpty = false;
+        }
+        if ($("input[name^='" + sHeightId + "']").val() != '') {
+            bEmpty = false;
+        }
+        // if empty get dimensions
+        if (bEmpty) {
+            var imageTag = $("#" + sImageFieldId).val();
+            imageTag = $(imageTag);
+            var imageWidth = imageTag.attr('width');
+            var imageHeight = imageTag.attr('height');
+            $("input[name^='" + sWidthId + "']").val(imageWidth);
+            $("input[name^='" + sHeightId + "']").val(imageHeight);
+        }
+        // update global ratio
+        recalculateDimensionsRatio(sWidthId, sHeightId);
+    });
+
+
+    // listeners for key taps on width
+    $("input[name^='" + sWidthId + "']").keyup(function (event) {
+        if (bDimensionsConstrain) {
+            var nKeyPressed = Number(event.keyCode);
+            // only allow 0-9, backspace and delete
+            if ((nKeyPressed >= 48 && nKeyPressed <= 57) || (nKeyPressed >= 96 && nKeyPressed <= 105) || (nKeyPressed == 8 || nKeyPressed == 46)) {
+                var widthValue = $(this).val();
+                var newHeightValue = Math.round(widthValue * nImageDimensionsRatio);
+                $("input[name^='" + sHeightId + "']").val(newHeightValue);
+            } else {
+                // remove last character typed
+                var removeLastTyped = $(this).val().substring(0, ($(this).val().length - 1));
+                $(this).val(removeLastTyped);
+                //alert('This must be a whole number');
+                displayErrorMessage('This must be a whole number', 'fa fa-exclamation-triangle');
+            }
+        }
+    });
+    // listeners for key taps on height
+    $("input[name^='" + sHeightId + "']").keyup(function (event) {
+        if (bDimensionsConstrain) {
+            var nKeyPressed = Number(event.keyCode);
+            // only allow 0-9, backspace and delete
+            if ((nKeyPressed >= 48 && nKeyPressed <= 57) || (nKeyPressed >= 96 && nKeyPressed <= 105) || (nKeyPressed == 8 || nKeyPressed == 46)) {
+                var heightValue = $(this).val();
+                var newWidthValue = Math.round(heightValue / nImageDimensionsRatio);
+                $("input[name^='" + sWidthId + "']").val(newWidthValue);
+            } else {
+                // remove last character typed
+                var removeLastTyped = $(this).val().substring(0, ($(this).val().length - 1));
+                $(this).val(removeLastTyped);
+                // alert('This must be a whole number');
+                displayErrorMessage('This must be a whole number', 'fa fa-exclamation-triangle');
+            }
+        }
+    });
+}
+function recalculateDimensionsRatio(sWidthId, sHeightId) {
+    nImageDimensionsRatio = Number($("input[name^='" + sHeightId + "']").val()) / Number($("input[name^='" + sWidthId + "']").val());
+}
 
 function markAsRead(userId, artId) {
     var logActivityAPIUrl = "/ewapi/Cms.Content/LogActivity";
