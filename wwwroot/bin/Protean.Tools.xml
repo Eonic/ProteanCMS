@@ -18,6 +18,22 @@ Protean.Tools
  </summary>
  <remarks></remarks>
 </member>
+<member name="M:Protean.Tools.CounterCollection.Add(System.String)">
+ <summary>
+ Creates a counter by counter name and adds it to the collection
+ </summary>
+ <param name="counterName">The name of the counter</param>
+ <returns>Returns the actual Counter object</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Tools.CounterCollection.Add(Protean.Tools.Counter)">
+ <summary>
+ Adds a counter by object
+ </summary>
+ <param name="value">The counter object to add</param>
+ <returns>The index of counter in the collection</returns>
+ <remarks></remarks>
+</member>
 <member name="T:Protean.Tools.DelegateWrappers.PredicateWrapperDelegate`2">
  <summary>
  
@@ -28,6 +44,27 @@ Protean.Tools
  <param name="argument"></param>
  <returns></returns>
  <remarks>From http://www.paulstovell.com/vb-anonymous-methods</remarks>
+</member>
+<member name="M:Protean.Tools.Dictionary.getSimpleHashTable(System.String)">
+ <summary>
+     Creates a hashtable based on a colon and comma separated list of key/value string pairs.
+ </summary>
+ <param name="cCSVString">Format is "key1:value1,key2:value2,key3:value3 etc.</param>
+ <returns>Hashtable</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Tools.Dictionary.hashtableToCSV(System.Collections.Hashtable@,Protean.Tools.Dictionary.Dimension,System.Char)">
+ <summary>
+    Creates a CSV from a hashtable.
+    If the key/value cannot be converted to a string, then this will fail.
+    If the key/value contains the separator then it will be removed.
+    
+ </summary>
+ <param name="hashTableToConvert">The hashtable to convert</param>
+ <param name="dimension">Determines whether to use the keys or values in the list </param>
+ <param name="separator">The separator character</param>
+ <returns>A CSV list of the hastable key or values</returns>
+ <remarks></remarks>
 </member>
 <member name="T:Protean.Tools.IFilter.IFilterReturnCodes">
  
