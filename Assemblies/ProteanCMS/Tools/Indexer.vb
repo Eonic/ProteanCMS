@@ -130,7 +130,7 @@ Public Class Indexer
     End Function
 
     Public Sub DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False)
-        nPage = 59
+        'nPage = 59
         PerfMon.Log("Indexer", "DoIndex")
         Dim cProcessInfo As String = ""
         Dim cPageHtml As String = ""
