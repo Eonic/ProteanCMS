@@ -8698,10 +8698,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Function
 
-        Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String) As String
+        Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String, ByVal AmountToDiscount As Decimal) As String
             Try
                 Dim cSqlUpdate As String
-                cSqlUpdate = " update tblCartItem set  cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
+                ' cSqlUpdate = " update tblCartItem set nPrice=0.00, nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
+                cSqlUpdate = " update tblCartItem set nPrice=" & AmountToDiscount & ", nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
                 moDBHelper.ExeProcessSql(cSqlUpdate)
 
             Catch ex As Exception
@@ -8709,6 +8710,16 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
+        Private Function updatePackagingForRemovingFreeGiftDiscount(ByVal nCartOrderId As String, ByVal AmountToDiscount As Decimal) As String
+            Try
+                Dim cSqlUpdate As String
+                cSqlUpdate = " update tblCartItem set nDiscountValue=" & AmountToDiscount & " where  nitemid=0 and nCartOrderId = " & nCartOrderId
+                moDBHelper.ExeProcessSql(cSqlUpdate)
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, , "", gbDebug)
+            End Try
+        End Function
 
         Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
             Try
