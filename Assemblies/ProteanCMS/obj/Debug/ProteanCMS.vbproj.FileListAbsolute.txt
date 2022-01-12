@@ -1484,10 +1484,8 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwit
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Msie.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
