@@ -813,14 +813,19 @@ Partial Public Class Cms
                         If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
                             myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value, AmountToDiscount)
                             'when shipping is Evoucher and giftbox promo is applied then change shipping to First class 
-                            Dim sSql As String
-                            Dim strSQL As New Text.StringBuilder
-                            Dim oDs As DataSet
-                            sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
-                            oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
-                            If (oDs.Tables(0).Rows(0)("nShippingMethodId") = "1") Then
-                                myCart.updateGCgetValidShippingOptionsDS("65")
+                            If moConfig("ShippingSettingForGiftboxPromocode") IsNot Nothing And moConfig("ShippingSettingForGiftboxPromocode") = "on" Then
+                                Dim sSql As String
+                                Dim strSQL As New Text.StringBuilder
+                                Dim oDs As DataSet
+                                sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
+                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                                If moConfig("EvoucherShippingMethod") IsNot Nothing And moConfig("RoyalMailShippingMethod") IsNot Nothing Then
+                                    If (oDs.Tables(0).Rows(0)("nShippingMethodId") = moConfig("EvoucherShippingMethod")) Then
+                                        myCart.updateGCgetValidShippingOptionsDS(moConfig("RoyalMailShippingMethod"))
+                                    End If
+                                End If
                             End If
+
                         End If
                     Next
                 Catch ex As Exception
