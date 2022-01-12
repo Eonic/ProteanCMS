@@ -837,13 +837,9 @@ function showDependant(dependant, allDependants) {
         var fieldName = $(this).attr('name');
         var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
         $(this).attr('name', tempFieldName);
-
         var fieldId = $(this).attr('id');
-        alert(fieldId);
         var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
         $(this).attr('id', tempFieldId);
-        //  alert("enable " + tempFieldName);
-        //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
     });
 
     $("#" + dependant).prepareXform();
@@ -1141,8 +1137,6 @@ Original preload function has been kept but is unused.
 
                 $(this).removeClass('collapsable-hitarea').addClass('expandable-hitarea');
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-right');
-
-                alert('empty');
 
                 // Remove the child tree
 
@@ -1452,7 +1446,7 @@ Original preload function has been kept but is unused.
 
         moveTop: function (moveId) {
             var moveIdNode = "node" + moveId;
-            alert(moveId);
+            //alert(moveId);
             if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
                 $('#MenuTree li#' + moveIdNode).addClass("locked");
                 $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
@@ -2366,7 +2360,7 @@ function ValidateContentForm(event) {
 function RedirectClick(redirectType) {
 
     //var redirectType = $("redirectType").val();
-    alert(redirectType);
+    //alert(redirectType);
     if (redirectType == "404Redirect") {
         $("input[name*='redirectOption']").val("");
         if ($(".btnSubmitPage").length > 0) {
@@ -2468,7 +2462,7 @@ $(document).on("click", "#btnYescreateRuleForChild", function (event) {
 
     var pageId = $(".hiddenPageId").val();
     var redirectType = $("input[name*='redirectOption']").val();
-    alert(redirectType);
+    //alert(redirectType);
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
@@ -2619,7 +2613,7 @@ if (editProductElement > 0) {
                     localStorage.removeItem('originalPathName');
                 }
                 localStorage.pageId = productId;
-                alert(this.urlPathInput);
+                //alert(this.urlPathInput);
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
