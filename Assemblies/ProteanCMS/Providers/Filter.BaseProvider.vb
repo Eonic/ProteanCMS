@@ -173,6 +173,8 @@ Namespace Providers
 
             Public Class Filters
 
+
+
                 Private Const mcModuleName As String = "Protean.Providers.Filter.DefaultProvider.Filters"
 
                 'Work 3 Ways
@@ -187,61 +189,75 @@ Namespace Providers
                 '' Product list module
 
 
-                Public Sub PageFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
-                    Try
 
-                        Dim nPageId As Integer = 0
-                        Dim cWhereSql As String = String.Empty
-                        If (oFilterNode.SelectNodes("Filter/PageId") Is Nothing) Then
-                            nPageId = oFilterNode.SelectNodes("Filter/PageId").ToString()
-                        End If
+                Public Sub PageFilter(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+                        Try
+                            Dim pageFilterSelect As XmlElement
+                            Dim oDr As SqlDataReader
+                        'Create Stored procedure 
+                        'oDr
+                        'Adding controls to the form like dropdown, radiobuttons
+                        pageFilterSelect = oXform.addSelect1(oFromGroup, "PageFilter", False, "Select By Page")
+                            oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr)
 
 
-                        Dim oMenuItem As XmlElement
-                        If (nPageId <> 0) Then
-                            'Dim oMenuElmt As XmlElement = aWeb.GetStructureXML(aWeb.mnUserId, nPageId, 0, "Site", False, False, False, True, False, "MenuItem", "Menu")
-                            Dim oSubMenuList As XmlNodeList = aWeb.moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & nPageId & "']").SelectNodes("MenuItem")
-                            For Each oMenuItem In oSubMenuList
-                                cWhereSql = cWhereSql + oMenuItem.Attributes("id").InnerText.ToString() + ","
-                            Next
-                            'call sp and return xml data
-                            If (cWhereSql <> String.Empty) Then
-                                cWhereSql = cWhereSql.Substring(0, cWhereSql.Length - 1)
-                                cWhereSql = " nStructId IN (" + cWhereSql + ")"
-                                aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
+                            'Dim nPageId As Integer = 0
+                            Dim cWhereSql As String = String.Empty
+                            'If (oFilterNode.SelectNodes("Filter/PageId") Is Nothing) Then
+                            '    nPageId = oFilterNode.SelectNodes("Filter/PageId").ToString()
+                            'End If
+
+
+
+                            Dim oMenuItem As XmlElement
+                            If (nPageId <> 0) Then
+
+                                'Dim oMenuElmt As XmlElement = aWeb.GetStructureXML(aWeb.mnUserId, nPageId, 0, "Site", False, False, False, True, False, "MenuItem", "Menu")
+                                Dim oSubMenuList As XmlNodeList = aWeb.moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & nPageId & "']").SelectNodes("MenuItem")
+                                For Each oMenuItem In oSubMenuList
+                                    cWhereSql = cWhereSql + oMenuItem.Attributes("id").InnerText.ToString() + ","
+                                Next
+                                If (cWhereSql = String.Empty) Then
+                                    cWhereSql = cWhereSql + nPageId.ToString() + ","
+                                End If
+                                'call sp and return xml data
+                                If (cWhereSql <> String.Empty) Then
+                                    cWhereSql = cWhereSql.Substring(0, cWhereSql.Length - 1)
+                                    cWhereSql = " nStructId IN (" + cWhereSql + ")"
+                                    aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
+                                End If
+
                             End If
 
-                        End If
+                        Catch ex As Exception
 
-                    Catch ex As Exception
+                        End Try
+                    End Sub
 
-                    End Try
-                End Sub
+                    Sub PriceRangeFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
 
-                Sub PriceRangeFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
+                        ' sets a low and high price returns 
 
-                    ' sets a low and high price returns 
-
-                End Sub
+                    End Sub
 
 
-                Sub BrandFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
-                    ' will not be required for ITB
+                    Sub BrandFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
+                        ' will not be required for ITB
 
 
-                End Sub
+                    End Sub
 
-                Sub InStockFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
-                    ' will not be required for ITB
+                    Sub InStockFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
+                        ' will not be required for ITB
 
 
-                End Sub
+                    End Sub
+
+
+                End Class
 
 
             End Class
-
-
-        End Class
 
 
     End Namespace
