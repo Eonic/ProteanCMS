@@ -3774,9 +3774,6 @@
         </li>
   </xsl:template>
 
-	<xsl:template match="Content[@type='PageFilter']" mode="displayBrief">
-		Hello
-	</xsl:template>
 	
 
   <!-- NewsArticle Brief -->
