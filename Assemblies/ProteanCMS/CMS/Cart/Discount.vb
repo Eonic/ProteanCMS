@@ -710,12 +710,7 @@ Partial Public Class Cms
                             If oDiscountLoop.GetAttribute("nDiscountRemaining") <> "" Then
                                 AmountToDiscount = oDiscountLoop.GetAttribute("nDiscountRemaining")
                             End If
-                            'if freegiftbox is applied and discount is there then do not give discount from basket, reduce it from experience
-                            'If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
-                            '    nNewPrice = nNewPrice
-                            'Else
-                            '    nNewPrice = nNewPrice - (AmountToDiscount / oItemLoop.GetAttribute("quantity"))
-                            'End If
+
 
                             nNewPrice = nNewPrice - (AmountToDiscount / oItemLoop.GetAttribute("quantity"))
 
@@ -808,20 +803,20 @@ Partial Public Class Cms
                         Next
 
 
-                        'set packaging option to giftbox after applied promocode
+                        'Code for setting default delivery option if discount code option is 'Giftbox'
 
                         If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
                             myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value, AmountToDiscount)
-                            'when shipping is Evoucher and giftbox promo is applied then change shipping to First class 
-                            If moConfig("ShippingSettingForGiftboxPromocode") IsNot Nothing And moConfig("ShippingSettingForGiftboxPromocode") = "on" Then
+
+                            If moConfig("GiftBoxDiscount") IsNot Nothing And moConfig("GiftBoxDiscount") = "on" Then
                                 Dim sSql As String
                                 Dim strSQL As New Text.StringBuilder
                                 Dim oDs As DataSet
                                 sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
                                 oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
-                                If moConfig("EvoucherShippingMethod") IsNot Nothing And moConfig("RoyalMailShippingMethod") IsNot Nothing Then
-                                    If (oDs.Tables(0).Rows(0)("nShippingMethodId") = moConfig("EvoucherShippingMethod")) Then
-                                        myCart.updateGCgetValidShippingOptionsDS(moConfig("RoyalMailShippingMethod"))
+                                If moConfig("eShippingMethodId") IsNot Nothing And moConfig("DefaultShippingMethodId") IsNot Nothing Then
+                                    If (oDs.Tables(0).Rows(0)("nShippingMethodId") = moConfig("eShippingMethodId")) Then
+                                        myCart.updateGCgetValidShippingOptionsDS(moConfig("DefaultShippingMethodId"))
                                     End If
                                 End If
                             End If

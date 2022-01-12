@@ -594,56 +594,56 @@ Partial Public Class Cms
             End Function
 
 
-            Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Dictionary(Of String, String)) As String
-                Try
-                    'Submit the address form as per Cart > Apply > Billing
-                    myCart.mcCartCmd = "Billing"
-                    myCart.apply()
+            'Public Function SubmitAddressForm(ByRef myApi As Protean.API, ByRef jObj As Dictionary(Of String, String)) As String
+            '    Try
+            '        'Submit the address form as per Cart > Apply > Billing
+            '        myCart.mcCartCmd = "Billing"
+            '        myCart.apply()
 
-                    'assigning gateway
-                    If (myApi.moRequest("paymentTypeValue") IsNot Nothing) Then
-                        myCart.mcPaymentMethod = myApi.moRequest("paymentTypeValue") 'JudoPay payment method
-                        myWeb.moSession.Remove("mcPaymentMethod")
-                        myWeb.moSession.Add("mcPaymentMethod", myApi.moRequest("paymentTypeValue"))
-                    Else
-                        Return "Error"
-                    End If
+            '        'assigning gateway
+            '        If (myApi.moRequest("paymentTypeValue") IsNot Nothing) Then
+            '            myCart.mcPaymentMethod = myApi.moRequest("paymentTypeValue") 'JudoPay payment method
+            '            myWeb.moSession.Remove("mcPaymentMethod")
+            '            myWeb.moSession.Add("mcPaymentMethod", myApi.moRequest("paymentTypeValue"))
+            '        Else
+            '            Return "Error"
+            '        End If
 
-                    If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
-                        myCart.mnProcessId = 4
-                    ElseIf myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Billing Address']") Is Nothing Then
-                        myCart.mnProcessId = 5
-                    End If
+            '        If myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Shipping Address']") Is Nothing Then
+            '            myCart.mnProcessId = 4
+            '        ElseIf myCart.mcPaymentMethod <> "" And Not myCart.moCartXml.SelectSingleNode("Order/Contact[@type='Billing Address']") Is Nothing Then
+            '            myCart.mnProcessId = 5
+            '        End If
 
-                    'get updated cart
-                    Dim moPageXml As XmlDocument
-                    moPageXml = myWeb.moPageXml
-                    Dim oCartXML As XmlDocument = moPageXml
-                    Dim oElmt As XmlElement
-                    Dim oContentElmt As XmlElement
-                    oContentElmt = myCart.CreateCartElement(oCartXML)
-                    oElmt = oContentElmt.FirstChild
-                    myCart.GetCart(oElmt)
+            '        'get updated cart
+            '        Dim moPageXml As XmlDocument
+            '        moPageXml = myWeb.moPageXml
+            '        Dim oCartXML As XmlDocument = moPageXml
+            '        Dim oElmt As XmlElement
+            '        Dim oContentElmt As XmlElement
+            '        oContentElmt = myCart.CreateCartElement(oCartXML)
+            '        oElmt = oContentElmt.FirstChild
+            '        myCart.GetCart(oElmt)
 
-                    Dim jsonString As String = ""
-                    If (myCart.mcPaymentMethod = "JudoPay") Then
-                        'paymentform 
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod)
-                        Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
-                        ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, myCart, oElmt)
-                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(ccPaymentXform.moXformElmt, Newtonsoft.Json.Formatting.Indented)
-                        jsonString = jsonString.Replace("""@", """_")
-                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
-                    ElseIf (myCart.mcPaymentMethod = "GooglePay") Then
+            '        Dim jsonString As String = ""
+            '        If (myCart.mcPaymentMethod = "JudoPay") Then
+            '            'paymentform 
+            '            Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, myCart.mcPaymentMethod)
+            '            Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
+            '            ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, myCart, oElmt)
+            '            jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(ccPaymentXform.moXformElmt, Newtonsoft.Json.Formatting.Indented)
+            '            jsonString = jsonString.Replace("""@", """_")
+            '            jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+            '        ElseIf (myCart.mcPaymentMethod = "GooglePay") Then
 
-                    End If
+            '        End If
 
-                    Return jsonString
-                    'Return "true"
-                Catch ex As Exception
-                    Return "error" 'ex.Message
-                End Try
-            End Function
+            '        Return jsonString
+            '        'Return "true"
+            '    Catch ex As Exception
+            '        Return "error" 'ex.Message
+            '    End Try
+            'End Function
 
             Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double, ByVal ShippingType As String) As String
                 Try
