@@ -257,8 +257,8 @@ $.fn.prepareXform = function () {
 
     //---------------------- Datepicker ----------------------------
 
-    $(this).find('input.hasDatepicker').datepicker('destroy');
-    $(this).find('input.hasDatepicker').removeClass('hasDatepicker');
+   // $(this).find('input.hasDatepicker').datepicker('destroy');
+   // $(this).find('input.hasDatepicker').removeClass('hasDatepicker');
 
 
     //---------------------- DOBpicker ----------------------------

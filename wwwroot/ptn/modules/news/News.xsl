@@ -35,7 +35,9 @@
           <xsl:text>clearfix NewsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <!--<div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >-->
+        <div data-slick="{{'slidesToShow': 4, 'slidesToScroll': 4}}" >
+        
         <!--responsive columns-->
         <xsl:apply-templates select="." mode="contentColumns"/>
         
