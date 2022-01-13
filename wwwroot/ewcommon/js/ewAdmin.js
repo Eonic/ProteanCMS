@@ -2164,7 +2164,7 @@ function ValidateContentForm(event) {
 function RedirectClick(redirectType) {
     
     //var redirectType = $("redirectType").val();
-    alert(redirectType);
+    //alert(redirectType);
     if (redirectType == "404Redirect") {
         $("input[name*='redirectOption']").val("");
         if ($(".btnSubmitPage").length > 0) {
@@ -2266,7 +2266,7 @@ $(document).on("click", "#btnYescreateRuleForChild", function (event) {
 
     var pageId = $(".hiddenPageId").val();
     var redirectType = $("input[name*='redirectOption']").val();
-    alert(redirectType);
+   // alert(redirectType);
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
@@ -2388,7 +2388,9 @@ $(document).ready(function () {
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
     }
     if ($("#MenuTree") != undefined) {
-        scrollToAnchor($("#MenuTree li.active").prop("id"));
+        if ($("#MenuTree li.active").prop("id") != undefined) {
+            scrollToAnchor($("#MenuTree li.active").prop("id"));
+        }
     }
 });
 
@@ -2431,7 +2433,7 @@ if (editProductElement > 0) {
                     localStorage.removeItem('originalPathName');
                 }
                 localStorage.pageId = productId;
-                alert(this.urlPathInput);
+             //   alert(this.urlPathInput);
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
