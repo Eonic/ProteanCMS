@@ -699,15 +699,19 @@ Partial Public Class Cms
                             oPriceElmt.SetAttribute("TotalSaving", 0)
                             oItemLoop.AppendChild(oPriceElmt)
                         End If
+
+                        Dim AmountToDiscount As Decimal
                         'loop through the basic money discounts'
                         For Each oDiscountLoop In oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=0 and @nDiscountCat=1 and not(@Applied='1')]")
                             'now work out new unit prices etc
 
                             Dim nNewPrice As Decimal = oPriceElmt.GetAttribute("UnitPrice")
-                            Dim AmountToDiscount As Decimal = oDiscountLoop.GetAttribute("nDiscountValue")
+                            AmountToDiscount = oDiscountLoop.GetAttribute("nDiscountValue")
                             If oDiscountLoop.GetAttribute("nDiscountRemaining") <> "" Then
                                 AmountToDiscount = oDiscountLoop.GetAttribute("nDiscountRemaining")
                             End If
+
+
                             nNewPrice = nNewPrice - (AmountToDiscount / oItemLoop.GetAttribute("quantity"))
 
                             If nNewPrice > 0 And bApplyOnTotal = False Then 'only apply it if its not gonna go below 0
@@ -787,7 +791,6 @@ Partial Public Class Cms
                                             If (AmountToDiscount = 0) Then
                                                 bApplyOnTotal = True
                                             Else
-
                                                 bApplyOnTotal = False
                                                 oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - RemainingAmountToDiscount)
                                             End If
@@ -800,9 +803,24 @@ Partial Public Class Cms
                         Next
 
 
-                        'set packaging option to giftbox after applied promocode
+                        'Code for setting default delivery option if discount code option is 'Giftbox'
+
                         If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
-                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value)
+                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value, AmountToDiscount)
+
+                            If moConfig("GiftBoxDiscount") IsNot Nothing And moConfig("GiftBoxDiscount") = "on" Then
+                                Dim sSql As String
+                                Dim strSQL As New Text.StringBuilder
+                                Dim oDs As DataSet
+                                sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
+                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                                If moConfig("eShippingMethodId") IsNot Nothing And moConfig("DefaultShippingMethodId") IsNot Nothing Then
+                                    If (oDs.Tables(0).Rows(0)("nShippingMethodId") = moConfig("eShippingMethodId")) Then
+                                        myCart.updateGCgetValidShippingOptionsDS(moConfig("DefaultShippingMethodId"))
+                                    End If
+                                End If
+                            End If
+
                         End If
                     Next
                 Catch ex As Exception
