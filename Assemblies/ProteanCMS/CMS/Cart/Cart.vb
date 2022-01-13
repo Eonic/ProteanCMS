@@ -3017,7 +3017,6 @@ processFlow:
                                 oCartElmt.SetAttribute("payableType", "settlement")
                             End If
 
-
                             If nPayable = 0 Then
                                 oCartElmt.SetAttribute("ReadOnly", "On")
                             End If

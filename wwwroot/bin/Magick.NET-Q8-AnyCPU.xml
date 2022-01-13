@@ -5469,6 +5469,11 @@
             Gets or sets a the maximum font pointsize (caption:max-pointsize).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.CaptionReadDefines.StartFontPointsize">
+            <summary>
+            Gets or sets a the start font pointsize (caption:start-pointsize).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.CaptionReadDefines.Defines">
             <summary>
             Gets the defines that should be set as a define on an image.
@@ -5560,6 +5565,51 @@
             Gets the defines that should be set as a define on an image.
             </summary>
         </member>
+        <member name="T:ImageMagick.Formats.DngInterpolation">
+            <summary>
+            Defines the dng interpolation quality.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Disabled">
+            <summary>
+            Interpolation will be disabled.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Linear">
+            <summary>
+            Linear interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Vng">
+            <summary>
+            VNG interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Ppg">
+            <summary>
+            PPG interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Ahd">
+            <summary>
+            AHD interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Dcb">
+            <summary>
+            DCB interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.Dht">
+            <summary>
+            DHT interpolation.
+            </summary>
+        </member>
+        <member name="F:ImageMagick.Formats.DngInterpolation.ModifiedAhd">
+            <summary>
+            Modified AHD interpolation (by Anton Petrusevich).
+            </summary>
+        </member>
         <member name="T:ImageMagick.Formats.DngOutputColor">
             <summary>
             Defines the dng output colors.
@@ -5615,6 +5665,11 @@
             Gets or sets a value indicating wether auto brightness should be used (dng:no-auto-bright).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.DngReadDefines.InterpolationQuality">
+            <summary>
+            Gets or sets a value indicating the interpolation quality (dng:interpolation-quality).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.OutputColor">
             <summary>
             Gets or sets the output color (dng:output-color).
@@ -5627,12 +5682,12 @@
         </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.UseAutoWhitebalance">
             <summary>
-            Gets or sets a value indicating wether auto whitebalance should be used (dng:use_auto_wb).
+            Gets or sets a value indicating wether auto whitebalance should be used (dng:use-auto-wb).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.UseCameraWhitebalance">
             <summary>
-            Gets or sets a value indicating wether the whitebalance of the camera should be used (dng:use_camera_wb).
+            Gets or sets a value indicating wether the whitebalance of the camera should be used (dng:use-camera-wb).
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.DngReadDefines.Defines">
@@ -6209,6 +6264,18 @@
             Gets or sets a value indicating whether alpha unblending should be enabled or disabled (psd:alpha-unblend).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.PsdReadDefines.PreserveOpacityMask">
+            <summary>
+            Gets or sets a value indicating whether the opacity mask of a layer should be preserved and add it back to
+            the layer when the image is saved. This option should only be used when converting from a PSD file to another
+            PSD file (psd:preserve-opacity-mask).
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.PsdReadDefines.ReplicateProfile">
+            <summary>
+            Gets or sets a value indicating whether the profile should be replicate to all the layers (psd:replicate-profile).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.PsdReadDefines.Defines">
             <summary>
             Gets the defines that should be set as a define on an image.
@@ -6539,6 +6606,11 @@
         <member name="P:ImageMagick.Formats.WebPWriteDefines.EmulateJpegSize">
             <summary>
             Gets or sets a value indicating wether a similar compression to that of JPEG but with less degradation should be used. (webp:emulate-jpeg-size).
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.WebPWriteDefines.Exact">
+            <summary>
+            Gets or sets a value indicating wether RGB values should be preserved in transparent area. It's disabled by default to help compressibility.
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.WebPWriteDefines.FilterSharpness">
@@ -13731,6 +13803,20 @@
             </summary>
             <param name="settings">The settings to copy the data from.</param>
         </member>
+        <member name="M:ImageMagick.MagickSettings.GetOption(System.String)">
+            <summary>
+            Gets an image option.
+            </summary>
+            <param name="key">The key of the option.</param>
+            <returns>The value of the option.</returns>
+        </member>
+        <member name="M:ImageMagick.MagickSettings.SetOption(System.String,System.String)">
+            <summary>
+            Sets an image option.
+            </summary>
+            <param name="key">The key of the option.</param>
+            <param name="value">The value of the option.</param>
+        </member>
         <member name="T:ImageMagick.MontageSettings">
             <summary>
             Class that contains setting for the montage operation.
@@ -14868,6 +14954,12 @@
         <member name="P:ImageMagick.MagickReadSettings.Height">
             <summary>
             Gets or sets the height.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.MagickReadSettings.SyncImageWithExifProfile">
+            <summary>
+            Gets or sets a value indicating whether the exif profile should be used to update some of the
+            properties of the image (e.g. <see cref="P:ImageMagick.IMagickImage.Density"/>, <see cref="P:ImageMagick.IMagickImage.Orientation"/>).
             </summary>
         </member>
         <member name="P:ImageMagick.MagickReadSettings.UseMonochrome">
