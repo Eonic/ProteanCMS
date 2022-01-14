@@ -419,3 +419,15 @@ form.xform {
     margin-top:7px;
     float:left;
 }
+//resource library
+.ewAdmin #files .popover-content {
+    width: 500px;
+
+    img {
+        max-width:100%;
+        width:400px;
+    }
+}
+.pick-image-responsive-popover {
+    width:400px;
+}

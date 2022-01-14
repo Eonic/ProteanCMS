@@ -66,7 +66,7 @@
                   <xsl:apply-templates select="submit" mode="xform"/>
                   <div class="footer-status">
                     <span>
-                      <i class="fas fa-eye"> </i> Live 
+                      <i class="fas fa-eye"> </i> Live
                     </span>
                     <span class="text-muted hidden">
                       <i class="fas fa-eye-slash"> </i> Hidden
@@ -115,7 +115,7 @@
   <xsl:template match="Content[ancestor::Page[@adminMode='true'] and count(group) = 1] | div[@class='xform' and count(group) = 1 and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action=""  novalidate="novalidate">
       <xsl:attribute name="class">
-        <xsl:text>xform card card-default needs-validation</xsl:text>
+        <xsl:text>xform needs-validation</xsl:text>
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>
@@ -143,14 +143,14 @@
         <xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
       </xsl:if>
       <xsl:if test="group/label[position()=1]">
-        <div class="card-header">
-          <h3 class="card-title">
+        <div>
+          <h3>
             <xsl:apply-templates select="group/label" mode="legend"/>
           </h3>
         </div>
       </xsl:if>
       <xsl:for-each select="group">
-        <div class="card-body">
+        <div>
           <xsl:choose>
             <xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
               <div class="row">
@@ -214,7 +214,7 @@
           <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
         </div>
         <xsl:if test="count(submit) &gt; 0">
-          <div class="card-footer clearfix">
+          <div class=" clearfix">
             <xsl:if test="ancestor-or-self::group/descendant-or-self::*[contains(@class,'required')]">
               <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
               <span class="required">
@@ -360,13 +360,13 @@
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
     <div id="modal-{$ref}" class="modal fade pickImageModal">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
             <xsl:text>Loading... </xsl:text>
-				</div>
-			</div>
-		</div>
+          </div>
+        </div>
+      </div>
     </div>
   </xsl:template>
 
@@ -1099,7 +1099,8 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
-    <div id="uploadFiles">test
+    <div id="uploadFiles">
+      test
       <xsl:choose>
         <xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
           <div class="drophere">Drag and drop files here to upload them</div>
