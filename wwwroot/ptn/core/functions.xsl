@@ -597,6 +597,7 @@
   <xsl:template match="Page" mode="commonJsFiles">
     <xsl:text>~/ptn/core/jquery/3.6.0/jquery.min.js,</xsl:text>
     <xsl:text>~/ptn/core/bs5/dist/js/bootstrap.bundle.min.js,</xsl:text>
+	<xsl:text>~/ptn/core/swiper/swiper-bundle.min.js,</xsl:text>
     <xsl:text>~/ptn/core/core.js,</xsl:text>
   </xsl:template>
 

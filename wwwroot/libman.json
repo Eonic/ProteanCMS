@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "library": "swiper@7.4.1",
+      "destination": "ptn/core/swiper/",
+      "files": [
+        "swiper.scss",
+        "swiper-bundle.min.js",
+        "swiper-bundle.css",
+        "swiper-bundle.js",
+        "swiper-vars.scss",
+        "LICENSE"
+      ]
+    }
+  ]
+}

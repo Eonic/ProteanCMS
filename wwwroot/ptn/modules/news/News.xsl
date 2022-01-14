@@ -1,85 +1,148 @@
-﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
   <!-- ############## News Articles ##############   -->
   
-    
-  
-  <!-- NewsArticle Module -->
-  <xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
-    <!-- Set Variables -->
-    <xsl:variable name="contentType" select="@contentType" />
-    <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-    <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-    <xsl:variable name="contentList">
-      <xsl:apply-templates select="." mode="getContent">
-        <xsl:with-param name="contentType" select="$contentType" />
-        <xsl:with-param name="startPos" select="$startPos" />
-      </xsl:apply-templates>
-    </xsl:variable>
-    <xsl:variable name="totalCount">
-      <xsl:choose>
-        <xsl:when test="@display='related'">
-          <xsl:value-of select="count(Content[@type=$contentType])"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <!--responsive columns variables-->
-    
-    <!--end responsive columns variables-->
-    <!-- Output Module -->
-    <div class="clearfix NewsList">
-      <xsl:if test="@carousel='true'">
-        <xsl:attribute name="class">
-          <xsl:text>clearfix NewsList content-scroller</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
-      <div data-slidestoshow="{@cols}" data-slideToScroll="1" data-dots="true" class="cols">
-        <!--<div data-slick="{{'slidesToShow': 4, 'slidesToScroll': 4}}" >-->
-        
-        <!--responsive columns
-		<xsl:apply-templates select="." mode="contentColumns"/>
-        -->
-        <!--end responsive columns-->
-        <xsl:if test="@autoplay !=''">
-          <xsl:attribute name="data-autoplay">
-            <xsl:value-of select="@autoplay"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@autoPlaySpeed!=''">
-          <xsl:attribute name="data-autoPlaySpeed">
-            <xsl:value-of select="@autoPlaySpeed"/>
-          </xsl:attribute>
-        </xsl:if>
-        <!-- If Stepper, display Stepper -->
-        <xsl:choose>
-          <xsl:when test="@linkArticle='true'">
-            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-              <xsl:with-param name="sortBy" select="@sortBy"/>
-            </xsl:apply-templates>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-              <xsl:with-param name="sortBy" select="@sortBy"/>
-            </xsl:apply-templates>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="@stepCount != '0'">
-          <xsl:apply-templates select="/" mode="genericStepper">
-            <xsl:with-param name="articleList" select="$contentList"/>
-            <xsl:with-param name="noPerPage" select="@stepCount"/>
-            <xsl:with-param name="startPos" select="$startPos"/>
-            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-            <xsl:with-param name="totalCount" select="$totalCount"/>
-          </xsl:apply-templates>
-        </xsl:if>
-        <xsl:text> </xsl:text>
-      </div>
-    </div>
-  </xsl:template>
+	<!-- NewsArticle Module -->
+	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
+		<!-- Set Variables -->
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<xsl:variable name="contentList">
+			<xsl:apply-templates select="." mode="getContent">
+				<xsl:with-param name="contentType" select="$contentType" />
+				<xsl:with-param name="startPos" select="$startPos" />
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="totalCount">
+			<xsl:choose>
+				<xsl:when test="@display='related'">
+					<xsl:value-of select="count(Content[@type=$contentType])"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<!--responsive columns variables-->
 
-  <xsl:template match="Content[@type='Module' and @moduleType='NewsListDateMenu']" mode="displayBrief">
+		<!--end responsive columns variables-->
+		<!-- Output Module -->
+		<div class="clearfix NewsList">
+			<xsl:if test="@carousel='true'">
+				<xsl:attribute name="class">
+					<xsl:text>clearfix NewsList content-scroller</xsl:text>
+				</xsl:attribute>
+			</xsl:if>
+			<div>
+				<!--responsive columns -->
+		        <xsl:apply-templates select="." mode="contentColumns"/>       
+				<!--end responsive columns-->
+
+				<!-- If Stepper, display Stepper -->
+				<xsl:choose>
+					<xsl:when test="@linkArticle='true'">
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+						</xsl:apply-templates>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="@stepCount != '0'">
+					<xsl:apply-templates select="/" mode="genericStepper">
+						<xsl:with-param name="articleList" select="$contentList"/>
+						<xsl:with-param name="noPerPage" select="@stepCount"/>
+						<xsl:with-param name="startPos" select="$startPos"/>
+						<xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+						<xsl:with-param name="totalCount" select="$totalCount"/>
+					</xsl:apply-templates>
+				</xsl:if>
+				<xsl:text> </xsl:text>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!-- NewsArticle Module Swiper -->
+	<xsl:template match="Content[@type='Module' and @moduleType='NewsList' and @carousel='true']" mode="displayBrief">
+		<!-- Set Variables -->
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<xsl:variable name="contentList">
+			<xsl:apply-templates select="." mode="getContent">
+				<xsl:with-param name="contentType" select="$contentType" />
+				<xsl:with-param name="startPos" select="$startPos" />
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="totalCount">
+			<xsl:choose>
+				<xsl:when test="@display='related'">
+					<xsl:value-of select="count(Content[@type=$contentType])"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<!--responsive columns variables-->
+
+		<!--end responsive columns variables-->
+		<!-- Output Module -->
+		<div class="NewsList swiper">
+			<div class="swiper-wrapper">
+				<!--end responsive columns-->
+				<xsl:if test="@autoplay !=''">
+					<xsl:attribute name="data-autoplay">
+						<xsl:value-of select="@autoplay"/>
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="@autoPlaySpeed!=''">
+					<xsl:attribute name="data-autoPlaySpeed">
+						<xsl:value-of select="@autoPlaySpeed"/>
+					</xsl:attribute>
+				</xsl:if>
+				<!-- If Stepper, display Stepper -->
+				<xsl:choose>
+					<xsl:when test="@linkArticle='true'">
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+							<xsl:with-param name="class" select="'swiper-slide'"/>
+						</xsl:apply-templates>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text> </xsl:text>
+			</div>
+			<!-- If we need pagination -->
+			<div class="swiper-pagination">
+				<xsl:text> </xsl:text>
+			</div>
+
+			<!-- If we need navigation buttons -->
+			<div class="swiper-button-prev">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="swiper-button-next">
+				<xsl:text> </xsl:text>
+			</div>
+
+			<!-- If we need scrollbar -->
+			<div class="swiper-scrollbar">
+				<xsl:text> </xsl:text>
+			</div>
+		</div>
+	</xsl:template>
+
+
+	<xsl:template match="Content[@type='Module' and @moduleType='NewsListDateMenu']" mode="displayBrief">
     <xsl:variable name="contentType" select="@contentType" />
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
     <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
@@ -184,13 +247,14 @@
   <!-- NewsArticle Brief -->
   <xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
     <xsl:param name="sortBy"/>
+	<xsl:param name="class"/>
     <!-- articleBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem newsarticle">
+    <div class="listItem newsarticle {$class}">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem newsarticle'"/>
+        <xsl:with-param name="class" select="concat('listItem newsarticle ',$class)"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
