@@ -3925,9 +3925,9 @@
       </xsl:if>
     </xsl:variable>
 
-    <div id="template_FileSystem" class="card card-default">
+    <div id="template_FileSystem" class="">
 
-      <div class="card-body row">
+      <div class="row">
 
         <div id="MenuTree" class="list-group col-md-3 col-sm-4">
           <xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
@@ -3980,20 +3980,21 @@
                   <!-- The file input field used as target for the file upload widget -->
                   <input id="fileupload" type="file" name="files[]" multiple="" class="fileUploadCheck"/>
                 </span>
-				  <div id="progress">
-					  <div class="bar" style="width: 0%;"></div>
-				  </div>
+                <div id="progress">
+                  <div class="bar" style="width: 0%;"></div>
+                </div>
 
                 <!--not for popup window or for root..!-->
                 <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
-					<xsl:if test="parent::folder">
+                  <xsl:if test="parent::folder">
 
-                  <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-danger">
-                    <i class="fas fa-trash fa-white">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    Delete Folder
-                  </a></xsl:if>
+                    <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-danger">
+                      <i class="fas fa-trash fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      Delete Folder
+                    </a>
+                  </xsl:if>
 
                 </xsl:if>
               </xsl:if>
@@ -4006,10 +4007,10 @@
                   <div class="overlay">
                     <i class="fas fa-mouse-pointer">&#160;</i> and drop files here to upload
                   </div>
-					<div class="overlay loading-counter">
-						&#160;loading
-						<span class="count">0</span>%
-					</div>
+                  <div class="overlay loading-counter">
+                    &#160;loading
+                    <span class="count">0</span>%
+                  </div>
                   <div class="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
 
                   </div>
@@ -4114,39 +4115,50 @@
     <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
 
 
-		<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-		<script src="/ptn/admin/fileupload/js/vendor/jquery.ui.widget.js">/* */</script>
-		<!-- The Templates plugin is included to render the upload/download listings
+      <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+      <script src="/ptn/admin/fileupload/js/vendor/jquery.ui.widget.js">/* */</script>
+      <!-- The Templates plugin is included to render the upload/download listings
 		<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js">/* */</script> -->
-		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-		<script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
-		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-		<script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
-		<!-- blueimp Gallery script -->
-		<script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js">/* */</script>
-		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="/ptn/admin/fileupload/js/jquery.iframe-transport.js">/* */</script>
-		<!-- The basic File Upload plugin -->
-		<script src="/ptn/admin/fileupload/js/jquery.fileupload.js">/* */</script>
-		<!-- The File Upload processing plugin --><!--
+      <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+      <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
+      <!-- The Canvas to Blob plugin is included for image resizing functionality -->
+      <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
+      <!-- blueimp Gallery script -->
+      <script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js">/* */</script>
+      <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+      <script src="/ptn/admin/fileupload/js/jquery.iframe-transport.js">/* */</script>
+      <!-- The basic File Upload plugin -->
+      <script src="/ptn/admin/fileupload/js/jquery.fileupload.js">/* */</script>
+      <!-- The File Upload processing plugin -->
+      <!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-process.js">/* */</script>
-		--><!-- The File Upload image preview & resize plugin --><!--
+		-->
+      <!-- The File Upload image preview & resize plugin -->
+      <!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-image.js">/* */</script>
-		--><!-- The File Upload audio preview plugin --><!--
+		-->
+      <!-- The File Upload audio preview plugin -->
+      <!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-audio.js">/* */</script>
-		--><!-- The File Upload video preview plugin --><!--
+		-->
+      <!-- The File Upload video preview plugin -->
+      <!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-video.js">/* */</script>
-		--><!-- The File Upload validation plugin --><!--
+		-->
+      <!-- The File Upload validation plugin -->
+      <!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-validate.js">/* */</script>
-		--><!-- The File Upload user interface plugin --><!--
+		-->
+      <!-- The File Upload user interface plugin -->
+      <!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-ui.js">/* */</script>-->
-		
+
       <!-- The Load Image plugin is included for the preview images and image resizing functionality 
       <script src="/ptn/admin/fileupload/js/load-image.all.min.js">/* */</script>-->
       <!-- The Canvas to Blob plugin is included for image resizing functionality
       <script src="/ptn/admin/fileupload/js/loadimage/vendor/canvas-to-blob.js">/* */</script> -->
       <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="/ptn/core/lazy/jquery.lazy.min.js">/* */</script>
+      <script src="/ptn/core/lazy/jquery.lazy.min.js">/* */</script>
     </xsl:if>
 
     <script>
@@ -4170,49 +4182,53 @@
         <xsl:text>,</xsl:text>
       </xsl:if>
       <xsl:apply-templates select="." mode="fileTypeScript"/>
-		
+
       <xsl:text>
         done: function (e, data) {
         $.each(data.files, function (index, file) {
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
-        var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
-        <xsl:apply-templates select="." mode="newItemScript"/>
-        $('#files').prepend(newItem);
-        $('#files .item-image .panel').prepareLibImages();
-          $("[data-toggle=popover]").popover({
-              html: true,
-              container: '#files',
-              trigger: 'hover',
-              viewport: '#files',
-              content: function () {
-              return $(this).prev('.popoverContent').html();
-          }
+      var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
+      <xsl:apply-templates select="." mode="newItemScript"/>
+      $('#files').prepend(newItem);
+      $('#files .item-image .panel').prepareLibImages();
+      $("[data-toggle=popover]").popover({
+      html: true,
+      container: '#files',
+      trigger: 'hover',
+      viewport: '#files',
+      content: function () {
+      return $(this).prev('.popoverContent').html();
+      }
       });
       if ($('.pickImageModal').exists()) {
       $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
       ev.preventDefault();
       $('.modal-dialog').addClass('loading')
-      $('.modal-body').html('<p class="text-center">  <h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
-		var target = $(this).attr("href");
-		// load the url and show modal on success
-		var currentModal = $('.pickImageModal')
-		currentModal.load(target, function () {
-		$('.modal-dialog').removeClass('loading')
-		currentModal.modal("show");
-		});
-		});
-		};
-		});
-		},
-		progressall: function (e, data) {
-		var progress = parseInt(data.loaded / data.total * 100, 10);
-		    $('.progress .progress-bar').css('width',progress + '%');
-		    $('.progress .progress-bar').attr('aria-valuenow',progress);
-		    $('.progress .loading-counter').css('display','block');
-		    $('.progress .loading-counter .count').html(progress);
-		}
-		});
-	</script>
+      $('.modal-body').html('<p class="text-center">
+        <h4>
+          <i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...
+        </h4>
+      </p>');
+      var target = $(this).attr("href");
+      // load the url and show modal on success
+      var currentModal = $('.pickImageModal')
+      currentModal.load(target, function () {
+      $('.modal-dialog').removeClass('loading')
+      currentModal.modal("show");
+      });
+      });
+      };
+      });
+      },
+      progressall: function (e, data) {
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('.progress .progress-bar').css('width',progress + '%');
+      $('.progress .progress-bar').attr('aria-valuenow',progress);
+      $('.progress .loading-counter').css('display','block');
+      $('.progress .loading-counter .count').html(progress);
+      }
+      });
+    </script>
 
     <script>
       $(function() {
@@ -4232,11 +4248,35 @@
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-    var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
-    newItem = newItem + '<div class="description">'
-    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
-    newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
-    newItem = newItem + '</div></div>';
+    var newItem = '<div class="item item-image col-md-2 col-sm-4">
+      <div class="panel">
+        <div class="image-thumbnail">
+          <div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
+            <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
+            <div class="popover-description">
+              <span class="image-description-name">' + file.name + '</span>
+              <br/>
+            </div>
+          </div>
+          <a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
+            <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
+          </a>
+        </div>'
+        newItem = newItem + '<div class="description">
+          '
+          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
+            <i class="fa fa-trash-o fa-white">
+              <xsl:text> </xsl:text>
+            </i>Delete
+          </a>';
+          newItem = newItem + '
+        </div><div class="img-description">
+          <span class="image-description-name">' + file.name + '</span>
+          <br/>
+        </div>';
+        newItem = newItem + '
+      </div>
+    </div>';
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
@@ -4260,7 +4300,7 @@
     <div class="row" id="files">
       <xsl:for-each select="file">
         <div class="item item-image col-lg-2 col-md-3 col-sm-4">
-          <div class="panel">
+          <div class="">
             <div class="image-thumbnail">
               <xsl:variable name="Extension">
                 <xsl:value-of select="translate(@Extension,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
@@ -4268,7 +4308,7 @@
               <xsl:choose>
                 <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp' or $Extension='.tif' or $Extension='.webp'">
                   <xsl:if test="@root">
-               
+
                     <a data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top">
                       <xsl:choose>
                         <xsl:when test="@width&gt;125 and @height&gt;125">
@@ -4281,9 +4321,9 @@
                         </xsl:otherwise>
                       </xsl:choose>
                     </a>
-					  
-					<div class="popover-content" id="imgpopover{position()}" role="tooltip">
-                      <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
+
+                    <div class="popover-content" id="imgpopover{position()}" role="tooltip">
+                      <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive pick-image-responsive-popover"/>
                       <div class="popup-description">
                         <span class="image-description-name">
                           <xsl:value-of select="@name"/>
@@ -5350,14 +5390,14 @@
     </xsl:variable>
 
     <div id="template_ListDirectory" class="">
-        <h4 class="visually-hidden">
-          <xsl:text>List </xsl:text>
-          <xsl:value-of select="ContentDetail/directory/@displayName"/>
-          <xsl:text>&#160;</xsl:text>
-          <xsl:if test="ContentDetail/directory/@parId">
-            <xsl:text>in </xsl:text><xsl:value-of select="ContentDetail/directory/@parType"/>&#160;<xsl:value-of select="ContentDetail/directory/@parName"/>
-          </xsl:if>
-        </h4>
+      <h4 class="visually-hidden">
+        <xsl:text>List </xsl:text>
+        <xsl:value-of select="ContentDetail/directory/@displayName"/>
+        <xsl:text>&#160;</xsl:text>
+        <xsl:if test="ContentDetail/directory/@parId">
+          <xsl:text>in </xsl:text><xsl:value-of select="ContentDetail/directory/@parType"/>&#160;<xsl:value-of select="ContentDetail/directory/@parName"/>
+        </xsl:if>
+      </h4>
       <div class="container-fluid">
         <xsl:apply-templates select="/" mode="alphaStepper">
           <xsl:with-param name="ewCmd" select="/Page/@ewCmd"/>
@@ -5443,13 +5483,13 @@
             <form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
               <div class="input-group">
                 <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
-                  <button type="submit" name="previous" value="Search" class="btn btn-primary">
-                    <i class="fa fa-search">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>User Search
-                    
-                  </button>
+                <button type="submit" name="previous" value="Search" class="btn btn-primary">
+                  <i class="fa fa-search">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <xsl:text> </xsl:text>User Search
+
+                </button>
               </div>
             </form>
           </xsl:if>
@@ -5463,7 +5503,7 @@
                       <xsl:text> </xsl:text>
                     </i>
                     <xsl:text> </xsl:text>Company Search
-                    
+
                   </button>
                 </span>
               </div>
@@ -5603,123 +5643,123 @@
     <xsl:param name="startPos"/>
     <xsl:param name="noOnPage"/>
     <xsl:if test="position() > $startPos and position() &lt;= ($startPos + $noOnPage)">
-      
-        <div class="row faux-row">
-          <div class="col-sm-1">
-            <xsl:apply-templates select="Status" mode="reportCell"/>
-          </div>
-          <div class="col-xs-4 col-sm-2">
-            <xsl:apply-templates select="User" mode="reportCell"/>
-          </div>
-          <div class="col-xs-4 col-sm-2">
-            <xsl:apply-templates select="Username" mode="reportCell"/>
+
+      <div class="row faux-row">
+        <div class="col-sm-1">
+          <xsl:apply-templates select="Status" mode="reportCell"/>
+        </div>
+        <div class="col-xs-4 col-sm-2">
+          <xsl:apply-templates select="User" mode="reportCell"/>
+        </div>
+        <div class="col-xs-4 col-sm-2">
+          <xsl:apply-templates select="Username" mode="reportCell"/>
+          <xsl:choose>
+            <xsl:when test="Companies/node()!=''">
+              <xsl:apply-templates select="Companies/node()" mode="cleanXhtml"/>
+            </xsl:when>
+            <xsl:otherwise>
+              &#160;
+            </xsl:otherwise>
+          </xsl:choose>
+        </div>
+
+        <div class="col-md-6 membership-controls">
+          <div class="btn-group">
+            <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
+              <i class="fa fa-edit fa-white">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>Edit
+            </a>
+            <a href="{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="btn btn-outline-primary">
+              <i class="fa fa-redo fa-white">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>Reset Pwd
+            </a>
+            <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-outline-primary">
+              <i class="fa fa-user-secret fa-white">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>Impersonate
+            </a>
+            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-outline-primary">
+              <i class="fa fa-cog fa-white">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>Roles
+            </a>
+            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListGroups']">
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-outline-primary">
+                <i class="fa fa-glass fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Groups
+              </a>
+              <a href="{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-outline-primary">
+                <i class="fa fa-lock fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Permissions
+              </a>
+            </xsl:if>
+            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListCompanies']">
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="btn btn-outline-primary">
+                <i class="fa fa-building-o fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Companies
+              </a>
+
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="btn btn-outline-primary">
+                <i class="fa fa-group fa-white">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Dept
+              </a>
+            </xsl:if>
+
+            <xsl:if test="/Page[@userIntegrations='true']">
+              <a href="{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="btn btn-outline-primary">
+                <i class="fa fa-random fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Integrations
+              </a>
+            </xsl:if>
+            <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
+              <a href="{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="btn btn-outline-primary">
+                <i class="fa fa-map-marker fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Addresses
+              </a>
+            </xsl:if>
+            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
+              <a href="{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-outline-primary">
+                <i class="fa fa-signal fa-white">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Activity
+              </a>
+            </xsl:if>
             <xsl:choose>
-              <xsl:when test="Companies/node()!=''">
-                <xsl:apply-templates select="Companies/node()" mode="cleanXhtml"/>
+              <xsl:when test="Status='0'">
+                <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
+                  <i class="fa fa-trash-o fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <xsl:text> </xsl:text>Delete
+                </a>
               </xsl:when>
               <xsl:otherwise>
-                &#160;
+                <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
+                  <i class="fa fa-ban fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <xsl:text> </xsl:text>Disable
+                </a>
               </xsl:otherwise>
             </xsl:choose>
           </div>
-
-          <div class="col-md-6 membership-controls">
-            <div class="btn-group">
-              <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-edit fa-white">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Edit
-              </a>
-              <a href="{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-redo fa-white">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Reset Pwd
-              </a>
-              <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-user-secret fa-white">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Impersonate
-              </a>
-              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-cog fa-white">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Roles
-              </a>
-              <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListGroups']">
-                <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-outline-primary">
-                  <i class="fa fa-glass fa-white">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Groups
-                </a>
-                <a href="{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-outline-primary">
-                  <i class="fa fa-lock fa-white">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Permissions
-                </a>
-              </xsl:if>
-              <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListCompanies']">
-                <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="btn btn-outline-primary">
-                  <i class="fa fa-building-o fa-white">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Companies
-                </a>
-
-                <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="btn btn-outline-primary">
-                  <i class="fa fa-group fa-white">
-                    <xsl:text> </xsl:text>
-                  </i><xsl:text> </xsl:text>Dept
-                </a>
-              </xsl:if>
-
-              <xsl:if test="/Page[@userIntegrations='true']">
-                <a href="{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="btn btn-outline-primary">
-                  <i class="fa fa-random fa-white">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Integrations
-                </a>
-              </xsl:if>
-              <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
-                <a href="{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="btn btn-outline-primary">
-                  <i class="fa fa-map-marker fa-white">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Addresses
-                </a>
-              </xsl:if>
-              <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
-                <a href="{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-outline-primary">
-                  <i class="fa fa-signal fa-white">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Activity
-                </a>
-              </xsl:if>
-              <xsl:choose>
-                <xsl:when test="Status='0'">
-                  <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
-                    <i class="fa fa-trash-o fa-white">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>Delete
-                  </a>
-                </xsl:when>
-                <xsl:otherwise>
-                  <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
-                    <i class="fa fa-ban fa-white">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>Disable
-                  </a>
-                </xsl:otherwise>
-              </xsl:choose>
-            </div>
-          </div>
         </div>
-      
+      </div>
+
     </xsl:if>
   </xsl:template>
 
@@ -12009,13 +12049,13 @@
   </xsl:template>
 
   <xsl:template match="Username | Full_Name[not(parent::*//Username)]" mode="reportCell">
-   
-      <xsl:value-of select="node()"/>
-      <a href="mailto:{parent::*//Email/node()}">
-        <xsl:text> </xsl:text>
-        <i class="far fa-envelope"> </i>
-      </a>
-    
+
+    <xsl:value-of select="node()"/>
+    <a href="mailto:{parent::*//Email/node()}">
+      <xsl:text> </xsl:text>
+      <i class="far fa-envelope"> </i>
+    </a>
+
   </xsl:template>
 
   <xsl:template match="Grade" mode="reportCell">
@@ -12050,40 +12090,40 @@
   </xsl:template>
 
   <xsl:template match="User" mode="reportCell">
-    
-      <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::user/@id}">
-        
-          <i class="fa fa-user fa-white">
-            <xsl:text> </xsl:text>
-          </i>
-        &#160;<xsl:choose>
-          <xsl:when test="FirstName and LastName">
-            <xsl:value-of select="LastName"/>, <xsl:value-of select="FirstName"/>
-          </xsl:when>
-          <xsl:when test="User/FirstName and User/LastName">
-            <xsl:value-of select="User/LastName"/>, <xsl:value-of select="User/FirstName"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="node()"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </a>
-    
+
+    <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::user/@id}">
+
+      <i class="fa fa-user fa-white">
+        <xsl:text> </xsl:text>
+      </i>
+      &#160;<xsl:choose>
+        <xsl:when test="FirstName and LastName">
+          <xsl:value-of select="LastName"/>, <xsl:value-of select="FirstName"/>
+        </xsl:when>
+        <xsl:when test="User/FirstName and User/LastName">
+          <xsl:value-of select="User/LastName"/>, <xsl:value-of select="User/FirstName"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="node()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </a>
+
   </xsl:template>
 
 
   <xsl:template match="Name[ancestor::company]" mode="reportCell">
-    
-      <a href="/{$appPath}?ewCmd=Profile&amp;DirType=Company&amp;id={ancestor::company/@id}">
-        
-          <i class="fa fa-building fa-white">
-            <xsl:text> </xsl:text>
-          </i>
-        
-        &#160;
-        <xsl:value-of select="node()"/>
-      </a>
-    
+
+    <a href="/{$appPath}?ewCmd=Profile&amp;DirType=Company&amp;id={ancestor::company/@id}">
+
+      <i class="fa fa-building fa-white">
+        <xsl:text> </xsl:text>
+      </i>
+
+      &#160;
+      <xsl:value-of select="node()"/>
+    </a>
+
   </xsl:template>
 
   <xsl:template match="UserXml" mode="reportCell">
