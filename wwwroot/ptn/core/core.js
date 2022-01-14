@@ -62,19 +62,20 @@ function PageContentActions() {
 }
 
 function contentScroller() {
-
     $(".content-scroller .cols").each(function () {
         var slidestoShow = $(this).data("slidestoshow");
         var xsSlides = $(this).data("xscols");
         var smSlides = $(this).data("smcols");
         var mdSlides = $(this).data("mdcols");
         var autoplay = $(this).data("autoplay");
+        if (autoplay == undefined) { autoplay = false };
         var autoplaySpeed = $(this).data("autoplayspeed");
         var equalHeight = $(this).data("height");
         var vCssEase = ($(this).data("cssease") === undefined ? "ease" : $(this).data("cssease"));
         var vSpeed = ($(this).data("speed") === undefined ? "300" : $(this).data("speed"));
         var breakpoint = 768;
         var dots = $(this).data("dots");
+        if (dots == true) { dots = false };
         $(this).on('init', function (event, slick) {
             // alert(equalHeight);
             if (equalHeight === undefined || equalHeight === true) {

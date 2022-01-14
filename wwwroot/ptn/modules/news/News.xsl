@@ -35,19 +35,19 @@
           <xsl:text>clearfix NewsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <!--<div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >-->
-        <div data-slick="{{'slidesToShow': 4, 'slidesToScroll': 4}}" >
+      <div data-slidestoshow="{@cols}" data-slideToScroll="1" data-dots="true" class="cols">
+        <!--<div data-slick="{{'slidesToShow': 4, 'slidesToScroll': 4}}" >-->
         
-        <!--responsive columns-->
-        <xsl:apply-templates select="." mode="contentColumns"/>
-        
+        <!--responsive columns
+		<xsl:apply-templates select="." mode="contentColumns"/>
+        -->
         <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
           </xsl:attribute>
         </xsl:if>
-        <xsl:if test="@autoPlaySpeed !=''">
+        <xsl:if test="@autoPlaySpeed!=''">
           <xsl:attribute name="data-autoPlaySpeed">
             <xsl:value-of select="@autoPlaySpeed"/>
           </xsl:attribute>
