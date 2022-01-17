@@ -546,8 +546,6 @@
           <xsl:value-of select="Contents/Content[@name='inlineCSS' and @type='PlainText']/node()"/>
         </style>
       </xsl:if>
-
-
     </xsl:if>
     <xsl:apply-templates select="." mode="adminStyle"/>
     <xsl:if test="/Page/@adminMode">
@@ -556,10 +554,6 @@
       </xsl:if>
     </xsl:if>
     <xsl:apply-templates select="." mode="resellerStyle"/>
-      <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 8') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 7') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0')">
-        <script src="/ewcommon/js/respond.min.js">/* */</script>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js">/* */</script>
-      </xsl:if>
   </xsl:template>
 
   <xsl:template match="Page" mode="resellerStyle">
@@ -568,21 +562,13 @@
 
   <xsl:template match="Page" mode="adminStyle"></xsl:template>
 
-
   <!--  ###########################################################################################  -->
   <!--  ##  JAVASCRIPTS  ##########################################################################  -->
   <!--  ###########################################################################################  -->
 
-
   <xsl:template match="Page" mode="js">
     <xsl:apply-templates select="." mode="siteJs"/>
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
-
-    <!-- IF IE6 apply PNG Fix as standard -->
-    <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
-      <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
-    </xsl:if>
-
   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
@@ -595,72 +581,16 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="commonJsFiles">
-    <xsl:text>~/ptn/core/jquery/3.6.0/jquery.min.js,</xsl:text>
-    <xsl:text>~/ptn/core/bs5/dist/js/bootstrap.bundle.min.js,</xsl:text>
-	<xsl:text>~/ptn/core/swiper/swiper-bundle.min.js,</xsl:text>
+    <xsl:text>~/ptn/libs/jquery/dist/jquery.min.js,</xsl:text>
+    <xsl:text>~/ptn/libs/bs5/js/bootstrap.bundle.min.js,</xsl:text>
+	<xsl:text>~/ptn/libs/swiper/swiper-bundle.min.js,</xsl:text>
     <xsl:text>~/ptn/core/core.js,</xsl:text>
   </xsl:template>
 
   <!-- template to bring in all the jQuery and plugins that are as standard on each page -->
   <xsl:template match="Page" mode="jQuery">
-    <xsl:choose>
-      <xsl:when test="descendant::DisplayName[@paralaxLoad='true']">
-        <xsl:call-template name="bundle-js">
-          <xsl:with-param name="comma-separated-files">
-            <xsl:text>~/ewcommon/js/jquery/isotope/jquery.isotope.min.js,</xsl:text>
-            <xsl:text>~/ewcommon/js/jquery/innerFade/jquery.innerfade.js,</xsl:text>
-            <xsl:text>~/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js,</xsl:text>
-            <xsl:text>~/ewcommon/js/ace/src-noconflict/ace.js,</xsl:text>
-            <xsl:text>~/ewcommon/js/ace/src-noconflict/theme-mono_industrial.js,</xsl:text>
-            <xsl:text>~/ewcommon/js/ace/src-noconflict/mode-xml.js,</xsl:text>
-            <xsl:text>~/ewcommon/js/ace/jquery-ace.js</xsl:text>
-          </xsl:with-param>
-          <xsl:with-param name="bundle-path">
-            <xsl:text>~/Bundles/JqueryModules</xsl:text>
-          </xsl:with-param>
-        </xsl:call-template>
-        <!---->
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:if test="@layout='Modules_Masonary'">
-          <script type="text/javascript" src="/ewcommon/js/jquery/isotope/jquery.isotope.min.js" >/* */</script>
-        </xsl:if>
-        <xsl:if test="//Content[@moduleType='SlideCarousel'] and not(/Page/@adminMode)">
-          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.mousewheel.min.js">/* */</script>
-          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.carousel-1.1.min.js">/* */</script>
-        </xsl:if>
-        <xsl:if test="//Content[@moduleType='ImageFader']">
-          <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
-        </xsl:if>
-        <xsl:if test="//Content[@carousel='true']">
-          <!--<script src="/ptn/core/jquery/slick.min.js">/* */</script>-->
-          <!--<script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>-->
-          
-          <!-- !!! MIN VERSION CAUSES ERROR -->
-        </xsl:if>
-        <script src="/ptn/core/jquery/slick.min.js">/* */</script>
-        <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
-          <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
-        </xsl:if>
-        <!-- code formatting plugin -->
-        <xsl:if test="//Content[@moduleType='FormattedCode' or @moduleType='EmbeddedHTML']">
-          <script type="text/javascript" src="/ewcommon/js/jquery/beautyOfCode/boc.js" >/* */</script>
-        </xsl:if>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:if test="//Content[@moduleType='Audio']/Path/node()!=''">
-      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.min.js">/* */</script>
-      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.inspector.js">/* */</script>
-      <script type="text/javascript">
-        <xsl:apply-templates select="." mode="initialiseJplayer"/>
-      </script>
-    </xsl:if>
-    <xsl:if test="@previewMode!='true'">
+      <xsl:if test="@previewMode!='true'">
       <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
-        <!-- MOVED to commonJsFiles
-        <script src="/ewcommon/js/jquery/jquery.cookie.js">/* */</script>
-        <script src="/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js">/* */</script>
-        -->
         <script type="text/javascript">
           <xsl:text>$(document).ready(function () {</xsl:text>
           <xsl:text>$.cookieCuttr(</xsl:text>

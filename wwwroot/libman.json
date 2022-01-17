@@ -4,15 +4,47 @@
   "libraries": [
     {
       "library": "swiper@7.4.1",
-      "destination": "ptn/core/swiper/",
+      "destination": "ptn/libs/swiper/",
       "files": [
         "swiper.scss",
-        "swiper-bundle.min.js",
-        "swiper-bundle.css",
-        "swiper-bundle.js",
+        "swiper.min.css",
         "swiper-vars.scss",
-        "LICENSE"
+        "swiper-bundle.min.js",
+        "swiper-bundle.js",
+        "swiper-bundle.css",
+        "LICENSE",
+        "package.json"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "bootstrap@5.1.3",
+      "destination": "ptn/libs/bs5/"
+    },
+    {
+      "library": "tinymce@5.10.2",
+      "destination": "ptn/libs/tinymce/"
+    },
+    {
+      "library": "@fortawesome/fontawesome-free@5.15.4",
+      "destination": "ptn/libs/fortawesome/fontawesome-free/"
+    },
+    {
+      "library": "jquery@3.6.0",
+      "destination": "ptn/libs/jquery/"
+    },
+    {
+      "library": "vue@2.6.14",
+      "destination": "ptn/libs/vue/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jquery.lazy@1.7.11",
+      "destination": "ptn/libs/jquery.lazy/"
+    },
+    {
+      "library": "jqueryui@1.11.1",
+      "destination": "ptn/libs/jqueryui/"
     }
   ]
 }
