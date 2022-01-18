@@ -509,13 +509,16 @@ body.ewAdmin.layout-AdmHome {
     }
     //end #adminLayout
     #MenuTree {
+        border-radius:0;
 
         .list-group-item {
-            padding-left: 50px;
+            padding-left: 15px;
+            border-left:0;
+            border-right:0;
         }
 
         .level-2 {
-            padding-left: 70px;
+            padding-left: 30px;
 
             div.pageCell {
                 width: 210px;
@@ -523,7 +526,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-3 {
-            padding-left: 80px;
+            padding-left: 40px;
 
             div.pageCell {
                 width: 200px;
@@ -531,7 +534,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-4 {
-            padding-left: 90px;
+            padding-left: 50px;
 
             div.pageCell {
                 width: 190px;
@@ -539,7 +542,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-5 {
-            padding-left: 100px;
+            padding-left: 60px;
 
             div.pageCell {
                 width: 180px;
@@ -547,7 +550,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-6 {
-            padding-left: 110px;
+            padding-left: 70px;
 
 
             div.pageCell {
@@ -556,7 +559,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-7 {
-            padding-left: 120px;
+            padding-left: 80px;
 
 
             div.pageCell {
@@ -565,7 +568,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-8 {
-            padding-left: 130px;
+            padding-left: 90px;
 
 
             div.pageCell {
@@ -574,7 +577,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-9 {
-            padding-left: 140px;
+            padding-left: 100px;
 
 
             div.pageCell {
@@ -583,7 +586,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-10 {
-            padding-left: 150px;
+            padding-left: 110px;
 
 
             div.pageCell {
@@ -631,7 +634,12 @@ body.ewAdmin.layout-AdmHome {
             font-weight: 600;
 
             i {
-                top: 17px;
+                top: 12px;
+
+                @include media-breakpoint-up(lg) {
+                    top:15px;
+                }
+
                 position: absolute;
             }
 
@@ -683,6 +691,17 @@ body.ewAdmin.layout-AdmHome {
                 color: #4a4a4a !important;
                 font-size: 13px;
             }
+        }
+
+        .optionButtons .plain-link {
+            font-weight: 600;
+            text-decoration: none;
+            padding: 0.375rem 0.75rem;
+            line-height: 1.5;
+        }
+
+        .option-arrow-wrapper {
+            white-space: nowrap;
         }
     }
 }

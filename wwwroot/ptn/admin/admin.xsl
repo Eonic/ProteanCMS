@@ -2175,30 +2175,32 @@
             </a>
             <!--span class="hidden"> | </span-->
             <xsl:if test="@id!=$siteRoot">
-              <a onclick="$('#MenuTree').moveTop({@id});" class="btn btn-arrow btn-default btn-xs move-top" title="Click here to move this page to the top">
-                <i class="fa fa-arrow-up fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-              </a>
-              <!--span class="hidden"> | </span-->
-              <!--<input type="button" class="arrowbutton up" onclick="moveUp({@id});" title="Click here to move this page up by one space"/>-->
-              <a onclick="$('#MenuTree').moveUp({@id});" class="btn btn-arrow btn-default btn-xs move-up" title="Click here to move this page up by one space">
-                <i class="fa fa-chevron-up fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-              </a>
-              <!--span class="hidden"> | </span-->
-              <a onclick="$('#MenuTree').moveDown({@id});" class="btn btn-arrow btn-default btn-xs move-down" title="Click here to move this page down by one space">
-                <i class="fa fa-chevron-down fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-              </a>
-              <!--span class="hidden"> | </span-->
-              <a onclick="$('#MenuTree').moveBottom({@id});" class="btn btn-arrow btn-default btn-xs move-bottom" title="Click here to move this page to the bottom">
-                <i class="fa fa-arrow-down fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-              </a>
+              <span class="option-arrow-wrapper">
+                <a onclick="$('#MenuTree').moveTop({@id});" class="btn btn-arrow btn-default btn-xs move-top" title="Click here to move this page to the top">
+                  <i class="fa fa-arrow-up fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </a>
+                <!--span class="hidden"> | </span-->
+                <!--<input type="button" class="arrowbutton up" onclick="moveUp({@id});" title="Click here to move this page up by one space"/>-->
+                <a onclick="$('#MenuTree').moveUp({@id});" class="btn btn-arrow btn-default btn-xs move-up" title="Click here to move this page up by one space">
+                  <i class="fa fa-chevron-up fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </a>
+                <!--span class="hidden"> | </span-->
+                <a onclick="$('#MenuTree').moveDown({@id});" class="btn btn-arrow btn-default btn-xs move-down" title="Click here to move this page down by one space">
+                  <i class="fa fa-chevron-down fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </a>
+                <!--span class="hidden"> | </span-->
+                <a onclick="$('#MenuTree').moveBottom({@id});" class="btn btn-arrow btn-default btn-xs move-bottom" title="Click here to move this page to the bottom">
+                  <i class="fa fa-arrow-down fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </a>
+              </span>
 
               <!--span class="hidden"> | </span-->
               <a href="{$appPath}?ewCmd=MovePage&amp;pgid={@id}" class="btn btn-xs btn-default" title="Click here to move this page">
@@ -2233,8 +2235,8 @@
                   </i><xsl:text> </xsl:text>Show
                 </a>
                 <!--span class="hidden"> | </span-->
-                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page">
-                  <i class="fa fa-trash-o fa-white">
+                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="text-danger plain-link" title="Click here to delete this page">
+                  <i class="fas fa-trash-alt">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Delete
                 </a>
@@ -12408,7 +12410,7 @@
       <xsl:when test="@status=0">
         <i>
           <xsl:attribute name="class">
-            <xsl:text>far fa-file-alt fa-lg text-muted status inactive</xsl:text>
+            <xsl:text>far fa-file status</xsl:text>
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           &#160;
@@ -12417,7 +12419,7 @@
       <xsl:when test="@status=1 or @status='-1'">
         <i>
           <xsl:attribute name="class">
-            <xsl:text>far fa-file-alt fa-lg status active</xsl:text>
+            <xsl:text>fas fa-file status</xsl:text>
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           &#160;
