@@ -56,13 +56,13 @@
             <xsl:if test="count(submit) &gt; 0">
               <div class="navbar-fixed-bottom">
                 <div class="container">
-                  <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
+                  <!--<xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
                     <span class="required">
                       <span class="req">*</span>
                       <xsl:text> </xsl:text>
                       <xsl:call-template name="msg_required"/>
                     </span>
-                  </xsl:if>
+                  </xsl:if>-->
                   <xsl:apply-templates select="submit" mode="xform"/>
                   <div class="footer-status">
                     <span>
@@ -294,25 +294,33 @@
       <xsl:apply-templates select="value/img" mode="jsNiceImage"/>
     </xsl:variable>
     <xsl:apply-templates select="self::node()[not(item[toggle])]" mode="xform_legend"/>
-    <div class="input-group form-margin" id="editImage_{$ref}">
-      <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-primary input-group-btn">
-        <i class="fa fa-times">
-          <xsl:text> </xsl:text>
-        </i>
-      </a>
-      <textarea name="{$ref}" id="{$ref}" readonly="readonly">
-        <xsl:attribute name="class">
-          <xsl:text>form-control pickImageInput </xsl:text>
-          <xsl:value-of select="@class"/>
-        </xsl:attribute>
-        <xsl:text></xsl:text>
-        <xsl:apply-templates select="value/img" mode="jsNiceImage"/>
-        <xsl:text> </xsl:text>
-      </textarea>
-      <!--<script language="javascript" type="text/javascript">
+    <div>
+      <xsl:if test="value/img/@src!=''">
+        <xsl:attribute name="class">pick-image-wrapper</xsl:attribute>
+        <div class="previewImage" id="previewImage_{$ref}">
+          <span>
+            <!--<xsl:value-of select="value/img"/>-->
+            <xsl:apply-templates select="value/img" mode="jsNiceImageForm"/>
+            <xsl:text> </xsl:text>
+          </span>
+        </div>
+      </xsl:if>
+      <div class="form-margin" id="editImage_{$ref}">
+        <xsl:if test="value/img/@src!=''">
+          <textarea name="{$ref}" id="{$ref}" readonly="readonly">
+            <xsl:attribute name="class">
+              <xsl:text>form-control pickImageInput pick-image-textarea </xsl:text>
+              <xsl:value-of select="@class"/>
+            </xsl:attribute>
+            <xsl:text></xsl:text>
+            <xsl:apply-templates select="value/img/@src" mode="jsNiceImage"/>
+            <xsl:text> </xsl:text>
+          </textarea>
+        </xsl:if>
+        <!--<script language="javascript" type="text/javascript">
       document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value = '<xsl:apply-templates select="value/img" mode="jsNiceImage"/>';
       -->
-      <!--<xsl:comment>
+        <!--<xsl:comment>
         function OpenWindow_edit_<xsl:value-of select="$ref"/>(){
         imgHtml = document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value
         OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=ImageLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&ewCmd2=editImage&imgHtml=' + imgHtml + '&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','Gallery','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=650' );
@@ -321,33 +329,36 @@
         OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=ImageLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','Gallery','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=650' );
         };
       </xsl:comment>-->
-      <!--
+        <!--
     </script>-->
-      <xsl:choose>
-        <xsl:when test="value/img/@src!=''">
-          <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
-          <a class="btn btn-primary input-group-btn editImage">
-            <i class="fas fa-image">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Edit
-          </a>
-        </xsl:when>
-        <xsl:otherwise>
-          <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-bs-target="#modal-{$ref}" class="btn btn-primary input-group-btn">
-            <i class="fas fa-image">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Pick
-          </a>
-        </xsl:otherwise>
-      </xsl:choose>
-    </div>
-    <div class="previewImage" id="previewImage_{$ref}">
-      <span>
-        <!--<xsl:value-of select="value/img"/>-->
-        <xsl:apply-templates select="value/img" mode="jsNiceImageForm"/>
-        <xsl:text> </xsl:text>
-      </span>
+        <div class="btn-group-spaced">
+          <xsl:if test="value/img/@src!=''">
+            <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-sm btn-danger ">
+              <i class="fa fa-times">
+                <xsl:text> </xsl:text>
+              </i> Remove
+            </a>
+          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="value/img/@src!=''">
+              <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
+              <a class="btn btn-sm btn-primary editImage">
+                <i class="fas fa-pen">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Edit
+              </a>
+            </xsl:when>
+            <xsl:otherwise>
+              <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
+              <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-bs-target="#modal-{$ref}" class="btn btn-sm btn-primary">
+                <i class="fas fa-image">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Pick Image
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>
+        </div>
+      </div>
     </div>
   </xsl:template>
 

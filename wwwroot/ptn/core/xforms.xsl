@@ -749,8 +749,8 @@
 
 
     <xsl:choose>
-      <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!='' or help or hint">
-        <div class="input-group">
+      <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!='' or hint">
+        <div class="input-group x">
           <xsl:if test="@prefixIcon!=''">
             <span class="input-group-addon">
               <i class="{@prefixIcon}">&#160;</i>
