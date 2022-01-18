@@ -40,13 +40,13 @@
       <xsl:choose>
         <xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*[name()!='submit']) = 0">
           <xsl:for-each select="group[1]">
-            <xsl:if test="label[position()=1]">
+            <!--<xsl:if test="label[position()=1]">
               <div class="">
-                <h3 class="">
+                <h3 class="x">
                   <xsl:copy-of select="label/node()"/>
                 </h3>
               </div>
-            </xsl:if>
+            </xsl:if>-->
             <div class="">
               <xsl:apply-templates select="." mode="xform"/>
               <!--xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/-->
@@ -1506,7 +1506,7 @@
     <select name="{$ref}" id="{$ref}">
 
       <xsl:attribute name="class">
-        <xsl:text>dropdown form-control </xsl:text>
+        <xsl:text>dropdown form-control form-select </xsl:text>
         <xsl:if test="@class!=''">
           <xsl:value-of select="@class"/>
         </xsl:if>
@@ -1824,14 +1824,14 @@
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <div class="btn-group-spaced">
             <xsl:if test="contains(@search,'find')">
-              <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-outline-primary btn-sm" onclick="disableButton(this);$('#{$formName}').submit();" >
+              <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-primary btn-sm" onclick="disableButton(this);$('#{$formName}').submit();" >
                 <i class="fa fa-search fa-white">
                   <xsl:text> </xsl:text>
                 </i> Find Existing <xsl:value-of select="$contentType"/>
               </button>
             </xsl:if>
             <xsl:if test="contains(@search,'add')">
-              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn  btn-outline-primary btn-sm" onclick="disableButton(this);$('#{$formName}').submit();">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn  btn-primary btn-sm" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add New

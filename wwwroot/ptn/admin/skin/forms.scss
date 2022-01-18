@@ -435,17 +435,42 @@ form.xform {
     padding:0 15px;
 }
 .btn-group-spaced {
-    display: inline-block;
+    margin-left:-5px;
+    margin-right:-5px;
 
     button {
-        margin-left:10px;
+        margin:0 5px 10px;
     }
 }
-.switch-form-wrapper {
+.relatedContent-group {
+    display: flex;
+    flex-wrap: wrap;
+
+    > label {
+        flex-grow:2;
+    }
+}
+.form-section-wrapper {
     padding: 10px 15px 0;
-    background: #f4f6f7;
+    background: #f4f7f9;
     border-radius: 5px;
     margin-bottom: 15px;
     margin-top: 10px;
     border: 1px solid #b3d2d9;
+}
+form.xform .relatedContent-group > label {
+    font-weight: 400;
+    margin-bottom: 5px;
+}
+.short-input {
+    display: flex;
+    align-items: center;
+
+    label {
+        margin-right: 10px;
+    }
+
+    input {
+        width: 80px;
+    }
 }
