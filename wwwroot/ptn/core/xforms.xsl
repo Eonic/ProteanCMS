@@ -238,42 +238,7 @@
   </xsl:template>
 
   <!-- Case -->
-  <xsl:template match="case" mode="xform">
-    <xsl:param name="class" />
-    <xsl:param name="selectedCase" />
-    <xsl:param name="dependantClass" />
-
-    <div id="{translate(@id,'[]#=/','')}-dependant">
-
-
-      <!-- IF CHOSEN CASE - HIDE-->
-      <xsl:attribute name="class">
-        <xsl:value-of select="$dependantClass" />
-        <xsl:if test="@id!=$selectedCase and not(descendant-or-self::alert)">
-          <xsl:text> invisible</xsl:text>
-        </xsl:if>
-        <xsl:text> form-group</xsl:text>
-      </xsl:attribute>
-
-
-      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
-
-      <xsl:if test="count(submit) &gt; 0">
-        <div class="form-margin">
-          <xsl:if test="descendant-or-self::*[contains(@class,'required')]">
-            <label class="required">
-              <span class="req">*</span>
-              <xsl:text> </xsl:text>
-              <xsl:call-template name="msg_required"/>
-            </label>
-          </xsl:if>
-
-          <xsl:apply-templates select="submit" mode="xform"/>
-        </div>
-      </xsl:if>
-    </div>
-
-  </xsl:template>
+  
 
   <xsl:template name="msg_required">
     <!-- required input-->
@@ -2384,7 +2349,7 @@
       </xsl:attribute>
 
 
-      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="control-outer"/>
 
       <xsl:if test="count(submit) &gt; 0">
         <div class="form-group">

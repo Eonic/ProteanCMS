@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="TrainingCourseList" formPath="trainingcourse/training-course-list" icon="fas fa-user-friends" name="Training Course List">Training Course List</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

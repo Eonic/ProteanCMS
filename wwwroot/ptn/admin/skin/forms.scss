@@ -122,7 +122,7 @@ form.xform {
 
                 i {
                     @include media-breakpoint-up(sm) {
-                        min-width: 1.5rem;
+                        min-width: 1rem;
                     }
                 }
 
@@ -430,4 +430,22 @@ form.xform {
 }
 .pick-image-responsive-popover {
     width:400px;
+}
+.admin-body {
+    padding:0 15px;
+}
+.btn-group-spaced {
+    display: inline-block;
+
+    button {
+        margin-left:10px;
+    }
+}
+.switch-form-wrapper {
+    padding: 10px 15px 0;
+    background: #f4f6f7;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    border: 1px solid #b3d2d9;
 }
