@@ -1795,42 +1795,42 @@
             </list>
           </xsl:variable>
           <xsl:variable name="value" select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')][1]/@id"/>
-          <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control">
+          <div class="select-with-button">
+            <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control form-select">
+              <xsl:if test="@maxRelationNo &gt; 1">
+                <xsl:attribute name="multiple">multiple</xsl:attribute>
+              </xsl:if>
+              <xsl:if test="@size &gt; 1">
+                <xsl:attribute name="size">
+                  <xsl:value-of select="@size"/>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:variable name="reationPickList">
+                <xsl:call-template name="getSelectOptionsFunction">
+                  <xsl:with-param name="query">
+                    <xsl:text>Content.</xsl:text>
+                    <xsl:value-of select="$contentType"/>
+                  </xsl:with-param>
+                </xsl:call-template>
+              </xsl:variable>
+              <option value="">None  </option>
+              <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
+                <xsl:with-param name="selectedValues" select="$valueList"/>
+              </xsl:apply-templates>
+            </select>
             <xsl:if test="@maxRelationNo &gt; 1">
-              <xsl:attribute name="multiple">multiple</xsl:attribute>
+              <div class="alert alert-info">
+                <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option
+              </div>
             </xsl:if>
-            <xsl:if test="@size &gt; 1">
-              <xsl:attribute name="size">
-                <xsl:value-of select="@size"/>
-              </xsl:attribute>
-            </xsl:if>
-            <xsl:variable name="reationPickList">
-              <xsl:call-template name="getSelectOptionsFunction">
-                <xsl:with-param name="query">
-                  <xsl:text>Content.</xsl:text>
-                  <xsl:value-of select="$contentType"/>
-                </xsl:with-param>
-              </xsl:call-template>
-            </xsl:variable>
-            <option value="">None  </option>
-            <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
-              <xsl:with-param name="selectedValues" select="$valueList"/>
-            </xsl:apply-templates>
-          </select>
-          <xsl:if test="@maxRelationNo &gt; 1">
-            <div class="alert alert-info">
-              <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option
-            </div>
-          </xsl:if>
-          <xsl:if test="contains(@search,'add')">
-            <span class="input-group-btn pull-right">
+            <xsl:if test="contains(@search,'add')">
               <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
               </button>
-            </span>
-          </xsl:if>
+            </xsl:if>
+          </div>
         </xsl:if>
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <div class="btn-group-spaced">

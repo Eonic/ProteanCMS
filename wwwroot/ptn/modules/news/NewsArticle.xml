@@ -140,16 +140,16 @@
           <span>Related Content</span>
         </label>
         <group>
-          <relatedContent search="find add" type="FAQ" relationType="" direction="1way">
+          <relatedContent search="find add" type="FAQ" relationType="" direction="1way" class="form-section-wrapper">
             <label>FAQ's</label>
           </relatedContent>
-          <relatedContent bind="Related-Author" search="pick add" type="Contact" relationType="Author" direction="2way" maxRelationNo="1">
+          <relatedContent bind="Related-Author" search="pick add" type="Contact" relationType="Author" direction="2way" maxRelationNo="1" class="form-section-wrapper">
             <label>Related Author</label>
           </relatedContent>
-          <relatedContent search="find add" type="Tag" relationType="Tag" direction="2way">
+          <relatedContent search="find add" type="Tag" relationType="Tag" direction="2way" class="form-section-wrapper">
             <label>Related Tags</label>
           </relatedContent>
-          <relatedContent search="find add" type="NewsArticle" relationType="NewsArticle" direction="2way">
+          <relatedContent search="find add" type="NewsArticle" relationType="NewsArticle" direction="2way" class="form-section-wrapper">
             <label>Related Articles</label>
           </relatedContent>
         </group>

@@ -135,6 +135,10 @@ form.xform {
         }
     }
 
+    .nav-link label {
+        cursor:pointer;
+    }
+
     .form-tab-wrapper {
         box-shadow: 0px 2px 11px rgba(0, 0, 0, 0.3);
         margin: 0;
@@ -483,8 +487,12 @@ strong {
 .edit-option-links {
     @include plain-buttons;
 }
+.form-select {
+    -webkit-appearance:none;
+}
 .related-content-rows {
     display: grid;
+    width:100%;
 
     > .row {
         border-top: 1px solid #b3d2d9;
@@ -497,14 +505,26 @@ strong {
     color: #666;
     background:#e6eced;
 }
+form.xform .form-section-wrapper > .relatedContent-group {
+    margin-bottom: 0;
+}
 form.xform .relatedContent-group {
-    margin: 0 -3px;
+    margin-left: -3px;
+    margin-right: -3px;
 
     .edit-option-links {
         text-align: right;
     }
 }
+.select-with-button {
+    display: flex;
+    margin-bottom: 10px;
 
+    button {
+        white-space: nowrap;
+        margin-left: 10px;
+    }
+}
 .navbar-fixed-bottom {
     position: fixed;
     bottom: 0;
