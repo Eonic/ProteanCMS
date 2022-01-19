@@ -2406,7 +2406,7 @@ Partial Public Class Cms
                         Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
                         Dim fld As DirectoryInfo
                         For Each fld In rootFolder.GetDirectories
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
                         Next
                         If myWeb.moConfig("ClientCommonFolder") <> "" Then
                             EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
@@ -2734,7 +2734,7 @@ Partial Public Class Cms
                             MyBase.Instance = goSession("oContentInstance")
                         End If
 
-                        If cContentName <> "" Then
+                        If cContentName <> "" And Not MyBase.Instance.FirstChild Is Nothing Then
                             MyBase.Instance.SelectSingleNode("tblContent/cContentName").InnerText() = cContentName
                             MyBase.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText() = Protean.Tools.Xml.XmlDate(Now())
                         End If
@@ -2747,7 +2747,9 @@ Partial Public Class Cms
                                 oElmt.ParentNode.RemoveChild(oElmt)
                             Next
                         Else
-                            addNewTextNode("bCascade", MyBase.Instance.SelectSingleNode("tblContent"), "", True, False)
+                            If Not MyBase.Instance.FirstChild Is Nothing Then
+                                addNewTextNode("bCascade", MyBase.Instance.SelectSingleNode("tblContent"), "", True, False)
+                            End If
                         End If
 
                     End If
@@ -2835,14 +2837,6 @@ Partial Public Class Cms
                                 If moRequest("productOldUrl") IsNot Nothing Then
                                     strOldurl = moRequest("productOldUrl").ToString()
                                 End If
-
-
-
-
-
-
-
-
 
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
@@ -2942,8 +2936,6 @@ Partial Public Class Cms
                                 End If
 
                             End If
-
-
 
                             goSession("mnContentRelationParent") = Nothing
                             goSession("mcRelRedirectString") = Nothing

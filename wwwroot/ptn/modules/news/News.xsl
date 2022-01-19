@@ -92,52 +92,54 @@
 
 		<!--end responsive columns variables-->
 		<!-- Output Module -->
-		<div class="NewsList swiper">
-			<div class="swiper-wrapper">
-				<!--end responsive columns-->
-				<xsl:if test="@autoplay !=''">
-					<xsl:attribute name="data-autoplay">
-						<xsl:value-of select="@autoplay"/>
-					</xsl:attribute>
-				</xsl:if>
-				<xsl:if test="@autoPlaySpeed!=''">
-					<xsl:attribute name="data-autoPlaySpeed">
-						<xsl:value-of select="@autoPlaySpeed"/>
-					</xsl:attribute>
-				</xsl:if>
-				<!-- If Stepper, display Stepper -->
-				<xsl:choose>
-					<xsl:when test="@linkArticle='true'">
-						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-							<xsl:with-param name="sortBy" select="@sortBy"/>
-						</xsl:apply-templates>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-							<xsl:with-param name="sortBy" select="@sortBy"/>
-							<xsl:with-param name="class" select="'swiper-slide'"/>
-						</xsl:apply-templates>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:text> </xsl:text>
-			</div>
-			<!-- If we need pagination -->
-			<div class="swiper-pagination">
-				<xsl:text> </xsl:text>
-			</div>
+		<div class="swiper-container container">
+			<div class="swiper" data-id="{@id}" data-xsCol="{@xsCol}" data-smCol="{@smCol}" data-mdCol="{@mdCol}" data-lgCol="{@lgCol}" data-xlCol="{@xlCol}">
+			    <div class="swiper-wrapper">
+				    <!--end responsive columns-->
+				    <xsl:if test="@autoplay !=''">
+					    <xsl:attribute name="data-autoplay">
+						    <xsl:value-of select="@autoplay"/>
+					    </xsl:attribute>
+				    </xsl:if>
+				    <xsl:if test="@autoPlaySpeed!=''">
+					    <xsl:attribute name="data-autoPlaySpeed">
+						    <xsl:value-of select="@autoPlaySpeed"/>
+					    </xsl:attribute>
+				    </xsl:if>
+				    <!-- If Stepper, display Stepper -->
+				    <xsl:choose>
+					    <xsl:when test="@linkArticle='true'">
+						    <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+							    <xsl:with-param name="sortBy" select="@sortBy"/>
+						    </xsl:apply-templates>
+					    </xsl:when>
+					    <xsl:otherwise>
+						    <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+							    <xsl:with-param name="sortBy" select="@sortBy"/>
+							    <xsl:with-param name="class" select="'swiper-slide'"/>
+						    </xsl:apply-templates>
+					    </xsl:otherwise>
+				    </xsl:choose>
+				    <xsl:text> </xsl:text>
+			    </div>
+			    <!-- If we need pagination -->
+			    <div class="swiper-pagination" id="swiper-pagination-{@id}">
+				    <xsl:text> </xsl:text>
+			    </div>
 
-			<!-- If we need navigation buttons -->
-			<div class="swiper-button-prev">
-				<xsl:text> </xsl:text>
-			</div>
-			<div class="swiper-button-next">
-				<xsl:text> </xsl:text>
-			</div>
 
-			<!-- If we need scrollbar -->
-			<div class="swiper-scrollbar">
-				<xsl:text> </xsl:text>
-			</div>
+				<!-- If we need scrollbar
+				<div class="swiper-scrollbar-{@id}">
+					<xsl:text> </xsl:text>
+				</div>		
+				-->
+		</div>				<!-- If we need navigation buttons -->
+				<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
+				<div class="swiper-button-next" id="swiper-button-next-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
 		</div>
 	</xsl:template>
 
