@@ -164,6 +164,20 @@
     </h1>
   </xsl:template>
 
+	<xsl:template match="Page[@ewCmd='AddContent']" mode="adminPageHeader">
+		<h1 class="page-header">
+			<i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
+			Add <xsl:value-of select="ContentDetail/Content/group/label/node()"/>
+		</h1>
+	</xsl:template>
+
+	<xsl:template match="Page[@ewCmd='EditContent']" mode="adminPageHeader">
+		<h1 class="page-header">
+			<i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
+			Edit <xsl:value-of select="ContentDetail/Content/group/label/node()"/>
+		</h1>
+	</xsl:template>
+
   <!--In admin but not WYSIWYG-->
   <xsl:template match="Page[@adminMode='true']" mode="bodyBuilder">
     <body id="pg_{@id}" class="ewAdmin layout-{@layout}">

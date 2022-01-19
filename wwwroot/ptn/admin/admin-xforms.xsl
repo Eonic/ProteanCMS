@@ -79,11 +79,11 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:if test="label[position()=1]">
-            <div class="">
+			  <!--div class="">
               <h3 class="">
                 <xsl:copy-of select="label/node()"/>
               </h3>
-            </div>
+            </div-->
           </xsl:if>
           <div class="">
             <xsl:apply-templates select="group | repeat " mode="xform"/>
@@ -111,6 +111,31 @@
     <xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
   </xsl:template>
 
+	<xsl:template match="group[@ref='EditContent']" mode="xform">
+		<xsl:param name="class"/>
+		<div class="{@class}">
+			<xsl:if test=" @id!='' ">
+				<xsl:attribute name="id">
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</xsl:if><br/>
+			<br/>
+			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+			<xsl:if test="count(submit) &gt; 0">
+				<xsl:if test="not(submit[contains(@class,'hideRequired')])">
+					<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+						<label class="required required-message">
+							<span class="req">*</span>
+							<xsl:text> </xsl:text>
+							<xsl:call-template name="msg_required"/>
+						</label>
+					</xsl:if>
+				</xsl:if>
+				<!-- For xFormQuiz change how these buttons work -->
+				<xsl:apply-templates select="submit" mode="xform"/>
+			</xsl:if>
+		</div>
+	</xsl:template>
 
   <xsl:template match="Content[ancestor::Page[@adminMode='true'] and count(group) = 1] | div[@class='xform' and count(group) = 1 and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action=""  novalidate="novalidate">
