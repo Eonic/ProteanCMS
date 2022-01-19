@@ -1795,42 +1795,42 @@
             </list>
           </xsl:variable>
           <xsl:variable name="value" select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')][1]/@id"/>
-          <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control">
+          <div class="select-with-button">
+            <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control form-select">
+              <xsl:if test="@maxRelationNo &gt; 1">
+                <xsl:attribute name="multiple">multiple</xsl:attribute>
+              </xsl:if>
+              <xsl:if test="@size &gt; 1">
+                <xsl:attribute name="size">
+                  <xsl:value-of select="@size"/>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:variable name="reationPickList">
+                <xsl:call-template name="getSelectOptionsFunction">
+                  <xsl:with-param name="query">
+                    <xsl:text>Content.</xsl:text>
+                    <xsl:value-of select="$contentType"/>
+                  </xsl:with-param>
+                </xsl:call-template>
+              </xsl:variable>
+              <option value="">None  </option>
+              <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
+                <xsl:with-param name="selectedValues" select="$valueList"/>
+              </xsl:apply-templates>
+            </select>
             <xsl:if test="@maxRelationNo &gt; 1">
-              <xsl:attribute name="multiple">multiple</xsl:attribute>
+              <div class="alert alert-info">
+                <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option
+              </div>
             </xsl:if>
-            <xsl:if test="@size &gt; 1">
-              <xsl:attribute name="size">
-                <xsl:value-of select="@size"/>
-              </xsl:attribute>
-            </xsl:if>
-            <xsl:variable name="reationPickList">
-              <xsl:call-template name="getSelectOptionsFunction">
-                <xsl:with-param name="query">
-                  <xsl:text>Content.</xsl:text>
-                  <xsl:value-of select="$contentType"/>
-                </xsl:with-param>
-              </xsl:call-template>
-            </xsl:variable>
-            <option value="">None  </option>
-            <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
-              <xsl:with-param name="selectedValues" select="$valueList"/>
-            </xsl:apply-templates>
-          </select>
-          <xsl:if test="@maxRelationNo &gt; 1">
-            <div class="alert alert-info">
-              <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option
-            </div>
-          </xsl:if>
-          <xsl:if test="contains(@search,'add')">
-            <span class="input-group-btn pull-right">
+            <xsl:if test="contains(@search,'add')">
               <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
               </button>
-            </span>
-          </xsl:if>
+            </xsl:if>
+          </div>
         </xsl:if>
         <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
           <div class="btn-group-spaced">
@@ -1854,15 +1854,15 @@
     </xsl:choose>
 
     <xsl:if test="not(contains(@search,'pick'))">
-
-      <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
-        <xsl:sort select="@status" data-type="number" order="descending"/>
-        <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
-        <xsl:with-param name="formName" select="$formName" />
-        <xsl:with-param name="relationType" select="$relationType" />
-        <xsl:with-param name="relationDirection" select="$RelType" />
-      </xsl:apply-templates>
-
+      <div class="related-content-rows">
+        <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
+          <xsl:sort select="@status" data-type="number" order="descending"/>
+          <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
+          <xsl:with-param name="formName" select="$formName" />
+          <xsl:with-param name="relationType" select="$relationType" />
+          <xsl:with-param name="relationDirection" select="$RelType" />
+        </xsl:apply-templates>
+      </div>
     </xsl:if>
   </xsl:template>
 
@@ -1992,14 +1992,15 @@
 
     <xsl:if test="not(contains(@search,'pick'))">
 
-      <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
-        <xsl:sort select="@status" data-type="number" order="descending"/>
-        <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
-        <xsl:with-param name="formName" select="$formName" />
-        <xsl:with-param name="relationType" select="$relationType" />
-        <xsl:with-param name="relationDirection" select="$RelType" />
-      </xsl:apply-templates>
-
+      <div class="related-content-rows">
+        <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
+          <xsl:sort select="@status" data-type="number" order="descending"/>
+          <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
+          <xsl:with-param name="formName" select="$formName" />
+          <xsl:with-param name="relationType" select="$relationType" />
+          <xsl:with-param name="relationDirection" select="$RelType" />
+        </xsl:apply-templates>
+      </div>
     </xsl:if>
   </xsl:template>
 
@@ -2129,14 +2130,15 @@
 
     <xsl:if test="not(contains(@search,'pick'))">
 
-      <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
-        <xsl:sort select="@status" data-type="number" order="descending"/>
-        <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
-        <xsl:with-param name="formName" select="$formName" />
-        <xsl:with-param name="relationType" select="$relationType" />
-        <xsl:with-param name="relationDirection" select="$RelType" />
-      </xsl:apply-templates>
-
+      <div class="related-content-rows">
+        <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
+          <xsl:sort select="@status" data-type="number" order="descending"/>
+          <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
+          <xsl:with-param name="formName" select="$formName" />
+          <xsl:with-param name="relationType" select="$relationType" />
+          <xsl:with-param name="relationDirection" select="$RelType" />
+        </xsl:apply-templates>
+      </div>
     </xsl:if>
   </xsl:template>
 
@@ -2145,68 +2147,80 @@
     <xsl:param name="relationType"/>
     <xsl:param name="relationDirection"/>
     <div class="advancedModeRow row" onmouseover="this.className='rowOver row'" onmouseout="this.className='advancedModeRow row'">
-      <div class="col-md-7">
-        <xsl:apply-templates select="." mode="status_legend"/>
+      <xsl:if test="@status=0">
+        <xsl:attribute name="class">advancedModeRow row inactive-related</xsl:attribute>
+      </xsl:if>
+      <div class="col-xl-6 col-xxl-7">
+        <xsl:if test="@status=0">
+          <xsl:attribute name="class">col-xl-5 col-xxl-6</xsl:attribute>
+        </xsl:if>
+          <!--<xsl:apply-templates select="." mode="status_legend"/>-->
         <xsl:text> </xsl:text>
         <xsl:apply-templates select="." mode="relatedBrief"/>
       </div>
       <xsl:choose>
         <xsl:when test="parent::ContentRelations[@copyRelations='true']">
-          <div class="col-md-6">
+          <div class="col-xl-6 col-xxl-5">
+            <xsl:if test="@status=0">
+              <xsl:attribute name="class">col-xl-7 col-xxl-6</xsl:attribute>
+            </xsl:if>
             <input type="checkbox" name="Relate_{$relationType}_{$relationDirection}" value="{@id}" checked="checked">
               <xsl:text> </xsl:text>Relate
             </input>
           </div>
         </xsl:when>
         <xsl:otherwise>
-          <div class="col-md-5 buttons">
-            <button type="button" name="RelateTop_{@id}" value=" " class="btn btn-arrow btn-primary btn-xs" onClick="disableButton(this);{$formName}.submit()">
+          <div class="col-xl-6 col-xxl-5 edit-option-links">
+            <xsl:if test="@status=0">
+              <xsl:attribute name="class">col-xl-7 col-xxl-6 edit-option-links</xsl:attribute>
+            </xsl:if>
+            <button type="button" name="RelateTop_{@id}" value=" " class="" onClick="disableButton(this);{$formName}.submit()">
               <i class="fa fa-arrow-up fa-white">
                 <xsl:text> </xsl:text>
               </i>
             </button>
-            <button type="button" name="RelateUp_{@id}" value=" " class="btn btn-arrow btn-primary btn-xs"  onClick="disableButton(this);{$formName}.submit()">
+            <button type="button" name="RelateUp_{@id}" value=" " class=""  onClick="disableButton(this);{$formName}.submit()">
               <i class="fa fa-chevron-up fa-white">
                 <xsl:text> </xsl:text>
               </i>
             </button>
-            <button type="button" name="RelateDown_{@id}" value=" " class="btn btn-arrow btn-primary btn-xs"  onClick="disableButton(this);{$formName}.submit()">
+            <button type="button" name="RelateDown_{@id}" value=" " class=""  onClick="disableButton(this);{$formName}.submit()">
               <i class="fa fa-chevron-down fa-white">
                 <xsl:text> </xsl:text>
               </i>
             </button>
-            <button type="button" name="RelateBottom_{@id}" value=" " class="btn btn-arrow btn-primary btn-xs" onClick="disableButton(this);{$formName}.submit()">
+            <button type="button" name="RelateBottom_{@id}" value=" " class="" onClick="disableButton(this);{$formName}.submit()">
               <i class="fa fa-arrow-down fa-white">
                 <xsl:text> </xsl:text>
               </i>
             </button>
-            <button type="button" name="RelateEdit_{@id}" value="Edit" class="btn btn-xs btn-primary " onClick="disableButton(this);{$formName}.submit()">
+            <button type="button" name="RelateEdit_{@id}" value="Edit" class=" " onClick="disableButton(this);{$formName}.submit()">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i>
               <xsl:text> </xsl:text>Edit
             </button>
-            <button type="button" name="RelateRemove_{@id}" value="Delete Relation" class="btn  btn-xs btn-danger"  onClick="disableButton(this);{$formName}.submit()">
+            <button type="button" name="RelateRemove_{@id}" value="Delete Relation" class="link-danger"  onClick="disableButton(this);{$formName}.submit()">
               <i class="fa fa-minus fa-white">
                 <xsl:text> </xsl:text>
               </i>
               <xsl:text> </xsl:text>Remove
             </button>
             <xsl:if test="@status='1'">
-              <a href="?ewCmd=HideContent&amp;id={@id}" title="Click here to hide this item" class="btn btn-xs btn-primary">
-                <i class="fa fa fa-eye-slash fa-white">
+              <a href="?ewCmd=HideContent&amp;id={@id}" title="Click here to hide this item" class="">
+                <i class="fa fa fa-eye fa-white">
                   <xsl:text> </xsl:text>
                 </i>
               </a>
             </xsl:if>
             <xsl:if test="@status='0'">
-              <a href="?ewCmd=ShowContent&amp;id={@id}" title="Click here to show this item" class="btn btn-xs btn-success">
-                <i class="fa fa-eye fa-white">
+              <a href="?ewCmd=ShowContent&amp;id={@id}" title="Click here to show this item" class="">
+                <i class="fa fa-eye-slash fa-white">
                   <xsl:text> </xsl:text>
                 </i>
               </a>
-              <a href="?ewCmd=DeleteContent&amp;id={@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
-                <i class="fa fa-trash-o fa-white">
+              <a href="?ewCmd=DeleteContent&amp;id={@id}" title="Click here to delete this item" class="link-danger">
+                <i class="fas fa-trash fa-white">
                   <xsl:text> </xsl:text>
                 </i>
               </a>
@@ -2252,12 +2266,14 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='NewsArticle']" mode="relatedBrief">
-    <xsl:apply-templates select="." mode="getDisplayName" />
+    <strong>
+      <xsl:apply-templates select="." mode="getDisplayName" />
+    </strong>
     <br/>
     <!--<small>-->
     <xsl:call-template name="truncate-string">
       <xsl:with-param name="text" select="Strapline/node()"/>
-      <xsl:with-param name="length" select="90"/>
+      <xsl:with-param name="length" select="140"/>
     </xsl:call-template>
     <!--</small>-->
   </xsl:template>

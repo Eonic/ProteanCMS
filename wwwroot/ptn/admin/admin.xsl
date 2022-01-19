@@ -2105,7 +2105,8 @@
         </xsl:if>
         <xsl:text> list-group-item level-</xsl:text>
         <xsl:value-of select="$level"/>
-        <xsl:if test="MenuItem"> expandable</xsl:if>
+        <xsl:if test="MenuItem"> expandable </xsl:if>
+        <xsl:if test="@status='0'"> inactive-row </xsl:if>
       </xsl:attribute>
 
       <div class="pageCell">
@@ -2220,7 +2221,7 @@
               <xsl:if test="@status='1'">
                 <!--a href="{$appPath}?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
                 <a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page">
-                  <i class="fa fa-times-circle fa-white">
+                  <i class="fas fa-eye-slash fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
                   Hide
@@ -2230,7 +2231,7 @@
               <xsl:if test="@status='0'">
                 <!--a href="{$appPath}?ewCmd=ShowPage&amp;pgid={@id}" class="adminButton show" title="Click here to hide this page">Show</a-->
                 <a onclick="$('#MenuTree').showButton({@id});" class="btn btn-xs btn-success btn-show" title="Click here to show this page">
-                  <i class="fa fa-check-circle fa-white">
+                  <i class="fas fa-eye fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Show
                 </a>
@@ -5550,8 +5551,8 @@
         </div>
       </div>
       <div class="container-fluid faux-table membership-user-list">
-        <div class="row">
-          <div class="col-sm-1">
+        <div class="row faux-header">
+          <div class="membership-status">
             Status
           </div>
           <xsl:choose>
@@ -5647,13 +5648,20 @@
     <xsl:if test="position() > $startPos and position() &lt;= ($startPos + $noOnPage)">
 
       <div class="row faux-row">
-        <div class="col-sm-1">
+        <xsl:if test="Status='0'">
+          <xsl:attribute name="class">row faux-row inactive-row</xsl:attribute>
+        </xsl:if>
+        <div class="membership-status">
           <xsl:apply-templates select="Status" mode="reportCell"/>
         </div>
-        <div class="col-xs-4 col-sm-2">
-          <xsl:apply-templates select="User" mode="reportCell"/>
+        <div class="col-10 col-lg-2">
+          
+          <strong>
+            <xsl:apply-templates select="User" mode="reportCell"/>
+          </strong>
         </div>
-        <div class="col-xs-4 col-sm-2">
+        <div class=" col-lg-3 col-xxl-2 text-muted text-break">
+          <span class="text-muted faux-table-xs-label">Username: </span>
           <xsl:apply-templates select="Username" mode="reportCell"/>
           <xsl:choose>
             <xsl:when test="Companies/node()!=''">
@@ -5665,76 +5673,76 @@
           </xsl:choose>
         </div>
 
-        <div class="col-md-6 membership-controls">
-          <div class="btn-group">
-            <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
-              <i class="fa fa-edit fa-white">
+        <div class="col-lg-7 col-xxl-8 membership-controls">
+          <div class="edit-option-links">
+            <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="">
+              <i class="fa fa-edit ">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit
             </a>
-            <a href="{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="btn btn-outline-primary">
-              <i class="fa fa-redo fa-white">
+            <a href="{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="">
+              <i class="fa fa-redo ">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Reset Pwd
             </a>
-            <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-outline-primary">
-              <i class="fa fa-user-secret fa-white">
+            <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="">
+              <i class="fa fa-user-secret ">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Impersonate
             </a>
-            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-outline-primary">
-              <i class="fa fa-cog fa-white">
+            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="">
+              <i class="fa fa-cog ">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Roles
             </a>
             <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListGroups']">
-              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-glass fa-white">
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="">
+                <i class="fa fa-glass ">
                   <xsl:text> </xsl:text>
                 </i>
                 <xsl:text> </xsl:text>Groups
               </a>
-              <a href="{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-lock fa-white">
+              <a href="{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="">
+                <i class="fa fa-lock ">
                   <xsl:text> </xsl:text>
                 </i>
                 <xsl:text> </xsl:text>Permissions
               </a>
             </xsl:if>
             <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListCompanies']">
-              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-building-o fa-white">
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="">
+                <i class="fa fa-building-o ">
                   <xsl:text> </xsl:text>
                 </i>
                 <xsl:text> </xsl:text>Companies
               </a>
 
-              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-group fa-white">
+              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="">
+                <i class="fa fa-group ">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Dept
               </a>
             </xsl:if>
 
             <xsl:if test="/Page[@userIntegrations='true']">
-              <a href="{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-random fa-white">
+              <a href="{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="">
+                <i class="fa fa-random ">
                   <xsl:text> </xsl:text>
                 </i>
                 <xsl:text> </xsl:text>Integrations
               </a>
             </xsl:if>
             <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
-              <a href="{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-map-marker fa-white">
+              <a href="{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="">
+                <i class="fa fa-map-marker ">
                   <xsl:text> </xsl:text>
                 </i>
                 <xsl:text> </xsl:text>Addresses
               </a>
             </xsl:if>
             <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
-              <a href="{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-outline-primary">
-                <i class="fa fa-signal fa-white">
+              <a href="{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="">
+                <i class="fa fa-signal ">
                   <xsl:text> </xsl:text>
                 </i>
                 <xsl:text> </xsl:text>Activity
@@ -5742,15 +5750,15 @@
             </xsl:if>
             <xsl:choose>
               <xsl:when test="Status='0'">
-                <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
-                  <i class="fa fa-trash-o fa-white">
+                <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="link-danger">
+                  <i class="fas fa-trash-alt">
                     <xsl:text> </xsl:text>
                   </i>
                   <xsl:text> </xsl:text>Delete
                 </a>
               </xsl:when>
               <xsl:otherwise>
-                <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-outline-primary">
+                <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="">
                   <i class="fa fa-ban fa-white">
                     <xsl:text> </xsl:text>
                   </i>
@@ -8084,83 +8092,83 @@
     <xsl:param name="querystringAmendment"/>
 
     <div class="btn-toolbar">
-      <div class="btn-group">
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;{$querystringAmendment}" class="all btn btn-default btn-sm">
+      <div class="btn-group flex-wrap alphabet-btns">
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;{$querystringAmendment}" class="all btn btn-outline-primary btn-sm text-nowrap">
           <xsl:text>All </xsl:text>
           <xsl:value-of select="$label"/>
         </a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=A&amp;{$querystringAmendment}" class="btn btn-default btn-sm">A</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=A&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">A</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=B&amp;{$querystringAmendment}" class="btn btn-default btn-sm">B</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=B&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">B</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=C&amp;{$querystringAmendment}" class="btn btn-default btn-sm">C</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=C&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">C</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=D&amp;{$querystringAmendment}" class="btn btn-default btn-sm">D</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=D&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">D</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=E&amp;{$querystringAmendment}" class="btn btn-default btn-sm">E</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=E&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">E</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=F&amp;{$querystringAmendment}" class="btn btn-default btn-sm">F</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=F&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">F</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=G&amp;{$querystringAmendment}" class="btn btn-default btn-sm">G</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=G&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">G</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=H&amp;{$querystringAmendment}" class="btn btn-default btn-sm">H</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=H&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">H</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=I&amp;{$querystringAmendment}" class="btn btn-default btn-sm">I</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=I&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">I</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=J&amp;{$querystringAmendment}" class="btn btn-default btn-sm">J</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=J&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">J</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=K&amp;{$querystringAmendment}" class="btn btn-default btn-sm">K</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=K&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">K</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=L&amp;{$querystringAmendment}" class="btn btn-default btn-sm">L</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=L&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">L</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=M&amp;{$querystringAmendment}" class="btn btn-default btn-sm">M</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=M&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">M</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=N&amp;{$querystringAmendment}" class="btn btn-default btn-sm">N</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=N&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">N</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=O&amp;{$querystringAmendment}" class="btn btn-default btn-sm">O</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=O&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">O</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=P&amp;{$querystringAmendment}" class="btn btn-default btn-sm">P</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=P&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">P</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Q&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Q</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Q&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">Q</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=R&amp;{$querystringAmendment}" class="btn btn-default btn-sm">R</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=R&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">R</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=S&amp;{$querystringAmendment}" class="btn btn-default btn-sm">S</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=S&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">S</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=T&amp;{$querystringAmendment}" class="btn btn-default btn-sm">T</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=T&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">T</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=U&amp;{$querystringAmendment}" class="btn btn-default btn-sm">U</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=U&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">U</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=V&amp;{$querystringAmendment}" class="btn btn-default btn-sm">V</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=V&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">V</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=W&amp;{$querystringAmendment}" class="btn btn-default btn-sm">W</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=W&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">W</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=X&amp;{$querystringAmendment}" class="btn btn-default btn-sm">X</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=X&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">X</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Y&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Y</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Y&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">Y</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Z&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Z</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Z&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">Z</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=0&amp;{$querystringAmendment}" class="btn btn-default btn-sm">0</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=0&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">0</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=1&amp;{$querystringAmendment}" class="btn btn-default btn-sm">1</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=1&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">1</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=2&amp;{$querystringAmendment}" class="btn btn-default btn-sm">2</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=2&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">2</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=3&amp;{$querystringAmendment}" class="btn btn-default btn-sm">3</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=3&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">3</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=4&amp;{$querystringAmendment}" class="btn btn-default btn-sm">4</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=4&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">4</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=5&amp;{$querystringAmendment}" class="btn btn-default btn-sm">5</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=5&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">5</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=6&amp;{$querystringAmendment}" class="btn btn-default btn-sm">6</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=6&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">6</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=7&amp;{$querystringAmendment}" class="btn btn-default btn-sm">7</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=7&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">7</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=8&amp;{$querystringAmendment}" class="btn btn-default btn-sm">8</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=8&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">8</a>
         <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=9&amp;{$querystringAmendment}" class="btn btn-default btn-sm">9</a>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=9&amp;{$querystringAmendment}" class="btn btn-outline-primary btn-sm">9</a>
         <xsl:text> </xsl:text>
       </div>
     </div>
@@ -12053,10 +12061,12 @@
   <xsl:template match="Username | Full_Name[not(parent::*//Username)]" mode="reportCell">
 
     <xsl:value-of select="node()"/>
-    <a href="mailto:{parent::*//Email/node()}">
-      <xsl:text> </xsl:text>
-      <i class="far fa-envelope"> </i>
-    </a>
+    <xsl:if test="contains(node(),'@')">
+      <a href="mailto:{parent::*//Email/node()}">
+        <xsl:text> </xsl:text>
+        <i class="far fa-envelope"> </i>
+      </a>
+    </xsl:if>
 
   </xsl:template>
 
