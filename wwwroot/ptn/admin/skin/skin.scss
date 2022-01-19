@@ -509,12 +509,16 @@ body.ewAdmin.layout-AdmHome {
     }
     //end #adminLayout
     #MenuTree {
-        border-radius:0;
+        border-radius: 0;
+
+        .inactive-row {
+            background: #f2f6f7;
+        }
 
         .list-group-item {
             padding-left: 15px;
-            border-left:0;
-            border-right:0;
+            border-left: 0;
+            border-right: 0;
         }
 
         .level-2 {
@@ -637,7 +641,7 @@ body.ewAdmin.layout-AdmHome {
                 top: 12px;
 
                 @include media-breakpoint-up(lg) {
-                    top:15px;
+                    top: 15px;
                 }
 
                 position: absolute;
@@ -682,14 +686,24 @@ body.ewAdmin.layout-AdmHome {
             font-weight: 600;
             font-size: 15px;
 
-            &:hover {
-                border: 0 !important;
-                background: none !important;
-            }
-
             i {
                 color: #4a4a4a !important;
                 font-size: 13px;
+                transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+
+            &:hover {
+                border: 0 !important;
+                background: none !important;
+                color: $admin-primary !important;
+
+                i {
+                    color: $admin-primary !important;
+                }
+            }
+
+            &:focus {
+                box-shadow:none;
             }
         }
 
