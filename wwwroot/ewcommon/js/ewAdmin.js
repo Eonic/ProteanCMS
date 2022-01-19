@@ -678,8 +678,10 @@ $.fn.prepareAdminXform = function () {
 };
 
 function passImgToForm(targetForm, targetField) {
-    cUrl = document.forms['imageDetailsForm'].elements['cPathName'].value
-    cAlt = document.forms['imageDetailsForm'].elements['cDesc'].value
+    debugger;
+    alert('hi');
+    cUrl = (document.forms['imageDetailsForm'].elements['cPathName'].value).replace(/'/g, "")
+    cAlt = (document.forms['imageDetailsForm'].elements['cDesc'].value).replace(/'/g, "")
     cWidth = document.forms['imageDetailsForm'].elements['nWidth'].value
     cHeight = document.forms['imageDetailsForm'].elements['nHeight'].value
     cName = document.forms['imageDetailsForm'].elements['cName'].value
