@@ -406,13 +406,44 @@ form.xform {
 .alphabet-btns a{
     flex-grow: 0!important;
 }
+@mixin plain-buttons {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+
+    a, button {
+        color: #4a4a4a;
+        font-weight: 600;
+        font-size: 15px;
+        padding: 0.375rem 0.75rem;
+        display: inline-block;
+
+        &:hover {
+            color: $admin-primary;
+        }
+
+        &.link-danger {
+            color: $admin-danger;
+
+            &:hover {
+                color: darken($danger,10%);
+            }
+        }
+    }
+
+    button {
+        border: 0;
+        background: none;
+        border-radius: 0;
+    }
+}
+strong {
+    font-weight: 600;
+}
 .faux-table {
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     margin-top: 10px;
 
-    strong {
-        font-weight: 600;
-    }
+
 
     .faux-header {
         color: #a7a7a7;
@@ -436,42 +467,43 @@ form.xform {
     }
 
     .inactive-row {
-        background: #f2f6f7;
+        background: #f1f5f7;
     }
 
     .edit-option-links {
-        margin-left: -0.75rem;
-        margin-right: -0.75rem;
-
-        a {
-            color: #4a4a4a;
-            font-weight: 600;
-            font-size: 15px;
-            padding: 0.375rem 0.75rem;
-            display: inline-block;
-
-            &:hover {
-                color: $admin-primary;
-            }
-
-            &.link-danger {
-                color: $admin-danger;
-
-                &:hover {
-                    color: darken($danger,10%);
-                }
-            }
-        }
+        @include plain-buttons;
     }
 
     .faux-table-xs-label {
         @include media-breakpoint-up(lg) {
-            display:none;
+            display: none;
         }
     }
 }
+.edit-option-links {
+    @include plain-buttons;
+}
+.related-content-rows {
+    display: grid;
 
+    > .row {
+        border-top: 1px solid #b3d2d9;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        align-items: center;
+    }
+}
+.inactive-related {
+    color: #666;
+    background:#e6eced;
+}
+form.xform .relatedContent-group {
+    margin: 0 -3px;
 
+    .edit-option-links {
+        text-align: right;
+    }
+}
 
 .navbar-fixed-bottom {
     position: fixed;
