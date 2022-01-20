@@ -32,7 +32,8 @@
   <xsl:variable name="subSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
-
+  <xsl:variable name="GutterWidth" select="'20'"/>
+  <xsl:variable name="GutterWidthLg" select="'30'"/>
 
   <xsl:variable name="responsiveImageSizes">off</xsl:variable>
 

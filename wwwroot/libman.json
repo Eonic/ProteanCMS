@@ -45,6 +45,10 @@
     {
       "library": "jqueryui@1.11.1",
       "destination": "ptn/libs/jqueryui/"
+    },
+    {
+      "library": "fancybox@3.0.1",
+      "destination": "ptn/libs/fancybox/"
     }
   ]
 }

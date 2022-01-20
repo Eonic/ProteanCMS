@@ -93,20 +93,8 @@
 		<!--end responsive columns variables-->
 		<!-- Output Module -->
 		<div class="swiper-container container">
-			<div class="swiper" data-id="{@id}" data-xsCol="{@xsCol}" data-smCol="{@smCol}" data-mdCol="{@mdCol}" data-lgCol="{@lgCol}" data-xlCol="{@xlCol}">
+			<div class="swiper" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$GutterWidth}" data-spacebetweenlg="{$GutterWidthLg}">
 			    <div class="swiper-wrapper">
-				    <!--end responsive columns-->
-				    <xsl:if test="@autoplay !=''">
-					    <xsl:attribute name="data-autoplay">
-						    <xsl:value-of select="@autoplay"/>
-					    </xsl:attribute>
-				    </xsl:if>
-				    <xsl:if test="@autoPlaySpeed!=''">
-					    <xsl:attribute name="data-autoPlaySpeed">
-						    <xsl:value-of select="@autoPlaySpeed"/>
-					    </xsl:attribute>
-				    </xsl:if>
-				    <!-- If Stepper, display Stepper -->
 				    <xsl:choose>
 					    <xsl:when test="@linkArticle='true'">
 						    <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
@@ -122,18 +110,11 @@
 				    </xsl:choose>
 				    <xsl:text> </xsl:text>
 			    </div>
-			    <!-- If we need pagination -->
+
 			    <div class="swiper-pagination" id="swiper-pagination-{@id}">
 				    <xsl:text> </xsl:text>
 			    </div>
-
-
-				<!-- If we need scrollbar
-				<div class="swiper-scrollbar-{@id}">
-					<xsl:text> </xsl:text>
-				</div>		
-				-->
-		</div>				<!-- If we need navigation buttons -->
+    		</div>				
 				<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
 					<xsl:text> </xsl:text>
 				</div>

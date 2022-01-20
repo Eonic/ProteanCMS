@@ -71,6 +71,9 @@ function contentSwiper() {
         var mdSlides = $(this).data("mdcol");
         var lgSlides = $(this).data("lgcol");
         var xlSlides = $(this).data("xlcol");
+        var xxlSlides = $(this).data("xxlcol");
+        var spaceBetween = $(this).data("spacebetween");
+        var spaceBetweenLg = $(this).data("spacebetweenlg");
         var autoplay = $(this).data("autoplay");
         if (autoplay == undefined) { autoplay = false };
         var autoplaySpeed = $(this).data("autoplayspeed");
@@ -84,7 +87,7 @@ function contentSwiper() {
         const swiper = new Swiper(this, {
             // Optional parameters
             slidesPerView: xsSlides,
-            spaceBetween: 30,
+            spaceBetween: spaceBetween,
             loop: true,
             loopFillGroupWithBlank: true,
             watchOverflow: true,
@@ -98,21 +101,23 @@ function contentSwiper() {
             },
             breakpoints: {
                 576: {
-                    slidesPerView: xsSlides,
-                    spaceBetween: 10,
+                    slidesPerView: smSlides,
                 },
                 768: {
-                    slidesPerView: smSlides,
-                    spaceBetween: 20,
+                    slidesPerView: mdSlides,
+                    
                 },
                 992: {
-                    slidesPerView: mdSlides,
+                    slidesPerView: lgSlides,
+                    spaceBetween: spaceBetweenLg,
                 },
                 1200: {
-                    slidesPerView: lgSlides,
+                    slidesPerView: xlSlides,
+                    spaceBetween: spaceBetweenLg,
                 },
                 1400: {
-                    slidesPerView: xlSlides,
+                    slidesPerView: xxlSlides,
+                    spaceBetween: spaceBetweenLg,
                 },
             },
         });
