@@ -12434,7 +12434,7 @@
       <xsl:when test="@status=0">
         <i>
           <xsl:attribute name="class">
-            <xsl:text>far fa-file status</xsl:text>
+            <xsl:text>far fa-file inactive</xsl:text>
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           &#160;
@@ -12443,7 +12443,7 @@
       <xsl:when test="@status=1 or @status='-1'">
         <i>
           <xsl:attribute name="class">
-            <xsl:text>fas fa-file status</xsl:text>
+            <xsl:text>fas fa-file active</xsl:text>
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           &#160;

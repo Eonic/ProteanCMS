@@ -1,14 +1,3 @@
-.treeview, .treeview ul { 
-	padding: 0;
-	margin: 0 !important;
-	list-style: none;
-}
-
-.treeview ul {
-	/*background-color: white;*/
-	margin-top: 4px;
-}
-
 .ewAdmin div.report div#column1 div.report div.reportSet .treeview div.hitarea, .treeview .hitarea {
 	height: 15px;
 	width: 14px;
@@ -27,10 +16,7 @@
 {
     margin-top:5px;
 }
-.treeview li { 
-	margin: 0;
-	padding: 0px 0pt 0px 10px;
-}
+
 
 .treeview a.selected {
 	background-color: #eee;
