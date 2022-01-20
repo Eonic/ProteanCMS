@@ -849,8 +849,6 @@ Original preload function has been kept but is unused.
                     $(this).expandToLevel(settings);
                 }
 
-
-
                 // Add the control classes to the tree
                 $(this).find('li').each(function () {
                     // alert($(this).attr('id') + '==' + 'node' + $(this).next().data("tree-parent"))
@@ -2166,7 +2164,7 @@ function ValidateContentForm(event) {
 function RedirectClick(redirectType) {
     
     //var redirectType = $("redirectType").val();
-    alert(redirectType);
+    
     if (redirectType == "404Redirect") {
         $("input[name*='redirectOption']").val("");
         if ($(".btnSubmitPage").length > 0) {
@@ -2268,7 +2266,7 @@ $(document).on("click", "#btnYescreateRuleForChild", function (event) {
 
     var pageId = $(".hiddenPageId").val();
     var redirectType = $("input[name*='redirectOption']").val();
-    alert(redirectType);
+   // alert(redirectType);
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
@@ -2390,7 +2388,9 @@ $(document).ready(function () {
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
     }
     if ($("#MenuTree") != undefined) {
-        scrollToAnchor($("#MenuTree li.active").prop("id"));
+        if ($("#MenuTree li.active").prop("id") != undefined) {
+            scrollToAnchor($("#MenuTree li.active").prop("id"));
+        }
     }
 });
 

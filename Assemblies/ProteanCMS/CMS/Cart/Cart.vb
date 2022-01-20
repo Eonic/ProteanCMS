@@ -1747,7 +1747,7 @@ processFlow:
                 Select Case PayableType
                     Case "deposit"
 
-                        Dim outstandingAmount As Double = CDbl(oCartElmt.GetAttribute("total")) - CDbl(oCartElmt.GetAttribute("payableAmount"))
+                        Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - CDbl("0" + oCartElmt.GetAttribute("payableAmount"))
                         mcDepositAmount = oCartElmt.GetAttribute("payableAmount")
                         ' Let's update the cart element
                         oCartElmt.SetAttribute("paymentMade", mcDepositAmount)
@@ -1766,7 +1766,7 @@ processFlow:
 
                         oCartElmt.SetAttribute("settlementID", cUniqueLink)
                         oCartElmt.SetAttribute("transStatus", "Complete")
-                        UpdateCartDeposit(oCartElmt, mcDepositAmount, PayableType)
+                        UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
                         mnProcessId = 10
 
                     Case "settlement"
@@ -2994,6 +2994,9 @@ processFlow:
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                         oCartElmt.SetAttribute("paymentMade", "0")
                                     End If
+                                    If nPayable = nTotalAmount Then
+                                        oCartElmt.SetAttribute("payableType", "full")
+                                    End If
                                 End If
                             Else
                                 ' A deposit has been paid - should I check if it's the same as the total amount?
@@ -3014,14 +3017,14 @@ processFlow:
                                 oCartElmt.SetAttribute("payableType", "settlement")
                             End If
 
-
                             If nPayable = 0 Then
-                                    oCartElmt.SetAttribute("ReadOnly", "On")
-                                End If
+                                oCartElmt.SetAttribute("ReadOnly", "On")
                             End If
+                        End If
 
-                            'Add Any Client Notes
-                            If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
+
+                        'Add Any Client Notes
+                        If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
                             oElmt = moPageXml.CreateElement("Notes")
                             oElmt.InnerXml = oRow("cClientNotes")
                             If oElmt.FirstChild.Name = "Notes" Then
@@ -4435,7 +4438,7 @@ processFlow:
                 ' Changed this so it gets any
 
                 'Check if updated primiary billing address, (TS added order by reverse order added)
-                cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 order by cContactType ASC, nContactKey DESC"
+                cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 and (cContactType = 'Billing Address' or cContactType = 'Delivery Address')  order by cContactType ASC, nContactKey DESC"
                 oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 For Each oDr In oDs.Tables("tblCartContact").Rows
                     If billingAddId = 0 Then billingAddId = oDr.Item("nContactKey")
@@ -4497,7 +4500,7 @@ processFlow:
                 If Not bBillingSet Then
                     contactId = setCurrentBillingAddress(myWeb.mnUserId, 0)
                 Else
-                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 order by cContactType ASC"
+                    cSql = "Select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " And nContactCartId = 0 And (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC"
                     oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 End If
 
@@ -5692,7 +5695,7 @@ processFlow:
                             If IsDBNull(oRow("nShippingTotal")) Then
                                 cHidden = " hidden"
                                 bHideDelivery = True
-                            ElseIf oRow("nShippingTotal") = 0 Then
+                            ElseIf oRow("nShippingTotal") = 0 And oRow("bCollection") = 0 Then
                                 cHidden = " hidden"
                                 bHideDelivery = True
                             Else
@@ -5890,10 +5893,10 @@ processFlow:
 
                     ' Adjust the group title
                     If bAdjustTitle Then
-                        Dim cGroupTitle As String = "Choose Delivery Type and Payment Method"
+                        Dim cGroupTitle As String = "Select Delivery and Payment Option'"
                         If bHideDelivery And bHidePayment Then cGroupTitle = "Terms and Conditions"
-                        If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Choose Payment Method"
-                        If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Choose Delivery Type"
+                        If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Select Payment Option"
+                        If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Select Shipping Option"
                         Dim labelElmt As XmlElement = oGrpElmt.SelectSingleNode("label")
                         labelElmt.InnerText = cGroupTitle
                         labelElmt.SetAttribute("class", "term3019")
@@ -8255,7 +8258,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Public Function CartReports(ByVal dBegin As Date, ByVal dEnd As Date, Optional ByVal bSplit As Integer = 0, Optional ByVal cProductType As String = "", Optional ByVal nProductId As Integer = 0, Optional ByVal cCurrencySymbol As String = "", Optional ByVal nOrderStatus1 As Integer = 6, Optional ByVal nOrderStatus2 As Integer = 9, Optional ByVal cOrderType As String = "ORDER") As XmlElement
+        Public Function CartReports(ByVal dBegin As Date, ByVal dEnd As Date, Optional ByVal bSplit As Integer = 0, Optional ByVal cProductType As String = "", Optional ByVal nProductId As Integer = 0, Optional ByVal cCurrencySymbol As String = "", Optional ByVal nOrderStatus As String = "6,9,17", Optional ByVal cOrderType As String = "ORDER") As XmlElement
             Try
                 Dim cSQL As String = "exec "
                 Dim cCustomParam As String = ""
@@ -8279,9 +8282,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 cSQL &= Protean.Tools.Database.SqlDate(dBegin) & ","
                 cSQL &= Protean.Tools.Database.SqlDate(dEnd) & ","
                 cSQL &= cCustomParam & ","
-                cSQL &= "'" & cCurrencySymbol & "',"
-                cSQL &= nOrderStatus1 & ","
-                cSQL &= nOrderStatus2 & ","
+                cSQL &= "'" & cCurrencySymbol & "','"
+                cSQL &= nOrderStatus & "',"
                 cSQL &= "'" & cOrderType & "'"
 
                 Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report")
@@ -8302,8 +8304,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 oReturnElmt.SetAttribute("cProductType", cProductType)
                 oReturnElmt.SetAttribute("nProductId", nProductId)
                 oReturnElmt.SetAttribute("cCurrencySymbol", cCurrencySymbol)
-                oReturnElmt.SetAttribute("nOrderStatus1", nOrderStatus1)
-                oReturnElmt.SetAttribute("nOrderStatus2", nOrderStatus2)
+                oReturnElmt.SetAttribute("nOrderStatus", nOrderStatus)
                 oReturnElmt.SetAttribute("cOrderType", cOrderType)
                 Return oRptElmt
             Catch ex As Exception
@@ -8696,10 +8697,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Function
 
-        Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String) As String
+        Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String, ByVal AmountToDiscount As Decimal) As String
             Try
                 Dim cSqlUpdate As String
-                cSqlUpdate = " update tblCartItem set  cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
+                ' cSqlUpdate = " update tblCartItem set nPrice=0.00, nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
+                cSqlUpdate = " update tblCartItem set nPrice=" & AmountToDiscount & ", nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
                 moDBHelper.ExeProcessSql(cSqlUpdate)
 
             Catch ex As Exception
@@ -8707,6 +8709,16 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
+        Private Function updatePackagingForRemovingFreeGiftDiscount(ByVal nCartOrderId As String, ByVal AmountToDiscount As Decimal) As String
+            Try
+                Dim cSqlUpdate As String
+                cSqlUpdate = " update tblCartItem set nDiscountValue=" & AmountToDiscount & " where  nitemid=0 and nCartOrderId = " & nCartOrderId
+                moDBHelper.ExeProcessSql(cSqlUpdate)
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, , "", gbDebug)
+            End Try
+        End Function
 
         Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
             Try

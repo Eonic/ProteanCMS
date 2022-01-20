@@ -2462,6 +2462,13 @@
         </xsl:variable>
 
         <a href="{$href}" title="{$title}">
+          <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($href,'.pdf')">
+              <xsl:attribute name="onclick">
+                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                <xsl:value-of select="$href"/>
+                <xsl:text>');</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
           <xsl:choose>
             <xsl:when test="img[contains(@src,'.svg')]">
               <svg id="svg-{@position}" width="{img/@width}" height="{img/@height}" viewbox="0 0 {img/@width} {img/@height}" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -2929,11 +2936,11 @@
     <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
       <xsl:variable name="apiKey">
         <xsl:choose>
-          <xsl:when test="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey!=''">
-            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+          <xsl:when test="$GoogleAPIKey!=''">
+            <xsl:value-of select="$GoogleAPIKey"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="$GoogleAPIKey"/>
+            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
            </xsl:otherwise>
         </xsl:choose>
        </xsl:variable>
@@ -3701,9 +3708,26 @@
     <xsl:apply-templates select="." mode="xform"/>
   </xsl:template>
 
-
+<!-- ################# Start Product Filter #########-->
+	<xsl:template match="Content[@type='Module' and @moduleType='ProductFilter']" mode="displayBrief">
+		<xsl:apply-templates select="Content[@type='PageFilter']" mode="displayBrief"></xsl:apply-templates>
+	</xsl:template>
+	
+	<xsl:template match="Content[@type='PageFilter']" mode="displayBrief">
+		 <select>
+			<option>Flying</option>
+			<option>Driving</option>
+	    </select>
+	</xsl:template>
+	<!--################ End Product Filter #########-->
+	
+	
+	
   <!-- ############## News Articles ##############   -->
   <!-- NewsArticle Module -->
+
+	
+	
   <xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
     <!-- Set Variables -->
     <xsl:variable name="contentType" select="@contentType" />
@@ -6412,16 +6436,16 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:attribute name="class">col-md-12</xsl:attribute>
-              <div class="col-md-5 pull-right">
+              
               <xsl:apply-templates select="." mode="displayDetailImage"/>
-                <xsl:if test="@bookingURL!=''">
+                <!--<xsl:if test="@bookingURL!=''">
                   <xsl:text> </xsl:text>
                   <a href="{@bookingURL}" class="btn btn-success btn-block">
                     Book Here&#160;&#160;<i class="fa fa-mouse-pointer">&#160;</i>
                   </a>
                 </xsl:if>
-                <xsl:apply-templates select="Content[@type='Contact']" mode="displayContributor"/>
-              </div>
+                <xsl:apply-templates select="Content[@type='Contact']" mode="displayContributor"/>-->
+              
             </xsl:otherwise>
           </xsl:choose>
           <xsl:if test="StartDate!=''">
@@ -15070,8 +15094,8 @@
       <xsl:with-param name="contentType" select="@contentType"/>
     </xsl:apply-templates>
   </xsl:template>
-
-  <xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="contentJS">
+	<xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery')]" mode="contentJS">
+		<!--xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="contentJS"-->
     <!--Moved so we can use within Event / Product templates too-->
     <xsl:apply-templates select="."  mode="displaySlideGalleryJS"/>
   </xsl:template>

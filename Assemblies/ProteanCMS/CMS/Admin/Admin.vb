@@ -1763,6 +1763,16 @@ ProcessFlow:
                             sAdminLayout = "AdminXForm"
                         End If
 
+                    Case "RegradeUser"
+                        sAdminLayout = "AdminXForm"
+                        Dim xformPath As String = "/xforms/directory/regradeuser.xml"
+                        oPageDetail.AppendChild(moAdXfm.xFrmRegradeUser(myWeb.moRequest("id"), myWeb.moRequest("existingGroupId"), myWeb.moRequest("newGroupId"), "Regrade User", xformPath, myWeb.moRequest("messageId")))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "ListUsers"
+                            GoTo ProcessFlow
+                        End If
+
                     Case "EditRole"
                         'replaces admin menu with one with full permissions
                         GetAdminMenu()
@@ -3526,8 +3536,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cProductType").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nProductId").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
@@ -3543,8 +3552,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nDay").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
@@ -3559,8 +3567,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nWeek").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
