@@ -2481,7 +2481,9 @@ Partial Public Class Cms
                 Try
                     If filepath = "" Then filepath = "/"
 
-                    Try
+
+
+                    If IO.File.Exists(goServer.MapPath(filepath) & "/" & manifestFilename) Then
                         'if this file exists then add the bespoke templates
                         oXformDoc.Load(goServer.MapPath(filepath) & "/" & manifestFilename)
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
@@ -2524,11 +2526,13 @@ Partial Public Class Cms
                             End If
 
                         Next
-                    Catch ex As Exception
+                    Else
                         If Not bIgnoreIfNotFound Then
-                            MyBase.addNote(oSelectElmt.ParentNode, xForm.noteTypes.Alert, filepath & " could not be found. - " & ex.Message)
+                            MyBase.addNote(oSelectElmt.ParentNode, xForm.noteTypes.Alert, filepath & " could not be found.")
                         End If
-                    End Try
+                    End If
+
+
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug)
                 End Try
