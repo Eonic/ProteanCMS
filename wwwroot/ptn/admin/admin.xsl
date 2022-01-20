@@ -492,8 +492,12 @@
           </ul>
         </xsl:for-each>
       </div>
-      <a href="" class="all-breadcrumb">see all locations</a>
-      <a href="" class="less-breadcrumb">hide locations</a>
+      <a href="" class="all-breadcrumb">
+        <i class="fas fa-chevron-down"> </i>
+      </a>
+      <a href="" class="less-breadcrumb">
+        <i class="fas fa-chevron-up"> </i>
+      </a>
     </div>
   </xsl:template>
 

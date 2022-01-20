@@ -79,7 +79,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:if test="label[position()=1]">
-			  <!--div class="">
+            <!--div class="">
               <h3 class="">
                 <xsl:copy-of select="label/node()"/>
               </h3>
@@ -111,31 +111,59 @@
     <xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
   </xsl:template>
 
-	<xsl:template match="group[@ref='EditContent']" mode="xform">
+  <!--<xsl:template match="group[@ref='EditContent']" mode="xform">
 		<xsl:param name="class"/>
 		<div class="{@class}">
 			<xsl:if test=" @id!='' ">
 				<xsl:attribute name="id">
 					<xsl:value-of select="@id"/>
 				</xsl:attribute>
-			</xsl:if><br/>
-			<br/>
+			</xsl:if>
 			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
 			<xsl:if test="count(submit) &gt; 0">
 				<xsl:if test="not(submit[contains(@class,'hideRequired')])">
-					<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+					-->
+  <!--<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
 						<label class="required required-message">
 							<span class="req">*</span>
 							<xsl:text> </xsl:text>
 							<xsl:call-template name="msg_required"/>
 						</label>
-					</xsl:if>
+					</xsl:if>-->
+  <!--
 				</xsl:if>
-				<!-- For xFormQuiz change how these buttons work -->
+				-->
+  <!-- For xFormQuiz change how these buttons work -->
+  <!--
 				<xsl:apply-templates select="submit" mode="xform"/>
 			</xsl:if>
 		</div>
-	</xsl:template>
+	</xsl:template>-->
+
+  <xsl:template match="group[@ref='EditContent' and parent::Content]" mode="xform">
+    <xsl:param name="class"/>
+    <div class="{@class}">
+      <xsl:if test=" @id!='' ">
+        <xsl:attribute name="id">
+          <xsl:value-of select="@id"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <xsl:if test="count(submit) &gt; 0">
+        <xsl:if test="not(submit[contains(@class,'hideRequired')])">
+          <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+            <label class="required required-message">
+              <span class="req">*</span>
+              <xsl:text> </xsl:text>
+              <xsl:call-template name="msg_required"/>
+            </label>
+          </xsl:if>
+        </xsl:if>
+        <!-- For xFormQuiz change how these buttons work -->
+        <xsl:apply-templates select="submit" mode="xform"/>
+      </xsl:if>
+    </div>
+  </xsl:template>
 
   <xsl:template match="Content[ancestor::Page[@adminMode='true'] and count(group) = 1] | div[@class='xform' and count(group) = 1 and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action=""  novalidate="novalidate">
@@ -505,25 +533,23 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </input>
-      <span class="input-group-btn">
-        <xsl:choose>
-          <xsl:when test="value!=''">
-            <a href="#" onclick="xfrmClearDocument('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
-              <i class="fa fa-trash-o fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Clear
-            </a>
+      <xsl:choose>
+        <xsl:when test="value!=''">
+          <a href="#" onclick="xfrmClearDocument('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
+            <i class="fa fa-trash-o fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Clear
+          </a>
 
-          </xsl:when>
-          <xsl:otherwise>
-            <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=DocsLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
-              <i class="fas fa-file">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Pick
-            </a>
-          </xsl:otherwise>
-        </xsl:choose>
-      </span>
+        </xsl:when>
+        <xsl:otherwise>
+          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=DocsLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
+            <i class="fas fa-file">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Pick
+          </a>
+        </xsl:otherwise>
+      </xsl:choose>
     </div>
     <!--<script language="javascript" type="text/javascript">
 
@@ -618,7 +644,6 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </input>
-      <span class="input-group-btn">
         <xsl:choose>
           <xsl:when test="value!=''">
             <a href="#" onclick="xfrmClearMedia('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
@@ -636,7 +661,6 @@
             </a>
           </xsl:otherwise>
         </xsl:choose>
-      </span>
     </div>
   </xsl:template>
 
@@ -2179,7 +2203,7 @@
         <xsl:if test="@status=0">
           <xsl:attribute name="class">col-xl-5 col-xxl-6</xsl:attribute>
         </xsl:if>
-          <!--<xsl:apply-templates select="." mode="status_legend"/>-->
+        <!--<xsl:apply-templates select="." mode="status_legend"/>-->
         <xsl:text> </xsl:text>
         <xsl:apply-templates select="." mode="relatedBrief"/>
       </div>

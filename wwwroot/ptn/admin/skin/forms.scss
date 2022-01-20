@@ -141,7 +141,7 @@ form.xform {
 
     .form-tab-wrapper {
         box-shadow: 0px 2px 11px rgba(0, 0, 0, 0.3);
-        margin: 0;
+        margin: 20px 0 0;
     }
 
     .form-tab-content-wrapper {
@@ -224,6 +224,11 @@ form.xform {
 
     .form-2-col {
         @include make-row();
+
+        legend {
+            padding-right: calc(var(--bs-gutter-x) * .5);
+            padding-left: calc(var(--bs-gutter-x) * .5);
+        }
 
         > div {
             @include make-col-ready();
@@ -318,7 +323,7 @@ form.xform {
         }
     }
 
-    
+
 
     .principle {
         //@extend .btn-info;

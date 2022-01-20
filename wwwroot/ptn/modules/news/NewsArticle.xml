@@ -79,14 +79,14 @@
   </model>
   <group ref="EditContent">
     <label>News Article</label>
-    <group ref="EditContent" class="tabs">
-      <group class="ContentColumn2">
+    <group class="tabs">
+      <group>
         <label>
           <i class="fas fa-pen"> </i>
           <span class="space"> </span>
           <span>Content</span>
         </label>
-        <group ref="Content" class="Content">
+        <group ref="Content">
           <label>Article Content</label>
           <group class="row">
             <input bind="cContentHeadline" class="required col-lg-6">
@@ -154,7 +154,7 @@
           </relatedContent>
         </group>
       </group>
-      <group class="ContentColumn1">
+      <group>
         <label>
           <i class="fas fa-cog"> </i>
           <span class="space"> </span>

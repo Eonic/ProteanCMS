@@ -182,330 +182,358 @@
       <bind id="nProductGroups" nodeset="@ids" required="false()" type="string"/>
     </bind>
   </model>
-  <group ref="EditContent" class="2col">
-    <label>Add/Edit Product </label>
-    <group class="xFormContainer">
-      <group class="Content">
-        <label>Settings</label>
-        <input bind="dPublishDate" class="calendar short">
-          <label>Publish date</label>
-        </input>
-        <input bind="dExpireDate" class="calendar short">
-          <label>Expire date</label>
-        </input>
-        <select1 bind="nStatus" appearance="full" class="required vshort">
-          <label>Status</label>
-          <item>
-            <label>Live</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>Hidden</label>
-            <value>0</value>
-          </item>
-        </select1>
-      </group>
-      <group>
-        <label>Product Groups</label>
-        <select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full"/>
-      </group>
-      <group class="Content">
-        <label>Images</label>
-        <input bind="cContentFullSizePicture" class="short pickImage">
-          <label>Main product image</label>
-          <help class="inline">
-            <p>
-              This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
-            </p>
-            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
-            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
-          </help>
-        </input>
-        <input bind="cContentThumbnail" class="short pickImage">
-          <label>Alternative thumbnail</label>
-        </input>
-        <input bind="cContentPicture" class="short pickImage">
-          <label>Alternative picture</label>
-        </input>
-      </group>
-      <group>
-        <label>Image gallery</label>
-        <help class="inline">Besides the main product images, You can add additional images below to display as a gallery.</help>
-        <relatedContent search="add" type="LibraryImage" relationType="" direction="1way"/>
-      </group>
-      <group>
-        <label>Documents</label>
-        <input bind="cContentSpecificationDocument" class="short pickDocument">
-          <label>Specification document</label>
-        </input>
-      </group>
-    </group>
+  <group ref="EditContent" >
+    <label>Product </label>
+    <group class="tabs">
 
-    <!-- End of Column 1-->
-    <group class="xFormContainer">
-      <group>
-        <label>Product Details</label>
-        <input bind="cContentProductName" class="required long">
-          <label>Product name</label>
-          <help class="inline">
-            <p>This is the name that will display for the product, and also form the URL.</p>
-            <p>Try to avoid ALL CAPS, as this can have a detramental effect on search engine listings or Product feed submissions.</p>
-          </help>
-        </input>
-      </group>
-      <group class="inline">
-        <label>Product Identifiers</label>
-        <input bind="cContentStockCode" class="short">
-          <label>Stock code</label>
-          <help class="inline">
-            <p>The stock code you wish to use for your item</p>
-          </help>
-        </input>
-        <input bind="cContentStockCodeGTIN" class="short">
-          <label>Global Trade Item Number (GTIN)</label>
-          <help class="inline">
-            <p>If your product has an international stockcode include it here. Recognised GTIN's are;</p>
-            <ul>
-              <li>
-                <b>EAN</b>
-              </li>
-              <li>
-                <b>ISBN</b>
-              </li>
-              <li>
-                <b>UPC</b>
-              </li>
-              <li>
-                <b>JAN</b>
-              </li>
-            </ul>
-            <p>Populating this field can help search engines identify your products</p>
-          </help>
-        </input>
-        <input bind="cContentManufacturer" class="short">
-          <label>Brand / Manufacturer</label>
-        </input>
-        <input bind="cContentStockCodeMPN" class="short">
-          <label>Manufacturer Part Number (MPN)</label>
-          <help class="inline">
-            <p>Unique part number for that manufacturer.</p>
-            <p>Populating this field can help search engines identify your products</p>
-          </help>
-        </input>
-      </group>
+      <!-- End of Column 1-->
+      <group class="xFormContainer">
+        <label>
+          <i class="fas fa-pen"> </i>
+          <span class="space"> </span>
+          <span>Content</span>
+        </label>
+        <group>
+          <input bind="cContentProductName" class="required long">
+            <label>Product name</label>
+            <help class="inline">
+              <p>This is the name that will display for the product, and also form the URL.</p>
+              <p>Try to avoid ALL CAPS, as this can have a detramental effect on search engine listings or Product feed submissions.</p>
+            </help>
+          </input>
+        </group>
+        <group class="form-2-col">
+          <label>Product Identifiers</label>
+          <input bind="cContentStockCode" class="short">
+            <label>Stock code</label>
+            <help class="inline">
+              <p>The stock code you wish to use for your item</p>
+            </help>
+          </input>
+          <input bind="cContentStockCodeGTIN" class="short">
+            <label>Global Trade Item Number (GTIN)</label>
+            <help class="inline">
+              <p>If your product has an international stockcode include it here. Recognised GTIN's are;</p>
+              <ul>
+                <li>
+                  <b>EAN</b>
+                </li>
+                <li>
+                  <b>ISBN</b>
+                </li>
+                <li>
+                  <b>UPC</b>
+                </li>
+                <li>
+                  <b>JAN</b>
+                </li>
+              </ul>
+              <p>Populating this field can help search engines identify your products</p>
+            </help>
+          </input>
+          <input bind="cContentManufacturer" class="short">
+            <label>Brand / Manufacturer</label>
+          </input>
+          <input bind="cContentStockCodeMPN" class="short">
+            <label>Manufacturer Part Number (MPN)</label>
+            <help class="inline">
+              <p>Unique part number for that manufacturer.</p>
+              <p>Populating this field can help search engines identify your products</p>
+            </help>
+          </input>
+        </group>
 
-      <group class="inline">
-        <label>Stock Control and Shipping</label>
-        <input bind="cContentShippingWeight" class="short">
-          <label>Weight</label>
-          <help class="inline">
-            <p>
-              <b>Only required for ecommerce sites</b>
-            </p>
-            <p>This must be a number, and is used to calculate any shipping charges that you have configured within your delivery methods.</p>
-          </help>
-        </input>
+        <group class="form-2-col">
+          <label>Stock Control and Shipping</label>
+          <input bind="cContentShippingWeight" class="short">
+            <label>Weight</label>
+            <help class="inline">
+              <p>
+                <b>Only required for ecommerce sites</b>
+              </p>
+              <p>This must be a number, and is used to calculate any shipping charges that you have configured within your delivery methods.</p>
+            </help>
+          </input>
 
-        <select1 bind="cContentShippingWeightUnits" class="dropdown">
-          <label>Weight units</label>
-          <item>
-            <label>grams (g)</label>
-            <value>g</value>
-          </item>
-          <item>
-            <label>kilograms (kg)</label>
-            <value>kg</value>
-          </item>
-          <item>
-            <label>pounds (lb)</label>
-            <value>lb</value>
-          </item>
-          <item>
-            <label>ounces (oz)</label>
-            <value>oz</value>
-          </item>
-        </select1>
+          <select1 bind="cContentShippingWeightUnits" class="dropdown">
+            <label>Weight units</label>
+            <item>
+              <label>grams (g)</label>
+              <value>g</value>
+            </item>
+            <item>
+              <label>kilograms (kg)</label>
+              <value>kg</value>
+            </item>
+            <item>
+              <label>pounds (lb)</label>
+              <value>lb</value>
+            </item>
+            <item>
+              <label>ounces (oz)</label>
+              <value>oz</value>
+            </item>
+          </select1>
 
-        <input bind="cContentStock" class="short">
-          <label>Stock level</label>
-        </input>
-      </group>
-      <group class="inline">
-        <label>Prices</label>
-        <input bind="cContentPrice" class="short">
-          <label>Purchase price</label>
-          <help class="inline">The price a customer will purchase the product for.</help>
-        </input>
-        <!--<input bind="cContentPriceSuffixSale" class="short">
+          <input bind="cContentStock" class="short">
+            <label>Stock level</label>
+          </input>
+        </group>
+        <group  class="form-2-col">
+          <label>Prices</label>
+          <input bind="cContentPrice" class="short">
+            <label>Purchase price</label>
+            <help class="inline">The price a customer will purchase the product for.</help>
+          </input>
+          <!--<input bind="cContentPriceSuffixSale" class="short">
               <label>Purchase Interval</label>
               <help class="inline">The interval of a payment e.g. pm</help>
           </input>-->
-        <input bind="cContentPriceRRP" class="short">
-          <label>RRP</label>
-          <help class="inline">
-            <p>Optional. If an RRP is specified, it will display to the user;</p>
-            <p>
-              RRP: £10.00<br/><b>Now: £8.50</b>
-            </p>
-            <p>If ecommerce, the user will still pay the 'purchase price'.</p>
-          </help>
-        </input>
-        <!--<input bind="cContentPriceSuffixRRP" class="short">
+          <input bind="cContentPriceRRP" class="short">
+            <label>RRP</label>
+            <help class="inline">
+              <p>Optional. If an RRP is specified, it will display to the user;</p>
+              <p>
+                RRP: £10.00<br/><b>Now: £8.50</b>
+              </p>
+              <p>If ecommerce, the user will still pay the 'purchase price'.</p>
+            </help>
+          </input>
+          <!--<input bind="cContentPriceSuffixRRP" class="short">
               <label>RRP Interval</label>
               <help class="inline">The interval of a payment e.g. pm</help>
           </input>-->
-      </group>
-      <group>
-        <label>Descriptions</label>
+        </group>
+        <group>
+          <input bind="cContentSpecificationDocument" class="short pickDocument">
+            <label>Specification document</label>
+          </input>
+        </group>
+        <group>
+          <label>Descriptions</label>
 
-        <textarea bind="cContentStrap" class="TextArea xhtml" rows="1">
-          <label>Short description</label>
-        </textarea>
+          <textarea bind="cContentStrap" class="TextArea xhtml" rows="1">
+            <label>Short description</label>
+          </textarea>
 
-        <textarea bind="cContentBody" class="TextArea xhtml" rows="10">
-          <label>Full description</label>
-        </textarea>
-      </group>
-      <!--<group>
+          <textarea bind="cContentBody" class="TextArea xhtml" rows="10">
+            <label>Full description</label>
+          </textarea>
+          
+        </group>
+        <!--<group>
 				<input bind="cContentKeywords" class="long">
 					<label>Additional Keywords</label>
 				</input>
 			</group>-->
+        <group>
+          <group class="form-section-wrapper">
+            <label>Product Variations</label>
+            <select1 bind="cSkuOptions" appearance="full" class="">
+              <label>Product options or SKU's</label>
+              <help class="inline">
+                <p>
+                  <b>Product Options</b>
+                  <br/>Simple product options for an online shop where;
+                </p>
+                <ul>
+                  <li>All colour or size options combinations are available,</li>
+                  <li>All colour or size options are the same price,</li>
+                  <li>All colour or size options DO NOT need individual stock level control.</li>
+                </ul>
+                <br/>
+                <p>
+                  <b>SKU's (Stock Keeping Unit's)</b>
+                  <br/>For the more advanced online shop where each colour or size combination is managed like a product of its own;
+                </p>
+                <ul>
+                  <li>Each colour or size combination has individual stock levels,</li>
+                  <li>Each colour or size combination may have a different price.</li>
+                </ul>
+              </help>
+              <item>
+                <label>None</label>
+                <value>None</value>
+                <toggle case="cSkuOptions_0" event="DOMActivate"/>
+              </item>
+              <item>
+                <label>Product options</label>
+                <value>options</value>
+                <toggle case="cSkuOptions_1" event="DOMActivate"/>
+              </item>
+              <item>
+                <label>SKU's</label>
+                <value>skus</value>
+                <toggle case="cSkuOptions_2" event="DOMActivate"/>
+              </item>
+            </select1>
 
-      <group>
-        <label>Product Variations</label>
-        <select1 bind="cSkuOptions" appearance="full" class="">
-          <label>Product options or SKU's</label>
-          <help class="inline">
-            <p>
-              <b>Product Options</b>
-              <br/>Simple product options for an online shop where;
-            </p>
-            <ul>
-              <li>All colour or size options combinations are available,</li>
-              <li>All colour or size options are the same price,</li>
-              <li>All colour or size options DO NOT need individual stock level control.</li>
-            </ul>
-            <br/>
-            <p>
-              <b>SKU's (Stock Keeping Unit's)</b>
-              <br/>For the more advanced online shop where each colour or size combination is managed like a product of its own;
-            </p>
-            <ul>
-              <li>Each colour or size combination has individual stock levels,</li>
-              <li>Each colour or size combination may have a different price.</li>
-            </ul>
-          </help>
-          <item>
-            <label>None</label>
-            <value>None</value>
-            <toggle case="cSkuOptions_0" event="DOMActivate"/>
-          </item>
-          <item>
-            <label>Product options</label>
-            <value>options</value>
-            <toggle case="cSkuOptions_1" event="DOMActivate"/>
-          </item>
-          <item>
-            <label>SKU's</label>
-            <value>skus</value>
-            <toggle case="cSkuOptions_2" event="DOMActivate"/>
-          </item>
-        </select1>
-
-        <switch class="disable">
-          <case id="cSkuOptions_0"/>
-          <case id="cSkuOptions_1">
-            <group>
-              <label>Product Options 1</label>
-              <input bind="cOptName1" class="short">
-                <label>Option Name</label>
-              </input>
-              <select1 bind="cOptType1">
-                <label>Option Type</label>
-                <item>
-                  <label>Drop Down (select 1)</label>
-                  <value>DropDown</value>
-                </item>
-                <item>
-                  <label>Radio Buttons (select 1)</label>
-                  <value>Radio</value>
-                </item>
-                <item>
-                  <label>Check Boxes (select many)</label>
-                  <value>CheckBoxes</value>
-                </item>
-                <item>
-                  <label>User entered text</label>
-                  <value>TextInput</value>
-                </item>
-              </select1>
-              <group>
-                <repeat bind="cOptRpt1" class="horizontal_cols">
-                  <input bind="cOpt1" class="short">
-                    <label>Option</label>
+            <switch class="disable">
+              <case id="cSkuOptions_0"/>
+              <case id="cSkuOptions_1">
+                <group>
+                  <label>Product Options 1</label>
+                  <input bind="cOptName1" class="short">
+                    <label>Option Name</label>
                   </input>
+                  <select1 bind="cOptType1">
+                    <label>Option Type</label>
+                    <item>
+                      <label>Drop Down (select 1)</label>
+                      <value>DropDown</value>
+                    </item>
+                    <item>
+                      <label>Radio Buttons (select 1)</label>
+                      <value>Radio</value>
+                    </item>
+                    <item>
+                      <label>Check Boxes (select many)</label>
+                      <value>CheckBoxes</value>
+                    </item>
+                    <item>
+                      <label>User entered text</label>
+                      <value>TextInput</value>
+                    </item>
+                  </select1>
+                  <group>
+                    <repeat bind="cOptRpt1" class="horizontal_cols">
+                      <input bind="cOpt1" class="short">
+                        <label>Option</label>
+                      </input>
+                      <trigger>
+                        <label>Del</label>
+                        <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
+                      </trigger>
+                    </repeat>
+                  </group>
                   <trigger>
-                    <label>Del</label>
-                    <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
+                    <label>Add Option</label>
+                    <insert position="after" bind="cOptRpt1" at="index('cOptRpt1')" class="add"/>
                   </trigger>
-                </repeat>
-              </group>
-              <trigger>
-                <label>Add Option</label>
-                <insert position="after" bind="cOptRpt1" at="index('cOptRpt1')" class="add"/>
-              </trigger>
-            </group>
-            <group>
-              <label>Product Options 2</label>
-              <input bind="cOptName2" class="short">
-                <label>Option Name</label>
-              </input>
-              <select1 bind="cOptType2">
-                <label>Option Type</label>
-                <item>
-                  <label>Drop Down (select 1)</label>
-                  <value>DropDown</value>
-                </item>
-                <item>
-                  <label>Radio Buttons (select 1)</label>
-                  <value>Radio</value>
-                </item>
-                <item>
-                  <label>Check Boxes (select many)</label>
-                  <value>CheckBoxes</value>
-                </item>
-              </select1>
-              <repeat bind="cOptRpt2" class="horizontal">
-                <input bind="cOpt2" class="short">
-                  <label>Option</label>
-                </input>
-                <trigger>
-                  <label>Del</label>
-                  <delete bind="cOptRpt2" at="index('cOptRpt2')"/>
-                </trigger>
-              </repeat>
-              <trigger>
-                <label>Add Option</label>
-                <insert position="after" bind="cOptRpt2" at="index('cOptRpt2')" class="add"/>
-              </trigger>
-            </group>
-          </case>
-          <case id="cSkuOptions_2">
-            <group>
-              <!--<label>SKU's</label>-->
-              <relatedContent type="SKU" search="add" relationType="" direction="2way" />
-            </group>
-          </case>
-        </switch>
+                </group>
+                <group>
+                  <label>Product Options 2</label>
+                  <input bind="cOptName2" class="short">
+                    <label>Option Name</label>
+                  </input>
+                  <select1 bind="cOptType2">
+                    <label>Option Type</label>
+                    <item>
+                      <label>Drop Down (select 1)</label>
+                      <value>DropDown</value>
+                    </item>
+                    <item>
+                      <label>Radio Buttons (select 1)</label>
+                      <value>Radio</value>
+                    </item>
+                    <item>
+                      <label>Check Boxes (select many)</label>
+                      <value>CheckBoxes</value>
+                    </item>
+                  </select1>
+                  <repeat bind="cOptRpt2" class="horizontal">
+                    <input bind="cOpt2" class="short">
+                      <label>Option</label>
+                    </input>
+                    <trigger>
+                      <label>Del</label>
+                      <delete bind="cOptRpt2" at="index('cOptRpt2')"/>
+                    </trigger>
+                  </repeat>
+                  <trigger>
+                    <label>Add Option</label>
+                    <insert position="after" bind="cOptRpt2" at="index('cOptRpt2')" class="add"/>
+                  </trigger>
+                </group>
+              </case>
+              <case id="cSkuOptions_2">
+                <group>
+                  <!--<label>SKU's</label>-->
+                  <relatedContent type="SKU" search="add" relationType="" direction="2way" />
+                </group>
+              </case>
+            </switch>
+          </group>
+          
+        </group>
       </group>
       <group>
-        <label>Related products</label>
-        <relatedContent type="Product" direction="2Way" search="find" relationType="related"/>
+        <label>
+          <i class="fas fa-image"> </i>
+          <span class="space"> </span>
+          <span>Images</span>
+        </label>
+        <group>
+          <input bind="cContentFullSizePicture" class="short pickImage">
+            <label>Main product image</label>
+            <help class="inline">
+              <p>
+                This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+              </p>
+              <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+              <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+            </help>
+          </input>
+          <input bind="cContentThumbnail" class="short pickImage">
+            <label>Alternative thumbnail</label>
+          </input>
+          <input bind="cContentPicture" class="short pickImage">
+            <label>Alternative picture</label>
+          </input>
+        </group>
+        <group>
+          <group class="form-section-wrapper">
+            <label>Image gallery</label>
+            <help>Besides the main product images, You can add additional images below to display as a gallery.</help>
+            <relatedContent search="add" type="LibraryImage" relationType="" direction="1way"/>
+          </group>
+        </group>
       </group>
       <group>
-        <label>Reviews</label>
-        <relatedContent search="find add" type="Review" relationType="" direction="2way"/>
+        <label>
+          <i class="fas fa-paperclip"> </i>
+          <span class="space"> </span>
+          <span>Related Content</span>
+        </label>
+        <group>
+          <group class="form-section-wrapper">
+            <label>Related products</label>
+            <relatedContent type="Product" direction="2Way" search="find" relationType="related"/>
+          </group>
+          <group class="form-section-wrapper">
+            <label>Reviews</label>
+            <relatedContent search="find add" type="Review" relationType="" direction="2way"/>
+          </group>
+        </group>
+      </group>
+      <group class="">
+        <label>
+          <i class="fas fa-cog"> </i>
+          <span class="space"> </span>
+          <span>Advanced Settings</span>
+        </label>
+        <group class="form-2-col">
+          <input bind="dPublishDate" class="calendar short">
+            <label>Publish date</label>
+          </input>
+          <input bind="dExpireDate" class="calendar short">
+            <label>Expire date</label>
+          </input>
+          <select1 bind="nStatus" appearance="full" class="required inline-items">
+            <label>Status</label>
+            <item>
+              <label>Live</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>Hidden</label>
+              <value>0</value>
+            </item>
+          </select1>
+          <select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full">
+            <label>Product Groups</label>
+          </select>
+        </group>
       </group>
     </group>
   </group>

@@ -136,154 +136,6 @@
           <span>Presentation</span>
         </label>
         <group>
-          <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='columns']"/>
-          <select1 bind="nStepCount" appearance="full" class="form-group">
-            <label>Products per page</label>
-            <item>
-              <label>all</label>
-              <value>0</value>
-              <toggle case="cStepCounter_1" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>3</label>
-              <value>3</value>
-              <toggle case="cStepCounter_2" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>5</label>
-              <value>5</value>
-              <toggle case="cStepCounter_3" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>10</label>
-              <value>10</value>
-              <toggle case="cStepCounter_4" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>25</label>
-              <value>25</value>
-              <toggle case="cStepCounter_5" event="DOMActivate"/>
-            </item>
-            <item bindTo="cStepBy">
-              <input bind="cStepBy" class="hidden" />
-              <label>Other</label>
-              <value>Other</value>
-              <toggle case="cStepCounter_6" event="DOMActivate" />
-            </item>
-          </select1>
-          <switch class="disable">
-            <case id="cStepCounter_1"/>
-            <case id="cStepCounter_2"/>
-            <case id="cStepCounter_3"/>
-            <case id="cStepCounter_4"/>
-            <case id="cStepCounter_5"/>
-            <case id="cStepCounter_6">
-              <input bind="nStepCount" class="vshort">
-                <label>Other Stepper Value</label>
-              </input>
-            </case>
-          </switch>
-          <select1 bind="cSortBy" appearance="full" class="form-group">
-            <label>Sort By</label>
-            <item>
-              <label>Page position</label>
-              <value>Position</value>
-              <toggle case="cSortBy_4" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>Alphabetical</label>
-              <value>Name</value>
-              <toggle case="cSortBy_1" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>Publish date</label>
-              <value>publish</value>
-              <toggle case="cSortBy_2" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>Price</label>
-              <value>Price</value>
-              <toggle case="cSortBy_3" event="DOMActivate"/>
-            </item>
-          </select1>
-          <switch class="disable">
-            <case id="cSortBy_1">
-              <select1 bind="cPageOrder" appearance="minimal" class="form-group">
-                <label>Order</label>
-                <item>
-                  <label>A to Z</label>
-                  <value>ascending</value>
-                </item>
-                <item>
-                  <label>Z to A</label>
-                  <value>descending</value>
-                </item>
-              </select1>
-            </case>
-            <case id="cSortBy_2">
-              <select1 bind="cPageOrder" appearance="minimal" class="form-group">
-                <label>Order</label>
-                <item>
-                  <label>Newest to Oldest</label>
-                  <value>descending</value>
-                </item>
-                <item>
-                  <label>Oldest to Newest</label>
-                  <value>ascending</value>
-                </item>
-              </select1>
-            </case>
-            <case id="cSortBy_3">
-              <select1 bind="cPageOrder" appearance="minimal" class="form-group">
-                <label>Order</label>
-                <item>
-                  <label>Lowest to Highest</label>
-                  <value>ascending</value>
-                </item>
-                <item>
-                  <label>Highest to Lowest</label>
-                  <value>descending</value>
-                </item>
-              </select1>
-            </case>
-            <case id="cSortBy_4" />
-          </switch>
-          <group class="inline">
-            <select1 bind="carousel" appearance="full"  class="form-group">
-              <label>Add articles to a carousel</label>
-              <item>
-                <label>Yes</label>
-                <value>true</value>
-                <toggle case="Carousel_true" event="DOMActivate"/>
-              </item>
-              <item>
-                <label>No</label>
-                <value>false</value>
-                <toggle case="Carousel_false" event="DOMActivate"/>
-              </item>
-              <help class="inline">If selected this option will display articles in a single horizontal line with arrows to scroll through to the left and right.</help>
-            </select1>
-            <switch class="disable">
-
-              <case id="Carousel_true" >
-                <select1 bind="autoplay"  appearance="full" class="form-group ">
-                  <label>Auto play</label>
-                  <item>
-                    <label>Yes</label>
-                    <value>true</value>
-                  </item>
-                  <item>
-                    <label>No</label>
-                    <value>false</value>
-                  </item>
-                </select1>
-                <input bind="autoPlaySpeed" class="form-group ">
-                  <label>autoplay Speed (milliseconds) </label>
-                </input>
-              </case>
-              <case id="Carousel_false"/>
-            </switch>
-          </group>
           <!-- These hidden fields and bindings are required for the component-->
           <input bind="nContentKey" class="hidden">
             <label>ContentId</label>
@@ -292,7 +144,190 @@
             <label>ModuleType</label>
           </input>
           <!-- end of hidden fields -->
-          <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+          <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+          <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='columns']"/>
+          <group class="row">
+            <group class="col-lg-6">
+              <select1 bind="cSortBy" appearance="full" class="form-group">
+                <label>Sort By</label>
+                <item>
+                  <label>Page position</label>
+                  <value>Position</value>
+                  <toggle case="cSortBy_4" event="DOMActivate"/>
+                </item>
+                <item>
+                  <label>Alphabetical</label>
+                  <value>Name</value>
+                  <toggle case="cSortBy_1" event="DOMActivate"/>
+                </item>
+                <item>
+                  <label>Publish date</label>
+                  <value>publish</value>
+                  <toggle case="cSortBy_2" event="DOMActivate"/>
+                </item>
+                <item>
+                  <label>Price</label>
+                  <value>Price</value>
+                  <toggle case="cSortBy_3" event="DOMActivate"/>
+                </item>
+              </select1>
+              <switch class="disable">
+                <case id="cSortBy_1">
+                  <select1 bind="cPageOrder" appearance="minimal" class="form-group">
+                    <label>Order</label>
+                    <item>
+                      <label>A to Z</label>
+                      <value>ascending</value>
+                    </item>
+                    <item>
+                      <label>Z to A</label>
+                      <value>descending</value>
+                    </item>
+                  </select1>
+                </case>
+                <case id="cSortBy_2">
+                  <select1 bind="cPageOrder" appearance="minimal" class="form-group">
+                    <label>Order</label>
+                    <item>
+                      <label>Newest to Oldest</label>
+                      <value>descending</value>
+                    </item>
+                    <item>
+                      <label>Oldest to Newest</label>
+                      <value>ascending</value>
+                    </item>
+                  </select1>
+                </case>
+                <case id="cSortBy_3">
+                  <select1 bind="cPageOrder" appearance="minimal" class="form-group">
+                    <label>Order</label>
+                    <item>
+                      <label>Lowest to Highest</label>
+                      <value>ascending</value>
+                    </item>
+                    <item>
+                      <label>Highest to Lowest</label>
+                      <value>descending</value>
+                    </item>
+                  </select1>
+                </case>
+                <case id="cSortBy_4" />
+              </switch>
+            </group>
+            <group class="col-lg-6">
+              <select1 bind="nStepCount" appearance="full" class="form-group">
+                <label>Products per page</label>
+                <item>
+                  <label>all</label>
+                  <value>0</value>
+                  <toggle case="cStepCounter_1" event="DOMActivate"/>
+                </item>
+                <item>
+                  <label>3</label>
+                  <value>3</value>
+                  <toggle case="cStepCounter_2" event="DOMActivate"/>
+                </item>
+                <item>
+                  <label>5</label>
+                  <value>5</value>
+                  <toggle case="cStepCounter_3" event="DOMActivate"/>
+                </item>
+                <item>
+                  <label>10</label>
+                  <value>10</value>
+                  <toggle case="cStepCounter_4" event="DOMActivate"/>
+                </item>
+                <item>
+                  <label>25</label>
+                  <value>25</value>
+                  <toggle case="cStepCounter_5" event="DOMActivate"/>
+                </item>
+                <item bindTo="cStepBy">
+                  <input bind="cStepBy" class="hidden" />
+                  <label>Other</label>
+                  <value>Other</value>
+                  <toggle case="cStepCounter_6" event="DOMActivate" />
+                </item>
+              </select1>
+              <switch class="disable">
+                <case id="cStepCounter_1"/>
+                <case id="cStepCounter_2"/>
+                <case id="cStepCounter_3"/>
+                <case id="cStepCounter_4"/>
+                <case id="cStepCounter_5"/>
+                <case id="cStepCounter_6">
+                  <input bind="nStepCount" class="vshort">
+                    <label>Other Stepper Value</label>
+                  </input>
+                </case>
+              </switch>
+            </group>
+          </group>
+          <group>
+            <group class="form-section-wrapper">
+              <select1 bind="carousel" appearance="full"  class="form-group">
+                <label>Add articles to a carousel</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                  <toggle case="Carousel_true" event="DOMActivate"/>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                  <toggle case="Carousel_false" event="DOMActivate"/>
+                </item>
+                <help class="inline">If selected this option will display articles in a single horizontal line with arrows to scroll through to the left and right.</help>
+              </select1>
+              <switch class="disable">
+                <case id="Carousel_true" >
+                  <group class="row">
+                    <group class="col-lg-6">
+                  <select1 bind="autoplay"  appearance="full" class="form-group inline-items">
+                    <label>Auto play</label>
+                    <item>
+                      <label>Yes</label>
+                      <value>true</value>
+                    </item>
+                    <item>
+                      <label>No</label>
+                      <value>false</value>
+                    </item>
+                  </select1>
+                  <input bind="autoPlaySpeed" class="form-group ">
+                    <label>autoplay Speed (milliseconds) </label>
+                  </input>
+                    </group>
+                    <group class="col-lg-6">
+                      <select1 bind="carouselBullets" appearance="full"  class="form-group inline-items">
+                        <label>Show navigation bullets for carousel</label>
+                        <item>
+                          <label>Yes</label>
+                          <value>true</value>
+                        </item>
+                        <item>
+                          <label>No</label>
+                          <value>false</value>
+                        </item>
+                      </select1>
+                      <select1 bind="carouselHeight" appearance="full"  class="form-group inline-items">
+                        <label>Match height of carousel items</label>
+                        <item>
+                          <label>Yes</label>
+                          <value>true</value>
+                        </item>
+                        <item>
+                          <label>No</label>
+                          <value>false</value>
+                        </item>
+                      </select1>
+                    </group>
+                  </group>
+                </case>
+                <case id="Carousel_false"/>
+              </switch>
+            </group>
+          </group>
         </group>
       </group>
       <group>
@@ -301,7 +336,8 @@
           <span class="space"> </span>
           <span>Advanced Settings</span>
         </label>
-        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
       </group>
       <group>
         <label>

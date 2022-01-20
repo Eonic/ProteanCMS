@@ -238,7 +238,7 @@
   </xsl:template>
 
   <!-- Case -->
-  
+
 
   <xsl:template name="msg_required">
     <!-- required input-->
@@ -476,9 +476,9 @@
         <xsl:text>show active</xsl:text>
       </xsl:if>
     </xsl:variable>
-      <div id="heading{position()}" class="tab-pane fade {$isopen}" role="tabpanel" aria-labelledby="tab{position()}">
-        <xsl:apply-templates select="*" mode="xform"/>
-      </div>
+    <div id="heading{position()}" class="tab-pane fade {$isopen}" role="tabpanel" aria-labelledby="tab{position()}">
+      <xsl:apply-templates select="*" mode="xform"/>
+    </div>
   </xsl:template>
 
   <!-- -->
@@ -487,9 +487,9 @@
   <xsl:template match="group[contains(@class,'input-group')]" mode="xform">
     <div class="input-group">
       <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
-      <span class="input-group-btn">
-        <xsl:apply-templates select="submit" mode="xform"/>
-      </span>
+
+      <xsl:apply-templates select="submit" mode="xform"/>
+
     </div>
   </xsl:template>
 
@@ -774,9 +774,8 @@
             </span>
           </xsl:if>
           <xsl:if test="hint">
-            <span class="input-group-btn">
-              <xsl:apply-templates select="." mode="hintButton"/>
-            </span>
+            <xsl:apply-templates select="." mode="hintButton"/>
+
           </xsl:if>
         </div>
       </xsl:when>
@@ -1660,13 +1659,13 @@
     </xsl:variable>
     <div class="controls">
       <div class="input-group">
-		  <label for="{$ref}-alt" class="input-group-addon btn btn-primary input-group-btn">
-			  <i class="fas fa-calendar">
-				  <xsl:text> </xsl:text>
-			  </i>
-		  </label>       
+        <label for="{$ref}-alt" class="input-group-addon btn btn-primary input-group-btn">
+          <i class="fas fa-calendar">
+            <xsl:text> </xsl:text>
+          </i>
+        </label>
         <input type="text" name="{$ref}-alt" id="{$ref}-alt" value="{$displayDate}" class="jqDatePicker input-small form-control" placeholder="{$inlineHint}"/>
-		<input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
+        <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
       </div>
     </div>
 
@@ -1693,15 +1692,13 @@
     </xsl:variable>
     <div class="controls">
       <div class="input-group">
-		  <span class="input-group-btn">
-          <label for="{$ref}-alt" class="input-group-addon btn btn-primary"  readonly="readonly">
-            <i class="fas fa-calendar">
-              <xsl:text> </xsl:text>
-            </i>
-          </label>
-        </span>
+        <label for="{$ref}-alt" class="input-group-addon btn btn-primary"  readonly="readonly">
+          <i class="fas fa-calendar">
+            <xsl:text> </xsl:text>
+          </i>
+        </label>
         <input type="text" name="{$ref}" id="{$ref}" value="{$displayDate}" class="input-small form-control"  readonly="readonly"/>
-       
+
       </div>
     </div>
 
