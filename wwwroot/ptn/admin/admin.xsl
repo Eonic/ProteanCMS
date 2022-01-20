@@ -1033,7 +1033,7 @@
           </div>
         </xsl:if>
         <h6 >
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{$contentType}">
+          <a class="accordion-toggle" data-bs-toggle="collapse" data-parent="#accordion" href="#collapse{$contentType}">
             <i class="fa fa-chevron-down">
               <xsl:text> </xsl:text>
             </i>
@@ -1491,7 +1491,7 @@
       <xsl:choose>
         <xsl:when test="contains($type,',')">
           <div class="dropdown float-end">
-            <a href="#" class="btn btn-default btn-xs float-end" data-toggle="dropdown">
+            <a href="#" class="btn btn-default btn-xs float-end" data-bs-toggle="dropdown">
               <xsl:value-of select="$text"/>
             </a>
             <ul class="dropdown-menu">
@@ -1504,7 +1504,7 @@
         </xsl:when>
         <xsl:when test="$type='Module'">
           <div class="dropdown">
-            <a href="#" class="btn btn-default btn-xs float-end" data-toggle="dropdown">
+            <a href="#" class="btn btn-default btn-xs float-end" data-bs-toggle="dropdown">
               <i class="fa fa-plus">&#160;</i>&#160;
               <xsl:value-of select="$text"/>&#160;
               <i class="fa fa-caret-down">&#160;</i>
@@ -1521,7 +1521,7 @@
         <xsl:when test="contains($find,'true')">
           <div class="ewAdmin options">
             <div class="dropdown float-end">
-              <a href="#" class="btn btn-default btn-xs float-end" data-toggle="dropdown">
+              <a href="#" class="btn btn-default btn-xs float-end" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
                 <xsl:value-of select="$text"/>&#160;
                 <i class="fa fa-caret-down">&#160;</i>
@@ -1544,7 +1544,7 @@
         <xsl:when test="contains($find,'only')">
           <div class="ewAdmin options">
             <div class="dropdown float-end">
-              <a href="#" class="btn btn-default btn-xs float-end" data-toggle="dropdown">
+              <a href="#" class="btn btn-default btn-xs float-end" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
                 <xsl:value-of select="$text"/>&#160;
                 <i class="fa fa-caret-down">&#160;</i>
@@ -1704,7 +1704,7 @@
       </a>
     </xsl:if>
     <div class="btn-group">
-      <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+      <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-bs-toggle="dropdown">
         <i class="fa fa-white fa-sort-down">
           <xsl:text> </xsl:text>
         </i> Options
@@ -3379,31 +3379,31 @@
   <xsl:template match="Page[@layout='EditPageSEO']" mode="Admin">
     <ul class="nav nav-tabs">
       <li class="active">
-        <a href="#general" data-toggle="tab">General</a>
+        <a href="#general" data-bs-toggle="tab">General</a>
       </li>
       <li>
-        <a href="#dublinCore" data-toggle="tab">Dublin Core</a>
+        <a href="#dublinCore" data-bs-toggle="tab">Dublin Core</a>
       </li>
       <li>
-        <a href="#google" data-toggle="tab">Google</a>
+        <a href="#google" data-bs-toggle="tab">Google</a>
       </li>
       <li>
-        <a href="#opengraph" data-toggle="tab">Open Graph</a>
+        <a href="#opengraph" data-bs-toggle="tab">Open Graph</a>
       </li>
       <li>
-        <a href="#facebook" data-toggle="tab">Facebook</a>
+        <a href="#facebook" data-bs-toggle="tab">Facebook</a>
       </li>
       <li>
-        <a href="#twitter" data-toggle="tab">Twitter</a>
+        <a href="#twitter" data-bs-toggle="tab">Twitter</a>
       </li>
       <li>
-        <a href="#linkedin" data-toggle="tab">LinkedIn</a>
+        <a href="#linkedin" data-bs-toggle="tab">LinkedIn</a>
       </li>
       <li>
-        <a href="#cookie" data-toggle="tab">Cookie Policy</a>
+        <a href="#cookie" data-bs-toggle="tab">Cookie Policy</a>
       </li>
       <li>
-        <a href="#settings" data-toggle="tab">Other Settings</a>
+        <a href="#settings" data-bs-toggle="tab">Other Settings</a>
       </li>
     </ul>
     <div class="tab-content">
@@ -3959,7 +3959,7 @@
 
                 <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-primary">
                   <xsl:if test="$submitPath!='/?'">
-                    <xsl:attribute name="data-toggle">modal</xsl:attribute>
+                    <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
                     <xsl:attribute name="data-target">
                       <xsl:text>#modal-</xsl:text>
                       <xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
@@ -3976,7 +3976,7 @@
 
                 <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-success">
                   <xsl:if test="$submitPath!='/?'">
-                    <xsl:attribute name="data-toggle">modal</xsl:attribute>
+                    <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
                     <xsl:attribute name="data-target">
                       <xsl:text>#modal-</xsl:text>
                       <xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
@@ -4208,7 +4208,7 @@
       <xsl:apply-templates select="." mode="newItemScript"/>
       $('#files').prepend(newItem);
       $('#files .item-image .panel').prepareLibImages();
-      $("[data-toggle=popover]").popover({
+      $("[data-bs-toggle=popover]").popover({
       html: true,
       container: '#files',
       trigger: 'hover',
@@ -4218,7 +4218,7 @@
       }
       });
       if ($('.pickImageModal').exists()) {
-      $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
+      $('.pickImageModal').find('a[data-bs-toggle!="popover"]').click(function (ev) {
       ev.preventDefault();
       $('.modal-dialog').addClass('loading')
       $('.modal-body').html('<p class="text-center">
@@ -4275,7 +4275,7 @@
               <br/>
             </div>
           </div>
-          <a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
+          <a data-bs-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
             <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
           </a>
         </div>'
@@ -4389,7 +4389,7 @@
               <xsl:choose>
                 <xsl:when test="$popup='true'">
                   <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'  or @Extension='.tif'  or @Extension='.tiff'">
-                    <a href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
+                    <a href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" data-bs-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
                       <i class="fa fa-check-circle-o fa-white">
                         <xsl:text> </xsl:text>
                       </i>
@@ -6725,7 +6725,7 @@
               </dl>
             </xsl:if>
             <xsl:if test="Payment">
-              <a class="btn btn-primary" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
+              <a class="btn btn-primary" role="button" data-bs-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
                 Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
               </a>
               <br/>
@@ -12172,37 +12172,37 @@
     <xsl:param name="status"/>
     <xsl:choose>
       <xsl:when test="$status='0'">
-        <a href="#" data-toggle="tooltip" data-placement="right" title="Hidden" data-original-title="Hidden">
+        <a href="#" data-bs-toggle="tooltip" data-placement="right" title="Hidden" data-original-title="Hidden">
           <i class="fa fa-times text-danger" alt="inactive">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='-1'">
-        <a href="#" data-toggle="tooltip" data-placement="right" title="Live" data-original-title="Live">
+        <a href="#" data-bs-toggle="tooltip" data-placement="right" title="Live" data-original-title="Live">
           <i class="fa fa-check text-success" alt="live">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='1'">
-        <a href="#" data-toggle="tooltip" data-placement="right" title="Live" data-original-title="Live">
+        <a href="#" data-bs-toggle="tooltip" data-placement="right" title="Live" data-original-title="Live">
           <i class="fa fa-check text-success" alt="live">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='2'">
-        <a href="#" data-toggle="tooltip" data-placement="right" title="Superceeded" data-original-title="Superceeded">
+        <a href="#" data-bs-toggle="tooltip" data-placement="right" title="Superceeded" data-original-title="Superceeded">
           <i class="fas fa-history text-default" alt="Superceeded">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='3'">
-        <a href="#" data-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Pending">
+        <a href="#" data-bs-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Pending">
           <i class="far fa-pause-circle" alt="live">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='4'">
-        <a href="#" data-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Preview">
+        <a href="#" data-bs-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Preview">
           <i class="far fa-pause-circle" alt="Preview">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='7'">
-        <a href="#" data-toggle="tooltip" data-placement="right" title="Expired" data-original-title="Expired">
+        <a href="#" data-bs-toggle="tooltip" data-placement="right" title="Expired" data-original-title="Expired">
           <i class="fa fa-clock-o text-danger">&#160;</i>
         </a>
       </xsl:when>
@@ -12434,7 +12434,7 @@
       <xsl:when test="@status=0">
         <i>
           <xsl:attribute name="class">
-            <xsl:text>far fa-file status</xsl:text>
+            <xsl:text>far fa-file inactive</xsl:text>
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           &#160;
@@ -12443,7 +12443,7 @@
       <xsl:when test="@status=1 or @status='-1'">
         <i>
           <xsl:attribute name="class">
-            <xsl:text>fas fa-file status</xsl:text>
+            <xsl:text>fas fa-file active</xsl:text>
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           &#160;
