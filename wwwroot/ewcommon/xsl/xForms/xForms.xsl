@@ -3945,7 +3945,9 @@
       </label>
     </xsl:if>
   </xsl:template>
-
+  
+ 
+  
   <!-- ##############################################-Nathan (New) RELATED CONTENT-############################## -->
   <xsl:template match="relatedContent" mode="xform">
     <xsl:param name="contentType" select="@type"/>

@@ -62,7 +62,7 @@ Partial Public Class Cms
                     copyNode = copyNode.Replace("<productDetail", "<Content")
                     copyNode = copyNode.Replace("</productDetail>", "</Content>")
 
-                    myWeb.moDbHelper.updateInstanceField(dbHelper.objectTypes.CartItem, CartItemId, "xItemXml", copyNode)
+                    myWeb.moDbHelper.updateInstanceField(dbHelper.objectTypes.CartItem, CartItemId, "xItemXml", copyNode.Replace("&lt;", "<").Replace("&gt;", ">"))
 
                     myWeb.moCart.SaveCartXML(cartItem.ParentNode)
 

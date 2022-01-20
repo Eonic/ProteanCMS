@@ -3708,9 +3708,26 @@
     <xsl:apply-templates select="." mode="xform"/>
   </xsl:template>
 
-
+<!-- ################# Start Product Filter #########-->
+	<xsl:template match="Content[@type='Module' and @moduleType='ProductFilter']" mode="displayBrief">
+		<xsl:apply-templates select="Content[@type='PageFilter']" mode="displayBrief"></xsl:apply-templates>
+	</xsl:template>
+	
+	<xsl:template match="Content[@type='PageFilter']" mode="displayBrief">
+		 <select>
+			<option>Flying</option>
+			<option>Driving</option>
+	    </select>
+	</xsl:template>
+	<!--################ End Product Filter #########-->
+	
+	
+	
   <!-- ############## News Articles ##############   -->
   <!-- NewsArticle Module -->
+
+	
+	
   <xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
     <!-- Set Variables -->
     <xsl:variable name="contentType" select="@contentType" />

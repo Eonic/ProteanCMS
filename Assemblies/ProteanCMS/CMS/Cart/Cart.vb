@@ -1747,7 +1747,7 @@ processFlow:
                 Select Case PayableType
                     Case "deposit"
 
-                        Dim outstandingAmount As Double = CDbl(oCartElmt.GetAttribute("total")) - CDbl(oCartElmt.GetAttribute("payableAmount"))
+                        Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - CDbl("0" + oCartElmt.GetAttribute("payableAmount"))
                         mcDepositAmount = oCartElmt.GetAttribute("payableAmount")
                         ' Let's update the cart element
                         oCartElmt.SetAttribute("paymentMade", mcDepositAmount)
@@ -1766,7 +1766,7 @@ processFlow:
 
                         oCartElmt.SetAttribute("settlementID", cUniqueLink)
                         oCartElmt.SetAttribute("transStatus", "Complete")
-                        UpdateCartDeposit(oCartElmt, mcDepositAmount, PayableType)
+                        UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
                         mnProcessId = 10
 
                     Case "settlement"
@@ -2994,6 +2994,9 @@ processFlow:
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                         oCartElmt.SetAttribute("paymentMade", "0")
                                     End If
+                                    If nPayable = nTotalAmount Then
+                                        oCartElmt.SetAttribute("payableType", "full")
+                                    End If
                                 End If
                             Else
                                 ' A deposit has been paid - should I check if it's the same as the total amount?
@@ -3014,14 +3017,14 @@ processFlow:
                                 oCartElmt.SetAttribute("payableType", "settlement")
                             End If
 
-
                             If nPayable = 0 Then
-                                    oCartElmt.SetAttribute("ReadOnly", "On")
-                                End If
+                                oCartElmt.SetAttribute("ReadOnly", "On")
                             End If
+                        End If
 
-                            'Add Any Client Notes
-                            If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
+
+                        'Add Any Client Notes
+                        If Not (IsDBNull(oRow("cClientNotes")) Or oRow("cClientNotes") & "" = "") Then
                             oElmt = moPageXml.CreateElement("Notes")
                             oElmt.InnerXml = oRow("cClientNotes")
                             If oElmt.FirstChild.Name = "Notes" Then
@@ -4435,7 +4438,7 @@ processFlow:
                 ' Changed this so it gets any
 
                 'Check if updated primiary billing address, (TS added order by reverse order added)
-                cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 order by cContactType ASC, nContactKey DESC"
+                cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 and (cContactType = 'Billing Address' or cContactType = 'Delivery Address')  order by cContactType ASC, nContactKey DESC"
                 oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 For Each oDr In oDs.Tables("tblCartContact").Rows
                     If billingAddId = 0 Then billingAddId = oDr.Item("nContactKey")
@@ -4497,7 +4500,7 @@ processFlow:
                 If Not bBillingSet Then
                     contactId = setCurrentBillingAddress(myWeb.mnUserId, 0)
                 Else
-                    cSql = "select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " and nContactCartId = 0 AND (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC"
+                    cSql = "Select * from tblCartContact where nContactDirId = " & CStr(myWeb.mnUserId) & " And nContactCartId = 0 And (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC"
                     oDs = moDBHelper.GetDataSet(cSql, "tblCartContact")
                 End If
 
@@ -8694,10 +8697,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Function
 
-        Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String) As String
+        Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String, ByVal AmountToDiscount As Decimal) As String
             Try
                 Dim cSqlUpdate As String
-                cSqlUpdate = " update tblCartItem set  cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
+                ' cSqlUpdate = " update tblCartItem set nPrice=0.00, nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
+                cSqlUpdate = " update tblCartItem set nPrice=" & AmountToDiscount & ", nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
                 moDBHelper.ExeProcessSql(cSqlUpdate)
 
             Catch ex As Exception
@@ -8705,6 +8709,16 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
+        Private Function updatePackagingForRemovingFreeGiftDiscount(ByVal nCartOrderId As String, ByVal AmountToDiscount As Decimal) As String
+            Try
+                Dim cSqlUpdate As String
+                cSqlUpdate = " update tblCartItem set nDiscountValue=" & AmountToDiscount & " where  nitemid=0 and nCartOrderId = " & nCartOrderId
+                moDBHelper.ExeProcessSql(cSqlUpdate)
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, , "", gbDebug)
+            End Try
+        End Function
 
         Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
             Try

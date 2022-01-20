@@ -1501,6 +1501,38 @@ Partial Public Module xmlTools
             End Try
 
         End Function
+        ''' <summary>
+        ''' Its a m
+        ''' </summary>
+        ''' <returns></returns>
+        Public Function GetFilterButtons() As Object
+            Try
+                Dim oXformDoc As XmlDocument = New XmlDocument()
+
+                Dim oChoices As XmlElement
+                Dim buttonName As String = ""
+                Dim projectPath As String = ""
+                Dim xmlButtons As XmlElement = oXformDoc.CreateElement("buttons")
+                If (myWeb.moConfig("ProjectPath") <> String.Empty) Then
+                    projectPath = myWeb.moConfig("ProjectPath")
+                End If
+                oXformDoc.Load(goServer.MapPath(projectPath & "/xsl") & "/LayoutManifest.xml")
+                For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/FilterTypes/Filter")
+                    Dim buttonElement As XmlElement = oXformDoc.CreateElement("button")
+                    buttonElement.InnerText = oChoices.InnerText
+                    buttonElement.SetAttribute("name", oChoices.InnerText)
+                    ' buttonElement.SetAttribute("type", oChoices.G)
+                    xmlButtons.AppendChild(buttonElement)
+
+                Next
+                Return xmlButtons
+            Catch ex As Exception
+                Return "Error - Filter Buttons" & ex.Message
+            End Try
+
+
+        End Function
+
 
         Public Function GetSelectOptions(ByVal Query As String) As Object
             'Dim SelectDoc As New XmlDocument()
@@ -1510,6 +1542,8 @@ Partial Public Module xmlTools
             Dim Query3 As String = ""
             Dim sql As String
             Try
+
+
                 Dim QueryArr() As String = Split(Query, ".")
                 Query1 = QueryArr(0)
                 If UBound(QueryArr) > 0 Then Query2 = QueryArr(1)

@@ -32,8 +32,8 @@
   <xsl:variable name="subSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
-
-
+  <xsl:variable name="mediaWidth" select="'640'"/>
+  
   <xsl:variable name="responsiveImageSizes">off</xsl:variable>
 
   <xsl:variable name="sitename">
@@ -9881,9 +9881,9 @@
 
   </xsl:template>
 
-  <xsl:template match="getFilterButtons" mode="getFilterButtons">
-
-      <!--  <xsl:copy-of select="ew:GetFilterButtons()"/> -->
+  <xsl:template  name="getFilterButtons">
+    
+     <xsl:copy-of select="ew:GetFilterButtons()"/>
     
   </xsl:template>
 
