@@ -223,6 +223,54 @@
   <!-- -->
   <!-- ############### Website Inline Page Editing Buttons ############################## -->
   <!-- -->
+	<xsl:template match="Page" mode="addModuleControlsSection">
+		<xsl:param name="text"/>
+		<xsl:param name="class"/>
+		<xsl:param name="position"/>
+		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule']">
+		<section>
+			<xsl:if test="$class='container'">
+				<xsl:attribute name="class">wrapper-sm</xsl:attribute>
+			</xsl:if>
+			<div id="{$position}">
+				<xsl:apply-templates select="." mode="addModuleControls">
+					<xsl:with-param name="text" select="$text"/>
+					<xsl:with-param name="class" select="$class"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</div>
+		</section>
+	    </xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Page" mode="addModuleControls">
+		<xsl:param name="text"/>
+		<xsl:param name="class"/>
+		<xsl:param name="position"/>
+		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule']">
+			<xsl:attribute name="class">
+				<xsl:text>moduleContainer</xsl:text>
+				<xsl:if test="$class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="$class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<div class="ewAdmin options addmodule">
+				<a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
+					<i class="fa fa-th-large">&#160;</i>&#160;<xsl:value-of select="$text"/>
+				</a>
+				<div class="addHere">
+					<strong>
+						<xsl:value-of select="$position"/>
+					</strong>
+					<xsl:text> - drag a module here</xsl:text>
+				</div>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
+	
+	
   <xsl:template match="Page" mode="inlinePopupPageAdd">
     <xsl:param name="text"/>
     <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddPage'] and $adminMode">

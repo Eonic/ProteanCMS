@@ -1,32 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
-  <xsl:template match="Page" mode="addModule">
+	<xsl:template match="Page" mode="addModuleControls"></xsl:template>
+	<xsl:template match="Page" mode="addModuleControlsSection"></xsl:template>
+	
+<xsl:template match="Page" mode="addModule">
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
     <xsl:choose>
       <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">
-        <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
-          <section>
-            <xsl:if test="$class='container'">
-              <xsl:attribute name="class">wrapper-sm</xsl:attribute>
-            </xsl:if>
-            <div id="{$position}" class="{$class} moduleContainer">
-              <div class="ewAdmin options addmodule">
-                <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
-                  <i class="fa fa-th-large">&#160;</i>&#160;
-                  <xsl:value-of select="$text"/>
-                </a>
-                <div class="addHere">
-                  <strong>
-                    <xsl:value-of select="$position"/>
-                  </strong>
-                  <xsl:text> - drag a module here</xsl:text>
-                </div>
-              </div>
-            </div>
-          </section>
-        </xsl:if>
+		<xsl:apply-templates select="." mode="addModuleControlsSection">
+					<xsl:with-param name="text" select="$text"/>
+		<xsl:with-param name="class" select="$class"/>
+		<xsl:with-param name="position" select="$position"/>
+			</xsl:apply-templates>       
         <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
           <xsl:variable name="backgroundResized">
             <xsl:if test="@backgroundImage!=''">
@@ -231,26 +218,11 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
-          <xsl:attribute name="class">
-            <xsl:text>moduleContainer</xsl:text>
-            <xsl:if test="$class!=''">
-              <xsl:text> </xsl:text>
-              <xsl:value-of select="$class"/>
-            </xsl:if>
-          </xsl:attribute>
-          <div class="ewAdmin options addmodule">
-            <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
-              <i class="fa fa-th-large">&#160;</i>&#160;<xsl:value-of select="$text"/>
-            </a>
-            <div class="addHere">
-              <strong>
-                <xsl:value-of select="$position"/>
-              </strong>
-              <xsl:text> - drag a module here</xsl:text>
-            </div>
-          </div>
-        </xsl:if>
+		<xsl:apply-templates select="." mode="addModuleControls">
+					<xsl:with-param name="text" select="$text"/>
+		<xsl:with-param name="class" select="$class"/>
+		<xsl:with-param name="position" select="$position"/>
+			</xsl:apply-templates>   
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@position = $position]">
             <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
