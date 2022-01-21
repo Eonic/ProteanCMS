@@ -1601,31 +1601,48 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
-
-  <xsl:template match="getFilterButtons" mode="xform">
-    <xsl:variable name="filterButtons">
-      <xsl:apply-templates select="." mode="getFilterButtons"/>
-      <!--
+  <!--
       <buttons>
         <button>pageFilter<button>
         <button>dateFilter<button>
       <buttons>
       -->
-    </xsl:variable>
+  <xsl:template match="group[@class='getFilterButtons']" mode="xform">
+    <xsl:variable name="filterButtons">
+      <xsl:call-template name="getFilterButtons"/>
+      </xsl:variable>
     <div>
-      <xsl:for-each select="ms:node($filterButtons)/button">
+   
+     
+      <xsl:for-each select="ms:node-set($filterButtons)/*">
         <xsl:variable name="buttonName" select="node()"/>
+        <!--<xsl:value-of select="count(ms:node-set($filterButtons)/*)"/>-->
         <xsl:choose>
           <xsl:when test="ancestor::Content/Content[@filterType=$buttonName]">
-            <!-- edit button and show filter details -->
+           <button type="button" name="Edit {$buttonName}" class="btn btn-primary">
+              Edit <xsl:value-of select="$buttonName"/>
+            </button>
           </xsl:when>
           <xsl:otherwise>
-            <!-- add button -->
+            <button type="submit" name="RelateAdd_PageFilter_1Way_~inactive" class="btn btn-primary">
+              Add <xsl:value-of select="$buttonName"/>
+            </button>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:for-each>
     </div>
   </xsl:template>
+  
+   <!--<xsl:template match="group[contains(@class,'getFilterButtons')]" mode="xform">
+      <xsl:variable name="filterButtons">
+      <xsl:apply-templates select="." mode="getFilterButtons"/>
+      </xsl:variable>
+  <div>
+    <xsl:value-of select="$filterButtons"/>
+    <input type="button"/>
+  </div>
+  </xsl:template>-->
+  
 
   <!-- ##############################################-Nathan (New) RELATED CONTENT-############################## -->
   <xsl:template match="relatedContent" mode="xform">
@@ -2142,7 +2159,8 @@
       </xsl:if>
     </span>
   </xsl:template>
-
+	
+	
   <xsl:template match="Content[@type='NewsArticle']" mode="relatedBrief">
     <xsl:apply-templates select="." mode="getDisplayName" />
     <br/>
@@ -2153,6 +2171,7 @@
     </xsl:call-template>
     <!--</small>-->
   </xsl:template>
+
 
   <xsl:template match="Content[@type='LibraryImage']" mode="relatedBrief">
     <xsl:apply-templates select="." mode="displayThumbnail">
@@ -2861,7 +2880,7 @@
             <div>
                 <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick(this.value);">301 Permanant Redirect</button>
                 <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">302 Temporary Redirect</button>
-                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>
+                <!--<button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>-->
              </div>
 
             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
@@ -2903,6 +2922,7 @@
       <input  name="redirectOption" type="textbox" class="hiddenRedirectType" />
       </div>
     </div>
+   
   </xsl:template>
 
 

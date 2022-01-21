@@ -1970,7 +1970,7 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <div class="col-md-12">test
+            <div class="col-md-12">
               <xsl:apply-templates select="group[div/tblCartContact/cContactType/node()='Billing Address']" mode="xform"/>
               <div class="pull-right">
                 <xsl:apply-templates select="submit" mode="xform"/>
