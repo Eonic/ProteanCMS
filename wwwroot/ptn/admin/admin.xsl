@@ -3830,7 +3830,7 @@
           <xsl:otherwise>
             <xsl:choose>
               <xsl:when test="$type='Module'">
-                <a class="btn btn-default btn-xs float-end" href="{$appPath}?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$name}">
+                <a class="btn btn-primary btn-xs float-end" href="{$appPath}?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$name}">
                   <i class="fa fa-th-large">&#160;</i>&#160;<xsl:text>Add Module</xsl:text>
                 </a>
               </xsl:when>

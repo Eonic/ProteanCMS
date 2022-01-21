@@ -21,7 +21,7 @@
                   <strong>
                     <xsl:value-of select="$position"/>
                   </strong>
-                  <xsl:text> - drag a module here </xsl:text>
+                  <xsl:text> - drag a module here</xsl:text>
                 </div>
               </div>
             </div>
@@ -240,14 +240,14 @@
             </xsl:if>
           </xsl:attribute>
           <div class="ewAdmin options addmodule">
-            <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
+            <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
               <i class="fa fa-th-large">&#160;</i>&#160;<xsl:value-of select="$text"/>
             </a>
             <div class="addHere">
               <strong>
                 <xsl:value-of select="$position"/>
               </strong>
-              <xsl:text> - drag a module here </xsl:text>
+              <xsl:text> - drag a module here</xsl:text>
             </div>
           </div>
         </xsl:if>
@@ -257,7 +257,9 @@
           </xsl:when>
           <xsl:otherwise>
             <!-- if no contnet, need a space for the compiling of the XSL. -->
-            <xsl:text>&#160;</xsl:text>
+            <span class="hidden">
+              <xsl:text>&#160;</xsl:text>
+            </span>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:otherwise>

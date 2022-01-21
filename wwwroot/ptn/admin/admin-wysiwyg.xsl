@@ -20,7 +20,7 @@
   </xsl:template-->
 
   <xsl:template match="Page[@adminMode='false']" mode="adminStyle">
-      <link type="text/css" rel="stylesheet" href="/ptn/admin/admin-wysiwyg.scss"/>
+    <link type="text/css" rel="stylesheet" href="/ptn/admin/admin-wysiwyg.scss"/>
   </xsl:template>
 
   <xsl:template match="Page[@previewMode]" mode="adminStyle">
@@ -98,13 +98,13 @@
     </body>
   </xsl:template>
 
-  
+
 
   <xsl:template name="otherwise">
     <xsl:text>No help available. If you think there should be a help section available here or if you need help using this section please contact support.</xsl:text>
   </xsl:template>
 
-  
+
 
   <xsl:template match="Page" mode="adminBreadcrumb">
     <xsl:apply-templates select="AdminMenu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@cmd=/Page/@ewCmd or contains(@subCmds,$subMenuCommand)]]" mode="adminLink"/>
@@ -216,9 +216,9 @@
     </div>
   </xsl:template>
   <!-- -->
-  
 
-  
+
+
 
   <!-- -->
   <!-- ############### Website Inline Page Editing Buttons ############################## -->
@@ -366,7 +366,7 @@
 
 
 
-  
+
 
 
   <!---->
@@ -384,7 +384,7 @@
         </xsl:if>
       </xsl:attribute>
       <div class="ewAdmin options addmodule">
-        <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
+        <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
           <i class="fa fa-th-large">&#160;</i>&#160;
           <xsl:value-of select="$text"/>
         </a>
@@ -403,7 +403,9 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- if no contnet, need a space for the compiling of the XSL. -->
-        <xsl:text>&#160;</xsl:text>
+        <span class="hidden">
+          <xsl:text>&#160;</xsl:text>
+        </span>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -423,7 +425,7 @@
       </xsl:attribute>
       <xsl:if test="not(/Page/Contents/Content[@position = $position])">
         <div class="ewAdmin options addmodule">
-          <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
+          <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
             <i class="fa fa-th-large">&#160;</i>&#160;<xsl:text>Add Module</xsl:text>
           </a>
           <div class="addHere">
@@ -448,7 +450,7 @@
     <xsl:if test="/Page/@adminMode">
 
       <div class="ewAdmin options addmodule">
-        <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddMailModule&amp;pgid={/Page/@id}&amp;position={$position}">
+        <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddMailModule&amp;pgid={/Page/@id}&amp;position={$position}">
           <i class="fa fa-th-large">&#160;</i>&#160;
           <xsl:value-of select="$text"/>
         </a>
@@ -792,7 +794,7 @@
     <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
       <xsl:if test="not(Content[@type=$type]) and not(Contnet[@name=$name])">
         <div class="ewAdmin options">
-          <a href="#" class="btn btn-default edit pull-right" data-bs-toggle="dropdown">
+          <a href="#" class="btn btn-primary edit pull-right" data-bs-toggle="dropdown">
             <i class="fa fa-plus">&#160;</i>&#160;
             <xsl:value-of select="$text"/>&#160;
             <i class="fa fa-caret-down">&#160;</i>

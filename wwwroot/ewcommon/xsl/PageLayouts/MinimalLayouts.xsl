@@ -15393,9 +15393,6 @@
             <xsl:if test="Title/node()!='' and not(@showHeading='false')">
               <h3 class="caption-title">
                 <xsl:value-of select="Title/node()"/>
-                <strong>!
-                  <xsl:value-of select="@link"/>
-                </strong>
               </h3>
             </xsl:if>
             <xsl:apply-templates select="Body/node()" mode="cleanXhtml"></xsl:apply-templates>
