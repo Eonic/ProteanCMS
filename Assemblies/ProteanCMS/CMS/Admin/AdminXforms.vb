@@ -2273,7 +2273,8 @@ Partial Public Class Cms
                                 'or redirect to content form
                                 '
                                 If goConfig("cssFramework") = "bs5" Then
-                                    xFrmEditContent(0, moRequest("cModuleType"), pgid, moRequest("cPosition"))
+                                    Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
+                                    xFrmEditContent(0, ModulePath, pgid, moRequest("cPosition"))
 
                                 Else
                                     xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
@@ -2300,7 +2301,7 @@ Partial Public Class Cms
                     If thisModule Is Nothing Then
                         Return SchemaName
                     Else
-                        Return thisModule.SelectSingleNode("value").InnerText
+                        Return thisModule.GetAttribute("formPath")
                     End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
@@ -2317,7 +2318,7 @@ Partial Public Class Cms
                     If thisModule Is Nothing Then
                         Return SchemaName
                     Else
-                        Return thisModule.SelectSingleNode("value").InnerText
+                        Return thisModule.GetAttribute("formPath")
                     End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
@@ -2502,26 +2503,26 @@ Partial Public Class Cms
                                 For Each oItem In oChoices.SelectNodes(optionName)
                                     If oItem.GetAttribute("targetCssFramework") = "" Or (Not (myWeb.moConfig("cssFramework") Is Nothing) And oItem.GetAttribute("targetCssFramework").Contains("" & myWeb.moConfig("cssFramework"))) Then
                                         Dim FormPath As String = oItem.GetAttribute("type")
-                                        If oItem.GetAttribute("formPath") <> "" Then
-                                            FormPath = oItem.GetAttribute("formPath")
-                                        End If
                                         oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), FormPath)
                                         'lets add an image tag
                                         oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
+                                        If oItem.GetAttribute("formPath") <> "" Then
+                                            oOptElmt.SetAttribute("formPath", oItem.GetAttribute("formPath"))
+                                        End If
                                         oDescElmt = moPageXML.CreateElement("img")
                                         oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
-                                        If oItem.GetAttribute("icon") <> "" Then
-                                            oDescElmt.SetAttribute("icon", oItem.GetAttribute("icon"))
-                                        End If
-                                        oOptElmt.AppendChild(oDescElmt)
-                                        'lets insert a description html tag
-                                        If oItem.InnerXml <> "" Then
-                                            oDescElmt = moPageXML.CreateElement("div")
-                                            oDescElmt.SetAttribute("class", "description")
-                                            oDescElmt.InnerXml = oItem.InnerXml
+                                            If oItem.GetAttribute("icon") <> "" Then
+                                                oDescElmt.SetAttribute("icon", oItem.GetAttribute("icon"))
+                                            End If
                                             oOptElmt.AppendChild(oDescElmt)
+                                            'lets insert a description html tag
+                                            If oItem.InnerXml <> "" Then
+                                                oDescElmt = moPageXML.CreateElement("div")
+                                                oDescElmt.SetAttribute("class", "description")
+                                                oDescElmt.InnerXml = oItem.InnerXml
+                                                oOptElmt.AppendChild(oDescElmt)
+                                            End If
                                         End If
-                                    End If
                                 Next
                             End If
 
@@ -2666,7 +2667,7 @@ Partial Public Class Cms
                         MyBase.submission("EditContent", "", "post", "form_check(this)")
 
                         oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "EditContent", "2Col", "Edit Content")
-                        MyBase.addNote("EditContent", xForm.noteTypes.Alert, "We do not have an XForm for this type of content - this is the default form")
+                        MyBase.addNote("EditContent", xForm.noteTypes.Alert, "We do not have an XForm for this type of content: " & cXformPath)
 
                     End If
 
