@@ -227,7 +227,7 @@
 		<xsl:param name="text"/>
 		<xsl:param name="class"/>
 		<xsl:param name="position"/>
-		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule']">
+		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $page/@ewCmd!='PreviewOn'">
 		<section>
 			<xsl:if test="$class='container'">
 				<xsl:attribute name="class">wrapper-sm</xsl:attribute>
@@ -247,7 +247,7 @@
 		<xsl:param name="text"/>
 		<xsl:param name="class"/>
 		<xsl:param name="position"/>
-		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule']">
+		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $page/@ewCmd!='PreviewOn'">
 			<xsl:attribute name="class">
 				<xsl:text>moduleContainer</xsl:text>
 				<xsl:if test="$class!=''">
