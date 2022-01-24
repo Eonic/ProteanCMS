@@ -256,15 +256,16 @@
 				</xsl:if>
 			</xsl:attribute>
 			<div class="ewAdmin options addmodule">
-				<a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
-					<i class="fa fa-th-large">&#160;</i>&#160;<xsl:value-of select="$text"/>
-				</a>
+				
 				<div class="addHere">
 					<strong>
 						<xsl:value-of select="$position"/>
 					</strong>
 					<xsl:text> - drag a module here</xsl:text>
 				</div>
+        <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
+          <i class="fa fa-th-large">&#160;</i>&#160;<xsl:value-of select="$text"/>
+        </a>
 			</div>
 		</xsl:if>
 	</xsl:template>
@@ -691,7 +692,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <div class="dropdown pull-right">
-                    <a href="#" class="btn btn-default btn-xs" data-bs-toggle="dropdown">
+                    <a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
                       <i class="fa fa-plus">&#160;</i>&#160;
                       Add&#160;
                       <i class="fa fa-caret-down">&#160;</i>
@@ -738,7 +739,7 @@
 
               </xsl:variable>
               <div class="dropdown pull-right">
-                <a href="#" class="btn btn-default btn-xs dropdown-toggle" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#" class="btn btn-primary btn-xs dropdown-toggle" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-plus">&#160;</i>&#160;
                   Add&#160;
                   <i class="fa fa-caret-down">&#160;</i>
