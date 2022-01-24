@@ -6,10 +6,10 @@
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>
-    <ModuleGroup name="Subscriptions">
+    <ModuleGroup name="Subscriptions"  icon="fas fa-user-clock">
       <!--<Module type="SubscriptionGroupList" name="SubscriptionGroupList">Simple list with Buy Buttons</Module>-->
-      <Module type="SubscriptionList" name="Subscription List">List of Subscriptions</Module>
-      <Module type="ManageUserSubscriptions" name="Manage User Subscriptions">Manage User Subscriptions</Module>
+      <Module type="SubscriptionList" name="Subscription List" icon="fas fa-calendar-check">List of Subscriptions</Module>
+      <Module type="ManageUserSubscriptions" name="Manage User Subscriptions"  icon="fas fa-users-cog">Manage User Subscriptions</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
