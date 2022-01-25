@@ -207,7 +207,7 @@ Public Class IndexerAsync
                 Return ResponseMessage
 
             Else
-                'checking folder size start
+                'checking index file size start
                 Dim TotalSize As String
 
                 Dim infoReader As System.IO.FileInfo = My.Computer.FileSystem.GetFileInfo(mcIndexWriteFolder & "indexInfo.xml")
@@ -216,13 +216,13 @@ Public Class IndexerAsync
 
                     If (myWeb.moConfig("indexFileSize") IsNot Nothing) Then
                         If ((myWeb.moConfig("indexFileSize") * 1048576) < TotalSize) Then 'converted config mb size to byte
-                            StopIndex()
+                            ' StopIndex()
                             Exit Function
                         End If
                     End If
                 End If
 
-                'checking folder size end
+                'checking index file size end
 
 
                 Me.StartIndex()
@@ -286,7 +286,8 @@ Public Class IndexerAsync
                         Dim pageObj As New IndexPageAsync.oPage()
                         pageObj.pgid = oDR("nStructKey")
                         pageObj.pagename = oDR("cStructName")
-                        'checking folder size start
+
+                        'checking index file size start
                         infoReader = My.Computer.FileSystem.GetFileInfo(mcIndexWriteFolder & "indexInfo.xml")
                         If (infoReader.Exists) Then
                             TotalSize = infoReader.Length
@@ -298,7 +299,7 @@ Public Class IndexerAsync
                                 End If
                             End If
                         End If
-                        'checking folder size end
+                        'checking index file size end
 
                         'don't do async
                         'Tasks.IndexSinglePage(pageObj)

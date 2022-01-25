@@ -165,7 +165,7 @@ Public Class Indexer
             IndexDetailTypes = Split(Replace(cIndexDetailTypes, " ", ""), ",")
             dStartTime = Now
 
-            'checking folder size start
+            'checking index file size start
             Dim TotalSize As String
 
             Dim infoReader As System.IO.FileInfo = My.Computer.FileSystem.GetFileInfo(mcIndexWriteFolder & "indexInfo.xml")
@@ -174,13 +174,12 @@ Public Class Indexer
 
                 If (myWeb.moConfig("indexFileSize") IsNot Nothing) Then
                     If ((myWeb.moConfig("indexFileSize") * 1048576) < TotalSize) Then 'converted config mb size to byte
-                        'StopIndex()
                         Exit Sub
                     End If
                 End If
             End If
 
-            'checking folder size end
+            'checking index file size end
             Me.StartIndex()
 
             If bIsError Then Exit Sub
@@ -226,7 +225,7 @@ Public Class Indexer
             If oDS.Tables.Contains("Structure") Then
                 For Each oDR In oDS.Tables("Structure").Rows
 
-                    'checking folder size start
+                    'checking index file size start
                     infoReader = My.Computer.FileSystem.GetFileInfo(mcIndexWriteFolder & "indexInfo.xml")
                     If (infoReader.Exists) Then
                         TotalSize = infoReader.Length
@@ -238,7 +237,7 @@ Public Class Indexer
                         End If
                     End If
 
-                    'checking folder size end
+                    'checking index file size end
 
 
                     'here we get a copy of the outputted html
