@@ -289,6 +289,12 @@ $(document).ready(function() {
         hide: true
     });
 
+    $('.pick-page #MenuTree').ajaxtreeview({
+        loadPath: treeviewPath,
+        ajaxCmd: '',
+        openLevel: 2,
+        hide: true
+    });
 
 
     $('div.module div.moduleDrag').closest('.module').draggable({
@@ -1087,7 +1093,7 @@ Original preload function has been kept but is unused.
 
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
-                            alert($(loadNode).html());
+                           // alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode)
