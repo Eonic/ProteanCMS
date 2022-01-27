@@ -4912,106 +4912,103 @@
 
   <xsl:template match="Page[@layout='Profile']" mode="Admin">
     <xsl:for-each select="ContentDetail/User">
-      <div id="template_ListDirectory" class="card card-default">
-        <div class="card-header">
-          <div class="float-end">
-            <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-user fa-white">
+      <div id="template_ListDirectory" class="container-fluid">
+        <div class="float-end">
+          <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
+            <i class="fa fa-user fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Edit
+          </a>
+          <a href="{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="btn btn-xs btn-primary">
+            <i class="fa fa-repeat fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Reset Pwd
+          </a>
+          <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-xs btn-primary">
+            <i class="fa fa-user-secret fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Impersonate
+          </a>
+          <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-xs btn-primary">
+            <i class="fa fa-cog fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Roles
+          </a>
+          <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListGroups']">
+            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-xs btn-primary">
+              <i class="fa fa-glass fa-white">
                 <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Edit
+              </i>
+              <xsl:text> </xsl:text>Groups
             </a>
-            <a href="{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-repeat fa-white">
+            <a href="{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
+              <i class="fa fa-lock fa-white">
                 <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Reset Pwd
+              </i>
+              <xsl:text> </xsl:text>Permissions
             </a>
-            <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-user-secret fa-white">
+          </xsl:if>
+          <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListCompanies']">
+            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="btn btn-xs btn-primary">
+              <i class="fa fa-building-o fa-white">
                 <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Impersonate
+              </i>
+              <xsl:text> </xsl:text>Companies
             </a>
-            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-cog fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Roles
-            </a>
-            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListGroups']">
-              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-xs btn-primary">
-                <i class="fa fa-glass fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>Groups
-              </a>
-              <a href="{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
-                <i class="fa fa-lock fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>Permissions
-              </a>
-            </xsl:if>
-            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListCompanies']">
-              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="btn btn-xs btn-primary">
-                <i class="fa fa-building-o fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>Companies
-              </a>
 
-              <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="btn btn-xs btn-primary">
-                <i class="fas fa-layer-group">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Dept
-              </a>
-            </xsl:if>
+            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="btn btn-xs btn-primary">
+              <i class="fas fa-layer-group">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>Dept
+            </a>
+          </xsl:if>
 
-            <xsl:if test="/Page[@userIntegrations='true']">
-              <a href="{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="btn btn-xs btn-primary">
-                <i class="fa fa-random fa-white">
+          <xsl:if test="/Page[@userIntegrations='true']">
+            <a href="{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="btn btn-xs btn-primary">
+              <i class="fa fa-random fa-white">
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>Integrations
+            </a>
+          </xsl:if>
+          <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
+            <a href="{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
+              <i class="fa fa-map-marker fa-white">
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>Addresses
+            </a>
+          </xsl:if>
+          <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
+            <a href="{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-xs btn-primary">
+              <i class="fa fa-signal fa-white">
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>Activity
+            </a>
+          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="Status='0'">
+              <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
+                <i class="fa fa-trash-o fa-white">
                   <xsl:text> </xsl:text>
                 </i>
-                <xsl:text> </xsl:text>Integrations
+                <xsl:text> </xsl:text>Delete
               </a>
-            </xsl:if>
-            <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
-              <a href="{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
-                <i class="fa fa-map-marker fa-white">
+            </xsl:when>
+            <xsl:otherwise>
+              <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
+                <i class="fa fa-ban fa-white">
                   <xsl:text> </xsl:text>
                 </i>
-                <xsl:text> </xsl:text>Addresses
+                <xsl:text> </xsl:text>Disable
               </a>
-            </xsl:if>
-            <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
-              <a href="{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-xs btn-primary">
-                <i class="fa fa-signal fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>Activity
-              </a>
-            </xsl:if>
-            <xsl:choose>
-              <xsl:when test="Status='0'">
-                <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
-                  <i class="fa fa-trash-o fa-white">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Delete
-                </a>
-              </xsl:when>
-              <xsl:otherwise>
-                <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
-                  <i class="fa fa-ban fa-white">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Disable
-                </a>
-              </xsl:otherwise>
-            </xsl:choose>
-          </div>
-          <h3 >
-            User Profile
-          </h3>
+            </xsl:otherwise>
+          </xsl:choose>
         </div>
-        <div class="card-body">
+        <h3 >
+          User Profile
+        </h3>
           <div class="row">
             <div class="col-md-4">
               <h1>
@@ -5055,7 +5052,6 @@
             </div>
           </div>
 
-        </div>
 
         <div class="card card-default">
           <div class="card-header">
