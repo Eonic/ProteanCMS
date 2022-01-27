@@ -414,6 +414,7 @@ form.xform {
         }
     }
 }
+
 .alphabet-btns a{
     flex-grow: 0!important;
 }
@@ -512,6 +513,78 @@ strong {
     color: #666;
     background:#e6eced;
 }
+form table {
+    th {
+        color: #a7a7a7;
+        font-weight: 400;
+    }
+
+    &.table > :not(:first-child) {
+        border-top:0;
+    }
+}
+.table-mobile-cards {
+    .xs-only {
+        @include media-breakpoint-up(lg) {
+            display: none;
+        }
+    }
+
+    @include media-breakpoint-down(lg) {
+        /* Force table to not be like tables anymore */
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+        /* Hide table headers (but not display: none;, for accessibility) */
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        tbody {
+            @include media-breakpoint-up(sm) {
+                padding: 1%;
+            }
+        }
+
+        tr {
+            margin: 0 0 1rem 0;
+            margin: 2%;
+            border: 1px solid #ccc;
+        }
+
+        tr:nth-child(odd) {
+            //  background: #ccc;
+        }
+
+        td {
+            /* Behave  like a "row" */
+            border: none;
+            border-bottom: 0;
+            position: relative;
+            --bs-table-accent-bg: #fff !important;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        @include media-breakpoint-up(sm) {
+            tr {
+                width: 48%;
+                float: left;
+                margin: 1%;
+            }
+        }
+
+        @include media-breakpoint-up(md) {
+            tr {
+                width: 31%;
+                float: left;
+                margin: 1%;
+            }
+        }
+    }
+}
 form.xform .form-section-wrapper > .relatedContent-group {
     margin-bottom: 0;
 }
@@ -579,7 +652,7 @@ form.xform .relatedContent-group {
     margin-left:-5px;
     margin-right:-5px;
     margin-bottom:-10px;
-    button, a {
+    button, a, .btn {
         margin:0 5px 10px;
     }
 }

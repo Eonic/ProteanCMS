@@ -631,8 +631,9 @@
   <!-- -->
 
   <xsl:template match="Page" mode="Admin">
-    <div class="row" id="template_1_Column">
-      <div class="col-md-12">
+    <div class="container-fluid" id="template_1_Column">
+
+      <div class="">
         <div class="card card-default">
           <div class="card-header">
             <h3 class="title">
@@ -944,7 +945,7 @@
 
   <xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
     <div class="row">
-      <div class="col-md-3 panel">
+      <div class="col-md-3 card">
         <div class="card-body">
           <div class="btn-group-vertical">
             <xsl:for-each select="AdminMenu/descendant-or-self::MenuItem[@cmd='SettingsDash']/MenuItem">
@@ -966,43 +967,46 @@
   </xsl:template>
   <!-- -->
   <xsl:template match="Page[@layout='Advanced' or @layout='AdvancedMail']" mode="Admin">
-    <div class="row" id="tpltAdvancedMode">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h4 >Navigate to page</h4>
-          </div>
-          <ul id="MenuTree" class="list-group treeview">
-            <xsl:apply-templates select="Menu/MenuItem" mode="menuitem_am">
-              <xsl:with-param name="level" select="'1'"/>
-            </xsl:apply-templates>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <form action="{$appPath}" method="get" class="ewXform">
-          <!--input type="hidden" name="ewCmd" value="BulkContentAction"/>
-					<input type="hidden" name="pgid" value="{$page/@id}"/-->
+    <div class="container-fluid" id="tpltAdvancedMode">
+      <div class="row">
+
+        <div class="col-md-3">
           <div class="card card-default">
             <div class="card-header">
-              <div class="card-header-buttons">
-                <xsl:apply-templates select="." mode="bulkActionForm"/>
-              </div>
-              <h4 >
-                All content on page - <strong>
-                  <xsl:apply-templates select="$currentPage" mode="getDisplayName"/>
-                </strong>
-              </h4>
+              <h4 >Navigate to page</h4>
             </div>
-            <div class="panel-group" id="accordion">
-              <xsl:for-each select="/Page/ContentDetail/ContentTypes/ContentTypeGroup/ContentType">
-                <xsl:apply-templates select="/" mode="ListByContentType">
-                  <xsl:with-param name="contentType" select="@type"/>
-                </xsl:apply-templates>
-              </xsl:for-each>
-            </div>
+            <ul id="MenuTree" class="list-group treeview">
+              <xsl:apply-templates select="Menu/MenuItem" mode="menuitem_am">
+                <xsl:with-param name="level" select="'1'"/>
+              </xsl:apply-templates>
+            </ul>
           </div>
-        </form>
+        </div>
+        <div class="col-md-9">
+          <form action="{$appPath}" method="get" class="ewXform">
+            <!--input type="hidden" name="ewCmd" value="BulkContentAction"/>
+					<input type="hidden" name="pgid" value="{$page/@id}"/-->
+            <div class="card card-default">
+              <div class="card-header">
+                <div class="card-header-buttons">
+                  <xsl:apply-templates select="." mode="bulkActionForm"/>
+                </div>
+                <h4 >
+                  All content on page - <strong>
+                    <xsl:apply-templates select="$currentPage" mode="getDisplayName"/>
+                  </strong>
+                </h4>
+              </div>
+              <div class="panel-group" id="accordion">
+                <xsl:for-each select="/Page/ContentDetail/ContentTypes/ContentTypeGroup/ContentType">
+                  <xsl:apply-templates select="/" mode="ListByContentType">
+                    <xsl:with-param name="contentType" select="@type"/>
+                  </xsl:apply-templates>
+                </xsl:for-each>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </xsl:template>
@@ -1750,10 +1754,10 @@
   <!-- -->
   <xsl:template match="Page[@layout='ByType']" mode="Admin">
     <xsl:variable name="contentType" select="@ewCmd2"/>
-    <div id="tpltAdvancedMode">
+    <div id="tpltAdvancedMode" class="container-fluid">
       <div class="row header-panels">
         <div class="col-md-6">
-          <form action="{$appPath}?ewCmd=ByType.{@ewCmd2}.Search&amp;pgid={$page/@id}" method="post" class="ewXform panel panel-default">
+          <form action="{$appPath}?ewCmd=ByType.{@ewCmd2}.Search&amp;pgid={$page/@id}" method="post" class="ewXform card ">
             <div class="card-body form-group">
               <div class="input-group">
                 <label class="input-group-addon">
@@ -1768,7 +1772,7 @@
           </form>
         </div>
         <div class="col-md-6">
-          <form method="post" action="/?ewCmd=ByType.{@ewCmd2}.Location" class="ewXform panel panel-default" id="LocationFilter" name="LocationFilter">
+          <form method="post" action="/?ewCmd=ByType.{@ewCmd2}.Location" class="ewXform card" id="LocationFilter" name="LocationFilter">
             <div class="card-body  form-group">
               <div class="input-group">
                 <label for="Location" class="input-group-addon">Select Location</label>
@@ -1903,11 +1907,13 @@
 
 
 
-    <div class="card card-default">
-      <div class="card-header row">
-        <h6 class="panel-title col-md-3">
-          <xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
-        </h6>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <h6>
+            <xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
+          </h6>
+        </div>
         <xsl:if test="$page/ContentDetail/@total > 0">
           <div class="list-controls col-md-9">
             <xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
@@ -1992,7 +1998,7 @@
         </xsl:choose>
       </table>
     </form>
-    <div class="panel-header">
+    <div class="card-header">
 
       <xsl:if test="$page/ContentDetail/@total > 0">
         <div class="float-end-stepper">
@@ -2335,25 +2341,27 @@
 
   <xsl:template match="Page[@layout='MovePage']" mode="Admin">
     <!-- -->
-    <div class="row" id="tpltMovePage">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Instructions</h3>
-          </div>
-          <div class="card-body">
-            <p>To move the page identified as "moving..." click the move here link on a another page.</p>
-            <p>The moved page will be added beneath the page you have selected.</p>
+    <div class="container-fluid" id="tpltMovePage">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Instructions</h3>
+            </div>
+            <div class="card-body">
+              <p>To move the page identified as "moving..." click the move here link on a another page.</p>
+              <p>The moved page will be added beneath the page you have selected.</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <ul id="MenuTree" class="list-group">
-            <xsl:apply-templates select="Menu/MenuItem" mode="movePage">
-              <xsl:with-param name="level">1</xsl:with-param>
-            </xsl:apply-templates>
-          </ul>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <ul id="MenuTree" class="list-group">
+              <xsl:apply-templates select="Menu/MenuItem" mode="movePage">
+                <xsl:with-param name="level">1</xsl:with-param>
+              </xsl:apply-templates>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -2448,24 +2456,26 @@
   <!--   ##################  Move Content - dynamically generated from menu   ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='MoveContent']" mode="Admin">
-    <div class="row" id="tpltMoveContent">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Instructions</h3>
-          </div>
-          <div class="card-body">
-            <p>Click the "Move Here" button on the page you want to move your content too.</p>
+    <div class="container-fluid" id="tpltMoveContent">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Instructions</h3>
+            </div>
+            <div class="card-body">
+              <p>Click the "Move Here" button on the page you want to move your content too.</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <ul id="MenuTree" class="list-group">
-            <xsl:apply-templates select="Menu/MenuItem" mode="moveContent">
-              <xsl:with-param name="level">1</xsl:with-param>
-            </xsl:apply-templates>
-          </ul>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <ul id="MenuTree" class="list-group">
+              <xsl:apply-templates select="Menu/MenuItem" mode="moveContent">
+                <xsl:with-param name="level">1</xsl:with-param>
+              </xsl:apply-templates>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -2556,53 +2566,54 @@
   <!--   ##################  Locate Content - dynamically generated from menu   ##############################   -->
 
   <xsl:template match="Page[@layout='LocateContent']" mode="Admin">
-    <div class="row" id="tpltLocateContent">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">Instructions</div>
-          <div class="card-body">
-
-            <p>Any content can be located on any page throughout the site. However it will not be displayed unless the page contains a module that displays that kind of content.</p>
-            <p>
-              There are two types of relationship, a primary location, that is the parent page of each piece of content every piece of content should have one of these. You can change this by clicking the <a class="adminButton edit">edit relationship</a> button
-            </p>
-          </div>
-        </div>
-      </div>
-      <form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/*/Item[@name='id']}" method="post" class="ewXform">
-        <input type="hidden" name="id" value="{/Page/Request/*/Item[@name='id']}"/>
-        <xsl:variable name="position">
-          <xsl:choose>
-            <xsl:when test="/Page/ContentDetail/Content/Location[@primary='true']/@position!=''">
-              <xsl:value-of select="/Page/ContentDetail/Content/Location[@primary='true']/@position"/>
-            </xsl:when>
-            <xsl:otherwise>column1</xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <input type="hidden" name="position" value="{$position}"/>
-        <div class="col-md-9">
+    <div class="container-fluid" id="tpltLocateContent">
+      <div class="row">
+        <div class="col-md-3">
           <div class="card card-default">
-            <div class="card-header">
-              <button type="submit" name="submit" class="float-end btn btn-primary btn-sm" value="submit">
-                Save Locations
-              </button>
-              <div class="clearfix">&#160;</div>
-            </div>
-            <ul id="MenuTree" class="list-group">
-              <xsl:apply-templates select="Menu/MenuItem" mode="LocateContent">
-                <xsl:with-param name="level">1</xsl:with-param>
-              </xsl:apply-templates>
-            </ul>
-            <div class="panel-footer">
-              <button type="submit" name="submit" class="float-end btn btn-primary btn-sm" value="submit">
-                Save Locations
-              </button>
-              <div class="clearfix">&#160;</div>
+            <div class="card-header">Instructions</div>
+            <div class="card-body">
+
+              <p>Any content can be located on any page throughout the site. However it will not be displayed unless the page contains a module that displays that kind of content.</p>
+              <p>
+                There are two types of relationship, a primary location, that is the parent page of each piece of content every piece of content should have one of these. You can change this by clicking the <a class="adminButton edit">edit relationship</a> button
+              </p>
             </div>
           </div>
         </div>
-      </form>
-
+        <form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/*/Item[@name='id']}" method="post" class="ewXform">
+          <input type="hidden" name="id" value="{/Page/Request/*/Item[@name='id']}"/>
+          <xsl:variable name="position">
+            <xsl:choose>
+              <xsl:when test="/Page/ContentDetail/Content/Location[@primary='true']/@position!=''">
+                <xsl:value-of select="/Page/ContentDetail/Content/Location[@primary='true']/@position"/>
+              </xsl:when>
+              <xsl:otherwise>column1</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <input type="hidden" name="position" value="{$position}"/>
+          <div class="col-md-9">
+            <div class="card card-default">
+              <div class="card-header">
+                <button type="submit" name="submit" class="float-end btn btn-primary btn-sm" value="submit">
+                  Save Locations
+                </button>
+                <div class="clearfix">&#160;</div>
+              </div>
+              <ul id="MenuTree" class="list-group">
+                <xsl:apply-templates select="Menu/MenuItem" mode="LocateContent">
+                  <xsl:with-param name="level">1</xsl:with-param>
+                </xsl:apply-templates>
+              </ul>
+              <div class="card-footer">
+                <button type="submit" name="submit" class="float-end btn btn-primary btn-sm" value="submit">
+                  Save Locations
+                </button>
+                <div class="clearfix">&#160;</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
 
     </div>
   </xsl:template>
@@ -2779,83 +2790,37 @@
   <!--   ##################  Related Search   ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='RelatedSearch']" mode="Admin">
-    <div class="row" id="tpltRelatedSearch">
-      <div class="col-md-4">
-        <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-      </div>
-      <div class="col-md-8">
+    <div class="container-fluid" id="tpltRelatedSearch">
+      <div class="row">
+        <div class="col-md-4">
+          <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+        </div>
+        <div class="col-md-8">
 
-        <xsl:text> </xsl:text>
-        <xsl:if test="ContentDetail/RelatedResults">
-          <form name="myform" action="" method="post" class="card card-default">
-            <input type="hidden" name="id" value="{ContentDetail/RelatedResults/@nParentID}"/>
-            <input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
-            <input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
-            <div class="card-header">
-              <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary btn-xs float-end">
-                <i class="fa fa-check fa-white">
-                  <xsl:text> </xsl:text>
-                </i> Check All
-              </button>
-              <xsl:text> </xsl:text>
-              <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary btn-xs float-end">
-                <i class="fa fa-share fa-white">
-                  <xsl:text> </xsl:text>
-                </i> Uncheck All
-              </button>
-              <h3 >Search Results</h3>
-            </div>
+          <xsl:text> </xsl:text>
+          <xsl:if test="ContentDetail/RelatedResults">
+            <form name="myform" action="" method="post" class="card card-default">
+              <input type="hidden" name="id" value="{ContentDetail/RelatedResults/@nParentID}"/>
+              <input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
+              <input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
+              <div class="card-header">
+                <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary btn-xs float-end">
+                  <i class="fa fa-check fa-white">
+                    <xsl:text> </xsl:text>
+                  </i> Check All
+                </button>
+                <xsl:text> </xsl:text>
+                <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary btn-xs float-end">
+                  <i class="fa fa-share fa-white">
+                    <xsl:text> </xsl:text>
+                  </i> Uncheck All
+                </button>
+                <h3 >Search Results</h3>
+              </div>
 
-            <table cellpadding="0" cellspacing="1" class="table">
-              <tbody>
-                <tr>
-                  <th>
-                    <xsl:choose>
-                      <xsl:when test="ContentDetail/RelatedResults/Content">
-                        <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-primary principle">
-                          <i class="fa fa-plus fa-white">
-                            <xsl:text> </xsl:text>
-                          </i><xsl:text> </xsl:text>Add
-                          <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
-                        </button>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <label>
-                          <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
-                        </label>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </th>
-                </tr>
-                <tr>
-                  <th>Name</th>
-                  <th>Publish Date</th>
-                  <th>Tick to Relate</th>
-                </tr>
-                <tr>
-                  <xsl:for-each select="ContentDetail/RelatedResults/Content">
-                    <xsl:sort select="@name" />
-
-                    <xsl:apply-templates select="." mode="LocateContentNode"/>
-
-                  </xsl:for-each>
-                </tr>
-                <!--<xsl:apply-templates select="ContentDetail/RelatedResults/Content" mode="LocateContentNode"/>-->
-                <xsl:if test="ContentDetail/RelatedResults/Content">
+              <table cellpadding="0" cellspacing="1" class="table">
+                <tbody>
                   <tr>
-                    <th>
-                      <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary">
-                        <i class="fa fa-check fa-white">
-                          <xsl:text> </xsl:text>
-                        </i> Check All
-                      </button>
-                      <xsl:text> </xsl:text>
-                      <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary">
-                        <i class="fa fa-share fa-white">
-                          <xsl:text> </xsl:text>
-                        </i> Uncheck All
-                      </button>
-                    </th>
                     <th>
                       <xsl:choose>
                         <xsl:when test="ContentDetail/RelatedResults/Content">
@@ -2874,11 +2839,59 @@
                       </xsl:choose>
                     </th>
                   </tr>
-                </xsl:if>
-              </tbody>
-            </table>
-          </form>
-        </xsl:if>
+                  <tr>
+                    <th>Name</th>
+                    <th>Publish Date</th>
+                    <th>Tick to Relate</th>
+                  </tr>
+                  <tr>
+                    <xsl:for-each select="ContentDetail/RelatedResults/Content">
+                      <xsl:sort select="@name" />
+
+                      <xsl:apply-templates select="." mode="LocateContentNode"/>
+
+                    </xsl:for-each>
+                  </tr>
+                  <!--<xsl:apply-templates select="ContentDetail/RelatedResults/Content" mode="LocateContentNode"/>-->
+                  <xsl:if test="ContentDetail/RelatedResults/Content">
+                    <tr>
+                      <th>
+                        <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary">
+                          <i class="fa fa-check fa-white">
+                            <xsl:text> </xsl:text>
+                          </i> Check All
+                        </button>
+                        <xsl:text> </xsl:text>
+                        <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary">
+                          <i class="fa fa-share fa-white">
+                            <xsl:text> </xsl:text>
+                          </i> Uncheck All
+                        </button>
+                      </th>
+                      <th>
+                        <xsl:choose>
+                          <xsl:when test="ContentDetail/RelatedResults/Content">
+                            <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-primary principle">
+                              <i class="fa fa-plus fa-white">
+                                <xsl:text> </xsl:text>
+                              </i><xsl:text> </xsl:text>Add
+                              <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
+                            </button>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <label>
+                              <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
+                            </label>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </th>
+                    </tr>
+                  </xsl:if>
+                </tbody>
+              </table>
+            </form>
+          </xsl:if>
+        </div>
       </div>
     </div>
   </xsl:template>
@@ -2955,122 +2968,124 @@
   <!--   ##################  Product Groups   ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='ProductGroups']" mode="Admin">
-    <div class="row" id="tpltProductGroups">
-      <div class="col-md-3">
-        <div class="alert alert-info">
-          <i class="fa fa-info-sign fa-3x float-end">
-            <xsl:text> </xsl:text>
-          </i>
-          <h4>Hint</h4>
-          <p>Product groups enable us to group a range of products together and apply behaviours such as discount rules and shipping methods.</p>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <div class="card-header">
-
-            <a href="{$appPath}?ewCmd=AddProductGroups" class="btn btn-primary">
-              <i class="fa fa-plus fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Add New Group
-            </a>
+    <div class="container-fluid" id="tpltProductGroups">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="alert alert-info">
+            <i class="fa fa-info-sign fa-3x float-end">
+              <xsl:text> </xsl:text>
+            </i>
+            <h4>Hint</h4>
+            <p>Product groups enable us to group a range of products together and apply behaviours such as discount rules and shipping methods.</p>
           </div>
-          <div class="card-body">
-            <xsl:if test="ContentDetail/ProductCategories">
-              <table cellpadding="0" cellspacing="1" class="table">
-                <tbody>
-                  <tr>
-                    <th></th>
-                    <th>Product Group</th>
-                    <th>Group Type</th>
-                    <th>Product Count</th>
-                    <th>
-                      <xsl:text> </xsl:text>
-                    </th>
-                  </tr>
-                  <xsl:for-each select="ContentDetail/ProductCategories/ProductCategory">
-                    <tr>
-                      <td>
-                        <xsl:choose>
-                          <xsl:when test="Content">
-                            <a href="{$appPath}?ewCmd=ProductGroups" alt="Click here to collapse" class="btn btn-xs btn-primary">
-                              <i class="fa fa-minus fa-white">
-                                <xsl:text> </xsl:text>
-                              </i>
-                            </a>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <a href="{$appPath}?ewCmd=ProductGroups&amp;GrpID={@nCatKey}" alt="Click here to expand" class="btn btn-xs btn-primary">
-                              <i class="fa fa-plus fa-white">
-                                <xsl:text> </xsl:text>
-                              </i>
-                            </a>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </td>
-                      <td>
-                        <strong>
-                          <xsl:value-of select="cCatName/text()"/>
-                        </strong>
-                      </td>
-                      <td>
-                        <strong>
-                          <xsl:value-of select="@cCatSchemaName"/>
-                        </strong>
-                      </td>
-                      <td>
-                        <strong>
-                          (<xsl:value-of select="@Count"/>)
-                        </strong>
-                      </td>
-                      <td>
-                        <a href="{$appPath}?ewCmd=AddProductGroupsProduct&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
-                          <i class="fa fa-gift fa-white">
-                            <xsl:text> </xsl:text>
-                          </i><xsl:text> </xsl:text>Add Products
-                        </a>
-                      </td>
+        </div>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <div class="card-header">
 
-                      <td>
-                        <a href="{$appPath}?ewCmd=EditProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
-                          <i class="fa fa-pencil fa-white">
-                            <xsl:text> </xsl:text>
-                          </i><xsl:text> </xsl:text>Edit
-                        </a>
-                        <a href="{$appPath}?ewCmd=DeleteProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-danger">
-                          <i class="fa fa-trash-o fa-white">
-                            <xsl:text> </xsl:text>
-                          </i><xsl:text> </xsl:text>Delete
-                        </a>
-                        <a href="/ewcommon/feeds/google/base.ashx?groupId={@nCatKey}" target="_new" class="btn btn-xs btn-primary">
-                          <i class="fa fa-list">
-                            <xsl:text> </xsl:text>
-                          </i><xsl:text> </xsl:text>Feed
-                        </a>
-                      </td>
+              <a href="{$appPath}?ewCmd=AddProductGroups" class="btn btn-primary">
+                <i class="fa fa-plus fa-white">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Add New Group
+              </a>
+            </div>
+            <div class="card-body">
+              <xsl:if test="ContentDetail/ProductCategories">
+                <table cellpadding="0" cellspacing="1" class="table">
+                  <tbody>
+                    <tr>
+                      <th></th>
+                      <th>Product Group</th>
+                      <th>Group Type</th>
+                      <th>Product Count</th>
+                      <th>
+                        <xsl:text> </xsl:text>
+                      </th>
                     </tr>
-                    <xsl:for-each select="Content">
+                    <xsl:for-each select="ContentDetail/ProductCategories/ProductCategory">
                       <tr>
-                        <td> </td>
-                        <td colspan="3">
+                        <td>
+                          <xsl:choose>
+                            <xsl:when test="Content">
+                              <a href="{$appPath}?ewCmd=ProductGroups" alt="Click here to collapse" class="btn btn-xs btn-primary">
+                                <i class="fa fa-minus fa-white">
+                                  <xsl:text> </xsl:text>
+                                </i>
+                              </a>
+                            </xsl:when>
+                            <xsl:otherwise>
+                              <a href="{$appPath}?ewCmd=ProductGroups&amp;GrpID={@nCatKey}" alt="Click here to expand" class="btn btn-xs btn-primary">
+                                <i class="fa fa-plus fa-white">
+                                  <xsl:text> </xsl:text>
+                                </i>
+                              </a>
+                            </xsl:otherwise>
+                          </xsl:choose>
+                        </td>
+                        <td>
                           <strong>
-                            <xsl:value-of select="@name"/>
+                            <xsl:value-of select="cCatName/text()"/>
                           </strong>
                         </td>
                         <td>
-                          <a href="{$appPath}?ewCmd=RemoveProductGroupsProduct&amp;GroupId={../@nCatKey}&amp;RelId={@relid}" class="btn btn-xs btn-primary">
-                            <i class="fa fa-remove fa-white">
+                          <strong>
+                            <xsl:value-of select="@cCatSchemaName"/>
+                          </strong>
+                        </td>
+                        <td>
+                          <strong>
+                            (<xsl:value-of select="@Count"/>)
+                          </strong>
+                        </td>
+                        <td>
+                          <a href="{$appPath}?ewCmd=AddProductGroupsProduct&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
+                            <i class="fa fa-gift fa-white">
                               <xsl:text> </xsl:text>
-                            </i>
-                            <xsl:text> </xsl:text>Remove
+                            </i><xsl:text> </xsl:text>Add Products
+                          </a>
+                        </td>
+
+                        <td>
+                          <a href="{$appPath}?ewCmd=EditProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
+                            <i class="fa fa-pencil fa-white">
+                              <xsl:text> </xsl:text>
+                            </i><xsl:text> </xsl:text>Edit
+                          </a>
+                          <a href="{$appPath}?ewCmd=DeleteProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-danger">
+                            <i class="fa fa-trash-o fa-white">
+                              <xsl:text> </xsl:text>
+                            </i><xsl:text> </xsl:text>Delete
+                          </a>
+                          <a href="/ewcommon/feeds/google/base.ashx?groupId={@nCatKey}" target="_new" class="btn btn-xs btn-primary">
+                            <i class="fa fa-list">
+                              <xsl:text> </xsl:text>
+                            </i><xsl:text> </xsl:text>Feed
                           </a>
                         </td>
                       </tr>
+                      <xsl:for-each select="Content">
+                        <tr>
+                          <td> </td>
+                          <td colspan="3">
+                            <strong>
+                              <xsl:value-of select="@name"/>
+                            </strong>
+                          </td>
+                          <td>
+                            <a href="{$appPath}?ewCmd=RemoveProductGroupsProduct&amp;GroupId={../@nCatKey}&amp;RelId={@relid}" class="btn btn-xs btn-primary">
+                              <i class="fa fa-remove fa-white">
+                                <xsl:text> </xsl:text>
+                              </i>
+                              <xsl:text> </xsl:text>Remove
+                            </a>
+                          </td>
+                        </tr>
+                      </xsl:for-each>
                     </xsl:for-each>
-                  </xsl:for-each>
-                </tbody>
-              </table>
-            </xsl:if>
+                  </tbody>
+                </table>
+              </xsl:if>
+            </div>
           </div>
         </div>
       </div>
@@ -3400,7 +3415,7 @@
       </li>
     </ul>
     <div class="tab-content">
-      <div class="tab-pane panel active" id="general">
+      <div class="tab-pane active" id="general">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">Browser Page Title</xsl:with-param>
@@ -3482,7 +3497,7 @@
           </xsl:call-template>
         </table>
       </div>
-      <div class="tab-pane panel" id="dublinCore">
+      <div class="tab-pane" id="dublinCore">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">DC.Title</xsl:with-param>
@@ -3536,7 +3551,7 @@
           </xsl:call-template>
         </table>
       </div>
-      <div class="tab-pane panel" id="google">
+      <div class="tab-pane" id="google">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">Google Verification</xsl:with-param>
@@ -3562,7 +3577,7 @@
       </div>
 
       <!--LUKE OG-->
-      <div class="tab-pane panel" id="opengraph">
+      <div class="tab-pane" id="opengraph">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">OpenGraph Title</xsl:with-param>
@@ -3607,7 +3622,7 @@
         </table>
       </div>
       <!--END -->
-      <div class="tab-pane panel" id="facebook">
+      <div class="tab-pane" id="facebook">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">Facebook UserId</xsl:with-param>
@@ -3638,7 +3653,7 @@
         </table>
       </div>
       <!--LUKE 05.10.21-->
-      <div class="tab-pane panel" id="twitter">
+      <div class="tab-pane" id="twitter">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">Twitter Card</xsl:with-param>
@@ -3673,7 +3688,7 @@
 
         </table>
       </div>
-      <div class="tab-pane panel" id="linkedin">
+      <div class="tab-pane" id="linkedin">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">LinkedIn Insight Tag</xsl:with-param>
@@ -3684,7 +3699,7 @@
       </div>
       <!-- END -->
 
-      <div class="tab-pane panel" id="cookie">
+      <div class="tab-pane" id="cookie">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">Cookie Policy</xsl:with-param>
@@ -3693,7 +3708,7 @@
           </xsl:call-template>
         </table>
       </div>
-      <div class="tab-pane panel" id="settings">
+      <div class="tab-pane" id="settings">
         <table cellpadding="0" class="table">
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">A1 Webstats ID</xsl:with-param>
@@ -4660,13 +4675,11 @@
         </div>
       </div>
       <div class="col-md-9">
-        <div class="panel">
-          <ul id="MenuTree" class="treeview">
-            <xsl:apply-templates select="Menu/MenuItem" mode="editStructurePermissions">
-              <xsl:with-param name="level">1</xsl:with-param>
-            </xsl:apply-templates>
-          </ul>
-        </div>
+        <ul id="MenuTree" class="treeview">
+          <xsl:apply-templates select="Menu/MenuItem" mode="editStructurePermissions">
+            <xsl:with-param name="level">1</xsl:with-param>
+          </xsl:apply-templates>
+        </ul>
       </div>
     </div>
   </xsl:template>
@@ -5009,48 +5022,48 @@
         <h3 >
           User Profile
         </h3>
-          <div class="row">
-            <div class="col-md-4">
-              <h1>
-                <xsl:value-of select="FirstName"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="LastName"/>
-              </h1>
-              <a href="mailto:{Email/node()}">
-                <xsl:value-of select="Email"/>
-              </a><br/>
-              <xsl:if test="Position/node()!=''">
-                <h3>
-                  <xsl:value-of select="Position"/>
-                </h3>
-                <br/>
-              </xsl:if>
-              <xsl:if test="Company">
-                <xsl:choose>
-                  <xsl:when test="count(Company[@id!=''])=1">Company:</xsl:when>
-                  <xsl:otherwise>Companies:</xsl:otherwise>
-                </xsl:choose>
-                <xsl:text> </xsl:text>
-                <xsl:apply-templates select="Company[@id!='']" mode="dirProfileLink"/>
-              </xsl:if>
-              <br/><br/>
-              Groups<br/>
-              <xsl:for-each select="Group">
-                <xsl:apply-templates select="." mode="dirProfileLink"/>
-                <xsl:text>, </xsl:text>
-              </xsl:for-each>
-            </div>
-            <div class="col-md-8">
-
-              <xsl:for-each select="Contacts/Contact">
-                <!--xsl:apply-templates select="." mode="contactAddressBriefProfile"/-->
-                <xsl:apply-templates select="." mode="AdminListContact"/>
-                <xsl:if test="position() mod 2=0">
-                  <div class="terminus">&#160;</div>
-                </xsl:if>
-              </xsl:for-each>
-            </div>
+        <div class="row">
+          <div class="col-md-4">
+            <h1>
+              <xsl:value-of select="FirstName"/>
+              <xsl:text> </xsl:text>
+              <xsl:value-of select="LastName"/>
+            </h1>
+            <a href="mailto:{Email/node()}">
+              <xsl:value-of select="Email"/>
+            </a><br/>
+            <xsl:if test="Position/node()!=''">
+              <h3>
+                <xsl:value-of select="Position"/>
+              </h3>
+              <br/>
+            </xsl:if>
+            <xsl:if test="Company">
+              <xsl:choose>
+                <xsl:when test="count(Company[@id!=''])=1">Company:</xsl:when>
+                <xsl:otherwise>Companies:</xsl:otherwise>
+              </xsl:choose>
+              <xsl:text> </xsl:text>
+              <xsl:apply-templates select="Company[@id!='']" mode="dirProfileLink"/>
+            </xsl:if>
+            <br/><br/>
+            Groups<br/>
+            <xsl:for-each select="Group">
+              <xsl:apply-templates select="." mode="dirProfileLink"/>
+              <xsl:text>, </xsl:text>
+            </xsl:for-each>
           </div>
+          <div class="col-md-8">
+
+            <xsl:for-each select="Contacts/Contact">
+              <!--xsl:apply-templates select="." mode="contactAddressBriefProfile"/-->
+              <xsl:apply-templates select="." mode="AdminListContact"/>
+              <xsl:if test="position() mod 2=0">
+                <div class="terminus">&#160;</div>
+              </xsl:if>
+            </xsl:for-each>
+          </div>
+        </div>
 
 
         <div class="card card-default">
@@ -6216,120 +6229,109 @@
         <xsl:when test="@ewCmd='OrdersHistory'">Full Order History</xsl:when>
       </xsl:choose>
     </xsl:variable>
-    <div class="row" >
-      <div class="col-md-12">
-        <div class="card card-default">
-          <xsl:choose>
-            <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
-              <form action="{$appPath}" method="get" class="ewXform">
-                <div class="card-header">
+    <div>
+      <xsl:choose>
+        <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
+          <form action="{$appPath}" method="get" class="ewXform">
 
-                  <input type="hidden" name="ewCmd" value="BulkCartAction"/>
-                  <input type="hidden" name="pgid" value="{$page/@id}"/>
-                  <div class="card-header-buttons col-md-3 float-end">
-                    <xsl:if test="@ewCmd='Orders'">
-                      <div class="form-group bulk-action">
-                        <div class="input-group">
-                          <label class="input-group-addon">Bulk Action</label>
-                          <select class="form-control" name="BulkAction" id="BulkAction">
-                            <option value="Print">Print Delivery</option>
-                            <option value="SetInProgress">Move to In Progress</option>
-                            <option value="SetShipped">Move to Shipped</option>
-                          </select>
-                          <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary">Go</button>
-                          </span>
-                        </div>
-                      </div>
-                    </xsl:if>
-                  </div>
-                  <div class="float-end">
-                    <xsl:apply-templates select="/" mode="adminStepper">
-                      <xsl:with-param name="itemCount" select="'100'"/>
-                      <xsl:with-param name="itemTotal" select="$total"/>
-                      <xsl:with-param name="startPos" select="$startPos"/>
-                      <xsl:with-param name="path" select="$queryString"/>
-                      <xsl:with-param name="itemName" select="$title"/>
-                    </xsl:apply-templates>
-                  </div>
-                  <h3 >
-                    <xsl:value-of select="$title"/>
-                  </h3>
-
-                  <div class="terminus">
-                    <xsl:text> </xsl:text>
+            <input type="hidden" name="ewCmd" value="BulkCartAction"/>
+            <input type="hidden" name="pgid" value="{$page/@id}"/>
+            <div class="container-fluid card-header-buttons">
+              <xsl:if test="@ewCmd='Orders'">
+                <div class="form-group bulk-action float-end">
+                  <div class="input-group mb-3">
+                    <label class="input-group-text">Bulk Action</label>
+                    <select class="form-control form-select" name="BulkAction" id="BulkAction">
+                      <option value="Print">Print Delivery</option>
+                      <option value="SetInProgress">Move to In Progress</option>
+                      <option value="SetShipped">Move to Shipped</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary input-group-btn">Go</button>
                   </div>
                 </div>
-                <table class="card-body table table-striped">
-                  <tbody>
-                    <tr>
-                      <th>Order Id</th>
-                      <th>Status</th>
-                      <th>Customer Name</th>
-                      <th>Email</th>
-                      <th>Time Placed</th>
-                      <th>Value</th>
-                      <th>&#160;</th>
-                      <th>
-                        <a href="" class="btn btn-primary">All</a>
-                      </th>
-                    </tr>
-                    <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
-                      <xsl:with-param name="startPos"  select="$startPos"/>
-                      <xsl:with-param name="itemCount" select="'100'"/>
-                    </xsl:apply-templates>
-                  </tbody>
-                </table>
-
-              </form>
-              <div class="panel-footer">
-                <div class="float-end">
-                  <xsl:apply-templates select="/" mode="adminStepper">
-                    <xsl:with-param name="itemCount" select="'100'"/>
-                    <xsl:with-param name="itemTotal" select="$total"/>
-                    <xsl:with-param name="startPos" select="$startPos"/>
-                    <xsl:with-param name="path" select="$queryString"/>
-                    <xsl:with-param name="itemName" select="$title"/>
-                  </xsl:apply-templates>
-                </div>
-                <div class="terminus">
-                  <xsl:text> </xsl:text>
-                </div>
+              </xsl:if>
+              <div class="float-start">
+                <xsl:apply-templates select="/" mode="adminStepper">
+                  <xsl:with-param name="itemCount" select="'100'"/>
+                  <xsl:with-param name="itemTotal" select="$total"/>
+                  <xsl:with-param name="startPos" select="$startPos"/>
+                  <xsl:with-param name="path" select="$queryString"/>
+                  <xsl:with-param name="itemName" select="$title"/>
+                </xsl:apply-templates>
               </div>
+              <!--<h3>
+                <xsl:value-of select="$title"/>
+              </h3>-->
+            </div>
+            <table class="table table-striped table-mobile-cards">
+              <thead>
+                <tr>
+                  <th>Order Id</th>
+                  <th>Status</th>
+                  <th>Customer Name</th>
+                  <th>Email</th>
+                  <th>Time Placed</th>
+                  <th>Value</th>
+                  <th>&#160;</th>
+                  <th>
+                    <a href="" class="btn btn-primary btn-sm">Select All</a>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
+                  <xsl:with-param name="startPos"  select="$startPos"/>
+                  <xsl:with-param name="itemCount" select="'100'"/>
+                </xsl:apply-templates>
+              </tbody>
+            </table>
+          </form>
+          <div class="container-fluid">
+            <div class="float-end">
+              <xsl:apply-templates select="/" mode="adminStepper">
+                <xsl:with-param name="itemCount" select="'100'"/>
+                <xsl:with-param name="itemTotal" select="$total"/>
+                <xsl:with-param name="startPos" select="$startPos"/>
+                <xsl:with-param name="path" select="$queryString"/>
+                <xsl:with-param name="itemName" select="$title"/>
+              </xsl:apply-templates>
+            </div>
+          </div>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:choose>
+            <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
+              <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary float-end">
+                <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
+              </a>
+              <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+              <xsl:variable name="currency" select="ContentDetail/Content[@type='order']/@currencySymbol"/>
+              <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
+              <xsl:variable name="orderId" select="ContentDetail/Content[@type='order']/@id"/>
+              <xsl:variable name="orderDate" select="ContentDetail/Content[@type='order']/@created"/>
+              <xsl:for-each select="ContentDetail/Content[@type='order']/Order">
+                <xsl:apply-templates select="." mode="displayCart">
+                  <xsl:with-param name="currency" select="$currency"/>
+                  <xsl:with-param name="statusId" select="$statusId"/>
+                  <xsl:with-param name="orderId" select="$orderId"/>
+                  <xsl:with-param name="orderDate" select="$orderDate"/>
+                </xsl:apply-templates>
+              </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:choose>
-                <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-                  <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary float-end">
-                    <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
-                  </a>
-                  <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-                  <xsl:variable name="currency" select="ContentDetail/Content[@type='order']/@currencySymbol"/>
-                  <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
-                  <xsl:variable name="orderId" select="ContentDetail/Content[@type='order']/@id"/>
-                  <xsl:variable name="orderDate" select="ContentDetail/Content[@type='order']/@created"/>
-                  <xsl:for-each select="ContentDetail/Content[@type='order']/Order">
-                    <xsl:apply-templates select="." mode="displayCart">
-                      <xsl:with-param name="currency" select="$currency"/>
-                      <xsl:with-param name="statusId" select="$statusId"/>
-                      <xsl:with-param name="orderId" select="$orderId"/>
-                      <xsl:with-param name="orderDate" select="$orderDate"/>
-                    </xsl:apply-templates>
-                  </xsl:for-each>
-                </xsl:when>
-                <xsl:otherwise>
-                  <h3>
-                    No <xsl:value-of select="$title"/>  found
-                  </h3>
-                </xsl:otherwise>
-              </xsl:choose>
+              <div class="container-fluid">
+                <div class="alert alert-danger">
+                  <h4 class="text-center">
+                    No <xsl:value-of select="$title"/> Found
+                  </h4>
+                </div>
+              </div>
             </xsl:otherwise>
           </xsl:choose>
-        </div>
-      </div>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+        </xsl:otherwise>
+      </xsl:choose>
     </div>
+
   </xsl:template>
 
 
@@ -6338,6 +6340,7 @@
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']"/>
     <tr>
       <td>
+        <span class="xs-only">Order Id: </span>
         <xsl:value-of select="@id"/>
       </td>
       <td>
@@ -6362,12 +6365,7 @@
         <xsl:choose>
           <xsl:when test="@userId!=''">
             <a href="{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={@userId}">
-              <span class="btn btn-primary btn-xs">
-                <i class="fa fa-user fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-              </span>
-              &#160;<xsl:value-of select="Order/Contact[@type='Billing Address']/GivenName/node()"/>
+              <xsl:value-of select="Order/Contact[@type='Billing Address']/GivenName/node()"/>
             </a>
           </xsl:when>
           <xsl:otherwise>
@@ -6406,36 +6404,38 @@
         <xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@total,'0.00')"/>
         <!-- COMMENTED THIS LINE AS @TOTAL ALREADY INCLUDES THE SHIPPING -->
         <!--<xsl:value-of select="format-number(Order/@total + Order/@shippingCost,'0.00')"/>-->
-        &#160;
+        <span>&#160;</span>
         <xsl:value-of select="@currency"/>
       </td>
       <td>
-        <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-xs btn-primary">
-          <i class="fa fa-eye">
-            <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>view order
-        </a>
-        <xsl:if test="@statusId=6">
-          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-xs btn-primary">
-            <i class="fa fa-print">
+        <div class="btn-group-spaced">
+          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-eye">
               <xsl:text> </xsl:text>
-            </i>
-            <xsl:text> print</xsl:text>
+            </i><xsl:text> </xsl:text>view order
           </a>
+          <xsl:if test="@statusId=6">
+            <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
+              <i class="fa fa-print">
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> print</xsl:text>
+            </a>
 
-        </xsl:if>
-        <xsl:if test="@statusId&lt;6 or @statusId=13">
-          <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@userId}&amp;CartId={@id}&amp;cartCmd=Cart" class="btn btn-xs btn-primary">
-            <i class="fa fa-cart-plus">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>complete order
-          </a>
-        </xsl:if>
-
+          </xsl:if>
+          <xsl:if test="@statusId&lt;6 or @statusId=13">
+            <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@userId}&amp;CartId={@id}&amp;cartCmd=Cart" class="btn btn-sm btn-outline-primary">
+              <i class="fa fa-cart-plus">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>complete order
+            </a>
+          </xsl:if>
+        </div>
       </td>
       <td>
         <xsl:if test="@statusId=6">
           <input type="checkbox" name="id" value="{@id}" class="input-control"/>
+          <span class="xs-only"> bulk action</span>
         </xsl:if>
       </td>
     </tr>
@@ -7529,36 +7529,36 @@
   <!--   ##################  Shipping Locations   ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='ShippingLocations']" mode="Admin">
-    <div id="tpltShippingLocations" class="row">
-      <div class="col-md-3">
-        <div class="alert alert-info">
-          <i class="fa fa-info-sign fa-3x float-end">
-            <xsl:text> </xsl:text>
-          </i>
-          <h4>Hint</h4>
-          <p>Shipping locations are heirarchical so you can set a shipping cost globally or by continent.</p>
-          <p>You can also set the tax rate by country, once the user has selected delivery country during the cart process the correct tax rate will be allied</p>
-        </div>
-      </div>
-
-      <div class="col-md-9">
-        <div class="card card-default">
-          <div class="card-header">
-
-            <a href="{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=edit" class="btn btn-primary float-end btn-xs">
-              <i class="fa fa-plus fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Add Root Location
-            </a>
-            <h3 >List of Locations</h3>
+    <div id="tpltShippingLocations" class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="alert alert-info">
+            <i class="fa fa-info-sign fa-3x float-end">
+              <xsl:text> </xsl:text>
+            </i>
+            <h4>Hint</h4>
+            <p>Shipping locations are heirarchical so you can set a shipping cost globally or by continent.</p>
+            <p>You can also set the tax rate by country, once the user has selected delivery country during the cart process the correct tax rate will be allied</p>
           </div>
+        </div>
 
-          <ul id="MenuTree" class="list-group">
-            <xsl:apply-templates select="ContentDetail/Tree/Tree/TreeItem" mode="treeShippingLocations">
-              <xsl:with-param name="level">1</xsl:with-param>
-            </xsl:apply-templates>
-          </ul>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <div class="card-header">
+              <h4 class="float-start">List of Locations</h4>
+              <a href="{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=edit" class="btn btn-primary float-end btn-xs">
+                <i class="fa fa-plus fa-white">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Add Root Location
+              </a>
+            </div>
+            <ul id="MenuTree" class="list-group">
+              <xsl:apply-templates select="ContentDetail/Tree/Tree/TreeItem" mode="treeShippingLocations">
+                <xsl:with-param name="level">1</xsl:with-param>
+              </xsl:apply-templates>
+            </ul>
 
+          </div>
         </div>
       </div>
     </div>
@@ -7633,35 +7633,37 @@
   <!--   ##################  Delivery Methods   ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='DeliveryMethods']" mode="Admin">
-    <div class="row" id="tpltDeliveryMethods">
-      <div class="col-md-3" id="column1">
-        <div class="alert alert-info">
-          <i class="fa fa-info-sign fa-3x float-end">
-            <xsl:text> </xsl:text>
-          </i>
-          <h4>Hint</h4>
-          You can create all of the delivery methods you need to ship products from your site.<br/><br/>Make sure each delivery method specifies the locations that it is valid for.<br/><br/>Delviery methods can be setup to be only available to certain users groups, if this is empty the delivery method is by default available to all users.
-        </div>
-      </div>
-      <div class="col-md-9" id="column2">
-        <div class="card card-default" >
-          <div class="card-header">
-            <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit" class="btn btn-xs btn-primary float-end">
-              <i class="fa fa-plus fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Add New Delivery Method
-            </a>
-            <h3 >Manage Delivery Methods</h3>
+    <div class="container-fluid" id="tpltDeliveryMethods">
+      <div class="row">
+        <div class="col-md-3" id="column1">
+          <div class="alert alert-info">
+            <i class="fa fa-info-sign fa-3x float-end">
+              <xsl:text> </xsl:text>
+            </i>
+            <h4>Hint</h4>
+            You can create all of the delivery methods you need to ship products from your site.<br/><br/>Make sure each delivery method specifies the locations that it is valid for.<br/><br/>Delviery methods can be setup to be only available to certain users groups, if this is empty the delivery method is by default available to all users.
           </div>
+        </div>
+        <div class="col-md-9" id="column2">
+          <div class="card card-default" >
+            <div class="card-header">
+              <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit" class="btn btn-xs btn-primary float-end">
+                <i class="fa fa-plus fa-white">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>Add New Delivery Method
+              </a>
+              <h3 >Manage Delivery Methods</h3>
+            </div>
 
-          <!--a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
-          <table class="table table-striped">
-            <xsl:for-each select="ContentDetail/List/ListItem">
-              <xsl:sort select="@name" order="ascending" data-type="text"/>
-              <xsl:apply-templates select="." mode="listDeliveryMethods"/>
-            </xsl:for-each>
-          </table>
+            <!--a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
+            <table class="table table-striped">
+              <xsl:for-each select="ContentDetail/List/ListItem">
+                <xsl:sort select="@name" order="ascending" data-type="text"/>
+                <xsl:apply-templates select="." mode="listDeliveryMethods"/>
+              </xsl:for-each>
+            </table>
 
+          </div>
         </div>
       </div>
     </div>
@@ -7717,91 +7719,95 @@
   <!--   ##################  Delivery Methods   ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='Carriers']" mode="Admin">
-    <div class="row" id="tpltCarrierss">
-      <div class="col-md-3" id="column1">
-        <div class="alert alert-info">
-          <i class="fa fa-info-sign fa-3x float-end">
-            <xsl:text> </xsl:text>
-          </i>
-          <h4>Hint</h4>
-          Carriers are the shipping companies that you use, when you ship a completed order you can select one of these and send information of a tracking link to your customer.
-        </div>
-      </div>
-      <div class="col-md-9" id="column2">
-        <div class="card card-default" >
-          <div class="card-header">
-            <a href="{$appPath}?ewCmd=Carriers&amp;ewcmd2=edit" class="btn btn-xs btn-primary float-end">
-              <i class="fa fa-plus fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Add New Carrier
-            </a>
-            <h3 >Manage Carriers</h3>
+    <div class="container-fluid" id="tpltCarrierss">
+      <div class="row">
+        <div class="col-md-3" id="column1">
+          <div class="alert alert-info">
+            <i class="fa fa-info-sign fa-3x float-end">
+              <xsl:text> </xsl:text>
+            </i>
+            <h4>Hint</h4>
+            Carriers are the shipping companies that you use, when you ship a completed order you can select one of these and send information of a tracking link to your customer.
           </div>
-
-          <!--a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
-          <table class="table table-striped">
-            <xsl:for-each select="ContentDetail/Carriers/Carrier">
-              <xsl:sort select="name" order="ascending" data-type="text"/>
-              <tr>
-                <td>
-                  <xsl:value-of select="name/node()"/>
-                </td>
-                <td class="options">
-                  <a href="{$appPath}?ewCmd=Carriers&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-primary">
-                    <i class="fa fa-pencil fa-white">
-                      <xsl:text> </xsl:text>
-                    </i><xsl:text> </xsl:text>Edit Carrier
-                  </a>
+        </div>
+        <div class="col-md-9" id="column2">
+          <div class="card card-default" >
+            <div class="card-header">
+              <a href="{$appPath}?ewCmd=Carriers&amp;ewcmd2=edit" class="btn btn-xs btn-primary float-end">
+                <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
-                  <a href="{$appPath}?ewCmd=Carriers&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
-                    <i class="fa fa-trash-o fa-white">
-                      <xsl:text> </xsl:text>
-                    </i><xsl:text> </xsl:text>Delete Carrier
-                  </a>
-                </td>
-              </tr>
-            </xsl:for-each>
-          </table>
+                </i><xsl:text> </xsl:text>Add New Carrier
+              </a>
+              <h3 >Manage Carriers</h3>
+            </div>
 
+            <!--a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
+            <table class="table table-striped">
+              <xsl:for-each select="ContentDetail/Carriers/Carrier">
+                <xsl:sort select="name" order="ascending" data-type="text"/>
+                <tr>
+                  <td>
+                    <xsl:value-of select="name/node()"/>
+                  </td>
+                  <td class="options">
+                    <a href="{$appPath}?ewCmd=Carriers&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-primary">
+                      <i class="fa fa-pencil fa-white">
+                        <xsl:text> </xsl:text>
+                      </i><xsl:text> </xsl:text>Edit Carrier
+                    </a>
+                    <xsl:text> </xsl:text>
+                    <a href="{$appPath}?ewCmd=Carriers&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
+                      <i class="fa fa-trash-o fa-white">
+                        <xsl:text> </xsl:text>
+                      </i><xsl:text> </xsl:text>Delete Carrier
+                    </a>
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </table>
+
+          </div>
         </div>
       </div>
     </div>
   </xsl:template>
 
   <xsl:template match="Page[@layout='DeliveryMethodLocations']" mode="Admin">
-    <div id="tpltDeliveryMethodLocations" class="row">
-      <div class="col-md-3">
-        <div class="alert alert-info">
-          <i class="fa fa-info-sign fa-3x float-end">
-            <xsl:text> </xsl:text>
-          </i>
-          <h4>Hint</h4>
-          <p>Shipping locations are heirarchical so you can set a shipping cost globally, by continent or by country.</p>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >List of Locations</h3>
+    <div id="tpltDeliveryMethodLocations" class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="alert alert-info">
+            <i class="fa fa-info-sign fa-3x float-end">
+              <xsl:text> </xsl:text>
+            </i>
+            <h4>Hint</h4>
+            <p>Shipping locations are heirarchical so you can set a shipping cost globally, by continent or by country.</p>
           </div>
-          <form class="ewXform" action="?ewcmd=DeliveryMethods&amp;ewcmd2=locations&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" method="post">
-            <div class="form-group">
-              <input type="hidden" name="nShpOptId" value="{/Page/Request/QueryString/Item[@name='id']/node()}"/>
-              <ul id="MenuTree" class="treeview">
-                <xsl:apply-templates select="ContentDetail/Tree/Tree/TreeItem" mode="ListLocationsForm"/>
-              </ul>
+        </div>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >List of Locations</h3>
             </div>
-            <div class="form-actions">
-              <button type="submit" name="ewSubmit" value="Submit" class="btn btn-primary principle">
-                <i class="fa fa-ok fa-white">
+            <form class="ewXform" action="?ewcmd=DeliveryMethods&amp;ewcmd2=locations&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" method="post">
+              <div class="form-group">
+                <input type="hidden" name="nShpOptId" value="{/Page/Request/QueryString/Item[@name='id']/node()}"/>
+                <ul id="MenuTree" class="treeview">
+                  <xsl:apply-templates select="ContentDetail/Tree/Tree/TreeItem" mode="ListLocationsForm"/>
+                </ul>
+              </div>
+              <div class="form-actions">
+                <button type="submit" name="ewSubmit" value="Submit" class="btn btn-primary principle">
+                  <i class="fa fa-ok fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
                   <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>
-                Save Selections
-              </button>
-              <br/>
-            </div>
-          </form>
+                  Save Selections
+                </button>
+                <br/>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -7890,98 +7896,102 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='PaymentProviders']" mode="Admin">
-    <div class="row" id="tpltPaymentProviders">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 class="title">Information</h3>
-          </div>
-          <div class="card-body">
-            <p>Here you can edit the settings how your site collects payment</p>
+    <div class="container-fluid" id="tpltPaymentProviders">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 class="title">Information</h3>
+            </div>
+            <div class="card-body">
+              <p>Here you can edit the settings how your site collects payment</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <table cellpadding="0" cellspacing="0" class="table">
-            <tbody>
-              <tr>
-                <th>Payment Provider</th>
-              </tr>
-              <xsl:for-each select="ContentDetail/List/Provider">
+        <div class="col-md-9">
+          <div class="card card-default">
+            <table cellpadding="0" cellspacing="0" class="table">
+              <tbody>
                 <tr>
-                  <td>
-                    <xsl:value-of select="node()"/>
-                  </td>
-                  <td class="clearfix">
-                    <xsl:choose>
-                      <xsl:when test="@active='true'">
-                        <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=delete&amp;type={node()}" class="btn btn-xs btn-danger float-end">
-                          <i class="fa fa-trash-o fa-white">
-                            <xsl:text> </xsl:text>
-                          </i><xsl:text> </xsl:text>Delete
-                        </a>
-                        <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=edit&amp;type={node()}" class="btn btn-xs btn-primary float-end">
-                          <i class="fa fa-pencil fa-white">
-                            <xsl:text> </xsl:text>
-                          </i><xsl:text> </xsl:text>Edit
-                        </a>
-
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=add&amp;type={node()}" class="btn btn-xs btn-primary float-end">
-                          <i class="fa fa-plus fa-white">
-                            <xsl:text> </xsl:text>
-                          </i><xsl:text> </xsl:text>Add
-                        </a>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </td>
+                  <th>Payment Provider</th>
                 </tr>
-              </xsl:for-each>
-            </tbody>
-          </table>
+                <xsl:for-each select="ContentDetail/List/Provider">
+                  <tr>
+                    <td>
+                      <xsl:value-of select="node()"/>
+                    </td>
+                    <td class="clearfix">
+                      <xsl:choose>
+                        <xsl:when test="@active='true'">
+                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=delete&amp;type={node()}" class="btn btn-xs btn-danger float-end">
+                            <i class="fa fa-trash-o fa-white">
+                              <xsl:text> </xsl:text>
+                            </i><xsl:text> </xsl:text>Delete
+                          </a>
+                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=edit&amp;type={node()}" class="btn btn-xs btn-primary float-end">
+                            <i class="fa fa-pencil fa-white">
+                              <xsl:text> </xsl:text>
+                            </i><xsl:text> </xsl:text>Edit
+                          </a>
+
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=add&amp;type={node()}" class="btn btn-xs btn-primary float-end">
+                            <i class="fa fa-plus fa-white">
+                              <xsl:text> </xsl:text>
+                            </i><xsl:text> </xsl:text>Add
+                          </a>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </td>
+                  </tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-
 
     </div>
   </xsl:template>
 
   <xsl:template match="Page[@layout='Reports']" mode="Admin">
-    <div id="tpltListReports" class="row">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-body">
-            <p>
-              <xsl:call-template name="eonicwebProductName"/>allows for sophisticated reports to be developed and deployed for whatever you might need.
-            </p>
-            <p>If you require additional reports please contact your website developer for a quote.</p>
+    <div id="tpltListReports" class="container-fluid">
+      <div class="row">
+
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-body">
+              <p>
+                <xsl:call-template name="eonicwebProductName"/>allows for sophisticated reports to be developed and deployed for whatever you might need.
+              </p>
+              <p>If you require additional reports please contact your website developer for a quote.</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
+        <div class="col-md-9">
 
-        <div class="card card-default">
-          <table class="table">
-            <tbody>
-              <xsl:for-each select="ContentDetail/List/Report">
-                <tr>
-                  <td>
-                    <xsl:value-of select="node()"/>
-                  </td>
-                  <td>
-                    <a href="{$appPath}?ewCmd=Reports&amp;ewCmd2={@type}" class="btn btn-xs btn-primary float-end">
-                      <i class="fa fa-chevron-circle-right">
-                        &#160;
-                      </i>&#160;Run Report
-                    </a>
-                  </td>
-                </tr>
-              </xsl:for-each>
-            </tbody>
-          </table>
+          <div class="card card-default">
+            <table class="table">
+              <tbody>
+                <xsl:for-each select="ContentDetail/List/Report">
+                  <tr>
+                    <td>
+                      <xsl:value-of select="node()"/>
+                    </td>
+                    <td>
+                      <a href="{$appPath}?ewCmd=Reports&amp;ewCmd2={@type}" class="btn btn-xs btn-primary float-end">
+                        <i class="fa fa-chevron-circle-right">
+                          &#160;
+                        </i>&#160;Run Report
+                      </a>
+                    </td>
+                  </tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
 
+          </div>
         </div>
       </div>
     </div>
@@ -8179,20 +8189,20 @@
         </xsl:if>
         <xsl:if test="$itemTotal &lt; ($startPos + $itemCount)">
           <xsl:value-of select="$itemTotal"/>
-        </xsl:if> of <xsl:value-of select="$itemTotal"/>
-        &#160;<xsl:value-of select="$itemName"/>
+        </xsl:if> <!--of <xsl:value-of select="$itemTotal"/>
+        &#160;<xsl:value-of select="$itemName"/>-->
       </span>
-      <span class="stepLinks">
+      <span class="btn-group-spaced stepLinks">
         <xsl:choose>
           <xsl:when test="$startPos &gt; ($itemCount - 1)">
-            <a href="{$path}&amp;startPos={$startPos - $itemCount}" title="click here to view the previous page in sequence" class="btn btn-primary">
+            <a href="{$path}&amp;startPos={$startPos - $itemCount}" title="click here to view the previous page in sequence" class="btn btn-outline-primary btn-sm">
               <i class="fa fa-chevron-left fa-white">
                 <xsl:text> </xsl:text>
               </i> Back
             </a>
           </xsl:when>
           <xsl:otherwise>
-            <span class="btn btn-primary disabled">
+            <span class="btn btn-outline-primary btn-sm disabled">
               <i class="fa fa-chevron-left fa-white">
                 <xsl:text> </xsl:text>
               </i> Back
@@ -8227,14 +8237,14 @@
         </xsl:for-each>
         <xsl:choose>
           <xsl:when test="$itemTotal &gt; ($startPos +$itemCount)">
-            <a href="{$path}&amp;startPos={$startPos+$itemCount}" title="click here to view the next page in sequence" class="btn btn-primary">
+            <a href="{$path}&amp;startPos={$startPos+$itemCount}" title="click here to view the next page in sequence" class="btn btn-outline-primary btn-sm">
               Next <i class="fa fa-chevron-right fa-white">
                 <xsl:text> </xsl:text>
               </i>
             </a>
           </xsl:when>
           <xsl:otherwise>
-            <span class="btn btn-primary disabled">
+            <span class="btn btn-outline-primary btn-sm disabled">
               Next <i class="fa fa-chevron-right fa-white">
                 <xsl:text> </xsl:text>
               </i>
@@ -8256,98 +8266,101 @@
   </xsl:variable>
 
   <xsl:template match="Page[@layout='MailingList']" mode="Admin">
-    <div class="row" id="template_EditStructure">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Instructions</h3>
+    <div class="container-fluid" id="template_EditStructure">
+      <div class="row">
+
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Instructions</h3>
+            </div>
+            <div class="card-body">
+              <p>This is where you manage all your Newsletters</p>
+              <p>
+                <a class="btn btn-sm btn-primary">
+                  <i class="fa fa-envelope">
+                    <xsl:text> </xsl:text>
+                  </i>&#160;Add New Campaign
+                </a> - create a new newsletter
+              </p>
+              <p>
+                <a class="btn btn-xs btn-primary">
+                  <i class="fa fa-edit">&#160;</i>&#160;View / Edit
+                </a> - view and edit the newsletter
+              </p>
+              <p>
+                <a class="btn btn-xs btn-primary">
+                  <i class="fa fa-eye">&#160;</i>&#160;Preview
+                </a> - send a single copy of the newsletter to your chosen email address
+              </p>
+              <p>
+                <a class="btn btn-xs btn-primary">
+                  <i class="fa fa-envelope">&#160;</i>&#160;Send
+                </a> - send the newsletter to your mailing list
+              </p>
+              <p>
+                <a class="btn btn-xs btn-danger">
+                  <i class="fa fa-trash-o">&#160;</i>&#160;Delete
+                </a> - delete newsletter
+              </p>
+            </div>
           </div>
-          <div class="card-body">
-            <p>This is where you manage all your Newsletters</p>
-            <p>
-              <a class="btn btn-sm btn-primary">
+        </div>
+        <div class="col-md-9 ">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >&#160;</h3>
+              <a href="{$appPath}?ewCmd=NewMail&amp;parId={$MailRoot}" class="btn btn-sm btn-primary float-end">
                 <i class="fa fa-envelope">
                   <xsl:text> </xsl:text>
                 </i>&#160;Add New Campaign
-              </a> - create a new newsletter
-            </p>
-            <p>
-              <a class="btn btn-xs btn-primary">
-                <i class="fa fa-edit">&#160;</i>&#160;View / Edit
-              </a> - view and edit the newsletter
-            </p>
-            <p>
-              <a class="btn btn-xs btn-primary">
-                <i class="fa fa-eye">&#160;</i>&#160;Preview
-              </a> - send a single copy of the newsletter to your chosen email address
-            </p>
-            <p>
-              <a class="btn btn-xs btn-primary">
-                <i class="fa fa-envelope">&#160;</i>&#160;Send
-              </a> - send the newsletter to your mailing list
-            </p>
-            <p>
-              <a class="btn btn-xs btn-danger">
-                <i class="fa fa-trash-o">&#160;</i>&#160;Delete
-              </a> - delete newsletter
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-9 ">
-        <div class="card card-default">
-          <div class="panel-header">
-            <h3 >&#160;</h3>
-            <a href="{$appPath}?ewCmd=NewMail&amp;parId={$MailRoot}" class="btn btn-sm btn-primary float-end">
-              <i class="fa fa-envelope">
-                <xsl:text> </xsl:text>
-              </i>&#160;Add New Campaign
-            </a>
-          </div>
-          <table class="table">
-            <tr>
-              <th>Title</th>
-              <th>Options</th>
-            </tr>
-            <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem">
-              <xsl:sort select="Sent"/>
+              </a>
+            </div>
+            <table class="table">
               <tr>
-                <td>
-                  <xsl:value-of select="@name"/>
-                </td>
-                <td>
-                  <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
-                    <i class="fa fa-edit">&#160;</i>&#160;View / Edit
-                  </a>
-                  <a href="/{$appPath}?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
-                    <i class="fa fa-copy">&#160;</i>&#160;Copy
-                  </a>
-                  <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
-                    <i class="fa fa-eye">&#160;</i>&#160;Preview
-                  </a>
-                  <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
-                    <i class="fa fa-envelope">&#160;</i>&#160;Send
-                  </a>
-                  <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-danger">
-                    <i class="fa fa-trash-o">&#160;</i>&#160;Delete
-                  </a>
-                </td>
+                <th>Title</th>
+                <th>Options</th>
               </tr>
-              <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem/MenuItem">
+              <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem">
+                <xsl:sort select="Sent"/>
                 <tr>
                   <td>
-                    &#160;&#160;&#160;<xsl:value-of select="@name"/>
+                    <xsl:value-of select="@name"/>
                   </td>
                   <td>
-                    <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-primary">View / Edit</a>
-                    <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton show">Preview</a>
-                    <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton move">Send</a>
-                    <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton delete">Delete</a>
+                    <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
+                      <i class="fa fa-edit">&#160;</i>&#160;View / Edit
+                    </a>
+                    <a href="/{$appPath}?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
+                      <i class="fa fa-copy">&#160;</i>&#160;Copy
+                    </a>
+                    <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
+                      <i class="fa fa-eye">&#160;</i>&#160;Preview
+                    </a>
+                    <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
+                      <i class="fa fa-envelope">&#160;</i>&#160;Send
+                    </a>
+                    <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-danger">
+                      <i class="fa fa-trash-o">&#160;</i>&#160;Delete
+                    </a>
                   </td>
                 </tr>
+                <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem/MenuItem">
+                  <tr>
+                    <td>
+                      &#160;&#160;&#160;<xsl:value-of select="@name"/>
+                    </td>
+                    <td>
+                      <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-primary">View / Edit</a>
+                      <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton show">Preview</a>
+                      <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton move">Send</a>
+                      <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton delete">Delete</a>
+                    </td>
+                  </tr>
+                </xsl:for-each>
               </xsl:for-each>
-            </xsl:for-each>
-          </table>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -8383,159 +8396,169 @@
   </xsl:template>
   <!-- -->
   <xsl:template match="Page[@ewCmd='SendMail']" mode="Admin">
-    <div class="row" id="template_EditStructure">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Sending Options</h3>
-          </div>
-          <div class="card-body">
-            <p>Configure the sending options, and the membership groups you wish to send to.</p>
+    <div class="container-fluid" id="template_EditStructure">
+      <div class="row">
+
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Sending Options</h3>
+            </div>
+            <div class="card-body">
+              <p>Configure the sending options, and the membership groups you wish to send to.</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <xsl:for-each select="ContentDetail/Content[@type='Message']">
-          <div class="group">
-            <h3>Result</h3>
-          </div>
-          <div class="alert alert-info">
-            <i class="fa fa-check fa-2x pull-left">
-              <xsl:text> </xsl:text>
-            </i>
-            <xsl:value-of select="node()"/>
-          </div>
-        </xsl:for-each>
-        <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-        <xsl:apply-templates select="ContentDetail/Report" mode="CampaignReport"/>
+        <div class="col-md-9">
+          <xsl:for-each select="ContentDetail/Content[@type='Message']">
+            <div class="group">
+              <h3>Result</h3>
+            </div>
+            <div class="alert alert-info">
+              <i class="fa fa-check fa-2x pull-left">
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:value-of select="node()"/>
+            </div>
+          </xsl:for-each>
+          <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+          <xsl:apply-templates select="ContentDetail/Report" mode="CampaignReport"/>
+        </div>
       </div>
     </div>
   </xsl:template>
   <!-- -->
   <!-- -->
   <xsl:template match="Page[@layout='PreviewMail' and @ewCmd='PreviewMail']" mode="Admin">
-    <div class="row" id="template_EditStructure">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Send Preview</h3>
-          </div>
-          <div class="card-body">
-            <p>Send a single copy of the newsletter to your own email address to test that the email sent out is correct.</p>
+    <div class="container-fluid" id="template_EditStructure">
+      <div class="row">
+
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Send Preview</h3>
+            </div>
+            <div class="card-body">
+              <p>Send a single copy of the newsletter to your own email address to test that the email sent out is correct.</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <xsl:choose>
-          <xsl:when test="ContentDetail/Content[@type='Message']">
-            <xsl:for-each select="ContentDetail/Content[@type='Message']">
-              <div class="alert alert-info">
-                <i class="fa fa-check fa-2x pull-left">
-                  <xsl:text> </xsl:text>
-                </i>
-                &#160;
-                <xsl:value-of select="node()"/>
-              </div>
-            </xsl:for-each>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="/Page/ContentDetail/Content[@type='xform']" mode="xform"/>
-          </xsl:otherwise>
-        </xsl:choose>
+        <div class="col-md-9">
+          <xsl:choose>
+            <xsl:when test="ContentDetail/Content[@type='Message']">
+              <xsl:for-each select="ContentDetail/Content[@type='Message']">
+                <div class="alert alert-info">
+                  <i class="fa fa-check fa-2x pull-left">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  &#160;
+                  <xsl:value-of select="node()"/>
+                </div>
+              </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="/Page/ContentDetail/Content[@type='xform']" mode="xform"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </div>
       </div>
     </div>
   </xsl:template>
   <!-- -->
   <xsl:template match="Page[@layout='OptOut' and @ewCmd='MailOptOut']" mode="Admin">
-    <div class="row">
-      <div class="col-md-3">
-        <div class="panel">
-          <div class="card-header">
-            <h3 >Newsletter Opt-Outs</h3>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-header">
+              <h3 >Newsletter Opt-Outs</h3>
+            </div>
+            <div class="card-body">
+              <p>Use the Add to List feature to add an email address to the opt-out list.</p>
+              <p>Use the Remove from list feature to remove an email address from the opt-out list.</p>
+              <p>
+                Opt-ed out email addresses are email addresses that are:
+                <ul>
+                  <li>Invalid email addresses</li>
+                  <li>Of Users who do not wish recieve a newsletter but are members of a user group</li>
+                </ul>
+              </p>
+            </div>
           </div>
-          <div class="card-body">
-            <p>Use the Add to List feature to add an email address to the opt-out list.</p>
-            <p>Use the Remove from list feature to remove an email address from the opt-out list.</p>
-            <p>
-              Opt-ed out email addresses are email addresses that are:
-              <ul>
-                <li>Invalid email addresses</li>
-                <li>Of Users who do not wish recieve a newsletter but are members of a user group</li>
-              </ul>
-            </p>
+        </div>
+        <div class="col-md-9">
+          <div class="card">
+            <div class="card-body">
+              <xsl:for-each select="ContentDetail/Content[@type='Message']">
+                <div class="group">
+                  <h3>Result</h3>
+                </div>
+                <xsl:value-of select="node()"/>
+              </xsl:for-each>
+              <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-md-9">
-        <div class="panel">
-          <div class="card-body">
-            <xsl:for-each select="ContentDetail/Content[@type='Message']">
-              <div class="group">
-                <h3>Result</h3>
-              </div>
-              <xsl:value-of select="node()"/>
-            </xsl:for-each>
-            <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-          </div>
-        </div>
-      </div>
-
     </div>
   </xsl:template>
   <!-- -->
   <xsl:template match="Page[@layout='MailHistory']" mode="Admin">
-    <div class="row" id="template_EditStructure">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Overview</h3>
-          </div>
-          <div class="card-body">
-            <p>A History of all Newsletters and the Mailing Lists they were sent to.</p>
+    <div class="container-fluid" id="template_EditStructure">
+      <div class="row">
+
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Overview</h3>
+            </div>
+            <div class="card-body">
+              <p>A History of all Newsletters and the Mailing Lists they were sent to.</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Mailing History</h3>
-          </div>
-          <table class="table card-body">
-            <tr>
-              <th>Item Name</th>
-              <th>Sent</th>
-              <th>Sent By</th>
-              <th>To Groups</th>
-            </tr>
-            <xsl:for-each select="/Page/ContentDetail/ActivityLog/Activity">
-              <xsl:sort select="Sent"/>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Mailing History</h3>
+            </div>
+            <table class="table card-body">
               <tr>
-                <td>
-                  <xsl:value-of select="@cStructName"/>
-                </td>
-                <td>
-                  <xsl:call-template name="DD_MM_YY">
-                    <xsl:with-param name="date">
-                      <xsl:value-of select="@dDateTime"/>
-                    </xsl:with-param>
-                  </xsl:call-template>
-                  <xsl:call-template name="HH_MM">
-                    <xsl:with-param name="date">
-                      <xsl:value-of select="@dDateTime"/>
-                    </xsl:with-param>
-                  </xsl:call-template>
-                </td>
-                <td>
-                  <xsl:value-of select="@cDirName"/>
-                </td>
-                <td>
-                  <xsl:call-template name="listSentGroups">
-                    <xsl:with-param name="grpString" select="cActivityDetail/node()"/>
-                  </xsl:call-template>
-                </td>
+                <th>Item Name</th>
+                <th>Sent</th>
+                <th>Sent By</th>
+                <th>To Groups</th>
               </tr>
-            </xsl:for-each>
-          </table>
+              <xsl:for-each select="/Page/ContentDetail/ActivityLog/Activity">
+                <xsl:sort select="Sent"/>
+                <tr>
+                  <td>
+                    <xsl:value-of select="@cStructName"/>
+                  </td>
+                  <td>
+                    <xsl:call-template name="DD_MM_YY">
+                      <xsl:with-param name="date">
+                        <xsl:value-of select="@dDateTime"/>
+                      </xsl:with-param>
+                    </xsl:call-template>
+                    <xsl:call-template name="HH_MM">
+                      <xsl:with-param name="date">
+                        <xsl:value-of select="@dDateTime"/>
+                      </xsl:with-param>
+                    </xsl:call-template>
+                  </td>
+                  <td>
+                    <xsl:value-of select="@cDirName"/>
+                  </td>
+                  <td>
+                    <xsl:call-template name="listSentGroups">
+                      <xsl:with-param name="grpString" select="cActivityDetail/node()"/>
+                    </xsl:call-template>
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -8562,88 +8585,48 @@
 
   <!--BJR Scheduler-->
   <xsl:template match="Page[@layout='ScheduledItems']" mode="Admin">
-    <div class="row" id="template_EditStructure">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Instructions</h3>
-          </div>
-          <div class="card-body">
-            <p>
-              Scheduled items are tasks that can be scheduled to run on a periodic basis, They can update indexes, collect inbound feeds or send email updates. <br/><br/>Please call Support for more information.
-            </p>
+    <div class="container-fluid" id="template_EditStructure">
+      <div class="row">
+
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Instructions</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                Scheduled items are tasks that can be scheduled to run on a periodic basis, They can update indexes, collect inbound feeds or send email updates. <br/><br/>Please call Support for more information.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="relatedSearchContent col-md-9">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Scheduled Items</h3>
-          </div>
-          <div class="card-body">
-            <xsl:for-each select="/Page/ContentDetail/Content[@type='ActionList']/Item">
-              <xsl:sort select="node()"/>
-              <xsl:variable name="cActionType" select="node()"/>
-              <xsl:choose>
-                <xsl:when test="$cActionType='DatabaseUpgrade'">
-                  <h3>Database Upgrade</h3>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
-                        <i class="fa fa-plus">&#160;</i>&#160;
-                        Add
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:when>
-                <xsl:when test="$cActionType='Feed'">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <h3>Feeds</h3>
-                    </div>
-                    <div class="col-md-6">
-                      <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
-                        <i class="fa fa-plus">&#160;</i>&#160;
-                        Add
-                      </a>
-                    </div>
-                  </div>
-                </xsl:when>
-                <xsl:when test="$cActionType='LuceneIndex'">
-                  <h3>Lucene Index</h3>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
-                        <i class="fa fa-plus">&#160;</i>&#160;
-                        Add
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:when>
-                <xsl:when test="$cActionType='SubscriptionProcess'">
-                  <h3>Subscription Process</h3>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
-                        <i class="fa fa-plus">&#160;</i>&#160;
-                        Add
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:if test="$cActionType!=''">
+        <div class="relatedSearchContent col-md-9">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Scheduled Items</h3>
+            </div>
+            <div class="card-body">
+              <xsl:for-each select="/Page/ContentDetail/Content[@type='ActionList']/Item">
+                <xsl:sort select="node()"/>
+                <xsl:variable name="cActionType" select="node()"/>
+                <xsl:choose>
+                  <xsl:when test="$cActionType='DatabaseUpgrade'">
+                    <h3>Database Upgrade</h3>
+                    <xsl:choose>
+                      <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
+                          <i class="fa fa-plus">&#160;</i>&#160;
+                          Add
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:when>
+                  <xsl:when test="$cActionType='Feed'">
                     <div class="row">
                       <div class="col-md-6">
-                        <h3>
-                          <xsl:value-of select="$cActionType"/>
-                        </h3>
+                        <h3>Feeds</h3>
                       </div>
                       <div class="col-md-6">
                         <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
@@ -8652,17 +8635,60 @@
                         </a>
                       </div>
                     </div>
-                  </xsl:if>
-                </xsl:otherwise>
-              </xsl:choose>
-              <xsl:if test="/Page/ContentDetail/Content[@cType=$cActionType]">
-                <table class="table">
-                  <xsl:for-each select="/Page/ContentDetail/Content[@cType=$cActionType]">
-                    <xsl:apply-templates select="." mode="ScheduledItem"/>
-                  </xsl:for-each>
-                </table>
-              </xsl:if>
-            </xsl:for-each>
+                  </xsl:when>
+                  <xsl:when test="$cActionType='LuceneIndex'">
+                    <h3>Lucene Index</h3>
+                    <xsl:choose>
+                      <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
+                          <i class="fa fa-plus">&#160;</i>&#160;
+                          Add
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:when>
+                  <xsl:when test="$cActionType='SubscriptionProcess'">
+                    <h3>Subscription Process</h3>
+                    <xsl:choose>
+                      <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
+                          <i class="fa fa-plus">&#160;</i>&#160;
+                          Add
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:if test="$cActionType!=''">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h3>
+                            <xsl:value-of select="$cActionType"/>
+                          </h3>
+                        </div>
+                        <div class="col-md-6">
+                          <a href="{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-primary btn-sm float-end">
+                            <i class="fa fa-plus">&#160;</i>&#160;
+                            Add
+                          </a>
+                        </div>
+                      </div>
+                    </xsl:if>
+                  </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="/Page/ContentDetail/Content[@cType=$cActionType]">
+                  <table class="table">
+                    <xsl:for-each select="/Page/ContentDetail/Content[@cType=$cActionType]">
+                      <xsl:apply-templates select="." mode="ScheduledItem"/>
+                    </xsl:for-each>
+                  </table>
+                </xsl:if>
+              </xsl:for-each>
+            </div>
           </div>
         </div>
       </div>
@@ -8978,54 +9004,57 @@
 
   <!--System Pages-->
   <xsl:template match="Page[@layout='SystemPages']" mode="Admin">
-    <div class="row" id="template_SystemPages">
-      <div  class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 class="title">Instructions</h3>
-          </div>
-          <div class="card-body">
-            <p>
-              System pages get shown to users in certian situations.
-            </p>
-            <p>
-              <strong>Page not found</strong> will be presented when a user types in or clicks on a page that does not or no longer exists.
-            </p>
-            <p>
-              <strong>Login Required</strong> will be presented when a user who is not logged in tries to access a page that has restricted permissions on it.
-            </p>
-            <p>
-              <strong>Access Denied</strong> will be presented when a user who is logged in tries to access a page that they do not have access to.
-            </p>
-            <p>
-              <strong>
-                <xsl:call-template name="eonicwebProductName"/> Error
-              </strong> will be presented when <xsl:call-template name="eonicwebProductName"/> encounters an error.
-            </p>
+    <div class="container-fluid" id="template_SystemPages">
+      <div class="row">
+
+        <div  class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 class="title">Instructions</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                System pages get shown to users in certian situations.
+              </p>
+              <p>
+                <strong>Page not found</strong> will be presented when a user types in or clicks on a page that does not or no longer exists.
+              </p>
+              <p>
+                <strong>Login Required</strong> will be presented when a user who is not logged in tries to access a page that has restricted permissions on it.
+              </p>
+              <p>
+                <strong>Access Denied</strong> will be presented when a user who is logged in tries to access a page that they do not have access to.
+              </p>
+              <p>
+                <strong>
+                  <xsl:call-template name="eonicwebProductName"/> Error
+                </strong> will be presented when <xsl:call-template name="eonicwebProductName"/> encounters an error.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 class="title">System Pages</h3>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 class="title">System Pages</h3>
+            </div>
+
+            <table class="table">
+              <xsl:call-template name="SystemPageAdminRow">
+                <xsl:with-param name="pageTitle" select="'Page Not Found'"/>
+              </xsl:call-template>
+              <xsl:call-template name="SystemPageAdminRow">
+                <xsl:with-param name="pageTitle" select="'Login Required'"/>
+              </xsl:call-template>
+              <xsl:call-template name="SystemPageAdminRow">
+                <xsl:with-param name="pageTitle" select="'Access Denied'"/>
+              </xsl:call-template>
+              <xsl:call-template name="SystemPageAdminRow">
+                <xsl:with-param name="pageTitle" select="'Eonic Error'"/>
+              </xsl:call-template>
+            </table>
+
           </div>
-
-          <table class="table">
-            <xsl:call-template name="SystemPageAdminRow">
-              <xsl:with-param name="pageTitle" select="'Page Not Found'"/>
-            </xsl:call-template>
-            <xsl:call-template name="SystemPageAdminRow">
-              <xsl:with-param name="pageTitle" select="'Login Required'"/>
-            </xsl:call-template>
-            <xsl:call-template name="SystemPageAdminRow">
-              <xsl:with-param name="pageTitle" select="'Access Denied'"/>
-            </xsl:call-template>
-            <xsl:call-template name="SystemPageAdminRow">
-              <xsl:with-param name="pageTitle" select="'Eonic Error'"/>
-            </xsl:call-template>
-          </table>
-
         </div>
       </div>
     </div>
@@ -9079,84 +9108,87 @@
 
   <!--Subscriptions-->
   <xsl:template match="Page[@layout='Subscriptions']" mode="Admin">
-    <div class="row" id="template_Subscriptions">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">Instructions</div>
-          <div class="card-body">
-            This allows you to manage groups of subscriptions. These are intended to identify different levels of the same service that can be "upgraded" such as silver and gold membership.<br/><br/> If a user has a silver membership the difference in cost of the remainder of the term will be calculated and charged, with the subscription repeating at the full rate.
+    <div class="container-fluid" id="template_Subscriptions">
+      <div class="row">
+
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-header">Instructions</div>
+            <div class="card-body">
+              This allows you to manage groups of subscriptions. These are intended to identify different levels of the same service that can be "upgraded" such as silver and gold membership.<br/><br/> If a user has a silver membership the difference in cost of the remainder of the term will be calculated and charged, with the subscription repeating at the full rate.
+            </div>
           </div>
+
         </div>
+        <div class="col-md-9">
 
-      </div>
-      <div class="col-md-9">
-
-        <div class="card card-default">
-          <div class="card-header">
-            <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
-              <a href="{$appPath}?ewCmd=AddSubscriptionGroup"  class="btn btn-primary float-end">
-                <i class="fa fa-plus">&#160;</i>&#160;
-                Add Subscription Category
-              </a>
-            </xsl:if>
-            <h3 >Subscription Categories</h3>
-          </div>
-          <table class="table">
-            <xsl:for-each select="/Page/ContentDetail/SubscriptionGroups">
-              <tr>
-                <td colspan="3">
-                  <h4>
-                    <xsl:value-of select="@cCatName"/>
-                  </h4>
-                </td>
-                <td colspan="3">
-                  <xsl:choose>
-                    <xsl:when test="/Page/@ewCmd='MoveSubscription'">
-                      <a href="{$appPath}?ewCmd=MoveSubscription&amp;grp={@nCatKey}&amp;id={/Page/Request/QueryString/Item[@name='id']}"  class="btn btn-primary">
-                        <i class="fa fa-move-here fa-white">
-                          <xsl:text> </xsl:text>
-                        </i><xsl:text> </xsl:text>Move Here
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="{$appPath}?ewCmd=EditSubscriptionGroup&amp;grp={@nCatKey}"  class="btn btn-primary btn-sm float-end">
-                        <i class="fa fa-edit">&#160;</i>&#160;Edit
-                      </a>
-                      <a href="{$appPath}?ewCmd=AddSubscription&amp;grp={@nCatKey}"  class="btn btn-primary btn-sm float-end">
-                        <i class="fa fa-plus">&#160;</i>&#160;Add Subscription
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </td>
-              </tr>
+          <div class="card card-default">
+            <div class="card-header">
               <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
-                <xsl:if test="Subscriptions">
-                  <tr>
-                    <td>
-                      <xsl:apply-templates select="." mode="AdminSubscriptions">
-                        <xsl:with-param name="GroupID">
-                          <xsl:value-of select="@nCatKey"/>
-                        </xsl:with-param>
-                      </xsl:apply-templates>
-                    </td>
-                  </tr>
-                </xsl:if>
+                <a href="{$appPath}?ewCmd=AddSubscriptionGroup"  class="btn btn-primary float-end">
+                  <i class="fa fa-plus">&#160;</i>&#160;
+                  Add Subscription Category
+                </a>
               </xsl:if>
-            </xsl:for-each>
+              <h3 >Subscription Categories</h3>
+            </div>
+            <table class="table">
+              <xsl:for-each select="/Page/ContentDetail/SubscriptionGroups">
+                <tr>
+                  <td colspan="3">
+                    <h4>
+                      <xsl:value-of select="@cCatName"/>
+                    </h4>
+                  </td>
+                  <td colspan="3">
+                    <xsl:choose>
+                      <xsl:when test="/Page/@ewCmd='MoveSubscription'">
+                        <a href="{$appPath}?ewCmd=MoveSubscription&amp;grp={@nCatKey}&amp;id={/Page/Request/QueryString/Item[@name='id']}"  class="btn btn-primary">
+                          <i class="fa fa-move-here fa-white">
+                            <xsl:text> </xsl:text>
+                          </i><xsl:text> </xsl:text>Move Here
+                        </a>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <a href="{$appPath}?ewCmd=EditSubscriptionGroup&amp;grp={@nCatKey}"  class="btn btn-primary btn-sm float-end">
+                          <i class="fa fa-edit">&#160;</i>&#160;Edit
+                        </a>
+                        <a href="{$appPath}?ewCmd=AddSubscription&amp;grp={@nCatKey}"  class="btn btn-primary btn-sm float-end">
+                          <i class="fa fa-plus">&#160;</i>&#160;Add Subscription
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </td>
+                </tr>
+                <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
+                  <xsl:if test="Subscriptions">
+                    <tr>
+                      <td>
+                        <xsl:apply-templates select="." mode="AdminSubscriptions">
+                          <xsl:with-param name="GroupID">
+                            <xsl:value-of select="@nCatKey"/>
+                          </xsl:with-param>
+                        </xsl:apply-templates>
+                      </td>
+                    </tr>
+                  </xsl:if>
+                </xsl:if>
+              </xsl:for-each>
 
-            <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
+              <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
 
-              <tr>
-                <th colspan="3">
-                  <h4>Orphan Subscriptions</h4>
-                </th>
-              </tr>
-              <xsl:apply-templates select="/Page/ContentDetail" mode="AdminSubscriptions">
-                <xsl:with-param name="GroupID">0</xsl:with-param>
-              </xsl:apply-templates>
+                <tr>
+                  <th colspan="3">
+                    <h4>Orphan Subscriptions</h4>
+                  </th>
+                </tr>
+                <xsl:apply-templates select="/Page/ContentDetail" mode="AdminSubscriptions">
+                  <xsl:with-param name="GroupID">0</xsl:with-param>
+                </xsl:apply-templates>
 
-            </xsl:if>
-          </table>
+              </xsl:if>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -9236,8 +9268,8 @@
 
   <!--Subscriptions-->
   <xsl:template match="Page[@layout='ListSubscribers']" mode="Admin">
-    <div class="row" id="template_Subscriptions">
-      <div class="col-md-12">
+    <div class="" id="template_Subscriptions">
+      <div class="container-fluid">
         <div class="card card-default">
           <div class="card-header">
             <h3 >Subscribers</h3>
@@ -9321,7 +9353,7 @@
     <xsl:variable name="parId" select="@parId" />
     <xsl:for-each select="ContentDetail/Subscription">
 
-      <div class="subscription detail">
+      <div class="subscription detail container-fluid">
         <div class="row">
           <div class="col-md-6">
             <div class="card card-default">
@@ -9499,7 +9531,7 @@
 
 
               </div>
-              <div class="panel-footer form-actions">
+              <div class="card-footer form-actions">
 
                 <xsl:if test="@renewalStatus!='Cancelled'">
                   <a href="{$appPath}?ewCmd=CancelSubscription&amp;id={@id}" class="btn btn-danger">
@@ -9637,8 +9669,8 @@
 
   <!--Subscriptions-->
   <xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredSubscriptions' or @layout='CancelledSubscriptions' or @layout='RecentRenewals']" mode="Admin">
-    <div class="row" id="template_Subscriptions">
-      <div class="col-md-12">
+    <div class="container-fluid" id="template_Subscriptions">
+      <div>
         <xsl:if test="@layout='UpcomingRenewals'">
           <div class="alert alert-info">
             <h3>
@@ -9768,9 +9800,9 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='EditTemplate']" mode="Admin">
-    <div class="row" id="tpltAdvancedMode">
-      <div class="col-md-12">
-        <div class="panel">
+    <div class="container-fluid" id="tpltAdvancedMode">
+      <div>
+        <div class="card ">
           <div class="card-header">
             <h4>
               Edit <xsl:value-of select="@ewCmd2"/><xsl:text> Templates</xsl:text>
@@ -9925,9 +9957,9 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='RenewalAlerts']" mode="Admin">
-    <div class="row" id="template_Subscriptions">
+    <div class="container-fluid" id="template_Subscriptions">
 
-      <div class="col-md-12">
+      <div class="">
         <div class="card card-default">
           <table class="table">
             <tr>
@@ -9982,50 +10014,55 @@
 
   <!--LocateSearch-->
   <xsl:template match="Page[@layout='LocateSearch']" mode="Admin">
-    <div class="row" id="tpltLocateSearch">
-      <div class="col-md-3">
-        <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='FindContentToRelate']" mode="xform"/>
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >Instructions</h3>
-          </div>
-          <div class="card-body">
-            <p>This enables you to search for items of content that are on other pages of the site to be placed on this current page.</p>
-            <p>You can search by page, by section by selecting a parent page and clicking "search children" or by keyword by entering a word into the box.</p>
-            <p>To list all content items just hit search without entering anything into the form (This may take some time to come back if your site contains a lot of this type of content)</p>
+    <div class="container-fluid" id="tpltLocateSearch">
+      <div class="row">
+        <div class="col-md-3">
+          <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='FindContentToRelate']" mode="xform"/>
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >Instructions</h3>
+            </div>
+            <div class="card-body">
+              <p>This enables you to search for items of content that are on other pages of the site to be placed on this current page.</p>
+              <p>You can search by page, by section by selecting a parent page and clicking "search children" or by keyword by entering a word into the box.</p>
+              <p>To list all content items just hit search without entering anything into the form (This may take some time to come back if your site contains a lot of this type of content)</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='SelectContentToLocate']" mode="xform"/>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='SelectContentToLocate']" mode="xform"/>
+          </div>
         </div>
       </div>
     </div>
   </xsl:template>
   <!-- BJR Member Activity Reports-->
   <xsl:template match="Page[@layout='MemberActivityReport']" mode="Admin">
-    <div class="row" id="template_EditStructure">
-      <xsl:choose>
-        <xsl:when test="ContentDetail/Content[@type='xform']">
-          <div class="col-md-3">
-            <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-          </div>
-          <div class="col-md-9 panel">
-            <xsl:apply-templates select="ContentDetail/Content[@type='Report']" mode="MemberActivityReport"/>
-          </div>
-        </xsl:when>
-        <xsl:otherwise>
-          <div class="col-md-12 panel">
-            <a href="{$appPath}?ewCmd=MemberActivity" class="btn btn-primary float-end">
-              <i class="fa fa-mail-reply">
-                <xsl:text> </xsl:text>
-              </i>Back
-            </a>
-            <xsl:apply-templates select="ContentDetail/Content[@type='Report']" mode="MemberActivityReport"/>
-          </div>
-        </xsl:otherwise>
-      </xsl:choose>
+    <div class="container-fluid" id="template_EditStructure">
+      <div class="row">
+
+        <xsl:choose>
+          <xsl:when test="ContentDetail/Content[@type='xform']">
+            <div class="col-md-3">
+              <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+            </div>
+            <div class="col-md-9">
+              <xsl:apply-templates select="ContentDetail/Content[@type='Report']" mode="MemberActivityReport"/>
+            </div>
+          </xsl:when>
+          <xsl:otherwise>
+            <div class="col-md-12">
+              <a href="{$appPath}?ewCmd=MemberActivity" class="btn btn-primary float-end">
+                <i class="fa fa-mail-reply">
+                  <xsl:text> </xsl:text>
+                </i>Back
+              </a>
+              <xsl:apply-templates select="ContentDetail/Content[@type='Report']" mode="MemberActivityReport"/>
+            </div>
+          </xsl:otherwise>
+        </xsl:choose>
+      </div>
     </div>
   </xsl:template>
 
@@ -10194,45 +10231,47 @@
 
   <!--BJR Codes-->
   <xsl:template match="Page[@layout='DirectoryCodes']" mode="Admin">
-    <div class="row" id="template_AdvancedMode">
-      <div class="col-md-3">
-        <div class="alert alert-info">
-          <i class="fa fa-info-sign fa-3x float-end">
-            <xsl:text> </xsl:text>
-          </i>
-          <h4>Hint</h4>
-          <p>Voucher codes are groups of codes that can either be applied to a discount or can enable the user access to a unique subscriber group.</p>
-          <p>Codes Must be created in advanced in code sets</p>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <div class="card-header">
-            <xsl:choose>
-              <xsl:when test="ContentDetail/Content[@type='xform']">
-                <p class="btn-group headerButtons">
-                  <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}" class="adminButton edit" title="Back to Member Codes">Back to Member Codes</a>
-                </p>
-              </xsl:when>
-              <xsl:otherwise>
-                <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;subCmd=AddCodeSet" class="btn btn-primary" title="Add a new code set">
-                  <i class="fa fa-plus fa-white">
-                    <xsl:text> </xsl:text>
-                  </i><xsl:text> </xsl:text>Add New Code Set
-                </a>
-                <h4>
-                  <xsl:value-of select="@name"/>
-                </h4>
-              </xsl:otherwise>
-            </xsl:choose>
-          </div>
-          <div class="panel-content">
-            <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-            <xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="DirectoryCodes"/>
-          </div>
-        </div>
-      </div>
+    <div class="container-fluid" id="template_AdvancedMode">
+      <div class="row">
 
+        <div class="col-md-3">
+          <div class="alert alert-info">
+            <i class="fa fa-info-sign fa-3x float-end">
+              <xsl:text> </xsl:text>
+            </i>
+            <h4>Hint</h4>
+            <p>Voucher codes are groups of codes that can either be applied to a discount or can enable the user access to a unique subscriber group.</p>
+            <p>Codes Must be created in advanced in code sets</p>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <div class="card-header">
+              <xsl:choose>
+                <xsl:when test="ContentDetail/Content[@type='xform']">
+                  <p class="btn-group headerButtons">
+                    <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}" class="adminButton edit" title="Back to Member Codes">Back to Member Codes</a>
+                  </p>
+                </xsl:when>
+                <xsl:otherwise>
+                  <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;subCmd=AddCodeSet" class="btn btn-primary" title="Add a new code set">
+                    <i class="fa fa-plus fa-white">
+                      <xsl:text> </xsl:text>
+                    </i><xsl:text> </xsl:text>Add New Code Set
+                  </a>
+                  <h4>
+                    <xsl:value-of select="@name"/>
+                  </h4>
+                </xsl:otherwise>
+              </xsl:choose>
+            </div>
+            <div class="panel-content">
+              <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+              <xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="DirectoryCodes"/>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </xsl:template>
 
@@ -10424,91 +10463,94 @@
   <!--   ##################  Site Index  ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='SiteIndex' or @ewCmd='SiteIndex']" mode="Admin">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card card-default">
-          <div class="card-header">
-            <h3 >
-              Last Index
-            </h3>
-          </div>
-          <div class="card-body">
-            <xsl:for-each select="ContentDetail/Content/model/instance/IndexInfo/indexInfo">
-              <dl class="tabled">
-                <dt>Start Time</dt>
-                <dd>
-                  <xsl:value-of select="@startTime"/>
-                </dd>
-                <dt>End Time</dt>
-                <dd>
-                  <xsl:value-of select="@endTime"/>
-                </dd>
-                <dt>Pages Index</dt>
-                <dd>
-                  <xsl:value-of select="@pagesIndexed"/>
-                </dd>
-                <dt>Pages Skipped</dt>
-                <dd>
-                  <xsl:value-of select="@pagesSkipped"/>
-                </dd>
-                <dt>Articles Indexed</dt>
-                <dd>
-                  <xsl:value-of select="@contentCount"/>
-                </dd>
-                <dt>Articles Skipped</dt>
-                <dd>
-                  <xsl:value-of select="@contentSkipped"/>
-                </dd>
-                <dt>Documents Indexed</dt>
-                <dd>
-                  <xsl:value-of select="@documentsIndexed"/>
-                </dd>
-                <dt>Documents Skipped</dt>
-                <dd>
-                  <xsl:value-of select="@documentsSkipped"/>
-                </dd>
-              </dl>
-            </xsl:for-each>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card card-default">
+            <div class="card-header">
+              <h3 >
+                Last Index
+              </h3>
+            </div>
+            <div class="card-body">
+              <xsl:for-each select="ContentDetail/Content/model/instance/IndexInfo/indexInfo">
+                <dl class="tabled">
+                  <dt>Start Time</dt>
+                  <dd>
+                    <xsl:value-of select="@startTime"/>
+                  </dd>
+                  <dt>End Time</dt>
+                  <dd>
+                    <xsl:value-of select="@endTime"/>
+                  </dd>
+                  <dt>Pages Index</dt>
+                  <dd>
+                    <xsl:value-of select="@pagesIndexed"/>
+                  </dd>
+                  <dt>Pages Skipped</dt>
+                  <dd>
+                    <xsl:value-of select="@pagesSkipped"/>
+                  </dd>
+                  <dt>Articles Indexed</dt>
+                  <dd>
+                    <xsl:value-of select="@contentCount"/>
+                  </dd>
+                  <dt>Articles Skipped</dt>
+                  <dd>
+                    <xsl:value-of select="@contentSkipped"/>
+                  </dd>
+                  <dt>Documents Indexed</dt>
+                  <dd>
+                    <xsl:value-of select="@documentsIndexed"/>
+                  </dd>
+                  <dt>Documents Skipped</dt>
+                  <dd>
+                    <xsl:value-of select="@documentsSkipped"/>
+                  </dd>
+                </dl>
+              </xsl:for-each>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-6">
+        <div class="col-md-6">
 
 
-        <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+          <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+        </div>
       </div>
     </div>
-
   </xsl:template>
 
   <!--BJR Codes-->
   <xsl:template match="Page[@layout='ManageLookups']" mode="Admin">
-    <div class="row" id="template_AdvancedMode">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-body">
-            Lookups can be used for a range of features in the system. They often are used to provide a list of options for dropdown lists on forms.
-          </div>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="card card-default">
-          <div class="card-header">
-            <p class="btn-group headerButtons">
-              <xsl:if test="ContentDetail/Content[@type='xform']">
-                <a href="{$appPath}?ewCmd=ManageLookups&amp;pgid={/Page/@id}" class="btn btn-primary" title="Back to ManageLookups">
-                  <i class="fa fa-caret-left">&#160; </i>&#160;Back to Lookups List
-                </a>
-              </xsl:if>
-            </p>
-          </div>
-          <div class="card-body">
-            <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-          </div>
-          <xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListLookups"/>
-        </div>
-      </div>
+    <div class="container-fluid" id="template_AdvancedMode">
+      <div class="row">
 
+        <div class="col-md-3">
+          <div class="card card-default">
+            <div class="card-body">
+              Lookups can be used for a range of features in the system. They often are used to provide a list of options for dropdown lists on forms.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="card card-default">
+            <div class="card-header">
+              <p class="btn-group headerButtons">
+                <xsl:if test="ContentDetail/Content[@type='xform']">
+                  <a href="{$appPath}?ewCmd=ManageLookups&amp;pgid={/Page/@id}" class="btn btn-primary" title="Back to ManageLookups">
+                    <i class="fa fa-caret-left">&#160; </i>&#160;Back to Lookups List
+                  </a>
+                </xsl:if>
+              </p>
+            </div>
+            <div class="card-body">
+              <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+            </div>
+            <xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListLookups"/>
+          </div>
+        </div>
+      </div>
     </div>
   </xsl:template>
 
@@ -10603,7 +10645,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='FileImport']" mode="Admin">
-    <div class="template" id="template_EditStructure">
+    <div class="template container-fluid" id="template_EditStructure">
       <div class="row">
         <div class="col-md-4">
           <div class="card card-danger">
@@ -10729,17 +10771,20 @@
   </xsl:template>
   <!-- -->
   <xsl:template match="Page[@layout='VersionControlProcess']" mode="Admin">
-    <div class="row" id="tpltListReports">
-      <div class="col-md-9">
-        <xsl:apply-templates select="ContentDetail/Content/GenericReport" mode="reportDetail"/>
-      </div>
-      <div class="col-md-3">
-        <div class="panel">
-          <div class="card-body">
-            <p>This lists all content that is awaiting approval from an administrator.</p>
-            <p>To approve the content, vlick the Edit button, review the content, and change the status to Approved or Live.</p>
-            <p>The version numbers show the most recent version awaiting approval. Numbers in square brackets indicate the current Live/Approved version.</p>
-            <p>Note: this does not track the location of the content or any changes to related items.</p>
+    <div class="container-fluid" id="tpltListReports">
+      <div class="row">
+
+        <div class="col-md-9">
+          <xsl:apply-templates select="ContentDetail/Content/GenericReport" mode="reportDetail"/>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body">
+              <p>This lists all content that is awaiting approval from an administrator.</p>
+              <p>To approve the content, vlick the Edit button, review the content, and change the status to Approved or Live.</p>
+              <p>The version numbers show the most recent version awaiting approval. Numbers in square brackets indicate the current Live/Approved version.</p>
+              <p>Note: this does not track the location of the content or any changes to related items.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -10914,9 +10959,9 @@
   <!-- -->
   <!-- -->
   <xsl:template match="Page[@layout='PageVersions']" mode="Admin">
-    <div class="rows" id="tpltEditStructure">
-      <div class="cols-md-12">
-        <div class="panel">
+    <div class="container-fluid" id="tpltEditStructure">
+      <div class="">
+        <div class="card">
           <div class="card-body">
             <p>Version history allows you create different versions of the same page for a number of reasons. Such as for different users, languages, split testing or working versions</p>
             <p>A user will see the first page on this list that matches their own permissions, if the user does not have access to the "original" page they will not see any of the alternative versions either.</p>
@@ -11067,7 +11112,7 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="sortCol" select="/Page/Request//Item[@name='sortCol']/node()"/>
-    <div class="panel">
+    <div class="card">
       <div class="card-header">
         <div class="btn-group float-end">
           <a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-primary btn-xs float-end" target="_new">
@@ -11977,7 +12022,7 @@
 
           <xsl:apply-templates select="Summary" mode="cleanXhtml"/>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
           <button class="btn btn-primary float-end" name="themeName" value="{ItemName/node()}">
             <i class="fa fa-arrow-down">&#160;</i>&#160;Install Theme
           </button>&#160;<br/>&#160;
