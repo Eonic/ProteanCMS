@@ -1174,7 +1174,7 @@
 
       <!--input type="hidden" name="path" /-->
       <!-- The fileinput-button span is used to style the file input field as button -->
-      <span class="btn btn-success fileinput-button">
+      <span class="btn btn-primary fileinput-button">
         <i class="fa fa-plus fa-white">
           <xsl:text> </xsl:text>
         </i>
@@ -2012,7 +2012,7 @@
           </xsl:if>
           <xsl:if test="contains(@search,'add')">
             <span class="input-group-btn pull-right">
-              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success" onclick="disableButton(this);$('#{$formName}').submit();">
+              <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i> Add
@@ -3076,7 +3076,7 @@
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
-        <xsl:text> btn-success</xsl:text>
+        <xsl:text> btn-primary</xsl:text>
       </xsl:if>
       <xsl:if test="@class!=''">
         <xsl:text> </xsl:text>

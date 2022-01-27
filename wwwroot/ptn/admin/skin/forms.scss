@@ -373,7 +373,10 @@ form.xform {
         }
     }
 }
-.membership-user-list {
+.faux-table {
+    .faux-header {
+        align-items: flex-end;
+    }
 
     .faux-row,
     .faux-header {
@@ -385,7 +388,8 @@ form.xform {
         }
     }
 
-    .membership-status {
+    .membership-status,
+    .status-col {
         text-align: center;
         position: absolute;
         left: 0;
@@ -409,8 +413,6 @@ form.xform {
             padding: 0px 5px
         }
     }
-
-    
 }
 .alphabet-btns a{
     flex-grow: 0!important;
