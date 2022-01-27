@@ -4712,97 +4712,97 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='EditDirectoryItemPermissions']" mode="Admin">
-    <div class="row" id="template_permissions">
-      <div class="col-md-3">
-        <div class="card card-default">
-          <div class="card-header">
-            <h4 >Edit Permissions</h4>
-          </div>
-          <div class="card-body">
-            <p>
-              OPEN<br/>
-              Means that this page can be viewed by everyone. It has no permissions set for it at all. If you set permit for one of these then the page will then be restircted so only members of this group can access it
-            </p>
-            <p>
-              DENIED<br/>
-              This page is explicity denied for access by this group/company/dept
-            </p>
-            <p>
-              IMPLIED DENIED<br/>
-              This page cannot be viewed by members of this group/company/dept because it has an exclusive permission to be viewed by other entities
-            </p>
-            <p>
-              VIEW<br/>
-              This page can be viewed by members of this group
-            </p>
-            <p>
-              VIEW by xxxx<br/>
-              This page can be viewed because of permission on xxxx
-            </p>
-            <p>
-              INHERITED<br/>
-              This takes its permissions from its parent, they will be overridden by permissions any applied directly to this page.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <form action="?ewCmd=DirPermissions" method="post" class="ewXform">
-          <div class="card card-default">
+    <div class="container-fluid">
+      <div class="row" id="template_permissions">
+        <div class="col-md-3">
+          <div class="card card-default mb-3">
             <div class="card-header">
-              <h4 >
-                <xsl:value-of select="name(ContentDetail/*)"/><xsl:text> </xsl:text><xsl:value-of select="ContentDetail/*/@name"/> is a member of the following
-              </h4>
+              <h4>Edit Permissions</h4>
             </div>
             <div class="card-body">
-
-              <ul>
-                <xsl:for-each select="ContentDetail/*[1]/Role | ContentDetail/*[1]/Company | ContentDetail/*[1]/Department | ContentDetail/*[1]/Group">
-                  <li>
-                    <xsl:value-of select="name()"/> - <xsl:value-of select="@name"/>
-                  </li>
-                </xsl:for-each>
-              </ul>
-              <h4>And has the following rights to access...</h4>
-
-              <button type="submit" name="submit" value="Save Permissions"  class="btn btn-primary principle">
-                <span class="hidden">
-                  <xsl:text> </xsl:text>
-                </span>Save Permissions
-              </button>
-              <button type="button" name="return" value="Return" onclick="window.history.back();" class="btn btn-primary">
-                <i class="fa fa-arrow-left">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>Return
-              </button>
-              <br/>
-              <br/>
-              <input type="hidden" name="parId" value="{ContentDetail/*[1]/@id}"/>
-            </div>
-
-            <ul id="MenuTree" class="list-group treeview">
-              <xsl:apply-templates select="ContentDetail/Menu/MenuItem" mode="editDirectoryItemPermissions">
-                <xsl:with-param name="level">1</xsl:with-param>
-              </xsl:apply-templates>
-            </ul>
-
-            <div class="panel-footer">
-              <button type="submit" name="submit" value="Save Permissions"  class="btn btn-primary principle">
-                <span class="hidden">
-                  <xsl:text> </xsl:text>
-                </span>Save Permissions
-              </button>
-              <button type="button" name="return" value="Return" onclick="window.history.back();" class="btn btn-primary">
-                <i class="fa fa-arrow-left">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>Return
-              </button>
-              <div class="clearfix">&#160;</div>
+              <p>
+                OPEN<br/>
+                Means that this page can be viewed by everyone. It has no permissions set for it at all. If you set permit for one of these then the page will then be restircted so only members of this group can access it
+              </p>
+              <p>
+                DENIED<br/>
+                This page is explicity denied for access by this group/company/dept
+              </p>
+              <p>
+                IMPLIED DENIED<br/>
+                This page cannot be viewed by members of this group/company/dept because it has an exclusive permission to be viewed by other entities
+              </p>
+              <p>
+                VIEW<br/>
+                This page can be viewed by members of this group
+              </p>
+              <p>
+                VIEW by xxxx<br/>
+                This page can be viewed because of permission on xxxx
+              </p>
+              <p>
+                INHERITED<br/>
+                This takes its permissions from its parent, they will be overridden by permissions any applied directly to this page.
+              </p>
             </div>
           </div>
-        </form>
+        </div>
+        <div class="col-md-9">
+          <form action="?ewCmd=DirPermissions" method="post" class="ewXform">
+            <div class="card card-default">
+              <div class="card-header">
+                <h4 >
+                  <xsl:value-of select="name(ContentDetail/*)"/><xsl:text> </xsl:text><xsl:value-of select="ContentDetail/*/@name"/> is a member of the following
+                </h4>
+              </div>
+              <div class="card-body">
+
+                <ul>
+                  <xsl:for-each select="ContentDetail/*[1]/Role | ContentDetail/*[1]/Company | ContentDetail/*[1]/Department | ContentDetail/*[1]/Group">
+                    <li>
+                      <xsl:value-of select="name()"/> - <xsl:value-of select="@name"/>
+                    </li>
+                  </xsl:for-each>
+                </ul>
+                <h4>And has the following rights to access...</h4>
+                <div class="btn-group-spaced">
+                  <button type="button" name="return" value="Return" onclick="window.history.back();" class="btn btn-outline-primary btn-sm">
+                    <i class="fa fa-arrow-left">
+                      <xsl:text> </xsl:text>
+                    </i>
+                    <xsl:text> </xsl:text>Return
+                  </button>
+                  <button type="submit" name="submit" value="Save Permissions"  class="btn btn-primary principle float-end">
+                    <span class="hidden">
+                      <xsl:text> </xsl:text>
+                    </span>Save Permissions
+                  </button>
+                </div>
+                <input type="hidden" name="parId" value="{ContentDetail/*[1]/@id}"/>
+              </div>
+              <ul id="MenuTree" class="list-group treeview">
+                <xsl:apply-templates select="ContentDetail/Menu/MenuItem" mode="editDirectoryItemPermissions">
+                  <xsl:with-param name="level">1</xsl:with-param>
+                </xsl:apply-templates>
+              </ul>
+              <div class="card-footer pb-0">
+                <div class="btn-group-spaced">
+                  <button type="button" name="return" value="Return" onclick="window.history.back();" class="btn btn-outline-primary btn-sm">
+                    <i class="fa fa-arrow-left">
+                      <xsl:text> </xsl:text>
+                    </i>
+                    <xsl:text> </xsl:text>Return
+                  </button>
+                  <button type="submit" name="submit" value="Save Permissions"  class="btn btn-primary principle float-end">
+                    <span class="hidden">
+                      <xsl:text> </xsl:text>
+                    </span>Save Permissions
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </xsl:template>
