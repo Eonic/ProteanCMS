@@ -91,7 +91,9 @@
     .slick-list .ewAdmin .btn-primary {
         z-index: 10;
     }
-
+    .ewAdmin.over-content{
+        top:-22px;
+    }
     .ewAdmin > .btn-default,
     .ewAdmin > .btn-primary,
     .ewAdmin > .dropdown > .btn-primary,
