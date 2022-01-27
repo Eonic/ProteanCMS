@@ -1414,17 +1414,20 @@
     <xsl:variable name="selectedValue">
       <xsl:value-of select="value/node()"/>
     </xsl:variable>
+	  <xsl:variable name="selectedName">
+		  <xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$selectedValue]/@name"/>
+	  </xsl:variable>
 	  <div class="pick-page">
-		<input type="hidden" class="form-control" placeholder="select page" aria-label="Username" name="{$ref}" id="{$ref}"/>
-	<div class="input-group">
-		<input type="text" class="form-control" placeholder="select page" aria-label="Username" name="{$ref}-name" id="{$ref}-name"/>
-		<span class="input-group-btn">
+		<input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}"/>
+	    <div class="input-group">
+		    <input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
+		    <span class="input-group-btn">
 			
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{$ref}-modal"><i class="fa fa-file-text-o fa-white">
-				<xsl:text> </xsl:text>
-			</i><xsl:text> </xsl:text>Pick Page</button>
-		</span>
-    </div>
+			    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{$ref}-modal"><i class="fa fa-file-text-o fa-white">
+				    <xsl:text> </xsl:text>
+			    </i><xsl:text> </xsl:text>Pick Page</button>
+		    </span>
+        </div>
 		  <div class="modal fade" id="{$ref}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			  <div class="modal-dialog" role="document">
 				  <div class="modal-content">
@@ -1433,10 +1436,12 @@
 							  <xsl:apply-templates select="/Page/Menu/MenuItem" mode="siteTreePage">
 								  <xsl:with-param name="level">1</xsl:with-param>
 								  <xsl:with-param name="ref" select="$ref" />
+								  <xsl:with-param name="selectedValue" select="$selectedValue" />
 							  </xsl:apply-templates>
 							  <xsl:apply-templates select="/Page/Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="siteTreePage">
 								  <xsl:with-param name="level">1</xsl:with-param>
 								  <xsl:with-param name="ref" select="$ref" />
+								  <xsl:with-param name="selectedValue" select="$selectedValue" />
 							  </xsl:apply-templates>
 						  </ul>
 					  </div>
@@ -1444,36 +1449,12 @@
 			  </div>
 		  </div>
   </div>
-
-
-	  <!--select name="{$ref}" id="{$ref}">
-
-      <xsl:attribute name="class">
-        <xsl:text>dropdown form-control </xsl:text>
-        <xsl:if test="@class!=''">
-          <xsl:value-of select="@class"/>
-        </xsl:if>
-      </xsl:attribute>
-
-      <xsl:if test="@onChange!=''">
-        <xsl:attribute name="onChange">
-          <xsl:value-of select="@onChange"/>
-        </xsl:attribute>
-      </xsl:if>
-      <option value="">
-        <xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
-        <xsl:text>Not Specified</xsl:text>
-      </option>
-      <xsl:apply-templates select="/Page/Menu/MenuItem" mode="listPageOption">
-        <xsl:with-param name="level" select="number(1)"/>
-        <xsl:with-param name="selectedValue" select="$selectedValue"/>
-      </xsl:apply-templates>
-    </select-->
   </xsl:template>
 
 	<xsl:template match="MenuItem" mode="siteTreePage">
 		<xsl:param name="level"/>
 		<xsl:param name="ref"/>
+		<xsl:param name="selectedValue"/>
 		<xsl:variable name="oldpgid">
 			<xsl:choose>
 				<xsl:when test="/Page/Request/QueryString/Item[@name='oldPgId']/node()!=''">
@@ -1488,11 +1469,20 @@
 			<xsl:if test="MenuItem"> expandable</xsl:if>
 		</xsl:variable>
 		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
-			<li id="node{@id}" class="list-group-item level-{$level} {$class}" data-tree-level="{$level}">
+			<li id="node{@id}" data-tree-level="{$level}">
 				<xsl:attribute name="data-tree-parent">
 					<xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
 						<xsl:value-of select="./parent::MenuItem/@id"/>
 					</xsl:if>
+				</xsl:attribute>
+				<xsl:attribute name="class">
+					<xsl:text>list-group-item level-</xsl:text>
+					<xsl:value-of select="$level"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="$class"/>
+					<xsl:if test="@id = $selectedValue">
+					    <xsl:text> selected</xsl:text>
+				    </xsl:if>
 				</xsl:attribute>
 				<div class="pageCell">
 					<xsl:choose>
@@ -1500,25 +1490,24 @@
 							<i class="fa fa-home fa-lg status activeParent">
 								&#160;
 							</i>
-							<span class="pageName">
+					
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="." mode="status_legend"/>							
+						</xsl:otherwise>
+					</xsl:choose>
+					    <a href="javascript:$('#{$ref}').val('{@id}');$('#{$ref}-name').val('{@name}');$('#{$ref}-modal .selected').removeClass('selected');$('#{$ref}-modal #node{@id}').addClass('selected');$('#{$ref}-modal').modal('hide');">
+								<span class="pageName">
 								&#160;
 								<xsl:value-of select="@name"/>
 							</span>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="." mode="status_legend"/>
-							<a href="javascript:$('#{$ref}').val('{@id}');$('#{$ref}-name').val('{@name}');$('#{$ref}-modal').modal('hide');">
-							<span class="pageName">
-								<xsl:value-of select="@name"/>
-							</span>
-							</a>
-						</xsl:otherwise>
-					</xsl:choose>
+						</a>
 				</div>
 			</li>
 				<xsl:apply-templates select="MenuItem" mode="siteTreePage">
 					<xsl:with-param name="level" select="$level + 1"/>
 					<xsl:with-param name="ref" select="$ref"/>
+					<xsl:with-param name="selectedValue" select="$selectedValue"/>
 				</xsl:apply-templates>
 		</xsl:if>
 	</xsl:template>
