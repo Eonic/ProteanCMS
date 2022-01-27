@@ -49,6 +49,10 @@
     {
       "library": "fancybox@3.0.1",
       "destination": "ptn/libs/fancybox/"
+    },
+    {
+      "library": "bs5-lightbox@1.7.7",
+      "destination": "ptn/libs/bs5-lightbox/"
     }
   ]
 }
