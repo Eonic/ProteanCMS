@@ -523,6 +523,14 @@ form table {
         border-top:0;
     }
 }
+form .table-striped {
+    > tbody > tr:nth-of-type(odd) > *{
+        --bs-table-accent-bg: #f2f6f7;
+    }
+}
+.card table {
+    margin-bottom:0;
+}
 .table-mobile-cards {
     .xs-only {
         @include media-breakpoint-up(lg) {
@@ -718,3 +726,4 @@ form.xform .pick-image-wrapper {
         margin-right: 10px;
     }
 }
+

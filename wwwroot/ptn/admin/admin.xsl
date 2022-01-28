@@ -2237,7 +2237,7 @@
               <!--span class="hidden"> | </span-->
               <xsl:if test="@status='1'">
                 <!--a href="{$appPath}?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
-                <a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page">
+                <a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-primary btn-hide" title="Click here to hide this page">
                   <i class="fas fa-eye-slash fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
@@ -7531,7 +7531,7 @@
   <xsl:template match="Page[@layout='ShippingLocations']" mode="Admin">
     <div id="tpltShippingLocations" class="container-fluid">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3">
           <div class="alert alert-info">
             <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
@@ -7542,7 +7542,7 @@
           </div>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-lg-9">
           <div class="card card-default">
             <div class="card-header">
               <h4 class="float-start">List of Locations</h4>
@@ -7594,7 +7594,7 @@
           </xsl:when>
           <xsl:otherwise>
             <a href="{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-primary">
-              <i class="fa fa-pencil fa-white">
+              <i class="fas fa-pen fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit Location
             </a>
@@ -7609,7 +7609,7 @@
               </i><xsl:text> </xsl:text>Move
             </a>
             <a href="{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
-              <i class="fa fa-trash-o fa-white">
+              <i class="fas fa-trash-alt fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Delete
             </a>
@@ -7689,7 +7689,7 @@
       </td>
       <td class="options">
         <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-primary">
-          <i class="fa fa-pencil fa-white">
+          <i class="fas fa-pen fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit Method
         </a>
@@ -7707,7 +7707,7 @@
         </a>
         <xsl:text> </xsl:text>
         <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
-          <i class="fa fa-trash-o fa-white">
+          <i class="fas fa-trash-alt fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete Method
         </a>
