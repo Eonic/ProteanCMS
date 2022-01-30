@@ -4219,7 +4219,6 @@
 				modalhtml += '<i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...';
 				modalhtml += '</h4>';
 			modalhtml += '</p>';
-		
 		$('.modal-body').html(modalhtml);
 		var target = $(this).attr("href");
 		// load the url and show modal on success
