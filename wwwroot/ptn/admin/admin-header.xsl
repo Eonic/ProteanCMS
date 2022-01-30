@@ -46,7 +46,7 @@
     <div id="adminHeader" class="affix-top navbar-fixed-top">
       
       <!-- MAIN MENU -->
-      <nav class="navbar navbar-expand-xl navbar-dark bg-dark admin-main-menu" role="navigation">
+      <nav class="navbar navbar-expand-xl navbar-dark admin-main-menu" role="navigation">
         
         <div class="container-fluid">
           

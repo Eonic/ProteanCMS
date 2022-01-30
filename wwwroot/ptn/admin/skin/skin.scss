@@ -53,7 +53,7 @@ body.ewAdmin.layout-Logon {
     background: url(/ptn/admin/skin/images/logon_bg.png) no-repeat #001834;
     background-size: cover;
 
-     #adminLayout .card {
+    #adminLayout .card {
         position: absolute;
         top: 40%;
         left: 50%;
@@ -62,7 +62,7 @@ body.ewAdmin.layout-Logon {
         border-radius: 10px !important;
         -webkit-box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
         box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
-        width:400px;
+        width: 400px;
     }
 
     #footer {
@@ -178,21 +178,13 @@ body.ewAdmin.layout-AdmHome {
 
 
         .status.active, .status.activeParent {
-            color: $admin-primary;
+          //  color: $admin-primary;
         }
 
         .status.inactive {
             color: $admin-gray;
         }
 
-        .table a {
-            color: darken($admin-header-color-link,25%)
-        }
-
-        .table a:hover {
-            text-decoration: none;
-            color: $admin-header-color-link;
-        }
 
         .listbox a {
             color: darken($admin-header-color-link,30%)
@@ -524,13 +516,17 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .list-group-item {
-            padding-left: 15px;
+            padding-left: 35px;
             border-left: 0;
             border-right: 0;
+
+            div.pageCell {
+                width: 220px;
+            }
         }
 
         .level-2 {
-            padding-left: 30px;
+            padding-left: 45px;
 
             div.pageCell {
                 width: 210px;
@@ -538,7 +534,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-3 {
-            padding-left: 40px;
+            padding-left: 55px;
 
             div.pageCell {
                 width: 200px;
@@ -546,7 +542,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-4 {
-            padding-left: 50px;
+            padding-left: 65px;
 
             div.pageCell {
                 width: 190px;
@@ -554,7 +550,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-5 {
-            padding-left: 60px;
+            padding-left: 75px;
 
             div.pageCell {
                 width: 180px;
@@ -562,7 +558,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-6 {
-            padding-left: 70px;
+            padding-left: 85px;
 
 
             div.pageCell {
@@ -571,7 +567,7 @@ body.ewAdmin.layout-AdmHome {
         }
 
         .level-7 {
-            padding-left: 80px;
+            padding-left: 95px;
 
 
             div.pageCell {
@@ -640,10 +636,15 @@ body.ewAdmin.layout-AdmHome {
 
         div.pageCell {
             display: inline-block;
-            width: 230px;
+            width: 220px;
             max-width: 100%;
             margin: 0px;
-            font-weight: 600;
+            // color: #7c7c7c;
+
+            a {
+                text-decoration: none;
+                font-weight: 600;
+            }
 
             i {
                 top: 12px;
@@ -668,11 +669,11 @@ body.ewAdmin.layout-AdmHome {
         div.optionButtons {
             margin: 0px;
 
-            @include media-breakpoint-up(lg) {
+            @include media-breakpoint-up(md) {
                 display: inline-block;
             }
 
-            @include media-breakpoint-down(lg) {
+            @include media-breakpoint-down(md) {
                 margin: 11px -10px 0;
             }
 
@@ -715,6 +716,18 @@ body.ewAdmin.layout-AdmHome {
             }
         }
 
+        .optionButtons .btn-danger {
+            color: $admin-danger !important;
+
+            i {
+                color: $admin-danger !important;
+            }
+
+            &:hover {
+                color: $admin-danger !important;
+            }
+        }
+
         .optionButtons .plain-link {
             font-weight: 600;
             text-decoration: none;
@@ -724,6 +737,16 @@ body.ewAdmin.layout-AdmHome {
 
         .option-arrow-wrapper {
             white-space: nowrap;
+        }
+    }
+
+    .card #MenuTree {
+        .optionButtons a.btn-primary {
+            color: $admin-header-color-link !important;
+
+            i {
+                color: $admin-header-color-link !important;
+            }
         }
     }
 }
@@ -772,7 +795,6 @@ body.ewAdmin.layout-AdmHome {
     #collapseInstalled_Themes button img {
         height: 175px;
     }
-
     /*.btn, .btn-sm, .btn-xs {
         margin-right: 1px;
     }*/
@@ -780,7 +802,6 @@ body.ewAdmin.layout-AdmHome {
     a.arrowbutton span, a.drag span {
         display: none;
     }
-
     /*.btn-xs {
         padding: 4px 10px;
     }
@@ -796,7 +817,6 @@ body.ewAdmin.layout-AdmHome {
     .btn-toolbar {
         padding-bottom: 10px;
     }
-
     /*.btn-primary,
     .btn-info,
     .btn-default {
@@ -935,7 +955,6 @@ body.ewAdmin.layout-AdmHome {
         line-height: 1.1;
         color: #333333;
     }
-
     /*.panel-heading {
         legend {
             border-bottom: 0;
@@ -948,7 +967,6 @@ body.ewAdmin.layout-AdmHome {
             font-size: 18px;
         }
     }*/
-
     /*.panel-body > .alert:last-child {
         margin-bottom: 0;
     }*/
@@ -1053,9 +1071,8 @@ body.ewAdmin.layout-AdmHome {
     i.fa-chevron-left {
         display: none;
     }
-
-
 }
+
 #template_FileSystem .progress {
     margin-top: 5px;
     margin-bottom: 5px;
@@ -1068,11 +1085,12 @@ body.ewAdmin.layout-AdmHome {
 
     .loading-counter {
         right: 0;
-        display:none;
+        display: none;
     }
 
     height: 2rem;
 }
+
 .ewAdmin #files {
 
 
@@ -1201,7 +1219,6 @@ body.ewAdmin.layout-AdmHome {
 }
 
 .ewAdmin .stepper {
-    padding-top: 10px;
 
     .itemInfo {
         padding-right: 10px;
@@ -1245,9 +1262,9 @@ form#AddModule {
 }
 
 .pickImageModal {
-    .modal-dialog{
-    max-width:80%;
-}
+    .modal-dialog {
+        max-width: 80%;
+    }
 }
 
 #RedirectPage .scolling-pane {
@@ -1370,21 +1387,22 @@ form#AddModule {
 //
 // Select box
 // --------------------------------------------------
-$zindex-select:10;
-$select-bg:#fff;
-$select-fallback-border:#ccc;
+$zindex-select: 10;
+$select-bg: #fff;
+$select-fallback-border: #ccc;
 $select-border: #ccc;
-$border-radius-base:2px;
-$select-divider-bg:#ccc;
-$select-height-base:40px;
-$select-link-color:$admin-primary;
+$border-radius-base: 2px;
+$select-divider-bg: #ccc;
+$select-height-base: 40px;
+$select-link-color: $admin-primary;
 $select-link-hover-color: lighten($admin-primary,10%);
-$select-link-hover-bg:#fff;
-$font-size-small:12px;
+$select-link-hover-bg: #fff;
+$font-size-small: 12px;
 $select-header-color: $admin-primary;
-$select-link-disabled-color:#ccc;
-$select-caret-color:#666;
-$grid-float-breakpoint:$screen-md-min;
+$select-link-disabled-color: #ccc;
+$select-caret-color: #666;
+$grid-float-breakpoint: $screen-md-min;
+
 .bfh-selectbox {
     position: relative;
 
@@ -1438,7 +1456,7 @@ $grid-float-breakpoint:$screen-md-min;
         }
         // Dividers (basically an hr) within the select box
         .divider {
-          //  @include nav-divider($select-divider-bg);
+            //  @include nav-divider($select-divider-bg);
         }
 
         .bfh-selectbox-filter-container {
