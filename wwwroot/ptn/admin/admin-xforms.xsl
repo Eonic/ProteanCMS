@@ -3156,4 +3156,48 @@
 
   </xsl:template>
 
+
+	<xsl:template match="group[contains(@class,'PermissionButtons')]" mode="xform">
+		<xsl:param name="class"/>
+		<fieldset>
+			<xsl:if test=" @id!='' ">
+				<xsl:attribute name="id">
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$class!='' or @class!='' ">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$class"/>
+					<xsl:if test="@class!=''">
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="@class"/>
+					</xsl:if>
+					<xsl:for-each select="group">
+						<xsl:text> form-group li-</xsl:text>
+						<xsl:value-of select="./@class"/>
+					</xsl:for-each>
+					<xsl:if test="contains(@class,'inline-2-col') or contains(@class,'inline-3-col')">
+						<xsl:text> row</xsl:text>
+					</xsl:if>
+					<xsl:text> </xsl:text>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
+						<div class="permission-button-wrapper">
+							<xsl:if test="not(submit[contains(@class,'hideRequired')])">
+								<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+									<label class="required">
+										<span class="req">*</span>
+										<xsl:text> </xsl:text>
+										<xsl:call-template name="msg_required"/>
+									</label>
+								</xsl:if>
+							</xsl:if>
+							<!-- For xFormQuiz change how these buttons work -->
+							<xsl:apply-templates select="submit" mode="xform"/>
+						</div>
+		</fieldset>
+	</xsl:template>
+
+
 </xsl:stylesheet>

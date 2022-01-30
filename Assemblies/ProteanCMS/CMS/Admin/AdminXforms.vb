@@ -5016,10 +5016,10 @@ Partial Public Class Cms
                     MyBase.addOption(oElmt2, "Full", "9")
 
                     ' Add All does nothing, probably is not good for this screen either.
-                    'MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "< Remove All", "", "PermissionButtons")
+                    'MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All", "", "PermissionButtons all")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons add")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton remove")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "Remove All", "", "PermissionButtons remove-all")
 
 
                     ' Save the permissions on submission
@@ -5240,9 +5240,9 @@ Partial Public Class Cms
 
 
                     ' Add submit buttons (group specified by issue 1362)
-                    MyBase.addSubmit(oFrmButtons, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmButtons, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmButtons, "Finish", "Finish Editing", "", "principle PermissionButtons")
+                    MyBase.addSubmit(oFrmButtons, "AddSelected", "Add Selected", "", "PermissionButtons add")
+                    MyBase.addSubmit(oFrmButtons, "RemoveSelected", "Remove Selected", "", "PermissionButtons remove")
+                    MyBase.addSubmit(oFrmButtons, "Finish", "Finish Editing", "", "principle PermissionButtons finish-editing")
 
                     'lets add / remove before we populate
                     Select Case MyBase.getSubmitted
@@ -6364,8 +6364,8 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditRelations", "RelationButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons add")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
@@ -6437,11 +6437,11 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons add")
                     If bDeny Then
-                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected >", "", "PermissionButtons")
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButtons deny")
                     End If
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
@@ -6533,11 +6533,11 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Allow Selected >", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Allow Selected", "", "PermissionButtons allow")
                     If bDeny Then
-                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected >", "", "PermissionButtons")
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButtons deny")
                     End If
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
