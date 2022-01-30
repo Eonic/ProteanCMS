@@ -111,6 +111,9 @@
 
     }
 
+    $('.responsive-cart .cart-quantity').on('change', function () {
+        $('#updateQty').click();
+    });
 });
 
 
