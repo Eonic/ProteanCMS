@@ -159,8 +159,8 @@
   <!-- -->
   <xsl:template match="Page[@adminMode='true']" mode="adminPageHeader">
     <h1 class="page-header">
-      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
-      <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@name"/>
+      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][position()=last()]/@icon}">&#160;</i>&#160;
+      <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][position()=last()]/@name"/>
     </h1>
   </xsl:template>
 
