@@ -9,6 +9,7 @@
     <xsl:choose>
       <xsl:when test="/Page/Cart/@siteURL!=''">
         <xsl:value-of select="/Page/Cart/@siteURL"/>
+        <xsl:value-of select="/Page/Cart/@siteURL"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="getSettings">
@@ -983,6 +984,9 @@
           <xsl:if test="@type='Module'">
             <xsl:text> moduleDrag</xsl:text>
           </xsl:if>
+			<xsl:if test="@title!=''">
+				<xsl:text> over-content</xsl:text>
+			</xsl:if>
         </xsl:attribute>
         <xsl:if test="@type='Module' and not(starts-with(@position,'column1') and $page/@layout='Modules_Masonary')">
           <a href="#" class="btn btn-primary btn-xs drag pull-right">
@@ -1352,7 +1356,7 @@
         <xsl:value-of select="@class"/>
         <xsl:text> editable</xsl:text>
       </xsl:attribute>
-      <div class="ewAdmin dropdown options pull-right">
+      <div class="ewAdmin over-content dropdown options pull-right">
         <a href="#" class="btn btn-primary btn-xs pull-right" data-bs-toggle="dropdown">
           <i class="fas fa-edit fa-lg">&#160;</i>&#160;
           <xsl:if test="@status=0">[hidden]</xsl:if>
