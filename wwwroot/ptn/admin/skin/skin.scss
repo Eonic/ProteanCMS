@@ -49,7 +49,7 @@ $admin-header-color:			#000;
 $admin-header-logo:				url(/ewcommon/images/admin/skin/eonic-admin-purple.png) 10px 13px no-repeat;*/
 // END VARIABLES
 
-body.ewAdmin.layout-Logon {
+body.ptn-edit.layout-Logon {
     background: url(/ptn/admin/skin/images/logon_bg.png) no-repeat #001834;
     background-size: cover;
 
@@ -72,7 +72,7 @@ body.ewAdmin.layout-Logon {
     }
 }
 
-body.ewAdmin.layout-AdmHome {
+body.ptn-edit.layout-AdmHome {
     background: url(/ptn/admin/skin/images/logon_bg.png);
 
     #adminLayout {
@@ -94,7 +94,7 @@ body.ewAdmin.layout-AdmHome {
     }
 }
 
-.ewAdmin {
+.ptn-edit {
     .admin-breadcrumb {
         position: relative;
         background: #fff;
@@ -461,9 +461,9 @@ body.ewAdmin.layout-AdmHome {
         .popover {
             z-index: 1060;
         }
-        /*.listItem .ewAdmin .btn,
-        .panel .list-group .ewAdmin .btn,
-        .panel .listItem .ewAdmin .btn {
+        /*.listItem .ptn-edit .btn,
+        .panel .list-group .ptn-edit .btn,
+        .panel .listItem .ptn-edit .btn {
             padding-left: 5px !important;
             padding-right: 5px !important;
             border-radius: 0px !important;
@@ -759,7 +759,7 @@ body.ewAdmin.layout-AdmHome {
     @include clearfix;
 }
 
-.ewAdmin #adminLayout {
+.ptn-edit #adminLayout {
     .scroll-pane-arrows {
         overflow-y: scroll;
         //background:#fff;
@@ -998,7 +998,7 @@ body.ewAdmin.layout-AdmHome {
     }
 }
 
-.ewAdmin #footer {
+.ptn-edit #footer {
     background-color: $admin-header-bg;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -1022,7 +1022,7 @@ body.ewAdmin.layout-AdmHome {
     display: none;
 }
 
-.Site .ewAdmin .dropdown-menu li {
+.Site .ptn-edit .dropdown-menu li {
     font-size: 13px !important;
 }
 
@@ -1091,7 +1091,7 @@ body.ewAdmin.layout-AdmHome {
     height: 2rem;
 }
 
-.ewAdmin #files {
+.ptn-edit #files {
 
 
     .item.item-image {
@@ -1208,7 +1208,7 @@ body.ewAdmin.layout-AdmHome {
     z-index: 49903;
 }
 //CMS LOGIN
-.ewAdmin div.report {
+.ptn-edit div.report {
     position: relative;
     background: #f3f7fb;
     border: solid 1px #c0cfd8;
@@ -1218,7 +1218,7 @@ body.ewAdmin.layout-AdmHome {
     color: #464646;
 }
 
-.ewAdmin .stepper {
+.ptn-edit .stepper {
 
     .itemInfo {
         padding-right: 10px;
@@ -1227,11 +1227,11 @@ body.ewAdmin.layout-AdmHome {
 
 
 
-.ewAdmin form#UserLogon h3.panel-title {
+.ptn-edit form#UserLogon h3.panel-title {
     font-size: 1.7em;
 }
 
-.ewAdmin form#UserLogon input.adminButton {
+.ptn-edit form#UserLogon input.adminButton {
     width: auto;
 }
 

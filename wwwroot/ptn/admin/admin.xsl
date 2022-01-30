@@ -180,7 +180,7 @@
 
   <!--In admin but not WYSIWYG-->
   <xsl:template match="Page[@adminMode='true']" mode="bodyBuilder">
-    <body id="pg_{@id}" class="ewAdmin layout-{@layout}">
+    <body id="pg_{@id}" class="ptn-edit layout-{@layout}">
       <xsl:apply-templates select="AdminMenu"/>
       <div id="adminLayout">
         <div class="admin-page">
@@ -218,13 +218,13 @@
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
     <body id="pg_{@id}" class="normalMode">
       <xsl:apply-templates select="." mode="bodyStyle"/>
-      <div class="ewAdmin">
+      <div class="ptn-edit">
         <xsl:apply-templates select="AdminMenu"/>
       </div>
       <div id="dragableModules">
         <xsl:apply-templates select="." mode="bodyDisplay"/>
       </div>
-      <div class="ewAdmin">
+      <div class="ptn-edit">
         <xsl:apply-templates select="." mode="adminFooter"/>
       </div>
       <xsl:apply-templates select="." mode="footerJs"/>
@@ -1514,7 +1514,7 @@
           </div>
         </xsl:when>
         <xsl:when test="contains($find,'true')">
-          <div class="ewAdmin options">
+          <div class="ptn-edit options">
             <div class="dropdown float-end">
               <a href="#" class="btn btn-primary btn-xs float-end" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
@@ -1537,7 +1537,7 @@
           </div>
         </xsl:when>
         <xsl:when test="contains($find,'only')">
-          <div class="ewAdmin options">
+          <div class="ptn-edit options">
             <div class="dropdown float-end">
               <a href="#" class="btn btn-primary btn-xs float-end" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
@@ -1555,7 +1555,7 @@
           </div>
         </xsl:when>
         <xsl:otherwise>
-          <div class="ewAdmin options">
+          <div class="ptn-edit options">
             <xsl:variable name="href">
               <xsl:text>?ewCmd=AddContent</xsl:text>
               <xsl:text>&amp;pgid=</xsl:text>
@@ -11950,7 +11950,7 @@
 
 
   <xsl:template match="Page[@adminMode='true' and @layout='GoogleAnalytics']" mode="bodyBuilder">
-    <body id="pg_{@id}" class="ewAdmin">
+    <body id="pg_{@id}" class="ptn-edit">
       <xsl:apply-templates select="AdminMenu"/>
       <div class="row" id="tpltCartActivity">
         <div class="col-md-4">&#160;</div>
@@ -11974,7 +11974,7 @@
 
 
   <xsl:template match="Page[@adminMode='true' and @layout='RavenFrameset']" mode="bodyBuilder">
-    <body id="pg_{@id}" class="ewAdmin">
+    <body id="pg_{@id}" class="ptn-edit">
       <xsl:apply-templates select="AdminMenu"/>
       <iframe class="pluginIframe" src="https://eonic.raventools.com/tools/z/#ranking/index" width="100%" height="1000">
         <p>Your browser does not support iframes.</p>
@@ -12019,7 +12019,7 @@
   </xsl:template>-->
 
   <xsl:template match="Page[@adminMode='true' and @layout='MailingList' and @ewCmd2='CMSession']" mode="bodyBuilder">
-    <body id="pg_{@id}" class="ewAdmin">
+    <body id="pg_{@id}" class="ptn-edit">
       <xsl:apply-templates select="AdminMenu"/>
       <iframe class="pluginIframe" src="{ContentDetail/SessionPage/@CMUrl}" width="100%" height="1000">
         <p>Your browser does not support iframes.</p>
