@@ -271,6 +271,9 @@ Namespace Providers
                                 ccPaymentXform = oEwProv.saveOrder(oOrder, oCart.mcPagePath & returnCmd)
                             Case "Pay By Cash", "PayByCash"
                                 ccPaymentXform = oEwProv.payByCash(oOrder, oCart.mcPagePath & returnCmd)
+                                If ccPaymentXform.valid Then
+                                    myWeb.moCart.mnProcessId = oEwProv.mnProcessIdOnComplete
+                                End If
                             Case "AuthorizeNet"
                                 ccPaymentXform = oEwProv.payAuthorizeNet(oOrder, oCart.mcPagePath & returnCmd)
                             Case "DirectDebitSecureEmail"

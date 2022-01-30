@@ -270,6 +270,12 @@ $(document).ready(function() {
         hide: true
     });
 
+    //   $('#tpltDeliveryMethodLocations #MenuTree').ajaxtreeview({
+    //       loadPath: treeviewPath,
+    //       ajaxCmd: 'GetLocateNode',
+    //       hide: true
+    //   });
+
     $('#template_permissions #MenuTree').ajaxtreeview({
         loadPath: treeviewPath,
         ajaxCmd: '',
@@ -283,7 +289,15 @@ $(document).ready(function() {
         hide: true
     });
 
-     $('div.module div.moduleDrag').closest('.module').draggable({
+    $('.pick-page #MenuTree').ajaxtreeview({
+        loadPath: treeviewPath,
+        ajaxCmd: '',
+        openLevel: 2,
+        hide: true
+    });
+
+
+    $('div.module div.moduleDrag').closest('.module').draggable({
         cursor: 'move',
         containment: '#dragableModules',
         handle: 'a.drag',
@@ -1079,7 +1093,7 @@ Original preload function has been kept but is unused.
 
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
-                            alert($(loadNode).html());
+                           // alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode)
