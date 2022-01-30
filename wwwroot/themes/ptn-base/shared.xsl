@@ -116,6 +116,8 @@
         <xsl:text>~/Bundles/site</xsl:text>
       </xsl:with-param>
     </xsl:call-template>
+
+	  <xsl:apply-templates select="." mode="siteAdminJs" />
   </xsl:template>
 
   <!-- ############################################ BOX STYLES ############################################### -->

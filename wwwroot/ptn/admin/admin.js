@@ -286,6 +286,12 @@ $(document).ready(function () {
         hide: true
     });
 
+    $('.pick-page #MenuTree').ajaxtreeview({
+        loadPath: treeviewPath,
+        ajaxCmd: '',
+        openLevel: 2,
+        hide: true
+    });
 
 
     $(function () {
