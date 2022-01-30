@@ -703,7 +703,7 @@
 
   <!-- TinyMCE configuration templates -->
   <xsl:template match="textarea" mode="tinymceGeneralOptions">
-    <xsl:text>script_url: '/ptn/core/tinymce/tinymce.min.js',
+    <xsl:text>script_url: '/ptn/libs/tinymce/tinymce.min.js',
 			mode: "exact",
 			theme: "silver",
 			width: "auto",

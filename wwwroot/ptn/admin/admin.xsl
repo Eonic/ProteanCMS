@@ -102,9 +102,9 @@
         <xsl:text>~/ptn/core/vue/axios.min.js,</xsl:text>
         <xsl:text>~/ptn/core/vue/polyfill.js,</xsl:text>
         <xsl:text>~/ptn/core/vue/protean-vue.js,</xsl:text>
-        <xsl:text>~/ptn/core/tinymce/jquery.tinymce.min.js,</xsl:text>
+        <xsl:text>~/ptn/libs/tinymce/jquery.tinymce.min.js,</xsl:text>
         <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text>
-        <xsl:text>~/ptn/admin/jqueryui/jquery-ui.js,</xsl:text>
+        <xsl:text>~/ptn/libs/jqueryui/jquery-ui.js,</xsl:text>
         <xsl:text>~/ptn/admin/admin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
@@ -4050,19 +4050,19 @@
 
   <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-    <script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
+	<script src="/ptn/libs/blueimp-load-image/js/load-image.all.min.js">/* */</script>
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-    <script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
+	 <script src="/ptn/libs/blueimp-canvas-to-blob/js/canvas-to-blob.js">/* */</script>
     <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
+    <script src="/ptn/libs/blueimp-file-upload/js/jquery.iframe-transport.js">/* */</script>
     <!-- The basic File Upload plugin -->
-    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
+    <script src="/ptn/libs/blueimp-file-upload/js/jquery.fileupload.js">/* */</script>
     <!-- The File Upload processing plugin -->
-    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
+    <script src="/ptn/libs/blueimp-file-upload/js/jquery.fileupload-process.js">/* */</script>
     <!-- The File Upload image preview & resize plugin -->
-    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+    <script src="/ptn/libs/blueimp-file-upload/js/jquery.fileupload-image.js">/* */</script>
     <!-- The Image Lazy load plugin -->
-    <script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
+    <script src="/ptn/libs/jquery.lazy/jquery.lazy.min.js">/* */</script>
   </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
@@ -4126,7 +4126,7 @@
 
 
       <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-      <script src="/ptn/admin/fileupload/js/vendor/jquery.ui.widget.js">/* */</script>
+      <script src="/ptn/libs/blueimp-file-upload/js/vendor/jquery.ui.widget.js">/* */</script>
       <!-- The Templates plugin is included to render the upload/download listings
 		<script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js">/* */</script> -->
       <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
@@ -4136,9 +4136,9 @@
       <!-- blueimp Gallery script -->
       <script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js">/* */</script>
       <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-      <script src="/ptn/admin/fileupload/js/jquery.iframe-transport.js">/* */</script>
+      <script src="/ptn/libs/blueimp-file-upload/js/jquery.iframe-transport.js">/* */</script>
       <!-- The basic File Upload plugin -->
-      <script src="/ptn/admin/fileupload/js/jquery.fileupload.js">/* */</script>
+      <script src="/ptn/libs/blueimp-file-upload/js/jquery.fileupload.js">/* */</script>
       <!-- The File Upload processing plugin -->
       <!--
 		<script src="/ptn/admin/fileupload/js/jquery.fileupload-process.js">/* */</script>
@@ -4168,7 +4168,7 @@
       <!-- The Canvas to Blob plugin is included for image resizing functionality
       <script src="/ptn/admin/fileupload/js/loadimage/vendor/canvas-to-blob.js">/* */</script> -->
       <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-      <script src="/ptn/core/lazy/jquery.lazy.min.js">/* */</script>
+      <script src="/ptn/libs/jquery.lazy/jquery.lazy.min.js">/* */</script>
     </xsl:if>
 
     <script>
@@ -4199,46 +4199,48 @@
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
       var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
       <xsl:apply-templates select="." mode="newItemScript"/>
-      $('#files').prepend(newItem);
-      $('#files .item-image .panel').prepareLibImages();
-      $("[data-bs-toggle=popover]").popover({
-      html: true,
-      container: '#files',
-      trigger: 'hover',
-      viewport: '#files',
-      content: function () {
-      return $(this).prev('.popoverContent').html();
-      }
-      });
-      if ($('.pickImageModal').exists()) {
-      $('.pickImageModal').find('a[data-bs-toggle!="popover"]').click(function (ev) {
-      ev.preventDefault();
-      $('.modal-dialog').addClass('loading')
-      $('.modal-body').html('<p class="text-center">
-        <h4>
-          <i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...
-        </h4>
-      </p>');
-      var target = $(this).attr("href");
-      // load the url and show modal on success
-      var currentModal = $('.pickImageModal')
-      currentModal.load(target, function () {
-      $('.modal-dialog').removeClass('loading')
-      currentModal.modal("show");
-      });
-      });
-      };
-      });
-      },
-      progressall: function (e, data) {
-      var progress = parseInt(data.loaded / data.total * 100, 10);
-      $('.progress .progress-bar').css('width',progress + '%');
-      $('.progress .progress-bar').attr('aria-valuenow',progress);
-      $('.progress .loading-counter').css('display','block');
-      $('.progress .loading-counter .count').html(progress);
-      }
-      });
-    </script>
+		$('#files').prepend(newItem);
+		$('#files .item-image .panel').prepareLibImages();
+		$("[data-bs-toggle=popover]").popover({
+		html: true,
+		container: '#files',
+		trigger: 'hover',
+		viewport: '#files',
+		content: function () {
+		return $(this).prev('.popoverContent').html();
+		}
+		});
+		if ($('.pickImageModal').exists()) {
+		$('.pickImageModal').find('a[data-bs-toggle!="popover"]').click(function (ev) {
+		ev.preventDefault();
+		$('.modal-dialog').addClass('loading')
+		var modalhtml = '<p class="text-center">';
+			modalhtml += '<h4>';
+				modalhtml += '<i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...';
+				modalhtml += '</h4>';
+			modalhtml += '</p>';
+		
+		$('.modal-body').html(modalhtml);
+		var target = $(this).attr("href");
+		// load the url and show modal on success
+		var currentModal = $('.pickImageModal')
+		currentModal.load(target, function () {
+		$('.modal-dialog').removeClass('loading')
+		currentModal.modal("show");
+		});
+		});
+		};
+		});
+		},
+		progressall: function (e, data) {
+		var progress = parseInt(data.loaded / data.total * 100, 10);
+		$('.progress .progress-bar').css('width',progress + '%');
+		$('.progress .progress-bar').attr('aria-valuenow',progress);
+		$('.progress .loading-counter').css('display','block');
+		$('.progress .loading-counter .count').html(progress);
+		}
+		});
+	</script>
 
     <script>
       $(function() {
@@ -4258,36 +4260,33 @@
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-    var newItem = '<div class="item item-image col-md-2 col-sm-4">
-      <div class="panel">
-        <div class="image-thumbnail">
-          <div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
-            <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
-            <div class="popover-description">
-              <span class="image-description-name">' + file.name + '</span>
-              <br/>
-            </div>
-          </div>
-          <a data-bs-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
-            <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
-          </a>
-        </div>'
-        newItem = newItem + '<div class="description">
-          '
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
-            <i class="fa fa-trash-o fa-white">
-              <xsl:text> </xsl:text>
-            </i>Delete
-          </a>';
-          newItem = newItem + '
-        </div><div class="img-description">
-          <span class="image-description-name">' + file.name + '</span>
-          <br/>
-        </div>';
-        newItem = newItem + '
-      </div>
-    </div>';
-  </xsl:template>
+    var newItem = '<div class="item item-image col-md-2 col-sm-4">';
+		newItem = newItem + '<div class="panel">';
+			newItem = newItem + '<div class="image-thumbnail">';
+				newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">';
+					newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
+					newItem = newItem + '<div class="popover-description">';
+						newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
+						newItem = newItem + '<br/>';
+						newItem = newItem + '</div>';
+					newItem = newItem + '</div>';
+				newItem = newItem + '<a data-bs-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">'
+					newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
+					newItem = newItem + '</a>';
+				newItem = newItem + '</div>';
+        newItem = newItem + '<div class="description">';
+         newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">'
+			 newItem = newItem + '<i class="fa fa-trash-o fa-white">';		 
+			 newItem = newItem + ' <xsl:text> </xsl:text>';
+				 newItem = newItem + '</i>Delete';
+			 newItem = newItem + '</a>';
+          newItem = newItem + '</div><div class="img-description">';
+			  newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
+			  newItem = newItem + '<br/>';
+			  newItem = newItem + '</div>';
+        newItem = newItem + '</div>';
+		newItem = newItem + '</div>';
+</xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
     <xsl:param name="rootPath"/>

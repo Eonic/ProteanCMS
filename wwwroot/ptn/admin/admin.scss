@@ -8,49 +8,49 @@
 // scss-docs-start import-stack
 // Configuration
 @import "skin/variables";
-@import "../core/bs5/scss/functions";
-@import "../core/bs5/scss/variables";
-@import "../core/bs5/scss/mixins";
-@import "../core/bs5/scss/utilities";
+@import "../libs/bs5/scss/functions";
+@import "../libs/bs5/scss/variables";
+@import "../libs/bs5/scss/mixins";
+@import "../libs/bs5/scss/utilities";
 
 // Layout & components
-@import "../core/bs5/scss/root";
-@import "../core/bs5/scss/reboot";
-@import "../core/bs5/scss/type";
-@import "../core/bs5/scss/images";
-@import "../core/bs5/scss/containers";
-@import "../core/bs5/scss/grid";
-@import "../core/bs5/scss/tables";
-@import "../core/bs5/scss/forms";
-@import "../core/bs5/scss/buttons";
-@import "../core/bs5/scss/transitions";
-@import "../core/bs5/scss/dropdown";
-@import "../core/bs5/scss/button-group";
-@import "../core/bs5/scss/nav";
-@import "../core/bs5/scss/navbar";
-@import "../core/bs5/scss/card";
-@import "../core/bs5/scss/accordion";
-@import "../core/bs5/scss/breadcrumb";
-@import "../core/bs5/scss/pagination";
-@import "../core/bs5/scss/badge";
-@import "../core/bs5/scss/alert";
-@import "../core/bs5/scss/progress";
-@import "../core/bs5/scss/list-group";
-@import "../core/bs5/scss/close";
-@import "../core/bs5/scss/toasts";
-@import "../core/bs5/scss/modal";
-@import "../core/bs5/scss/tooltip";
-@import "../core/bs5/scss/popover";
-@import "../core/bs5/scss/carousel";
-@import "../core/bs5/scss/spinners";
-@import "../core/bs5/scss/offcanvas";
-@import "../core/bs5/scss/placeholders";
+@import "../libs/bs5/scss/root";
+@import "../libs/bs5/scss/reboot";
+@import "../libs/bs5/scss/type";
+@import "../libs/bs5/scss/images";
+@import "../libs/bs5/scss/containers";
+@import "../libs/bs5/scss/grid";
+@import "../libs/bs5/scss/tables";
+@import "../libs/bs5/scss/forms";
+@import "../libs/bs5/scss/buttons";
+@import "../libs/bs5/scss/transitions";
+@import "../libs/bs5/scss/dropdown";
+@import "../libs/bs5/scss/button-group";
+@import "../libs/bs5/scss/nav";
+@import "../libs/bs5/scss/navbar";
+@import "../libs/bs5/scss/card";
+@import "../libs/bs5/scss/accordion";
+@import "../libs/bs5/scss/breadcrumb";
+@import "../libs/bs5/scss/pagination";
+@import "../libs/bs5/scss/badge";
+@import "../libs/bs5/scss/alert";
+@import "../libs/bs5/scss/progress";
+@import "../libs/bs5/scss/list-group";
+@import "../libs/bs5/scss/close";
+@import "../libs/bs5/scss/toasts";
+@import "../libs/bs5/scss/modal";
+@import "../libs/bs5/scss/tooltip";
+@import "../libs/bs5/scss/popover";
+@import "../libs/bs5/scss/carousel";
+@import "../libs/bs5/scss/spinners";
+@import "../libs/bs5/scss/offcanvas";
+@import "../libs/bs5/scss/placeholders";
 
 // Helpers
-@import "../core/bs5/scss/helpers";
+@import "../libs/bs5/scss/helpers";
 
 // Utilities
-@import "../core/bs5/scss/utilities/api";
+@import "../libs/bs5/scss/utilities/api";
 // scss-docs-end import-stack
 
 @import "skin/skin";
