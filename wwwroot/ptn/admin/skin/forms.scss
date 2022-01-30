@@ -429,6 +429,7 @@ form.xform {
         font-size: 15px;
         padding: 0.375rem 0.75rem;
         display: inline-block;
+        text-decoration:none;
 
         &:hover {
             color: $admin-primary;
@@ -516,13 +517,32 @@ strong {
     .btn-outline-primary {
         color: $admin-primary;
 
+        i {
+            color: $admin-primary;
+        }
+
         &:hover {
             color: darken($admin-primary,10%);
+
+            i {
+                color: darken($admin-primary,10%);
+            }
         }
     }
 }
+td > .edit-option-links,
+td > .edit-option-links-blue {
+    @include media-breakpoint-up(lg) {
+        margin: 0;
+    }
+}
+table.membership-table {
+    a {
+        text-decoration:none;
+    }
+}
 .form-select {
-    -webkit-appearance:none;
+    -webkit-appearance: none;
 }
 .related-content-rows {
     display: grid;
@@ -591,6 +611,7 @@ form .table-striped {
             margin: 0 0 1rem 0;
             margin: 2%;
             border: 1px solid #ccc;
+            border-radius:3px;
         }
 
         tr:nth-child(odd) {
@@ -704,12 +725,16 @@ form.xform .relatedContent-group {
 .admin-body {
     padding:0 15px;
 }
+.col-lg-8 .admin-body {
+    padding:0;
+}
 .btn-group-spaced {
-    margin-left:-5px;
-    margin-right:-5px;
-    margin-bottom:-10px;
+    margin-left: -5px;
+    margin-right: -5px;
+    margin-bottom: -10px;
+
     button, a, .btn {
-        margin:0 5px 10px;
+        margin: 0 5px 10px;
     }
 }
 .relatedContent-group {
@@ -778,8 +803,12 @@ form .form-actions .required {
     display:none;
 }
 #MenuTree {
+    li {
+        list-style:none;
+    }
+
     > li.checkbox {
-        margin-left:-1rem;
+        margin-left: -1rem;
     }
 
     li.checkbox {
@@ -799,12 +828,14 @@ form .form-actions .required {
     }
 }
 #EditShippingLocation,
-#WebSettings {
+#WebSettings,
+#template_EditStructure,
+#SetPassword {
     .form-check {
         @extend .form-check-inline;
     }
 
-    input {
+    input, textarea, select, .input-group {
         margin-bottom: 1rem;
     }
 
@@ -813,6 +844,89 @@ form .form-actions .required {
     }
 
     button.principle {
-        margin-right:1rem;
+        margin-right: 1rem;
+    }
+
+    .form-margin input,
+    .input-group input {
+        margin-bottom: 0;
+    }
+
+    fieldset.inline {
+        @include make-row();
+
+        legend {
+            padding-right: calc(var(--bs-gutter-x) * .5);
+            padding-left: calc(var(--bs-gutter-x) * .5);
+        }
+
+        > div {
+            @include make-col-ready();
+
+            @include media-breakpoint-up(sm) {
+                @include make-col(6);
+            }
+        }
+
+        > div.long {
+            margin-bottom: 1rem;
+
+            @include media-breakpoint-up(sm) {
+                @include make-col(12);
+            }
+        }
+    }
+
+    .form-actions .principle {
+        margin-bottom: 1rem;
+    }
+
+    fieldset .form-actions button.principle {
+        margin-right: 0;
+    }
+}
+.card {
+    margin-bottom:1rem;
+}
+#SetPassword {
+    position: relative;
+
+    .text-muted {
+        position:absolute;
+        bottom:0;
+        color:$admin-primary!important;
+    }
+}
+.ewAdmin #template_EditPermissions {
+    #MenuTree {
+        padding-left: 0;
+    }
+
+    .optionButtons {
+        @extend .edit-option-links-blue;
+
+        a {
+            margin-left: 10px;
+        }
+    }
+
+    table {
+        @include media-breakpoint-down(sm) {
+            /* Force table to not be like tables anymore */
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+        }
+
+        td.status {
+            float:left;
+        }
+    }
+}
+#accordion .card {
+    margin-bottom: 0.2rem;
+
+    a {
+        text-decoration:none;
     }
 }
