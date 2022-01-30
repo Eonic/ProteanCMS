@@ -2970,7 +2970,7 @@
   <xsl:template match="Page[@layout='ProductGroups']" mode="Admin">
     <div class="container-fluid" id="tpltProductGroups">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3">
           <div class="alert alert-info">
             <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
@@ -2979,11 +2979,11 @@
             <p>Product groups enable us to group a range of products together and apply behaviours such as discount rules and shipping methods.</p>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9">
           <div class="card card-default">
             <div class="card-header">
 
-              <a href="{$appPath}?ewCmd=AddProductGroups" class="btn btn-primary">
+              <a href="{$appPath}?ewCmd=AddProductGroups" class="btn btn-primary float-end">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Add New Group
@@ -2991,8 +2991,8 @@
             </div>
             <div class="card-body">
               <xsl:if test="ContentDetail/ProductCategories">
-                <table cellpadding="0" cellspacing="1" class="table">
-                  <tbody>
+                <table cellpadding="0" cellspacing="1" class="table table-mobile-cards-1col">
+                  <thead>
                     <tr>
                       <th></th>
                       <th>Product Group</th>
@@ -3002,20 +3002,22 @@
                         <xsl:text> </xsl:text>
                       </th>
                     </tr>
+                  </thead>
+                  <tbody>
                     <xsl:for-each select="ContentDetail/ProductCategories/ProductCategory">
                       <tr>
                         <td>
                           <xsl:choose>
                             <xsl:when test="Content">
-                              <a href="{$appPath}?ewCmd=ProductGroups" alt="Click here to collapse" class="btn btn-xs btn-primary">
-                                <i class="fa fa-minus fa-white">
+                              <a href="{$appPath}?ewCmd=ProductGroups" alt="Click here to collapse" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-caret-up">
                                   <xsl:text> </xsl:text>
                                 </i>
                               </a>
                             </xsl:when>
                             <xsl:otherwise>
-                              <a href="{$appPath}?ewCmd=ProductGroups&amp;GrpID={@nCatKey}" alt="Click here to expand" class="btn btn-xs btn-primary">
-                                <i class="fa fa-plus fa-white">
+                              <a href="{$appPath}?ewCmd=ProductGroups&amp;GrpID={@nCatKey}" alt="Click here to expand" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-caret-down">
                                   <xsl:text> </xsl:text>
                                 </i>
                               </a>
@@ -3023,44 +3025,43 @@
                           </xsl:choose>
                         </td>
                         <td>
-                          <strong>
-                            <xsl:value-of select="cCatName/text()"/>
-                          </strong>
+                          <xsl:value-of select="cCatName/text()"/>
                         </td>
                         <td>
-                          <strong>
-                            <xsl:value-of select="@cCatSchemaName"/>
-                          </strong>
+                          <span class="xs-only">
+                            Group Type:
+                          </span>
+                          <xsl:value-of select="@cCatSchemaName"/>
                         </td>
                         <td>
-                          <strong>
-                            (<xsl:value-of select="@Count"/>)
-                          </strong>
-                        </td>
-                        <td>
-                          <a href="{$appPath}?ewCmd=AddProductGroupsProduct&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
-                            <i class="fa fa-gift fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Add Products
-                          </a>
-                        </td>
+                          <span class="xs-only">
+                            Product Count:
+                          </span>(<xsl:value-of select="@Count"/>)
 
+                        </td>
                         <td>
-                          <a href="{$appPath}?ewCmd=EditProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
-                            <i class="fa fa-pencil fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Edit
-                          </a>
-                          <a href="{$appPath}?ewCmd=DeleteProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-danger">
-                            <i class="fa fa-trash-o fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Delete
-                          </a>
-                          <a href="/ewcommon/feeds/google/base.ashx?groupId={@nCatKey}" target="_new" class="btn btn-xs btn-primary">
-                            <i class="fa fa-list">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Feed
-                          </a>
+                          <span class="edit-option-links-blue">
+                            <a href="{$appPath}?ewCmd=AddProductGroupsProduct&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
+                              <i class="fa fa-gift fa-white">
+                                <xsl:text> </xsl:text>
+                              </i><xsl:text> </xsl:text>Add Products
+                            </a>
+                            <a href="{$appPath}?ewCmd=EditProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
+                              <i class="fas fa-pen fa-white">
+                                <xsl:text> </xsl:text>
+                              </i><xsl:text> </xsl:text>Edit
+                            </a>
+                            <a href="/ewcommon/feeds/google/base.ashx?groupId={@nCatKey}" target="_new" class="btn btn-xs btn-primary">
+                              <i class="fa fa-list">
+                                <xsl:text> </xsl:text>
+                              </i><xsl:text> </xsl:text>Feed
+                            </a>
+                            <a href="{$appPath}?ewCmd=DeleteProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-danger">
+                              <i class="fas fa-trash-alt fa-white">
+                                <xsl:text> </xsl:text>
+                              </i><xsl:text> </xsl:text>Delete
+                            </a>
+                          </span>
                         </td>
                       </tr>
                       <xsl:for-each select="Content">
@@ -3072,12 +3073,14 @@
                             </strong>
                           </td>
                           <td>
-                            <a href="{$appPath}?ewCmd=RemoveProductGroupsProduct&amp;GroupId={../@nCatKey}&amp;RelId={@relid}" class="btn btn-xs btn-primary">
-                              <i class="fa fa-remove fa-white">
-                                <xsl:text> </xsl:text>
-                              </i>
-                              <xsl:text> </xsl:text>Remove
-                            </a>
+                            <span class="edit-option-links-blue">
+                              <a href="{$appPath}?ewCmd=RemoveProductGroupsProduct&amp;GroupId={../@nCatKey}&amp;RelId={@relid}" class="btn btn-xs btn-danger">
+                                <i class="fas fa-minus-circle fa-white">
+                                  <xsl:text> </xsl:text>
+                                </i>
+                                <xsl:text> </xsl:text>Remove
+                              </a>
+                            </span>
                           </td>
                         </tr>
                       </xsl:for-each>
@@ -3096,210 +3099,187 @@
   <!--   ##################  Discount Rules   ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='Discounts']" mode="Admin">
-    <div class="row" id="tpltDiscounts">
-      <div class="col-md-4">
-        <ul class="nav nav-stacked featuresEnabled">
-          <li>
-            <a href="{$appPath}?ewCmd=ProductGroups" class="btn btn-primary">
-              <i class="fa fa-coffee">
-                <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Manage Product Groups<br/>
-              <span class="btnNotes">
-                Create groups of products to apply discounts too.
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="{$appPath}?ewCmd=DiscountRules" class="btn btn-primary">
-              <i class="fa fa-money">
-                <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Manage Discount Rules<br/>
-              <span class="btnNotes">
-                Create the discounts themselves
-              </span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="col-md-8">
-        <div class="jumbotron">
-          To create a discount you must first create groups of products to which that discount applies.
-          You must then create discount rules for those groups of products.
+    <div class="container-fluid" id="tpltDiscounts">
+      <div class="row">
+        <div class="col-lg-4">
+          <ul class="nav nav-stacked featuresEnabled">
+            <li>
+              <a href="{$appPath}?ewCmd=ProductGroups" class="btn btn-primary">
+                <i class="fa fa-coffee">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Manage Product Groups<br/>
+                <span class="btnNotes">
+                  Create groups of products to apply discounts too.
+                </span>
+              </a>
+            </li>
+            <li>
+              <a href="{$appPath}?ewCmd=DiscountRules" class="btn btn-primary">
+                <i class="fa fa-money">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>Manage Discount Rules<br/>
+                <span class="btnNotes">
+                  Create the discounts themselves
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-8">
+          <div class="jumbotron">
+            To create a discount you must first create groups of products to which that discount applies.
+            You must then create discount rules for those groups of products.
+          </div>
         </div>
       </div>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
   <xsl:template match="Page[@layout='DiscountRules']" mode="Admin">
-    <div class="row" id="tpltDiscountRules">
-      <div class="col-md-3">
-        <div class="alert alert-info">
-          <i class="fa fa-info-sign fa-3x float-end">
-            <xsl:text> </xsl:text>
-          </i>
-          <h4>Hint</h4>
-          <p>Discount rules can be set to apply to groups of products and to groups of users within the system.</p>
-          <p>
-            <strong>Basic</strong><br/>Money or Percentage off.
-          </p>
-          <p>
-            <strong>Product Quantity / Price Breaks</strong><br/>Money or Percentage off for buying a single product over a certain quantity.
-          </p>
-          <p>
-            <strong>Group Quantity / Price Breaks</strong><br/>Money or Percentage off for buying a number of products from that group over a certain quantity.
-          </p>
-          <p>
-            <strong>X For The Price of Y</strong><br/>Buy X number of a sinple product for the price of Y number of products. e.g. 3 for the price of 2.
-          </p>
-          <p>
-            <strong>Cheapest Item Free</strong><br/>Buy a number of products from a group and get the cheapest free.
-          </p>
+    <div class="container-fluid" id="tpltDiscountRules">
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="alert alert-info">
+            <i class="fa fa-info-sign fa-3x float-end">
+              <xsl:text> </xsl:text>
+            </i>
+            <h4>Hint</h4>
+            <p>Discount rules can be set to apply to groups of products and to groups of users within the system.</p>
+            <p>
+              <strong>Basic</strong><br/>Money or Percentage off.
+            </p>
+            <p>
+              <strong>Product Quantity / Price Breaks</strong><br/>Money or Percentage off for buying a single product over a certain quantity.
+            </p>
+            <p>
+              <strong>Group Quantity / Price Breaks</strong><br/>Money or Percentage off for buying a number of products from that group over a certain quantity.
+            </p>
+            <p>
+              <strong>X For The Price of Y</strong><br/>Buy X number of a sinple product for the price of Y number of products. e.g. 3 for the price of 2.
+            </p>
+            <p>
+              <strong>Cheapest Item Free</strong><br/>Buy a number of products from a group and get the cheapest free.
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="col-md-9">
-        <form action="{$appPath}?ewCmd=DiscountRules" class="ewXform well well-default" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
-          <div class="input-group">
-            <span class="input-group-addon">Add Rule &#160;</span>
+        <div class="col-lg-9">
+          <form action="{$appPath}?ewCmd=DiscountRules" class="ewXform well well-default" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
+            <div class="input-group mb-3">
+              <span class="input-group-text">Add Rule </span>
 
 
-            <select name="newDiscountType" id="newDiscountType" class="required full form-control">
-              <option value="">Select type</option>
-              <option value="1">Basic Percentage Discount or Money Off</option>
-              <option value="2">Product Quantity/Price Breaks</option>
-              <option value="5">Group Quantity/Price Breaks</option>
-              <option value="3">X for the Price of Y</option>
-              <option value="4">Cheapest Item Free</option>
-            </select>
-            <span class="input-group-btn">
-              <button type="submit" name="addNewDiscountRule" id="addNewDiscountRule"  value="Add" class="btn btn-primary principle">
+              <select name="newDiscountType" id="newDiscountType" class="required full form-control">
+                <option value="">Select type</option>
+                <option value="1">Basic Percentage Discount or Money Off</option>
+                <option value="2">Product Quantity/Price Breaks</option>
+                <option value="5">Group Quantity/Price Breaks</option>
+                <option value="3">X for the Price of Y</option>
+                <option value="4">Cheapest Item Free</option>
+              </select>
+              <button type="submit" name="addNewDiscountRule" id="addNewDiscountRule"  value="Add" class="btn btn-primary">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Add
               </button>
-            </span>
 
-            <xsl:text> </xsl:text>
+              <xsl:text> </xsl:text>
 
-          </div>
-        </form>
+            </div>
+          </form>
 
-        <xsl:text> </xsl:text>
+          <xsl:text> </xsl:text>
 
 
-        <ul class="nav nav-tabs">
-          <li role="presentation">
-            <xsl:if test="$page/Request/QueryString/Item[@name='isActive']/node()!=0">
-              <xsl:attribute name="class">active</xsl:attribute>
-            </xsl:if>
-            <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=1"  >
-              <xsl:text> Active Codes</xsl:text>
-            </a>
-          </li>
-          <li role="presentation">
-            <xsl:if test="$page/Request/QueryString/Item[@name='isActive']/node()=0">
-              <xsl:attribute name="class">active</xsl:attribute>
-            </xsl:if>
-            <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=0" >
-              <xsl:text> InActive Codes</xsl:text>
-            </a>
-          </li>
-        </ul>
-        <div class="card card-default">
+          <ul class="nav nav-pills">
+            <li role="presentation" class="nav-item">
+              <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=1" class="nav-link" >
+                <xsl:if test="$page/Request/QueryString/Item[@name='isActive']/node()!=0">
+                  <xsl:attribute name="class">nav-link active</xsl:attribute>
+                </xsl:if>
+                <xsl:text> Active Codes</xsl:text>
+              </a>
+            </li>
+            <li role="presentation" class="nav-item">
+              <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=0"  class="nav-link">
+                <xsl:if test="$page/Request/QueryString/Item[@name='isActive']/node()=0">
+                  <xsl:attribute name="class">nav-link active</xsl:attribute>
+                </xsl:if>
+                <xsl:text> InActive Codes</xsl:text>
+              </a>
+            </li>
+          </ul>
 
-          <table cellpadding="0" cellspacing="1" class="table">
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Code</th>
-              <th>Type</th>
-              <th>
-
-              </th>
-            </tr>
-            <xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
-              <xsl:sort select="cDiscountName"/>
+          <table cellpadding="0" cellspacing="1" class="table table-mobile-cards-1col">
+            <thead>
               <tr>
-                <td>
-                  <xsl:call-template name="status_legend">
-                    <xsl:with-param name="status">
-                      <xsl:value-of select="@status"/>
-                    </xsl:with-param>
-                  </xsl:call-template>
-                </td>
-                <td>
-                  <strong>
-                    <xsl:value-of select="@cDiscountName"/>
-                  </strong>
-                </td>
-                <td>
-                  <xsl:value-of select="@cDiscountCode"/>
-                </td>
-                <td>
-                  <xsl:choose>
-                    <xsl:when test="nDiscountCat=1">
-                      <xsl:text>Basic</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="nDiscountCat=2">
-                      <xsl:text>Break by Product</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="nDiscountCat=3">
-                      <xsl:text>X For The Price oF Y</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="nDiscountCat=4">
-                      <xsl:text>Cheapest Item Free</xsl:text>
-                    </xsl:when>
-                    <xsl:when test="nDiscountCat=5">
-                      <xsl:text>Break by Group</xsl:text>
-                    </xsl:when>
-                  </xsl:choose>
-                </td>
-                <td>
-                  <a href="{$appPath}?ewCmd=EditDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
-                    <i class="fa fa-pencil fa-white">
-                      <xsl:text> </xsl:text>
-                    </i><xsl:text> </xsl:text>Edit
-                  </a>
-                  <a href="{$appPath}?ewCmd=RemoveDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-danger">
-                    <i class="fa fa-trash-o fa-white">
-                      <xsl:text> </xsl:text>
-                    </i><xsl:text> </xsl:text>Remove
-                  </a>
-                </td>
+                <th></th>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Type</th>
+                <th>
+
+                </th>
               </tr>
-              <tr>
-                <td>&#160;</td>
-                <td colspan="3">
-                  Allowed User Groups:&#160;<xsl:for-each select="Dir[@nPermLevel='1']">
-                    <xsl:choose>
-                      <xsl:when test="@cDirName">
-                        <xsl:value-of select="@cDirName"/>,&#160;
-                      </xsl:when>
-                      <xsl:otherwise>
-                        All Groups/Users
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </xsl:for-each>
-                </td>
-                <td>
-                  <xsl:if test="Dir[@nPermLevel='0']">
-                    <xsl:attribute name="rowspan">2</xsl:attribute>
-                  </xsl:if>
-                  <a href="{$appPath}?ewCmd=ApplyDirDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
-                    <i class="fa fa-user fa-white">
-                      <xsl:text> </xsl:text>
-                    </i><xsl:text> </xsl:text>Select User Groups
-                  </a>
-                </td>
-              </tr>
-              <xsl:if test="Dir[@nPermLevel='0']">
+            </thead>
+            <tbody>
+              <xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
+                <xsl:sort select="cDiscountName"/>
                 <tr>
-                  <td>&#160;</td>
+                  <td>
+                    <xsl:call-template name="status_legend">
+                      <xsl:with-param name="status">
+                        <xsl:value-of select="@status"/>
+                      </xsl:with-param>
+                    </xsl:call-template>
+                  </td>
+                  <td>
+                    <strong>
+                      <xsl:value-of select="@cDiscountName"/>
+                    </strong>
+                  </td>
+                  <td>
+                    <xsl:value-of select="@cDiscountCode"/>
+                  </td>
+                  <td>
+                    <xsl:choose>
+                      <xsl:when test="nDiscountCat=1">
+                        <xsl:text>Basic</xsl:text>
+                      </xsl:when>
+                      <xsl:when test="nDiscountCat=2">
+                        <xsl:text>Break by Product</xsl:text>
+                      </xsl:when>
+                      <xsl:when test="nDiscountCat=3">
+                        <xsl:text>X For The Price oF Y</xsl:text>
+                      </xsl:when>
+                      <xsl:when test="nDiscountCat=4">
+                        <xsl:text>Cheapest Item Free</xsl:text>
+                      </xsl:when>
+                      <xsl:when test="nDiscountCat=5">
+                        <xsl:text>Break by Group</xsl:text>
+                      </xsl:when>
+                    </xsl:choose>
+                  </td>
+                  <td>
+                    <span class="btn-group-spaced">
+                      <a href="{$appPath}?ewCmd=EditDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-pen">
+                          <xsl:text> </xsl:text>
+                        </i><xsl:text> </xsl:text>Edit
+                      </a>
+                      <a href="{$appPath}?ewCmd=RemoveDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-minus">
+                          <xsl:text> </xsl:text>
+                        </i><xsl:text> </xsl:text>Remove
+                      </a>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="empty-td">&#160;</td>
                   <td colspan="3">
-                    Denied User Groups:&#160;<xsl:for-each select="Dir[@nPermLevel='0']">
+                    Allowed User Groups:&#160;<xsl:for-each select="Dir[@nPermLevel='1']">
                       <xsl:choose>
                         <xsl:when test="@cDirName">
                           <xsl:value-of select="@cDirName"/>,&#160;
@@ -3310,61 +3290,88 @@
                       </xsl:choose>
                     </xsl:for-each>
                   </td>
+                  <td>
+                    <xsl:if test="Dir[@nPermLevel='0']">
+                      <xsl:attribute name="rowspan">2</xsl:attribute>
+                    </xsl:if>
+                    <a href="{$appPath}?ewCmd=ApplyDirDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-sm btn-outline-primary">
+                      <i class="fa fa-user fa-white">
+                        <xsl:text> </xsl:text>
+                      </i><xsl:text> </xsl:text>Select User Groups
+                    </a>
+                  </td>
                 </tr>
-              </xsl:if>
-              <tr>
-                <td>&#160;</td>
-                <td colspan="3">
-                  Product Groups:&#160;<xsl:for-each select="ProdCat">
+                <xsl:if test="Dir[@nPermLevel='0']">
+                  <tr>
+                    <td class="empty-td">&#160;</td>
+                    <td colspan="3">
+                      Denied User Groups:&#160;<xsl:for-each select="Dir[@nPermLevel='0']">
+                        <xsl:choose>
+                          <xsl:when test="@cDirName">
+                            <xsl:value-of select="@cDirName"/>,&#160;
+                          </xsl:when>
+                          <xsl:otherwise>
+                            All Groups/Users
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:for-each>
+                    </td>
+                  </tr>
+                </xsl:if>
+                <tr>
+                  <td class="empty-td">&#160;</td>
+                  <td colspan="3">
+                    Product Groups:&#160;<xsl:for-each select="ProdCat">
+                      <xsl:choose>
+                        <xsl:when test="@cCatName">
+                          <xsl:value-of select="@cCatName"/>,&#160;
+                        </xsl:when>
+                        <xsl:otherwise>
+                          All Product Groups
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </xsl:for-each>
+                  </td>
+                  <td>
+                    <a href="{$appPath}?ewCmd=ApplyGrpDiscountRules&amp;DiscId={@nDiscountKey}" class="btn  btn-sm btn-outline-primary">
+                      <i class="fa fa-gift fa-white">
+                        <xsl:text> </xsl:text>
+                      </i><xsl:text> </xsl:text>Select Product Groups
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="empty-td">&#160;</td>
+                  <td colspan="1">
+                    <strong>Start Date:</strong>
+                    &#160;
+                    <xsl:call-template name="DD_Mon_YYYY">
+                      <xsl:with-param name="date">
+                        <xsl:value-of select="@publishDate"/>
+                      </xsl:with-param>
+                      <xsl:with-param name="showTime">true</xsl:with-param>
+                    </xsl:call-template>
+                  </td>
+                  <td colspan="3">
+                    <strong>Expire Date:</strong>
+                    &#160;
                     <xsl:choose>
-                      <xsl:when test="@cCatName">
-                        <xsl:value-of select="@cCatName"/>,&#160;
+                      <xsl:when test="@expireDate!=''">
+                        <xsl:call-template name="DD_Mon_YYYY">
+                          <xsl:with-param name="date">
+                            <xsl:value-of select="@expireDate"/>
+                          </xsl:with-param>
+                          <xsl:with-param name="showTime">true</xsl:with-param>
+                        </xsl:call-template>
                       </xsl:when>
                       <xsl:otherwise>
-                        All Product Groups
+                        ongoing
                       </xsl:otherwise>
                     </xsl:choose>
-                  </xsl:for-each>
-                </td>
-                <td>
-                  <a href="{$appPath}?ewCmd=ApplyGrpDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
-                    <i class="fa fa-gift fa-white">
-                      <xsl:text> </xsl:text>
-                    </i><xsl:text> </xsl:text>Select Product Groups
-                  </a>
-                </td>
-              </tr>
-              <tr>
-                <td>&#160;</td>
-                <td colspan="1">
-                  <strong>Start Date:</strong>
-                  &#160;
-                  <xsl:call-template name="DD_Mon_YYYY">
-                    <xsl:with-param name="date">
-                      <xsl:value-of select="@publishDate"/>
-                    </xsl:with-param>
-                    <xsl:with-param name="showTime">true</xsl:with-param>
-                  </xsl:call-template>
-                </td>
-                <td colspan="3">
-                  <strong>Expire Date:</strong>
-                  &#160;
-                  <xsl:choose>
-                    <xsl:when test="@expireDate!=''">
-                      <xsl:call-template name="DD_Mon_YYYY">
-                        <xsl:with-param name="date">
-                          <xsl:value-of select="@expireDate"/>
-                        </xsl:with-param>
-                        <xsl:with-param name="showTime">true</xsl:with-param>
-                      </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      ongoing
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </td>
-              </tr>
-            </xsl:for-each>
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </tbody>
           </table>
         </div>
       </div>
@@ -7635,7 +7642,7 @@
   <xsl:template match="Page[@layout='DeliveryMethods']" mode="Admin">
     <div class="container-fluid" id="tpltDeliveryMethods">
       <div class="row">
-        <div class="col-md-3" id="column1">
+        <div class="col-lg-3" id="column1">
           <div class="alert alert-info">
             <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
@@ -7644,7 +7651,7 @@
             You can create all of the delivery methods you need to ship products from your site.<br/><br/>Make sure each delivery method specifies the locations that it is valid for.<br/><br/>Delviery methods can be setup to be only available to certain users groups, if this is empty the delivery method is by default available to all users.
           </div>
         </div>
-        <div class="col-md-9" id="column2">
+        <div class="col-lg-9" id="column2">
           <div class="card card-default" >
             <div class="card-header">
               <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit" class="btn btn-xs btn-primary float-end">
@@ -7656,7 +7663,7 @@
             </div>
 
             <!--a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
-            <table class="table table-striped">
+            <table class="table table-striped table-mobile-cards">
               <xsl:for-each select="ContentDetail/List/ListItem">
                 <xsl:sort select="@name" order="ascending" data-type="text"/>
                 <xsl:apply-templates select="." mode="listDeliveryMethods"/>
@@ -7688,29 +7695,31 @@
         </xsl:choose>
       </td>
       <td class="options">
-        <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-primary">
-          <i class="fas fa-pen fa-white">
-            <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Edit Method
-        </a>
-        <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=locations&amp;id={@id}" class="btn btn-xs btn-primary">
-          <i class="fa fa-globe fa-white">
-            <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Set Locations
-        </a>
-        <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=permissions&amp;id={@id}" class="btn btn-xs btn-primary">
-          <i class="fa fa-user fa-white">
-            <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Select User Groups
-        </a>
-        <xsl:text> </xsl:text>
-        <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
-          <i class="fas fa-trash-alt fa-white">
-            <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Delete Method
-        </a>
+        <span class="edit-option-links-blue">
+          <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-pen fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Edit Method
+          </a>
+          <xsl:text> </xsl:text>
+          <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=locations&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-globe fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Set Locations
+          </a>
+          <xsl:text> </xsl:text>
+          <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=permissions&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-user fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Select User Groups
+          </a>
+          <xsl:text> </xsl:text>
+          <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-sm btn-outline-danger">
+            <i class="fas fa-trash-alt fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Delete Method
+          </a>
+        </span>
       </td>
     </tr>
   </xsl:template>
@@ -7796,8 +7805,9 @@
                   <xsl:apply-templates select="ContentDetail/Tree/Tree/TreeItem" mode="ListLocationsForm"/>
                 </ul>
               </div>
-              <div class="form-actions">
-                <button type="submit" name="ewSubmit" value="Submit" class="btn btn-primary principle">
+
+              <div class="clearfix form-actions card-footer">
+                <button type="submit" name="ewSubmit" value="Submit" class="btn btn-primary principle float-end">
                   <i class="fa fa-ok fa-white">
                     <xsl:text> </xsl:text>
                   </i>
@@ -7850,8 +7860,6 @@
         </div>
         <xsl:apply-templates select="ContentDetail/report" mode="reportDetail"/>
       </div>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   <!-- Default Report Template Sortable Columns -->
@@ -7911,10 +7919,12 @@
         <div class="col-md-9">
           <div class="card card-default">
             <table cellpadding="0" cellspacing="0" class="table">
-              <tbody>
+              <thead>
                 <tr>
                   <th>Payment Provider</th>
                 </tr>
+              </thead>
+              <tbody>
                 <xsl:for-each select="ContentDetail/List/Provider">
                   <tr>
                     <td>
@@ -7923,20 +7933,21 @@
                     <td class="clearfix">
                       <xsl:choose>
                         <xsl:when test="@active='true'">
-                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=delete&amp;type={node()}" class="btn btn-xs btn-danger float-end">
-                            <i class="fa fa-trash-o fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Delete
-                          </a>
-                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=edit&amp;type={node()}" class="btn btn-xs btn-primary float-end">
-                            <i class="fa fa-pencil fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Edit
-                          </a>
-
+                          <span class="btn-group-spaced  float-end">
+                            <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=edit&amp;type={node()}" class="btn btn-sm btn-outline-primary">
+                              <i class="fa fa-pen fa-white">
+                                <xsl:text> </xsl:text>
+                              </i><xsl:text> </xsl:text>Edit
+                            </a>
+                            <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=delete&amp;type={node()}" class="btn btn-sm btn-outline-danger">
+                              <i class="fa fa-trash-alt fa-white">
+                                <xsl:text> </xsl:text>
+                              </i><xsl:text> </xsl:text>Delete
+                            </a>
+                          </span>
                         </xsl:when>
                         <xsl:otherwise>
-                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=add&amp;type={node()}" class="btn btn-xs btn-primary float-end">
+                          <a href="{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=add&amp;type={node()}" class="btn btn-sm btn-outline-primary float-end">
                             <i class="fa fa-plus fa-white">
                               <xsl:text> </xsl:text>
                             </i><xsl:text> </xsl:text>Add
@@ -10234,7 +10245,7 @@
     <div class="container-fluid" id="template_AdvancedMode">
       <div class="row">
 
-        <div class="col-md-3">
+        <div class="col-lg-3">
           <div class="alert alert-info">
             <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
@@ -10244,7 +10255,7 @@
             <p>Codes Must be created in advanced in code sets</p>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9">
           <div class="card card-default">
             <div class="card-header">
               <xsl:choose>
@@ -10254,7 +10265,7 @@
                   </p>
                 </xsl:when>
                 <xsl:otherwise>
-                  <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;subCmd=AddCodeSet" class="btn btn-primary" title="Add a new code set">
+                  <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;subCmd=AddCodeSet" class="btn btn-primary float-end" title="Add a new code set">
                     <i class="fa fa-plus fa-white">
                       <xsl:text> </xsl:text>
                     </i><xsl:text> </xsl:text>Add New Code Set
@@ -10276,18 +10287,22 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='CodeList']" mode="DirectoryCodes">
-    <table class="table">
-      <tr>
-        <th>&#160;</th>
-        <th>Code Name</th>
-        <th>Code Groups</th>
-        <th>Total Codes</th>
-        <th>Unused</th>
-        <th>Used</th>
-        <th>Published</th>
-        <th>Expires</th>
-      </tr>
-      <xsl:apply-templates select="tblCodes/Code" mode="DirectoryCodesList"/>
+    <table class="table table-mobile-cards">
+      <thead>
+        <tr>
+          <th>&#160;</th>
+          <th>Code Name</th>
+          <th>Code Groups</th>
+          <th>Total Codes</th>
+          <th>Unused</th>
+          <th>Used</th>
+          <th>Published</th>
+          <th>Expires</th>
+        </tr>
+      </thead>
+      <tbody>
+        <xsl:apply-templates select="tblCodes/Code" mode="DirectoryCodesList"/>
+      </tbody>
     </table>
   </xsl:template>
 
@@ -10350,29 +10365,38 @@
         </xsl:if>
       </td>
 
-      <td class="btn-group">
-        <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-primary" title="Edit this new code set">View/Add Codes</a>
-        <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary" title="Edit this new code set">Code Memberships</a>
+      <td >
+        <span class="edit-option-links-blue">
+          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-primary" title="Edit this new code set">View/Add Codes</a>
+          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary" title="Edit this new code set">Code Memberships</a>
+        </span>
       </td>
     </tr>
   </xsl:template>
 
   <xsl:template match="Content[@type='CodeSet']" mode="DirectoryCodes">
-    <table class="table">
-      <tr>
-        <th>&#160;</th>
-        <th>Code Name</th>
-        <th>Code Groups</th>
-        <th>Total Codes</th>
-        <th>Unused</th>
-        <th>Used</th>
-        <th>Published</th>
-        <th>Expires</th>
-        <th class="btn-group headerButtons">
-          &#160;
-        </th>
-      </tr>
-      <xsl:apply-templates select="tblCodes/Code" mode="DirectoryCodesList"/>
+    <table class="table table-mobile-cards">
+      <thead>
+        <tr>
+          <th>&#160;</th>
+          <th>Code Name</th>
+          <th>Code Groups</th>
+          <th>Total Codes</th>
+          <th>Unused</th>
+          <th>Used</th>
+          <th>Published</th>
+          <th>Expires</th>
+          <th class="">
+            &#160;
+          </th>
+          <th class="">
+            &#160;
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <xsl:apply-templates select="tblCodes/Code" mode="DirectoryCodesList"/>
+      </tbody>
     </table>
 
   </xsl:template>
@@ -10435,22 +10459,24 @@
           </xsl:call-template>
         </xsl:if>
       </td>
-      <td class="btn-group">
-        <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-primary btn-xs" title="Edit this new code set">
-          <i class="fa fa-edit">
-            <xsl:text> </xsl:text>
-          </i>Edit Group
-        </a>
-        <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodes" class="btn btn-primary btn-xs" title="Generate Codes">
-          <i class="fa fa-plus">
-            <xsl:text> </xsl:text>
-          </i>View/Add Codes
-        </a>
-        <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary btn-xs" title="Edit this new code set">
-          <i class="fa fa-group">
-            <xsl:text> </xsl:text>
-          </i>Code Memberships
-        </a>
+      <td >
+        <span class="edit-option-links-blue">
+          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-primary btn-xs" title="Edit this new code set">
+            <i class="fa fa-edit">
+              <xsl:text> </xsl:text>
+            </i> Edit Group
+          </a>
+          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodes" class="btn btn-primary btn-xs" title="Generate Codes">
+            <i class="fa fa-plus">
+              <xsl:text> </xsl:text>
+            </i> View/Add Codes
+          </a>
+          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary btn-xs" title="Edit this new code set">
+            <i class="fa fa-users">
+              <xsl:text> </xsl:text>
+            </i> Code Memberships
+          </a>
+        </span>
       </td>
     </tr>
   </xsl:template>

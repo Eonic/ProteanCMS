@@ -421,6 +421,7 @@ form.xform {
 @mixin plain-buttons {
     margin-left: -0.75rem;
     margin-right: -0.75rem;
+    display:block;
 
     a, button {
         color: #4a4a4a;
@@ -431,6 +432,7 @@ form.xform {
 
         &:hover {
             color: $admin-primary;
+            background: none;
         }
 
         &.link-danger {
@@ -440,12 +442,24 @@ form.xform {
                 color: darken($danger,10%);
             }
         }
+
+        &:focus {
+            box-shadow:none!important;
+        }
     }
 
-    button {
+    a, button {
         border: 0;
         background: none;
         border-radius: 0;
+    }
+
+    .btn-danger, .btn-outline-danger {
+        color: $admin-danger;
+
+        &:hover {
+            color: darken($danger,10%);
+        }
     }
 }
 strong {
@@ -495,6 +509,18 @@ strong {
 .edit-option-links {
     @include plain-buttons;
 }
+.edit-option-links-blue {
+    @include plain-buttons;
+
+    .btn-primary,
+    .btn-outline-primary {
+        color: $admin-primary;
+
+        &:hover {
+            color: darken($admin-primary,10%);
+        }
+    }
+}
 .form-select {
     -webkit-appearance:none;
 }
@@ -513,7 +539,8 @@ strong {
     color: #666;
     background:#e6eced;
 }
-form table {
+form table,
+table{
     th {
         color: #a7a7a7;
         font-weight: 400;
@@ -542,6 +569,10 @@ form .table-striped {
         /* Force table to not be like tables anymore */
         table, thead, tbody, th, td, tr {
             display: block;
+        }
+
+        .empty-td {
+            display:none;
         }
         /* Hide table headers (but not display: none;, for accessibility) */
         thead tr {
@@ -590,6 +621,23 @@ form .table-striped {
                 float: left;
                 margin: 1%;
             }
+        }
+    }
+}
+.table-mobile-cards-1col {
+    @extend .table-mobile-cards;
+
+    @include media-breakpoint-up(sm) {
+        tr {
+            width: 100%;
+            float: none;
+        }
+    }
+
+    @include media-breakpoint-up(md) {
+        tr {
+            width: 100%;
+            float: none;
         }
     }
 }
@@ -726,4 +774,45 @@ form.xform .pick-image-wrapper {
         margin-right: 10px;
     }
 }
+form .form-actions .required {
+    display:none;
+}
+#MenuTree {
+    > li.checkbox {
+        margin-left:-1rem;
+    }
 
+    li.checkbox {
+        list-style: none;
+        position: relative;
+        padding-left: 1rem;
+
+        input {
+            position: absolute;
+            left: 0;
+            top: 5px;
+        }
+
+        label {
+            // margin-left: 0.5rem;
+        }
+    }
+}
+#EditShippingLocation,
+#WebSettings {
+    .form-check {
+        @extend .form-check-inline;
+    }
+
+    input {
+        margin-bottom: 1rem;
+    }
+
+    span.required {
+        display: none;
+    }
+
+    button.principle {
+        margin-right:1rem;
+    }
+}
