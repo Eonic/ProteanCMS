@@ -19,6 +19,7 @@ a {
 img {
     max-width: 100%;
     height: auto;
+    overflow:hidden;
 }
 //utilities
 .hidden {
@@ -94,6 +95,9 @@ section.bg-primary {
     align-items: center;
     color: #fff;
     text-shadow: 1px 1px #000;
+}
+.fullwidthContainer {
+    @extend .container-fluid;
 }
 // CONTENT LISTS
 .date,

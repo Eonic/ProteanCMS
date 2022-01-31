@@ -32,10 +32,10 @@
   <!-- -->
   <xsl:template match="Page" mode="siteAdminJs"></xsl:template>
 
-	<xsl:template match="Page[@adminMode='false']" mode="siteAdminJs">
-		<script type="text/javascript" src="/ptn/libs/jqueryui/jquery-ui.js">&#160;</script>
-		<script type="text/javascript" src="/ptn/admin/admin-wysiwyg.js">&#160;</script>
-	</xsl:template>
+  <xsl:template match="Page[@adminMode='false']" mode="siteAdminJs">
+    <script type="text/javascript" src="/ptn/libs/jqueryui/jquery-ui.js">&#160;</script>
+    <script type="text/javascript" src="/ptn/admin/admin-wysiwyg.js">&#160;</script>
+  </xsl:template>
 
   <!--In admin WYSIWYG mode-->
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
@@ -200,55 +200,55 @@
   <!-- -->
   <!-- ############### Website Inline Page Editing Buttons ############################## -->
   <!-- -->
-	<xsl:template match="Page" mode="addModuleControlsSection">
-		<xsl:param name="text"/>
-		<xsl:param name="class"/>
-		<xsl:param name="position"/>
-		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $page/@ewCmd!='PreviewOn'">
-		<section>
-			<xsl:if test="$class='container'">
-				<xsl:attribute name="class">wrapper-sm</xsl:attribute>
-			</xsl:if>
-			<div id="{$position}">
-				<xsl:apply-templates select="." mode="addModuleControls">
-					<xsl:with-param name="text" select="$text"/>
-					<xsl:with-param name="class" select="$class"/>
-					<xsl:with-param name="position" select="$position"/>
-				</xsl:apply-templates>
-			</div>
-		</section>
-	    </xsl:if>
-	</xsl:template>
+  <xsl:template match="Page" mode="addModuleControlsSection">
+    <xsl:param name="text"/>
+    <xsl:param name="class"/>
+    <xsl:param name="position"/>
+    <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $page/@ewCmd!='PreviewOn'">
+      <section>
+        <xsl:if test="$class='container'">
+          <xsl:attribute name="class">wrapper-sm</xsl:attribute>
+        </xsl:if>
+        <div id="{$position}">
+          <xsl:apply-templates select="." mode="addModuleControls">
+            <xsl:with-param name="text" select="$text"/>
+            <xsl:with-param name="class" select="$class"/>
+            <xsl:with-param name="position" select="$position"/>
+          </xsl:apply-templates>
+        </div>
+      </section>
+    </xsl:if>
+  </xsl:template>
 
-	<xsl:template match="Page" mode="addModuleControls">
-		<xsl:param name="text"/>
-		<xsl:param name="class"/>
-		<xsl:param name="position"/>
-		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $page/@ewCmd!='PreviewOn'">
-			<xsl:attribute name="class">
-				<xsl:text>moduleContainer</xsl:text>
-				<xsl:if test="$class!=''">
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="$class"/>
-				</xsl:if>
-			</xsl:attribute>
-			<div class="ptn-edit options addmodule">
-				
-				<div class="addHere">
-					<strong>
-						<xsl:value-of select="$position"/>
-					</strong>
-					<xsl:text> - drag a module here</xsl:text>
-				</div>
+  <xsl:template match="Page" mode="addModuleControls">
+    <xsl:param name="text"/>
+    <xsl:param name="class"/>
+    <xsl:param name="position"/>
+    <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $page/@ewCmd!='PreviewOn'">
+      <xsl:attribute name="class">
+        <xsl:text>moduleContainer</xsl:text>
+        <xsl:if test="$class!=''">
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="$class"/>
+        </xsl:if>
+      </xsl:attribute>
+      <div class="ptn-edit options addmodule">
+
+        <div class="addHere">
+          <strong>
+            <xsl:value-of select="$position"/>
+          </strong>
+          <xsl:text> - drag a module here</xsl:text>
+        </div>
         <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
           <i class="fa fa-th-large">&#160;</i>&#160;<xsl:value-of select="$text"/>
         </a>
-			</div>
-		</xsl:if>
-	</xsl:template>
-	
-	
-	
+      </div>
+    </xsl:if>
+  </xsl:template>
+
+
+
   <xsl:template match="Page" mode="inlinePopupPageAdd">
     <xsl:param name="text"/>
     <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddPage'] and $adminMode">
@@ -752,8 +752,11 @@
               <xsl:text> </xsl:text>
             </xsl:when>
             <xsl:otherwise>
-              <button class="btn btn-default btn-xs pull-right" disabled="disabled">
+              <!--<button class="btn btn-default btn-xs" disabled="disabled">
                 @display=<xsl:value-of select="@display"/>
+              </button>-->
+              <button class="btn btn-default btn-xs layout-btn" disabled="disabled">
+                layout
               </button>
             </xsl:otherwise>
           </xsl:choose>
@@ -959,12 +962,15 @@
           <xsl:if test="@type='Module'">
             <xsl:text> moduleDrag</xsl:text>
           </xsl:if>
-			<xsl:if test="@title!='' or not(@contentType!='')">
-				<xsl:text> over-content</xsl:text>
-			</xsl:if>
+          <xsl:if test="@title!='' or not(@contentType!='')">
+            <xsl:text> over-content</xsl:text>
+          </xsl:if>
         </xsl:attribute>
+        <xsl:if test="@contentType!=''">
+          <xsl:apply-templates select="." mode="inlinePopupRelateTop"/>
+        </xsl:if>
         <xsl:if test="@type='Module' and not(starts-with(@position,'column1') and $page/@layout='Modules_Masonary')">
-          <a href="#" class="btn btn-primary btn-xs drag pull-right">
+          <a href="#" class="btn btn-primary btn-xs drag">
             <i class="fas fa-arrows-alt">&#160;</i>
             <span>Move in page</span>
           </a>
@@ -1177,14 +1183,14 @@
                   <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='ShowContent']">
                     <li>
                       <a href="?ewCmd=ShowContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to show this item">
-                        <i class="fa fa-check-square-o">&#160;</i>&#160;Show
+                        <i class="fa fa-eye">&#160;</i>&#160;Show
                       </a>
                     </li>
                   </xsl:if>
                   <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='DeleteContent']">
                     <li>
                       <a href="?ewCmd=DeleteContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to delete this item">
-                        <i class="fa fa-trash-o">&#160;</i>&#160;Delete
+                        <i class="fa fa-trash-alt">&#160;</i>&#160;Delete
                       </a>
                     </li>
                   </xsl:if>
@@ -1255,9 +1261,6 @@
             </xsl:choose>
           </ul>
         </div>
-        <xsl:if test="@contentType!=''">
-          <xsl:apply-templates select="." mode="inlinePopupRelateTop"/>
-        </xsl:if>
       </div>
     </xsl:if>
 

@@ -6,7 +6,7 @@
 
         a.btn-primary,
         a:visited.btn-primary {
-            color: #fff !important;
+            //color: #fff !important;
             letter-spacing: normal;
         }
 
@@ -179,7 +179,7 @@
 
     .ptn-edit > .btn-default,
     .ptn-edit > .dropdown > .btn-default {
-        background: lighten($admin-header-color-link, 45%);
+        //background: lighten($admin-header-color-link, 45%);
         border: 1px !important;
         color: $admin-header-color-link !important;
 
@@ -421,7 +421,7 @@
 }
 
 .normalMode {
-    .editable {
+    .module > .editable {
         width: 100%;
     }
 
@@ -461,6 +461,11 @@
     .ptn-edit.options.addmodule {
         justify-content: space-between;
         opacity: 0.3;
+        align-items: flex-start;
+
+        a {
+            white-space: nowrap;
+        }
 
         &:hover {
             opacity: 1;
@@ -473,9 +478,33 @@
         }
 
         &:hover {
-            > .editable .options{
+            > .editable .options {
                 opacity: 1;
             }
+        }
+    }
+
+    .layout-btn {
+        display:none;
+    }
+
+    .layout-btn + .btn, .layout-btn ~ .dropdown > .btn {
+        border: 1px solid $admin-header-color-link !important;
+        color: $admin-header-color-link !important;
+        background: #fff !important;
+
+        i {
+            color: $admin-header-color-link !important;
+        }
+    }
+
+    .addmodule .btn {
+        border: 1px solid $admin-header-color-link !important;
+        color: $admin-header-color-link !important;
+        background: #fff !important;
+
+        i {
+            color: $admin-header-color-link !important;
         }
     }
 }

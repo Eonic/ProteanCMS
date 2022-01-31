@@ -22,11 +22,19 @@
     position: relative;
 }
 
-.swiper-button-prev{
-    left:-20px;
+.swiper-button-prev {
+    left: 0px;
+
+    &:after {
+        font-size: 30px;
+    }
 }
 .swiper-button-next {
-    right: -20px;
+    right: 0px;
+
+    &:after {
+        font-size: 30px;
+    }
 }
 @media only screen and (min-width: 769px) {
     .swiper-slide:first-child {
