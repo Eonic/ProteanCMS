@@ -1570,13 +1570,13 @@
 			<input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}"/>
 			<div class="input-group">
 				<input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
-				<span class="input-group-btn">
+				
 					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{$ref}-modal">
 						<i class="fa fa-file-alt fa-white">
 							<xsl:text> </xsl:text>
 						</i><xsl:text> </xsl:text>Pick Page
 					</button>
-				</span>
+				
 			</div>
 			<div class="modal fade" id="{$ref}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 				<div class="modal-dialog" role="document">

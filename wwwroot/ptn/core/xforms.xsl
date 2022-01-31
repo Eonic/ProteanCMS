@@ -765,7 +765,7 @@
 
           <xsl:apply-templates select="." mode="xform_control"/>
           <xsl:if test="@suffix!=''">
-            <div class="input-group-texx">
+            <div class="input-group-text">
               <xsl:value-of select="@suffix"/>
             </div>
           </xsl:if>
