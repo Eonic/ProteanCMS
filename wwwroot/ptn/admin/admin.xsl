@@ -6322,7 +6322,7 @@
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-              <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary float-end">
+              <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-sm btn-outline-primary padded-btn">
                 <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
               </a>
               <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
