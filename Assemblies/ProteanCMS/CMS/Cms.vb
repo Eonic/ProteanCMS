@@ -977,11 +977,13 @@ Public Class Cms
                     Else
                         mcEwSiteXsl = "/ewcommon/xsl/admin/AdminPopups.xsl"
                     End If
+                    If moConfig("cssFramework") = "bs5" Then mcEwSiteXsl = "/ptn/admin/admin-popups.xsl"
                     mbPopupMode = True
                     mbAdminMode = True
                     moResponseType = pageResponseType.popup
                 Case "ajaxadmin"
                     mcEwSiteXsl = "/ewcommon/xsl/admin/ajaxAdmin.xsl"
+                    If moConfig("cssFramework") = "bs5" Then mcEwSiteXsl = "/ptn/admin/admin-ajax.xsl"
                     moResponseType = pageResponseType.ajaxadmin
                    ' oEw.GetAjaxHTML("MenuNode")
                 Case "mail", "email"
@@ -991,6 +993,7 @@ Public Class Cms
                     Else
                         gcEwSiteXsl = "/ewcommon/xsl/Mailer/mailerStandard.xsl"
                     End If
+                    If moConfig("cssFramework") = "bs5" Then mcEwSiteXsl = "/ptn/features/mailer/mailer-core.xsl"
                     mnMailMenuId = moMailConfig("RootPageId")
                     mcContentType = "text/html"
                     moResponseType = pageResponseType.mail
