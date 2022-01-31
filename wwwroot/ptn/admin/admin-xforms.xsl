@@ -240,7 +240,7 @@
                 <xsl:for-each select="group | repeat">
                   <xsl:apply-templates select="." mode="xform">
                     <xsl:with-param name="class">
-                      <xsl:text>col-md-4</xsl:text>
+                      <xsl:text>col-lg-4</xsl:text>
                     </xsl:with-param>
                   </xsl:apply-templates>
                 </xsl:for-each>
@@ -267,7 +267,7 @@
           <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
         </div>
         <xsl:if test="count(submit) &gt; 0">
-          <div class=" clearfix">
+          <div class=" clearfix pe-3 ps-3">
             <xsl:if test="ancestor-or-self::group/descendant-or-self::*[contains(@class,'required')]">
               <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
               <span class="required">

@@ -4065,9 +4065,9 @@
 
   <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-	<script src="/ptn/libs/blueimp-load-image/js/load-image.all.min.js">/* */</script>
+    <script src="/ptn/libs/blueimp-load-image/js/load-image.all.min.js">/* */</script>
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-	 <script src="/ptn/libs/blueimp-canvas-to-blob/js/canvas-to-blob.js">/* */</script>
+    <script src="/ptn/libs/blueimp-canvas-to-blob/js/canvas-to-blob.js">/* */</script>
     <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
     <script src="/ptn/libs/blueimp-file-upload/js/jquery.iframe-transport.js">/* */</script>
     <!-- The basic File Upload plugin -->
@@ -4214,47 +4214,51 @@
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
       var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
       <xsl:apply-templates select="." mode="newItemScript"/>
-		$('#files').prepend(newItem);
-		$('#files .item-image .panel').prepareLibImages();
-		$("[data-bs-toggle=popover]").popover({
-		html: true,
-		container: '#files',
-		trigger: 'hover',
-		viewport: '#files',
-		content: function () {
-		return $(this).prev('.popoverContent').html();
-		}
-		});
-		if ($('.pickImageModal').exists()) {
-		$('.pickImageModal').find('a[data-bs-toggle!="popover"]').click(function (ev) {
-		ev.preventDefault();
-		$('.modal-dialog').addClass('loading')
-		var modalhtml = '<p class="text-center">';
-			modalhtml += '<h4>';
-				modalhtml += '<i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...';
-				modalhtml += '</h4>';
-			modalhtml += '</p>';
-		$('.modal-body').html(modalhtml);
-		var target = $(this).attr("href");
-		// load the url and show modal on success
-		var currentModal = $('.pickImageModal')
-		currentModal.load(target, function () {
-		$('.modal-dialog').removeClass('loading')
-		currentModal.modal("show");
-		});
-		});
-		};
-		});
-		},
-		progressall: function (e, data) {
-		var progress = parseInt(data.loaded / data.total * 100, 10);
-		$('.progress .progress-bar').css('width',progress + '%');
-		$('.progress .progress-bar').attr('aria-valuenow',progress);
-		$('.progress .loading-counter').css('display','block');
-		$('.progress .loading-counter .count').html(progress);
-		}
-		});
-	</script>
+      $('#files').prepend(newItem);
+      $('#files .item-image .panel').prepareLibImages();
+      $("[data-bs-toggle=popover]").popover({
+      html: true,
+      container: '#files',
+      trigger: 'hover',
+      viewport: '#files',
+      content: function () {
+      return $(this).prev('.popoverContent').html();
+      }
+      });
+      if ($('.pickImageModal').exists()) {
+      $('.pickImageModal').find('a[data-bs-toggle!="popover"]').click(function (ev) {
+      ev.preventDefault();
+      $('.modal-dialog').addClass('loading')
+      var modalhtml = '<p class="text-center">
+        ';
+        modalhtml += '<h4>
+          ';
+          modalhtml += '<i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...';
+          modalhtml += '
+        </h4>';
+        modalhtml += '
+      </p>';
+      $('.modal-body').html(modalhtml);
+      var target = $(this).attr("href");
+      // load the url and show modal on success
+      var currentModal = $('.pickImageModal')
+      currentModal.load(target, function () {
+      $('.modal-dialog').removeClass('loading')
+      currentModal.modal("show");
+      });
+      });
+      };
+      });
+      },
+      progressall: function (e, data) {
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('.progress .progress-bar').css('width',progress + '%');
+      $('.progress .progress-bar').attr('aria-valuenow',progress);
+      $('.progress .loading-counter').css('display','block');
+      $('.progress .loading-counter .count').html(progress);
+      }
+      });
+    </script>
 
     <script>
       $(function() {
@@ -4274,33 +4278,53 @@
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-    var newItem = '<div class="item item-image col-md-2 col-sm-4">';
-		newItem = newItem + '<div class="panel">';
-			newItem = newItem + '<div class="image-thumbnail">';
-				newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">';
-					newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
-					newItem = newItem + '<div class="popover-description">';
-						newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
-						newItem = newItem + '<br/>';
-						newItem = newItem + '</div>';
-					newItem = newItem + '</div>';
-				newItem = newItem + '<a data-bs-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">'
-					newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
-					newItem = newItem + '</a>';
-				newItem = newItem + '</div>';
-        newItem = newItem + '<div class="description">';
-         newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">'
-			 newItem = newItem + '<i class="fa fa-trash-o fa-white">';		 
-			 newItem = newItem + ' <xsl:text> </xsl:text>';
-				 newItem = newItem + '</i>Delete';
-			 newItem = newItem + '</a>';
-          newItem = newItem + '</div><div class="img-description">';
-			  newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
-			  newItem = newItem + '<br/>';
-			  newItem = newItem + '</div>';
-        newItem = newItem + '</div>';
-		newItem = newItem + '</div>';
-</xsl:template>
+    var newItem = '<div class="item item-image col-md-2 col-sm-4">
+      ';
+      newItem = newItem + '<div class="panel">
+        ';
+        newItem = newItem + '<div class="image-thumbnail">
+          ';
+          newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
+            ';
+            newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
+            newItem = newItem + '<div class="popover-description">
+              ';
+              newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
+              newItem = newItem + '<br/>';
+              newItem = newItem + '
+            </div>';
+            newItem = newItem + '
+          </div>';
+          newItem = newItem + '<a data-bs-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
+            '
+            newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
+            newItem = newItem + '
+          </a>';
+          newItem = newItem + '
+        </div>';
+        newItem = newItem + '<div class="description">
+          ';
+          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
+            '
+            newItem = newItem + '<i class="fa fa-trash-o fa-white">
+              ';
+              newItem = newItem + ' <xsl:text> </xsl:text>';
+              newItem = newItem + '
+            </i>Delete';
+            newItem = newItem + '
+          </a>';
+          newItem = newItem + '
+        </div><div class="img-description">
+          ';
+          newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
+          newItem = newItem + '<br/>';
+          newItem = newItem + '
+        </div>';
+        newItem = newItem + '
+      </div>';
+      newItem = newItem + '
+    </div>';
+  </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
     <xsl:param name="rootPath"/>
@@ -6654,7 +6678,7 @@
                 <dd>
                   <xsl:if test="ancestor::Content/User">
                     <a href="?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::Content/User/@id}">
-                      <span class="btn btn-primary btn-xs">
+                      <span class="btn btn-outline-primary btn-sm mt-1">
                         <i class="fa fa-user fa-white"> </i>
                         <xsl:text> </xsl:text>
                         <xsl:value-of select="ancestor::Content/User/FirstName/node()"/>
@@ -6738,7 +6762,7 @@
             </div>
             <xsl:if test="Contact[@type='Billing Address']">
               <div id="billingAddress" class="cartAddress col-lg-3">
-                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm float-end">
+                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-outline-primary btn-sm float-end">
                   <i class="fa fa-edit"> </i>
                   Edit
                 </a>
@@ -6747,7 +6771,7 @@
             </xsl:if>
             <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
               <div id="deliveryAddress" class="cartAddress col-lg-3">
-                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm float-end">
+                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-outline-primary btn-sm float-end">
                   <i class="fa fa-edit"> </i>
                   Edit
                 </a>
@@ -7608,7 +7632,7 @@
               </xsl:when>
               <xsl:otherwise>
                 <a href="{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=movehere&amp;parid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-primary">
-                  <i class="fa fa-move-here fa-white">
+                  <i class="fa fa-arrow-right fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Move Here
                 </a>
@@ -11279,33 +11303,37 @@
   <!-- ##################################################################################################### -->
 
   <xsl:template match="Page[@layout='CartReportsMain']" mode="Admin">
-    <div class="row" id="tpltCartActivity">
-      <div class="col-md-3 btn-group-vertical"  id="column1">
-        <a href="{$appPath}?ewCmd=CartDownload" class="btn btn-primary">Order Download</a>
-        <a href="{$appPath}?ewCmd=CartReports" class="btn btn-primary">Sales By Product</a>
-        <a href="{$appPath}?ewCmd=CartActivityDrilldown" class="btn btn-primary">Sales By Page</a>
-        <a href="{$appPath}?ewCmd=CartActivityPeriod" class="btn btn-primary">Sales By Period</a>
-      </div>
-      <div class="col-md-9" id="column2">
-        &#160;
+    <div class="container-fluid" id="tpltCartActivity">
+      <div class="row">
+        <div class="col-lg-3 btn-group-vertical"  id="column1">
+          <a href="{$appPath}?ewCmd=CartDownload" class="btn btn-primary">Order Download</a>
+          <a href="{$appPath}?ewCmd=CartReports" class="btn btn-primary">Sales By Product</a>
+          <a href="{$appPath}?ewCmd=CartActivityDrilldown" class="btn btn-primary">Sales By Page</a>
+          <a href="{$appPath}?ewCmd=CartActivityPeriod" class="btn btn-primary">Sales By Period</a>
+        </div>
+        <div class="col-lg-9" id="column2">
+          &#160;
+        </div>
       </div>
     </div>
   </xsl:template>
 
   <xsl:template match="Page[@layout='CartDownload' or @layout='CartActivity' or @layout='CartActivityDrilldown' or @layout='CartActivityPeriod']" mode="Admin">
-    <div class="row" id="tpltCartActivity">
-      <div class="col-md-3">
-        <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-      </div>
-      <div class="col-md-9">
-        <xsl:choose>
-          <xsl:when test="ContentDetail/Content[@type='Report']/Report">
-            <xsl:apply-templates select="ContentDetail/Content[@type='Report']/Report" mode="CartReport"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="." mode="CartReport"/>
-          </xsl:otherwise>
-        </xsl:choose>
+    <div class="container-fluid" id="tpltCartActivity">
+      <div class="row">
+        <div class="col-lg-3">
+          <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+        </div>
+        <div class="col-lg-9">
+          <xsl:choose>
+            <xsl:when test="ContentDetail/Content[@type='Report']/Report">
+              <xsl:apply-templates select="ContentDetail/Content[@type='Report']/Report" mode="CartReport"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="." mode="CartReport"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </div>
       </div>
     </div>
   </xsl:template>

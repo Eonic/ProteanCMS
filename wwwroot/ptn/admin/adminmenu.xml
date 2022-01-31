@@ -114,16 +114,16 @@
         <MenuItem name="Product Groups" cmd="ProductGroups" display="true" icon="fa-gift"/>
         <MenuItem name="Discount Rules" cmd="DiscountRules" display="true" icon="fa-certificate"/>
         <MenuItem name="Discounts" cmd="Discounts" display="false" icon="fa-certificate"/>
-        <MenuItem name="ProductGroups" cmd="ProductGroups" display="false"/>
+        <MenuItem name="ProductGroups" cmd="ProductGroups" display="false" icon="fa-layer-group"/>
         <MenuItem name="DiscountRules" cmd="DiscountRules" display="false"/>
         <MenuItem name="DiscountGroupRelations" cmd="DiscountGroupRelations" display="false"/>
-        <MenuItem name="EditProductGroups" cmd="EditProductGroups" display="false"/>
-        <MenuItem name="Add Products to Product Group" cmd="AddProductGroupsProduct" display="false"/>
-        <MenuItem name="AddDiscountRules" cmd="AddDiscountRules" display="false"/>
-        <MenuItem name="EditDiscountRules" cmd="EditDiscountRules" display="false"/>
-        <MenuItem name="ApplyDirDiscountRules" cmd="ApplyDirDiscountRules" display="false"/>
-        <MenuItem name="ApplyGrpDiscountRules" cmd="ApplyGrpDiscountRules" display="false"/>
-        <MenuItem name="AddProductGroups" cmd="AddProductGroups" display="false"/>
+        <MenuItem name="EditProductGroups" cmd="EditProductGroups" display="false" icon="fas fa-pen"/>
+        <MenuItem name="Add Products to Product Group" cmd="AddProductGroupsProduct" display="false" icon="fas fa-plus"/>
+        <MenuItem name="AddDiscountRules" cmd="AddDiscountRules" display="false" icon="fa-certificate"/>
+        <MenuItem name="EditDiscountRules" cmd="EditDiscountRules" display="false" icon="fa-certificate"/>
+        <MenuItem name="ApplyDirDiscountRules" cmd="ApplyDirDiscountRules" display="false" icon="fa-certificate"/>
+        <MenuItem name="ApplyGrpDiscountRules" cmd="ApplyGrpDiscountRules" display="false" icon="fa-certificate"/>
+        <MenuItem name="AddProductGroups" cmd="AddProductGroups" display="false" icon="fas fa-plus"/>
       </MenuItem>
       <MenuItem name="Voucher Codes" cmd="MemberCodes" display="true" icon="fa-barcode"/>
       <MenuItem name="Reports" cmd="CartReportsMain" display="true" icon="fa-chart-bar">
