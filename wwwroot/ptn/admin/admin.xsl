@@ -2787,10 +2787,10 @@
   <xsl:template match="Page[@layout='RelatedSearch']" mode="Admin">
     <div class="container-fluid" id="tpltRelatedSearch">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4 mb-3">
           <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
         </div>
-        <div class="col-md-8">
+        <div class="col-lg-8">
 
           <xsl:text> </xsl:text>
           <xsl:if test="ContentDetail/RelatedResults">
@@ -2799,30 +2799,31 @@
               <input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
               <input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
               <div class="card-header">
-                <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary btn-xs float-end">
-                  <i class="fa fa-check fa-white">
-                    <xsl:text> </xsl:text>
-                  </i> Check All
-                </button>
-                <xsl:text> </xsl:text>
-                <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary btn-xs float-end">
-                  <i class="fa fa-share fa-white">
-                    <xsl:text> </xsl:text>
-                  </i> Uncheck All
-                </button>
-                <h3 >Search Results</h3>
+                <h3>Search Results</h3>
+                
               </div>
 
-              <table cellpadding="0" cellspacing="1" class="table">
-                <tbody>
+              <table cellpadding="0" cellspacing="1" class="table table-mobile-cards-1col">
+                <thead>
                   <tr>
-                    <th>
+                    <th colspan="3">
+                      <span class="btn-group-spaced float-start">
+                        <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-check fa-white">
+                            <xsl:text> </xsl:text>
+                          </i> Check All
+                        </button>
+                        <xsl:text> </xsl:text>
+                        <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-share fa-white">
+                            <xsl:text> </xsl:text>
+                          </i> Uncheck All
+                        </button>
+                      </span>
                       <xsl:choose>
                         <xsl:when test="ContentDetail/RelatedResults/Content">
-                          <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-primary principle">
-                            <i class="fa fa-plus fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Add
+                          <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-primary float-end principle">
+                            Add
                             <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
                           </button>
                         </xsl:when>
@@ -2839,51 +2840,48 @@
                     <th>Publish Date</th>
                     <th>Tick to Relate</th>
                   </tr>
-                  <tr>
+                </thead>
+                <tbody>
                     <xsl:for-each select="ContentDetail/RelatedResults/Content">
                       <xsl:sort select="@name" />
 
                       <xsl:apply-templates select="." mode="LocateContentNode"/>
 
                     </xsl:for-each>
-                  </tr>
                   <!--<xsl:apply-templates select="ContentDetail/RelatedResults/Content" mode="LocateContentNode"/>-->
-                  <xsl:if test="ContentDetail/RelatedResults/Content">
-                    <tr>
-                      <th>
-                        <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary">
-                          <i class="fa fa-check fa-white">
-                            <xsl:text> </xsl:text>
-                          </i> Check All
-                        </button>
-                        <xsl:text> </xsl:text>
-                        <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary">
-                          <i class="fa fa-share fa-white">
-                            <xsl:text> </xsl:text>
-                          </i> Uncheck All
-                        </button>
-                      </th>
-                      <th>
-                        <xsl:choose>
-                          <xsl:when test="ContentDetail/RelatedResults/Content">
-                            <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-primary principle">
-                              <i class="fa fa-plus fa-white">
-                                <xsl:text> </xsl:text>
-                              </i><xsl:text> </xsl:text>Add
-                              <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
-                            </button>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <label>
-                              <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
-                            </label>
-                          </xsl:otherwise>
-                        </xsl:choose>
-                      </th>
-                    </tr>
-                  </xsl:if>
+                  
                 </tbody>
               </table>
+              <xsl:if test="ContentDetail/RelatedResults/Content">
+                <div class="card-footer">
+                  <span class="btn-group-spaced">
+                    <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-sm btn-outline-primary">
+                      <i class="fa fa-check fa-white">
+                        <xsl:text> </xsl:text>
+                      </i> Check All
+                    </button>
+                    <xsl:text> </xsl:text>
+                    <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-sm btn-outline-primary">
+                      <i class="fa fa-share fa-white">
+                        <xsl:text> </xsl:text>
+                      </i> Uncheck All
+                    </button>
+                  </span>
+                  <xsl:choose>
+                    <xsl:when test="ContentDetail/RelatedResults/Content">
+                      <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-primary principle float-end">
+                        Add
+                        <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
+                      </button>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <label>
+                        <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
+                      </label>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </div>
+              </xsl:if>
             </form>
           </xsl:if>
         </div>
@@ -2923,8 +2921,7 @@
             </xsl:call-template>
           </xsl:if>
         </td>
-        <td class="relate">
-          <xsl:choose>
+        <td class="relate"><xsl:choose>
             <xsl:when test="@related=1">
               <xsl:text>(Related)</xsl:text>
               <xsl:value-of select="@sType"/>|<xsl:value-of select="$relationType"/>
@@ -2947,6 +2944,7 @@
               </xsl:if>-->
             </xsl:otherwise>
           </xsl:choose>
+          <span class="xs-only"> Relate</span>
         </td>
       </tr>
     </span>
