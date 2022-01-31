@@ -347,7 +347,6 @@
     <xsl:param name="text"/>
     <xsl:param name="name"/>
     <xsl:param name="class"/>
-
     <xsl:choose>
       <xsl:when test="/Page/Contents/Content[@name=$name]">
         <!-- Do we need to tie it down by Type? What about bespoke types?-->
@@ -960,7 +959,7 @@
           <xsl:if test="@type='Module'">
             <xsl:text> moduleDrag</xsl:text>
           </xsl:if>
-			<xsl:if test="@title!=''">
+			<xsl:if test="@title!='' or not(@contentType!='')">
 				<xsl:text> over-content</xsl:text>
 			</xsl:if>
         </xsl:attribute>
