@@ -5689,13 +5689,18 @@ processFlow:
                         oGrpElmt = oOptXform.addGroup(oOptXform.moXformElmt, "options", "", "Select Payment Method")
                     End If
 
+
                     ' Even if there is only 1 option we still want to display it, if it is a non-zero value - the visitor should know the description of their delivery option
                     If ods.Tables("Option").Rows.Count = 1 Then
                         For Each oRow In ods.Tables("Option").Rows
+                            Dim bCollection As Boolean = False
+                            If Not IsDBNull(oRow("bCollection")) Then
+                                If oRow("bCollection") = "1" Then bCollection = True
+                            End If
                             If IsDBNull(oRow("nShippingTotal")) Then
                                 cHidden = " hidden"
                                 bHideDelivery = True
-                            ElseIf oRow("nShippingTotal") = 0 And oRow("bCollection") = 0 Then
+                            ElseIf oRow("nShippingTotal") = 0 And Not bCollection Then
                                 cHidden = " hidden"
                                 bHideDelivery = True
                             Else
@@ -5719,232 +5724,232 @@ processFlow:
                             End If
                         Next
                     Else
-                        oOptXform.addSelect1(oGrpElmt, "nShipOptKey", False, "Delivery Type", "radios multiline", xForm.ApperanceTypes.Full)
-                        bFirstRow = True
-                        Dim nLastID As Integer = 0
+                            oOptXform.addSelect1(oGrpElmt, "nShipOptKey", False, "Delivery Type", "radios multiline", xForm.ApperanceTypes.Full)
+                            bFirstRow = True
+                            Dim nLastID As Integer = 0
 
-                        ' If selected shipping method is still in those available (because we now )
-                        If nShippingMethodId <> 0 Then
-                            Dim bIsAvail As Boolean = False
+                            ' If selected shipping method is still in those available (because we now )
+                            If nShippingMethodId <> 0 Then
+                                Dim bIsAvail As Boolean = False
+                                For Each oRow In ods.Tables("Option").Rows
+                                    If Not oRow.RowState = DataRowState.Deleted Then
+                                        If nShippingMethodId = oRow("nShipOptKey") Then
+                                            bIsAvail = True
+                                        End If
+                                    End If
+                                Next
+                                'If not then strip it out.
+                                If bIsAvail = False Then
+                                    nShippingMethodId = 0
+                                    cartElmt.SetAttribute("shippingType", "0")
+                                    cartElmt.SetAttribute("shippingCost", "")
+                                    cartElmt.SetAttribute("shippingDesc", "")
+                                    Dim cSqlUpdate As String = "UPDATE tblCartOrder SET cShippingDesc= null, nShippingCost=null, nShippingMethodId = 0 WHERE nCartOrderKey=" & mnCartId
+                                    moDBHelper.ExeProcessSql(cSqlUpdate)
+                                End If
+                            End If
+
+                            'If shipping option selected is collection don't change
+                            Dim bCollectionSelected As Boolean = False
                             For Each oRow In ods.Tables("Option").Rows
                                 If Not oRow.RowState = DataRowState.Deleted Then
-                                    If nShippingMethodId = oRow("nShipOptKey") Then
-                                        bIsAvail = True
+                                    If Not IsDBNull(oRow("bCollection")) Then
+                                        If oRow("nShipOptKey") = nShippingMethodId And oRow("bCollection") = True Then
+                                            bCollectionSelected = True
+                                        End If
                                     End If
                                 End If
                             Next
-                            'If not then strip it out.
-                            If bIsAvail = False Then
-                                nShippingMethodId = 0
-                                cartElmt.SetAttribute("shippingType", "0")
-                                cartElmt.SetAttribute("shippingCost", "")
-                                cartElmt.SetAttribute("shippingDesc", "")
-                                Dim cSqlUpdate As String = "UPDATE tblCartOrder SET cShippingDesc= null, nShippingCost=null, nShippingMethodId = 0 WHERE nCartOrderKey=" & mnCartId
-                                moDBHelper.ExeProcessSql(cSqlUpdate)
-                            End If
-                        End If
 
-                        'If shipping option selected is collection don't change
-                        Dim bCollectionSelected As Boolean = False
-                        For Each oRow In ods.Tables("Option").Rows
-                            If Not oRow.RowState = DataRowState.Deleted Then
-                                If Not IsDBNull(oRow("bCollection")) Then
-                                    If oRow("nShipOptKey") = nShippingMethodId And oRow("bCollection") = True Then
-                                        bCollectionSelected = True
-                                    End If
-                                End If
-                            End If
-                        Next
+                            For Each oRow In ods.Tables("Option").Rows
+                                If Not oRow.RowState = DataRowState.Deleted Then
+                                    If (Not oRow("nShipOptKey") = nLastID) Then
 
-                        For Each oRow In ods.Tables("Option").Rows
-                            If Not oRow.RowState = DataRowState.Deleted Then
-                                If (Not oRow("nShipOptKey") = nLastID) Then
-
-                                    If bCollectionSelected Then
-                                        'if collection allready selected... Show only this option
-                                        If nShippingMethodId = oRow("nShipOptKey") Then
-                                            oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
-                                            nShippingCost = CDbl("0" & oRow("nShippingTotal"))
-                                            nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
-                                            Dim optElmt As XmlElement = oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
-                                            Dim optLabel As XmlElement = optElmt.SelectSingleNode("label")
-                                            optLabel.SetAttribute("name", oRow("cShipOptName"))
-                                            optLabel.SetAttribute("carrier", oRow("cShipOptCarrier"))
-                                            optLabel.SetAttribute("cost", FormatNumber(nShippingCost, 2))
-                                        End If
-                                    Else
-                                        Dim bShowMethod As Boolean = True
-                                        'Don't show if a collection method
-                                        If moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
-                                            If Not IsDBNull(oRow("bCollection")) Then
-                                                If oRow("bCollection") = True Then
-                                                    bShowMethod = False
+                                        If bCollectionSelected Then
+                                            'if collection allready selected... Show only this option
+                                            If nShippingMethodId = oRow("nShipOptKey") Then
+                                                oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
+                                                nShippingCost = CDbl("0" & oRow("nShippingTotal"))
+                                                nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                                Dim optElmt As XmlElement = oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
+                                                Dim optLabel As XmlElement = optElmt.SelectSingleNode("label")
+                                                optLabel.SetAttribute("name", oRow("cShipOptName"))
+                                                optLabel.SetAttribute("carrier", oRow("cShipOptCarrier"))
+                                                optLabel.SetAttribute("cost", FormatNumber(nShippingCost, 2))
+                                            End If
+                                        Else
+                                            Dim bShowMethod As Boolean = True
+                                            'Don't show if a collection method
+                                            If moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
+                                                If Not IsDBNull(oRow("bCollection")) Then
+                                                    If oRow("bCollection") = True Then
+                                                        bShowMethod = False
+                                                    End If
                                                 End If
                                             End If
+                                            If bShowMethod Then
+                                                If bFirstRow Then oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
+                                                nShippingCost = CDbl("0" & oRow("nShippingTotal"))
+                                                nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                                Dim optElmt As XmlElement = oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
+                                                Dim optLabel As XmlElement = optElmt.SelectSingleNode("label")
+                                                optLabel.SetAttribute("name", oRow("cShipOptName"))
+                                                optLabel.SetAttribute("carrier", oRow("cShipOptCarrier"))
+                                                optLabel.SetAttribute("cost", FormatNumber(nShippingCost, 2))
+                                                bFirstRow = False
+                                                nLastID = oRow("nShipOptKey")
+                                            End If
                                         End If
-                                        If bShowMethod Then
-                                            If bFirstRow Then oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
-                                            nShippingCost = CDbl("0" & oRow("nShippingTotal"))
-                                            nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
-                                            Dim optElmt As XmlElement = oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
-                                            Dim optLabel As XmlElement = optElmt.SelectSingleNode("label")
-                                            optLabel.SetAttribute("name", oRow("cShipOptName"))
-                                            optLabel.SetAttribute("carrier", oRow("cShipOptCarrier"))
-                                            optLabel.SetAttribute("cost", FormatNumber(nShippingCost, 2))
-                                            bFirstRow = False
-                                            nLastID = oRow("nShipOptKey")
-                                        End If
+
+                                    End If
+                                End If
+
+                            Next
+                        End If
+
+                        ods = Nothing
+
+                        If LCase(moCartConfig("NotesOnOptions")) = "on" Then
+
+                            ' Dim oNotesGrp As XmlElement = oOptXform.addGroup(oOptXform.moXformElmt, "notes", "term4051", "Please add any details for the delivery here")
+                            oOptXform.addTextArea(oGrpElmt, "tblCartOrder/cClientNotes/Notes/Notes", False, "Please add any details for the delivery here", "")
+                            ' oGrpElmt.AppendChild(oNotesGrp)
+
+                        End If
+
+
+
+                        ' Allow to Select Multiple Payment Methods or just one
+                        Dim oPaymentCfg As XmlNode
+
+                        oPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
+                        'more than one..
+
+                        Dim bPaymentTypeButtons As Boolean = False
+                        If LCase(moCartConfig("PaymentTypeButtons")) = "on" Then bPaymentTypeButtons = True
+
+                        bFirstRow = True
+                        If Not oPaymentCfg Is Nothing Then
+                            If nAmount = 0 And nRepeatAmount = 0 Then
+
+                                oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = "No Charge"
+                                Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                oOptXform.addOption(oSelectElmt, "No Charge", "No Charge")
+                                bHidePayment = False
+                                AllowedPaymentMethods.Add("No Charge")
+
+                            ElseIf oPaymentCfg.SelectNodes("provider").Count > 1 Then
+
+                                If Not bPaymentTypeButtons Then
+                                    Dim oSelectElmt As XmlElement
+                                    oSelectElmt = oOptXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@ref='cPaymentMethod']")
+                                    If oSelectElmt Is Nothing Then
+                                        oSelectElmt = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                    End If
+                                    Dim nOptCount As Integer = oPay.getPaymentMethods(oOptXform, oSelectElmt, nAmount, mcPaymentMethod)
+
+                                    'Code Moved to Get PaymentMethods
+
+                                    If nOptCount = 0 Then
+                                        oOptXform.valid = False
+                                        oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.")
+                                    ElseIf nOptCount = 1 Then
+                                        'hide the options
+                                        oSelectElmt.SetAttribute("class", "hidden")
                                     End If
 
-                                End If
-                            End If
-
-                        Next
-                    End If
-
-                    ods = Nothing
-
-                    If LCase(moCartConfig("NotesOnOptions")) = "on" Then
-
-                        ' Dim oNotesGrp As XmlElement = oOptXform.addGroup(oOptXform.moXformElmt, "notes", "term4051", "Please add any details for the delivery here")
-                        oOptXform.addTextArea(oGrpElmt, "tblCartOrder/cClientNotes/Notes/Notes", False, "Please add any details for the delivery here", "")
-                        ' oGrpElmt.AppendChild(oNotesGrp)
-
-                    End If
-
-
-
-                    ' Allow to Select Multiple Payment Methods or just one
-                    Dim oPaymentCfg As XmlNode
-
-                    oPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
-                    'more than one..
-
-                    Dim bPaymentTypeButtons As Boolean = False
-                    If LCase(moCartConfig("PaymentTypeButtons")) = "on" Then bPaymentTypeButtons = True
-
-                    bFirstRow = True
-                    If Not oPaymentCfg Is Nothing Then
-                        If nAmount = 0 And nRepeatAmount = 0 Then
-
-                            oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = "No Charge"
-                            Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
-                            oOptXform.addOption(oSelectElmt, "No Charge", "No Charge")
-                            bHidePayment = False
-                            AllowedPaymentMethods.Add("No Charge")
-
-                        ElseIf oPaymentCfg.SelectNodes("provider").Count > 1 Then
-
-                            If Not bPaymentTypeButtons Then
-                                Dim oSelectElmt As XmlElement
-                                oSelectElmt = oOptXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@ref='cPaymentMethod']")
-                                If oSelectElmt Is Nothing Then
-                                    oSelectElmt = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
-                                End If
-                                Dim nOptCount As Integer = oPay.getPaymentMethods(oOptXform, oSelectElmt, nAmount, mcPaymentMethod)
-
-                                'Code Moved to Get PaymentMethods
-
-                                If nOptCount = 0 Then
-                                    oOptXform.valid = False
-                                    oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.")
-                                ElseIf nOptCount = 1 Then
-                                    'hide the options
-                                    oSelectElmt.SetAttribute("class", "hidden")
+                                    'step throught the payment methods to set as allowed.
+                                    Dim oOptElmt As XmlElement
+                                    For Each oOptElmt In oSelectElmt.SelectNodes("item")
+                                        AllowedPaymentMethods.Add(oOptElmt.SelectSingleNode("value").InnerText)
+                                    Next
                                 End If
 
-                                'step throught the payment methods to set as allowed.
-                                Dim oOptElmt As XmlElement
-                                For Each oOptElmt In oSelectElmt.SelectNodes("item")
-                                    AllowedPaymentMethods.Add(oOptElmt.SelectSingleNode("value").InnerText)
-                                Next
-                            End If
 
 
 
+                            ElseIf oPaymentCfg.SelectNodes("provider").Count = 1 Then
+                                'or just one
+                                If Not bPaymentTypeButtons Then
+                                    If oPay.HasRepeatPayments Then
+                                        Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                        oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, oOptXform, oSelectElmt)
 
-                        ElseIf oPaymentCfg.SelectNodes("provider").Count = 1 Then
-                            'or just one
-                            If Not bPaymentTypeButtons Then
-                                If oPay.HasRepeatPayments Then
-                                    Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
-                                    oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, oOptXform, oSelectElmt)
-
-                                    oOptXform.addOption(oSelectElmt, oPaymentCfg.SelectSingleNode("provider/description").Attributes("value").Value, oPaymentCfg.SelectSingleNode("provider").Attributes("name").Value)
-                                    bHidePayment = False
-                                    AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
-                                Else
-                                    bHidePayment = True
-                                    oOptXform.addInput(oGrpElmt, "cPaymentMethod", False, oPaymentCfg.SelectSingleNode("provider/@name").InnerText, "hidden")
-                                    oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = oPaymentCfg.SelectSingleNode("provider/@name").InnerText
-                                    AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
+                                        oOptXform.addOption(oSelectElmt, oPaymentCfg.SelectSingleNode("provider/description").Attributes("value").Value, oPaymentCfg.SelectSingleNode("provider").Attributes("name").Value)
+                                        bHidePayment = False
+                                        AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
+                                    Else
+                                        bHidePayment = True
+                                        oOptXform.addInput(oGrpElmt, "cPaymentMethod", False, oPaymentCfg.SelectSingleNode("provider/@name").InnerText, "hidden")
+                                        oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = oPaymentCfg.SelectSingleNode("provider/@name").InnerText
+                                        AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
+                                    End If
                                 End If
+                            Else
+                                oOptXform.valid = False
+                                oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.")
                             End If
                         Else
                             oOptXform.valid = False
                             oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.")
                         End If
-                    Else
-                        oOptXform.valid = False
-                        oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.")
-                    End If
 
-                    Dim cTermsTitle As String = "Terms and Conditions"
+                        Dim cTermsTitle As String = "Terms and Conditions"
 
-                    ' Adjust the group title
-                    If bAdjustTitle Then
-                        Dim cGroupTitle As String = "Select Delivery and Payment Option'"
-                        If bHideDelivery And bHidePayment Then cGroupTitle = "Terms and Conditions"
-                        If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Select Payment Option"
-                        If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Select Shipping Option"
-                        Dim labelElmt As XmlElement = oGrpElmt.SelectSingleNode("label")
-                        labelElmt.InnerText = cGroupTitle
-                        labelElmt.SetAttribute("class", "term3019")
+                        ' Adjust the group title
+                        If bAdjustTitle Then
+                            Dim cGroupTitle As String = "Select Delivery and Payment Option'"
+                            If bHideDelivery And bHidePayment Then cGroupTitle = "Terms and Conditions"
+                            If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Select Payment Option"
+                            If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Select Shipping Option"
+                            Dim labelElmt As XmlElement = oGrpElmt.SelectSingleNode("label")
+                            labelElmt.InnerText = cGroupTitle
+                            labelElmt.SetAttribute("class", "term3019")
 
-                        ' Just so we don't show the terms and conditions title twice
+                            ' Just so we don't show the terms and conditions title twice
 
-                        If cGroupTitle = "Terms and Conditions" Then
-                            cTermsTitle = ""
+                            If cGroupTitle = "Terms and Conditions" Then
+                                cTermsTitle = ""
+                            End If
+                        End If
+
+                        If bAddTerms Then
+
+                            If oGrpElmt.SelectSingleNode("*[@ref='terms']") Is Nothing Then
+                                oOptXform.addTextArea(oGrpElmt, "terms", False, cTermsTitle, "readonly terms-and-condiditons")
+                            End If
+
+                            If oGrpElmt.SelectSingleNode("*[@ref='confirmterms']") Is Nothing Then
+                                oOptXform.addSelect(oGrpElmt, "confirmterms", False, "&#160;", "", xForm.ApperanceTypes.Full)
+                                oOptXform.addOption(oGrpElmt.LastChild, "I agree to the Terms and Conditions", "Agree")
+                            End If
+
+                            If CInt("0" & moCartConfig("TermsContentId")) > 0 Then
+                                Dim termsElmt As New XmlDocument
+                                termsElmt.LoadXml(moDBHelper.getContentBrief(moCartConfig("TermsContentId")))
+                                mcTermsAndConditions = termsElmt.DocumentElement.InnerXml
+                            Else
+                                mcTermsAndConditions = moCartConfig("TermsAndConditions")
+                            End If
+
+                            If mcTermsAndConditions Is Nothing Then mcTermsAndConditions = ""
+
+                            oOptXform.Instance.SelectSingleNode("terms").InnerXml = mcTermsAndConditions
+
+                        End If
+
+                        oOptXform.addSubmit(oGrpElmt, "optionsForm", "Make Secure Payment")
+
+                        If bPaymentTypeButtons Then
+                            oPay.getPaymentMethodButtons(oOptXform, oOptXform.moXformElmt.SelectSingleNode("group"), nAmount)
+                            Dim oSubmitBtn As XmlElement
+                            For Each oSubmitBtn In oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit")
+                                AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"))
+                            Next
                         End If
                     End If
 
-                    If bAddTerms Then
-
-                        If oGrpElmt.SelectSingleNode("*[@ref='terms']") Is Nothing Then
-                            oOptXform.addTextArea(oGrpElmt, "terms", False, cTermsTitle, "readonly terms-and-condiditons")
-                        End If
-
-                        If oGrpElmt.SelectSingleNode("*[@ref='confirmterms']") Is Nothing Then
-                            oOptXform.addSelect(oGrpElmt, "confirmterms", False, "&#160;", "", xForm.ApperanceTypes.Full)
-                            oOptXform.addOption(oGrpElmt.LastChild, "I agree to the Terms and Conditions", "Agree")
-                        End If
-
-                        If CInt("0" & moCartConfig("TermsContentId")) > 0 Then
-                            Dim termsElmt As New XmlDocument
-                            termsElmt.LoadXml(moDBHelper.getContentBrief(moCartConfig("TermsContentId")))
-                            mcTermsAndConditions = termsElmt.DocumentElement.InnerXml
-                        Else
-                            mcTermsAndConditions = moCartConfig("TermsAndConditions")
-                        End If
-
-                        If mcTermsAndConditions Is Nothing Then mcTermsAndConditions = ""
-
-                        oOptXform.Instance.SelectSingleNode("terms").InnerXml = mcTermsAndConditions
-
-                    End If
-
-                    oOptXform.addSubmit(oGrpElmt, "optionsForm", "Make Secure Payment")
-
-                    If bPaymentTypeButtons Then
-                        oPay.getPaymentMethodButtons(oOptXform, oOptXform.moXformElmt.SelectSingleNode("group"), nAmount)
-                        Dim oSubmitBtn As XmlElement
-                        For Each oSubmitBtn In oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit")
-                            AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"))
-                        Next
-                    End If
-                End If
-
-                oOptXform.valid = False
+                    oOptXform.valid = False
 
                 Dim submittedPaymentMethod As String = myWeb.moRequest("submit")
                 If submittedPaymentMethod = "Make Secure Payment" Then

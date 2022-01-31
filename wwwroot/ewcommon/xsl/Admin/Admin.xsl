@@ -3017,8 +3017,10 @@
 				<xsl:apply-templates select="Menu/MenuItem" mode="editStructure">
 					<xsl:with-param name="level">1</xsl:with-param>
 				</xsl:apply-templates>
+			    <xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="editStructure">
+				    <xsl:with-param name="level">1</xsl:with-param>
+			    </xsl:apply-templates>
 			</ul>
-
 		</div>
 	</xsl:template>
 
@@ -3028,9 +3030,14 @@
 	<!-- -->
 	<!-- -->
 	<!-- -->
+
 	<xsl:template match="MenuItem" mode="editStructure">
 		<xsl:param name="level"/>
-
+		
+		<xsl:variable name="thislevel">
+			<xsl:value-of select="$level"/>
+		</xsl:variable>
+			
 		<xsl:variable name="siteRoot">
 			<xsl:call-template name="getSettings">
 				<xsl:with-param name="sectionName" select="'web'"/>
@@ -3044,6 +3051,7 @@
 				<xsl:with-param name="valueName" select="'MenuTreeDepth'"/>
 			</xsl:call-template>
 		</xsl:variable>
+	
 		<xsl:variable name="menuLevelDepth">
 			<xsl:choose>
 				<xsl:when test="$getMenuLevelDepth = ''">
@@ -3054,15 +3062,20 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
-		<li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+		<li id="node{@id}" data-tree-level="{$thislevel}">
+			<xsl:attribute name="data-tree-parent">
+				<xsl:if test="not(DisplayName/@siteTemplate='micro' and $thislevel='1')">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+				</xsl:if>
+			</xsl:attribute>
 			<xsl:attribute name="class">
 				<xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
 					<xsl:text>clone context</xsl:text>
 					<xsl:value-of select="@cloneparent"/>
 				</xsl:if>
 				<xsl:text> list-group-item level-</xsl:text>
-				<xsl:value-of select="$level"/>
+				<xsl:value-of select="$thislevel"/>
 				<xsl:if test="MenuItem"> expandable</xsl:if>
 			</xsl:attribute>
 
@@ -3080,7 +3093,7 @@
 				</xsl:variable>
 				<a href="{$pageLink}" title="{@name}" name="{@id}">
           <xsl:choose>
-            <xsl:when test="DisplayName/@siteTemplate='micro'">
+            <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
               <i class="fa fa-home fa-lg status activeParent" xmlns="http://www.w3.org/1999/xhtml">
                 &#160;
               </i>
@@ -3237,7 +3250,7 @@
 
 							<xsl:apply-templates select="MenuItem" mode="editStructure">
 								<xsl:with-param name="level">
-									<xsl:value-of select="$level + 1"/>
+									<xsl:value-of select="$thislevel + 1"/>
 								</xsl:with-param>
 							</xsl:apply-templates>
 
@@ -3251,7 +3264,7 @@
 
 						<xsl:apply-templates select="MenuItem" mode="editStructure">
 							<xsl:with-param name="level">
-								<xsl:value-of select="$level + 1"/>
+								<xsl:value-of select="$thislevel + 1"/>
 							</xsl:with-param>
 						</xsl:apply-templates>
 
@@ -3262,13 +3275,16 @@
 						<xsl:if test="MenuItem">
 							<xsl:apply-templates select="MenuItem" mode="editStructure">
 								<xsl:with-param name="level">
-									<xsl:value-of select="$level + 1"/>
+									<xsl:value-of select="$thislevel + 1"/>
 								</xsl:with-param>
 							</xsl:apply-templates>
 						</xsl:if>
 					</xsl:if>
 				</xsl:otherwise>
 			</xsl:choose>
+
+
+		</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
@@ -3287,7 +3303,7 @@
 					</div>
 					<div class="panel-body">
 						<p>To move the page identified as "moving..." click the move here link on a another page.</p>
-						<p>The moved page will be added beneath the page you have selected.</p>
+						<p>The moved page will be added beneath the page you have selected...</p>
 					</div>
 				</div>
 			</div>
@@ -3295,6 +3311,9 @@
 				<div class="panel panel-default">
 					<ul id="MenuTree" class="list-group">
 						<xsl:apply-templates select="Menu/MenuItem" mode="movePage">
+							<xsl:with-param name="level">1</xsl:with-param>
+						</xsl:apply-templates>
+						<xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="movePage">
 							<xsl:with-param name="level">1</xsl:with-param>
 						</xsl:apply-templates>
 					</ul>
@@ -3305,7 +3324,13 @@
 
 	<xsl:template match="MenuItem" mode="movePage">
 		<xsl:param name="level"/>
-		<li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+		<li id="node{@id}" data-tree-level="{$level}">
+			<xsl:attribute name="data-tree-parent">
+				<xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+				</xsl:if>
+			</xsl:attribute>
 			<!--<xsl:apply-templates select="." mode="status_legend"/>-->
 			<!--<xsl:if test="(position()+1) mod 2=0">
 				<xsl:attribute name="class">alternate</xsl:attribute>
@@ -3320,7 +3345,7 @@
 			</xsl:attribute>
 			<div class="pageCell">
 	          <xsl:choose>
-                  <xsl:when test="DisplayName/@siteTemplate='micro'">
+                  <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
                     <i class="fa fa-home fa-lg status activeParent">
                       &#160;
                     </i>
@@ -3385,6 +3410,7 @@
 			</xsl:apply-templates>
 
 		</xsl:if>
+	</xsl:if>
 	</xsl:template>
 
 	<!-- -->
@@ -3406,6 +3432,9 @@
 				<div class="panel panel-default">
 					<ul id="MenuTree" class="list-group">
 						<xsl:apply-templates select="Menu/MenuItem" mode="moveContent">
+							<xsl:with-param name="level">1</xsl:with-param>
+						</xsl:apply-templates>
+						<xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="moveContent">
 							<xsl:with-param name="level">1</xsl:with-param>
 						</xsl:apply-templates>
 					</ul>
@@ -3430,10 +3459,16 @@
 		<xsl:variable name="class">
 			<xsl:if test="MenuItem"> expandable</xsl:if>
 		</xsl:variable>
-		<li id="node{@id}" class="list-group-item level-{$level} {$class}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+		<li id="node{@id}" class="list-group-item level-{$level} {$class}" data-tree-level="{$level}">
+			<xsl:attribute name="data-tree-parent">
+				<xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+				</xsl:if>
+			</xsl:attribute>
 			<div class="pageCell">
         <xsl:choose>
-          <xsl:when test="DisplayName/@siteTemplate='micro'">
+          <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
             <i class="fa fa-home fa-lg status activeParent">
               &#160;
             </i>
@@ -3465,14 +3500,19 @@
 				</xsl:choose>
 			</div>
 		</li>
+			
 		<xsl:if test="PageVersion">
-
+			<xsl:variable name="data-tree-parent">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+			</xsl:variable>
+			<xsl:variable name="data-tree-level" select="number($level)+1"/>
 			<xsl:for-each select="PageVersion">
-				<li id="node{@id}" class="list-group-item level-{$level} page-version">
+				<li id="node{@id}" class="list-group-item level-{$data-tree-level} page-version" data-tree-level="{$data-tree-level}" data-tree-parent="{$data-tree-parent}">
 					<div class="pageCell">
 						<xsl:apply-templates select="." mode="status_legend"/>
 						<span class="pageName">
 							Version - <xsl:value-of select="@name"/> - <xsl:value-of select="@desc"/>
+							<xsl:value-of select="parent::*/@id"/>
 						</span>
 					</div>
 					<div class="optionButtons">
@@ -3493,6 +3533,7 @@
 					<xsl:value-of select="$level + 1"/>
 				</xsl:with-param>
 			</xsl:apply-templates>
+		</xsl:if>
 		</xsl:if>
 	</xsl:template>
 	<!-- -->
@@ -3537,6 +3578,9 @@
 							<xsl:apply-templates select="Menu/MenuItem" mode="LocateContent">
 								<xsl:with-param name="level">1</xsl:with-param>
 							</xsl:apply-templates>
+							<xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="LocateContent">
+								<xsl:with-param name="level">1</xsl:with-param>
+							</xsl:apply-templates>
 						</ul>
 						<div class="panel-footer">
 							<button type="submit" name="submit" class="pull-right btn btn-success btn-sm" value="submit">
@@ -3557,7 +3601,13 @@
 	<!-- ###### NEW AJAX TREE VIEW - COMMENTED UNTIL THE LOCATIONS AND THE TREE VIEW WORK ###### -->
 	<xsl:template match="MenuItem" mode="LocateContent">
 		<xsl:param name="level"/>
-		<li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+		<li id="node{@id}" data-tree-level="{$level}">
+			<xsl:attribute name="data-tree-parent">
+				<xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+				</xsl:if>
+			</xsl:attribute>
 			<xsl:attribute name="class">
 				<xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
 					<xsl:text>clone context</xsl:text>
@@ -3569,7 +3619,7 @@
 			</xsl:attribute>
 			<div class="pageCell">
         <xsl:choose>
-          <xsl:when test="DisplayName/@siteTemplate='micro'">
+          <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
             <i class="fa fa-home fa-lg status activeParent">
               &#160;
             </i>
@@ -3680,6 +3730,7 @@
 				</xsl:with-param>
 			</xsl:apply-templates>
 
+		</xsl:if>
 		</xsl:if>
 	</xsl:template>
 

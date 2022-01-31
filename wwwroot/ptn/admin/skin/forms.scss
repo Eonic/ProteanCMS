@@ -136,7 +136,7 @@ form.xform {
     }
 
     .nav-link label {
-        cursor:pointer;
+        cursor: pointer;
     }
 
     .form-tab-wrapper {
@@ -183,6 +183,11 @@ form.xform {
             padding: 0 20px 20px;
         }
     }
+
+    .pick-page .selected {
+       background: $admin-primary;
+       a{ color: #ffffff;}
+    }
 }
 .ewXform > div:first-child > h3 {
     text-align: center;
@@ -218,7 +223,7 @@ form.xform {
     }
 }
 
-.ewAdmin #adminLayout {
+.ptn-edit #adminLayout {
     padding-bottom: 28px;
     flex-grow: 1;
 
@@ -694,7 +699,7 @@ form.xform .relatedContent-group {
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
 }
 //buttons and colour overrides
-.ewAdmin #adminLayout {
+.ptn-edit #adminLayout {
     .btn-info {
         @include button-variant($admin-info,$admin-info);
     }
@@ -711,7 +716,7 @@ form.xform .relatedContent-group {
     float:left;
 }
 //resource library
-.ewAdmin #files .popover-content {
+.ptn-edit #files .popover-content {
     width: 500px;
 
     img {
@@ -897,7 +902,7 @@ form .form-actions .required {
         color:$admin-primary!important;
     }
 }
-.ewAdmin #template_EditPermissions {
+.ptn-edit #template_EditPermissions {
     #MenuTree {
         padding-left: 0;
     }

@@ -130,7 +130,9 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
-      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+
+
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <xsl:if test="count(submit) &gt; 0">
         <xsl:if test="not(submit[contains(@class,'hideRequired')])">
           <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
@@ -174,7 +176,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
-      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat |  alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <xsl:if test="count(submit) &gt; 0">
         <xsl:choose>
           <xsl:when test="contains(@class,'form-inline')">
@@ -222,7 +224,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
-      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <div class="form-group input-containing ">
         <div class="control-wrapper input-wrapper appearance- ">
           <xsl:apply-templates select="submit" mode="xform"/>
@@ -287,7 +289,7 @@
                     <xsl:value-of select="@ref"/>
                   </xsl:with-param>
                 </xsl:apply-templates>
-              </div>
+             </div>
             </xsl:if>
             <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | trigger" mode="xform_cols_pt"/>
 
@@ -744,12 +746,11 @@
           <xsl:text> col-md-offset-3</xsl:text>
         </xsl:if>
       </xsl:if>
-
     </xsl:variable>
 
 
     <xsl:choose>
-      <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!='' or hint">
+      <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
         <div class="input-group x">
           <xsl:if test="@prefixIcon!=''">
             <span class="input-group-addon">
@@ -773,10 +774,10 @@
               <i class="{@suffixIcon}">&#160;</i>
             </span>
           </xsl:if>
-          <xsl:if test="hint">
+			<!--xsl:if test="hint">
             <xsl:apply-templates select="." mode="hintButton"/>
 
-          </xsl:if>
+          </xsl:if-->
         </div>
       </xsl:when>
       <xsl:otherwise>
@@ -3023,12 +3024,14 @@
           <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
         </xsl:otherwise>
       </xsl:choose>
+	  <xsl:apply-templates select="parent::group" mode="infoButton"/>
     </legend>
   </xsl:template>
 
   <xsl:template match="label" mode="xform">
     <label class="form-label">
       <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+		<xsl:apply-templates select="parent::*" mode="infoButton"/>
     </label>
   </xsl:template>
 
@@ -3078,7 +3081,7 @@
           <span class="req">*</span>
         </xsl:if>
       </label>
-      <xsl:apply-templates select="parent::*[help]" mode="infoButton"/>
+      <xsl:apply-templates select="parent::*[help|hint]" mode="infoButton"/>
     </xsl:if>
   </xsl:template>
 
@@ -3122,16 +3125,64 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
-    <xsl:text>&#160;</xsl:text>
-    <a data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
-      <i class="fas fa-info-circle">
-        <xsl:text> </xsl:text>
-      </i>
-    </a>
-    <div class="popover-content" role="tooltip">
-      <xsl:copy-of select="help/node()"/>
-    </div>
+	  <xsl:choose>
+		  <xsl:when test="help">
+			  <xsl:text>&#160;</xsl:text>
+			  <a data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
+				  <i class="fas fa-question-circle">
+					  <xsl:text> </xsl:text>
+				  </i>
+			  </a>
+			  <div class="popover-content" role="tooltip">
+				  <xsl:copy-of select="help/node()"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="hint">
+			  <xsl:text>&#160;</xsl:text>
+			  <a data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
+				  <i class="fas fa-info-circle">
+					  <xsl:text> </xsl:text>
+				  </i>
+			  </a>
+			  <div class="popover-content" role="tooltip">
+				  <xsl:copy-of select="hint/node()"/>
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
+
+	<xsl:template match="group" mode="infoButton">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<xsl:variable name="ref2">
+			<xsl:value-of select="translate($ref,'/','-')"/>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="help">
+				<xsl:text>&#160;</xsl:text>
+				<a data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
+					<i class="fas fa-info-circle">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+				<div class="popover-content" role="tooltip">
+					<xsl:copy-of select="help/node()"/>
+				</div>
+			</xsl:when>
+			<xsl:when test="hint">
+				<xsl:text>&#160;</xsl:text>
+				<a data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
+					<i class="fas fa-info-circle">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+				<div class="popover-content" role="tooltip">
+					<xsl:copy-of select="hint/node()"/>
+				</div>
+			</xsl:when>			
+		</xsl:choose>
+	</xsl:template>
 
   <xsl:template match="input[not(contains(@class,'hidden'))] | secret | select | select1 | range | textarea | upload" mode="alertButton">
     <xsl:variable name="ref">
@@ -3374,7 +3425,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="input[not(contains(@class,'hidden'))] | secret | select | select1 | range | textarea | upload" mode="hintButton">
+	<!--xsl:template match="input[not(contains(@class,'hidden'))] | secret | select | select1 | range | textarea | upload" mode="hintButton">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
@@ -3389,7 +3440,7 @@
         <xsl:text> </xsl:text>
       </i>
     </button>
-  </xsl:template>
+  </xsl:template-->
 
   <xsl:template match="submit[@submission='oAuth']" mode="xform">
     <xsl:variable name="class">

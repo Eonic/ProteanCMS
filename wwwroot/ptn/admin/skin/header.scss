@@ -9,7 +9,7 @@
 }
 //end
 
-body.ewAdmin {
+body.ptn-edit {
     background-color: $admin-bg;
 }
 
@@ -18,11 +18,11 @@ body.normalMode, #adminLayout {
         padding-top: 45px !important;
     }
 }
-.normalMode .ewAdmin #adminHeader {
+.normalMode .ptn-edit #adminHeader {
     z-index: 9990;
 }
 
-.ewAdmin #adminHeader {
+.ptn-edit #adminHeader {
     background: $admin-header-bg;
     z-index: 1000;
     font-size: 15px;

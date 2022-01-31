@@ -6687,7 +6687,7 @@
     ],
     "url": "<xsl:value-of select="$href"/>"
     <xsl:apply-templates select="." mode="organiser"/>
-    } } ]
+    } ]
   </xsl:template>
   <xsl:template match="Content[@type='Event' and ancestor::ContentDetail]" mode="organiser">
     <!-- Copy this to set the value site wide for the organiastion events.
@@ -6711,12 +6711,20 @@
     "addressRegion": "<xsl:value-of select="Organization/location/PostalAddress/addressRegion/node()"/>",
     "postalCode": "<xsl:value-of select="Organization/location/PostalAddress/postalCode/node()"/>",
     "addressCountry": "<xsl:value-of select="Organization/location/PostalAddress/addressCountry/node()"/>"
-    },
+    }},
   </xsl:template>
 
   <xsl:template match="Content[@type='Performer']" mode="JSONLD">
     {"@type": "MusicGroup",
-    "name": "<xsl:value-of select="Surname/node()"/>",
+    "name": "<xsl:apply-templates select="." mode="getDisplayName" />",
+	<xsl:if test="JobTitle/node()!=''">	
+    "additionalName": "<xsl:value-of select="JobTitle/node()"/>", 
+	"description": "<xsl:call-template name="escape-json">
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="Profile/*" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>",
+	</xsl:if>
     "sameAs": [
       "<xsl:apply-templates select="self::Content" mode="getHref">
       <xsl:with-param name="parId" select="@parId"/>
@@ -6748,10 +6756,10 @@
     "@type": "Offer",
     "description":"<xsl:value-of select="@name"/>",
     "url": "<xsl:value-of select="$href"/>",
-    "price": "<xsl:apply-templates select="." mode="displayPrice" />",
+    "price": "<xsl:apply-templates select="." mode="PriceNumberic" />",
     "priceCurrency": "GBP",
     "availability": "https://schema.org/InStock",
-    "validFrom": "<xsl:value-of select="@publishDate"/>"
+    "validFrom": "<xsl:value-of select="@publish"/>"
     }
     <xsl:if test="position()!=last()">,</xsl:if>
   </xsl:template>

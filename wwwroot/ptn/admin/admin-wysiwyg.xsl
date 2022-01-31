@@ -28,50 +28,26 @@
     <link type="text/css" rel="stylesheet" href="/ptn/admin/preview.scss?v={$scriptVersion}"/>
   </xsl:template>
 
-  <xsl:template match="Page" mode="adminJs">
-    <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo">&#160;</script>
-    </xsl:if>
-    <xsl:call-template name="bundle-js">
-      <xsl:with-param name="comma-separated-files">
-        <xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/protean-vue.js</xsl:text>
-      </xsl:with-param>
-      <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/Admin</xsl:text>
-      </xsl:with-param>
-    </xsl:call-template>
-
-    <xsl:apply-templates select="." mode="siteAdminJs"/>
-
-    <xsl:apply-templates select="." mode="LayoutAdminJs"/>
-
-    <!--xsl:apply-templates select="." mode="xform_control_scripts"/-->
-
-  </xsl:template>
 
   <!-- -->
   <xsl:template match="Page" mode="siteAdminJs"></xsl:template>
+
+	<xsl:template match="Page[@adminMode='false']" mode="siteAdminJs">
+		<script type="text/javascript" src="/ptn/libs/jqueryui/jquery-ui.js">&#160;</script>
+		<script type="text/javascript" src="/ptn/admin/admin-wysiwyg.js">&#160;</script>
+	</xsl:template>
 
   <!--In admin WYSIWYG mode-->
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
     <body id="pg_{@id}" class="normalMode">
       <xsl:apply-templates select="." mode="bodyStyle"/>
-      <div class="ewAdmin">
+      <div class="ptn-edit">
         <xsl:apply-templates select="AdminMenu"/>
       </div>
       <div id="dragableModules">
         <xsl:apply-templates select="." mode="bodyDisplay"/>
       </div>
-      <div class="ewAdmin">
+      <div class="ptn-edit">
         <xsl:apply-templates select="." mode="adminFooter"/>
       </div>
       <xsl:apply-templates select="." mode="footerJs"/>
@@ -256,7 +232,7 @@
 					<xsl:value-of select="$class"/>
 				</xsl:if>
 			</xsl:attribute>
-			<div class="ewAdmin options addmodule">
+			<div class="ptn-edit options addmodule">
 				
 				<div class="addHere">
 					<strong>
@@ -276,7 +252,7 @@
   <xsl:template match="Page" mode="inlinePopupPageAdd">
     <xsl:param name="text"/>
     <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddPage'] and $adminMode">
-      <div class="ewAdmin options">
+      <div class="ptn-edit options">
         <a href="?ewCmd=AddPage&amp;parId={/Page/@id}" class="add adminButton">
           <xsl:value-of select="$text"/>
         </a>
@@ -299,7 +275,7 @@
         <xsl:text> editable</xsl:text>
       </xsl:attribute>
 
-      <div class="ewAdmin options">
+      <div class="ptn-edit options">
         <div class="dropdown pull-right">
           <button href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
             <i class="fas fa-edit fa-lg">&#160;</i>&#160;
@@ -393,7 +369,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
-          <div class="ewAdmin options">
+          <div class="ptn-edit options">
             <xsl:apply-templates select="/Page" mode="inlinePopupAdd">
               <xsl:with-param name="type">
                 <xsl:value-of select="$type"/>
@@ -433,7 +409,7 @@
           <xsl:value-of select="$class"/>
         </xsl:if>
       </xsl:attribute>
-      <div class="ewAdmin options addmodule">
+      <div class="ptn-edit options addmodule">
         <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
           <i class="fa fa-th-large">&#160;</i>&#160;
           <xsl:value-of select="$text"/>
@@ -474,7 +450,7 @@
         </xsl:if>
       </xsl:attribute>
       <xsl:if test="not(/Page/Contents/Content[@position = $position])">
-        <div class="ewAdmin options addmodule">
+        <div class="ptn-edit options addmodule">
           <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
             <i class="fa fa-th-large">&#160;</i>&#160;<xsl:text>Add Module</xsl:text>
           </a>
@@ -499,7 +475,7 @@
     <xsl:param name="position"/>
     <xsl:if test="/Page/@adminMode">
 
-      <div class="ewAdmin options addmodule">
+      <div class="ptn-edit options addmodule">
         <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddMailModule&amp;pgid={/Page/@id}&amp;position={$position}">
           <i class="fa fa-th-large">&#160;</i>&#160;
           <xsl:value-of select="$text"/>
@@ -525,7 +501,7 @@
     <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
       <xsl:choose>
         <xsl:when test="contains($type,',')">
-          <div class="dropdown pull-right ewAdmin options addmodule">
+          <div class="dropdown pull-right ptn-edit options addmodule">
             <a href="#" class="btn btn-default btn-xs pull-right" data-bs-toggle="dropdown">
               <i class="fa fa-plus">&#160;</i>&#160;
               <xsl:value-of select="$text"/>&#160;
@@ -556,7 +532,7 @@
           </div>
         </xsl:when>
         <xsl:when test="contains($find,'true')">
-          <div class="ewAdmin options">
+          <div class="ptn-edit options">
             <div class="dropdown pull-right">
               <a href="#" class="btn btn-default btn-xs pull-right" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
@@ -579,7 +555,7 @@
           </div>
         </xsl:when>
         <xsl:when test="contains($find,'only')">
-          <div class="ewAdmin options">
+          <div class="ptn-edit options">
             <div class="dropdown pull-right">
               <a href="#" class="btn btn-default btn-xs pull-right" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>&#160;
@@ -597,7 +573,7 @@
           </div>
         </xsl:when>
         <xsl:otherwise>
-          <div class="ewAdmin options">
+          <div class="ptn-edit options">
             <xsl:variable name="href">
               <xsl:text>?ewCmd=AddContent</xsl:text>
               <xsl:text>&amp;pgid=</xsl:text>
@@ -644,7 +620,7 @@
       </xsl:if>
     </xsl:variable>
     <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
-      <div class="ewAdmin options">
+      <div class="ptn-edit options">
         <div class="dropdown pull-right">
           <a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
             <i class="fa fa-plus">&#160;</i>
@@ -684,7 +660,7 @@
             <xsl:when test="@display='all'">
               <xsl:choose>
                 <xsl:when test="$type='Module' and @moduleType='Tabbed'">
-                  <div class="ewAdmin options">
+                  <div class="ptn-edit options">
                     <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={$page/@id}&amp;position=tabbed-{@id}">
                       <i class="fa fa-th-large">&#160;</i>&#160;
                       Add Tab
@@ -805,7 +781,7 @@
           </xsl:apply-templates>
         </xsl:when>
         <xsl:otherwise>
-          <div class="ewAdmin options">
+          <div class="ptn-edit options">
             <div class="dropdown pull-right">
               <a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
                 <i class="fa fa-plus">&#160;</i>
@@ -843,7 +819,7 @@
     <xsl:param name="find"/>
     <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
       <xsl:if test="not(Content[@type=$type]) and not(Contnet[@name=$name])">
-        <div class="ewAdmin options">
+        <div class="ptn-edit options">
           <a href="#" class="btn btn-primary edit pull-right" data-bs-toggle="dropdown">
             <i class="fa fa-plus">&#160;</i>&#160;
             <xsl:value-of select="$text"/>&#160;
@@ -980,7 +956,7 @@
       </xsl:attribute>
       <div>
         <xsl:attribute name="class">
-          <xsl:text>ewAdmin options</xsl:text>
+          <xsl:text>ptn-edit options</xsl:text>
           <xsl:if test="@type='Module'">
             <xsl:text> moduleDrag</xsl:text>
           </xsl:if>
@@ -1320,7 +1296,7 @@
       </xsl:attribute>
       <div>
         <xsl:attribute name="class">
-          <xsl:text>ewAdmin options</xsl:text>
+          <xsl:text>ptn-edit options</xsl:text>
         </xsl:attribute>
         <a class="adminButton popup">
           <xsl:attribute name="href">
@@ -1356,7 +1332,7 @@
         <xsl:value-of select="@class"/>
         <xsl:text> editable</xsl:text>
       </xsl:attribute>
-      <div class="ewAdmin over-content dropdown options pull-right">
+      <div class="ptn-edit over-content dropdown options pull-right">
         <a href="#" class="btn btn-primary btn-xs pull-right" data-bs-toggle="dropdown">
           <i class="fas fa-edit fa-lg">&#160;</i>&#160;
           <xsl:if test="@status=0">[hidden]</xsl:if>
