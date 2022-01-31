@@ -267,7 +267,7 @@
           <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
         </div>
         <xsl:if test="count(submit) &gt; 0">
-          <div class=" clearfix pe-3 ps-3">
+          <div class=" clearfix pe-3 ps-3 mt-3">
             <xsl:if test="ancestor-or-self::group/descendant-or-self::*[contains(@class,'required')]">
               <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
               <span class="required">

@@ -617,12 +617,12 @@
           </i>
         </xsl:when>
         <xsl:when test="$classVal!=''">
-          <i class="fa fa-exclamation-triangle fa-2x pull-left">
+          <i class="fa fa-exclamation-triangle  pull-left">
             <xsl:text> </xsl:text>
           </i>
         </xsl:when>
         <xsl:otherwise>
-          <i class="fa fa-exclamation-circle fa-2x pull-left">
+          <i class="fa fa-exclamation-circle  pull-left">
             <xsl:text> </xsl:text>
           </i>
         </xsl:otherwise>
@@ -753,24 +753,24 @@
       <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
         <div class="input-group x">
           <xsl:if test="@prefixIcon!=''">
-            <span class="input-group-addon">
+            <span class="input-group-text">
               <i class="{@prefixIcon}">&#160;</i>
             </span>
           </xsl:if>
           <xsl:if test="@prefix!=''">
-            <div class="input-group-addon">
+            <div class="input-group-text">
               <xsl:value-of select="@prefix"/>
             </div>
           </xsl:if>
 
           <xsl:apply-templates select="." mode="xform_control"/>
           <xsl:if test="@suffix!=''">
-            <div class="input-group-addon">
+            <div class="input-group-texx">
               <xsl:value-of select="@suffix"/>
             </div>
           </xsl:if>
           <xsl:if test="@suffixIcon!=''">
-            <span class="input-group-addon">
+            <span class="input-group-text">
               <i class="{@suffixIcon}">&#160;</i>
             </span>
           </xsl:if>

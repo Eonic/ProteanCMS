@@ -657,289 +657,292 @@
     </xsl:variable>
 
     <section>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="matchHeight dashboard-first-column">
+                  <div class="card card-default">
+                    <div class="card-header">
+                      <h4 >What's New</h4>
+                    </div>
+                    <div class="card-body">
+                      <xsl:choose>
+                        <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+                          <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <h3>
+                            <strong>ProteanCMS</strong>
+                          </h3>
+                          <p>ProteanCMS is fully opensource.</p>
+                          <a href="https://www.proteancms.com">For more information click here.</a>
+                        </xsl:otherwise>
+                      </xsl:choose>
+                    </div>
+                  </div>
+                  <div class="card card-default dashboard-contact">
+                    <div class="card-header">
+                      <h4 >Get Help</h4>
+                    </div>
+                    <div class="card-body">
+                      <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
+                        <p>
+                          <a href="https://www.facebook.com/proteancms" class="" target="_new">
+                            <i class="fab fa-facebook-square fa-lg"> </i>Follow ProteanCMS
+                          </a>
+                        </p>
+                        <p>
+                          <a href="https://www.linkedin.com/groups?gid=1840777" class="" target="_new">
+                            <i class="fab fa-linkedin fa-lg"> </i>Join our LinkedIn Group
+                          </a>
+                        </p>
 
-      <div class="row">
-        <div class="col-md-9">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="matchHeight dashboard-first-column">
-                <div class="card card-default">
-                  <div class="card-header">
-                    <h3 >What's New</h3>
-                  </div>
-                  <div class="card-body">
-                    <xsl:choose>
-                      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-                        <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <h3>
-                          <strong>ProteanCMS</strong>
-                        </h3>
-                        <p>ProteanCMS is fully opensource.</p>
-                        <a href="https://www.proteancms.com">For more information click here.</a>
-                      </xsl:otherwise>
-                    </xsl:choose>
-                  </div>
-                </div>
-                <div class="card card-default">
-                  <div class="card-header">
-                    <h3 >Get Help</h3>
-                  </div>
-                  <div class="card-body">
-                    <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
-                      <h5>
-                        <a href="https://www.facebook.com/proteancms" class="" target="_new">
-                          <i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS on Facebook
+
+                      </xsl:if>
+                      <p>
+                          <i class="fa fa-phone"> </i>
+                          <xsl:call-template name="eonicwebSupportTelephone"/>
+                      </p>
+                      <p>
+                        <a href="mailto:{$supportEmail}" title="Email Support">
+                          <i class="fa fa-envelope"> </i><xsl:value-of select="$supportEmail"/>
                         </a>
-                      </h5>
-                      <h5>
-                        <a href="https://www.linkedin.com/groups?gid=1840777" class="" target="_new">
-                          <i class="fa fa-linkedin-square fa-lg">&#160;</i>&#160;Join our LinkedIn Group
+                      </p>
+                      <p>
+                        <i class="fa fa-globe"> </i> <a title="view the latest news">
+                          <xsl:attribute name="href">
+                            <xsl:text>http://{$supportWebsite}?utm_campaign=cmsadminsystem&amp;utm_source=</xsl:text>
+                            <xsl:value-of select="//ServerVariables/Item[@name='SERVER_NAME']/node()"/>
+                          </xsl:attribute>
+                          <xsl:value-of select="$supportWebsite"/>
                         </a>
-                      </h5>
-
-
-                    </xsl:if>
-                    <h5>
-                      <i class="fa fa-phone">&#160;</i>&#160;<xsl:call-template name="eonicwebSupportTelephone"/>
-                    </h5>
-                    <h5>
-                      <i class="fa fa-envelope">&#160;</i>&#160;<a href="mailto:{$supportEmail}" title="Email Support">
-                        <xsl:value-of select="$supportEmail"/>
-                      </a>
-                    </h5>
-                    <h5>
-                      <i class="fa fa-globe">&#160;</i>&#160;	<a title="view the latest news">
-                        <xsl:attribute name="href">
-                          <xsl:text>http://{$supportWebsite}?utm_campaign=cmsadminsystem&amp;utm_source=</xsl:text>
-                          <xsl:value-of select="//ServerVariables/Item[@name='SERVER_NAME']/node()"/>
-                        </xsl:attribute>
-                        <xsl:value-of select="$supportWebsite"/>
-                      </a>
-                    </h5>
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card card-default matchHeight">
-                <div class="card-header">
-                  <h3 >Performance Tips</h3>
-                </div>
-                <div class="card-body">
-                  <p>Have you checked Google Analytics recently ?</p>
                 </div>
               </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card card-default matchHeight">
-                <div class="card-header">
-                  <h3 >Insights</h3>
+              <div class="col-lg-4">
+                <div class="card card-default matchHeight">
+                  <div class="card-header">
+                    <h4 >Performance Tips</h4>
+                  </div>
+                  <div class="card-body">
+                    <p>Have you checked Google Analytics recently ?</p>
+                  </div>
                 </div>
-                <div class="card-body">
-                  <div id="insights-section">
-                    <xsl:for-each select="$page/AdminMenu/MenuItem/Module">
-                      <xsl:if test="@name != ''">
-                        <xsl:variable name="id" select="@id"/>
-                        <xsl:variable name="jsonURL" select="@jsonURL"/>
-                        <div id="metric_{position()}" class="metric" data-json-url="{$jsonURL}">
-                          <div class="metric-inner">
-                            <header class="metric-header">
-                              <h1 class="metric-title">
-                                <xsl:value-of select="@name"/>
-                              </h1>
-                            </header>
-                            <div class="metric-body">
-                              <div class="value">
-                                <h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
-                                  <b>{{result.Key}}</b>: {{result.Value}}<br/>
+              </div>
+              <div class="col-lg-4">
+                <div class="card card-default">
+                  <div class="card-header">
+                    <h4 >Insights</h4>
+                  </div>
+                  <div class="card-body">
+                    <div id="insights-section">
+                      <xsl:for-each select="$page/AdminMenu/MenuItem/Module">
+                        <xsl:if test="@name != ''">
+                          <xsl:variable name="id" select="@id"/>
+                          <xsl:variable name="jsonURL" select="@jsonURL"/>
+                          <div id="metric_{position()}" class="metric" data-json-url="{$jsonURL}">
+                            <div class="metric-inner">
+                              <header class="metric-header">
+                                <h1 class="metric-title">
+                                  <xsl:value-of select="@name"/>
                                 </h1>
+                              </header>
+                              <div class="metric-body">
+                                <div class="value">
+                                  <h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
+                                    <b>{{result.Key}}</b>: {{result.Value}}<br/>
+                                  </h1>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </xsl:if>
-                    </xsl:for-each>
+                        </xsl:if>
+                      </xsl:for-each>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card card-default matchHeight">
-            <div class="card-header">
-              <h3 >Features Enabled</h3>
-            </div>
-            <ul class="nav flex-column featuresEnabled">
+          <div class="col-lg-3">
+            <div class="card card-default">
+              <div class="card-header">
+                <h4 >Features Enabled</h4>
+              </div>
+              <div class="card-body">
+                <ul class="nav flex-column featuresEnabled">
 
-              <li class="btn-group-vertical">
-                <a href="" class="btn btn-primary">
-                  <i class="fa fa-ok">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>
-                  Content Management<br/>
-                  <span class="btnNotes">
-                    <xsl:value-of select="/Page/ContentDetail/Status/Status/@activePageCount"/> active pages of <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageCount"/> pages <xsl:value-of select="/Page/ContentDetail/Status/Status/@contentCount"/> items.<br/>
-                    <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageRedirects"/> Page Redirects
-                  </span>
-                  <br/><strong>
+                  <li class="btn-group-vertical">
+                    <a href="" class="btn btn-primary">
+                      <i class="fa fa-ok">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <xsl:text> </xsl:text>
+                      Content Management<br/>
+                      <span class="btnNotes">
+                        <xsl:value-of select="/Page/ContentDetail/Status/Status/@activePageCount"/> active pages of <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageCount"/> pages <xsl:value-of select="/Page/ContentDetail/Status/Status/@contentCount"/> items.<br/>
+                        <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageRedirects"/> Page Redirects
+                      </span>
+                      <br/><strong>
+                        <xsl:choose>
+                          <xsl:when test="/Page/ContentDetail/Status/Status/@activePageCount &lt; 50 and /Page/ContentDetail/Status/Status/@contentCount &lt; 500">
+                            Lite Licence
+                          </xsl:when>
+                          <xsl:otherwise>
+                            Pro Licence
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </strong>
+                    </a>
+                  </li>
+                  <li class="btn-group-vertical">
+                    <a href="" class="btn btn-primary">
+                      <i class="fa fa-plus">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <xsl:text> </xsl:text>Multi-Language
+                    </a>
+                  </li>
+                  <li class="btn-group-vertical">
+                    <a href="" class="btn btn-primary">
+                      <i class="fa fa-plus">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <xsl:text> </xsl:text>Page Versions
+                    </a>
+                  </li>
+                  <li class="btn-group-vertical">
                     <xsl:choose>
-                      <xsl:when test="/Page/ContentDetail/Status/Status/@activePageCount &lt; 50 and /Page/ContentDetail/Status/Status/@contentCount &lt; 500">
-                        Lite Licence
+                      <xsl:when test="/Page/ContentDetail/Status/Status/Cart/node() = 'on'">
+                        <a href="" class="btn btn-primary">
+                          <span class="hidden">
+                            <xsl:text> </xsl:text>
+                          </span>eCommerce
+                        </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        Pro Licence
+                        <a href="" class="btn btn-primary">
+                          <i class="fa fa-plus">
+                            <xsl:text> </xsl:text>
+                          </i>
+                          <xsl:text> </xsl:text>eCommerce
+                        </a>
                       </xsl:otherwise>
                     </xsl:choose>
-                  </strong>
-                </a>
-              </li>
-              <li class="btn-group-vertical">
-                <a href="" class="btn btn-primary">
-                  <i class="fa fa-plus">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Multi-Language
-                </a>
-              </li>
-              <li class="btn-group-vertical">
-                <a href="" class="btn btn-primary">
-                  <i class="fa fa-plus">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Page Versions
-                </a>
-              </li>
-              <li class="btn-group-vertical">
-                <xsl:choose>
-                  <xsl:when test="/Page/ContentDetail/Status/Status/Cart/node() = 'on'">
-                    <a href="" class="btn btn-primary">
-                      <span class="hidden">
-                        <xsl:text> </xsl:text>
-                      </span>eCommerce
-                    </a>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <a href="" class="btn btn-primary">
-                      <i class="fa fa-plus">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <xsl:text> </xsl:text>eCommerce
-                    </a>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </li>
-              <li class="btn-group-vertical">
-                <xsl:choose>
-                  <xsl:when test="/Page/ContentDetail/Status/Status/Membership/node() = 'on'">
-                    <a href="" class="btn btn-primary">
-                      <span class="hidden">
-                        <xsl:text> </xsl:text>
-                      </span>Membership
-                    </a>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <a href="" class="btn btn-primary">
-                      <i class="fa fa-plus">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <xsl:text> </xsl:text>Membership
-                    </a>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </li>
-              <li class="btn-group-vertical">
-                <xsl:choose>
-                  <xsl:when test="/Page/ContentDetail/Status/Status/MailingList/node() = 'on'">
-                    <a href="" class="btn btn-primary">
-                      <span class="hidden">
-                        <xsl:text> </xsl:text>
-                      </span>Email Marketing
-                    </a>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <a href="" class="btn btn-primary">
-                      <i class="fa fa-plus">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <xsl:text> </xsl:text>Email Marketing
-                    </a>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </li>
-              <li class="active btn-group-vertical">
-                <a href="" class="btn btn-primary">
-                  <i class="fa fa-plus">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>SEO Reporting
-                </a>
-              </li>
-              <li class="btn-group-vertical">
-                <!--Not working-->
-                <xsl:choose>
-                  <xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
-                    <a href="" class="btn btn-primary">
-                      <span class="hidden">
-                        <xsl:text> </xsl:text>
-                      </span>Page Cache
-                    </a>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <a href="" class="btn btn-primary">
-                      <i class="fa fa-plus">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <xsl:text> </xsl:text>Page Cache
-                    </a>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </li>
-              <xsl:choose>
-
-                <xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
-                  <li  class="btn-group-vertical mt-2">
-                    <a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
-                      <i class="fa fa-bug">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <xsl:text> </xsl:text>Debug Mode Enabled
-                    </a>
                   </li>
-                  <div class="alert alert-warning mt-2">
-                    Debug mode turns off some compression and performance features. It also reports any errors directly to screen rather than showing a friendly error page.<br/><br/> Debug Mode should be turned <strong>off</strong> on live websites.
-                  </div>
-                </xsl:when>
-                <xsl:otherwise>
                   <li class="btn-group-vertical">
-                    <a href="{$appPath}?rebundle=true" class="btn btn-warning">
-                      <i class="fa fa-recycle">
+                    <xsl:choose>
+                      <xsl:when test="/Page/ContentDetail/Status/Status/Membership/node() = 'on'">
+                        <a href="" class="btn btn-primary">
+                          <span class="hidden">
+                            <xsl:text> </xsl:text>
+                          </span>Membership
+                        </a>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <a href="" class="btn btn-primary">
+                          <i class="fa fa-plus">
+                            <xsl:text> </xsl:text>
+                          </i>
+                          <xsl:text> </xsl:text>Membership
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </li>
+                  <li class="btn-group-vertical">
+                    <xsl:choose>
+                      <xsl:when test="/Page/ContentDetail/Status/Status/MailingList/node() = 'on'">
+                        <a href="" class="btn btn-primary">
+                          <span class="hidden">
+                            <xsl:text> </xsl:text>
+                          </span>Email Marketing
+                        </a>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <a href="" class="btn btn-primary">
+                          <i class="fa fa-plus">
+                            <xsl:text> </xsl:text>
+                          </i>
+                          <xsl:text> </xsl:text>Email Marketing
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </li>
+                  <li class="active btn-group-vertical">
+                    <a href="" class="btn btn-primary">
+                      <i class="fa fa-plus">
                         <xsl:text> </xsl:text>
                       </i>
-                      <xsl:text> </xsl:text>Rebundle JS / CSS files
+                      <xsl:text> </xsl:text>SEO Reporting
                     </a>
                   </li>
-                </xsl:otherwise>
-              </xsl:choose>
-              <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
-                <li class="btn-group-vertical">
-                  <a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-primary">
-                    <i class="fa fa-refresh">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>Update Schema from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
-                  </a>
-                </li>
-              </xsl:if>
-            </ul>
+                  <li class="btn-group-vertical">
+                    <!--Not working-->
+                    <xsl:choose>
+                      <xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
+                        <a href="" class="btn btn-primary">
+                          <span class="hidden">
+                            <xsl:text> </xsl:text>
+                          </span>Page Cache
+                        </a>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <a href="" class="btn btn-primary">
+                          <i class="fa fa-plus">
+                            <xsl:text> </xsl:text>
+                          </i>
+                          <xsl:text> </xsl:text>Page Cache
+                        </a>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </li>
+                  <xsl:choose>
+
+                    <xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
+                      <li  class="btn-group-vertical mt-2">
+                        <a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
+                          <i class="fa fa-bug">
+                            <xsl:text> </xsl:text>
+                          </i>
+                          <xsl:text> </xsl:text>Debug Mode Enabled
+                        </a>
+                      </li>
+                      <div class="alert alert-warning mt-2">
+                        Debug mode turns off some compression and performance features. It also reports any errors directly to screen rather than showing a friendly error page.<br/><br/> Debug Mode should be turned <strong>off</strong> on live websites.
+                      </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <li class="btn-group-vertical">
+                        <a href="{$appPath}?rebundle=true" class="btn btn-warning">
+                          <i class="fa fa-recycle">
+                            <xsl:text> </xsl:text>
+                          </i>
+                          <xsl:text> </xsl:text>Rebundle JS / CSS files
+                        </a>
+                      </li>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                  <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
+                    <li class="btn-group-vertical">
+                      <a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-primary">
+                        <i class="fa fa-refresh">
+                          <xsl:text> </xsl:text>
+                        </i>
+                        <xsl:text> </xsl:text>Update Schema from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
+                      </a>
+                    </li>
+                  </xsl:if>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
     </section>
   </xsl:template>
 
@@ -3950,11 +3953,11 @@
       </xsl:if>
     </xsl:variable>
 
-    <div id="template_FileSystem" class="">
+    <div id="template_FileSystem" class="container-fluid">
 
       <div class="row">
 
-        <div id="MenuTree" class="list-group col-md-3 col-sm-4">
+        <div id="MenuTree" class="list-group col-md-3 col-sm-4 mb-3">
           <xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
             <xsl:with-param name="level">1</xsl:with-param>
           </xsl:apply-templates>
@@ -3962,10 +3965,10 @@
 
         <div class="col-md-9 col-sm-8">
           <xsl:for-each select="descendant-or-self::folder[@active='true']">
-            <div class="btn-group">
+            <div class="btn-group-spaced mb-1">
               <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
 
-                <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-primary">
+                <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-sm btn-outline-primary">
                   <xsl:if test="$submitPath!='/?'">
                     <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
                     <xsl:attribute name="data-target">
@@ -3982,7 +3985,7 @@
               </xsl:if>
               <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
 
-                <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-primary">
+                <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
                   <xsl:if test="$submitPath!='/?'">
                     <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
                     <xsl:attribute name="data-target">
@@ -3996,7 +3999,7 @@
                 </a>
 
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-primary fileinput-button">
+                <span class="btn btn-sm btn-outline-primary fileinput-button">
                   <i class="fa fa-upload fa-white">
                     <xsl:text> </xsl:text>
                   </i>
@@ -4005,15 +4008,12 @@
                   <!-- The file input field used as target for the file upload widget -->
                   <input id="fileupload" type="file" name="files[]" multiple="" class="fileUploadCheck"/>
                 </span>
-                <div id="progress">
-                  <div class="bar" style="width: 0%;"></div>
-                </div>
 
                 <!--not for popup window or for root..!-->
                 <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
                   <xsl:if test="parent::folder">
 
-                    <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-danger">
+                    <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-sm btn-outline-danger">
                       <i class="fas fa-trash fa-white">
                         <xsl:text> </xsl:text>
                       </i>
@@ -4023,6 +4023,9 @@
 
                 </xsl:if>
               </xsl:if>
+              <div id="progress">
+                <div class="bar" style="width: 0%;"></div>
+              </div>
             </div>
           </xsl:for-each>
           <div id="uploadFiles">
@@ -4058,8 +4061,6 @@
         </div>
       </div>
 
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -4339,14 +4340,14 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="alert alert-info">
+    <div class="text-center">
       <span class="small">
         Showing <xsl:value-of select="$fileCount"/> files
       </span>
     </div>
     <div class="row" id="files">
       <xsl:for-each select="file">
-        <div class="item item-image col-lg-2 col-md-3 col-sm-4">
+        <div class="item item-image col-6 col-lg-2 col-md-3 col-sm-4">
           <div class="">
             <div class="image-thumbnail">
               <xsl:variable name="Extension">
