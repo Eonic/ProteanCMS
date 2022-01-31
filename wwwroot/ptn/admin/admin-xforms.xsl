@@ -240,7 +240,7 @@
                 <xsl:for-each select="group | repeat">
                   <xsl:apply-templates select="." mode="xform">
                     <xsl:with-param name="class">
-                      <xsl:text>col-md-4</xsl:text>
+                      <xsl:text>col-lg-4</xsl:text>
                     </xsl:with-param>
                   </xsl:apply-templates>
                 </xsl:for-each>
@@ -267,7 +267,7 @@
           <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
         </div>
         <xsl:if test="count(submit) &gt; 0">
-          <div class=" clearfix">
+          <div class=" clearfix pe-3 ps-3 mt-3">
             <xsl:if test="ancestor-or-self::group/descendant-or-self::*[contains(@class,'required')]">
               <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
               <span class="required">
@@ -1570,13 +1570,13 @@
 			<input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}"/>
 			<div class="input-group">
 				<input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
-				<span class="input-group-btn">
+				
 					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{$ref}-modal">
 						<i class="fa fa-file-alt fa-white">
 							<xsl:text> </xsl:text>
 						</i><xsl:text> </xsl:text>Pick Page
 					</button>
-				</span>
+				
 			</div>
 			<div class="modal fade" id="{$ref}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 				<div class="modal-dialog" role="document">

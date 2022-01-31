@@ -441,7 +441,7 @@
     }
 
     .listItem,
-    .grid-item{
+    .grid-item {
         .ptn-edit.options {
             margin-bottom: -22px;
 
@@ -464,6 +464,18 @@
 
         &:hover {
             opacity: 1;
+        }
+    }
+
+    .module {
+        > .editable .options {
+            opacity: 0.3;
+        }
+
+        &:hover {
+            > .editable .options{
+                opacity: 1;
+            }
         }
     }
 }

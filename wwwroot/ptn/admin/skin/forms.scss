@@ -730,7 +730,7 @@ form.xform .relatedContent-group {
 .admin-body {
     padding:0 15px;
 }
-.col-lg-8 .admin-body {
+div[class^="col"] .admin-body {
     padding:0;
 }
 .btn-group-spaced {
@@ -849,7 +849,7 @@ form .form-actions .required {
     }
 
     button.principle {
-        margin-right: 1rem;
+    //    margin-right: 1rem;
     }
 
     .form-margin input,
@@ -943,6 +943,78 @@ form .form-actions .required {
 }
 .ptn-edit {
     #cartFull {
-        margin-top:1rem;
+        margin-top: 1rem;
     }
+
+    #cartListing {
+        word-break: break-word;
+    }
+}
+.DirButtons,
+.PermissionButtons {
+
+    legend {
+        text-align: center;
+    }
+
+    .form-actions,
+    .permission-button-wrapper {
+        text-align: center;
+
+        button {
+            margin: 0 0.5rem 0.5rem;
+
+            @include media-breakpoint-up(lg) {
+                float: none;
+                display: block;
+                margin: 0 auto 0.5rem;
+                min-width: 175px;
+                max-width: 100%;
+            }
+
+            &:before {
+                font-family: 'Font Awesome 5 Free';
+                padding-right: 5px;
+            }
+        }
+
+        .btn-add,
+        .btn-allow {
+            &:before {
+                content: '\f058';
+            }
+        }
+
+        .btn-deny {
+            &:before {
+                content: '\f05e';
+                font-weight: 900;
+            }
+        }
+
+        .btn-remove {
+            &:before {
+                content: '\f00d';
+                font-weight: 900;
+            }
+        }
+
+        .btn-clear-all {
+            &:before {
+                content: '\f2ed';
+                font-weight: 900;
+            }
+        }
+    }
+}
+.DirButtons{
+    @include media-breakpoint-up(lg) {
+        padding-top: 4rem;
+    }
+
+    legend {
+        text-align: center;
+        display: none;
+    }
+
 }
