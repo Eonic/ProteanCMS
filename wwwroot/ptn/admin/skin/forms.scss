@@ -943,6 +943,10 @@ form .form-actions .required {
 }
 .ptn-edit {
     #cartFull {
-        margin-top:1rem;
+        margin-top: 1rem;
+    }
+
+    #cartListing {
+        word-break: break-word;
     }
 }

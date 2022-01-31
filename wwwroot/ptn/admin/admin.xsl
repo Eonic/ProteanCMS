@@ -6626,219 +6626,221 @@
 
           </h3>
         </div>
-        <div class="card-body row">
-          <div class="col-md-3">
-            <h4>Order Details</h4>
-            <dl class="dl-horizontal">
-              <dt>
-                Order Date
-              </dt>
-              <dd>
-                <xsl:call-template name="DD_Mon_YYYY">
-                  <xsl:with-param name="date">
-                    <xsl:value-of select="$orderDate"/>
-                  </xsl:with-param>
-                  <xsl:with-param name="showTime">true</xsl:with-param>
-                </xsl:call-template>
-              </dd>
-              <dt>
-                Order Reference
-              </dt>
-              <dd>
-                <xsl:value-of select="$orderId"/>
-              </dd>
-              <dt>
-                Customer Account
-              </dt>
-              <dd>
-                <xsl:if test="ancestor::Content/User">
-                  <a href="?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::Content/User/@id}">
-                    <span class="btn btn-primary btn-xs">
-                      <i class="fa fa-user fa-white"> </i>
-                      <xsl:text> </xsl:text>
-                      <xsl:value-of select="ancestor::Content/User/FirstName/node()"/>
-                      <xsl:text> </xsl:text>
-                      <xsl:value-of select="ancestor::Content/User/LastName/node()"/>
-                    </span>
-                  </a>
-                </xsl:if>
-              </dd>
-
-              <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-lg-3">
+              <h4>Order Details</h4>
+              <dl class="dl-horizontal">
                 <dt>
-                  Payment Received
+                  Order Date
                 </dt>
                 <dd>
-                  <xsl:value-of select="$currency"/>
-                  <xsl:value-of select="format-number(@paymentMade,'0.00')" />
+                  <xsl:call-template name="DD_Mon_YYYY">
+                    <xsl:with-param name="date">
+                      <xsl:value-of select="$orderDate"/>
+                    </xsl:with-param>
+                    <xsl:with-param name="showTime">true</xsl:with-param>
+                  </xsl:call-template>
                 </dd>
-                <dt>Final Payment Reference/Link</dt>
+                <dt>
+                  Order Reference
+                </dt>
                 <dd>
-                  <xsl:variable name="secureURL">
-                    <xsl:text>http</xsl:text>
-                    <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-                    <xsl:text>://</xsl:text>
-                    <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-                  </xsl:variable>
-                  <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
-                    <xsl:value-of select="@settlementID" />
-                  </a>
+                  <xsl:value-of select="$orderId"/>
                 </dd>
-              </xsl:if>
-              <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
-                <dt>Payment Made</dt>
+                <dt>
+                  Customer Account
+                </dt>
                 <dd>
-                  <xsl:value-of select="$currency"/>
-                  <xsl:value-of select="format-number(@paymentMade,'0.00')" />
+                  <xsl:if test="ancestor::Content/User">
+                    <a href="?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::Content/User/@id}">
+                      <span class="btn btn-primary btn-xs">
+                        <i class="fa fa-user fa-white"> </i>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="ancestor::Content/User/FirstName/node()"/>
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="ancestor::Content/User/LastName/node()"/>
+                      </span>
+                    </a>
+                  </xsl:if>
                 </dd>
-                <dt>Total Payment Received</dt>
-                <dd>
-                  <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-                </dd>
-              </xsl:if>
-            </dl>
-            <xsl:if test="not(Payment)">
-              <h4>Payment Details</h4>
-              <dl class="dl-horizontal">
-                <dt>Payment Method</dt>
-                <dd>
-                  <xsl:value-of select="PaymentDetails/@provider"/>
-                </dd>
-                <dt>Payment Ref.</dt>
-                <dd>
-                  <xsl:value-of select="PaymentDetails/@ref"/>
-                </dd>
-                <dt>Payment Acct</dt>
-                <dd>
-                  <xsl:value-of select="PaymentDetails/@acct"/>
-                </dd>
-                <xsl:for-each select="PaymentDetails/*[local-name()!='Ref' or node()!='']/*">
+
+                <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
                   <dt>
-                    <xsl:value-of select="local-name()"/>
+                    Payment Received
                   </dt>
                   <dd>
-                    <xsl:value-of select="node()"/>
+                    <xsl:value-of select="$currency"/>
+                    <xsl:value-of select="format-number(@paymentMade,'0.00')" />
                   </dd>
-                </xsl:for-each>
+                  <dt>Final Payment Reference/Link</dt>
+                  <dd>
+                    <xsl:variable name="secureURL">
+                      <xsl:text>http</xsl:text>
+                      <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                      <xsl:text>://</xsl:text>
+                      <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+                    </xsl:variable>
+                    <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
+                      <xsl:value-of select="@settlementID" />
+                    </a>
+                  </dd>
+                </xsl:if>
+                <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
+                  <dt>Payment Made</dt>
+                  <dd>
+                    <xsl:value-of select="$currency"/>
+                    <xsl:value-of select="format-number(@paymentMade,'0.00')" />
+                  </dd>
+                  <dt>Total Payment Received</dt>
+                  <dd>
+                    <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
+                  </dd>
+                </xsl:if>
               </dl>
+              <xsl:if test="not(Payment)">
+                <h4>Payment Details</h4>
+                <dl class="dl-horizontal">
+                  <dt>Payment Method</dt>
+                  <dd>
+                    <xsl:value-of select="PaymentDetails/@provider"/>
+                  </dd>
+                  <dt>Payment Ref.</dt>
+                  <dd>
+                    <xsl:value-of select="PaymentDetails/@ref"/>
+                  </dd>
+                  <dt>Payment Acct</dt>
+                  <dd>
+                    <xsl:value-of select="PaymentDetails/@acct"/>
+                  </dd>
+                  <xsl:for-each select="PaymentDetails/*[local-name()!='Ref' or node()!='']/*">
+                    <dt>
+                      <xsl:value-of select="local-name()"/>
+                    </dt>
+                    <dd>
+                      <xsl:value-of select="node()"/>
+                    </dd>
+                  </xsl:for-each>
+                </dl>
+              </xsl:if>
+              <xsl:if test="Payment">
+                <a class="btn btn-primary" role="button" data-bs-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
+                  Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
+                </a>
+                <br/>
+                <br/>
+              </xsl:if>
+              <xsl:if test="Payment">
+                <a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary" target="_new">
+                  <i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
+                </a>
+              </xsl:if>
+            </div>
+            <xsl:if test="Contact[@type='Billing Address']">
+              <div id="billingAddress" class="cartAddress col-lg-3">
+                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm float-end">
+                  <i class="fa fa-edit"> </i>
+                  Edit
+                </a>
+                <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart"/>
+              </div>
+            </xsl:if>
+            <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
+              <div id="deliveryAddress" class="cartAddress col-lg-3">
+                <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm float-end">
+                  <i class="fa fa-edit"> </i>
+                  Edit
+                </a>
+                <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
+              </div>
+            </xsl:if>
+            <xsl:if test="DeliveryDetails">
+              <div id="carrier-info" class="col-lg-3">
+                <h4>Shipping Details</h4>
+                <dl class="dl-horizontal">
+                  <xsl:for-each select="DeliveryDetails">
+                    <dt>Carrier</dt>
+                    <dd>
+                      <xsl:value-of select="@carrierName"/>
+                    </dd>
+                    <dt>Ref</dt>
+                    <dd>
+                      <xsl:value-of select="@ref"/>
+                    </dd>
+                    <dt>Collected Date</dt>
+                    <dd>
+                      <xsl:call-template name="DD_Mon_YYYY">
+                        <xsl:with-param name="date">
+                          <xsl:value-of select="@collectionDate"/>
+                        </xsl:with-param>
+                        <xsl:with-param name="showTime">false</xsl:with-param>
+                      </xsl:call-template>
+                    </dd>
+                    <dt>Delivery Date</dt>
+                    <dd>
+                      <xsl:call-template name="DD_Mon_YYYY">
+                        <xsl:with-param name="date">
+                          <xsl:value-of select="@deliveryDate"/>
+                        </xsl:with-param>
+                        <xsl:with-param name="showTime">false</xsl:with-param>
+                      </xsl:call-template>
+                    </dd>
+                    <dt>Notes</dt>
+                    <dd>
+                      <xsl:value-of select="@notes"/>
+                    </dd>
+                  </xsl:for-each>
+                </dl>
+              </div>
             </xsl:if>
             <xsl:if test="Payment">
-              <a class="btn btn-primary" role="button" data-bs-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
-                Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
-              </a>
-              <br/>
-              <br/>
+              <div class="col-md-12">
+
+                <table class="table collapse" id="paymentTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Provider</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Other Info</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <xsl:for-each select="Payment">
+                      <tr>
+                        <th scope="row">
+                          <xsl:call-template name="DD_Mon_YYYY">
+                            <xsl:with-param name="date">
+                              <xsl:value-of select="dInsertDate"/>
+                            </xsl:with-param>
+                            <xsl:with-param name="showTime">true</xsl:with-param>
+                          </xsl:call-template>
+                        </th>
+                        <th scope="row">
+                          <xsl:value-of select="nPaymentAmount"/>
+                        </th>
+                        <td>
+                          <xsl:value-of select="cPayMthdProviderName"/>
+                        </td>
+                        <td>
+                          AuthCode:
+                          <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+                        </td>
+                      </tr>
+                    </xsl:for-each>
+                  </tbody>
+                </table>
+              </div>
             </xsl:if>
-            <xsl:if test="Payment">
-              <a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary" target="_new">
-                <i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
-              </a>
+            <xsl:if test="Notes/Notes">
+              <div class="col-md-12">
+                <div class="notes alert alert-danger">
+                  <i class="fas fa-lg fa-exclamation-triangle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;
+                  <xsl:apply-templates select="Notes" mode="displayNotes"/>
+                </div>
+              </div>
             </xsl:if>
           </div>
-          <xsl:if test="Contact[@type='Billing Address']">
-            <div id="billingAddress" class="cartAddress col-md-3">
-              <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm float-end">
-                <i class="fa fa-edit"> </i>
-                Edit
-              </a>
-              <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart"/>
-            </div>
-          </xsl:if>
-          <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
-            <div id="deliveryAddress" class="cartAddress col-md-3">
-              <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm float-end">
-                <i class="fa fa-edit"> </i>
-                Edit
-              </a>
-              <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
-            </div>
-          </xsl:if>
-          <xsl:if test="DeliveryDetails">
-            <div id="carrier-info" class="col-md-3">
-              <h4>Shipping Details</h4>
-              <dl class="dl-horizontal">
-                <xsl:for-each select="DeliveryDetails">
-                  <dt>Carrier</dt>
-                  <dd>
-                    <xsl:value-of select="@carrierName"/>
-                  </dd>
-                  <dt>Ref</dt>
-                  <dd>
-                    <xsl:value-of select="@ref"/>
-                  </dd>
-                  <dt>Collected Date</dt>
-                  <dd>
-                    <xsl:call-template name="DD_Mon_YYYY">
-                      <xsl:with-param name="date">
-                        <xsl:value-of select="@collectionDate"/>
-                      </xsl:with-param>
-                      <xsl:with-param name="showTime">false</xsl:with-param>
-                    </xsl:call-template>
-                  </dd>
-                  <dt>Delivery Date</dt>
-                  <dd>
-                    <xsl:call-template name="DD_Mon_YYYY">
-                      <xsl:with-param name="date">
-                        <xsl:value-of select="@deliveryDate"/>
-                      </xsl:with-param>
-                      <xsl:with-param name="showTime">false</xsl:with-param>
-                    </xsl:call-template>
-                  </dd>
-                  <dt>Notes</dt>
-                  <dd>
-                    <xsl:value-of select="@notes"/>
-                  </dd>
-                </xsl:for-each>
-              </dl>
-            </div>
-          </xsl:if>
-          <xsl:if test="Payment">
-            <div class="col-md-12">
-
-              <table class="table collapse" id="paymentTable">
-                <thead>
-                  <tr>
-                    <th scope="col">Provider</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Other Info</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <xsl:for-each select="Payment">
-                    <tr>
-                      <th scope="row">
-                        <xsl:call-template name="DD_Mon_YYYY">
-                          <xsl:with-param name="date">
-                            <xsl:value-of select="dInsertDate"/>
-                          </xsl:with-param>
-                          <xsl:with-param name="showTime">true</xsl:with-param>
-                        </xsl:call-template>
-                      </th>
-                      <th scope="row">
-                        <xsl:value-of select="nPaymentAmount"/>
-                      </th>
-                      <td>
-                        <xsl:value-of select="cPayMthdProviderName"/>
-                      </td>
-                      <td>
-                        AuthCode:
-                        <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
-                      </td>
-                    </tr>
-                  </xsl:for-each>
-                </tbody>
-              </table>
-            </div>
-          </xsl:if>
-          <xsl:if test="Notes/Notes">
-            <div class="col-md-12">
-              <div class="notes alert alert-danger">
-                <i class="fas fa-lg fa-exclamation-triangle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;
-                <xsl:apply-templates select="Notes" mode="displayNotes"/>
-              </div>
-            </div>
-          </xsl:if>
         </div>
 
 
