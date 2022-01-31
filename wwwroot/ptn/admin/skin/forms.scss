@@ -247,6 +247,7 @@ form.xform {
     a.form-tip {
         color: lighten($admin-header-font-color,10%);
         padding-left: 3px;
+        cursor:pointer;
     }
 
     .form-check-input:checked {
@@ -673,6 +674,10 @@ form .table-striped {
 }
 form.xform .form-section-wrapper > .relatedContent-group {
     margin-bottom: 0;
+
+    .btn-group-spaced {
+        margin-bottom:0;
+    }
 }
 form.xform .relatedContent-group {
     margin-left: -3px;
