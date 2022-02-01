@@ -49,6 +49,7 @@ form.xform {
 
     legend {
         font-size: 1.25rem;
+        float:none;
     }
 
     .principle {
@@ -672,11 +673,16 @@ form .table-striped {
         }
     }
 }
-form.xform .form-section-wrapper > .relatedContent-group {
+form.xform .form-section-wrapper > .relatedContent-group,
+form.xform .form-section-wrapper.relatedContent-group {
     margin-bottom: 0;
 
     .btn-group-spaced {
-        margin-bottom:0;
+        margin-bottom: 0;
+    }
+
+    .select-with-button {
+        margin-right: 0.5rem;
     }
 }
 form.xform .relatedContent-group {
@@ -844,7 +850,8 @@ form .form-actions .required {
 #EditShippingLocation,
 #WebSettings,
 #template_EditStructure,
-#SetPassword {
+#SetPassword,
+#tpltLocateSearch {
     .form-check {
         @extend .form-check-inline;
     }
@@ -858,7 +865,7 @@ form .form-actions .required {
     }
 
     button.principle {
-    //    margin-right: 1rem;
+        //    margin-right: 1rem;
     }
 
     .form-margin input,
@@ -1027,3 +1034,14 @@ form .form-actions .required {
     }
 
 }
+.footer-btn-padding {
+    padding-left:1rem;
+    padding-right:1rem;
+    margin-top:1rem;
+    margin-bottom:1rem;
+}
+div[class^="col"] .footer-btn-padding {
+    padding-left:0;
+    padding-right:0;
+}
+

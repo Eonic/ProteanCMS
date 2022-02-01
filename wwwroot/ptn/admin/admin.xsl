@@ -3781,16 +3781,6 @@
         <xsl:value-of select="$desc"/>
       </td>
       <td>
-        <xsl:choose>
-          <xsl:when test="/Page/Contents/Content[@position = $name]">
-            <xsl:value-of select="/Page/Contents/Content[@position = $name]/@moduleType"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:copy-of select="/Page/Contents/Content[@name=$name and @type = $type and @type!='=CookiePolicy']/node()"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <td>
         <div class="btn-group-spaced">
           <xsl:choose>
             <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type and @parId!=/Page/@id]">
@@ -3849,6 +3839,16 @@
             </xsl:otherwise>
           </xsl:choose>
         </div>
+      </td>
+      <td>
+        <xsl:choose>
+          <xsl:when test="/Page/Contents/Content[@position = $name]">
+            <xsl:value-of select="/Page/Contents/Content[@position = $name]/@moduleType"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:copy-of select="/Page/Contents/Content[@name=$name and @type = $type and @type!='=CookiePolicy']/node()"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </td>
     </tr>
 
@@ -4750,7 +4750,7 @@
   <xsl:template match="Page[@layout='EditDirectoryItemPermissions']" mode="Admin">
     <div class="container-fluid">
       <div class="row" id="template_permissions">
-        <div class="col-md-3">
+        <div class="col-lg-3">
           <div class="card card-default mb-3">
             <div class="card-header">
               <h4>Edit Permissions</h4>
@@ -4783,7 +4783,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9">
           <form action="?ewCmd=DirPermissions" method="post" class="ewXform">
             <div class="card card-default">
               <div class="card-header">
@@ -10068,7 +10068,7 @@
   <xsl:template match="Page[@layout='LocateSearch']" mode="Admin">
     <div class="container-fluid" id="tpltLocateSearch">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3">
           <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='FindContentToRelate']" mode="xform"/>
           <div class="card card-default">
             <div class="card-header">
@@ -10081,9 +10081,11 @@
             </div>
           </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-9">
           <div class="card card-default">
-            <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='SelectContentToLocate']" mode="xform"/>
+            <div class="card-body">
+              <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='SelectContentToLocate']" mode="xform"/>
+            </div>
           </div>
         </div>
       </div>
@@ -10096,10 +10098,10 @@
 
         <xsl:choose>
           <xsl:when test="ContentDetail/Content[@type='xform']">
-            <div class="col-md-3">
+            <div class="col-lg-3">
               <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
             </div>
-            <div class="col-md-9">
+            <div class="col-lg-9">
               <xsl:apply-templates select="ContentDetail/Content[@type='Report']" mode="MemberActivityReport"/>
             </div>
           </xsl:when>
