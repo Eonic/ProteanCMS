@@ -98,9 +98,6 @@
         <xsl:text>/js/jquery.appear.js,</xsl:text>
         <xsl:text>~/themes/</xsl:text>
         <xsl:value-of select="$theme"/>
-        <xsl:text>/js/offcanvas.js,</xsl:text>
-        <xsl:text>~/themes/</xsl:text>
-        <xsl:value-of select="$theme"/>
         <xsl:text>/js/responsive-tabs.js,</xsl:text>
         <xsl:text>~/themes/</xsl:text>
         <xsl:value-of select="$theme"/>
@@ -313,7 +310,7 @@
 
   <xsl:template match="/" mode="loginTop">
     <div id="signin">
-      <a class="loginText login-btn" data-bs-toggle="modal" data-target="#LoginModal">
+      <a class="loginText login-btn" data-bs-toggle="modal" href="#LoginModal" role="button">
         <xsl:if test="/Page/User[@id!='']">
           <xsl:attribute name="class">
             <xsl:text>loginText login-btn logged-in-btn</xsl:text>
@@ -329,7 +326,7 @@
 
   <xsl:template match="/" mode="loginTopxs">
     <li id="loginBriefxs" >
-      <a class="loginText login-small" data-bs-toggle="modal" data-target="#LoginModal">
+      <a class="loginText login-small" data-bs-toggle="modal" href="#LoginModal" role="button">
         <xsl:choose>
           <xsl:when test="/Page/User">My Account</xsl:when>
           <xsl:otherwise>Log in</xsl:otherwise>
@@ -339,7 +336,7 @@
   </xsl:template>
 
   <xsl:template match="/" mode="loginSimple">
-    <a class="nav-link login-btn" data-bs-toggle="modal" data-target="#LoginModal">
+    <a class="nav-link login-btn" data-bs-toggle="modal" href="#LoginModal" role="button">
       <xsl:choose>
         <xsl:when test="/Page/User">My Account</xsl:when>
         <xsl:otherwise>Log in</xsl:otherwise>
@@ -391,7 +388,7 @@
 
   <!-- ############################################# FOOTER ############################################### -->
   <xsl:template match="Page" mode="footer1">
-    <div id="pagefooter" class="Site clearfix">
+    <footer id="pagefooter" class="Site clearfix">
       <div class="footer-inner">
         <div class="clearfix footer-main">
           <div class="container">
@@ -433,7 +430,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   </xsl:template>
   <!-- ############################################# BESPOKE ############################################### -->
 

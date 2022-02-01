@@ -3385,7 +3385,7 @@
   <!--   ##################  PageSettings  ##############################   -->
   <!-- -->
   <xsl:template match="Page[@layout='EditPageSEO']" mode="Admin">
-    <ul class="nav nav-pills ms-2">
+    <ul class="nav nav-pills ms-2 mb-2">
       <li class="nav-item">
         <a href="#general" data-bs-toggle="tab" class="nav-link active">General</a>
       </li>

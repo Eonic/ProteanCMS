@@ -33,16 +33,12 @@
       <!--################## HEADER ################## -->
 
       <a class="sr-only" href="#content">Skip to main content</a>
-      <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginModal">
+      <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginTitle" aria-hidden="true">
         <div class="modal-dialog modal-md" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">
-                  <i class="fa fa-close"> </i>
-                </span>
-              </button>
-              <h4 class="modal-title">Login</h4>
+              <h5 class="modal-title" id="LoginTitle">Login</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
             </div>
             <div class="modal-body">
               <div id="Login">
@@ -158,5 +154,5 @@
     <xsl:apply-templates select="." mode="footer1" />
   </xsl:template>
 
-  
+
 </xsl:stylesheet>

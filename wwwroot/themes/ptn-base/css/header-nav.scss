@@ -10,15 +10,83 @@
         display: none;
     }
 }
-
+.navbar {
+    padding-top:0.4rem;
+    padding-bottom:0.4rem;
+}
 .navbar-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
     .header-tier1,
     .header-tier2 {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: right;
+
         @include media-breakpoint-up($nav-breakpoint) {
-            display: flex;
             float: right;
             margin-right: -($header-spacing/2);
-            align-items:center;
+        }
+    }
+
+    .header-tier1 {
+        @include media-breakpoint-down(lg) {
+            display: none;
+        }
+    }
+}
+.main-nav {
+    @include media-breakpoint-up(lg) {
+        font-size: $main-nav-size;
+
+
+        .offcanvas-end {
+            width: auto;
+        }
+
+        ul {
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+    }
+
+
+
+    @include media-breakpoint-down(lg) {
+        .offcanvas {
+            overflow: scroll;
+        }
+
+        .navbar-nav .nav-link {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .dropdown-menu {
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
+        }
+
+        .btn-close {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+        }
+
+        .show::after {
+            transform: rotate( 180deg );
+        }
+
+        .search-wrapper {
+            padding: 1rem 1.5rem 0.5rem 0.3rem;
+        }
+
+        .socialLinks.iconset-plain {
+            margin-left: 0.4rem;
         }
     }
 }
@@ -26,6 +94,11 @@
 .info-nav {
     $info-nav-spacing: 0.7rem;
     margin: 0 ($header-spacing/2) - $info-nav-spacing;
+
+    ul {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
 
     .nav-link {
         padding: 0.5rem $info-nav-spacing;
@@ -74,7 +147,14 @@
         }
     }
 }
+.cart-brief-wrapper-xs {
+    display: flex;
+    align-items: center;
 
+    @include media-breakpoint-up(lg) {
+        display:none;
+    }
+}
 .search-wrapper {
     margin: 0 ($header-spacing/2);
 }
