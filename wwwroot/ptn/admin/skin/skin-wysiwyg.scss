@@ -426,6 +426,10 @@
         width: 100%;
     }
 
+    .module.module-centred > .editable h3{
+        text-align:center;
+    }
+
     .ptn-edit.options {
         display: flex;
         justify-content: right;
@@ -486,7 +490,7 @@
     }
 
     .layout-btn {
-        display:none;
+        display: none;
     }
 
     .layout-btn + .btn, .layout-btn ~ .dropdown > .btn {
