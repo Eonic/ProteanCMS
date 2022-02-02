@@ -445,7 +445,7 @@
             </select1>
             <select1 bind="mdCol" class="col">
               <label>
-                <i class="fas fa-tablet-alt"> </i> Medium
+                <i class="fas fa-tablet-alt"> </i> Med
               </label>
               <item>
                 <label>1</label>
