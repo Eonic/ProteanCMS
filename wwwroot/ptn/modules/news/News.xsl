@@ -29,11 +29,6 @@
 		<!--end responsive columns variables-->
 		<!-- Output Module -->
 		<div class="clearfix NewsList">
-			<xsl:if test="@carousel='true'">
-				<xsl:attribute name="class">
-					<xsl:text>clearfix NewsList content-scroller</xsl:text>
-				</xsl:attribute>
-			</xsl:if>
 			<div>
 				<!--responsive columns -->
 		        <xsl:apply-templates select="." mode="contentColumns"/>       
@@ -92,36 +87,36 @@
 
 		<!--end responsive columns variables-->
 		<!-- Output Module -->
-		<div class="swiper-container container">
-			<div class="swiper" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$GutterWidth}" data-spacebetweenlg="{$GutterWidthLg}">
-			    <div class="swiper-wrapper">
-				    <xsl:choose>
-					    <xsl:when test="@linkArticle='true'">
-						    <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-							    <xsl:with-param name="sortBy" select="@sortBy"/>
-						    </xsl:apply-templates>
-					    </xsl:when>
-					    <xsl:otherwise>
-						    <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-							    <xsl:with-param name="sortBy" select="@sortBy"/>
-							    <xsl:with-param name="class" select="'swiper-slide'"/>
-						    </xsl:apply-templates>
-					    </xsl:otherwise>
-				    </xsl:choose>
-				    <xsl:text> </xsl:text>
-			    </div>
+      <div class="swiper-container container-fluid NewsList">
+        <div class="swiper" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$GutterWidth}" data-spacebetweenlg="{$GutterWidthLg}">
+          <div class="swiper-wrapper">
+            <xsl:choose>
+              <xsl:when test="@linkArticle='true'">
+                <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+                  <xsl:with-param name="sortBy" select="@sortBy"/>
+                </xsl:apply-templates>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+                  <xsl:with-param name="sortBy" select="@sortBy"/>
+                  <xsl:with-param name="class" select="'swiper-slide'"/>
+                </xsl:apply-templates>
+              </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text> </xsl:text>
+          </div>
 
-			    <div class="swiper-pagination" id="swiper-pagination-{@id}">
-				    <xsl:text> </xsl:text>
-			    </div>
-    		</div>				
-				<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
-					<xsl:text> </xsl:text>
-				</div>
-				<div class="swiper-button-next" id="swiper-button-next-{@id}">
-					<xsl:text> </xsl:text>
-				</div>
-		</div>
+          <div class="swiper-pagination" id="swiper-pagination-{@id}">
+            <xsl:text> </xsl:text>
+          </div>
+        </div>
+        <div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+          <xsl:text> </xsl:text>
+        </div>
+        <div class="swiper-button-next" id="swiper-button-next-{@id}">
+          <xsl:text> </xsl:text>
+        </div>
+      </div>
 	</xsl:template>
 
 

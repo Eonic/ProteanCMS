@@ -34,6 +34,11 @@
       <bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
       <bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
       <bind id="bMatchHeight" nodeset="@matchHeight" required="false()" type="string"/>
+      <bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
+      <bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
+      <bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
+      <bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
+      <bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <bind nodeset="tblContent">
@@ -211,6 +216,72 @@
               </range>
             </group>
           </group>
+        </group>
+
+        <group id="carousel" class="form-section-wrapper">
+          <select1 bind="carousel" appearance="full"  class="form-group inline-items">
+            <label>Add articles to a carousel</label>
+            <item>
+              <label>Yes</label>
+              <value>true</value>
+              <toggle case="Carousel_true" event="DOMActivate"/>
+            </item>
+            <item>
+              <label>No</label>
+              <value>false</value>
+              <toggle case="Carousel_false" event="DOMActivate"/>
+            </item>
+            <help class="inline">If selected this option will display articles in a single horizontal line with arrows to scroll through to the left and right.</help>
+          </select1>
+          <switch class="disable">
+            <case id="Carousel_true" >
+              <group class="row">
+                <group class="col-lg-6">
+                  <select1 bind="autoplay"  appearance="full" class="form-group  inline-items">
+                    <label>Auto play</label>
+                    <item>
+                      <label>Yes</label>
+                      <value>true</value>
+                    </item>
+                    <item>
+                      <label>No</label>
+                      <value>false</value>
+                    </item>
+                  </select1>
+                  <input bind="autoPlaySpeed" class="form-group ">
+                    <label>autoplay Speed (milliseconds) </label>
+                  </input>
+                </group>
+                <group class="col-lg-6">
+                  <select1 bind="carouselBullets" appearance="full"  class="form-group inline-items">
+                    <label>Show navigation bullets for carousel</label>
+                    <item>
+                      <label>Yes</label>
+                      <value>true</value>
+                    </item>
+                    <item>
+                      <label>No</label>
+                      <value>false</value>
+                    </item>
+                  </select1>
+                  <select1 bind="carouselHeight" appearance="full"  class="form-group inline-items">
+                    <label>Match height of carousel items</label>
+                    <item>
+                      <label>Yes</label>
+                      <value>true</value>
+                    </item>
+                    <item>
+                      <label>No</label>
+                      <value>false</value>
+                    </item>
+                  </select1>
+                </group>
+              </group>
+            </case>
+            <case id="Carousel_false"/>
+          </switch>
+
+
         </group>
         <group id="publish" class="row">
           <input bind="cPosition" class="readonly">
