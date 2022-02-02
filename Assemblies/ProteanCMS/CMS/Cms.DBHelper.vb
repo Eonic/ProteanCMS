@@ -4755,8 +4755,9 @@ restart:
                 ' Validate and Build the SQL conditions that we are going to need
 
                 If cSchema <> "" Then
-
-                    Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
+                    Dim cWhereSql As String = " (tblCartCatProductRelations.nCatId =" & nGroupId & ")"
+                    ' Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
+                    cOrderBy = "tblCartCatProductRelations.nDisplayOrder"
 
                     myWeb.GetPageContentFromSelect(cWhereSql, , , myWeb.mbAdminMode, 0, cOrderBy, oContent)
 
