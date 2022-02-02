@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content position="" contentType="Module" moduleType="2columns5050" background="" title="" link="" linkType="internal" linkText="Read more" data-stellar-background-ratio="10" mdCol="2" smCol="2" xsCol="2"/>
+          <Content position="" contentType="Module" moduleType="2Columns5050" background="" title="" link="" linkType="internal" linkText="Read more" data-stellar-background-ratio="10" mdCol="2" smCol="2" xsCol="2"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

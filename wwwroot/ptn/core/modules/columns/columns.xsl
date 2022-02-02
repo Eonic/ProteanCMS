@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 
-  <xsl:template match="Content[@moduleType='3columns']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='3Columns' or @moduleType='3columns']" mode="displayBrief">
     <xsl:variable name="responsiveColumns">
       <xsl:apply-templates select="." mode="responsiveColumns">
         <xsl:with-param name="defaultCols" select="'4'"/>
@@ -50,7 +50,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='1Column' or @moduleType='Conditional1Column']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='1Column' or @moduleType='1column' or @moduleType='Conditional1Column']" mode="displayBrief">
     <div class="row">
       <xsl:if test="@flexbox='true'">
         <xsl:attribute name="class">
@@ -79,7 +79,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='2columns5050']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='2Columns5050' or @moduleType='2columns5050']" mode="displayBrief">
     <xsl:variable name="responsiveColumns">
       <xsl:apply-templates select="." mode="responsiveColumns">
         <xsl:with-param name="defaultCols" select="'6'"/>
@@ -361,7 +361,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='4columns']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='4Columns' or @moduleType='4columns']" mode="displayBrief">
     <xsl:variable name="responsiveColumns">
       <xsl:apply-templates select="." mode="responsiveColumns">
         <xsl:with-param name="defaultCols" select="'3'"/>
@@ -599,7 +599,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='5columns']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='5Columns' or @moduleType='5columns']" mode="displayBrief">
     <xsl:variable name="responsiveColumns">
       <xsl:apply-templates select="." mode="responsiveColumns">
         <xsl:with-param name="defaultCols" select="'2'"/>
@@ -678,7 +678,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='6columns']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='6Columns' or @moduleType='6columns']" mode="displayBrief">
     <xsl:variable name="responsiveColumns">
       <xsl:apply-templates select="." mode="responsiveColumns">
         <xsl:with-param name="defaultCols" select="'2'"/>

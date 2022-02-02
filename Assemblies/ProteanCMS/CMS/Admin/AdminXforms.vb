@@ -2242,9 +2242,10 @@ Partial Public Class Cms
                 Try
 
                     If moRequest("cModuleBox") <> "" Then
-
+                        ' case for when the content form is being submitted
                         If goConfig("cssFramework") = "bs5" Then
-                            xFrmEditContent(0, moRequest("cModuleType"), pgid, moRequest("cPosition"))
+                            Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
+                            xFrmEditContent(0, ModulePath, pgid, moRequest("cPosition"))
                         Else
                             xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
                         End If

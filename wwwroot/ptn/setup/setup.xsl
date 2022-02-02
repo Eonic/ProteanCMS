@@ -135,7 +135,7 @@
 	      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/ptn/setup/setup.scss" />
 	    </head>
-        <body class="ewAdmin setup layout-{@ewCmd}">
+        <body class="ptn-edit setup layout-{@ewCmd}">
           <div id="adminHeader" class="navbar navbar-expand-lg sticky-top">
           <div id="adminLogo" class="navbar-brand">
             <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo"/>
