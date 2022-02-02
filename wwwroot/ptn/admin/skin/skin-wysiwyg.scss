@@ -28,10 +28,15 @@
 
         li a {
             color: $admin-header-color !important;
-            display:block;
+            display: block;
+
             &:hover {
                 color: $admin-header-color-link !important;
                 background: transparent;
+
+                i {
+                    color: $admin-header-color-link !important;
+                }
             }
 
             padding: 3px 20px !important;

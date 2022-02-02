@@ -1137,7 +1137,7 @@
               <xsl:when test="$page/Contents/Content/Content[@id=$id] and (@parId != $pageId)">
                 <li>
                   <a href="?ewCmd=RemoveContentRelation&amp;relId={$page/Contents/Content[Content/@id=$id]/@id}&amp;id={@id}" title="Click here to unrelate this item">
-                    <i class="fa fa-chain-broken">&#160;</i>&#160;Un-relate
+                    <i class="fa fa-unlink">&#160;</i>&#160;Un-relate
                   </a>
                 </li>
                 <li>
