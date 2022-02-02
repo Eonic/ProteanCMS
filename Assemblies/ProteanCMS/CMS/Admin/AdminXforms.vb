@@ -2655,7 +2655,11 @@ Partial Public Class Cms
                     End If
 
                     If goConfig("cssFramework") = "bs5" Then
-                        cXformPath = "/modules/" & cXformPath
+                        If cXformPath.StartsWith("/") Then
+                            cXformPath = cXformPath
+                        Else
+                            cXformPath = "/modules/" & cXformPath
+                        End If
                     Else
                         cXformPath = "/xforms/content/" & cXformPath
                     End If

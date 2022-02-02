@@ -30,7 +30,7 @@
   </xsl:template>-->
 
   <xsl:template match="Page">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="popup1">
         <div class="modal-content">
           <div class="modal-body">
           <xsl:apply-templates select="." mode="Admin"/>

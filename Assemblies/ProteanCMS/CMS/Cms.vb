@@ -1065,6 +1065,7 @@ Public Class Cms
             If Not String.IsNullOrEmpty(mcClientCommonFolder) Then commonfolders.Add(mcClientCommonFolder)
             If Not String.IsNullOrEmpty(mcEWCommonFolder) Then commonfolders.Add(mcEWCommonFolder)
             If moConfig("cssFramework") = "bs5" Then commonfolders.Add("/ptn/core/")
+            If moConfig("cssFramework") = "bs5" Then commonfolders.Add("/ptn/features/")
 
             maCommonFolders = commonfolders.ToArray(GetType(String))
 

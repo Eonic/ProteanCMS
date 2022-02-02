@@ -424,7 +424,7 @@
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
     <div id="modal-{$ref}" class="modal fade pickImageModal">
-      <div class="modal-dialog">
+      <div class="modal-dialog" id="test">
         <div class="modal-content">
           <div class="modal-body">
             <xsl:text>Loading... </xsl:text>
@@ -1941,11 +1941,6 @@
                   <xsl:with-param name="selectedValues" select="$valueList"/>
                 </xsl:apply-templates>
               </select>
-              <xsl:if test="contains(@search,'add')">
-                <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-sm btn-primary" onclick="disableButton(this);$('#{$formName}').submit();">
-                  Select
-                </button>
-              </xsl:if>
             </div>
             <xsl:if test="@maxRelationNo &gt; 1">
               <div class="alert alert-info">

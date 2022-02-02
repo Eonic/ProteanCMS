@@ -315,7 +315,12 @@ $(document).ready(function () {
     initialiseHelptips();
     //   $('.pickImageModal').on('shown.bs.modal', function () {
     $('.pickImageModal').on('loaded', function () {
-        var currentModal = $(this)
+        var currentModal = $(this);
+        //fix for bootstrap5 loading into .modal-content not replacing .modal
+        if ($(this).find(".modal-content:first .modal-content").exists()) {
+            $(this).find(".modal-content:first").replaceWith($(this).find(".modal-content:first .modal-content"));
+        };
+      
         //activateTreeview
         $('#template_FileSystem #MenuTree').ajaxtreeview({
             loadPath: treeviewPath,

@@ -2,11 +2,11 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ModuleTypes>
     <ModuleGroup name="Membership features" icon="fas fa-users">
-      <Module type="MembershipLogon" name="Membership Logon"  icon="fas fa-user-check">Membership Logon</Module>
-      <Module type="MembershipRegister" name="Membership Register or My Account" icon="fas fa-user-plus">Membership Register/My Account</Module>
-      <Module type="MembershipPasswordReminder" name="Membership Password Reminder" icon="fas fa-user-lock">Membership Password Reminder</Module>
-      <Module type="MembershipListUsers" name="List users" icon="fas fa-user-friends">Choose and group to list the users for</Module>
-      <Module type="MembershipUserContacts" name="List user contacts" icon="fas fa-address-card">Usually used for a user to list and manage their addresses</Module>
+      <Module type="MembershipLogon" formPath="/features/membership/logon"  name="Membership Logon"  icon="fas fa-user-check">Membership Logon</Module>
+      <Module type="MembershipRegister" formPath="/features/membership/register" name="Membership Register or My Account" icon="fas fa-user-plus">Membership Register/My Account</Module>
+      <Module type="MembershipPasswordReminder" formPath="/features/membership/passwordreminder" name="Membership Password Reminder" icon="fas fa-user-lock">Membership Password Reminder</Module>
+      <Module type="MembershipListUsers"  formPath="/features/membership/listusers" name="List users" icon="fas fa-user-friends">Choose and group to list the users for</Module>
+      <Module type="MembershipUserContacts" formPath="/features/membership/usercontacts" name="List user contacts" icon="fas fa-address-card">Usually used for a user to list and manage their addresses</Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

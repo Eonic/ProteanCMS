@@ -3,7 +3,9 @@
 
 
 	<xsl:import href="../ptn/features/cart/cart.xsl"/>
-	
+	<xsl:import href="../ptn/features/membership/membership.xsl"/>
+	<xsl:import href="../ptn/features/search/search.xsl"/>
+	<xsl:import href="../ptn/features/subscriptions/subscriptions.xsl"/>
   <!--xsl:import href="InstalledModules/TESTMODULE.xsl"/-->
 
 </xsl:stylesheet>
