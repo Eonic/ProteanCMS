@@ -335,7 +335,7 @@
       </xsl:when>
       <xsl:otherwise>
         <div class="mb-1">
-          <span class="text-muted">
+          <span class="text-muted small">
             <xsl:value-of select="$fld"/> contains <xsl:value-of select="$fileCount"/> files
             <xsl:value-of select="$page/Request/QueryString/Item[@name='pathonly']"/>
           </span>
@@ -343,7 +343,7 @@
 
       </xsl:otherwise>
     </xsl:choose>
-    <div class="row" id="files">
+    <div class="row row-cols-auto" id="files">
       <xsl:choose>
         <xsl:when test="$fld='' and $fileCount &gt; $itemCount and not(/Page/Request/QueryString/Item[@name='showall']/node()='all')">
 
@@ -438,7 +438,7 @@
         <xsl:with-param name="str" select="@name"/>
       </xsl:call-template>
     </xsl:variable>
-    <div class="item item-image col-sm-4 col-md-3 col-xl-2">
+    <div class="item item-image col">
       <div class="panel">
         <div class="image-thumbnail">
           <xsl:variable name="Extension">

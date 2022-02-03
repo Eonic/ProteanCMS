@@ -1119,7 +1119,8 @@ body.ptn-edit.layout-AdmHome {
 
     .item.item-image {
         position: relative;
-        text-align:center;
+        text-align: center;
+        width: 205px;
 
         > div {
             background: #e9ecef;
@@ -1149,7 +1150,7 @@ body.ptn-edit.layout-AdmHome {
     .image-thumbnail {
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         height: 145px;
         overflow: hidden;
 
@@ -1207,6 +1208,14 @@ body.ptn-edit.layout-AdmHome {
             padding: 0.3rem 0.4rem;
             line-height: 1;
             font-size: 0.8rem;
+        }
+    }
+
+    #files .item.item-image {
+        width: 145px;
+
+        .image-thumbnail {
+            height: 135px;
         }
     }
 }

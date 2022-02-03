@@ -702,16 +702,18 @@
 
                       </xsl:if>
                       <p>
-                          <i class="fa fa-phone"> </i>
-                          <xsl:call-template name="eonicwebSupportTelephone"/>
+                        <i class="fa fa-phone"> </i>
+                        <xsl:call-template name="eonicwebSupportTelephone"/>
                       </p>
                       <p>
                         <a href="mailto:{$supportEmail}" title="Email Support">
-                          <i class="fa fa-envelope"> </i><xsl:value-of select="$supportEmail"/>
+                          <i class="fa fa-envelope"> </i>
+                          <xsl:value-of select="$supportEmail"/>
                         </a>
                       </p>
                       <p>
-                        <i class="fa fa-globe"> </i> <a title="view the latest news">
+                        <i class="fa fa-globe"> </i>
+                        <a title="view the latest news">
                           <xsl:attribute name="href">
                             <xsl:text>http://{$supportWebsite}?utm_campaign=cmsadminsystem&amp;utm_source=</xsl:text>
                             <xsl:value-of select="//ServerVariables/Item[@name='SERVER_NAME']/node()"/>
@@ -2800,7 +2802,7 @@
               <input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
               <div class="card-header">
                 <h3>Search Results</h3>
-                
+
               </div>
 
               <table cellpadding="0" cellspacing="1" class="table table-mobile-cards-1col">
@@ -2842,14 +2844,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                    <xsl:for-each select="ContentDetail/RelatedResults/Content">
-                      <xsl:sort select="@name" />
+                  <xsl:for-each select="ContentDetail/RelatedResults/Content">
+                    <xsl:sort select="@name" />
 
-                      <xsl:apply-templates select="." mode="LocateContentNode"/>
+                    <xsl:apply-templates select="." mode="LocateContentNode"/>
 
-                    </xsl:for-each>
+                  </xsl:for-each>
                   <!--<xsl:apply-templates select="ContentDetail/RelatedResults/Content" mode="LocateContentNode"/>-->
-                  
+
                 </tbody>
               </table>
               <xsl:if test="ContentDetail/RelatedResults/Content">
@@ -2921,7 +2923,8 @@
             </xsl:call-template>
           </xsl:if>
         </td>
-        <td class="relate"><xsl:choose>
+        <td class="relate">
+          <xsl:choose>
             <xsl:when test="@related=1">
               <xsl:text>(Related)</xsl:text>
               <xsl:value-of select="@sType"/>|<xsl:value-of select="$relationType"/>
@@ -3956,12 +3959,18 @@
       <div class="row">
 
         <div id="MenuTree" class="list-group col-md-3 col-sm-4 mb-3">
+          <xsl:if test="contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')">
+            <xsl:attribute name="class">list-group col-md-4 col-lg-3 col-xxl-2 mb-3</xsl:attribute>
+          </xsl:if>
           <xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
             <xsl:with-param name="level">1</xsl:with-param>
           </xsl:apply-templates>
         </div>
 
         <div class="col-md-9 col-sm-8">
+          <xsl:if test="contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')">
+            <xsl:attribute name="class">col-md-8 col-lg-9 col-xxl-10</xsl:attribute>
+          </xsl:if>
           <xsl:for-each select="descendant-or-self::folder[@active='true']">
             <div class="btn-group-spaced mb-1">
               <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
@@ -4343,7 +4352,7 @@
         Showing <xsl:value-of select="$fileCount"/> files
       </span>
     </div>
-    <div class="row" id="files">
+    <div class="row row-cols-auto" id="files">
       <xsl:for-each select="file">
         <div class="item item-image col-6 col-lg-2 col-md-3 col-sm-4">
           <div class="">
