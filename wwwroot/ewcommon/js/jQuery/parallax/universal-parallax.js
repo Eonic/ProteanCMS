@@ -140,7 +140,7 @@ var universalParallax = function universalParallax() {
 			if (supportsWebp()) {
 				imgData = imgDataWebp;
 			};
-			debugger;
+			//debugger;
 			// add image to div if none is specified
 			if (typeof imgData !== 'undefined') {
 				var newImg = new Image();

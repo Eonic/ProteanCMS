@@ -4237,15 +4237,11 @@
       $('.pickImageModal').find('a[data-bs-toggle!="popover"]').click(function (ev) {
       ev.preventDefault();
       $('.modal-dialog').addClass('loading')
-      var modalhtml = '<p class="text-center">
-        ';
-        modalhtml += '<h4>
-          ';
+      var modalhtml = '<p class="text-center">';
+        modalhtml += '<h4>';
           modalhtml += '<i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...';
-          modalhtml += '
-        </h4>';
-        modalhtml += '
-      </p>';
+          modalhtml += '</h4>';
+        modalhtml += '</p>';
       $('.modal-body').html(modalhtml);
       var target = $(this).attr("href");
       // load the url and show modal on success
@@ -4286,52 +4282,32 @@
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-    var newItem = '<div class="item item-image col-md-3 col-sm-4">
-      ';
-      newItem = newItem + '<div class="panel">
-        ';
-        newItem = newItem + '<div class="image-thumbnail">
-          ';
-          newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
-            ';
+    var newItem = '<div class="item item-image col-md-3 col-sm-4">';
+      newItem = newItem + '<div class="panel">';
+        newItem = newItem + '<div class="image-thumbnail">';
+          newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">';
             newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
-            newItem = newItem + '<div class="popover-description">
-              ';
+            newItem = newItem + '<div class="popover-description">';
               newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
               newItem = newItem + '<br/>';
-              newItem = newItem + '
-            </div>';
-            newItem = newItem + '
-          </div>';
-          newItem = newItem + '<a data-bs-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
-            '
+              newItem = newItem + '</div>';
+            newItem = newItem + '</div>';
+          newItem = newItem + '<a data-bs-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">';
             newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
-            newItem = newItem + '
-          </a>';
-          newItem = newItem + '
-        </div>';
-        newItem = newItem + '<div class="description">
-          ';
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
-            '
-            newItem = newItem + '<i class="fa fa-trash-alt fa-white">
-              ';
+            newItem = newItem + '</a>';
+          newItem = newItem + '</div>';
+        newItem = newItem + '<div class="description">';
+          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">';
+            newItem = newItem + '<i class="fa fa-trash-alt fa-white">';
               newItem = newItem + ' <xsl:text> </xsl:text>';
-              newItem = newItem + '
-            </i>Delete';
-            newItem = newItem + '
-          </a>';
-          newItem = newItem + '
-        </div><div class="img-description">
-          ';
+              newItem = newItem + ' </i>Delete';
+            newItem = newItem + '</a>';
+          newItem = newItem + '</div><div class="img-description">';
           newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
           newItem = newItem + '<br/>';
-          newItem = newItem + '
-        </div>';
-        newItem = newItem + '
-      </div>';
-      newItem = newItem + '
-    </div>';
+          newItem = newItem + '</div>';
+        newItem = newItem + '</div>';
+      newItem = newItem + '</div>';
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">

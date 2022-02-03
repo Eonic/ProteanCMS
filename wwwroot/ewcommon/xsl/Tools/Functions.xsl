@@ -1093,12 +1093,100 @@
         <xsl:for-each select="descendant-or-self::instance[@valid='true']/emailer">
           <xsl:text>fbq('track', 'Lead');</xsl:text>
         </xsl:for-each>
+          <xsl:choose>
+			 
+            <xsl:when test="Cart/Order/@cmd='Logon'"> 
+				<xsl:text>fbq('track', 'AddToCart', {currency: "</xsl:text>
+				<xsl:value-of select="Cart/Order/@currency"/>  
+				<xsl:text>", value:</xsl:text>
+				<xsl:value-of select="Cart/Order/@total"/>  
+				<xsl:text>,content_type: 'product', contents: [</xsl:text>
+				<xsl:for-each select="Cart/Order/Item">
+				    <xsl:text>{id: '</xsl:text>
+					<xsl:value-of select="@id"/>
+                    <xsl:text>', quantity:</xsl:text>
+					<xsl:value-of select="@quantity"/>
+					<xsl:text>}</xsl:text>
+	                <xsl:if test="position()!=last()">
+						<xsl:text>,</xsl:text>					
+					</xsl:if>				
+				</xsl:for-each>
+                <xsl:text>]});</xsl:text>
+            </xsl:when>
+			<!--
+            <xsl:when test="/Page/Cart/Order/@cmd='Logon'">
+              <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
+              ga('ec:setAction','checkout', {'step': 2});
+            </xsl:when>
+            <xsl:when test="/Page/Cart/Order/@cmd='Billing'">
+              <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
+              ga('ec:setAction','checkout', {'step': 3});
+            </xsl:when>
+            <xsl:when test="/Page/Cart/Order/@cmd='Delivery'">
+              <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
+              ga('ec:setAction','checkout', {'step': 3});
+            </xsl:when>
+            <xsl:when test="/Page/Cart/Order/@cmd='ChoosePaymentShippingOption'">
+              <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
+              ga('ec:setAction','checkout', {'step': 4});
+            </xsl:when>
+			  -->
+            <xsl:when test="Cart/Order/@cmd='EnterPaymentDetails'">
+					<xsl:text>fbq('track', 'AddPaymentInfo', {currency: "</xsl:text>
+				<xsl:value-of select="Cart/Order/@currency"/>  
+				<xsl:text>", value:</xsl:text>
+				<xsl:value-of select="Cart/Order/@total"/>  
+				<xsl:text>,content_type: 'product', contents: [</xsl:text>
+				<xsl:for-each select="Cart/Order/Item">
+				    <xsl:text>{id: '</xsl:text>
+					<xsl:value-of select="@id"/>
+                    <xsl:text>', quantity:</xsl:text>
+					<xsl:value-of select="@quantity"/>
+					<xsl:text>}</xsl:text>
+	                <xsl:if test="position()!=last()">
+						<xsl:text>,</xsl:text>					
+					</xsl:if>				
+				</xsl:for-each>
+                <xsl:text>]});</xsl:text>
+            </xsl:when>
+			  
+            <xsl:when test="Cart/Order/@cmd='ShowInvoice'">
+					<xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
+				<xsl:value-of select="Cart/Order/@currency"/>  
+				<xsl:text>", value:</xsl:text>
+				<xsl:value-of select="Cart/Order/@total"/>  
+				<xsl:text>,content_type: 'product', contents: [</xsl:text>
+				<xsl:for-each select="Cart/Order/Item">
+				    <xsl:text>{id: '</xsl:text>
+					<xsl:value-of select="@id"/>
+                    <xsl:text>', quantity:</xsl:text>
+					<xsl:value-of select="@quantity"/>
+					<xsl:text>}</xsl:text>
+	                <xsl:if test="position()!=last()">
+						<xsl:text>,</xsl:text>					
+					</xsl:if>				
+				</xsl:for-each>
+                <xsl:text>]});</xsl:text>
+            </xsl:when>
+			  <!--
+            <xsl:when test="/Page/ContentDetail/Content[@type='Product']">
+              <xsl:apply-templates select="/Page/ContentDetail/Content[@type='Product']" mode="ga-universal-addProduct" />
+              ga('ec:setAction', 'detail');
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="/Page/Contents/Content[@type='Product']" mode="ga-universal-impression" />
+            </xsl:otherwise>
+			-->
+          </xsl:choose>
+      
+	  
       </script>
       <noscript>
         <img height="1" width="1" src="https://www.facebook.com/tr?id={Contents/Content[@name='fb-pixel_id']}&amp;ev=PageView&amp;noscript=1"/>
       </noscript>
       <!-- End Facebook Pixel Code -->
     </xsl:if>
+	  
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
     <xsl:apply-templates select="." mode="JSONLD"/>
@@ -1124,6 +1212,8 @@
 
   </xsl:template>
 
+
+	
   <!-- DUMMY template, as sometimes Functions.xsl gets imported without CommonLayouts where this actually sits -->
   <xsl:template name="initialiseSocialBookmarks"></xsl:template>
 
@@ -2255,6 +2345,13 @@
     <xsl:value-of select="Cart/Order/@shippingCost"/>
     <xsl:text>'</xsl:text>
     <xsl:text>});</xsl:text>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+      ga('set', 'campaignSource', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>');
+    </xsl:if>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+      ga('set', 'campaignMedium', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>');
+
+    </xsl:if>
   </xsl:template>
 
   <!-- Log Order Items-->
