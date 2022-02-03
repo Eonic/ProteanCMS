@@ -190,6 +190,8 @@ Partial Public Class fsHelper
 
             If IO.File.Exists(goServer.MapPath(localFilePath)) Then
                 Return localFilePath
+            ElseIf IO.File.Exists(goServer.MapPath("/ptn" & localFilePath)) Then
+                Return "/ptn" & localFilePath
             ElseIf IO.File.Exists(goServer.MapPath("/ewcommon" & localFilePath)) Then
                 Return "/ewcommon" & localFilePath
             Else

@@ -992,8 +992,8 @@ Public Class Cms
                         gcEwSiteXsl = moMailConfig("MailingXsl")
                     Else
                         gcEwSiteXsl = "/ewcommon/xsl/Mailer/mailerStandard.xsl"
+                        If moConfig("cssFramework") = "bs5" Then mcEwSiteXsl = "/ptn/features/mailer/mailer-core.xsl"
                     End If
-                    If moConfig("cssFramework") = "bs5" Then mcEwSiteXsl = "/ptn/features/mailer/mailer-core.xsl"
                     mnMailMenuId = moMailConfig("RootPageId")
                     mcContentType = "text/html"
                     moResponseType = pageResponseType.mail

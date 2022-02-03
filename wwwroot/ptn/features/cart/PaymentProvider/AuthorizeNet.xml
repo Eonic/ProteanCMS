@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<provider name="AuthorizeNet" validGroups="all" validCurrencies="GBP">
+				<description value="Pay by Credit Card (AuthorizeNet)"/>
+				<currency value="GBP"/>
+				<cardsAccepted value="MasterCard:Master Card,VISA:Visa,Delta:Delta,Solo:Solo,Switch/Maestro:Switch"/>
+				<accountId value="6kQq2S25"/>
+				<transactionKey value="652enRP62SCaB7Tq"/>
+				<accountPassword value="bustercat"/>
+				<opperationMode value="true"/>
+				<transactionType value="AUTH_CAPTURE"/>
+				<emailCustomer value="TRUE"/>
+				<validateAddress value="on"/>
+				<validateCV2 value="on"/>
+			</provider>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="provider">
+			<bind id="description" nodeset="description/@value" required="true()" type="string"/>
+			<bind id="accountId" nodeset="accountId/@value" required="true()" type="string"/>
+			<bind id="transactionKey" nodeset="transactionKey/@value" required="true()" type="string"/>
+			<bind id="accountPassword" nodeset="accountPassword/@value" required="true()" type="string"/>
+			<bind id="currency" nodeset="currency/@value" required="true()" type="string"/>
+			<bind id="cardsAccepted" nodeset="cardsAccepted/@value" required="true()" type="string"/>
+			<bind id="opperationMode" nodeset="opperationMode/@value" required="true()" type="string"/>
+			<bind id="transactionType" nodeset="transactionType/@value" required="true()" type="string"/>
+			<bind id="emailCustomer" nodeset="emailCustomer/@value" required="true()" type="string"/>
+			<bind id="validateAddress" nodeset="validateAddress/@value" required="true()" type="string"/>
+			<bind id="validateCV2" nodeset="validateCV2/@value" required="true()" type="string"/>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>Authoize.Net Settings</label>
+		<input bind="description" class="long">
+			<label>Description</label>
+		</input>
+		<input bind="accountId">
+			<label>Account Id</label>
+		</input>
+		<input bind="transactionKey">
+			<label>Transaction Key</label>
+		</input>
+		<input bind="accountPassword">
+			<label>Account Password (MD5 Hash)</label>
+		</input>
+		<input bind="currency">
+			<label>Currency</label>
+		</input>
+		<textarea bind="cardsAccepted">
+			<label>CardsAccepted</label>
+		</textarea>
+		<select1 bind="opperationMode" appearance="full" class="required">
+			<label>Opperation Mode</label>
+			<item>
+				<label>Live</label>
+				<value>live</value>
+			</item>
+			<item>
+				<label>Test</label>
+				<value>true</value>
+			</item>
+			<item>
+				<label>Test False</label>
+				<value>false</value>
+			</item>
+		</select1>
+		<select1 bind="transactionType" appearance="full" class="required">
+			<label>Transaction Type</label>
+			<item>
+				<label>AUTH_CAPTURE</label>
+				<value>AUTH_CAPTURE</value>
+			</item>
+			<item>
+				<label>AUTH_ONLY</label>
+				<value>AUTH_ONLY</value>
+			</item>
+			<item>
+				<label>CAPTURE_ONLY</label>
+				<value>CAPTURE_ONLY</value>
+			</item>
+			<item>
+				<label>PRIOR_AUTH_CAPTURE</label>
+				<value>PRIOR_AUTH_CAPTURE</value>
+			</item>
+		</select1>
+		<select1 bind="emailCustomer" appearance="full" class="required">
+			<label>Email Customer (from Authorize.Net)</label>
+			<item>
+				<label>Yes</label>
+				<value>TRUE</value>
+			</item>
+			<item>
+				<label>No</label>
+				<value>FALSE</value>
+			</item>
+		</select1>
+		<select1 bind="validateAddress" appearance="full" class="required">
+			<label>Validate Address</label>
+			<item>
+				<label>Yes</label>
+				<value>on</value>
+			</item>
+			<item>
+				<label>No</label>
+				<value>off</value>
+			</item>
+		</select1>
+		<select1 bind="validateCV2" appearance="full" class="required">
+			<label>Validate CV2</label>
+			<item>
+				<label>Yes</label>
+				<value>on</value>
+			</item>
+			<item>
+				<label>No</label>
+				<value>off</value>
+			</item>
+		</select1>
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Settings</label>
+		</submit>
+	</group>
+</Content>
