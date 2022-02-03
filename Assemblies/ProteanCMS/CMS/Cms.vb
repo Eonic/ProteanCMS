@@ -448,8 +448,10 @@ Public Class Cms
             'Start LatestDBVersion
             oElmt = oRXML.CreateElement("LatestDBVersion")
             Dim LatestDBVersion As XmlTextReader
-            LatestDBVersion = New XmlTextReader(goServer.MapPath("/ewcommon/sqlUpdate/DatabaseUpgrade.xml"))
-            LatestDBVersion.WhitespaceHandling = WhitespaceHandling.None
+            Dim dbUpgradeFile As String = "/ewcommon/sqlUpdate/DatabaseUpgrade.xml"
+            If moConfig("cssFramework") = "bs5" Then dbUpgradeFile = "/ptn/update/sql/databaseupgrade.xml"
+            LatestDBVersion = New XmlTextReader(goServer.MapPath(dbUpgradeFile))
+                LatestDBVersion.WhitespaceHandling = WhitespaceHandling.None
             'Disable whitespace so that it doesn't have to read over whitespaces
             LatestDBVersion.Read()
             LatestDBVersion.Read()
