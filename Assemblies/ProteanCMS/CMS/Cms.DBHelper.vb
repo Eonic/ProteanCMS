@@ -710,10 +710,13 @@ Partial Public Class Cms
                     strReturn = "nDisplayOrder"
                 Case 3
                     strReturn = "nStructOrder"
+                Case 18
+                    strReturn = "nDisplayOrder"
                 Case 29
                     strReturn = "nStructOrder"
                 Case 30
                     strReturn = "nDisplayOrder"
+
                     'Case 5
                     '    Return "nRelKey"
             End Select
@@ -4044,7 +4047,7 @@ restart:
             End Try
         End Sub
 
-        Sub ReorderContent(ByVal nPgId As Long, ByVal nContentId As Long, ByVal ReOrderCmd As String, Optional ByVal bIsRelatedContent As Boolean = False, Optional ByVal cPosition As String = "")
+        Sub ReorderContent(ByVal nPgId As Long, ByVal nContentId As Long, ByVal ReOrderCmd As String, Optional ByVal bIsRelatedContent As Boolean = False, Optional ByVal cPosition As String = "", Optional ByVal nGroupId As Int32 = 0)
             PerfMon.Log("DBHelper", "ReorderContent")
             Dim sSql As String
             Dim oDs As DataSet
@@ -4059,20 +4062,24 @@ restart:
 
             Dim objectType As objectTypes
             Dim sKeyField As String
-            If bIsRelatedContent Then
-                objectType = objectTypes.ContentRelation
-                'sKeyField = "nContentRelationKey"
-                sKeyField = "nContentChildId"
-            Else
-                objectType = objectTypes.ContentLocation
-                sKeyField = "nContentId"
-            End If
 
+            If nGroupId <> 0 Then
+                objectType = objectTypes.CartCatProductRelations
+                sKeyField = "nContentId"
+            Else
+                If bIsRelatedContent Then
+                    objectType = objectTypes.ContentRelation
+                    'sKeyField = "nContentRelationKey"
+                    sKeyField = "nContentChildId"
+                Else
+                    objectType = objectTypes.ContentLocation
+                    sKeyField = "nContentId"
+                End If
+            End If
 
 
             Dim cProcessInfo As String = ""
             Try
-
 
                 'Lets go and get the content type
 
@@ -4088,20 +4095,30 @@ restart:
 
                 sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
 
-                If cPosition <> "" Then
-                    If cPosition.EndsWith("-") Then
-                        sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and CL.cPosition like'" & cPosition & "%' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
-                    Else
-                        sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and CL.cPosition ='" & cPosition & "' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
-                    End If
-                End If
+                If nGroupId <> 0 Then
+                    sSql = " Select * From tblContent c " &
+                    " INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId " &
+                    " WHERE(tblCartCatProductRelations.nCatId = " & nGroupId & ") " &
+                    " And c.cContentSchemaName = '" & cSchemaName & "'" &
+                    " order by tblCartCatProductRelations.nDisplayOrder  "
 
-                If bIsRelatedContent Then
-                    sSql = "SELECT tblContentRelation.* FROM tblContentRelation INNER JOIN" &
-                       " tblContent ON tblContentRelation.nContentChildId = tblContent.nContentKey INNER JOIN" &
-                       " tblContent tblContent_1 ON tblContent.cContentSchemaName = tblContent_1.cContentSchemaName" &
-                       " WHERE (tblContentRelation.nContentParentId = " & nPgId & ") AND (tblContent_1.nContentKey = " & nContentId & ")" &
-                       " ORDER BY tblContentRelation.nDisplayOrder"
+
+                Else
+                    If cPosition <> "" Then
+                        If cPosition.EndsWith("-") Then
+                            sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and CL.cPosition like'" & cPosition & "%' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
+                        Else
+                            sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and CL.cPosition ='" & cPosition & "' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
+                        End If
+                    End If
+
+                    If bIsRelatedContent Then
+                        sSql = "Select tblContentRelation.* FROM tblContentRelation INNER JOIN" &
+                           " tblContent On tblContentRelation.nContentChildId = tblContent.nContentKey INNER JOIN" &
+                           " tblContent tblContent_1 On tblContent.cContentSchemaName = tblContent_1.cContentSchemaName" &
+                           " WHERE (tblContentRelation.nContentParentId = " & nPgId & ") And (tblContent_1.nContentKey = " & nContentId & ")" &
+                           " ORDER BY tblContentRelation.nDisplayOrder"
+                    End If
                 End If
 
                 oDs = getDataSetForUpdate(sSql, getTable(objectType), "results")
@@ -4120,7 +4137,7 @@ restart:
                                 i = i + 1
                             End If
                             'non-ideal alternative for updating the entire dataset
-                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
+                            sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                             ExeProcessSql(sSql)
                         Next
                     Case "MoveBottom"
@@ -4132,7 +4149,7 @@ restart:
                                 i = i + 1
                             End If
                             'non-ideal alternative for updating the entire dataset
-                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
+                            sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                             ExeProcessSql(sSql)
                         Next
                     Case "MoveUp"
@@ -4140,19 +4157,19 @@ restart:
                             If oRow(sKeyField) = nContentId And i <> 1 Then
                                 'swap with previous
                                 oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) = i
-                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
+                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
                                 ExeProcessSql(sSql)
 
                                 oRow(getOrderFname(objectType)) = i - 1
-                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
+                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                                 ExeProcessSql(sSql)
                             Else
                                 oRow(getOrderFname(objectType)) = i
-                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
+                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                                 ExeProcessSql(sSql)
                             End If
                             'non-ideal alternative for updating the entire dataset
-                            ' sSql = "update tblContentLocation set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where nAuditId = " & oRow("nAuditId")
+                            ' sSql = "update tblContentLocation Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where nAuditId = " & oRow("nAuditId")
                             ' exeProcessSQL(sSql)
                             i = i + 1
                         Next
@@ -4171,7 +4188,7 @@ restart:
                             End If
 
                             'non-ideal alternative for updating the entire dataset
-                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
+                            sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                             ExeProcessSql(sSql)
 
                             i = i + 1
@@ -4202,7 +4219,7 @@ restart:
                 'ignoring cascaded items
                 cProcessInfo = "Retreiving Original Content"
 
-                sSql = "SELECT nContentId, bPrimary, bCascade, cPosition FROM tblContentLocation WHERE (nStructId = " & nSourcePageId & ") ORDER BY nDisplayOrder"
+                sSql = "Select nContentId, bPrimary, bCascade, cPosition FROM tblContentLocation WHERE (nStructId = " & nSourcePageId & ") ORDER BY nDisplayOrder"
 
                 Dim positionReMap(1, 1) As Long
                 Dim copyCount As Long = 0
@@ -4233,10 +4250,10 @@ restart:
                             'nContentId = setObjectInstance(objectTypes.Content, oInstanceXML.DocumentElement)
                             ''get any items related to the origional that are not orphan (have no page) or are related to other items.
                             '' - copy relations to the new object.
-                            'sSql = "select nContentChildId, nDisplayOrder, cRelationtype," & _
-                            '"(select COUNT(nContentId) from tblContentLocation l where l.nContentId = r.nContentChildId) as nLocations, " & _
-                            '"(select COUNT(nContentParentId) from tblContentRelation r2 where r2.nContentChildId = r.nContentChildId) as nRelations, " & _
-                            '"(select COUNT(nContentParentId) from tblContentRelation r3 where r3.nContentParentId = r.nContentChildId and r3.nContentChildId = r.nContentParentId) as twoWay " & _
+                            'sSql = "Select nContentChildId, nDisplayOrder, cRelationtype," & _
+                            '"(Select COUNT(nContentId) from tblContentLocation l where l.nContentId = r.nContentChildId) As nLocations, " & _
+                            '"(Select COUNT(nContentParentId) from tblContentRelation r2 where r2.nContentChildId = r.nContentChildId) As nRelations, " & _
+                            '"(Select COUNT(nContentParentId) from tblContentRelation r3 where r3.nContentParentId = r.nContentChildId And r3.nContentChildId = r.nContentParentId) As twoWay " & _
                             '"from tblContentRelation r where nContentParentId = " & oDr("nContentId")
                             'Dim oDS2 As DataSet
                             'Dim oDr2 As DataRow
@@ -4283,7 +4300,7 @@ restart:
                 'do we need to create the menu for this?
                 If oMenuItem Is Nothing Then
                     'get the full menu
-                    sSql = "SELECT nStructKey, nStructParId  FROM tblContentStructure"
+                    sSql = "Select nStructKey, nStructParId  FROM tblContentStructure"
                     oDS = GetDataSet(sSql, "MenuItem", "Menu")
                     oDS.Tables("MenuItem").Columns("nStructKey").ColumnMapping = MappingType.Attribute
                     oDS.Tables("MenuItem").Columns("nStructParId").ColumnMapping = MappingType.Hidden
@@ -4292,7 +4309,7 @@ restart:
                     Dim oMenuXml As New XmlDocument
                     oMenuXml.InnerXml = oDS.GetXml
                     'now select the menu item we need
-                    oMenuItem = oMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@nStructKey=" & nSourcePageId & "]")
+                    oMenuItem = oMenuXml.SelectSingleNode("descendant-Or-self::MenuItem[@nStructKey=" & nSourcePageId & "]")
                     oMenuXml = Nothing
                 End If
                 'we need to go through its children and create items
@@ -4738,8 +4755,9 @@ restart:
                 ' Validate and Build the SQL conditions that we are going to need
 
                 If cSchema <> "" Then
-
-                    Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
+                    Dim cWhereSql As String = " (tblCartCatProductRelations.nCatId =" & nGroupId & ")"
+                    ' Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
+                    cOrderBy = "tblCartCatProductRelations.nDisplayOrder"
 
                     myWeb.GetPageContentFromSelect(cWhereSql, , , myWeb.mbAdminMode, 0, cOrderBy, oContent)
 
