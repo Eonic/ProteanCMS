@@ -35,6 +35,9 @@
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="xxlCol" nodeset="@xxlCol" required="false()" type="string"/>
+      <bind id="xlCol" nodeset="@xlCol" required="false()" type="string"/>
+      <bind id="lgCol" nodeset="@lgCol" required="false()" type="string"/>
       <bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
       <bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
       <bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>
@@ -67,93 +70,202 @@
         </input>
       </group>
 
-      <group class="inline-4col">
+      <group>
         <label>Layout options for smaller screens</label>
-        <select1 bind="lgCol" class="readonly">
-          <label>Desktop</label>
-          <value>6</value>
-          <item>
-            <label>6</label>
-            <value>6</value>
-          </item>
-          <help class="inline">
-            <p>The number of columns on larger screens (≥1200px) is determind by the module selected, and therefore cannot be changed</p>
-          </help>
-        </select1>
-        <select1 bind="mdCol">
-          <label>Laptop</label>
-          <item>
-            <label>1</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>2</label>
-            <value>2</value>
-          </item>
-          <item>
-            <label>3</label>
-            <value>3</value>
-          </item>
-          <item>
-            <label>4</label>
-            <value>4</value>
-          </item>
-          <item>
-            <label>5</label>
-            <value>5</value>
-          </item>
-          <item>
-            <label>6</label>
-            <value>6</value>
-          </item>
-          <help class="inline">
-            <p>Medium devices (≥992px), typically laptops, large tablets and small desktop monitors</p>
-          </help>
-        </select1>
-        <select1 bind="smCol">
-          <label>Tablet</label>
-          <item>
-            <label>1</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>2</label>
-            <value>2</value>
-          </item>
-          <item>
-            <label>3</label>
-            <value>3</value>
-          </item>
-          <item>
-            <label>4</label>
-            <value>4</value>
-          </item>
-          <item>
-            <label>5</label>
-            <value>5</value>
-          </item>
-          <item>
-            <label>6</label>
-            <value>6</value>
-          </item>
-          <help class="inline">
-            <p>Small devices (≥768px), typically small tablets</p>
-          </help>
-        </select1>
-        <select1 bind="xsCol">
-          <label>Lrg Mobile</label>
-          <item>
-            <label>1</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>2</label>
-            <value>2</value>
-          </item>
-          <help class="inline">
-            <p>Extra small devices (≥576px), typically small tablets. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
-          </help>
-        </select1>
+        <group class="row row-cols-auto row-cols-xxl-6 w-100">
+          <select1 bind="xsCol">
+            <label>
+              <i class="fas fa-mobile-alt"> </i> Extra small
+            </label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Extra small means screens under 576px wide</p>
+            </help>
+          </select1>
+          <select1 bind="smCol">
+            <label>
+              <i class="fas fa-mobile-alt"> </i> Small
+            </label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Small screens are 576px-767px</p>
+            </help>
+          </select1>
+          <select1 bind="mdCol">
+            <label>
+              <i class="fas fa-tablet-alt"> </i> Medium
+            </label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Medium screens are 768px-991px</p>
+            </help>
+          </select1>
+          <select1 bind="lgCol">
+            <label>
+              <i class="fas fa-laptop"> </i> Large
+            </label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Large screens are 992px-1199px</p>
+            </help>
+          </select1>
+          <select1 bind="xlCol">
+            <label>
+              <i class="fas fa-desktop"> </i> Extra Large
+            </label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Extra large screens are 1200px-1399px</p>
+            </help>
+          </select1>
+          <select1 bind="xxlCol">
+            <label>
+              <i class="fas fa-desktop"> </i> XXL
+            </label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Extra extra large screens are 1400px and up</p>
+            </help>
+          </select1>
+        </group>
       </group>
       <group>
         <label>Module Links</label>

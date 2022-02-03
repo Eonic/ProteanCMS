@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content position="" contentType="Module" moduleType="1Column" background="" title="" link="" linkType="internal" linkText="Read more" data-stellar-background-ratio="10"/>
+          <Content position="" contentType="Module" moduleType="AutoColumn" background="" title="" link="" linkType="internal" linkText="Read more" data-stellar-background-ratio="10"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -32,6 +32,7 @@
       <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
       <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="itemWidth" nodeset="@width" required="false()" type="string"/>
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
@@ -49,7 +50,7 @@
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
   <group ref="EditContent" class="2col">
-    <label>Edit 1 Column Module</label>
+    <label>Auto Column Module</label>
     <group>
       <group>
         <!-- These hidden fields and bindings are required for the component-->
@@ -127,7 +128,7 @@
           </item>
           <help class="inline">For expert use, only effective if flexbox has been enabled for your website</help>
         </select1>-->
-        <switch class="disable">
+        <!--<switch class="disable">
           <case id="Flex_true" >
             <label>Number of columns</label>
             <select1 bind="flexColumns">
@@ -159,7 +160,8 @@
             </select1>
           </case>
           <case id="Flex_false"/>
-        </switch>
+        </switch>-->
+        
       </group>
     </group>
     <group>
@@ -169,6 +171,10 @@
           <label>Title or Name</label>
         </input>
       </group>
+      <input bind="itemWidth" class="col-2" suffix="px">
+        <label>Item Width</label>
+
+      </input>
       <group>
         <label>Module Links</label>
         <select1 bind="cLinkType" appearance="full" class="required">
@@ -204,7 +210,7 @@
   </group>
   <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">
-      <label>Save 1 Column Module</label>
+      <label>Save Auto Column Module</label>
     </submit>
   </group>
 </Content>

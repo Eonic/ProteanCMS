@@ -70,18 +70,29 @@
       <group class="inline-4col">
         <label>Layout options for smaller screens</label>
         <select1 bind="lgCol" class="readonly">
-          <label>Desktop</label>
-          <value>3</value>
+          <label>
+            <i class="fas fa-laptop"> </i> Large
+          </label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2</label>
+            <value>2</value>
+          </item>
           <item>
             <label>3</label>
             <value>3</value>
           </item>
           <help class="inline">
-            <p>The number of columns on larger screens (≥1200px) is determind by the module selected, and therefore cannot be changed</p>
+            <p>Large screens are 992px-1199px</p>
           </help>
         </select1>
         <select1 bind="mdCol">
-          <label>Laptop</label>
+          <label>
+            <i class="fas fa-tablet-alt"> </i> Medium
+          </label>
           <item>
             <label>1</label>
             <value>1</value>
@@ -95,11 +106,13 @@
             <value>3</value>
           </item>
           <help class="inline">
-            <p>Medium devices (≥992px), typically laptops, large tablets and small desktop monitors</p>
+            <p>Medium screens are 768px-991px</p>
           </help>
         </select1>
         <select1 bind="smCol">
-          <label>Tablet</label>
+          <label>
+            <i class="fas fa-mobile-alt"> </i> Small
+          </label>
           <item>
             <label>1</label>
             <value>1</value>
@@ -113,11 +126,13 @@
             <value>3</value>
           </item>
           <help class="inline">
-            <p>Small devices (≥768px), typically small tablets</p>
+            <p>Small screens are 576px-767px</p>
           </help>
         </select1>
         <select1 bind="xsCol">
-          <label>Lrg Mobile</label>
+          <label>
+            <i class="fas fa-mobile-alt"> </i> Extra small
+          </label>
           <item>
             <label>1</label>
             <value>1</value>
@@ -126,8 +141,12 @@
             <label>2</label>
             <value>2</value>
           </item>
+          <item>
+            <label>3</label>
+            <value>3</value>
+          </item>
           <help class="inline">
-            <p>Extra small devices (≥576px), typically small tablets. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
+            <p>Extra small means screens under 576px wide</p>
           </help>
         </select1>
       </group>

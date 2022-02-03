@@ -1,6 +1,166 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 
+  <!--responsive column settings-->
+
+  <xsl:template match="*" mode="responsiveColumns">
+    <xsl:param name="defaultCols"/>
+    <xsl:variable name="smColsEven">
+      <xsl:choose>
+        <xsl:when test="@smCol='2'">col-sm-6 </xsl:when>
+        <xsl:when test="@smCol='3'">col-sm-4 </xsl:when>
+        <xsl:when test="@smCol='4'">col-sm-3 </xsl:when>
+        <xsl:when test="@smCol='5'">col-sm-2 5-col </xsl:when>
+        <xsl:when test="@smCol='6'">col-sm-2 </xsl:when>
+        <xsl:otherwise>col-sm-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsEven">
+      <xsl:if test="@mdCol='1'">col-md-12 </xsl:if>
+      <xsl:if test="@mdCol='2'">col-md-6 </xsl:if>
+      <xsl:if test="@mdCol='3'">col-md-4 </xsl:if>
+      <xsl:if test="@mdCol='4'">col-md-3 </xsl:if>
+      <xsl:if test="@mdCol='5'">col-md-2 5-col </xsl:if>
+      <xsl:if test="@mdCol='6'">col-md-2 </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="lgColsEven">
+      <xsl:if test="@lgCol='1'">col-lg-12 </xsl:if>
+      <xsl:if test="@lgCol='2'">col-lg-6 </xsl:if>
+      <xsl:if test="@lgCol='3'">col-lg-4 </xsl:if>
+      <xsl:if test="@lgCol='4'">col-lg-3 </xsl:if>
+      <xsl:if test="@lgCol='5'">col-lg-2 5-col </xsl:if>
+      <xsl:if test="@lgCol='6'">col-lg-2 </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="xlColsEven">
+      <xsl:if test="@xlCol='1'">col-xl-12 </xsl:if>
+      <xsl:if test="@xlCol='2'">col-xl-6 </xsl:if>
+      <xsl:if test="@xlCol='3'">col-xl-4 </xsl:if>
+      <xsl:if test="@xlCol='4'">col-xl-3 </xsl:if>
+      <xsl:if test="@xlCol='5'">col-xl-2 5-col </xsl:if>
+      <xsl:if test="@xlCol='6'">col-xl-2 </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="xxlColsEven">
+      <xsl:if test="@xxlCol='1'">col-xxl-12 </xsl:if>
+      <xsl:if test="@xxlCol='2'">col-xxl-6 </xsl:if>
+      <xsl:if test="@xxlCol='3'">col-xxl-4 </xsl:if>
+      <xsl:if test="@xxlCol='4'">col-xxl-3 </xsl:if>
+      <xsl:if test="@xxlCol='5'">col-xxl-2 5-col </xsl:if>
+      <xsl:if test="@xxlCol='6'">col-xxl-2 </xsl:if>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:otherwise>mobile-1-col </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="@smCol and @smCol!=''">
+      <xsl:value-of select="$smColsEven"/>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@mdCol and @mdCol!=''">
+        <xsl:value-of select="$mdColsEven"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultCols"/>
+        <xsl:text> </xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>col-lg-</xsl:text>
+    <xsl:value-of select="$defaultCols"/>
+    <xsl:text> </xsl:text>
+    <xsl:if test="@xlCol and @xlCol!=''">
+      <xsl:value-of select="$xlColsEven"/>
+    </xsl:if>
+    <xsl:if test="@xxlCol and @xxlCol!=''">
+      <xsl:value-of select="$xxlColsEven"/>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="*" mode="unevenColumns">
+    <xsl:param name="defaultWidth"/>
+    <xsl:variable name="smColsUneven">
+      <xsl:choose>
+        <xsl:when test="@smCol='2'">
+          <xsl:text>col-sm-</xsl:text>
+          <xsl:value-of select="$defaultWidth"/>
+          <xsl:text> </xsl:text>
+        </xsl:when>
+        <xsl:when test="@smCol='2equal'">col-sm-6 </xsl:when>
+        <xsl:otherwise>sm-single-col </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsUneven">
+      <xsl:if test="@mdCol='2'">
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultWidth"/>
+        <xsl:text> </xsl:text>
+      </xsl:if>
+      <xsl:if test="@mdCol='2equal'">col-md-6 </xsl:if>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:otherwise>mobile-1-col </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="@smCol and @smCol!=''">
+      <xsl:value-of select="$smColsUneven"/>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@mdCol and @mdCol!=''">
+        <xsl:value-of select="$mdColsUneven"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultWidth"/>
+        <xsl:text> </xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>col-lg-</xsl:text>
+    <xsl:value-of select="$defaultWidth"/>
+    <xsl:text> </xsl:text>
+  </xsl:template>
+
+  <xsl:template match="*" mode="uneven5Columns">
+    <xsl:param name="defaultWidth"/>
+    <xsl:variable name="smColsUneven">
+      <xsl:choose>
+        <xsl:when test="@smCol='2'">
+          <xsl:text>col-sm-</xsl:text>
+          <xsl:value-of select="$defaultWidth"/>
+          <xsl:text> </xsl:text>
+        </xsl:when>
+        <xsl:when test="@smCol='2equal'">col-sm-equal-2 </xsl:when>
+        <xsl:otherwise>sm-single-col </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsUneven">
+      <xsl:if test="@mdCol='2'">
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultWidth"/>
+        <xsl:text> </xsl:text>
+      </xsl:if>
+      <xsl:if test="@mdCol='2equal'">col-md-equal-2 </xsl:if>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:otherwise>mobile-1-col </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="@smCol and @smCol!=''">
+      <xsl:value-of select="$smColsUneven"/>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@mdCol and @mdCol!=''">
+        <xsl:value-of select="$mdColsUneven"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultWidth"/>
+        <xsl:text> </xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>col-lg-</xsl:text>
+    <xsl:value-of select="$defaultWidth"/>
+    <xsl:text> </xsl:text>
+  </xsl:template>
+
   <xsl:template match="Content[@moduleType='3Columns' or @moduleType='3columns']" mode="displayBrief">
     <xsl:variable name="responsiveColumns">
       <xsl:apply-templates select="." mode="responsiveColumns">
@@ -52,6 +212,35 @@
 
   <xsl:template match="Content[@moduleType='1Column' or @moduleType='1column' or @moduleType='Conditional1Column']" mode="displayBrief">
     <div class="row">
+      <!--<xsl:if test="@flexbox='true'">
+        <xsl:attribute name="class">
+          row flexbox-columns flexbox-cols-<xsl:value-of select="@flexColumns"/>
+        </xsl:attribute>
+      </xsl:if>-->
+      <xsl:if test="$adminMode and @moduleType='Conditional1Column'">
+        <xsl:attribute name="class">row conditional-block</xsl:attribute>
+        <div class="conditional-note">
+          This block is conditional on the querystring containing '<xsl:value-of select="@querystringcontains"/>'
+        </div>
+      </xsl:if>
+      <div id="column1-{@id}" class="column1 col-md-12">
+
+        <xsl:apply-templates select="/Page" mode="addModule">
+          <xsl:with-param name="text">Add Module</xsl:with-param>
+          <xsl:with-param name="position">
+            <xsl:text>column1-</xsl:text>
+            <xsl:value-of select="@id"/>
+          </xsl:with-param>
+          <xsl:with-param name="class">
+            <xsl:text>column1 col-md-12</xsl:text>
+          </xsl:with-param>
+        </xsl:apply-templates>
+      </div>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="Content[@moduleType='AutoColumn']" mode="displayBrief">
+    <div class="row">
       <xsl:if test="@flexbox='true'">
         <xsl:attribute name="class">
           row flexbox-columns flexbox-cols-<xsl:value-of select="@flexColumns"/>
@@ -73,6 +262,9 @@
           </xsl:with-param>
           <xsl:with-param name="class">
             <xsl:text>column1 col-md-12</xsl:text>
+          </xsl:with-param>
+          <xsl:with-param name="style">
+            <xsl:text>width:300</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
