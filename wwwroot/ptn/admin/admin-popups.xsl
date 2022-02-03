@@ -117,7 +117,7 @@
     newItem = newItem + '<div class="description">';
     newItem = newItem + '<a href="{$appPath}?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file=' + file.name + '" data-toggle="modal" data-target="#modal-{$targetFeild}" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text></i> Pick Image</a>';
     newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span></div>';
-    newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel">' + newItem + '</div></div>';
+    newItem = '<div class="item item-image col-md-3 col-sm-4"><div class="panel">' + newItem + '</div></div>';
   </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' and (Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly'] or Request/QueryString/Item[@name='pathOnly' and node()='true'])]" mode="newItemScript">
@@ -175,7 +175,7 @@
     newItem = newItem + '<a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name.replace(/\ /g,'-') + '" class="img-responsive" /></a></div>';
     newItem = newItem + '<div class="description"></div>';
     newItem = newItem + '<a onclick="passImgFileToForm(\'EditContent\',\'{$targetFeild}\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text></i> Pick Image</a>';
-    newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel">' + newItem + '</div></div>';
+    newItem = '<div class="item item-image col-md-3 col-sm-4"><div class="panel">' + newItem + '</div></div>';
   </xsl:template>
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
@@ -396,7 +396,7 @@
                 <xsl:with-param name="str" select="@name"/>
               </xsl:call-template>
               </xsl:variable>
-                <div class="item item-image col-md-2 col-sm-4">
+                <div class="item item-image col-md-3 col-sm-4">
                     <div class="panel">
                             <div class="image-thumbnail">
                                 <xsl:variable name="Extension">
