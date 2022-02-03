@@ -1109,52 +1109,52 @@ body.ptn-edit.layout-AdmHome {
 
     height: 2rem;
 }
-
+#fileupload {
+    small {
+        display: block;
+        margin-bottom: 10px;
+    }
+}
 .ptn-edit #files {
 
-
     .item.item-image {
-        .panel {
-            position: relative;
-            margin-bottom: 10px;
-            background-color: #ddd;
+        position: relative;
 
-            img {
-                display: block;
-                margin: auto;
-                max-width: 100%;
-                height: auto;
+        > div {
+            background: #e9ecef;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+
+        .thumb-button {
+            width: 100%;
+            word-break: break-word;
+            padding: 6px;
+
+            .btn {
+                margin-right: 5px;
             }
         }
-
-        .description {
-            padding: 5px;
-            position: absolute;
-            width: 100%;
-            bottom: 0;
-            left: 0;
-            word-break: break-word;
-            background-color: rgba(255,255,255,0.5);
-            text-align: right;
-            display: none;
-        }
     }
-
-    .popoverContent {
+    /* .popoverContent {
         width: 500px;
 
         img {
             border: 1px solid #ddd;
             background-color: #ddd;
         }
-    }
+    }*/
 
     .image-thumbnail {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        height: 165px;
+        height: 145px;
         overflow: hidden;
+
+        img {
+            max-width: 100%;
+        }
 
         .img-overflow {
             overflow: hidden;
@@ -1174,13 +1174,14 @@ body.ptn-edit.layout-AdmHome {
             width: 120px;
             height: 33px;
             overflow: hidden;
-            padding-bottom: 5px;
+            // padding-bottom: 5px;
             display: flex;
             align-items: flex-end;
         }
 
         font-size: 10px;
-        padding: 5px;
+        //padding: 5px;
+        padding:0 6px;
     }
 
     .item-image {

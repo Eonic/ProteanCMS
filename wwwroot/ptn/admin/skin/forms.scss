@@ -731,7 +731,7 @@ form.xform .relatedContent-group {
     float:left;
 }
 //resource library
-.ptn-edit #files .popover-content {
+/*.ptn-edit #files .popover-content {
     width: 500px;
 
     img {
@@ -741,7 +741,7 @@ form.xform .relatedContent-group {
 }
 .pick-image-responsive-popover {
     width:400px;
-}
+}*/
 .admin-body {
     padding:0 15px;
 }
@@ -820,7 +820,7 @@ form.xform .pick-image-wrapper {
     }
 }
 form .form-actions .required {
-    display:none;
+    display: none;
 }
 #MenuTree {
     li {
@@ -851,7 +851,8 @@ form .form-actions .required {
 #WebSettings,
 #template_EditStructure,
 #SetPassword,
-#tpltLocateSearch {
+#tpltLocateSearch,
+#template_AdminXForm {
     .form-check {
         @extend .form-check-inline;
     }
