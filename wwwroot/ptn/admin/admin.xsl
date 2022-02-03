@@ -4277,7 +4277,7 @@
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-    var newItem = '<div class="item item-image col-md-2 col-sm-4">
+    var newItem = '<div class="item item-image col-md-3 col-sm-4">
       ';
       newItem = newItem + '<div class="panel">
         ';
@@ -4305,7 +4305,7 @@
           ';
           newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
             '
-            newItem = newItem + '<i class="fa fa-trash-o fa-white">
+            newItem = newItem + '<i class="fa fa-trash-alt fa-white">
               ';
               newItem = newItem + ' <xsl:text> </xsl:text>';
               newItem = newItem + '
@@ -4414,42 +4414,6 @@
                 </xsl:otherwise>
               </xsl:choose>
             </div>
-            <div class="thumb-button description">
-              <xsl:choose>
-                <xsl:when test="$popup='true'">
-                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'  or @Extension='.tif'  or @Extension='.tiff'">
-                    <a href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" data-bs-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-primary pickImage">
-                      <i class="fas fa-image">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      Pick Image
-                    </a>
-                  </xsl:if>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-                    <a class="btn btn-xs btn-primary" href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
-                      <i class="fas fa-arrow-right fa-white">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <span class="sr-only"> Move</span>
-                    </a>
-                    <a href="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="btn btn-xs btn-warning" download="{@name}">
-                      <i class="fas fa-download fa-white">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <span class="sr-only"> Download</span>
-                    </a>
-                    <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
-                      <i class="fas fa-trash fa-white">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <span class="sr-only">Delete</span>
-                    </a>
-                  </xsl:if>
-                </xsl:otherwise>
-              </xsl:choose>
-            </div>
             <div class="img-description">
               <span class="image-description-name">
                 <xsl:value-of select="@name"/>
@@ -4465,6 +4429,42 @@
                 </xsl:otherwise>
               </xsl:choose>
 
+            </div>
+            <div class="thumb-button">
+              <xsl:choose>
+                <xsl:when test="$popup='true'">
+                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'  or @Extension='.tif'  or @Extension='.tiff'">
+                    <a href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" data-bs-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-primary pickImage">
+                      <i class="fas fa-image">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      Pick Image
+                    </a>
+                  </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
+                    <a class="btn btn-sm btn-primary" href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
+                      <i class="fas fa-arrow-up fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <span class="sr-only"> Move</span>
+                    </a>
+                    <a href="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="btn btn-sm btn-primary" download="{@name}">
+                      <i class="fas fa-download fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <span class="sr-only"> Download</span>
+                    </a>
+                    <a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-sm btn-danger">
+                      <i class="fas fa-trash-alt fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <span class="sr-only">Delete</span>
+                    </a>
+                  </xsl:if>
+                </xsl:otherwise>
+              </xsl:choose>
             </div>
           </div>
         </div>

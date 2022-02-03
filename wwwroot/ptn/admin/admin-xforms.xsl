@@ -498,7 +498,7 @@
       <xsl:choose>
         <xsl:when test="value!=''">
           <a href="#" onclick="xfrmClearImgFile('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the file path" class="btn btn-danger">
-            <i class="fa fa-trash-o fa-white">
+            <i class="fa fa-times fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Clear
           </a>
@@ -536,7 +536,7 @@
       <xsl:choose>
         <xsl:when test="value!=''">
           <a href="#" onclick="xfrmClearDocument('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
-            <i class="fa fa-trash-o fa-white">
+            <i class="fa fa-times fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Clear
           </a>
@@ -647,7 +647,7 @@
         <xsl:choose>
           <xsl:when test="value!=''">
             <a href="#" onclick="xfrmClearMedia('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
-              <i class="fa fa-trash-o fa-white">
+              <i class="fa fa-times fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Clear
             </a>
