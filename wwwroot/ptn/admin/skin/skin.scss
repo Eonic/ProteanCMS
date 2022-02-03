@@ -1119,6 +1119,7 @@ body.ptn-edit.layout-AdmHome {
 
     .item.item-image {
         position: relative;
+        text-align:center;
 
         > div {
             background: #e9ecef;
@@ -1177,11 +1178,13 @@ body.ptn-edit.layout-AdmHome {
             // padding-bottom: 5px;
             display: flex;
             align-items: flex-end;
+            justify-content: center;
+            width: 100%;
         }
 
         font-size: 10px;
         //padding: 5px;
-        padding:0 6px;
+        padding: 0 6px;
     }
 
     .item-image {
@@ -1192,7 +1195,21 @@ body.ptn-edit.layout-AdmHome {
     margin-left: -5px;
     margin-right: -5px;
 }
+.pickImageModal {
+    .popoverContent {
+        display: none;
+    }
 
+    .pick-btn {
+        padding: 2px 6px 6px;
+
+        .btn {
+            padding: 0.3rem 0.4rem;
+            line-height: 1;
+            font-size: 0.8rem;
+        }
+    }
+}
 #btnHelpEditing.open .fa-chevron-left {
     transform: rotate(-180deg);
     -ms-transform: rotate(-180deg); /* IE 9 */

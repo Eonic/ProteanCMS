@@ -134,7 +134,7 @@ body.normalMode, #adminLayout {
         }
     }
 
-    .dashboard-logo {
+    /*.dashboard-logo {
         position: static;
     }
 
@@ -150,7 +150,7 @@ body.normalMode, #adminLayout {
                 display: none;
             }
         }
-    }
+    }*/
 
     .admin-logo-dropdown {
         display: none;
@@ -232,7 +232,7 @@ body.normalMode, #adminLayout {
 
 
 
-        &.dashboard-menu {
+        /*&.dashboard-menu {
             @include media-breakpoint-up(xl) {
                 display: block !important;
                 position: absolute;
@@ -289,7 +289,7 @@ body.normalMode, #adminLayout {
                     }
                 }
             }
-        }
+        }*/
     }
     // - MAIN MENU
     .admin-main-menu {
