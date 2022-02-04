@@ -40,7 +40,12 @@
         <xsl:when test="@xsCol='2'">col-6 </xsl:when>
         <xsl:when test="@xsCol='3'">col-4 </xsl:when>
         <xsl:when test="@xsCol='4'">col-3 </xsl:when>
-        <xsl:when test="@xsCol='5'">col-5th </xsl:when>
+        <xsl:when test="@xsCol='5'">
+          <xsl:choose>
+            <xsl:when test="@smCol='' and @mdCol='' and @lgCol='' and @xlCol='' and @xxlCol=''">col-5th </xsl:when>
+            <xsl:otherwise>col-xs-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
         <xsl:when test="@xsCol='6'">col-2 </xsl:when>
         <xsl:otherwise>col-12 </xsl:otherwise>
       </xsl:choose>
@@ -108,91 +113,287 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="*" mode="unevenColumns">
+  <xsl:template match="*" mode="unevenColumns1">
     <xsl:param name="defaultWidth"/>
+    <xsl:variable name="xsColsUneven">
+      <xsl:choose>
+        <xsl:when test="@xsCol='1-6-5-6'">col-2 </xsl:when>
+        <xsl:when test="@xsCol='1-5-4-5'">
+          <xsl:choose>
+            <xsl:when test="(@smCol='' or not(@smCol)) and (@mdCol='' or not(@mdCol)) and (@lgCol='' or not(@lgCol)) and (@xlCol='' or not(@xlCol)) and (@xxlCol='' or not(@xxlCol))">col-5th</xsl:when>
+            <xsl:otherwise>col-xs-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="@xsCol='1-4-3-4'">col-3 </xsl:when>
+        <xsl:when test="@xsCol='1-3-2-3'">col-4 </xsl:when>
+        <xsl:when test="@xsCol='2-5-3-5'">
+          <xsl:choose>
+            <xsl:when test="(@smCol='' or not(@smCol)) and (@mdCol='' or not(@mdCol)) and (@lgCol='' or not(@lgCol)) and (@xlCol='' or not(@xlCol)) and (@xxlCol='' or not(@xxlCol))">col-2-5th </xsl:when>
+            <xsl:otherwise>col-xs-2-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="@xsCol='1-2-1-2'">col-6 </xsl:when>
+        <xsl:when test="@xsCol='3-5-2-5'">
+          <xsl:choose>
+            <xsl:when test="(@smCol='' or not(@smCol)) and (@mdCol='' or not(@mdCol)) and (@lgCol='' or not(@lgCol)) and (@xlCol='' or not(@xlCol)) and (@xxlCol='' or not(@xxlCol))">col-3-5th </xsl:when>
+            <xsl:otherwise>col-xs-3-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="@xsCol='2-3-1-3'">col-8 </xsl:when>
+        <xsl:when test="@xsCol='3-4-1-4'">col-9 </xsl:when>
+        <xsl:when test="@xsCol='4-5-1-5'">
+          <xsl:choose>
+            <xsl:when test="(@smCol='' or not(@smCol)) and (@mdCol='' or not(@mdCol)) and (@lgCol='' or not(@lgCol)) and (@xlCol='' or not(@xlCol)) and (@xxlCol='' or not(@xxlCol))">col-4-5th </xsl:when>
+            <xsl:otherwise>col-xs-4-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="@xsCol='5-6-1-6'">col-10 </xsl:when>
+        <xsl:otherwise>col-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="smColsUneven">
       <xsl:choose>
-        <xsl:when test="@smCol='2'">
-          <xsl:text>col-sm-</xsl:text>
-          <xsl:value-of select="$defaultWidth"/>
-          <xsl:text> </xsl:text>
-        </xsl:when>
-        <xsl:when test="@smCol='2equal'">col-sm-6 </xsl:when>
-        <xsl:otherwise>sm-single-col </xsl:otherwise>
+        <xsl:when test="@smCol='1-6-5-6'">col-sm-2 </xsl:when>
+        <xsl:when test="@smCol='1-5-4-5'">col-sm-5th </xsl:when>
+        <xsl:when test="@smCol='1-4-3-4'">col-sm-3 </xsl:when>
+        <xsl:when test="@smCol='1-3-2-3'">col-sm-4 </xsl:when>
+        <xsl:when test="@smCol='2-5-3-5'">col-sm-2-5th </xsl:when>
+        <xsl:when test="@smCol='1-2-1-2'">col-sm-6 </xsl:when>
+        <xsl:when test="@smCol='3-5-2-5'">col-sm-3-5th </xsl:when>
+        <xsl:when test="@smCol='2-3-1-3'">col-sm-8 </xsl:when>
+        <xsl:when test="@smCol='3-4-1-4'">col-sm-9 </xsl:when>
+        <xsl:when test="@smCol='4-5-1-5'">col-sm-4-5th </xsl:when>
+        <xsl:when test="@smCol='5-6-1-6'">col-sm-10 </xsl:when>
+        <xsl:otherwise>col-sm-12 </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="mdColsUneven">
-      <xsl:if test="@mdCol='2'">
-        <xsl:text>col-md-</xsl:text>
-        <xsl:value-of select="$defaultWidth"/>
-        <xsl:text> </xsl:text>
-      </xsl:if>
-      <xsl:if test="@mdCol='2equal'">col-md-6 </xsl:if>
+      <xsl:choose>
+        <xsl:when test="@mdCol='1-6-5-6'">col-md-2 </xsl:when>
+        <xsl:when test="@mdCol='1-5-4-5'">col-md-5th </xsl:when>
+        <xsl:when test="@mdCol='1-4-3-4'">col-md-3 </xsl:when>
+        <xsl:when test="@mdCol='1-3-2-3'">col-md-4 </xsl:when>
+        <xsl:when test="@mdCol='2-5-3-5'">col-md-2-5th </xsl:when>
+        <xsl:when test="@mdCol='1-2-1-2'">col-md-6 </xsl:when>
+        <xsl:when test="@mdCol='3-5-2-5'">col-md-3-5th </xsl:when>
+        <xsl:when test="@mdCol='2-3-1-3'">col-md-8 </xsl:when>
+        <xsl:when test="@mdCol='3-4-1-4'">col-md-9 </xsl:when>
+        <xsl:when test="@mdCol='4-5-1-5'">col-md-4-5th </xsl:when>
+        <xsl:when test="@mdCol='5-6-1-6'">col-md-10 </xsl:when>
+        <xsl:otherwise>col-md-12 </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
-      <xsl:otherwise>mobile-1-col </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="lgColsUneven">
+      <xsl:choose>
+        <xsl:when test="@lgCol='1-6-5-6'">col-lg-2 </xsl:when>
+        <xsl:when test="@lgCol='1-5-4-5'">col-lg-5th </xsl:when>
+        <xsl:when test="@lgCol='1-4-3-4'">col-lg-3 </xsl:when>
+        <xsl:when test="@lgCol='1-3-2-3'">col-lg-4 </xsl:when>
+        <xsl:when test="@lgCol='2-5-3-5'">col-lg-2-5th </xsl:when>
+        <xsl:when test="@lgCol='1-2-1-2'">col-lg-6 </xsl:when>
+        <xsl:when test="@lgCol='3-5-2-5'">col-lg-3-5th </xsl:when>
+        <xsl:when test="@lgCol='2-3-1-3'">col-lg-8 </xsl:when>
+        <xsl:when test="@lgCol='3-4-1-4'">col-lg-9 </xsl:when>
+        <xsl:when test="@lgCol='4-5-1-5'">col-lg-4-5th </xsl:when>
+        <xsl:when test="@lgCol='5-6-1-6'">col-lg-10 </xsl:when>
+        <xsl:otherwise>col-lg-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="xlColsUneven">
+      <xsl:choose>
+        <xsl:when test="@xlCol='1-6-5-6'">col-xl-2 </xsl:when>
+        <xsl:when test="@xlCol='1-5-4-5'">col-xl-5th </xsl:when>
+        <xsl:when test="@xlCol='1-4-3-4'">col-xl-3 </xsl:when>
+        <xsl:when test="@xlCol='1-3-2-3'">col-xl-4 </xsl:when>
+        <xsl:when test="@xlCol='2-5-3-5'">col-xl-2-5th </xsl:when>
+        <xsl:when test="@xlCol='1-2-1-2'">col-xl-6 </xsl:when>
+        <xsl:when test="@xlCol='3-5-2-5'">col-xl-3-5th </xsl:when>
+        <xsl:when test="@xlCol='2-3-1-3'">col-xl-8 </xsl:when>
+        <xsl:when test="@xlCol='3-4-1-4'">col-xl-9 </xsl:when>
+        <xsl:when test="@xlCol='4-5-1-5'">col-xl-4-5th </xsl:when>
+        <xsl:when test="@xlCol='5-6-1-6'">col-xl-10 </xsl:when>
+        <xsl:otherwise>col-xl-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="xxlColsUneven">
+      <xsl:choose>
+        <xsl:when test="@xxlCol='1-6-5-6'">col-xxl-2 </xsl:when>
+        <xsl:when test="@xxlCol='1-5-4-5'">col-xxl-5th </xsl:when>
+        <xsl:when test="@xxlCol='1-4-3-4'">col-xxl-3 </xsl:when>
+        <xsl:when test="@xxlCol='1-3-2-3'">col-xxl-4 </xsl:when>
+        <xsl:when test="@xxlCol='2-5-3-5'">col-xxl-2-5th </xsl:when>
+        <xsl:when test="@xxlCol='1-2-1-2'">col-xxl-6 </xsl:when>
+        <xsl:when test="@xxlCol='3-5-2-5'">col-xxl-3-5th </xsl:when>
+        <xsl:when test="@xxlCol='2-3-1-3'">col-xxl-8 </xsl:when>
+        <xsl:when test="@xxlCol='3-4-1-4'">col-xxl-9 </xsl:when>
+        <xsl:when test="@xxlCol='4-5-1-5'">col-xxl-4-5th </xsl:when>
+        <xsl:when test="@xxlCol='5-6-1-6'">col-xxl-10 </xsl:when>
+        <xsl:otherwise>col-xxl-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:if test="@xsCol and @xsCol!=''">
+      <xsl:value-of select="$xsColsUneven"/>
+    </xsl:if>
     <xsl:if test="@smCol and @smCol!=''">
       <xsl:value-of select="$smColsUneven"/>
     </xsl:if>
-    <xsl:choose>
-      <xsl:when test="@mdCol and @mdCol!=''">
-        <xsl:value-of select="$mdColsUneven"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>col-md-</xsl:text>
-        <xsl:value-of select="$defaultWidth"/>
-        <xsl:text> </xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>col-lg-</xsl:text>
-    <xsl:value-of select="$defaultWidth"/>
-    <xsl:text> </xsl:text>
+    <xsl:if test="@mdCol and @mdCol!=''">
+      <xsl:value-of select="$mdColsUneven"/>
+    </xsl:if>
+    <xsl:if test="@lgCol and @lgCol!=''">
+      <xsl:value-of select="$lgColsUneven"/>
+    </xsl:if>
+    <xsl:if test="@xlCol and @xlCol!=''">
+      <xsl:value-of select="$xlColsUneven"/>
+    </xsl:if>
+    <xsl:if test="@xxlCol and @xxlCol!=''">
+      <xsl:value-of select="$xxlColsUneven"/>
+    </xsl:if>
   </xsl:template>
 
-  <xsl:template match="*" mode="uneven5Columns">
+  <xsl:template match="*" mode="unevenColumns2">
     <xsl:param name="defaultWidth"/>
+    <xsl:variable name="xsColsUneven">
+      <xsl:choose>
+        <xsl:when test="@xsCol='1-6-5-6'">col-10 </xsl:when>
+        <xsl:when test="@xsCol='1-5-4-5'">
+          <xsl:choose>
+            <xsl:when test="(@smCol='' or not(@smCol)) and (@mdCol='' or not(@mdCol)) and (@lgCol='' or not(@lgCol)) and (@xlCol='' or not(@xlCol)) and (@xxlCol='' or not(@xxlCol))">col-4-5th </xsl:when>
+            <xsl:otherwise>col-xs-4-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="@xsCol='1-4-3-4'">col-9 </xsl:when>
+        <xsl:when test="@xsCol='1-3-2-3'">col-8 </xsl:when>
+        <xsl:when test="@xsCol='2-5-3-5'">
+          <xsl:choose>
+            <xsl:when test="(@smCol='' or not(@smCol)) and (@mdCol='' or not(@mdCol)) and (@lgCol='' or not(@lgCol)) and (@xlCol='' or not(@xlCol)) and (@xxlCol='' or not(@xxlCol))">col-3-5th </xsl:when>
+            <xsl:otherwise>col-xs-3-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="@xsCol='1-2-1-2'">col-6 </xsl:when>
+        <xsl:when test="@xsCol='3-5-2-5'">
+          <xsl:choose>
+            <xsl:when test="(@smCol='' or not(@smCol)) and (@mdCol='' or not(@mdCol)) and (@lgCol='' or not(@lgCol)) and (@xlCol='' or not(@xlCol)) and (@xxlCol='' or not(@xxlCol))">col-2-5th </xsl:when>
+            <xsl:otherwise>col-xs-2-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="@xsCol='2-3-1-3'">col-4 </xsl:when>
+        <xsl:when test="@xsCol='3-4-1-4'">col-3 </xsl:when>
+        <xsl:when test="@xsCol='4-5-1-5'">
+          <xsl:choose>
+            <xsl:when test="(@smCol='' or not(@smCol)) and (@mdCol='' or not(@mdCol)) and (@lgCol='' or not(@lgCol)) and (@xlCol='' or not(@xlCol)) and (@xxlCol='' or not(@xxlCol))">col-5th </xsl:when>
+            <xsl:otherwise>col-xs-5th </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:when test="@xsCol='5-6-1-6'">col-2 </xsl:when>
+        <xsl:otherwise>col-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="smColsUneven">
       <xsl:choose>
-        <xsl:when test="@smCol='2'">
-          <xsl:text>col-sm-</xsl:text>
-          <xsl:value-of select="$defaultWidth"/>
-          <xsl:text> </xsl:text>
-        </xsl:when>
-        <xsl:when test="@smCol='2equal'">col-sm-equal-2 </xsl:when>
-        <xsl:otherwise>sm-single-col </xsl:otherwise>
+        <xsl:when test="@smCol='1-6-5-6'">col-sm-10 </xsl:when>
+        <xsl:when test="@smCol='1-5-4-5'">col-sm-4-5th </xsl:when>
+        <xsl:when test="@smCol='1-4-3-4'">col-sm-9 </xsl:when>
+        <xsl:when test="@smCol='1-3-2-3'">col-sm-8 </xsl:when>
+        <xsl:when test="@smCol='2-5-3-5'">col-sm-3-5th </xsl:when>
+        <xsl:when test="@smCol='1-2-1-2'">col-sm-6 </xsl:when>
+        <xsl:when test="@smCol='3-5-2-5'">col-sm-2-5th </xsl:when>
+        <xsl:when test="@smCol='2-3-1-3'">col-sm-4 </xsl:when>
+        <xsl:when test="@smCol='3-4-1-4'">col-sm-3 </xsl:when>
+        <xsl:when test="@smCol='4-5-1-5'">col-sm-5th </xsl:when>
+        <xsl:when test="@smCol='5-6-1-6'">col-sm-2 </xsl:when>
+        <xsl:otherwise>col-12 </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="mdColsUneven">
-      <xsl:if test="@mdCol='2'">
-        <xsl:text>col-md-</xsl:text>
-        <xsl:value-of select="$defaultWidth"/>
-        <xsl:text> </xsl:text>
-      </xsl:if>
-      <xsl:if test="@mdCol='2equal'">col-md-equal-2 </xsl:if>
+      <xsl:choose>
+        <xsl:when test="@mdCol='1-6-5-6'">col-md-10 </xsl:when>
+        <xsl:when test="@mdCol='1-5-4-5'">col-md-4-5th </xsl:when>
+        <xsl:when test="@mdCol='1-4-3-4'">col-md-9 </xsl:when>
+        <xsl:when test="@mdCol='1-3-2-3'">col-md-8 </xsl:when>
+        <xsl:when test="@mdCol='2-5-3-5'">col-md-3-5th </xsl:when>
+        <xsl:when test="@mdCol='1-2-1-2'">col-md-6 </xsl:when>
+        <xsl:when test="@mdCol='3-5-2-5'">col-md-2-5th </xsl:when>
+        <xsl:when test="@mdCol='2-3-1-3'">col-md-4 </xsl:when>
+        <xsl:when test="@mdCol='3-4-1-4'">col-md-3 </xsl:when>
+        <xsl:when test="@mdCol='4-5-1-5'">col-md-5th </xsl:when>
+        <xsl:when test="@mdCol='5-6-1-6'">col-md-2 </xsl:when>
+        <xsl:otherwise>col-12 </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
-      <xsl:otherwise>mobile-1-col </xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="lgColsUneven">
+      <xsl:choose>
+        <xsl:when test="@lgCol='1-6-5-6'">col-lg-10 </xsl:when>
+        <xsl:when test="@lgCol='1-5-4-5'">col-lg-4-5th </xsl:when>
+        <xsl:when test="@lgCol='1-4-3-4'">col-lg-9 </xsl:when>
+        <xsl:when test="@lgCol='1-3-2-3'">col-lg-8 </xsl:when>
+        <xsl:when test="@lgCol='2-5-3-5'">col-lg-3-5th </xsl:when>
+        <xsl:when test="@lgCol='1-2-1-2'">col-lg-6 </xsl:when>
+        <xsl:when test="@lgCol='3-5-2-5'">col-lg-2-5th </xsl:when>
+        <xsl:when test="@lgCol='2-3-1-3'">col-lg-4 </xsl:when>
+        <xsl:when test="@lgCol='3-4-1-4'">col-lg-3 </xsl:when>
+        <xsl:when test="@lgCol='4-5-1-5'">col-lg-5th </xsl:when>
+        <xsl:when test="@lgCol='5-6-1-6'">col-lg-2 </xsl:when>
+        <xsl:otherwise>col-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="xlColsUneven">
+      <xsl:choose>
+        <xsl:when test="@xlCol='1-6-5-6'">col-xl-10 </xsl:when>
+        <xsl:when test="@xlCol='1-5-4-5'">col-xl-4-5th </xsl:when>
+        <xsl:when test="@xlCol='1-4-3-4'">col-xl-9 </xsl:when>
+        <xsl:when test="@xlCol='1-3-2-3'">col-xl-8 </xsl:when>
+        <xsl:when test="@xlCol='2-5-3-5'">col-xl-3-5th </xsl:when>
+        <xsl:when test="@xlCol='1-2-1-2'">col-xl-6 </xsl:when>
+        <xsl:when test="@xlCol='3-5-2-5'">col-xl-2-5th </xsl:when>
+        <xsl:when test="@xlCol='2-3-1-3'">col-xl-4 </xsl:when>
+        <xsl:when test="@xlCol='3-4-1-4'">col-xl-3 </xsl:when>
+        <xsl:when test="@xlCol='4-5-1-5'">col-xl-5th </xsl:when>
+        <xsl:when test="@xlCol='5-6-1-6'">col-xl-2 </xsl:when>
+        <xsl:otherwise>col-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="xxlColsUneven">
+      <xsl:choose>
+        <xsl:when test="@xxlCol='1-6-5-6'">col-xxl-10 </xsl:when>
+        <xsl:when test="@xxlCol='1-5-4-5'">col-xxl-4-5th </xsl:when>
+        <xsl:when test="@xxlCol='1-4-3-4'">col-xxl-9 </xsl:when>
+        <xsl:when test="@xxlCol='1-3-2-3'">col-xxl-8 </xsl:when>
+        <xsl:when test="@xxlCol='2-5-3-5'">col-xxl-3-5th </xsl:when>
+        <xsl:when test="@xxlCol='1-2-1-2'">col-xxl-6 </xsl:when>
+        <xsl:when test="@xxlCol='3-5-2-5'">col-xxl-2-5th </xsl:when>
+        <xsl:when test="@xxlCol='2-3-1-3'">col-xxl-4 </xsl:when>
+        <xsl:when test="@xxlCol='3-4-1-4'">col-xxl-3 </xsl:when>
+        <xsl:when test="@xxlCol='4-5-1-5'">col-xxl-5th </xsl:when>
+        <xsl:when test="@xxlCol='5-6-1-6'">col-xxl-2 </xsl:when>
+        <xsl:otherwise>col-12 </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:if test="@xsCol and @xsCol!=''">
+      <xsl:value-of select="$xsColsUneven"/>
+    </xsl:if>
+
     <xsl:if test="@smCol and @smCol!=''">
       <xsl:value-of select="$smColsUneven"/>
     </xsl:if>
-    <xsl:choose>
-      <xsl:when test="@mdCol and @mdCol!=''">
-        <xsl:value-of select="$mdColsUneven"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>col-md-</xsl:text>
-        <xsl:value-of select="$defaultWidth"/>
-        <xsl:text> </xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:text>col-lg-</xsl:text>
-    <xsl:value-of select="$defaultWidth"/>
-    <xsl:text> </xsl:text>
+
+    <xsl:if test="@mdCol and @mdCol!=''">
+      <xsl:value-of select="$mdColsUneven"/>
+    </xsl:if>
+
+    <xsl:if test="@lgCol and @lgCol!=''">
+      <xsl:value-of select="$lgColsUneven"/>
+    </xsl:if>
+
+    <xsl:if test="@xlCol and @xlCol!=''">
+      <xsl:value-of select="$xlColsUneven"/>
+    </xsl:if>
+
+    <xsl:if test="@xxlCol and @xxlCol!=''">
+      <xsl:value-of select="$xxlColsUneven"/>
+    </xsl:if>
   </xsl:template>
+
 
 
   <xsl:template match="Content[@moduleType='1Column' or @moduleType='1column' or @moduleType='Conditional1Column']" mode="displayBrief">
@@ -289,18 +490,16 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='2Columns3366']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='2Columns']" mode="displayBrief">
     <xsl:variable name="unevenColumns1">
-      <xsl:apply-templates select="." mode="unevenColumns">
-        <xsl:with-param name="defaultWidth" select="'4'"/>
+      <xsl:apply-templates select="." mode="unevenColumns1">
       </xsl:apply-templates>
     </xsl:variable>
     <xsl:variable name="unevenColumns2">
-      <xsl:apply-templates select="." mode="unevenColumns">
-        <xsl:with-param name="defaultWidth" select="'8'"/>
+      <xsl:apply-templates select="." mode="unevenColumns2">
       </xsl:apply-templates>
     </xsl:variable>
-    <div class="row">
+    <div class="row test">
       <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>

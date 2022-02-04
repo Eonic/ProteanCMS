@@ -35,6 +35,9 @@
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="xxlCol" nodeset="@xxlCol" required="false()" type="string"/>
+      <bind id="xlCol" nodeset="@xlCol" required="false()" type="string"/>
+      <bind id="lgCol" nodeset="@lgCol" required="false()" type="string"/>
       <bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
       <bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
       <bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>
@@ -68,75 +71,317 @@
       </group>
 
       <group class="inline-4col">
-        <label>Layout options for smaller screens</label>
-        <select1 bind="lgCol">
-          <label>Desktop</label>
-          <value>2</value>
+        <label>Layout options</label>
+        <select1 bind="xsCol">
+          <label>
+            <i class="fas fa-mobile-alt"> </i> Extra small
+          </label>
           <item>
-            <label>50%,50%</label>
-            <value>2575</value>
+            <label>1/6, 5/6</label>
+            <value>1-6-5-6</value>
           </item>
           <item>
-            <label>25%,75%</label>
-            <value>2575</value>
+            <label>1/5, 4/5</label>
+            <value>1-5-4-5</value>
           </item>
           <item>
-            <label>25%,75%</label>
-            <value>2575</value>
+            <label>1/4, 3/4</label>
+            <value>1-4-3-4</value>
           </item>
           <item>
-            <label>25%,75%</label>
-            <value>2575</value>
-          </item>
-        </select1>
-        <select1 bind="mdCol">
-          <label>Laptop</label>
-          <item>
-            <label>1</label>
-            <value>1</value>
+            <label>1/3, 2/3</label>
+            <value>1-3-2-3</value>
           </item>
           <item>
-            <label>2 (25/75)</label>
-            <value>2</value>
+            <label>2/5, 3/5</label>
+            <value>2-5-3-5</value>
           </item>
           <item>
-            <label>2 equal columns</label>
-            <value>2equal</value>
+            <label>1/2, 1/2</label>
+            <value>1-2-1-2</value>
+          </item>
+          <item>
+            <label>3/5, 2/5</label>
+            <value>3-5-2-5</value>
+          </item>
+          <item>
+            <label>2/3, 1/3</label>
+            <value>2-3-1-3</value>
+          </item>
+          <item>
+            <label>3/4, 1/4</label>
+            <value>3-4-1-4</value>
+          </item>
+          <item>
+            <label>4/5, 1/5</label>
+            <value>4-5-1-5</value>
+          </item>
+          <item>
+            <label>5/6, 1/6</label>
+            <value>5-6-1-6</value>
           </item>
           <help class="inline">
-            <p>Medium devices (≥992px), typically laptops, large tablets and small desktop monitors</p>
+            <p>Extra small means screens under 576px wide</p>
           </help>
         </select1>
         <select1 bind="smCol">
-          <label>Tablet</label>
+          <label>
+            <i class="fas fa-mobile-alt"> </i> Small
+          </label>
           <item>
-            <label>1</label>
-            <value>1</value>
+            <label>1/6, 5/6</label>
+            <value>1-6-5-6</value>
           </item>
           <item>
-            <label>2 (25/75)</label>
-            <value>2</value>
+            <label>1/5, 4/5</label>
+            <value>1-5-4-5</value>
           </item>
           <item>
-            <label>2 equal columns</label>
-            <value>2equal</value>
+            <label>1/4, 3/4</label>
+            <value>1-4-3-4</value>
+          </item>
+          <item>
+            <label>1/3, 2/3</label>
+            <value>1-3-2-3</value>
+          </item>
+          <item>
+            <label>2/5, 3/5</label>
+            <value>2-5-3-5</value>
+          </item>
+          <item>
+            <label>1/2, 1/2</label>
+            <value>1-2-1-2</value>
+          </item>
+          <item>
+            <label>3/5, 2/5</label>
+            <value>3-5-2-5</value>
+          </item>
+          <item>
+            <label>2/3, 1/3</label>
+            <value>2-3-1-3</value>
+          </item>
+          <item>
+            <label>3/4, 1/4</label>
+            <value>3-4-1-4</value>
+          </item>
+          <item>
+            <label>4/5, 1/5</label>
+            <value>4-5-1-5</value>
+          </item>
+          <item>
+            <label>5/6, 1/6</label>
+            <value>5-6-1-6</value>
           </item>
           <help class="inline">
-            <p>Small devices (≥768px), typically small tablets</p>
+            <p>Small screens are 576px-767px</p>
           </help>
         </select1>
-        <select1 bind="xsCol">
-          <label>Lrg Mobile</label>
+        <select1 bind="mdCol">
+          <label>
+            <i class="fas fa-tablet-alt"> </i> Medium
+          </label>
           <item>
-            <label>1</label>
-            <value>1</value>
+            <label>1/6, 5/6</label>
+            <value>1-6-5-6</value>
           </item>
           <item>
-            <label>2 equal columns</label>
-            <value>2</value>
+            <label>1/5, 4/5</label>
+            <value>1-5-4-5</value>
+          </item>
+          <item>
+            <label>1/4, 3/4</label>
+            <value>1-4-3-4</value>
+          </item>
+          <item>
+            <label>1/3, 2/3</label>
+            <value>1-3-2-3</value>
+          </item>
+          <item>
+            <label>2/5, 3/5</label>
+            <value>2-5-3-5</value>
+          </item>
+          <item>
+            <label>1/2, 1/2</label>
+            <value>1-2-1-2</value>
+          </item>
+          <item>
+            <label>3/5, 2/5</label>
+            <value>3-5-2-5</value>
+          </item>
+          <item>
+            <label>2/3, 1/3</label>
+            <value>2-3-1-3</value>
+          </item>
+          <item>
+            <label>3/4, 1/4</label>
+            <value>3-4-1-4</value>
+          </item>
+          <item>
+            <label>4/5, 1/5</label>
+            <value>4-5-1-5</value>
+          </item>
+          <item>
+            <label>5/6, 1/6</label>
+            <value>5-6-1-6</value>
           </item>
           <help class="inline">
-            <p>Extra small devices (≥576px), typically small tablets. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
+            <p>Medium screens are 768px-991px</p>
+          </help>
+        </select1>
+        <select1 bind="lgCol">
+          <label>
+            <i class="fas fa-laptop"> </i> Large
+          </label>
+          <item>
+            <label>1/6, 5/6</label>
+            <value>1-6-5-6</value>
+          </item>
+          <item>
+            <label>1/5, 4/5</label>
+            <value>1-5-4-5</value>
+          </item>
+          <item>
+            <label>1/4, 3/4</label>
+            <value>1-4-3-4</value>
+          </item>
+          <item>
+            <label>1/3, 2/3</label>
+            <value>1-3-2-3</value>
+          </item>
+          <item>
+            <label>2/5, 3/5</label>
+            <value>2-5-3-5</value>
+          </item>
+          <item>
+            <label>1/2, 1/2</label>
+            <value>1-2-1-2</value>
+          </item>
+          <item>
+            <label>3/5, 2/5</label>
+            <value>3-5-2-5</value>
+          </item>
+          <item>
+            <label>2/3, 1/3</label>
+            <value>2-3-1-3</value>
+          </item>
+          <item>
+            <label>3/4, 1/4</label>
+            <value>3-4-1-4</value>
+          </item>
+          <item>
+            <label>4/5, 1/5</label>
+            <value>4-5-1-5</value>
+          </item>
+          <item>
+            <label>5/6, 1/6</label>
+            <value>5-6-1-6</value>
+          </item>
+          <help class="inline">
+            <p>Large screens are 992px-1199px</p>
+          </help>
+        </select1>
+        <select1 bind="xlCol">
+          <label>
+            <i class="fas fa-desktop"> </i> Extra Large
+          </label>
+          <item>
+            <label>1/6, 5/6</label>
+            <value>1-6-5-6</value>
+          </item>
+          <item>
+            <label>1/5, 4/5</label>
+            <value>1-5-4-5</value>
+          </item>
+          <item>
+            <label>1/4, 3/4</label>
+            <value>1-4-3-4</value>
+          </item>
+          <item>
+            <label>1/3, 2/3</label>
+            <value>1-3-2-3</value>
+          </item>
+          <item>
+            <label>2/5, 3/5</label>
+            <value>2-5-3-5</value>
+          </item>
+          <item>
+            <label>1/2, 1/2</label>
+            <value>1-2-1-2</value>
+          </item>
+          <item>
+            <label>3/5, 2/5</label>
+            <value>3-5-2-5</value>
+          </item>
+          <item>
+            <label>2/3, 1/3</label>
+            <value>2-3-1-3</value>
+          </item>
+          <item>
+            <label>3/4, 1/4</label>
+            <value>3-4-1-4</value>
+          </item>
+          <item>
+            <label>4/5, 1/5</label>
+            <value>4-5-1-5</value>
+          </item>
+          <item>
+            <label>5/6, 1/6</label>
+            <value>5-6-1-6</value>
+          </item>
+          <help class="inline">
+            <p>Extra large screens are 1200px-1399px</p>
+          </help>
+        </select1>
+        <select1 bind="xxlCol">
+          <label>
+            <i class="fas fa-desktop"> </i> XXL
+          </label>
+          <item>
+            <label>1/6, 5/6</label>
+            <value>1-6-5-6</value>
+          </item>
+          <item>
+            <label>1/5, 4/5</label>
+            <value>1-5-4-5</value>
+          </item>
+          <item>
+            <label>1/4, 3/4</label>
+            <value>1-4-3-4</value>
+          </item>
+          <item>
+            <label>1/3, 2/3</label>
+            <value>1-3-2-3</value>
+          </item>
+          <item>
+            <label>2/5, 3/5</label>
+            <value>2-5-3-5</value>
+          </item>
+          <item>
+            <label>1/2, 1/2</label>
+            <value>1-2-1-2</value>
+          </item>
+          <item>
+            <label>3/5, 2/5</label>
+            <value>3-5-2-5</value>
+          </item>
+          <item>
+            <label>2/3, 1/3</label>
+            <value>2-3-1-3</value>
+          </item>
+          <item>
+            <label>3/4, 1/4</label>
+            <value>3-4-1-4</value>
+          </item>
+          <item>
+            <label>4/5, 1/5</label>
+            <value>4-5-1-5</value>
+          </item>
+          <item>
+            <label>5/6, 1/6</label>
+            <value>5-6-1-6</value>
+          </item>
+          <help class="inline">
+            <p>Extra extra large screens are 1400px and up</p>
           </help>
         </select1>
       </group>
