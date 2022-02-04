@@ -5,13 +5,9 @@
   <xsl:template match="*" mode="siteBoxStyles">
     <xsl:param name="value" />
     <!-- EXAMPLE BESPOKE BOX-->
-    
-    <div data-value="heading-only">
-      <div class="heading-only">
-        <div class="panel-heading">
-          <h6 class="panel-title">Heading Only</h6>
-        </div>
-      </div>
+
+    <div data-value="heading-only" class="box-style-item">
+      Heading Only
     </div>
   </xsl:template>
 

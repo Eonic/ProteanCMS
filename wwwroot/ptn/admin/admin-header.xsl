@@ -111,13 +111,7 @@
             </div>
           </div>
 
-          <xsl:if test="not(/Page[@ewCmd='AdmHome'])">
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#bs-admin-navbar-collapse-1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="fas fa-bars">
-                <xsl:text> </xsl:text>
-              </span>
-            </button>
-          </xsl:if>
+          
 
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-admin-navbar-collapse-1">
@@ -128,6 +122,21 @@
               <xsl:text> </xsl:text>
             </ul>
           </div>
+          <div class="text-muted display-screen-size me-2">
+            <div class="d-block d-sm-none">xs</div>
+            <div class="d-none d-sm-block d-md-none">sm</div>
+            <div class="d-none d-md-block d-lg-none">md</div>
+            <div class="d-none d-lg-block d-xl-none">lg</div>
+            <div class="d-none d-xl-block d-xxl-none">xl</div>
+            <div class="d-none d-xxl-block">xxl</div>
+          </div>
+          <xsl:if test="not(/Page[@ewCmd='AdmHome'])">
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#bs-admin-navbar-collapse-1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="fas fa-bars">
+                <xsl:text> </xsl:text>
+              </span>
+            </button>
+          </xsl:if>
         </div>
       </nav>
       <div id="headers">

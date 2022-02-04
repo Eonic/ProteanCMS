@@ -1,19 +1,22 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
-	<xsl:template match="Page" mode="addModuleControls"></xsl:template>
-	<xsl:template match="Page" mode="addModuleControlsSection"></xsl:template>
-	
-<xsl:template match="Page" mode="addModule">
+  <xsl:template match="Page" mode="addModuleControls"></xsl:template>
+  <xsl:template match="Page" mode="addModuleControlsSection"></xsl:template>
+
+  <xsl:template match="Page" mode="addModule">
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
+    <xsl:param name="width"/>
+    <xsl:param name="auto-col"/>
+    <xsl:param name="module-type"/>
     <xsl:choose>
       <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">
-		<xsl:apply-templates select="." mode="addModuleControlsSection">
-					<xsl:with-param name="text" select="$text"/>
-		<xsl:with-param name="class" select="$class"/>
-		<xsl:with-param name="position" select="$position"/>
-			</xsl:apply-templates>       
+        <xsl:apply-templates select="." mode="addModuleControlsSection">
+          <xsl:with-param name="text" select="$text"/>
+          <xsl:with-param name="class" select="$class"/>
+          <xsl:with-param name="position" select="$position"/>
+        </xsl:apply-templates>
         <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
           <xsl:variable name="backgroundResized">
             <xsl:if test="@backgroundImage!=''">
@@ -218,14 +221,21 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-		<xsl:apply-templates select="." mode="addModuleControls">
-					<xsl:with-param name="text" select="$text"/>
-		<xsl:with-param name="class" select="$class"/>
-		<xsl:with-param name="position" select="$position"/>
-			</xsl:apply-templates>   
+        <xsl:apply-templates select="." mode="addModuleControls">
+          <xsl:with-param name="text" select="$text"/>
+          <xsl:with-param name="class" select="$class"/>
+          <xsl:with-param name="position" select="$position"/>
+        </xsl:apply-templates>
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@position = $position]">
-            <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
+            <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule">
+              <xsl:with-param name="auto-col">
+                <xsl:if test="$module-type='AutoColumn'">true</xsl:if>
+              </xsl:with-param>
+              <xsl:with-param name="width">
+                <xsl:value-of select="$width"/>
+              </xsl:with-param>
+            </xsl:apply-templates>
           </xsl:when>
           <xsl:otherwise>
             <!-- if no contnet, need a space for the compiling of the XSL. -->
@@ -681,9 +691,27 @@
 
   <!-- ## Module Handlers - Boxes, No-Boxes, Links and Titles  #######################################   -->
   <xsl:template match="Content[@type='Module']" mode="displayModule">
+    <xsl:param name="auto-col"/>
+    <xsl:param name="width"/>
     <xsl:choose>
       <xsl:when test="@box!='false' and @box!=''">
-        <xsl:apply-templates select="." mode="moduleBox"/>
+        <xsl:choose>
+          <xsl:when test="$auto-col='true'">
+            <div class="col">
+              <xsl:if test="$width!=''">
+                <xsl:attribute name="style">
+                  <xsl:text>width:</xsl:text>
+                  <xsl:value-of select="$width"/>
+                  <xsl:text>px;</xsl:text>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:apply-templates select="." mode="moduleBox"/>
+            </div>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="." mode="moduleBox"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="thisClass">
@@ -892,9 +920,11 @@
             </div>
           </xsl:if>
         </div>
+
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
 
   <xsl:template match="Content" mode="hideScreens">
     <xsl:if test="not($adminMode)">
@@ -921,7 +951,7 @@
       <xsl:text> mb-0 </xsl:text>
     </xsl:if>
   </xsl:template>
-  
+
   <xsl:template match="Content" mode="moduleBox">
     <xsl:choose>
       <xsl:when test="@linkBox='true'">

@@ -13,3 +13,34 @@
         outline:none;
     }
 }
+.col-5th {
+    @include media-breakpoint-only(xs) {
+        width: 20%;
+    }
+}
+.col-sm-5th {
+    @include media-breakpoint-only(sm) {
+        width: 20%;
+    }
+}
+.col-md-5th {
+    @include media-breakpoint-only(md) {
+        width: 20%;
+    }
+}
+.col-lg-5th {
+    @include media-breakpoint-only(lg) {
+        width: 20%;
+    }
+}
+.col-xl-5th {
+    @include media-breakpoint-only(xl) {
+        width: 20%;
+    }
+}
+.col-xxl-5th {
+    @include media-breakpoint-only(xxl) {
+        width: 20%;
+    }
+}
+
