@@ -3,6 +3,7 @@
 
   <xsl:import href="new-minimal-layouts.xsl"/>
   <xsl:import href="columns/columns.xsl"/>
+  <xsl:import href="columns/columns-bs5.xsl"/>
   <xsl:import href="formattedtext/formattedtext.xsl"/>
   <xsl:import href="image/image.xsl"/>
   <xsl:import href="socialbookmarks/socialbookmarks.xsl"/>

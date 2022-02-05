@@ -119,6 +119,8 @@
         <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
       </bind>
       <bind nodeset="cContentXmlDetail/Content">
+        <bind id="cMetaTitle" nodeset="@metaTitle" required="false()" type="string"/>
+        <bind id="cMetaDescription" nodeset="@metaDescription" required="false()" type="string"/>
         <bind id="cEventStatus" nodeset="@eventStatus" required="false()" type="string"/>
         <bind id="cEventAttendanceMode" nodeset="@eventAttendanceMode" required="false()" type="string"/>
         <bind id="cEventBookingURL" nodeset="@bookingURL" required="false()" type="string"/>
@@ -159,168 +161,206 @@
       </bind>
     </bind>
   </model>
-  <group ref="EditContent" class="2col">
+  <group ref="EditContent">
     <label>Event</label>
-    <group>
+
+    <group class="tabs">
       <group>
-        <label>Settings</label>
-        <input bind="nContentKey" class="hidden">
-          <label>ContentId</label>
-        </input>
-        <input bind="dPublishDate" class="calendar short">
-          <label>Publish date</label>
-        </input>
-        <select1 bind="nStatus" appearance="full" class="vshort">
-          <label>Status</label>
-          <item>
-            <label>Live</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>Hidden</label>
-            <value>0</value>
-          </item>
-        </select1>
-      </group>
-      <group class="Content">
-        <label>Images</label>
-        <input bind="cContentFullSizePicture" class="short pickImage">
-          <label>Main event image</label>
-          <help class="inline">
-            <p>
-              This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
-            </p>
-            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
-            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
-          </help>
-        </input>
-        <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
-        <input bind="cContentThumbnail" class="short pickImage">
-          <label>Alternative thumbnail</label>
-        </input>
-        <input bind="cContentPicture" class="short pickImage">
-          <label>Alternative picture</label>
-        </input>
-      </group>
-      <group>
-        <label>Image gallery</label>
-        <help class="inline">Besides the main product images, You can add additional images below to display as a gallery.</help>
-        <relatedContent search="add" type="LibraryImage" relationType="" direction="1way"/>
-      </group>
-      <group>
-        <label>Event Terms</label>
-        <input bind="cContentSpecificationDocument" class="short pickDocument">
-          <label>Specification document</label>
-        </input>
-      </group>
-    </group>
-    <group>
-      <group>
-        <label>Event Details</label>
+        <label>
+          <i class="fas fa-pen"> </i>
+          <span class="space"> </span>
+          <span>Content</span>
+        </label>
         <group>
-          <input bind="cContentEventName" class="required long">
-            <label>Event name</label>
-          </input>
+          <label>Event Details</label>
           <group>
-            <label>Headliner</label>
-            <relatedContent type="Contact" search="add find" relationType="Headliner" direction="2way" />
-          </group>
-          <group>
-            <label>Support</label>
-            <relatedContent type="Contact" search="add find" relationType="Support" direction="2way" />
-          </group>
-        </group>
-        <group class="inline">
-          <input bind="dEventDate" class="calendar required">
-            <label>Start date</label>
-          </input>
-          <input bind="dEventEndDate" class="calendar">
-            <label>End date</label>
-            <help class="inline">
-              <p>
-                <strong>Optional.</strong> If specified this content will expire on this date.
-              </p>
-            </help>
-          </input>
-          <input bind="cContentSTime" class="time">
-            <label>Start time</label>
-          </input>
-          <input bind="cContentETime" class="time">
-            <label>End time</label>
-          </input>
-        </group>
-        <select1 bind="cEventStatus" appearance="full" class="vshort">
-          <label>Event Status</label>
-          <item>
-            <label>Scheduled</label>
-            <value>EventScheduled</value>
-          </item>
-          <item>
-            <label>Moved Online</label>
-            <value>EventMovedOnline</value>
-          </item>
-          <item>
-            <label>Postponed</label>
-            <value>EventPostponed</value>
-          </item>
-          <item>
-            <label>Rescheduled</label>
-            <value>EventRescheduled</value>
-          </item>
-          <item>
-            <label>Cancelled</label>
-            <value>EventCancelled</value>
-          </item>
-        </select1>
-        <select1 bind="cEventAttendanceMode" appearance="full" class="vshort">
-          <label>Attendance Type</label>
-          <item>
-            <label>In Person</label>
-            <value>OfflineEventAttendanceMode</value>
-          </item>
-          <item>
-            <label>Online</label>
-            <value>OnlineEventAttendanceMode</value>
-          </item>
-          <item>
-            <label>Mixed</label>
-            <value>MixedEventAttendanceMode</value>
-          </item>         
-        </select1>
-      </group>    
-      <group>
-        <label>Location</label>
-        <select1 bind="VenueType" appearance="full">
-          <label>Venue Type</label>
-          <item>
-            <label>Related Organisation</label>
-            <value>related</value>
-            <toggle case="cVenue_1" event="DOMActivate"/>
-          </item>
-          <item>
-            <label>Enter Details</label>
-            <value></value>
-            <toggle case="cVenue_2" event="DOMActivate"/>
-          </item>
-        </select1>
-        <switch class="disable">
-          <case id="cVenue_1">
-            <label>Venue</label>
-            <relatedContent type="Organisation" search="add find" relationType="venue" direction="2way" />
-          </case>
-          <case id="cVenue_2">
-            <group>
-            <input bind="cContentVenue" class="short">
-              <label>Venue name</label>
+            <input bind="cContentEventName" class="required long">
+              <label>Event name</label>
             </input>
-            <!--<select bind="bLocationMap" appearance="full" class="checkboxes">
+            <group>
+              <!-- label>Details</label -->
+              <textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">
+                <label>Strapline details</label>
+              </textarea>
+              <textarea bind="cContentBody" class="TextArea xhtml" rows="20" cols="70">
+                <label>Main details</label>
+              </textarea>
+            </group>
+
+          </group>
+          <group class="row">
+            <input bind="dEventDate" class="calendar required col-lg-6">
+              <label>Start date</label>
+            </input>
+            <input bind="dEventEndDate" class="calendar col-lg-6">
+              <label>End date</label>
+              <help class="inline">
+                <p>
+                  <strong>Optional.</strong> If specified this content will expire on this date.
+                </p>
+              </help>
+            </input>
+
+            <input bind="cContentSTime" class="time">
+              <label>Start time</label>
+            </input>
+            <input bind="cContentETime" class="time">
+              <label>End time</label>
+            </input>
+          </group>
+          <group class="row">
+            <select1 bind="cEventStatus" appearance="full" class="vshort col-lg-6">
+              <label>Event Status</label>
+              <item>
+                <label>Scheduled</label>
+                <value>EventScheduled</value>
+              </item>
+              <item>
+                <label>Moved Online</label>
+                <value>EventMovedOnline</value>
+              </item>
+              <item>
+                <label>Postponed</label>
+                <value>EventPostponed</value>
+              </item>
+              <item>
+                <label>Rescheduled</label>
+                <value>EventRescheduled</value>
+              </item>
+              <item>
+                <label>Cancelled</label>
+                <value>EventCancelled</value>
+              </item>
+            </select1>
+            <select1 bind="cEventAttendanceMode" appearance="full" class="vshort col-lg-6">
+              <label>Attendance Type</label>
+              <item>
+                <label>In Person</label>
+                <value>OfflineEventAttendanceMode</value>
+              </item>
+              <item>
+                <label>Online</label>
+                <value>OnlineEventAttendanceMode</value>
+              </item>
+              <item>
+                <label>Mixed</label>
+                <value>MixedEventAttendanceMode</value>
+              </item>
+            </select1>
+          </group>
+          <group class="row">
+            <input bind="cEventBookingURL" class="long col-lg-6">
+              <label>External Booking URL</label>
+            </input>
+            <input bind="cTeaserSlug" class="long col-lg-6">
+              <label>Teaser Slug</label>
+            </input>
+
+          </group>
+
+
+        </group>
+
+      </group>
+
+      <group>
+        <label>
+          <i class="fas fa-image"> </i>
+          <span class="space"> </span>
+          <span>Images</span>
+        </label>
+
+        <group>
+          <group class="Content">
+            <label>Images</label>
+            <input bind="cContentFullSizePicture" class="short pickImage form-section-wrapper">
+              <label>Main event image</label>
+              <help class="inline">
+                <p>
+                  This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+                </p>
+                <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+                <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+              </help>
+            </input>
+            <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
+            <input bind="cContentThumbnail" class="short pickImage form-section-wrapper">
+              <label>Alternative thumbnail</label>
+            </input>
+            <input bind="cContentPicture" class="short pickImage form-section-wrapper">
+              <label>Alternative picture</label>
+            </input>
+          </group>
+          <group class="form-section-wrapper">
+            <label>Image Gallery</label>
+            <help class="inline">Besides the main product images, You can add additional images below to display as a gallery.</help>
+            <relatedContent search="add" type="LibraryImage" relationType="" direction="1way" />
+          </group>
+
+        </group>
+      </group>
+
+      <group>
+        <label>
+          <i class="fas fa-paperclip"> </i>
+          <span class="space"> </span>
+          <span>Related Content</span>
+        </label>
+        <group>
+
+          <group>
+            <!-- label>Headliner</label -->
+            <relatedContent type="Contact" search="add find" relationType="Headliner" direction="2way" class="form-section-wrapper" />
+          </group>
+          <group>
+            <!-- label>Support</label -->
+            <relatedContent type="Contact" search="add find" relationType="Support" direction="2way" class="form-section-wrapper"/>
+          </group>
+          <group>
+            <!--label>Tickets</label-->
+            <relatedContent type="Ticket" search="add find" relationType="Tickets" direction="2way" class="form-section-wrapper"/>
+
+          </group>
+          <group class="form-section-wrapper">
+            <!-- label>Event Terms</label-->
+            <input bind="cContentSpecificationDocument" class="short pickDocument">
+              <label>Event Terms / Specification document</label>
+            </input>
+          </group>
+
+          <group class="form-section-wrapper">
+            <label>Location</label>
+            <select1 bind="VenueType" appearance="full" >
+              <label>Venue Type</label>
+              <item>
+                <label>Related Organisation</label>
+                <value>related</value>
+                <toggle case="cVenue_1" event="DOMActivate"/>
+              </item>
+              <item>
+                <label>Enter Details</label>
+                <value></value>
+                <toggle case="cVenue_2" event="DOMActivate"/>
+              </item>
+            </select1>
+            <switch class="disable">
+              <case id="cVenue_1">
+                <label>Venue</label>
+                <relatedContent type="Organisation" search="add find" relationType="venue" direction="2way" />
+              </case>
+              <case id="cVenue_2">
+                <group>
+                  <input bind="cContentVenue" class="short">
+                    <label>Venue name</label>
+                  </input>
+                  <!--<select bind="bLocationMap" appearance="full" class="checkboxes">
           <label>Map</label>
           <item>
             <label>Display map (*feature to come)</label>
             <value>true</value>
           </item>
         </select>-->
-            <!--<select1 bind="bLocationType" appearance="full" class="multiline">
+                  <!--<select1 bind="bLocationType" appearance="full" class="multiline">
           <label>Define location</label>
           <item>
             <label>Not specified</label>
@@ -341,57 +381,95 @@
         <switch class="disable">
           <case id="bLocationSwitch_0"/>
           <case id="bLocationSwitch_1">-->
-            <group class="inline">
-              <input bind="cContentLocationNo" class="vshort keep_empty">
-                <label>Name or No.</label>
-              </input>
-              <input bind="cContentLocationStreet" class="keep_empty">
-                <label>Street</label>
-              </input>
-              <input bind="cContentLocationTown" class="keep_empty">
-                <label>Town / city</label>
-              </input>
-              <input bind="cContentLocationRegion" class="keep_empty">
-                <label>County / region</label>
-              </input>
-              <input bind="cContentLocationPostCode" class="vshort keep_empty">
-                <label>Postal code</label>
-              </input>
-              <submit submission="" ref="" class="getGeocodeButton hideRequired btn-primary" icon="fa-globe">
-                <label>Get latitude and longitude from address</label>
-              </submit>
-            </group>
-            <group class="inline">
-              <input bind="cContentLocationLat" class="keep_empty">
-                <label>Latitude</label>
-              </input>
-              <input bind="cContentLocationLong" class="keep_empty">
-                <label>Longitude</label>
-              </input>
-            </group>
+                  <group class="inline">
+                    <input bind="cContentLocationNo" class="vshort keep_empty">
+                      <label>Name or No.</label>
+                    </input>
+                    <input bind="cContentLocationStreet" class="keep_empty">
+                      <label>Street</label>
+                    </input>
+                    <input bind="cContentLocationTown" class="keep_empty">
+                      <label>Town / city</label>
+                    </input>
+                    <input bind="cContentLocationRegion" class="keep_empty">
+                      <label>County / region</label>
+                    </input>
+                    <input bind="cContentLocationPostCode" class="vshort keep_empty">
+                      <label>Postal code</label>
+                    </input>
+                    <submit submission="" ref="" class="getGeocodeButton hideRequired btn-primary" icon="fa-globe">
+                      <label>Get latitude and longitude from address</label>
+                    </submit>
+                  </group>
+                  <group class="inline">
+                    <input bind="cContentLocationLat" class="keep_empty">
+                      <label>Latitude</label>
+                    </input>
+                    <input bind="cContentLocationLong" class="keep_empty">
+                      <label>Longitude</label>
+                    </input>
+                  </group>
+                </group>
+              </case>
+            </switch>
           </group>
-          </case>
-        </switch>
+
+
         </group>
-      <group>
-        <label>Tickets</label>
-        <relatedContent type="Ticket" search="add" relationType="" direction="2way" />
-        <input bind="cEventBookingURL" class="long">
-          <label>External Booking URL</label>
-        </input>
-        <input bind="cTeaserSlug" class="long">
-          <label>Teaser Slug</label>
-        </input>
       </group>
+
       <group>
-        <label>Details</label>
-        <textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">
-          <label>Strapline details</label>
-        </textarea>
-        <textarea bind="cContentBody" class="TextArea xhtml" rows="20" cols="70">
-          <label>Main details</label>
-        </textarea>
+        <label>
+          <i class="fas fa-cog"> </i>
+          <span class="space"> </span>
+          <span>Advanced Settings</span>
+        </label>
+        <group>
+          <label>Settings</label>
+          <input bind="nContentKey" class="hidden">
+            <label>ContentId</label>
+          </input>
+          <input bind="dPublishDate" class="calendar short">
+            <label>Publish date</label>
+          </input>
+          <select1 bind="nStatus" appearance="full" class="vshort">
+            <label>Status</label>
+            <item>
+              <label>Live</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>Hidden</label>
+              <value>0</value>
+            </item>
+          </select1>
+          <input bind="cDescription" class="short">
+            <label>Change Notes</label>
+          </input>
+          <input bind="cMetaTitle" class="short">
+            <label>Meta Title</label>
+            <help>Google typically displays the first 50–60 characters of a title tag. If you keep your titles under 60 characters, our research suggests that you can expect about 90% of your titles to display properly. There's no exact character limit, because characters can vary in width and Google's display titles max out (currently) at 600 pixels.</help>
+          </input>
+          <input bind="cMetaDescripton" class="short">
+            <label>Meta Description</label>
+            <help>Meta descriptions can be any length, but Google generally truncates snippets to ~155–160 characters. It's best to keep meta descriptions long enough that they're sufficiently descriptive, so we recommend descriptions between 50–160 characters. Keep in mind that the "optimal" length will vary depending on the situation, and your primary goal should be to provide value and drive clicks.</help>
+          </input>
+        </group>
+
+
       </group>
+
+
+
+    </group>
+
+
+
+    <group>
+
+
+
+
     </group>
   </group>
   <group ref="submit" class="contentSubmit">
