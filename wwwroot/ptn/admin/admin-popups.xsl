@@ -191,40 +191,38 @@
     <xsl:text disable-output-escaping="yes"><![CDATA[&]]></xsl:text>
     <xsl:text>0x3|0x8;return v.toString(16);});</xsl:text>
 
-    var newItem = '<div class="image-thumbnail">
-      <div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
-        ' + file.name.replace(/\ /g,'-') + '<br />
-      </div>';
-      newItem = newItem + '<a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
-        <img src="' + targetPath + '/' + file.name.replace(/\ /g,'-') + '" class="img-responsive" />
-      </a>
-    </div>';
+    var newItem = '<div class="image-thumbnail">';
+		newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">';
+			newItem = newItem + file.name.replace(/\ /g,'-') + '<br />';
+			newItem = newItem + '</div>';
+      newItem = newItem + '<a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">';
+		  newItem = newItem + '<img src="' + targetPath + '/' + file.name.replace(/\ /g,'-') + '" class="img-responsive" />';
+		  newItem = newItem + '</a>';
+		newItem = newItem + '</div>';
     newItem = newItem + '<div class="description"></div>';
-    newItem = newItem + '<a onclick="passImgFileToForm(\'EditContent\',\'{$targetFeild}\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-info">
-      <i class="fa fa-picture-o fa-white">
-        <xsl:text> </xsl:text>
-      </i> Pick Image
-    </a>';
-    newItem = '<div class="item item-image col-md-3 col-sm-4">
-      <div class="panel">' + newItem + '</div>
-    </div>';
+    newItem = newItem + '<a onclick="passImgFileToForm(\'EditContent\',\'{$targetFeild}\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-info">';
+		newItem = newItem + '<i class="fa fa-picture-o fa-white">';
+			newItem = newItem + '<xsl:text> </xsl:text>';
+			newItem = newItem + '</i> Pick Image';
+		newItem = newItem + '</a>';
+	  newItem =newItem + '<div class="item item-image col-md-3 col-sm-4"> ';
+		  newItem =newItem + '<div class="panel">' + newItem + '</div>';
+		  newItem =newItem + '</div>';
   </xsl:template>
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
-    var newItem = '<tr>
-      <td>
-        <i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '
-      </td>
-      <td>.' + /[^.]+$/.exec(file.name) + '</td>
-      <td>
-        ';
+    var newItem = '<tr>';
+		newItem = newItem + '<td>';
+			newItem = newItem + '<i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + ';
+		newItem = newItem + '</td>';
+		newItem = newItem + '<td>.' + /[^.]+$/.exec(file.name) + '</td>';
+		newItem = newItem + '<td>';
         <!--newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\' + targetPath + \'/\' + file.name + \');" class="btn btn-xs btn-default" href="#">';-->
-        newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-default" href="#">
-          ';
-          newItem = newItem + '<i class="fa fa-file-o fa-white"> </i> Pick
-        </a>
-      </td>
-    </tr>';
+        newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-default" href="#">';
+          newItem = newItem + '<i class="fa fa-file-o fa-white"> </i> Pick';
+			newItem = newItem + '</a>';
+			newItem = newItem + '</td>';
+		newItem = newItem + '</tr>';
   </xsl:template>
 
   <xsl:template match="folder" mode="FolderTree">
