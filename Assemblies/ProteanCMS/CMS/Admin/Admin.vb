@@ -3317,10 +3317,12 @@ AfterProcessFlow:
                             bShowTree = True
                         End If
                     Case "deleteFolder"
+                        Dim parentFolder
                         oPageDetail.AppendChild(moAdXfm.xFrmDeleteFolder(sFolder, LibType))
                         If moAdXfm.valid = False Then
                             sAdminLayout = "AdminXForm"
                         Else
+                            myWeb.msRedirectOnEnd = "?ewCmd=ImageLib&fld=\"
                             bShowTree = True
                         End If
                     Case "deleteFile"
