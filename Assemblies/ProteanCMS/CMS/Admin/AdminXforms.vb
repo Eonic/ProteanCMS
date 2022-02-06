@@ -3382,7 +3382,7 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim sValidResponse As String
                 Dim cProcessInfo As String = ""
-
+                Dim oinputElmt As XmlElement
                 Try
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
@@ -3392,7 +3392,8 @@ Partial Public Class Cms
 
                     MyBase.submission("DeleteFolder", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Delete Content")
-
+                    oinputElmt = MyBase.addInput(oFrmElmt, "cFolderName", False, "FolderName", "hidden")
+                    xmlTools.addNewTextNode("value", oinputElmt, cPath)
                     If cPath = "" Or cPath = "\" Or cPath = "/" Then
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "You cannot delete the root folder", , "alert-danger")
                     Else
@@ -3412,7 +3413,7 @@ Partial Public Class Cms
 
                             Dim oFs As fsHelper = New fsHelper
                             oFs.initialiseVariables(nType)
-                            sValidResponse = oFs.DeleteFolder(goRequest("cFolderName"), cPath)
+                            sValidResponse = oFs.DeleteFolder("", cPath)
 
                             ' fsh.DeleteFolder()
                             ' cPath = Left(cPath, InStrRev(cPath, "\") - 1)

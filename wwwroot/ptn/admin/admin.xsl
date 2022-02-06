@@ -4540,11 +4540,8 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
-    var newItem = '<tr>
-      <td>
-        <i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '
-      </td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
-      newItem = newItem + '<td>
+    var newItem = '<tr>     <td>        <i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '      </td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
+    newItem = newItem + '<td>
         <a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
           <i class="fa fa-trash-o fa-white"> </i> Delete
         </a>

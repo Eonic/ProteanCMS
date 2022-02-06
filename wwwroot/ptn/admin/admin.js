@@ -1,15 +1,4 @@
-﻿////document.addEventListener('DOMContentLoaded', function (e) {
-////    debugger;
-////    FormValidation.formValidation($('.xform'), {
-////        plugins: {
-////            declarative: new FormValidation.plugins.Declarative(),
-////        }
-////    });
-
-////});
-
-
-// Example starter JavaScript for disabling form submissions if there are invalid fields
+﻿
 (function () {
     'use strict'
 
@@ -225,10 +214,10 @@ $(document).ready(function () {
     })(jQuery);
 
     // ON ADMIN MENU CLICK 
-    $('#mainMenuButtonadminOptions').click(function (e) {
-        e.preventDefault();
-        $('#adminOptions').modal({ onOpen: modalOpen });
-    });
+    //$('#mainMenuButtonadminOptions').click(function (e) {
+    //    e.preventDefault();
+    //    $('#adminOptions').modal({ onOpen: modalOpen });
+    //});
 
 
     $('#ThemePreset').change(function () {
@@ -331,7 +320,7 @@ $(document).ready(function () {
 
         $('#files .item-image .panel').prepareLibImages();
 
-        $("[data-toggle=popover]").popover({
+        $(this).find("[data-bs-toggle=popover]").popover({
             html: true,
             container: '#files',
             trigger: 'hover',
@@ -341,26 +330,26 @@ $(document).ready(function () {
             }
         });
 
-        $(this).find('a[data-toggle!="popover"]').click(function (ev) {
+        $(this).find('a[data-bs-toggle!="popover"]').click(function (ev) {
             ev.preventDefault();
-            $('.modal-dialog').addClass('loading')
-            $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+            $(this).find('.modal-dialog').addClass('loading')
+            $(this).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
             var target = $(this).attr("href");
             // load the url and show modal on success
-            currentModal.load(target, function () {
-                $('.modal-dialog').removeClass('loading')
-                currentModal.modal("show");
-
-            });
+            if (target != '#') {
+                currentModal.load(target, function () {
+                    $('.modal-dialog').removeClass('loading')
+                    currentModal.modal("show");
+                });
+            };
         });
 
-        $(this).find('form').on('submit', function (event) {
+        $(this).find('form:not([id="imageDetailsForm"])').on('submit', function (event) {
 
             event.preventDefault()
             var formData = $(this).serialize();
             var targetUrl = $(this).attr("action") + '&contentType=popup';
-            $('.modal-dialog').addClass('loading')
-            $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+            currentModal.find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
 
             $.ajax({
                 type: 'post',
@@ -368,8 +357,8 @@ $(document).ready(function () {
                 data: formData,
                 dataType: 'html',
                 success: function (msg) {
-                    $('.modal-dialog').removeClass('loading')
-                    $(".modal").html(msg);
+                    //$(this).find('.modal-dialog').removeClass('loading')
+                    currentModal.find(".modal-body").html(msg);
                     currentModal.trigger('loaded');
                 }
             });
@@ -451,34 +440,42 @@ $(document).ready(function () {
         }
     });
 
-    $('a[data-bs-toggle="modal"]').on('click', function (e) {
-        e.preventDefault();
-        var link = $(this)
-        var content = $(link.attr('data-bs-target') + " .modal-content");
-        content.load(link.attr("href"));
-    });
+    prepareAjaxModals()
 
 });
 
+function prepareAjaxModals() {
+    $('a[data-bs-toggle="modal"]').off('click');
+    $('a[data-bs-toggle="modal"]').on('click', function (e) {
+        e.preventDefault();
+        var link = $(this)
+        resetAjaxModal(link.attr('data-bs-target'))
+        var content = $(link.attr('data-bs-target') + " .modal-content");
+        content.load(link.attr("href"));
+    });
+}
+
+function resetAjaxModal(ref) {
+    $(ref).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading...</h4></p>');
+}
+
 function setEditImage() {
-    $('a.editImage').click(function () {
+    $('a.editImage').click(function (e) {
+        e.preventDefault();
         var targetForm = $(this).parents('form').attr('id');
-        var imgtag = $(this).parents('.input-group').children('textarea').val();
+        var targetField = $(this).parents('.form-margin').children('textarea').attr('id');
+        var imgtag = $(this).parents('.form-margin').children('textarea').val();
         imgtag = $.trim(imgtag);
         imgtag = encodeURIComponent(imgtag);
-        var targetField = $(this).parents('.input-group').children('textarea').attr('id');
         var cName = "";
         var linkUrl = '?contentType=popup&ewCmd=ImageLib&targetForm=' + targetForm + '&ewCmd2=editImage&imgHtml=' + imgtag + '&targetField=' + targetField
-        // alert(linkUrl);
-        // $(this).attr("href", linkUrl); 
-        $('#modal-' + targetField).load(linkUrl, function (e) { $('#modal-' + targetField).modal('show'); });
-        return false;
-
+        var link = $(this)
+        var content = $(link.attr('data-bs-target') + " .modal-content");
+        link.attr("href", linkUrl)
     });
 };
 
 function initialiseHelptips() {
-
     $(".helpTip").tooltip({
         track: true,
         relative: true,
@@ -488,9 +485,85 @@ function initialiseHelptips() {
             return element.attr("title");
         }
     });
-
 };
 
+function S4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+}
+
+function getUploadedImageHtmlPopup(appPath, fld, targetPath, targetField, filename) {
+
+    var guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+
+    var newItem = '<div class="item item-image col">';
+    newItem = newItem + '<div class="panel">';
+    newItem = newItem + '<div class="image-thumbnail">	';
+    newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">';
+    newItem = newItem + '<img src="' + targetPath + '/' + filename.replace(/\ /g, '-') + '" class="img-responsive" />';
+    newItem = newItem + '<div class="popover-description">';
+    newItem = newItem + '<span class="image-description-name">' + filename.replace(/\ /g, '-') + '</span>';
+    newItem = newItem + '<br/>';
+    newItem = newItem + '</div>';
+    newItem = newItem + '</div>';
+    newItem = newItem + '<a data-bs-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">';
+    newItem = newItem + '<img src="' + targetPath + '/' + filename.replace(/\ /g, '-') + '" class="img-responsive" />';
+    newItem = newItem + '  </a>';
+    newItem = newItem + '</div>';
+
+    newItem = newItem + '<div class="img-description"> ';
+    newItem = newItem + '  <span class="image-description-name">' + filename.replace(/\ /g, '-') + '</span>';
+    newItem = newItem + '	  </div>';
+    newItem = newItem + '<div class="pick-btn">      ';
+    newItem = newItem + '<a href="' + appPath + '?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld=' + fld + '&amp;file=' + filename.replace(/\ /g, '-') + '" data-bs-toggle="modal" data-bs-target="#modal-' + targetField + '" class="btn btn-sm btn-primary pickImage">';
+    newItem = newItem + '<i class="fa fa-picture-o fa-white"> ';
+    newItem = newItem + '<xsl:text> </xsl:text>';
+    newItem = newItem + ' </i> Pick Image';
+    newItem = newItem + ' </a>';
+    newItem = newItem + '</div>';
+    newItem = newItem + '</div>';
+    newItem = newItem + '</div>';
+
+    return newItem;
+}
+
+function getUploadedImagePathPopup(appPath, fld, targetPath, targetField, filename) {
+
+    var guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+
+    var imgfullpath = targetPath + '/' + filename.replace(/\ /g, '-');
+
+    var img = new Image();
+    var imgheight = 0;
+    var imgwidth = 0;
+    img.onload = function () {
+        imgheight = img.height;
+        imgwidth = img.width;
+    }
+    img.src = imgfullpath;
+
+    var newItem = '<div class="item item-image col"> ';
+    newItem = newItem + '<div class="panel">';
+    newItem = newItem + '<div class="image-thumbnail">';
+    newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">';
+    newItem = newItem + filename.replace(/\ /g, '-') + '<br />';
+    newItem = newItem + '</div>';
+    newItem = newItem + '<a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">';
+    newItem = newItem + '<img src="' + imgfullpath + '" class="img-responsive" />';
+    newItem = newItem + '</a>';
+    newItem = newItem + '</div>';
+    newItem = newItem + '<div class="img-description"><span class="image-description-name">' + filename.replace(/\ /g, ' -') + '</span>' + imgheight + 'x' + imgwidth +'</div>';
+    newItem = newItem + '<div class="pick-btn">      ';
+    newItem = newItem + '<a onclick="passImgFileToForm(\'EditContent\',\'' + targetField + '\',\'' + targetPath + '/' + filename.replace(/\ /g, '-') + '\');" class="btn btn-sm btn-primary pickImage">';
+    newItem = newItem + '<i class="fa fa-picture-o fa-white">';
+    newItem = newItem + '<xsl:text> </xsl:text>';
+    newItem = newItem + '</i> Pick Image';
+    newItem = newItem + '</a>';
+    newItem = newItem + '</div>';
+    newItem = newItem + '</div>';
+    newItem = newItem + '</div>';
+
+    return newItem;
+}
 
 
 (function () {
@@ -569,13 +642,14 @@ function growModuleContents($drag) {
     $drag.removeClass("dragging");
 };
 
-function modalOpen(dialog) {
-    dialog.overlay.fadeIn('slow', function () {
-        dialog.container.fadeIn('slow', function () {
-            dialog.data.slideDown('slow');
-        });
-    });
-}
+//function modalOpen(dialog) {
+//    dialog.overlay.fadeIn('slow', function () {
+//        dialog.container.fadeIn('slow', function () {
+//            dialog.data.slideDown('slow');
+//        });
+//    });
+//}
+
 (function ($) {
     $.fn.prepareLibImages = function () {
         return this.each(function () {
@@ -728,73 +802,79 @@ function passImgToForm(targetForm, targetField) {
 
         $('#' + targetField).val(imgtag);
         editDiv = $('#editImage_' + targetField);
-        previewDiv = $('#previewImage_' + targetField);
+        previewDiv = $('#previewImage_' + targetField + ' span');
         // previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + targetField + '()" title="edit an image from the image library" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"> </i> Edit image</a><br/><a href="#" onclick="xfrmClearImage(\'EditContent\',\'' + targetField + '\',\'' + cName + '\');return false" title="Clear Image" class="btn btn-sm btn-danger"><i class="icon-remove-circle icon-white"> </i> Clear image</a>';
-        $(editDiv).find('.editpick').html('<a title="edit an image from the image library" class="btn btn-primary editImage"><i class="fa fa-edit fa-white"> </i> Edit</a>');
-        $(editDiv).find('a.editImage').click(function () {
-            $(this).attr("href", '?contentType=popup&ewCmd=ImageLib&amp;targetForm=' + targetForm + '&amp;ewCmd2=editImage&amp;imgHtml=' + imgtag + '&amp;targetField=' + targetField + '&amp;targetClass=' + cName);
-            return true;
-        });
+        $(editDiv).find('.btn-group-spaced .clearImage').show();
+        $(editDiv).find('.btn-group-spaced .editImage').show();
+        $(editDiv).find('.btn-group-spaced .pickImage').hide();
         //add preview Image
-        $('<div class="previewImage" id="previewImage_' + targetField + '"><span>' + cImgHtml + '</span></div>').insertAfter(editDiv);
-        previewDiv.remove();
+        previewDiv.html(cImgHtml)
+      //  $('<div class="previewImage" id="previewImage_' + targetField + '"><span>' + cImgHtml + '</span></div>').insertAfter(editDiv);
+      //  previewDiv.remove();
     }
-    $(".pickImageModal").modal("hide").removeData();
-    // $(".pickImageModal").html("");
+    var thisModal = bootstrap.Modal.getInstance($("#modal-" + targetField))
+    thisModal.hide();
+    $("#modal-" + targetField).removeData('bs.modal');
+    resetAjaxModal(targetField);
     setEditImage();
 }
 
 function passDocToForm(targetForm, targetField, cUrl) {
     $('#' + targetField).val(cUrl);
     buttonDiv = $('#editDoc_' + targetField + '  .input-group-btn');
-    buttonDiv.html("<a href=\"#\" onclick=\"xfrmClearDocument('" + targetForm + "','" + targetField + "');return false\" title=\"Remove current Document reference\" class=\"btn btn-danger\"><i class=\"fa fa-trash-o fa-white\"> </i> Clear</a>")
-    $(".pickImageModal").modal("hide").removeData();
-    $(".pickImageModal").html("");
+    buttonDiv.replaceWith("<a href=\"#\" onclick=\"xfrmClearDocument('" + targetForm + "','" + targetField + "');return false\" title=\"Remove current Document reference\" class=\"btn btn-danger\"><i class=\"fas fa-times fa-white\"> </i> Clear</a>")
+    var thisModal = bootstrap.Modal.getInstance($("#modal-" + targetField))
+    thisModal.hide();
+    $("#modal-" + targetField).removeData('bs.modal');
+    resetAjaxModal(targetField);
 }
 
 function passMediaToForm(targetForm, targetField, cUrl) {
     $('#' + targetField).val(cUrl);
     buttonDiv = $('#editDoc_' + targetField + '  .input-group-btn');
-    buttonDiv.html("<a href=\"#\" onclick=\"xfrmClearMedia('" + targetForm + "','" + targetField + "');return false\" title=\"Remove current Image reference\" class=\"btn btn-danger\"><i class=\"fa fa-trash-o fa-white\"> </i> Clear</a>")
-    $(".pickImageModal").modal("hide").removeData();
-    $(".pickImageModal").html("");
+    buttonDiv.replaceWith("<a href=\"#\" onclick=\"xfrmClearMedia('" + targetForm + "','" + targetField + "');return false\" title=\"Remove current Image reference\" class=\"btn btn-danger input-group-btn\"><i class=\"fas fa-times fa-white\"> </i> Clear</a>")
+    var thisModal = bootstrap.Modal.getInstance($("#modal-" + targetField))
+    thisModal.hide();
+    $("#modal-" + targetField).removeData('bs.modal');
+    resetAjaxModal(targetField);
 }
 
 function passImgFileToForm(targetForm, targetField, cUrl) {
     $('#' + targetField).val(cUrl);
     buttonDiv = $('#editImageFile_' + targetField + '  .input-group-btn');
-    buttonDiv.html("<a href=\"#\" onclick=\"xfrmClearImgFile('" + targetForm + "','" + targetField + "');return false\" title=\"Remove current File reference\" class=\"btn btn-danger\"><i class=\"fa fa-trash-o fa-white\"> </i> Clear</a>")
-    $(".pickImageModal").modal("hide").removeData();
-    $(".pickImageModal").html("");
+    buttonDiv.replaceWith("<a href=\"#\" onclick=\"xfrmClearImgFile('" + targetForm + "','" + targetField + "');return false\" title=\"Remove current File reference\" class=\"btn btn-danger input-group-btn\"><i class=\"fas fa-times fa-white\"> </i> Clear</a>")
+    var thisModal = bootstrap.Modal.getInstance($("#modal-" + targetField))
+    thisModal.hide();
+    $("#modal-" + targetField).removeData('bs.modal');
+    resetAjaxModal(targetField);
 }
 
 function xfrmClearImage(formRef, fieldRef, className) {
     document.forms[formRef].elements[fieldRef].value = '<img class="' + className + '"/>';
-    previewDiv = $('#previewImage_' + fieldRef);
+    previewDiv = $('#previewImage_' + fieldRef + ' span');
     editDiv = $('#editImage_' + fieldRef);
-    previewDiv.remove();
-    editDiv.find('a.btn-danger').remove();
-    editDiv.find('a.editImage').remove();
-    editDiv.find('span.editpick').html('<a data-toggle="modal" href="?contentType=popup&ewCmd=ImageLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '&amp;targetClass=' + className + '" title="pick an image from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>');
-    //	alert(previewDiv.innerHTML);
+    previewDiv.html('<i class="fas fa-image">&#160;</i>');
+    editDiv.find('a.clearImage').hide();
+    editDiv.find('a.editImage').hide();
+    editDiv.find('a.pickImage').show();
 }
 
 function xfrmClearDocument(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
     buttonDiv = $('#editDoc_' + fieldRef + '  .input-group-btn');
-    buttonDiv.html('<a data-toggle="modal" href="?contentType=popup&ewCmd=DocsLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>')
+    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=DocsLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-bs-target="#modal-' + fieldRef + '" class="btn btn-primary input-group-btn"><i class="fas fa-image fa-white"> </i> Pick</a>')
 }
 
 function xfrmClearMedia(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
     buttonDiv = $('#editDoc_' + fieldRef + '  .input-group-btn');
-    buttonDiv.html('<a data-toggle="modal" href="?contentType=popup&ewCmd=MediaLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-music fa-white"> </i> Pick</a>')
+    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=MediaLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-bs-target="#modal-' + fieldRef + '" class="btn btn-primary input-group-btn"><i class="fa fa-music fa-white"> </i> Pick</a>')
 }
 
 function xfrmClearImgFile(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
     buttonDiv = $('#editImageFile_' + fieldRef + '  .input-group-btn');
-    buttonDiv.html('<a data-toggle="modal" href="?contentType=popup&ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>')
+    buttonDiv.replaceWith('<a data-bs-toggle="modal" href="?contentType=popup&ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-bs-target="#modal-' + fieldRef + '" class="btn btn-primary input-group-btn"><i class="fas fa-image fa-white"> </i> Pick</a>')
 }
 
 function xfrmClearCalendar(formRef, fieldRef) {
@@ -810,7 +890,7 @@ function passFilePathToForm(targetField, filepath) {
 function updatePreviewImage(formRef, fieldRef) {
     imgtag = document.forms[formRef].elements[fieldRef].value;
     previewDiv = document.getElementById('previewImage_' + fieldRef);
-    previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + fieldRef + '();return false" title="edit an image from the image library" class="btn btn-sm btn-primary"><i class="fa-picture-o fa-white"> </i> Edit</a>' + imgtag;
+    previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + fieldRef + '();return false" title="edit an image from the image library" class="btn btn-sm btn-primary input-group-btn"><i class="fa-picture-o fa-white"> </i> Edit</a>' + imgtag;
 }
 
 /*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */

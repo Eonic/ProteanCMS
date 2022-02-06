@@ -814,9 +814,17 @@ form.xform .pick-image-wrapper {
         flex-grow: 2;
         margin-bottom: 0;
     }
-
+    textarea{
+            display:none;
+        }
     .previewImage {
         margin-right: 10px;
+        width: 100px;
+        
+        i {
+            font-size: 70px;
+            color: #b3d2d9;
+        }
     }
 }
 form .form-actions .required {

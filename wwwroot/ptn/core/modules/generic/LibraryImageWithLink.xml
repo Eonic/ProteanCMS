@@ -87,7 +87,7 @@
 		</bind>
 	</model>
 	<group ref="EditContent" class="2col">
-		<label>Edit Library Image (with link)</label>
+		<label>Library Image (with link)</label>
 		<group>
 			<group>
 				<input bind="nContentKey" class="hidden">
