@@ -764,7 +764,9 @@
           <xsl:text>module noboxlayout layoutModule pos-</xsl:text>
           <xsl:value-of select="@position"/>
           <xsl:text> </xsl:text>
-          <xsl:value-of select="@background"/>
+          <xsl:if test="not(@position='header') and not(@position='footer') and not(@position='column1')">
+            <xsl:value-of select="@background"/>
+          </xsl:if>
           <xsl:apply-templates select="." mode="hideScreens" />
           <xsl:apply-templates select="." mode="marginBelow" />
           <xsl:value-of select="$thisClass"/>

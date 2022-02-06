@@ -847,18 +847,24 @@ form .form-actions .required {
         }
     }
 }
+//#template_AdminXForm, 
 #EditShippingLocation,
 #WebSettings,
 #template_EditStructure,
 #SetPassword,
-#tpltLocateSearch,
-#template_AdminXForm {
+#tpltLocateSearch{
     .form-check {
         @extend .form-check-inline;
     }
 
     input, textarea, select, .input-group {
         margin-bottom: 1rem;
+    }
+
+    .form-margin {
+        input, textarea, select, .input-group {
+            margin-bottom: 0rem;
+        }
     }
 
     span.required {
