@@ -37,7 +37,7 @@
 		<!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
 	</model>
 	<group ref="EditContent" class="2col">
-		<label>Edit Formatted Text</label>
+		<label>Formatted Text</label>
 		<group>
       <group>
 			  <input bind="nContentKey" class="hidden">

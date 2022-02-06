@@ -48,7 +48,7 @@
     <!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
   </model>
   <group ref="EditContent" class="2col">
-    <label>Add/Edit Image</label>
+    <label>Image</label>
     <group>
       <group>
         <label>Settings</label>
