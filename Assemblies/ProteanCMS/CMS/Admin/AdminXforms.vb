@@ -5621,8 +5621,9 @@ Partial Public Class Cms
 
                     'Replace Spaces with hypens
                     cProviderType = Replace(cProviderType, " ", "-")
-
-                    If Not MyBase.load("/xforms/PaymentProvider/" & cProviderType & ".xml", myWeb.maCommonFolders) Then
+                    Dim formPath = "/xforms/PaymentProvider/"
+                    If bs5 Then formPath = "/features/cart/PaymentProvider/"
+                    If Not MyBase.load(formPath & cProviderType & ".xml", myWeb.maCommonFolders) Then
                         'show xform load error message
 
                     Else
@@ -8239,7 +8240,9 @@ Partial Public Class Cms
 
                     ' Build the form
                     MyBase.NewFrm("MemberCodes")
-                    MyBase.load("/xforms/directory/" & cFormName & ".xml", myWeb.maCommonFolders)
+                    Dim formPath = "/xforms/directory/"
+                    If bs5 Then formPath = "/admin/xforms/directory/"
+                    MyBase.load(formPath & cFormName & ".xml", myWeb.maCommonFolders)
 
                     MyBase.Instance.SelectSingleNode("tblCodes/nCodeType").InnerText = Cms.dbHelper.CodeType.Membership
 
@@ -8570,8 +8573,10 @@ Partial Public Class Cms
 
                     'Replace Spaces with hypens
                     cReportName = Replace(cReportName, " ", "-")
+                    Dim reportsFolder As String = "/xforms/Reports/"
+                    If bs5 Then reportsFolder = "/admin/xforms/reports/"
 
-                    If Not MyBase.load("/xforms/Reports/" & cReportName & ".xml", myWeb.maCommonFolders) Then
+                    If Not MyBase.load(reportsFolder & cReportName & ".xml", myWeb.maCommonFolders) Then
                         'show xform load error message
                     End If
 

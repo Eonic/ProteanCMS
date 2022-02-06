@@ -7189,7 +7189,7 @@ processFlow:
             Dim Folder As String = "/ewcommon/xforms/PaymentProvider/"
             Dim fi As FileInfo
             Dim ProviderName As String
-
+            If bs5 Then Folder = "/ptn/features/cart/PaymentProvider/"
             Try
 
                 oPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")

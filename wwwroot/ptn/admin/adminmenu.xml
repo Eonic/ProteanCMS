@@ -58,7 +58,9 @@
       <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="List Companies" cmd="ListCompanies" display="false" feature="Membership"/>
       <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership"/>
-      <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
+		<MenuItem name="Dir Memberships" cmd="DirMemberships" display="false" feature="Membership"/>
+		
+		<MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="Activity Reporting" cmd="MemberActivity" display="true" feature="Membership" icon="fa-chart-bar"/>
       <MenuItem name="Member Codes" cmd="MemberCodes" display="true" feature="MemberCodes" icon="fa-certificate"/>
       <MenuItem name="Profile" cmd="Profile" display="False"/>

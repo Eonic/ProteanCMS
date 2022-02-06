@@ -931,7 +931,7 @@
                   </xsl:choose>
                   <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
                     <li class="btn-group-vertical">
-                      <a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-primary">
+                      <a href="/ptn/setup/?ewCmd=UpgradeDB" class="btn btn-primary">
                         <i class="fa fa-refresh">
                           <xsl:text> </xsl:text>
                         </i>
