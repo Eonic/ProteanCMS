@@ -658,6 +658,12 @@ ProcessFlow:
                                     myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=Normal&pgid=" & myWeb.mnPageId 'myWeb.mcOriginalURL
                                 End If
                             End If
+
+                            If myWeb.moRequest("pgid") = "" And myWeb.mcPagePath = "" Then
+                                'this gets called only in WYSIWYG mode and I don't know why?
+                                'This Is a fudge to stop always redirect to the homepage.
+                                myWeb.mbSuppressLastPageOverrides = True
+                            End If
                             'we want to return here after editing
                             If Not myWeb.mbSuppressLastPageOverrides Then
                                 myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=Normal&pgid=" & myWeb.mnPageId '
