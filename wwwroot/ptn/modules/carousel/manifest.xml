@@ -3,7 +3,7 @@
 
   
   <ModuleTypes>
-    <ModuleGroup name="Image Galleries" icon="fa-picture-o">
+    <ModuleGroup name="Image Galleries" icon="fa-image">
       <Module type="Carousel" formPath="carousel/carousel" icon="fas fa-images" name="Carousel" targetCssFramework="bs3">Create a carousel of images with optional captions and links</Module>
     </ModuleGroup>
   </ModuleTypes>

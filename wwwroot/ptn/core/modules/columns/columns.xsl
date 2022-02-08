@@ -1012,12 +1012,12 @@
   </xsl:template>
 
   <!-- TABBED-->
-  <xsl:template match="Content[@moduleType='Tabbed']" mode="displayBrief">
+  <!--<xsl:template match="Content[@moduleType='Tabbed']" mode="displayBrief">
     <xsl:variable name="containerID">
       <xsl:value-of select="@id"/>
     </xsl:variable>
     <ul class="nav nav-tabs responsive">
-      <!--<xsl:for-each select="/Page/Contents/Content[starts-with(@position,'tabbed')]">-->
+      --><!--<xsl:for-each select="/Page/Contents/Content[starts-with(@position,'tabbed')]">--><!--
       <xsl:for-each select="/Page/Contents/Content[contains(@position, $containerID)]">
         <li>
           <xsl:if test="count(./preceding-sibling::Content[contains(@position, $containerID)])=0">
@@ -1041,7 +1041,7 @@
                 <img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
               </span>
             </xsl:if>
-            <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
+            --><!--<xsl:apply-templates select="." mode="getDisplayName"/>--><!--
             <xsl:value-of select="@title"/>
           </a>
         </li>
@@ -1065,7 +1065,7 @@
     </div>
   </xsl:template>
 
-  <!--tabbed with and without box-->
+  --><!--tabbed with and without box--><!--
   <xsl:template match="Content[starts-with(@position,'tabbed')]" mode="displayModule">
     <xsl:variable name="contentPosition">
       <xsl:value-of select="@position"/>
@@ -1156,11 +1156,11 @@
         </div>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
+  </xsl:template>-->
 
   <!--end tabbed with and without box-->
 
-  <xsl:template match="Content[starts-with(@position,'tabbed')]" mode="moduleBox">
+  <!--<xsl:template match="Content[starts-with(@position,'tabbed')]" mode="moduleBox">
     <xsl:variable name="contentPosition">
       <xsl:value-of select="@position"/>
     </xsl:variable>
@@ -1175,7 +1175,7 @@
         </xsl:attribute>
       </xsl:if>
       <div id="mod_{@id}" class="panel panel-default">
-        <!-- define classes for box -->
+        --><!-- define classes for box --><!--
         <xsl:attribute name="class">
           <xsl:text>panel </xsl:text>
           <xsl:choose>
@@ -1185,8 +1185,8 @@
             </xsl:otherwise>
           </xsl:choose>
           <xsl:text> module</xsl:text>
-          <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
-              stled differently to a title bar. -->
+          --><!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
+              stled differently to a title bar. --><!--
           <xsl:if test="@title=''">
             <xsl:text> boxnotitle</xsl:text>
           </xsl:if>
@@ -1249,6 +1249,6 @@
         </xsl:if>
       </div>
     </div>
-  </xsl:template>
+  </xsl:template>-->
 
 </xsl:stylesheet>
