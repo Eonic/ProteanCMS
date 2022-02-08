@@ -659,6 +659,11 @@
     <section>
       <div class="container-fluid">
         <div class="row">
+          <div class="btn-group-spaced mb-1">
+              <a href="?ewCmd=Content" class="btn btn-primary">
+                <i class="fas fa-pen"></i> Edit Content</a>
+            
+          </div>
           <div class="col-md-9">
             <div class="row">
               <div class="col-lg-4">

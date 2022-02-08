@@ -39,6 +39,7 @@
       <!--<bind id="flexbox" nodeset="@flexbox" required="false()" type="string"/>-->
       <bind id="flexColumns" nodeset="@flexColumns" required="false()" type="string"/>
       <bind id="alignment" nodeset="@alignment" required="false()" type="string"/>
+      <bind id="alignmentV" nodeset="@alignmentV" required="false()" type="string"/>
     </bind>
     <bind nodeset="tblContent/cContentXmlBrief/Content" id="columnPresentationBinds">
       <bind id="cModuleBox" nodeset="@background" required="false()" type="string"/>
@@ -266,10 +267,10 @@
             </select1>
             
           </group>
-          <group class="row row-cols-sm-2">
+          <group class="row row-cols-sm-3">
             <select1 bind="alignment">
               <label>
-                Align
+                Align Horizontally
               </label>
               <item>
                 <label>Left</label>
@@ -282,6 +283,30 @@
               <item>
                 <label>Right</label>
                 <value>end</value>
+              </item>
+              <hint class="inline">
+                <p>Set this to align items on the last row, if there are less than other columns. This alignment will also affect all rows if there is a pixel width set for the items.</p>
+              </hint>
+            </select1>
+            <select1 bind="alignmentV">
+              <label>
+                Align Vertically
+              </label>
+              <item>
+                <label>Top</label>
+                <value>start</value>
+              </item>
+              <item>
+                <label>Centre</label>
+                <value>center</value>
+              </item>
+              <item>
+                <label>Bottom</label>
+                <value>end</value>
+              </item>
+              <item>
+                <label>Stretch</label>
+                <value>stretch</value>
               </item>
               <hint class="inline">
                 <p>Set this to align items on the last row, if there are less than other columns. This alignment will also affect all rows if there is a pixel width set for the items.</p>

@@ -104,10 +104,7 @@
                   <label>None</label>
                   <value></value>
                 </item>
-                <item>
-                  <label>Default Box</label>
-                  <value>Default Box</value>
-                </item>
+                
               </select1>
               <select bind="bMatchHeight" appearance="full" class="multiline bs-only">
                 <item>

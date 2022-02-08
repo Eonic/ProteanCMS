@@ -429,7 +429,7 @@
     <xsl:variable name="responsiveAutoColumns">
       <xsl:apply-templates select="." mode="responsiveAutoColumns"/>
     </xsl:variable>
-    <div id="column1-{@id}" class="row {$responsiveAutoColumns} justify-content-{@alignment}">
+    <div id="column1-{@id}" class="row {$responsiveAutoColumns} justify-content-{@alignment} align-items-{@alignmentV}">
 
       <xsl:apply-templates select="/Page" mode="addModule">
         <xsl:with-param name="text">Add Module</xsl:with-param>
@@ -440,9 +440,11 @@
 
         <xsl:with-param name="class">
           <!--<xsl:value-of select="$responsiveColumns-bs5"/>-->
+          <xsl:value-of select="$responsiveAutoColumns"/>
           <xsl:text> row justify-content-</xsl:text>
           <xsl:value-of select="@alignment"/>
-          <xsl:value-of select="$responsiveAutoColumns"/>
+          <xsl:text> align-items-</xsl:text>
+          <xsl:value-of select="@alignmentV"/>
         </xsl:with-param>
         <xsl:with-param name="width">
           <xsl:value-of select="@width"/>
@@ -738,10 +740,13 @@
     <xsl:variable name="containerID">
       <xsl:value-of select="@id"/>
     </xsl:variable>
-    <ul class="nav nav-tabs" role="tablist">
+    <ul class="nav nav-pills" role="tablist">
+      <xsl:if test="@tab-style='tab-style'">
+        <xsl:attribute name="class">nav nav-tabs</xsl:attribute>
+      </xsl:if>
       <xsl:for-each select="/Page/Contents/Content[contains(@position, $containerID)]">
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="{@id}-tab" data-bs-toggle="tab" data-bs-target="#{@id}" type="button" role="tab" aria-controls="{@id}" aria-selected="false">
+          <button class="nav-link" id="{@id}-tab" data-bs-toggle="tab" data-bs-target="#tab{@id}" type="button" role="tab" aria-controls="tab{@id}" aria-selected="false">
             <xsl:if test="count(./preceding-sibling::Content[contains(@position, $containerID)])=0">
               <xsl:attribute name="aria-selected">
                 <xsl:text>true</xsl:text>
@@ -771,6 +776,7 @@
         </li>
       </xsl:for-each>
     </ul>
+
     <div id="tabbed-{@id}" class="tab-content">
       <xsl:apply-templates select="/Page" mode="addModule">
         <xsl:with-param name="text">Add Tab</xsl:with-param>
@@ -799,14 +805,15 @@
         <xsl:apply-templates select="." mode="moduleBox"/>
       </xsl:when>
       <xsl:otherwise>
-        <div class="tab-pane fade {$contentPosition}" role="tabpanel" aria-labelledby="{@id}-tab">
+        <div class="tab-pane" role="tabpanel" aria-labelledby="{@id}-tab">
           <xsl:attribute name="id">
+            <xsl:text>tab</xsl:text>
             <xsl:value-of select="@id"/>
           </xsl:attribute>
           <xsl:if test="count(./preceding-sibling::Content[@position=$contentPosition])=0">
             <xsl:attribute name="class">
               <xsl:value-of select="@position"/>
-              <xsl:text> tab-pane fade active</xsl:text>
+              <xsl:text> tab-pane active</xsl:text>
             </xsl:attribute>
           </xsl:if>
           <div id="mod_{@id}" class="module nobox pos-{@position}">

@@ -431,8 +431,8 @@
         width: 100%;
     }
 
-    .module.module-centred > .editable h3{
-        text-align:center;
+    .module.module-centred > .editable h3 {
+        text-align: center;
     }
 
     .ptn-edit.options {
@@ -508,7 +508,9 @@
         }
     }
 
-    .addmodule .btn {
+    .addmodule .btn,
+    .tabbed-module .options .btn-primary,
+    .accordion-module .options .btn-primary {
         border: 1px solid $admin-header-color-link !important;
         color: $admin-header-color-link !important;
         background: #fff !important;
