@@ -105,7 +105,7 @@
         <xsl:text>~/ptn/libs/tinymce/jquery.tinymce.min.js,</xsl:text>
         <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text>
         <xsl:text>~/ptn/libs/jqueryui/jquery-ui.js,</xsl:text>
-        <xsl:text>~/ptn/admin/admin.js</xsl:text>
+		<xsl:text>~/ptn/admin/admin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
@@ -208,7 +208,7 @@
       <xsl:apply-templates select="." mode="adminFooter"/>
       <xsl:apply-templates select="." mode="footerJs"/>
       <script>keepAlive();</script>
-      <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
+      <iframe id="keepalive" src="/ptn/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
     </body>
   </xsl:template>
 

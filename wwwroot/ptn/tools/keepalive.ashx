@@ -12,6 +12,7 @@ Public Class keepalive : Implements IHttpHandler, IRequiresSessionState
         oEw.InitializeVariables()
         If oEw.gbSingleLoginSessionPerUser Then
             oEw.Open()
+            oEw.mbSuppressLastPageOverrides = True
             oEw.LogSingleUserSession()
             oEw.Close()
         End If

@@ -21,7 +21,7 @@
   </xsl:template-->
 
   <xsl:template match="Page[@adminMode='false']" mode="adminStyle">
-    <link type="text/css" rel="stylesheet" href="/ptn/admin/admin-wysiwyg.scss"/>
+   <link type="text/css" rel="stylesheet" href="/ptn/admin/admin-wysiwyg.scss"/>
   </xsl:template>
 
   <xsl:template match="Page[@previewMode]" mode="adminStyle">
@@ -51,7 +51,7 @@
         <xsl:apply-templates select="." mode="adminFooter"/>
       </div>
       <xsl:apply-templates select="." mode="footerJs"/>
-      <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
+      <iframe id="keepalive" src="/ptn/tools/keepalive.ashx" frameborder="0" width="0" height="0">Keep Alive frame</iframe>
     </body>
   </xsl:template>
 
@@ -111,7 +111,7 @@
           <p>
             <a target="_new" id="userGuideURL">
               <xsl:attribute name="href">
-                <xsl:text>/ewcommon/tools/UserGuide.ashx?fRef=</xsl:text>
+                <xsl:text>/ptn/tools/userguide.ashx?fRef=</xsl:text>
                 <xsl:choose>
                   <xsl:when test="$ewCmd='EditContent' or $ewCmd='CopyContent' or $ewCmd='AddModule' or $ewCmd='AddContent'">
                     <xsl:choose>
