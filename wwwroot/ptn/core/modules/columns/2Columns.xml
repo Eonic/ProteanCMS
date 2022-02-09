@@ -72,51 +72,52 @@
                 <i class="fas fa-mobile-alt"> </i> Extra small
               </label>
               <item>
-                <label>1/6, 5/6</label>
+                <label>16% / 83%</label>
                 <value>1-6-5-6</value>
               </item>
               <item>
-                <label>1/5, 4/5</label>
+                <label>20% / 80% **</label>
                 <value>1-5-4-5</value>
               </item>
               <item>
-                <label>1/4, 3/4</label>
+                <label>25% / 75%</label>
                 <value>1-4-3-4</value>
               </item>
               <item>
-                <label>1/3, 2/3</label>
+                <label>33% / 66%</label>
                 <value>1-3-2-3</value>
               </item>
               <item>
-                <label>2/5, 3/5</label>
+                <label>40% / 60% **</label>
                 <value>2-5-3-5</value>
               </item>
               <item>
-                <label>1/2, 1/2</label>
+                <label>50% / 50%</label>
                 <value>1-2-1-2</value>
               </item>
               <item>
-                <label>3/5, 2/5</label>
+                <label>60% / 40% **</label>
                 <value>3-5-2-5</value>
               </item>
               <item>
-                <label>2/3, 1/3</label>
+                <label>66% / 33%</label>
                 <value>2-3-1-3</value>
               </item>
               <item>
-                <label>3/4, 1/4</label>
+                <label>75% / 25%</label>
                 <value>3-4-1-4</value>
               </item>
               <item>
-                <label>4/5, 1/5</label>
+                <label>80% / 20% **</label>
                 <value>4-5-1-5</value>
               </item>
               <item>
-                <label>5/6, 1/6</label>
+                <label>83% / 16%</label>
                 <value>5-6-1-6</value>
               </item>
               <help class="inline">
-                <p>Extra small means screens under 576px wide</p>
+                <p>Extra small means screens under 576px wide. </p>
+                <p>** These layouts are based on a 5 column grid and won't cascade in the same way as the others</p>
               </help>
             </select1>
             <select1 bind="smCol">
@@ -124,47 +125,47 @@
                 <i class="fas fa-mobile-alt"> </i> Small
               </label>
               <item>
-                <label>1/6, 5/6</label>
+                <label>16% / 83%</label>
                 <value>1-6-5-6</value>
               </item>
               <item>
-                <label>1/5, 4/5</label>
+                <label>20% / 80% **</label>
                 <value>1-5-4-5</value>
               </item>
               <item>
-                <label>1/4, 3/4</label>
+                <label>25% / 75%</label>
                 <value>1-4-3-4</value>
               </item>
               <item>
-                <label>1/3, 2/3</label>
+                <label>33% / 66%</label>
                 <value>1-3-2-3</value>
               </item>
               <item>
-                <label>2/5, 3/5</label>
+                <label>40% / 60% **</label>
                 <value>2-5-3-5</value>
               </item>
               <item>
-                <label>1/2, 1/2</label>
+                <label>50% / 50%</label>
                 <value>1-2-1-2</value>
               </item>
               <item>
-                <label>3/5, 2/5</label>
+                <label>60% / 40% **</label>
                 <value>3-5-2-5</value>
               </item>
               <item>
-                <label>2/3, 1/3</label>
+                <label>66% / 33%</label>
                 <value>2-3-1-3</value>
               </item>
               <item>
-                <label>3/4, 1/4</label>
+                <label>75% / 25%</label>
                 <value>3-4-1-4</value>
               </item>
               <item>
-                <label>4/5, 1/5</label>
+                <label>80% / 20% **</label>
                 <value>4-5-1-5</value>
               </item>
               <item>
-                <label>5/6, 1/6</label>
+                <label>83% / 16%</label>
                 <value>5-6-1-6</value>
               </item>
               <help class="inline">
@@ -176,47 +177,47 @@
                 <i class="fas fa-tablet-alt"> </i> Medium
               </label>
               <item>
-                <label>1/6, 5/6</label>
+                <label>16% / 83%</label>
                 <value>1-6-5-6</value>
               </item>
               <item>
-                <label>1/5, 4/5</label>
+                <label>20% / 80% **</label>
                 <value>1-5-4-5</value>
               </item>
               <item>
-                <label>1/4, 3/4</label>
+                <label>25% / 75%</label>
                 <value>1-4-3-4</value>
               </item>
               <item>
-                <label>1/3, 2/3</label>
+                <label>33% / 66%</label>
                 <value>1-3-2-3</value>
               </item>
               <item>
-                <label>2/5, 3/5</label>
+                <label>40% / 60% **</label>
                 <value>2-5-3-5</value>
               </item>
               <item>
-                <label>1/2, 1/2</label>
+                <label>50% / 50%</label>
                 <value>1-2-1-2</value>
               </item>
               <item>
-                <label>3/5, 2/5</label>
+                <label>60% / 40% **</label>
                 <value>3-5-2-5</value>
               </item>
               <item>
-                <label>2/3, 1/3</label>
+                <label>66% / 33%</label>
                 <value>2-3-1-3</value>
               </item>
               <item>
-                <label>3/4, 1/4</label>
+                <label>75% / 25%</label>
                 <value>3-4-1-4</value>
               </item>
               <item>
-                <label>4/5, 1/5</label>
+                <label>80% / 20% **</label>
                 <value>4-5-1-5</value>
               </item>
               <item>
-                <label>5/6, 1/6</label>
+                <label>83% / 16%</label>
                 <value>5-6-1-6</value>
               </item>
               <help class="inline">
@@ -228,47 +229,47 @@
                 <i class="fas fa-laptop"> </i> Large
               </label>
               <item>
-                <label>1/6, 5/6</label>
+                <label>16% / 83%</label>
                 <value>1-6-5-6</value>
               </item>
               <item>
-                <label>1/5, 4/5</label>
+                <label>20% / 80% **</label>
                 <value>1-5-4-5</value>
               </item>
               <item>
-                <label>1/4, 3/4</label>
+                <label>25% / 75%</label>
                 <value>1-4-3-4</value>
               </item>
               <item>
-                <label>1/3, 2/3</label>
+                <label>33% / 66%</label>
                 <value>1-3-2-3</value>
               </item>
               <item>
-                <label>2/5, 3/5</label>
+                <label>40% / 60% **</label>
                 <value>2-5-3-5</value>
               </item>
               <item>
-                <label>1/2, 1/2</label>
+                <label>50% / 50%</label>
                 <value>1-2-1-2</value>
               </item>
               <item>
-                <label>3/5, 2/5</label>
+                <label>60% / 40% **</label>
                 <value>3-5-2-5</value>
               </item>
               <item>
-                <label>2/3, 1/3</label>
+                <label>66% / 33%</label>
                 <value>2-3-1-3</value>
               </item>
               <item>
-                <label>3/4, 1/4</label>
+                <label>75% / 25%</label>
                 <value>3-4-1-4</value>
               </item>
               <item>
-                <label>4/5, 1/5</label>
+                <label>80% / 20% **</label>
                 <value>4-5-1-5</value>
               </item>
               <item>
-                <label>5/6, 1/6</label>
+                <label>83% / 16%</label>
                 <value>5-6-1-6</value>
               </item>
               <help class="inline">
@@ -280,47 +281,47 @@
                 <i class="fas fa-desktop"> </i> Extra Large
               </label>
               <item>
-                <label>1/6, 5/6</label>
+                <label>16% / 83%</label>
                 <value>1-6-5-6</value>
               </item>
               <item>
-                <label>1/5, 4/5</label>
+                <label>20% / 80% **</label>
                 <value>1-5-4-5</value>
               </item>
               <item>
-                <label>1/4, 3/4</label>
+                <label>25% / 75%</label>
                 <value>1-4-3-4</value>
               </item>
               <item>
-                <label>1/3, 2/3</label>
+                <label>33% / 66%</label>
                 <value>1-3-2-3</value>
               </item>
               <item>
-                <label>2/5, 3/5</label>
+                <label>40% / 60% **</label>
                 <value>2-5-3-5</value>
               </item>
               <item>
-                <label>1/2, 1/2</label>
+                <label>50% / 50%</label>
                 <value>1-2-1-2</value>
               </item>
               <item>
-                <label>3/5, 2/5</label>
+                <label>60% / 40% **</label>
                 <value>3-5-2-5</value>
               </item>
               <item>
-                <label>2/3, 1/3</label>
+                <label>66% / 33%</label>
                 <value>2-3-1-3</value>
               </item>
               <item>
-                <label>3/4, 1/4</label>
+                <label>75% / 25%</label>
                 <value>3-4-1-4</value>
               </item>
               <item>
-                <label>4/5, 1/5</label>
+                <label>80% / 20% **</label>
                 <value>4-5-1-5</value>
               </item>
               <item>
-                <label>5/6, 1/6</label>
+                <label>83% / 16%</label>
                 <value>5-6-1-6</value>
               </item>
               <help class="inline">
@@ -332,47 +333,47 @@
                 <i class="fas fa-desktop"> </i> XXL
               </label>
               <item>
-                <label>1/6, 5/6</label>
+                <label>16% / 83%</label>
                 <value>1-6-5-6</value>
               </item>
               <item>
-                <label>1/5, 4/5</label>
+                <label>20% / 80% **</label>
                 <value>1-5-4-5</value>
               </item>
               <item>
-                <label>1/4, 3/4</label>
+                <label>25% / 75%</label>
                 <value>1-4-3-4</value>
               </item>
               <item>
-                <label>1/3, 2/3</label>
+                <label>33% / 66%</label>
                 <value>1-3-2-3</value>
               </item>
               <item>
-                <label>2/5, 3/5</label>
+                <label>40% / 60% **</label>
                 <value>2-5-3-5</value>
               </item>
               <item>
-                <label>1/2, 1/2</label>
+                <label>50% / 50%</label>
                 <value>1-2-1-2</value>
               </item>
               <item>
-                <label>3/5, 2/5</label>
+                <label>60% / 40% **</label>
                 <value>3-5-2-5</value>
               </item>
               <item>
-                <label>2/3, 1/3</label>
+                <label>66% / 33%</label>
                 <value>2-3-1-3</value>
               </item>
               <item>
-                <label>3/4, 1/4</label>
+                <label>75% / 25%</label>
                 <value>3-4-1-4</value>
               </item>
               <item>
-                <label>4/5, 1/5</label>
+                <label>80% / 20% **</label>
                 <value>4-5-1-5</value>
               </item>
               <item>
-                <label>5/6, 1/6</label>
+                <label>83% / 16%</label>
                 <value>5-6-1-6</value>
               </item>
               <help class="inline">
@@ -403,7 +404,7 @@
                 <label>Full Width Content</label>
                 <item>
                   <label>No</label>
-                  <value></value>
+                  <value>false</value>
                 </item>
                 <item>
                   <label>Yes</label>

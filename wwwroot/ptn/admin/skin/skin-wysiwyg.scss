@@ -168,7 +168,7 @@
         //padding: 0px 3px 3px 5px !important;
         font-weight: 400;
         border-radius: 4px;
-        border: 1px solid #fff!important;
+        border: 1px solid #fff !important;
     }
 
     .ptn-edit > .ui-draggable-handle i {
@@ -221,7 +221,11 @@
     }
 
     .editable > div.ptn-edit.options {
-        position: relative
+        position: relative;
+    }
+
+    .accordion-module .editable > div.ptn-edit.options {
+        z-index: 2;
     }
 
     .ptn-edit.options.addmodule.droppable-hover {
@@ -431,8 +435,8 @@
         width: 100%;
     }
 
-    .module.module-centred > .editable h3{
-        text-align:center;
+    .module.module-centred > .editable h3 {
+        text-align: center;
     }
 
     .ptn-edit.options {
@@ -508,7 +512,9 @@
         }
     }
 
-    .addmodule .btn {
+    .addmodule .btn,
+    .tabbed-module .options .btn-primary,
+    .accordion-module .options .btn-primary {
         border: 1px solid $admin-header-color-link !important;
         color: $admin-header-color-link !important;
         background: #fff !important;

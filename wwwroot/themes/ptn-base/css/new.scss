@@ -32,7 +32,7 @@ img {
     align-items: center;
 }
 
-.module-with-icon > .center-block {
+.module-with-icon div.center-block {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,7 +61,14 @@ img {
 .layout-title {
     text-align: center;
 }
+.layoutModule .align-items-stretch .col {
+    margin-bottom:$spacer;
 
+    > div {
+        height: 100%;
+        margin-bottom:0;
+    }
+}
 // BACKGROUNDS
 .section-spacing {
     padding-top: $section-padding;

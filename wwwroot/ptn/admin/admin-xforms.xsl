@@ -48,6 +48,7 @@
               </div>
             </xsl:if>-->
             <div class="">
+              
               <xsl:apply-templates select="." mode="xform"/>
               <!--xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/-->
             </div>
@@ -264,7 +265,7 @@
             </xsl:otherwise>
           </xsl:choose>
           <xsl:apply-templates select="parent::*/alert" mode="xform"/>
-          <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
+          <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="control-outer"/>
         </div>
         <xsl:if test="count(submit) &gt; 0">
           <div class=" clearfix footer-btn-padding">
@@ -348,27 +349,25 @@
     </xsl:variable>
     <xsl:apply-templates select="self::node()[not(item[toggle])]" mode="xform_legend"/>
     <div>
-	<xsl:attribute name="class">pick-image-wrapper</xsl:attribute>
-   
-     
-        <div class="previewImage" id="previewImage_{$ref}">   
-          <span>
-			  <xsl:choose>
-				  <xsl:when test="value/img/@src!=''">
-					  <!--<xsl:value-of select="value/img"/>-->
-					  <xsl:apply-templates select="value/img" mode="jsNiceImageForm"/>
-					  <xsl:text> </xsl:text>
-				  </xsl:when>
-				  <xsl:otherwise>
-					  <i class="fas fa-image fa-xxl">&#160;</i>
-				  </xsl:otherwise>
-			  </xsl:choose>
-          </span>
-        </div>
+      <xsl:attribute name="class">pick-image-wrapper</xsl:attribute>
+      <div class="previewImage" id="previewImage_{$ref}">
+        <span>
+          <xsl:choose>
+            <xsl:when test="value/img/@src!=''">
+              <!--<xsl:value-of select="value/img"/>-->
+              <xsl:apply-templates select="value/img" mode="jsNiceImageForm"/>
+              <xsl:text> </xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <i class="fas fa-image fa-xxl">&#160;</i>
+            </xsl:otherwise>
+          </xsl:choose>
+        </span>
+      </div>
       <div class="form-margin" id="editImage_{$ref}">
-		  <textarea name="{$ref}" id="{$ref}" readonly="readonly">
+		  <textarea name="{$ref}" id="{$ref}" readonly="readonly" class="pick-image-textarea">
 			  <xsl:attribute name="class">
-				  <xsl:text>form-control pickImageInput </xsl:text>
+				  <xsl:text>form-control pickImageInput pick-image-textarea </xsl:text>
 				  <xsl:value-of select="@class"/>
 			  </xsl:attribute>
 			  <xsl:text></xsl:text>
@@ -391,35 +390,35 @@
         <!--
     </script>-->
         <div class="btn-group-spaced">
-          
-            <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-sm btn-danger clearImage">
-              <xsl:if test="not(value/img/@src!='')">
-				  <xsl:attribute name="style">display:none</xsl:attribute>
-               </xsl:if>
-				  <i class="fa fa-times">
-                <xsl:text> </xsl:text>
-              </i> Remove
-            </a>
 
-              <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
-              <a class="btn btn-sm btn-primary editImage" data-bs-toggle="modal" data-bs-target="#modal-{$ref}">
-				  <xsl:if test="not(value/img/@src!='')">
-					  <xsl:attribute name="style">display:none</xsl:attribute>
-				  </xsl:if>
-                <i class="fas fa-pen">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Edit
-              </a>
+          <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-sm btn-danger clearImage">
+            <xsl:if test="not(value/img/@src!='')">
+              <xsl:attribute name="style">display:none</xsl:attribute>
+            </xsl:if>
+            <i class="fa fa-times">
+              <xsl:text> </xsl:text>
+            </i> Remove
+          </a>
 
-              <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-              <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-bs-target="#modal-{$ref}" class="btn btn-sm btn-primary pickImage">
-				  <xsl:if test="value/img/@src!=''">
-					  <xsl:attribute name="style">display:none</xsl:attribute>
-				  </xsl:if>
-				  <i class="fas fa-image">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Pick Image
-              </a>
+          <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
+          <a class="btn btn-sm btn-primary editImage" data-bs-toggle="modal" data-bs-target="#modal-{$ref}">
+            <xsl:if test="not(value/img/@src!='')">
+              <xsl:attribute name="style">display:none</xsl:attribute>
+            </xsl:if>
+            <i class="fas fa-pen">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Edit
+          </a>
+
+          <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
+          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-bs-target="#modal-{$ref}" class="btn btn-sm btn-primary pickImage">
+            <xsl:if test="value/img/@src!=''">
+              <xsl:attribute name="style">display:none</xsl:attribute>
+            </xsl:if>
+            <i class="fas fa-image">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Pick Image
+          </a>
         </div>
       </div>
     </div>

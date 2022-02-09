@@ -815,8 +815,8 @@ form.xform .pick-image-wrapper {
         margin-bottom: 0;
     }
     textarea{
-            display:none;
-        }
+     //   display:none;
+    }
     .previewImage {
         margin-right: 10px;
         width: 100px;
@@ -856,8 +856,8 @@ form .form-actions .required {
     }
 }
 //#template_AdminXForm, 
-#EditShippingLocation,
-#WebSettings,
+//#EditShippingLocation,
+/*#WebSettings,
 #template_EditStructure,
 #SetPassword,
 #tpltLocateSearch{
@@ -920,7 +920,7 @@ form .form-actions .required {
     fieldset .form-actions button.principle {
         margin-right: 0;
     }
-}
+}*/
 .card {
     margin-bottom:1rem;
 }

@@ -131,7 +131,6 @@
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
 
-
       <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <xsl:if test="count(submit) &gt; 0">
         <xsl:if test="not(submit[contains(@class,'hideRequired')])">
@@ -751,7 +750,7 @@
 
     <xsl:choose>
       <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
-        <div class="input-group x">
+        <div class="input-group">
           <xsl:if test="@prefixIcon!=''">
             <span class="input-group-text">
               <i class="{@prefixIcon}">&#160;</i>
