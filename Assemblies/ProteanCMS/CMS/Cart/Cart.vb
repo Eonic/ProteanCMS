@@ -1556,17 +1556,19 @@ processFlow:
                                         moSubscription.AddUserSubscriptions(Me.mnCartId, myWeb.mnUserId, mnPaymentId, oContentElmt)
                                     End If
                                 End If
-
-                                emailReceipts(oContentElmt)
-
+                                If (mnProcessId = Cart.cartProcess.AwaitingPayment And (moCartConfig("SendReceiptEmailForAwaitingPayment") Is Nothing Or moCartConfig("SendReceiptEmailForAwaitingPayment") = "on")) Then
+                                    emailReceipts(oContentElmt)
+                                Else
+                                    emailReceipts(oContentElmt)
+                                End If
                                 moDiscount.DisablePromotionalDiscounts()
 
-                            End If
+                                End If
 
 
 
 
-                            If mbQuitOnShowInvoice Then
+                                If mbQuitOnShowInvoice Then
                                 EndSession()
                             End If
 
