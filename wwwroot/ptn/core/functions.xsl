@@ -298,7 +298,7 @@
 
   <!-- -->
   <xsl:variable name="lazy" select="'off'"/>
-  <xsl:variable name="placeholder" select="'/ewcommon/images/t22.gif'"/>
+  <xsl:variable name="placeholder" select="'/ptn/core/images/t22.gif'"/>
   <xsl:variable name="lazyplaceholder" select="''"/>
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
@@ -863,7 +863,7 @@
           <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @position = 'ExitModal']" mode="modalBox"/>
         </div>
       </div>
-      <script type="text/javascript" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js" async="async">/* */</script>
+      <script type="text/javascript" src="/ptn/libs/jquery.exitmodal/jquery.exit-modal.js" async="async">/* */</script>
     </xsl:if>
 
     <xsl:if test="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleRemarketingConversionId']">
@@ -1608,7 +1608,7 @@
     <xsl:variable name="parId" select="@parId"/>
     <xsl:variable name="feedLink">
       <xsl:value-of select="$siteURL"/>
-      <xsl:text>/ewcommon/feeds/rss/feed.ashx?pgid=</xsl:text>
+      <xsl:text>/ptn/feeds/rss/feed.ashx?pgid=</xsl:text>
       <xsl:value-of select="$parId"/>
     </xsl:variable>
     <link type="application/rss+xml" href="{$feedLink}" title="{channel/title/node()}" rel="alternate" />
@@ -1618,7 +1618,7 @@
     <xsl:variable name="parId" select="@parId"/>
     <xsl:variable name="feedLink">
       <xsl:value-of select="$siteURL"/>
-      <xsl:text>/ewcommon/feeds/rss/feed.ashx?pgid=</xsl:text>
+      <xsl:text>/ptn/feeds/rss/feed.ashx?pgid=</xsl:text>
       <xsl:value-of select="$parId"/>
       <xsl:text>&amp;settingsId=</xsl:text>
       <xsl:value-of select="@id"/>
@@ -2814,19 +2814,14 @@
           <xsl:value-of select="$page/Settings/add[@key='web.websitecreditText']/@value"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>Site by Eonic</xsl:text>
+          <xsl:text>Built on Protean CMS</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="websitecreditLogo">
-      <xsl:choose>
-        <xsl:when test="$page/Settings/add[@key='web.websitecreditLogo']/@value!=''">
+        <xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value!=''">
           <xsl:value-of select="$page/Settings/add[@key='web.websitecreditLogo']/@value"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>/ewcommon/images/Eonic-Web-Logo-t-white.png</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
+        </xsl:if>
     </xsl:variable>
     <div id="developerLink">
       <xsl:if test="$page/Settings/add[@key='web.websitecreditURL']/@value!='' or $page/@id = $page/Menu/MenuItem/@id">
@@ -5412,78 +5407,6 @@
 
 
 
-
-
-
-
-
-  <!-- ## Social Networking Bookmarks  #######################################################   -->
-
-  <xsl:template match="/" mode="socialBookmarks">
-    <!-- Currently Image sizes are only 16 and 32 -->
-    <xsl:param name="size"/>
-
-    <xsl:variable name="linkURL">
-      <xsl:call-template name="getXmlSettings">
-        <xsl:with-param name="sectionName" select="'web'"/>
-        <xsl:with-param name="valueName" select="'BaseUrl'"/>
-      </xsl:call-template>
-      <xsl:choose>
-        <xsl:when test="/Page/ContentDetail">
-          <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates select="$currentPage" mode="getHref"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <xsl:variable name="linkTitle">
-      <xsl:choose>
-        <xsl:when test="/Page/ContentDetail">
-          <xsl:value-of select="/Page/ContentDetail/Content/@name"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$currentPage/@name"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-
-    <!-- FACEBOOK -->
-    <a href="http://www.facebook.com/sharer.php?u={$linkURL}" title="Post on Facebook" rel="external">
-      <img src="/ewcommon/images/icons/socialnetworking/facebook_{$size}.png" width="{$size}" height="{$size}" alt="Facebook"/>
-      <span class="hidden">Facebook | </span>
-    </a>
-    <!-- Twitter -->
-    <a href="http://twitter.com/home?status={$linkTitle} - {$linkURL}" title="Post to Twitter" rel="external">
-      <img src="/ewcommon/images/icons/socialnetworking/twitter_{$size}.png" width="{$size}" height="{$size}" alt="Twitter"/>
-      <span class="hidden">Twitter | </span>
-    </a>
-    <!-- DELICIOUS -->
-    <a href="http://del.icio.us/post?url={$linkURL}&amp;title={$linkTitle}" title="Post to Delicious" rel="external">
-      <img src="/ewcommon/images/icons/socialnetworking/delicious_{$size}.png" width="{$size}" height="{$size}" alt="Delicious"/>
-      <span class="hidden">Del.icio.us | </span>
-    </a>
-    <!-- DIGG IT -->
-    <a href="http://digg.com/submit?url={$linkURL}&amp;title={$linkTitle}" title="Dig this" rel="external">
-      <img src="/ewcommon/images/icons/socialnetworking/digg_{$size}.png" width="{$size}" height="{$size}" alt="Dig"/>
-      <span class="hidden">Digg | </span>
-    </a>
-    <!-- REDDIT -->
-    <a href="http://reddit.com/submit?url={$linkURL}&amp;title={$linkTitle}" title="Post to Reddit" rel="external">
-      <img src="/ewcommon/images/icons/socialnetworking/reddit_{$size}.png" width="{$size}" height="{$size}" alt="Reddit"/>
-      <span class="hidden">Reddit | </span>
-    </a>
-    <!-- STUMBLE UPON -->
-    <a href="http://www.stumbleupon.com/submit?url={$linkURL}&amp;title={$linkTitle}" title="Post to StumbleUpon" rel="external">
-      <img src="/ewcommon/images/icons/socialnetworking/stumbleupon_{$size}.png" width="{$size}" height="{$size}" alt="StumbleUpon"/>
-      <span class="hidden">StumbleUpon | </span>
-    </a>
-
-  </xsl:template>
-
-
   <!-- ## MODULE TITLE AND LINKS  #######################################################   -->
   <!--    Handles The Module Title and Module links 
   -->
@@ -6968,19 +6891,6 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
-      <!--<xsl:otherwise>
-        -->
-      <!-- add awaiting image graphic -->
-      <!--
-        <span class="picture">
-          <xsl:if test="$showImage = 'noshow'">
-            <xsl:attribute name="class">
-              <xsl:text>picture hidden</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-          <img src="/ewcommon/images/awaiting-image-picture.gif" width="400" height="300" alt="Awaiting Image" class="detail" id="{$imgId}"/>
-        </span>
-      </xsl:otherwise>-->
     </xsl:choose>
   </xsl:template>
 
@@ -7082,19 +6992,6 @@
           </xsl:if>
         </img>
       </xsl:when>
-      <!--<xsl:otherwise>
-        -->
-      <!-- add awaiting image graphic -->
-      <!--
-        <span class="picture">
-          <xsl:if test="$showImage = 'noshow'">
-            <xsl:attribute name="class">
-              <xsl:text>picture hidden</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-          <img src="/ewcommon/images/awaiting-image-picture.gif" width="400" height="300" alt="Awaiting Image" class="detail" id="{$imgId}"/>
-        </span>
-      </xsl:otherwise>-->
     </xsl:choose>
   </xsl:template>
 
@@ -8064,7 +7961,7 @@
     <xsl:value-of select="$siteURL"/>
     <xsl:choose>
       <xsl:when test="@rss='this'">
-        <xsl:text>/ewcommon/feeds/rss/rss.ashx</xsl:text>
+        <xsl:text>/ptn/feeds/rss/rss.ashx</xsl:text>
         <xsl:choose>
           <xsl:when test="@rss='this'">
             <xsl:text>?pgid=</xsl:text>
@@ -8079,7 +7976,7 @@
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>/ewcommon/feeds/generic/feed.ashx</xsl:text>
+        <xsl:text>/ptn/feeds/generic/feed.ashx</xsl:text>
         <xsl:text>?contentSchema=</xsl:text>
         <xsl:value-of select="@contentType"/>
       </xsl:otherwise>
@@ -8105,7 +8002,7 @@
   </xsl:template>
 
   <xsl:template name="rssSubscribe">
-    <img src="/ewcommon/images/icons/rss16x16.png" width="16" height="16" alt="RSS" />
+	 <i class="fas fa-rss-square">&#160;</i>
   </xsl:template>
 
 
@@ -8139,28 +8036,6 @@
       </xsl:choose>
     </xsl:if>
   </xsl:template>
-
-  <xsl:template name="SortArrows">
-    <xsl:param name="sortCol"/>
-    <xsl:param name="bSortFormMethod"/>
-
-    <div class="sortArrows">
-      <xsl:variable name="qsSet" select="/Page/Request/QueryString/Item[@name!='sortCol' and @name!='sortDir']"/>
-      <xsl:variable name="qs">
-        <xsl:for-each select="$qsSet/.">
-          <xsl:if test="not(position()=1)">&amp;</xsl:if>
-          <xsl:value-of select="@name"/>=<xsl:value-of select="."/>
-        </xsl:for-each>
-      </xsl:variable>
-      <a href="?{$qs}&amp;sortCol={$sortCol}&amp;sortDir=ascending" title="Sort Ascending">
-        <img  src="/ewcommon/images/sortDown.gif" width="11" height="7" class="down" />
-      </a>
-      <a href="?{$qs}&amp;sortCol={$sortCol}&amp;sortDir=descending" title="Sort Descending">
-        <img  src="/ewcommon/images/sortUp.gif" width="11" height="7" class="up" />
-      </a>
-    </div>
-  </xsl:template>
-
 
   <!-- Show Price -->
   <xsl:template match="Content" mode="showPrice">
