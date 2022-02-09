@@ -596,7 +596,7 @@
 
   <!-- ACCORDION -->
   <xsl:template match="Content[@moduleType='Accordion']" mode="displayBrief">
-    <div class="panel-group" id="accordion-{@id}">
+    <div class="accordion" id="accordion-{@id}">
       <xsl:apply-templates select="/Page" mode="addModule">
         <xsl:with-param name="text">Add Module</xsl:with-param>
         <xsl:with-param name="position">
@@ -604,7 +604,7 @@
           <xsl:value-of select="@id"/>
         </xsl:with-param>
         <xsl:with-param name="class">
-          <xsl:text>panel-group</xsl:text>
+          <xsl:text>accordion</xsl:text>
         </xsl:with-param>
         <xsl:with-param name="id">
           <xsl:text>accordion</xsl:text>
@@ -630,16 +630,11 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div id="mod_{@id}" class="panel panel-default">
+    <div id="mod_{@id}" class="">
       <!-- define classes for box -->
       <xsl:attribute name="class">
-        <xsl:text>panel </xsl:text>
-        <xsl:choose>
-          <xsl:when test="@box='Default Box'">panel-default</xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="translate(@box,' ','-')"/>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:text>accordion-item </xsl:text>
+        <xsl:value-of select="translate(@box,' ','-')"/>
         <xsl:text> module</xsl:text>
         <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
               stled differently to a title bar. -->
@@ -653,44 +648,41 @@
         <xsl:apply-templates select="." mode="hideScreens" />
         <xsl:apply-templates select="." mode="marginBelow" />
       </xsl:attribute>
-      <div class="panel-heading">
+
+
+      <h2 class="accordion-header" id="heading{@id}">
         <xsl:apply-templates select="." mode="inlinePopupOptions">
-          <xsl:with-param name="class" select="'panel-heading'"/>
+          <xsl:with-param name="class" select="'accordion-header'"/>
         </xsl:apply-templates>
         <xsl:if test="@rss and @rss!='false'">
           <xsl:apply-templates select="." mode="rssLink" />
         </xsl:if>
-        <a data-toggle="collapse" data-parent="#{@position}" href="#collapse{@id}" class="accordion-load">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{@id}" aria-expanded="false" aria-controls="collapse{@id}">
+          <!--<a data-toggle="collapse" data-parent="#{@position}" href="#collapse{@id}" class="accordion-load">-->
           <xsl:if test="$open='true'">
             <xsl:if test="count(./preceding-sibling::Content[@position=$contentPosition])=0">
-              <xsl:attribute name="class">
-                <xsl:value-of select="@position"/>
-                <xsl:text> accordion-open</xsl:text>
+              <xsl:attribute name="aria-expanded">
+                <xsl:text> true</xsl:text>
               </xsl:attribute>
+              <xsl:attribute name="class">accordion-button</xsl:attribute>
             </xsl:if>
           </xsl:if>
-          <h3 class="panel-title">
-            <!--<i class="fa fa-ellipsis-v">&#160;</i>-->
-            <i class="fa fa-caret-down">
-              <xsl:text> </xsl:text>
-            </i>
-            <span class="space">&#160;</span>
-            <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
-            <xsl:value-of select="@title"/>
-          </h3>
-        </a>
-      </div>
-      <div id="collapse{@id}" class="panel-collapse collapse">
+          <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
+          <xsl:value-of select="@title"/>
+        </button>
+      </h2>
+
+      <div id="collapse{@id}" class="accordion-collapse collapse" aria-labelledby="heading{@id}" data-bs-parent="#accordion-{@id}">
         <xsl:if test="$open='true'">
           <xsl:if test="count(./preceding-sibling::Content[@position=$contentPosition])=0">
             <xsl:attribute name="class">
               <xsl:value-of select="@position"/>
-              <xsl:text> panel-collapse collapse in</xsl:text>
+              <xsl:text> show</xsl:text>
             </xsl:attribute>
           </xsl:if>
         </xsl:if>
         <xsl:if test="not(@listGroup='true')">
-          <div class="panel-body">
+          <div class="accordion-body">
             <xsl:if test="not(@title!='')">
               <xsl:apply-templates select="." mode="inlinePopupOptions">
                 <xsl:with-param name="class" select="'panel-body'"/>
