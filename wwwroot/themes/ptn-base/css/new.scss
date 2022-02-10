@@ -32,7 +32,7 @@ img {
     align-items: center;
 }
 
-.module-with-icon > .center-block {
+.module-with-icon div.center-block {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,6 +49,22 @@ img {
         }
     }
 }
+.btn-clean {
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: 0;
+    color: $link-color;
+
+    &:hover,
+    &:focus {
+        padding: 0;
+        background: none;
+        border: 0;
+        box-shadow: 0;
+        color: $link-color;
+    }
+}
 //end utilities
 .bannerless-page {
     padding-top: $top-padding;
@@ -61,7 +77,14 @@ img {
 .layout-title {
     text-align: center;
 }
+.layoutModule .align-items-stretch .col {
+    margin-bottom:$spacer;
 
+    > div {
+        height: 100%;
+        margin-bottom:0;
+    }
+}
 // BACKGROUNDS
 .section-spacing {
     padding-top: $section-padding;
@@ -279,4 +302,22 @@ section.bg-primary {
         margin-left: -1rem;
         margin-right: -1rem;
     }
+}
+.module.nobox {
+    margin-bottom:$spacer;
+}
+#Login {
+    form .principle {
+        float: right;
+    }
+
+    .morelink a {
+        @extend .btn-clean;
+    }
+}
+.modal-body #Login legend {
+    display:none;
+}
+.MembershipUserContacts .add {
+    margin-bottom:1rem;
 }

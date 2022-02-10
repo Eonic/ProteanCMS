@@ -58,7 +58,9 @@
       <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="List Companies" cmd="ListCompanies" display="false" feature="Membership"/>
       <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership"/>
-      <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
+		<MenuItem name="Dir Memberships" cmd="DirMemberships" display="false" feature="Membership"/>
+		
+		<MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="Activity Reporting" cmd="MemberActivity" display="true" feature="Membership" icon="fa-chart-bar"/>
       <MenuItem name="Member Codes" cmd="MemberCodes" display="true" feature="MemberCodes" icon="fa-certificate"/>
       <MenuItem name="Profile" cmd="Profile" display="False"/>
@@ -78,7 +80,7 @@
     </MenuItem>
     <MenuItem name="Email Marketing" cmd="MailingList" display="true" feature="MailingList" icon="fa-envelope">
       <MenuItem name="All email campaigns" cmd="MailingList" display="true" icon="fa-envelope"/>
-      <MenuItem name="History" cmd="MailHistory" display="true" icon="icon-history" />
+      <MenuItem name="History" cmd="MailHistory" display="true" icon="fa-history" />
       <MenuItem name="Opt-Out" cmd="MailOptOut" display="true" icon="fa-ban"/>
       <MenuItem name="HiddenMenu" cmd="NotARealValue" display="false">
         <MenuItem name="Normal Mode" cmd="NormalMail" display="true" icon="fa-pencil-square-o" />

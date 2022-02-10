@@ -48,6 +48,7 @@
               </div>
             </xsl:if>-->
             <div class="">
+              
               <xsl:apply-templates select="." mode="xform"/>
               <!--xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/-->
             </div>
@@ -264,7 +265,7 @@
             </xsl:otherwise>
           </xsl:choose>
           <xsl:apply-templates select="parent::*/alert" mode="xform"/>
-          <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
+          <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="control-outer"/>
         </div>
         <xsl:if test="count(submit) &gt; 0">
           <div class=" clearfix footer-btn-padding">
@@ -348,28 +349,32 @@
     </xsl:variable>
     <xsl:apply-templates select="self::node()[not(item[toggle])]" mode="xform_legend"/>
     <div>
-      <xsl:if test="value/img/@src!=''">
-        <xsl:attribute name="class">pick-image-wrapper</xsl:attribute>
-        <div class="previewImage" id="previewImage_{$ref}">
-          <span>
-            <!--<xsl:value-of select="value/img"/>-->
-            <xsl:apply-templates select="value/img" mode="jsNiceImageForm"/>
-            <xsl:text> </xsl:text>
-          </span>
-        </div>
-      </xsl:if>
+      <xsl:attribute name="class">pick-image-wrapper</xsl:attribute>
+      <div class="previewImage" id="previewImage_{$ref}">
+        <span>
+          <xsl:choose>
+            <xsl:when test="value/img/@src!=''">
+              <!--<xsl:value-of select="value/img"/>-->
+              <xsl:apply-templates select="value/img" mode="jsNiceImageForm"/>
+              <xsl:text> </xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <i class="fas fa-image fa-xxl">&#160;</i>
+            </xsl:otherwise>
+          </xsl:choose>
+        </span>
+      </div>
       <div class="form-margin" id="editImage_{$ref}">
-        <xsl:if test="value/img/@src!=''">
-          <textarea name="{$ref}" id="{$ref}" readonly="readonly">
-            <xsl:attribute name="class">
-              <xsl:text>form-control pickImageInput pick-image-textarea </xsl:text>
-              <xsl:value-of select="@class"/>
-            </xsl:attribute>
-            <xsl:text></xsl:text>
-            <xsl:apply-templates select="value/img/@src" mode="jsNiceImage"/>
-            <xsl:text> </xsl:text>
-          </textarea>
-        </xsl:if>
+		  <textarea name="{$ref}" id="{$ref}" readonly="readonly" class="pick-image-textarea">
+			  <xsl:attribute name="class">
+				  <xsl:text>form-control pickImageInput pick-image-textarea </xsl:text>
+				  <xsl:value-of select="@class"/>
+			  </xsl:attribute>
+			  <xsl:text></xsl:text>
+			  <xsl:apply-templates select="value/img" mode="jsNiceImage"/>
+			  <xsl:text> </xsl:text>
+		  </textarea>
+
         <!--<script language="javascript" type="text/javascript">
       document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value = '<xsl:apply-templates select="value/img" mode="jsNiceImage"/>';
       -->
@@ -385,31 +390,35 @@
         <!--
     </script>-->
         <div class="btn-group-spaced">
-          <xsl:if test="value/img/@src!=''">
-            <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-sm btn-danger ">
-              <i class="fa fa-times">
-                <xsl:text> </xsl:text>
-              </i> Remove
-            </a>
-          </xsl:if>
-          <xsl:choose>
-            <xsl:when test="value/img/@src!=''">
-              <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
-              <a class="btn btn-sm btn-primary editImage">
-                <i class="fas fa-pen">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Edit
-              </a>
-            </xsl:when>
-            <xsl:otherwise>
-              <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-              <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-bs-target="#modal-{$ref}" class="btn btn-sm btn-primary">
-                <i class="fas fa-image">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Pick Image
-              </a>
-            </xsl:otherwise>
-          </xsl:choose>
+
+          <a href="#" onclick="xfrmClearImage('{ancestor::Content/model/submission/@id}','{$ref}','{value/*/@class}');return false" title="edit an image from the image library" class="btn btn-sm btn-danger clearImage">
+            <xsl:if test="not(value/img/@src!='')">
+              <xsl:attribute name="style">display:none</xsl:attribute>
+            </xsl:if>
+            <i class="fa fa-times">
+              <xsl:text> </xsl:text>
+            </i> Remove
+          </a>
+
+          <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
+          <a class="btn btn-sm btn-primary editImage" data-bs-toggle="modal" data-bs-target="#modal-{$ref}">
+            <xsl:if test="not(value/img/@src!='')">
+              <xsl:attribute name="style">display:none</xsl:attribute>
+            </xsl:if>
+            <i class="fas fa-pen">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Edit
+          </a>
+
+          <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
+          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-bs-target="#modal-{$ref}" class="btn btn-sm btn-primary pickImage">
+            <xsl:if test="value/img/@src!=''">
+              <xsl:attribute name="style">display:none</xsl:attribute>
+            </xsl:if>
+            <i class="fas fa-image">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Pick Image
+          </a>
         </div>
       </div>
     </div>
@@ -427,7 +436,13 @@
       <div class="modal-dialog" id="test">
         <div class="modal-content">
           <div class="modal-body">
-            <xsl:text>Loading... </xsl:text>
+			  <p class="text-center">
+				  <h4>
+					  <i class="fa fa-cog fa-spin fa-2x fa-fw">
+						  <xsl:text> </xsl:text>
+					  </i> Loading ...
+				  </h4>
+			  </p>
           </div>
         </div>
       </div>
@@ -644,23 +659,23 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </input>
-        <xsl:choose>
-          <xsl:when test="value!=''">
-            <a href="#" onclick="xfrmClearMedia('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
-              <i class="fa fa-times fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Clear
-            </a>
+      <xsl:choose>
+        <xsl:when test="value!=''">
+          <a href="#" onclick="xfrmClearMedia('{ancestor::Content/model/submission/@id}','{$scriptRef}');return false" title="Clear the document path" class="btn btn-danger">
+            <i class="fa fa-times fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Clear
+          </a>
 
-          </xsl:when>
-          <xsl:otherwise>
-            <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=MediaLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
-              <i class="fa fa-music fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Pick
-            </a>
-          </xsl:otherwise>
-        </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+          <a data-bs-toggle="modal" href="?contentType=popup&amp;ewCmd=MediaLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$scriptRef}&amp;targetClass={value/*/@class}" data-bs-target="#modal-{$scriptRef}" class="btn btn-primary">
+            <i class="fa fa-music fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Pick
+          </a>
+        </xsl:otherwise>
+      </xsl:choose>
     </div>
   </xsl:template>
 
@@ -1374,7 +1389,7 @@
   </xsl:template>
 
   <!-- -->
-  <xsl:template match="*" mode="bootstrapBoxStyles">
+  <!--<xsl:template match="*" mode="bootstrapBoxStyles">
     <xsl:param name="value" />
     <div data-value="bg-primary">
       <div class="card bg-primary">
@@ -1526,6 +1541,64 @@
         alert danger
       </div>
     </div>
+  </xsl:template>-->
+
+  <xsl:template match="*" mode="bootstrapBoxStyles">
+    <xsl:param name="value" />
+    <div class="box-style-item" data-value="bg-primary">
+      card primary
+    </div>
+    <div class="box-style-item" data-value="bg-secondary">
+      card secondary
+    </div>
+    <div class="box-style-item" data-value="bg-info">
+      card info
+    </div>
+    <div class="box-style-item" data-value="bg-light">
+      card light
+    </div>
+    <div class="box-style-item" data-value="bg-dark">
+      card dark
+    </div>
+    <div class="box-style-item" data-value="border-primary">
+      card border primary
+    </div>
+    <div class="box-style-item" data-value="border-secondary">
+      card border secondary
+    </div>
+    <div class="box-style-item" data-value="border-info">
+      card border info
+    </div>
+    <div class="box-style-item" data-value="border-light">
+      card border light
+    </div>
+    <div class="box-style-item" data-value="border-dark">
+      card border dark
+    </div>
+    <div class="box-style-item" data-value="alert-primary">
+      alert primary
+    </div>
+    <div class="box-style-item" data-value="alert-secondary">
+      alert secondary
+    </div>
+    <div class="box-style-item" data-value="alert-info">
+      alert info
+    </div>
+    <div class="box-style-item" data-value="alert-light">
+      alert light
+    </div>
+    <div class="box-style-item" data-value="alert-dark">
+      alert dark
+    </div>
+    <div class="box-style-item" data-value="alert-success">
+      alert success
+    </div>
+    <div class="box-style-item" data-value="alert-warning">
+      alert warning
+    </div>
+    <div class="box-style-item" data-value="alert-danger">
+      alert danger"
+    </div>
   </xsl:template>
 
   <!-- -->
@@ -1555,112 +1628,112 @@
 
 
 
-	<!-- -->
-	<xsl:template match="select1[@class='siteTree']" mode="xform_control">
-		<xsl:variable name="ref">
-			<xsl:apply-templates select="." mode="getRefOrBind"/>
-		</xsl:variable>
-		<xsl:variable name="selectedValue">
-			<xsl:value-of select="value/node()"/>
-		</xsl:variable>
-		<xsl:variable name="selectedName">
-			<xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$selectedValue]/@name"/>
-		</xsl:variable>
-		<div class="pick-page">
-			<input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}"/>
-			<div class="input-group">
-				<input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
-				
-					<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{$ref}-modal">
-						<i class="fa fa-file-alt fa-white">
-							<xsl:text> </xsl:text>
-						</i><xsl:text> </xsl:text>Pick Page
-					</button>
-				
-			</div>
-			<div class="modal fade" id="{$ref}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-body">
-							<ul id="MenuTree" class="list-group">
-								<xsl:apply-templates select="/Page/Menu/MenuItem" mode="siteTreePage">
-									<xsl:with-param name="level">1</xsl:with-param>
-									<xsl:with-param name="ref" select="$ref" />
-									<xsl:with-param name="selectedValue" select="$selectedValue" />
-								</xsl:apply-templates>
-								<xsl:apply-templates select="/Page/Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="siteTreePage">
-									<xsl:with-param name="level">1</xsl:with-param>
-									<xsl:with-param name="ref" select="$ref" />
-									<xsl:with-param name="selectedValue" select="$selectedValue" />
-								</xsl:apply-templates>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</xsl:template>
+  <!-- -->
+  <xsl:template match="select1[@class='siteTree']" mode="xform_control">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="selectedValue">
+      <xsl:value-of select="value/node()"/>
+    </xsl:variable>
+    <xsl:variable name="selectedName">
+      <xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$selectedValue]/@name"/>
+    </xsl:variable>
+    <div class="pick-page">
+      <input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}"/>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
 
-	<xsl:template match="MenuItem" mode="siteTreePage">
-		<xsl:param name="level"/>
-		<xsl:param name="ref"/>
-		<xsl:param name="selectedValue"/>
-		<xsl:variable name="oldpgid">
-			<xsl:choose>
-				<xsl:when test="/Page/Request/QueryString/Item[@name='oldPgId']/node()!=''">
-					<xsl:value-of select="/Page/Request/QueryString/Item[@name='oldPgId']/node()"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="/Page/@id"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="class">
-			<xsl:if test="MenuItem"> expandable</xsl:if>
-		</xsl:variable>
-		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
-			<li id="node{@id}" data-tree-level="{$level}">
-				<xsl:attribute name="data-tree-parent">
-					<xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
-						<xsl:value-of select="./parent::MenuItem/@id"/>
-					</xsl:if>
-				</xsl:attribute>
-				<xsl:attribute name="class">
-					<xsl:text>list-group-item level-</xsl:text>
-					<xsl:value-of select="$level"/>
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="$class"/>
-					<xsl:if test="@id = $selectedValue">
-						<xsl:text> selected</xsl:text>
-					</xsl:if>
-				</xsl:attribute>
-				<div class="pageCell">
-					<xsl:choose>
-						<xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
-							<i class="fa fa-home fa-lg status activeParent">
-								&#160;
-							</i>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{$ref}-modal">
+          <i class="fa fa-file-alt fa-white">
+            <xsl:text> </xsl:text>
+          </i><xsl:text> </xsl:text>Pick Page
+        </button>
 
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="." mode="status_legend"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<a href="javascript:$('#{$ref}').val('{@id}');$('#{$ref}-name').val('{@name}');$('#{$ref}-modal .selected').removeClass('selected');$('#{$ref}-modal #node{@id}').addClass('selected');$('#{$ref}-modal').modal('hide');">
-						<span class="pageName">
-							&#160;
-							<xsl:value-of select="@name"/>
-						</span>
-					</a>
-				</div>
-			</li>
-			<xsl:apply-templates select="MenuItem" mode="siteTreePage">
-				<xsl:with-param name="level" select="$level + 1"/>
-				<xsl:with-param name="ref" select="$ref"/>
-				<xsl:with-param name="selectedValue" select="$selectedValue"/>
-			</xsl:apply-templates>
-		</xsl:if>
-	</xsl:template>
+      </div>
+      <div class="modal fade" id="{$ref}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-body">
+              <ul id="MenuTree" class="list-group">
+                <xsl:apply-templates select="/Page/Menu/MenuItem" mode="siteTreePage">
+                  <xsl:with-param name="level">1</xsl:with-param>
+                  <xsl:with-param name="ref" select="$ref" />
+                  <xsl:with-param name="selectedValue" select="$selectedValue" />
+                </xsl:apply-templates>
+                <xsl:apply-templates select="/Page/Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="siteTreePage">
+                  <xsl:with-param name="level">1</xsl:with-param>
+                  <xsl:with-param name="ref" select="$ref" />
+                  <xsl:with-param name="selectedValue" select="$selectedValue" />
+                </xsl:apply-templates>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="MenuItem" mode="siteTreePage">
+    <xsl:param name="level"/>
+    <xsl:param name="ref"/>
+    <xsl:param name="selectedValue"/>
+    <xsl:variable name="oldpgid">
+      <xsl:choose>
+        <xsl:when test="/Page/Request/QueryString/Item[@name='oldPgId']/node()!=''">
+          <xsl:value-of select="/Page/Request/QueryString/Item[@name='oldPgId']/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="/Page/@id"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="class">
+      <xsl:if test="MenuItem"> expandable</xsl:if>
+    </xsl:variable>
+    <xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+      <li id="node{@id}" data-tree-level="{$level}">
+        <xsl:attribute name="data-tree-parent">
+          <xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
+            <xsl:value-of select="./parent::MenuItem/@id"/>
+          </xsl:if>
+        </xsl:attribute>
+        <xsl:attribute name="class">
+          <xsl:text>list-group-item level-</xsl:text>
+          <xsl:value-of select="$level"/>
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="$class"/>
+          <xsl:if test="@id = $selectedValue">
+            <xsl:text> selected</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <div class="pageCell">
+          <xsl:choose>
+            <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
+              <i class="fa fa-home fa-lg status activeParent">
+                &#160;
+              </i>
+
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="." mode="status_legend"/>
+            </xsl:otherwise>
+          </xsl:choose>
+          <a href="javascript:$('#{$ref}').val('{@id}');$('#{$ref}-name').val('{@name}');$('#{$ref}-modal .selected').removeClass('selected');$('#{$ref}-modal #node{@id}').addClass('selected');$('#{$ref}-modal').modal('hide');">
+            <span class="pageName">
+              &#160;
+              <xsl:value-of select="@name"/>
+            </span>
+          </a>
+        </div>
+      </li>
+      <xsl:apply-templates select="MenuItem" mode="siteTreePage">
+        <xsl:with-param name="level" select="$level + 1"/>
+        <xsl:with-param name="ref" select="$ref"/>
+        <xsl:with-param name="selectedValue" select="$selectedValue"/>
+      </xsl:apply-templates>
+    </xsl:if>
+  </xsl:template>
   <!-- -->
   <xsl:template match="select1[@class='siteTreeName']" mode="xform_control">
     <xsl:variable name="ref">
@@ -2580,17 +2653,8 @@
 
   <xsl:template match="item[node()='Default Box']" mode="xform_BoxStyles">
     <xsl:param name="ref"/>
-    <div data-value="{value/node()}">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h6 class="panel-title">
-            <xsl:value-of select="value/node()"/>
-          </h6>
-        </div>
-        <div class="panel-body">
-          <xsl:text> </xsl:text>
-        </div>
-      </div>
+    <div data-value="{value/node()}" class="card-default">
+      <xsl:value-of select="value/node()"/>
     </div>
   </xsl:template>
 
@@ -3225,47 +3289,47 @@
   </xsl:template>
 
 
-	<xsl:template match="group[contains(@class,'PermissionButtons')]" mode="xform">
-		<xsl:param name="class"/>
-		<fieldset>
-			<xsl:if test=" @id!='' ">
-				<xsl:attribute name="id">
-					<xsl:value-of select="@id"/>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="$class!='' or @class!='' ">
-				<xsl:attribute name="class">
-					<xsl:value-of select="$class"/>
-					<xsl:if test="@class!=''">
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="@class"/>
-					</xsl:if>
-					<xsl:for-each select="group">
-						<xsl:text> form-group li-</xsl:text>
-						<xsl:value-of select="./@class"/>
-					</xsl:for-each>
-					<xsl:if test="contains(@class,'inline-2-col') or contains(@class,'inline-3-col')">
-						<xsl:text> row</xsl:text>
-					</xsl:if>
-					<xsl:text> </xsl:text>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
-						<div class="permission-button-wrapper">
-							<xsl:if test="not(submit[contains(@class,'hideRequired')])">
-								<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
-									<label class="required">
-										<span class="req">*</span>
-										<xsl:text> </xsl:text>
-										<xsl:call-template name="msg_required"/>
-									</label>
-								</xsl:if>
-							</xsl:if>
-							<!-- For xFormQuiz change how these buttons work -->
-							<xsl:apply-templates select="submit" mode="xform"/>
-						</div>
-		</fieldset>
-	</xsl:template>
+  <xsl:template match="group[contains(@class,'PermissionButtons')]" mode="xform">
+    <xsl:param name="class"/>
+    <fieldset>
+      <xsl:if test=" @id!='' ">
+        <xsl:attribute name="id">
+          <xsl:value-of select="@id"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="$class!='' or @class!='' ">
+        <xsl:attribute name="class">
+          <xsl:value-of select="$class"/>
+          <xsl:if test="@class!=''">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="@class"/>
+          </xsl:if>
+          <xsl:for-each select="group">
+            <xsl:text> form-group li-</xsl:text>
+            <xsl:value-of select="./@class"/>
+          </xsl:for-each>
+          <xsl:if test="contains(@class,'inline-2-col') or contains(@class,'inline-3-col')">
+            <xsl:text> row</xsl:text>
+          </xsl:if>
+          <xsl:text> </xsl:text>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="label[position()=1]" mode="legend"/>
+      <div class="permission-button-wrapper">
+        <xsl:if test="not(submit[contains(@class,'hideRequired')])">
+          <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+            <label class="required">
+              <span class="req">*</span>
+              <xsl:text> </xsl:text>
+              <xsl:call-template name="msg_required"/>
+            </label>
+          </xsl:if>
+        </xsl:if>
+        <!-- For xFormQuiz change how these buttons work -->
+        <xsl:apply-templates select="submit" mode="xform"/>
+      </div>
+    </fieldset>
+  </xsl:template>
 
 
 </xsl:stylesheet>

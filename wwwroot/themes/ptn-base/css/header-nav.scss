@@ -10,6 +10,11 @@
         display: none;
     }
 }
+header {
+    .module.nobox {
+        margin-bottom: 0;
+    }
+}
 .navbar {
     padding-top:0.4rem;
     padding-bottom:0.4rem;
@@ -157,4 +162,12 @@
 }
 .search-wrapper {
     margin: 0 ($header-spacing/2);
+}
+.tabbed-module {
+    .nav {
+        margin-bottom:1rem;
+    }
+}
+.accordion-module {
+    margin-bottom: $spacer;
 }

@@ -465,7 +465,7 @@ Partial Public Class fsHelper
 
                     dir.Delete(True)
                 Else
-                    Return "this folder does not exist"
+                    Return "this folder does not exist - " & cFolderPath & cFolderName
                 End If
                 oImp.UndoImpersonation()
             Else

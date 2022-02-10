@@ -39,7 +39,6 @@
           </xsl:choose>
           <xsl:apply-templates select="/" mode="addtoCartButtons"/>
         </xsl:if>
-        <div class="terminus">&#160;</div>
       </form>
     </div>
   </xsl:template>
@@ -67,7 +66,6 @@
           <input type="hidden" name="qty_{@id}" id="qty_{@id}" value="1"/>
           <xsl:apply-templates select="/" mode="addtoCartButtons"/>
         </xsl:if>
-        <div class="terminus">&#160;</div>
       </form>
     </div>
   </xsl:template>
@@ -89,7 +87,6 @@
       <xsl:apply-templates select="." mode="orderProgressLegend"/>
       <xsl:apply-templates select="." mode="orderAlert"/>
       <xsl:apply-templates select="." mode="orderProcess"/>
-      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -173,50 +170,54 @@
 
       <xsl:if test="Contact[@type='Billing Address']">
         <div class="col-md-6">
-          <div id="billingAddress" class="cartAddress box Default-Box">
-            <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart">
-              <xsl:with-param name="parentURL" select="$parentURL"/>
-              <xsl:with-param name="cartType" select="'cart'"/>
-            </xsl:apply-templates>
-            <xsl:if test="not(@readonly)">
-              <!-- THIS SHOULD BE DONE IN THE ABOVE TEMPLATE - WILL -->
-              <!--<p class="optionButtons">
+          <div id="billingAddress" class="card cartAddress">
+            <div class="card-body">
+              <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart">
+                <xsl:with-param name="parentURL" select="$parentURL"/>
+                <xsl:with-param name="cartType" select="'cart'"/>
+              </xsl:apply-templates>
+              <xsl:if test="not(@readonly)">
+                <!-- THIS SHOULD BE DONE IN THE ABOVE TEMPLATE - WILL -->
+                <!--<p class="optionButtons">
 						<a href="{$parentURL}?pgid={/Page/@id}&amp;cartCmd=Billing" title="Click here to edit the details you have entered for the billing address" class="button">Edit Billing Address</a>
 					</p>-->
-            </xsl:if>
+              </xsl:if>
+            </div>
           </div>
         </div>
       </xsl:if>
       <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
         <div class="col-md-6">
-          <div id="deliveryAddress" class="cartAddress box Default-Box">
-            <xsl:choose>
-              <xsl:when test="@giftListId and false()">
-                <p class="addressTitle">
-                  <!--Delivery Address Details-->
-                  <xsl:call-template name="term3036" />
-                  <xsl:text>:</xsl:text>
-                </p>
-                <p>
-                  <!--Your order will be delivered to-->
-                  <xsl:call-template name="term3037" />
-                  <xsl:text>: </xsl:text>
-                  <strong>
-                    <xsl:value-of select="Contact[@type='Delivery Address']/GivenName"/>
-                  </strong>
-                </p>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart">
-                  <xsl:with-param name="parentURL" select="$parentURL"/>
-                  <xsl:with-param name="cartType" select="'cart'"/>
-                </xsl:apply-templates>
-                <!-- THIS SHOULD BE DONE IN THE ABOVE TEMPLATE - WILL -->
-                <!--<p class="optionButtons">
+          <div id="deliveryAddress" class="card cartAddress">
+            <div class="card-body">
+              <xsl:choose>
+                <xsl:when test="@giftListId and false()">
+                  <p class="addressTitle">
+                    <!--Delivery Address Details-->
+                    <xsl:call-template name="term3036" />
+                    <xsl:text>:</xsl:text>
+                  </p>
+                  <p>
+                    <!--Your order will be delivered to-->
+                    <xsl:call-template name="term3037" />
+                    <xsl:text>: </xsl:text>
+                    <strong>
+                      <xsl:value-of select="Contact[@type='Delivery Address']/GivenName"/>
+                    </strong>
+                  </p>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart">
+                    <xsl:with-param name="parentURL" select="$parentURL"/>
+                    <xsl:with-param name="cartType" select="'cart'"/>
+                  </xsl:apply-templates>
+                  <!-- THIS SHOULD BE DONE IN THE ABOVE TEMPLATE - WILL -->
+                  <!--<p class="optionButtons">
 							<a href="{$parentURL}?pgid={/Page/@id}&amp;cartCmd=Delivery" title="Click here to edit the details you have entered for the delivery address" class="button">Edit Delivery Address</a>
 						</p>-->
-              </xsl:otherwise>
-            </xsl:choose>
+                </xsl:otherwise>
+              </xsl:choose>
+            </div>
           </div>
         </div>
       </xsl:if>
@@ -235,8 +236,8 @@
     <div>
       <xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
         <xsl:if test="/Page/Cart/Order/@cmd!='MakePayment'">
-          <a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn btn-default btn-sm pull-right">
-            <i class="fa fa-pencil">&#160;</i>&#160;<xsl:call-template name="term4022"/>&#160;
+          <a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn btn-primary btn-sm pull-right">
+            <i class="fa fa-pencil">&#160;</i>&#160;<xsl:call-template name="term4022"/><xsl:text> </xsl:text>
             <xsl:choose>
               <xsl:when test="@type = 'Billing Address'">
                 <xsl:call-template name="term4033"/>
@@ -384,7 +385,6 @@
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <xsl:apply-templates select="." mode="orderAddresses"/>
-    <div class="terminus">&#160;</div>
     <div class="basket">
       <xsl:if test="@cmd='Add' or @cmd='Cart'">
         <xsl:apply-templates select="." mode="suggestedItems"/>
@@ -397,23 +397,24 @@
           <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-primary continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3060" />
           </button>
-          
-        <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
+
+          <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Update Order
           </button>-->
-        <!--
+          <!--
           -->
-        <!--<button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
+          <!--<button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
             <i class="fa fa-trash-o">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Empty Order
           </button>-->
-        
+
         </div>
         <xsl:apply-templates select="." mode="orderItems">
           <xsl:with-param name="editQty">true</xsl:with-param>
@@ -456,13 +457,11 @@
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <div id="template_1_Column" class="template template_1_Column">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="title">
-            <xsl:call-template name="term4031" />
-          </h2>
-        </div>
-        <div class="panel-body">
+      <div class="card">
+        <h4 class="card-header">
+          <xsl:call-template name="term4031" />
+        </h4>
+        <div class="card-body">
           <xsl:apply-templates select="." mode="orderEditAddresses"/>
         </div>
       </div>
@@ -550,8 +549,6 @@
         </xsl:if>
       </div>
     </xsl:if>
-    <!-- Terminus class fix to floating columns -->
-    <div class="terminus">&#160;</div>
   </xsl:template>
   <!--#-->
   <!--############################## Quote Procees - Logon ################################-->
@@ -577,7 +574,7 @@
           <div class="account-btns-top clearfix">
             <xsl:if test="not($page/Cart/Order/Item/productDetail/UserGroups)">
               <!--Remove for subscritpions-->
-              <a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn pull-right btn-action">
+              <a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn pull-right btn-primary">
                 Continue with my order <i class="fa fa-chevron-right">
                   <xsl:text> </xsl:text>
                 </i>
@@ -587,21 +584,20 @@
         </xsl:if>
         <div class="row">
           <div class="col-md-6">
-            <div id="cartLogonBox" class="panel panel-default cartBox">
-              <div class="panel-heading">
-                <h3 class="title">Logon - I have an account</h3>
-              </div>
-              <div class="panel-body">
+            <div id="cartLogonBox" class="card cartBox">
+
+              <h4 class="card-header">Logon - I have an account</h4>
+              <div class="card-body">
                 <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
               </div>
             </div>
           </div>
           <div class="col-md-6">
-            <div id="cartRegisterBox" class="panel panel-default cartBox">
-              <div class="panel-heading">
-                <h3 class="title">Create new account</h3>
-              </div>
-              <div class="panel-body">
+            <div id="cartRegisterBox" class="card cartBox">
+
+              <h4 class="card-header">Create new account</h4>
+
+              <div class="card-body">
                 <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='CartRegistration']" mode="xform"/>
               </div>
             </div>
@@ -717,7 +713,6 @@
           <xsl:call-template name="term3062" />
         </button>
         <!--</div>-->
-        <div class="terminus">&#160;</div>
       </form>
     </div>
   </xsl:template>
@@ -734,8 +729,8 @@
   <xsl:template match="Order[@cmd='Discounts']" mode="orderProcess">
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card-default">
+      <div class="card-body">
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='discountsForm']" mode="xform"/>
       </div>
     </div>
@@ -765,7 +760,6 @@
             <xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
           </button>
-          <div class="terminus">&#160;</div>
         </div>
         <div>
           <xsl:apply-templates select="." mode="orderItems">
@@ -794,9 +788,7 @@
             <xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
           </button>
-          <div class="terminus">&#160;</div>
         </div>
-        <div class="terminus">&#160;</div>
       </form>
     </div>
   </xsl:template>
@@ -811,36 +803,36 @@
   <xsl:template match="Order[@cmd='ChoosePaymentShippingOption']" mode="orderProcess">
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
-    <div class="panel panel-default cartBox payment-tcs">
-      <div class="panel-heading">
-        <h2 class="title">
-          <xsl:call-template name="term4045" />
-        </h2>
-      </div>
-      <div class="panel-body">
+    <div class="card cartBox payment-tcs">
+
+      <h4 class="card-header">
+        <xsl:call-template name="term4045" />
+      </h4>
+
+      <div class="card-body">
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='optionsForm']" mode="xform"/>
       </div>
     </div>
-    <div class="panel panel-default cartBox check-address">
-      <div class="panel-body">
+    <div class="cartBox check-address">
+      
         <xsl:apply-templates select="." mode="orderAddresses"/>
-      </div>
+      
     </div>
     <xsl:apply-templates select="." mode="displayNotes"/>
-    <div class="panel panel-default cart-summary">
-      <div class="panel-body">
-        <form method="post" id="cart">
-          <xsl:apply-templates select="." mode="orderItems">
-            <xsl:with-param name="editQty">true</xsl:with-param>
-          </xsl:apply-templates>
-          <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
-            <i class="fa fa-chevron-left">
-              <xsl:text> </xsl:text>
-            </i>
+    <div class="cart-summary">
+
+      <form method="post" id="cart">
+        <xsl:apply-templates select="." mode="orderItems">
+          <xsl:with-param name="editQty">true</xsl:with-param>
+        </xsl:apply-templates>
+        <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
+          <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
-            <xsl:call-template name="term3060" />
-          </button>
-          <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
+          </i>
+          <xsl:text> </xsl:text>
+          <xsl:call-template name="term3060" />
+        </button>
+        <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
             </i>
@@ -853,10 +845,9 @@
             </i>
             <xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
-          </button>
-          <div class="terminus">&#160;</div>
-        </form>
-      </div>
+          </button>-->
+      </form>
+
     </div>
   </xsl:template>
   <!--#-->
@@ -872,13 +863,13 @@
 
   <xsl:template match="Order[@cmd='EnterPaymentDetails' or @cmd='SubmitPaymentDetails']" mode="orderProcess">
     <xsl:apply-templates select="." mode="orderErrorReports"/>
-    <div class="panel panel-default ccForm">
-      <div class="panel-heading">
-        <h2 class="title">
-          <xsl:call-template name="term3020" />
-        </h2>
-      </div>
-      <div class="panel-body">
+    <div class="card ccForm">
+
+      <h4 class="card-header">
+        <xsl:call-template name="term3020" />
+      </h4>
+
+      <div class="card-body">
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (contains(@name,'PayForm') or @name='Secure3D' or @name='Secure3DReturn')]" mode="xform"/>
       </div>
     </div>
@@ -1102,7 +1093,7 @@
     <div id="cartStepper" class="fuelux">
       <div id="MyWizard" class="wizard">
 
-        <ul class="steps">
+        <ul class="nav">
           <li>
             <xsl:attribute name="class">
               <xsl:if test="/Page/Cart/Order/@cmd='Cart'">
@@ -1112,7 +1103,7 @@
                 <xsl:text> complete</xsl:text>
               </xsl:if>
             </xsl:attribute>
-            <span class="badge badge-info">1</span>
+            <span class="badge bg-primary">1</span>
             <span class="step-text">
               <xsl:text>Cart Details</xsl:text>
             </span>
@@ -1244,11 +1235,11 @@
 
   <xsl:template match="Order" mode="suggestedItems">
     <xsl:if test="$page/ContentDetail/Content/Content[@type='Product' and @id!=$page/Cart/Order/Item/@contentId]">
-      <div class="relatedcontent panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">Recommended with this purchase</h3>
-        </div>
-        <div class="panel-body">
+      <div class="relatedcontent card bg-primary">
+
+        <h4 class="card-header">Recommended with this purchase</h4>
+
+        <div class="card-body">
           <xsl:for-each select="$page/ContentDetail/Content/Content[@type='Product' and @id!=$page/Cart/Order/Item/@contentId]">
             <xsl:apply-templates select="." mode="displayBriefRelated"/>
           </xsl:for-each>
@@ -1302,32 +1293,35 @@
     </xsl:variable>
     <!--<xsl:if test="Images/img[@class='detail']/@src and Images/img[@class='detail']/@src!=''">-->
 
-    <div class="cart-thumbnail">
-      <xsl:apply-templates select="productDetail" mode="displayThumbnail">
-        <xsl:with-param name="forceResize">true</xsl:with-param>
-        <xsl:with-param name="crop">true</xsl:with-param>
-        <xsl:with-param name="width">
-          <xsl:value-of select="$cartThumbWidth" />
-        </xsl:with-param>
-        <xsl:with-param name="height">
-          <xsl:value-of select="$cartThumbHeight" />
-        </xsl:with-param>
-      </xsl:apply-templates>
-    </div>
+
     <!--</xsl:if>-->
     <div class="description">
-
-      <a href="{$siteURL}{@url}" title="">
-        <xsl:apply-templates select="." mode="CartProductName"/>
-      </a>
-      <xsl:if test="@ref and @ref!=''">
-        <div class="ref">
-          <xsl:value-of select="@ref"/>&#160;
-          <xsl:for-each select="Item">
-            <xsl:apply-templates select="option" mode="optionCodeConcat"/>
-          </xsl:for-each>
-        </div>
-      </xsl:if>
+      <div class="cart-thumbnail">
+        <xsl:apply-templates select="productDetail" mode="displayThumbnail">
+          <xsl:with-param name="forceResize">true</xsl:with-param>
+          <xsl:with-param name="crop">true</xsl:with-param>
+          <xsl:with-param name="width">
+            <xsl:value-of select="$cartThumbWidth" />
+          </xsl:with-param>
+          <xsl:with-param name="height">
+            <xsl:value-of select="$cartThumbHeight" />
+          </xsl:with-param>
+        </xsl:apply-templates>
+        <i class="fa fa-image fa-5x text-muted"> </i>
+      </div>
+      <div class="cart-desc">
+        <a href="{$siteURL}{@url}" title="">
+          <xsl:apply-templates select="." mode="CartProductName"/>
+        </a>
+        <xsl:if test="@ref and @ref!=''">
+          <div class="ref">
+            <xsl:value-of select="@ref"/>&#160;
+            <xsl:for-each select="Item">
+              <xsl:apply-templates select="option" mode="optionCodeConcat"/>
+            </xsl:for-each>
+          </div>
+        </xsl:if>
+      </div>
       <!-- ################################# Line Options Info ################################# -->
       <xsl:if test="Item">
         <span class="optionList">
@@ -1508,16 +1502,18 @@
                 </button>
               </xsl:when>
               <xsl:otherwise>
-                <input type="text" size="2" name="itemId-{@id}" value="{@quantity}" class="">
-                  <xsl:if test="../@readonly">
-                    <xsl:attribute name="readonly">readonly</xsl:attribute>
-                  </xsl:if>
-                </input>
-                <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-xs update">
-                  <i class="fa fa-refresh">
-                    <xsl:text> </xsl:text>
-                  </i><xsl:text> </xsl:text>Update
-                </button>
+                <div class="input-group">
+                  <input type="text" size="2" name="itemId-{@id}" value="{@quantity}" class="form-control">
+                    <xsl:if test="../@readonly">
+                      <xsl:attribute name="readonly">readonly</xsl:attribute>
+                    </xsl:if>
+                  </input>
+                  <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-primary btn-sm update">
+                    <i class="fa fa-refresh">
+                      <xsl:text> </xsl:text>
+                    </i><xsl:text> </xsl:text>Update
+                  </button>
+                </div>
               </xsl:otherwise>
             </xsl:choose>
 
@@ -1531,10 +1527,10 @@
             <a href="{$parentURL}?cartCmd=Remove&amp;id={@id}" title="click here to remove this item from the list" class="text-danger delete-link">
               <!--BJR - This either doesnt work or is wrong so i have changed it for the moment to work-->
               <!--<img src="{$secureURL}/ewCommon/images/icons/trash.gif" alt="delete icon - click here to remove this item from the list"/>-->
-              <i class="fa fa-trash-alt">
+              <i class="fa fa-times">
                 <xsl:text> </xsl:text>
               </i>
-              <span> Delete</span>
+              <span> Remove</span>
             </a>
           </xsl:otherwise>
         </xsl:choose>
@@ -1765,7 +1761,6 @@
           <xsl:apply-templates select="submit" mode="xform"/>
         </p>
       </xsl:if>
-      <div class="terminus">&#160;</div>
     </form>
     <iframe name="threeDS" id="threeDS"></iframe>
 
@@ -1868,7 +1863,6 @@
           <xsl:apply-templates select="submit" mode="xform"/>
         </p>
       </xsl:if>
-      <div class="terminus">&#160;</div>
     </form>
   </xsl:template>
 
@@ -1909,7 +1903,6 @@
             </xsl:if>
             <!-- For xFormQuiz change how these buttons work -->
             <xsl:apply-templates select="submit" mode="xform"/>
-            <div class="terminus">&#160;</div>
           </li>
 
         </xsl:if>
@@ -1922,7 +1915,7 @@
   <xsl:template match="Order" mode="orderErrorReports">
     <xsl:if test="@errorMsg &gt; 0">
       <div class="alert alert-danger errorMessage">
-        <a href="/" class="btn btn-default pull-right ">
+        <a href="/" class="btn btn-primary pull-right ">
           <xsl:call-template name="term3093" />
         </a>
         <xsl:choose>
@@ -1979,7 +1972,6 @@
             <xsl:apply-templates select="." mode="cleanXhtml"/>
           </span>
         </xsl:for-each>
-        <div class="terminus">&#160;</div>
       </div>
 
 
@@ -2083,11 +2075,6 @@
             </xsl:if>
             <!-- For xFormQuiz change how these buttons work -->
             <xsl:apply-templates select="submit" mode="xform"/>
-            <!-- Terminus needed for CHROME ! -->
-            <!-- Terminus needed for BREAKS IE 7! -->
-            <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus">&#160;</div>
-            </xsl:if>
           </li>
         </xsl:if>
       </ol>
@@ -2211,7 +2198,7 @@
     <!--SCRIPT LANGUAGE="javascript">if (top.location != location) top.location.href = location.href;</SCRIPT-->
     <div id="cartInvoice">
       <p class="optionButtons">
-        <a href="{$secureURL}?pgid={/Page/@id}&amp;cartCmd=Quit" class="btn btn-default button principle" target="_parent" title="Click here to close this invoice and return to the site.">
+        <a href="{$secureURL}?pgid={/Page/@id}&amp;cartCmd=Quit" class="btn btn-primary button principle" target="_parent" title="Click here to close this invoice and return to the site.">
           <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
           </i>
@@ -2275,14 +2262,14 @@
         </p>
       </xsl:if>
     </div>
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
         <xsl:apply-templates select="." mode="orderAddresses"/>
         <xsl:apply-templates select="." mode="displayNotes"/>
       </div>
     </div>
-    <div class="panel panel-default ">
-      <div class="panel-body">
+    <div class="card ">
+      <div class="card-body">
         <form method="post" id="cart">
           <xsl:apply-templates select="." mode="orderItems"/>
         </form>
@@ -2429,7 +2416,7 @@
           <div class="total">
             <span>
               <!--Total Value-->
-              <xsl:call-template name="term3048" />
+              <xsl:call-template name="term3048a" />
               <xsl:text>:&#160;</xsl:text>
             </span>
             <span class="total amount">

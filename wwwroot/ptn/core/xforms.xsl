@@ -131,7 +131,6 @@
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
 
-
       <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <xsl:if test="count(submit) &gt; 0">
         <xsl:if test="not(submit[contains(@class,'hideRequired')])">
@@ -751,7 +750,7 @@
 
     <xsl:choose>
       <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
-        <div class="input-group x">
+        <div class="input-group">
           <xsl:if test="@prefixIcon!=''">
             <span class="input-group-text">
               <i class="{@prefixIcon}">&#160;</i>
@@ -1387,65 +1386,6 @@
         </xsl:attribute>
       </xsl:if>
     </input>
-  </xsl:template>
-  <!-- -->
-  <!-- -->
-  <!-- ========================== CONTROL : ImgVerification ========================== -->
-  <!-- -->
-
-  <xsl:template match="input[contains(@class,'capcha') or contains(@class,'imgVerification')]" mode="xform_control">
-    <xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
-    <xsl:variable name="inlineHint">
-      <xsl:choose>
-        <xsl:when test="hint[@class='inline']">
-          <xsl:value-of select="hint[@class='inline']/node()"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:call-template name="msg_required_inline"/>
-          <xsl:value-of select="$label_low"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-    <input type="text" name="{$ref}" id="{$ref}">
-      <xsl:choose>
-        <xsl:when test="@class!=''">
-          <xsl:attribute name="class">
-            <xsl:choose>
-              <xsl:when test="ancestor::switch and contains(@class,'required')">
-                <xsl:apply-templates select="." mode="isRequired"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="@class"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="class">textbox</xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:choose>
-        <xsl:when test="value!=''">
-          <xsl:attribute name="value">
-            <xsl:value-of select="value"/>
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="value">
-            <xsl:value-of select="$inlineHint"/>
-          </xsl:attribute>
-          <xsl:attribute name="onfocus">
-            <xsl:text>if (this.value=='</xsl:text>
-            <xsl:value-of select="$inlineHint"/>
-            <xsl:text>') {this.value=''}</xsl:text>
-          </xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
-    </input>
-    <img class="imgVerification" src="/ewcommon/tools/imgVerification.ashx"/>
   </xsl:template>
 
 
@@ -3284,8 +3224,8 @@
       </xsl:when>
       <xsl:otherwise>
         <p>
-          <a href="?ewCmd=UserIntegrations&amp;ewCmd2=connect&amp;dirId={$dirId}&amp;integration={$provider}.GetRequestToken" class="adminButton">
-            <img src="/ewcommon/images/integrations/sign-in-with-twitter-d.png"/>
+          <a href="?ewCmd=UserIntegrations&amp;ewCmd2=connect&amp;dirId={$dirId}&amp;integration={$provider}.GetRequestToken" class="btn btn-default">
+			  <i class="fab fa-twitter-square">&#160;</i>&#160;Sign in with Twitter
           </a>
         </p>
       </xsl:otherwise>
@@ -3591,8 +3531,8 @@
   </xsl:template>
 
   <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
-    <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css" />
-    <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
+    <link rel="stylesheet" href="/ptn/spmeesseman/extjs-pkg-intltelinput/intltelinput/css/intlTelInput.css" />
+    <script src="/ptn/spmeesseman/extjs-pkg-intltelinput/intlTelInput/js/intlTelInput.js" >
       <xsl:text> </xsl:text>
     </script>
     <script>
@@ -3603,12 +3543,12 @@
         </xsl:variable>
         const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
 
-        window.intlTelInput(telinput, {
-        initialCountry: "auto",
-        preferredCountries: ["gb"],
-        separateDialCode: true,
-        utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
-        hiddenInput: "<xsl:value-of select="$ref"/>"
+		  window.intlTelInput(telinput, {
+		  initialCountry: "auto",
+		  preferredCountries: ["gb"],
+		  separateDialCode: true,
+		  utilsScript: "/ptn/spmeesseman/extjs-pkg-intltelinput/intlTelInput/js/utils.js",
+		  hiddenInput: "<xsl:value-of select="$ref"/>"
         });
 
         telinput.addEventListener("countrychange", function() {

@@ -814,9 +814,17 @@ form.xform .pick-image-wrapper {
         flex-grow: 2;
         margin-bottom: 0;
     }
-
+    textarea{
+     //   display:none;
+    }
     .previewImage {
         margin-right: 10px;
+        width: 100px;
+        
+        i {
+            font-size: 70px;
+            color: #b3d2d9;
+        }
     }
 }
 form .form-actions .required {
@@ -847,18 +855,24 @@ form .form-actions .required {
         }
     }
 }
-#EditShippingLocation,
-#WebSettings,
+//#template_AdminXForm, 
+//#EditShippingLocation,
+/*#WebSettings,
 #template_EditStructure,
 #SetPassword,
-#tpltLocateSearch,
-#template_AdminXForm {
+#tpltLocateSearch{
     .form-check {
         @extend .form-check-inline;
     }
 
     input, textarea, select, .input-group {
         margin-bottom: 1rem;
+    }
+
+    .form-margin {
+        input, textarea, select, .input-group {
+            margin-bottom: 0rem;
+        }
     }
 
     span.required {
@@ -906,9 +920,14 @@ form .form-actions .required {
     fieldset .form-actions button.principle {
         margin-right: 0;
     }
+}*/
+#EditEage {
+    .form-check {
+        @extend .form-check-inline;
+    }
 }
 .card {
-    margin-bottom:1rem;
+    margin-bottom: 1rem;
 }
 #SetPassword {
     position: relative;

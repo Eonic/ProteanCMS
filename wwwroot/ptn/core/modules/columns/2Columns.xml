@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" contentType="Module" moduleType="2Columns" background="" title="" link="" linkType="internal" linkText="Read more"  data-stellar-background-ratio="10"/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="backgroundImage" nodeset="@backgroundImage" required="false()" type="string"/>
+      <bind id="minHeightxs" nodeset="@minHeightxs" required="false()" type="string"/>
+      <bind id="minHeight" nodeset="@minHeight" required="false()" type="string"/>
+      <bind id="data-stellar-background-ratio" nodeset="@data-stellar-background-ratio" required="false()" type="string"/>
+      <bind id="fullWidth" nodeset="@fullWidth" required="false()" type="string"/>
+      <bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
+      <bind id="xxlCol" nodeset="@xxlCol" required="false()" type="string"/>
+      <bind id="xlCol" nodeset="@xlCol" required="false()" type="string"/>
+      <bind id="lgCol" nodeset="@lgCol" required="false()" type="string"/>
+      <bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
+      <bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
+      <bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>
+    </bind>
+    <!--<ewInclude filePath="/ewcommon/xforms/content/module/1column.xml" xPath="descendant-or-self::bind[@id='columnPresentationBinds']"/>-->
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent">
+    <label>2 Column Module</label>
+    <group class="tabs">
+
+      <group>
+        <label>
+          <i class="fas fa-pen"> </i>
+          <span class="space"> </span>
+          <span>Content</span>
+        </label>
+        <group>
+          <input bind="cModuleTitle" class="long">
+            <label>Title or Name</label>
+          </input>
+
+          <group class="row row-cols-auto row-cols-xxl-6 w-100">
+            <select1 bind="xsCol">
+              <label>
+                <i class="fas fa-mobile-alt"> </i> Extra small
+              </label>
+              <item>
+                <label>16% / 83%</label>
+                <value>1-6-5-6</value>
+              </item>
+              <item>
+                <label>20% / 80% **</label>
+                <value>1-5-4-5</value>
+              </item>
+              <item>
+                <label>25% / 75%</label>
+                <value>1-4-3-4</value>
+              </item>
+              <item>
+                <label>33% / 66%</label>
+                <value>1-3-2-3</value>
+              </item>
+              <item>
+                <label>40% / 60% **</label>
+                <value>2-5-3-5</value>
+              </item>
+              <item>
+                <label>50% / 50%</label>
+                <value>1-2-1-2</value>
+              </item>
+              <item>
+                <label>60% / 40% **</label>
+                <value>3-5-2-5</value>
+              </item>
+              <item>
+                <label>66% / 33%</label>
+                <value>2-3-1-3</value>
+              </item>
+              <item>
+                <label>75% / 25%</label>
+                <value>3-4-1-4</value>
+              </item>
+              <item>
+                <label>80% / 20% **</label>
+                <value>4-5-1-5</value>
+              </item>
+              <item>
+                <label>83% / 16%</label>
+                <value>5-6-1-6</value>
+              </item>
+              <help class="inline">
+                <p>Extra small means screens under 576px wide. </p>
+                <p>** These layouts are based on a 5 column grid and won't cascade in the same way as the others</p>
+              </help>
+            </select1>
+            <select1 bind="smCol">
+              <label>
+                <i class="fas fa-mobile-alt"> </i> Small
+              </label>
+              <item>
+                <label>16% / 83%</label>
+                <value>1-6-5-6</value>
+              </item>
+              <item>
+                <label>20% / 80% **</label>
+                <value>1-5-4-5</value>
+              </item>
+              <item>
+                <label>25% / 75%</label>
+                <value>1-4-3-4</value>
+              </item>
+              <item>
+                <label>33% / 66%</label>
+                <value>1-3-2-3</value>
+              </item>
+              <item>
+                <label>40% / 60% **</label>
+                <value>2-5-3-5</value>
+              </item>
+              <item>
+                <label>50% / 50%</label>
+                <value>1-2-1-2</value>
+              </item>
+              <item>
+                <label>60% / 40% **</label>
+                <value>3-5-2-5</value>
+              </item>
+              <item>
+                <label>66% / 33%</label>
+                <value>2-3-1-3</value>
+              </item>
+              <item>
+                <label>75% / 25%</label>
+                <value>3-4-1-4</value>
+              </item>
+              <item>
+                <label>80% / 20% **</label>
+                <value>4-5-1-5</value>
+              </item>
+              <item>
+                <label>83% / 16%</label>
+                <value>5-6-1-6</value>
+              </item>
+              <help class="inline">
+                <p>Small screens are 576px-767px</p>
+              </help>
+            </select1>
+            <select1 bind="mdCol">
+              <label>
+                <i class="fas fa-tablet-alt"> </i> Medium
+              </label>
+              <item>
+                <label>16% / 83%</label>
+                <value>1-6-5-6</value>
+              </item>
+              <item>
+                <label>20% / 80% **</label>
+                <value>1-5-4-5</value>
+              </item>
+              <item>
+                <label>25% / 75%</label>
+                <value>1-4-3-4</value>
+              </item>
+              <item>
+                <label>33% / 66%</label>
+                <value>1-3-2-3</value>
+              </item>
+              <item>
+                <label>40% / 60% **</label>
+                <value>2-5-3-5</value>
+              </item>
+              <item>
+                <label>50% / 50%</label>
+                <value>1-2-1-2</value>
+              </item>
+              <item>
+                <label>60% / 40% **</label>
+                <value>3-5-2-5</value>
+              </item>
+              <item>
+                <label>66% / 33%</label>
+                <value>2-3-1-3</value>
+              </item>
+              <item>
+                <label>75% / 25%</label>
+                <value>3-4-1-4</value>
+              </item>
+              <item>
+                <label>80% / 20% **</label>
+                <value>4-5-1-5</value>
+              </item>
+              <item>
+                <label>83% / 16%</label>
+                <value>5-6-1-6</value>
+              </item>
+              <help class="inline">
+                <p>Medium screens are 768px-991px</p>
+              </help>
+            </select1>
+            <select1 bind="lgCol">
+              <label>
+                <i class="fas fa-laptop"> </i> Large
+              </label>
+              <item>
+                <label>16% / 83%</label>
+                <value>1-6-5-6</value>
+              </item>
+              <item>
+                <label>20% / 80% **</label>
+                <value>1-5-4-5</value>
+              </item>
+              <item>
+                <label>25% / 75%</label>
+                <value>1-4-3-4</value>
+              </item>
+              <item>
+                <label>33% / 66%</label>
+                <value>1-3-2-3</value>
+              </item>
+              <item>
+                <label>40% / 60% **</label>
+                <value>2-5-3-5</value>
+              </item>
+              <item>
+                <label>50% / 50%</label>
+                <value>1-2-1-2</value>
+              </item>
+              <item>
+                <label>60% / 40% **</label>
+                <value>3-5-2-5</value>
+              </item>
+              <item>
+                <label>66% / 33%</label>
+                <value>2-3-1-3</value>
+              </item>
+              <item>
+                <label>75% / 25%</label>
+                <value>3-4-1-4</value>
+              </item>
+              <item>
+                <label>80% / 20% **</label>
+                <value>4-5-1-5</value>
+              </item>
+              <item>
+                <label>83% / 16%</label>
+                <value>5-6-1-6</value>
+              </item>
+              <help class="inline">
+                <p>Large screens are 992px-1199px</p>
+              </help>
+            </select1>
+            <select1 bind="xlCol">
+              <label>
+                <i class="fas fa-desktop"> </i> Extra Large
+              </label>
+              <item>
+                <label>16% / 83%</label>
+                <value>1-6-5-6</value>
+              </item>
+              <item>
+                <label>20% / 80% **</label>
+                <value>1-5-4-5</value>
+              </item>
+              <item>
+                <label>25% / 75%</label>
+                <value>1-4-3-4</value>
+              </item>
+              <item>
+                <label>33% / 66%</label>
+                <value>1-3-2-3</value>
+              </item>
+              <item>
+                <label>40% / 60% **</label>
+                <value>2-5-3-5</value>
+              </item>
+              <item>
+                <label>50% / 50%</label>
+                <value>1-2-1-2</value>
+              </item>
+              <item>
+                <label>60% / 40% **</label>
+                <value>3-5-2-5</value>
+              </item>
+              <item>
+                <label>66% / 33%</label>
+                <value>2-3-1-3</value>
+              </item>
+              <item>
+                <label>75% / 25%</label>
+                <value>3-4-1-4</value>
+              </item>
+              <item>
+                <label>80% / 20% **</label>
+                <value>4-5-1-5</value>
+              </item>
+              <item>
+                <label>83% / 16%</label>
+                <value>5-6-1-6</value>
+              </item>
+              <help class="inline">
+                <p>Extra large screens are 1200px-1399px</p>
+              </help>
+            </select1>
+            <select1 bind="xxlCol">
+              <label>
+                <i class="fas fa-desktop"> </i> XXL
+              </label>
+              <item>
+                <label>16% / 83%</label>
+                <value>1-6-5-6</value>
+              </item>
+              <item>
+                <label>20% / 80% **</label>
+                <value>1-5-4-5</value>
+              </item>
+              <item>
+                <label>25% / 75%</label>
+                <value>1-4-3-4</value>
+              </item>
+              <item>
+                <label>33% / 66%</label>
+                <value>1-3-2-3</value>
+              </item>
+              <item>
+                <label>40% / 60% **</label>
+                <value>2-5-3-5</value>
+              </item>
+              <item>
+                <label>50% / 50%</label>
+                <value>1-2-1-2</value>
+              </item>
+              <item>
+                <label>60% / 40% **</label>
+                <value>3-5-2-5</value>
+              </item>
+              <item>
+                <label>66% / 33%</label>
+                <value>2-3-1-3</value>
+              </item>
+              <item>
+                <label>75% / 25%</label>
+                <value>3-4-1-4</value>
+              </item>
+              <item>
+                <label>80% / 20% **</label>
+                <value>4-5-1-5</value>
+              </item>
+              <item>
+                <label>83% / 16%</label>
+                <value>5-6-1-6</value>
+              </item>
+              <help class="inline">
+                <p>Extra extra large screens are 1400px and up</p>
+              </help>
+            </select1>
+          </group>
+
+          <group class="row row-cols-md-2">
+            <group class="inline-items">
+              <select1 bind="marginBelow" appearance="full">
+                <label>Margin Below Section</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+                <help class="inline">
+                  <p>By default column modules have a margin below them. If you would like to remove this for this module, please select "no"</p>
+                </help>
+              </select1>
+            </group>
+            <group class="inline-items">
+              <select1 bind="fullWidth"  appearance="full">
+                <label>Full Width Content</label>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+              </select1>
+            </group>
+          </group>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-link"> </i>
+          <span class="space"> </span>
+          <span>Footer Links</span>
+        </label>
+        <group>
+          <group class="form-section-wrapper">
+            <select1 bind="cLinkType" appearance="full" class="required">
+              <label>Type of link</label>
+              <item>
+                <label>Internal (Going to a page on this site)</label>
+                <value>internal</value>
+                <toggle case="cLinkType_1" event="DOMActivate"/>
+              </item>
+              <item>
+                <label>External (Going to another site)</label>
+                <value>external</value>
+                <toggle case="cLinkType_2" event="DOMActivate"/>
+              </item>
+            </select1>
+            <switch class="disable">
+              <case id="cLinkType_1">
+                <select1 bind="cModuleLink" class="siteTree">
+                  <label>Link to page</label>
+                </select1>
+              </case>
+              <case id="cLinkType_2">
+                <input bind="cModuleLink" class="short">
+                  <label>Link to URL</label>
+                </input>
+              </case>
+            </switch>
+          </group>
+          <input bind="cModuleLinkText" class="long">
+            <label>Module footer link text</label>
+          </input>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-brush"> </i>
+          <span class="space"> </span>
+          <span>Presentation</span>
+        </label>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+
+        <!-- end of hidden fields -->
+        <group id="columnPresentation">
+          <select1 bind="cModuleBox" class="" appearance="minimal">
+            <label>Background Style</label>
+            <item>
+              <label>None</label>
+              <value>false</value>
+            </item>
+            <item>
+              <label>Light</label>
+              <value>bg-light</value>
+            </item>
+          </select1>
+          <input bind="backgroundImage" class="pickImageFile bs-only">
+            <label>Background Image</label>
+            <value></value>
+          </input>
+          <group class="row row-cols-sm-2 row-cols-lg-3">
+            <!--<input bind="minHeightxs" class="bs-only" suffix="px">
+              <label>Minimum Height Mobile</label>
+              <value></value>
+            </input>-->
+            <input bind="minHeight" class="bs-only" suffix="px">
+              <label>Minimum Height</label>
+              <value></value>
+            </input>
+            <range bind="data-stellar-background-ratio" start="0" end="30" step="1">
+              <label>Background Scroll Rate</label>
+            </range>
+          </group>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-tachometer-alt"> </i>
+          <span class="space"> </span>
+          <span>Animate</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-cog"> </i>
+          <span class="space"> </span>
+          <span>Advanced Settings</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save 2 Columns Module</label>
+    </submit>
+  </group>
+</Content>

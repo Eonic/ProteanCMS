@@ -95,6 +95,8 @@ Public Class Cms
     Public Shared gnTopLevel As Integer = 0
     Public Shared gnNonAuthUsers As Integer = 0
     Public Shared gnAuthUsers As Integer = 0
+    Public Shared bs3 As Boolean = False
+    Public Shared bs5 As Boolean = False
 
     Public Shared gbClone As Boolean = False
     Public Shared gbMemberCodes As Boolean = False
@@ -449,7 +451,7 @@ Public Class Cms
             oElmt = oRXML.CreateElement("LatestDBVersion")
             Dim LatestDBVersion As XmlTextReader
             Dim dbUpgradeFile As String = "/ewcommon/sqlUpdate/DatabaseUpgrade.xml"
-            If moConfig("cssFramework") = "bs5" Then dbUpgradeFile = "/ptn/update/sql/databaseupgrade.xml"
+            If bs5 Then dbUpgradeFile = "/ptn/update/sql/databaseupgrade.xml"
             LatestDBVersion = New XmlTextReader(goServer.MapPath(dbUpgradeFile))
                 LatestDBVersion.WhitespaceHandling = WhitespaceHandling.None
             'Disable whitespace so that it doesn't have to read over whitespaces
@@ -524,7 +526,7 @@ Public Class Cms
             End If
             If moDbHelper.DatabaseName = "" Then
                 'redirect to setup
-                If moConfig("cssFramework") = "bs5" Then
+                If bs5 Then
                     msRedirectOnEnd = "ptn/setup/default.ashx"
                 Else
                     msRedirectOnEnd = "ewcommon/setup/default.ashx"
@@ -906,6 +908,7 @@ Public Class Cms
                 gnShowRelatedBriefDepth = moConfig("ShowRelatedBriefDepth")
             End If
             If moConfig("cssFramework") = "bs5" Then
+                bs5 = True
                 mcEWCommonFolder = "/ptn"
             End If
 
@@ -979,13 +982,13 @@ Public Class Cms
                     Else
                         mcEwSiteXsl = "/ewcommon/xsl/admin/AdminPopups.xsl"
                     End If
-                    If moConfig("cssFramework") = "bs5" Then mcEwSiteXsl = "/ptn/admin/admin-popups.xsl"
+                    If bs5 Then mcEwSiteXsl = "/ptn/admin/admin-popups.xsl"
                     mbPopupMode = True
                     mbAdminMode = True
                     moResponseType = pageResponseType.popup
                 Case "ajaxadmin"
                     mcEwSiteXsl = "/ewcommon/xsl/admin/ajaxAdmin.xsl"
-                    If moConfig("cssFramework") = "bs5" Then mcEwSiteXsl = "/ptn/admin/admin-ajax.xsl"
+                    If bs5 Then mcEwSiteXsl = "/ptn/admin/admin-ajax.xsl"
                     moResponseType = pageResponseType.ajaxadmin
                    ' oEw.GetAjaxHTML("MenuNode")
                 Case "mail", "email"
@@ -994,7 +997,7 @@ Public Class Cms
                         gcEwSiteXsl = moMailConfig("MailingXsl")
                     Else
                         gcEwSiteXsl = "/ewcommon/xsl/Mailer/mailerStandard.xsl"
-                        If moConfig("cssFramework") = "bs5" Then mcEwSiteXsl = "/ptn/features/mailer/mailer-core.xsl"
+                        If bs5 Then mcEwSiteXsl = "/ptn/features/mailer/mailer-core.xsl"
                     End If
                     mnMailMenuId = moMailConfig("RootPageId")
                     mcContentType = "text/html"
@@ -1066,8 +1069,13 @@ Public Class Cms
             If Not String.IsNullOrEmpty(gcProjectPath) Then commonfolders.Add(gcProjectPath)
             If Not String.IsNullOrEmpty(mcClientCommonFolder) Then commonfolders.Add(mcClientCommonFolder)
             If Not String.IsNullOrEmpty(mcEWCommonFolder) Then commonfolders.Add(mcEWCommonFolder)
-            If moConfig("cssFramework") = "bs5" Then commonfolders.Add("/ptn/core/")
-            If moConfig("cssFramework") = "bs5" Then commonfolders.Add("/ptn/features/")
+
+            If bs5 Then
+                commonfolders.Add("/ptn/features/")
+                commonfolders.Add("/ptn/core/")
+            End If
+
+
 
             maCommonFolders = commonfolders.ToArray(GetType(String))
 

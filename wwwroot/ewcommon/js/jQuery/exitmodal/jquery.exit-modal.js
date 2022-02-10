@@ -1,5 +1,6 @@
 /**
      * Exit modal 2.0
+     * https://www.jqueryscript.net/other/Lightweight-Exit-Modal-Plugin-With-jQuery-And-Bootstrap-exit-modal.html
      */
     (function () {
 

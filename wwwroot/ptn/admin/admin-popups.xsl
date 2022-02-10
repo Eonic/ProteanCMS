@@ -12,23 +12,6 @@
     <xsl:apply-imports/>
   </xsl:template>
 
-  <!--<xsl:template match="Page">
-		<html>
-			<head>
-				<title>Pick <xsl:value-of select="Request/QueryString/Item[@name='targetClass']/node()"/></title>
-				<xsl:apply-templates select="." mode="metadata"/>
-				<xsl:apply-templates select="." mode="style"/>
-				<xsl:apply-templates select="." mode="js"/>
-				<xsl:apply-templates select="." mode="adminJs"/>
-			</head>
-			<body class="ewAdmin" id="popupWindow">
-				<div>
-					<xsl:apply-templates select="." mode="Admin"/>
-				</div>
-			</body>
-		</html>
-  </xsl:template>-->
-
   <xsl:template match="Page">
     <div class="modal-dialog" id="popup1">
       <div class="modal-content">
@@ -39,20 +22,6 @@
       <xsl:apply-templates select="." mode="LayoutAdminJs"/>
     </div>
   </xsl:template>
-
-  <!--xsl:template match="Page" mode="style">
-    <link rel="stylesheet" type="text/css" href="/ewcommon/css/base.css" />
-    <link rel="stylesheet" type="text/css" href="/ewcommon/js/jQuery/ui/1.10.2/css/smoothness/jquery-ui-1.10.2.custom.min.css" />
-    <link rel="stylesheet" type="text/css" href="/ewcommon/css/Layout/dynamiclayout.css.aspx?fullwidth=900&amp;colPad=20&amp;boxPad=15&amp;NavWidth=170" />
-    <link rel="stylesheet" type="text/css" href="/ewThemes/EyecarePlans/css/eyecareplans.css" />
-    <meta name="viewport" content="initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="/ewThemes/EyecarePlans/css/simplemodal.css" media="screen" />
-    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/admin.css" />
-    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/skins/eonic.css" />
-    <link type="text/css" rel="stylesheet" href="/ewcommon/js/jquery/treeview/jquery.treeview.css" />
-    <link type="text/css" rel="stylesheet" href="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.css" />
-    <link type="text/css" rel="stylesheet" href="/ewcommon/js/jquery/gccolor.1.0.3/css/gccolor.css" />
-  </xsl:template-->
 
   <xsl:template match="Page" mode="SubmitPath">
     <xsl:value-of select="$appPath"/>
@@ -80,64 +49,9 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:variable name="callScript">
-      <xsl:call-template name="escape-js">
-        <xsl:with-param name="string">
-          <xsl:text>javascript:&#36;('#modal-</xsl:text>
-          <xsl:value-of select="$targetFeild"/>
-          <xsl:text>').load('</xsl:text>
-          <xsl:value-of select="$appPath"/>
-          <xsl:text>?contentType=popup&amp;ewcmd=</xsl:text>
-          <xsl:value-of select="$page/@ewCmd"/>
-          <xsl:text>&amp;ewCmd2=pickImage&amp;fld=</xsl:text>
-          <xsl:value-of select="$fld"/>
-          <xsl:text>&amp;file=</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name="callScript2">
-      <xsl:call-template name="escape-js">
-        <xsl:with-param name="string">
-          <xsl:text>',function(e){&#36;('#modal-</xsl:text>
-          <xsl:value-of select="$targetFeild"/>
-          <xsl:text>').modal('show');});</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:variable>
-
-    function S4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    }
-
-    var guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
-
-    var newItem = '<div class="image-thumbnail">
-      <div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
-        <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
-        <div class="popover-description">
-          <span class="image-description-name">' + file.name + '</span>
-          <br/>
-        </div>
-      </div>';
-      newItem = newItem + '<a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
-        <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
-      </a>
-    </div>';
-    newItem = newItem + '<div class="description">
-      ';
-      newItem = newItem + '<a href="{$appPath}?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file=' + file.name + '" data-toggle="modal" data-target="#modal-{$targetFeild}" class="btn btn-xs btn-info">
-        <i class="fa fa-picture-o fa-white">
-          <xsl:text> </xsl:text>
-        </i> Pick Image
-      </a>';
-      newItem = newItem + '
-    </div><div class="img-description">
-      <span class="image-description-name">' + file.name + '</span>
-    </div>';
-    newItem = '<div class="item item-image col-md-3 col-sm-4">
-      <div class="panel">' + newItem + '</div>
-    </div>';
+	var newItem = getUploadedImageHtmlPopup('<xsl:value-of select="$appPath"/>','<xsl:value-of select="$fld"/>',targetPath,'<xsl:value-of select="$targetFeild"/>',file.name)
+	prepareAjaxModals();
+	
   </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' and (Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly'] or Request/QueryString/Item[@name='pathOnly' and node()='true'])]" mode="newItemScript">
@@ -162,69 +76,24 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <xsl:variable name="callScript">
-      <xsl:call-template name="escape-js">
-        <xsl:with-param name="string">
-          <xsl:text>javascript:&#36;('#modal-</xsl:text>
-          <xsl:value-of select="$targetFeild"/>
-          <xsl:text>').load('</xsl:text>
-          <xsl:value-of select="$appPath"/>
-          <xsl:text>?contentType=popup&amp;ewcmd=</xsl:text>
-          <xsl:value-of select="$page/@ewCmd"/>
-          <xsl:text>&amp;ewCmd2=pickImage&amp;fld=</xsl:text>
-          <xsl:value-of select="$fld"/>
-          <xsl:text>&amp;file=</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:variable>
-
-    <xsl:variable name="callScript2">
-      <xsl:call-template name="escape-js">
-        <xsl:with-param name="string">
-          <xsl:text>',function(e){&#36;('#modal-</xsl:text>
-          <xsl:value-of select="$targetFeild"/>
-          <xsl:text>').modal('show');});</xsl:text>
-        </xsl:with-param>
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:text>var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r</xsl:text>
-    <xsl:text disable-output-escaping="yes"><![CDATA[&]]></xsl:text>
-    <xsl:text>0x3|0x8;return v.toString(16);});</xsl:text>
-
-    var newItem = '<div class="image-thumbnail">
-      <div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
-        ' + file.name.replace(/\ /g,'-') + '<br />
-      </div>';
-      newItem = newItem + '<a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
-        <img src="' + targetPath + '/' + file.name.replace(/\ /g,'-') + '" class="img-responsive" />
-      </a>
-    </div>';
-    newItem = newItem + '<div class="description"></div>';
-    newItem = newItem + '<a onclick="passImgFileToForm(\'EditContent\',\'{$targetFeild}\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-info">
-      <i class="fa fa-picture-o fa-white">
-        <xsl:text> </xsl:text>
-      </i> Pick Image
-    </a>';
-    newItem = '<div class="item item-image col-md-3 col-sm-4">
-      <div class="panel">' + newItem + '</div>
-    </div>';
+	  var newItem = getUploadedImagePathPopup('<xsl:value-of select="$appPath"/>','<xsl:value-of select="$fld"/>',targetPath,'<xsl:value-of select="$targetFeild"/>',file.name)
+	  prepareAjaxModals();
+	  
   </xsl:template>
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
-    var newItem = '<tr>
-      <td>
-        <i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '
-      </td>
-      <td>.' + /[^.]+$/.exec(file.name) + '</td>
-      <td>
-        ';
+    var newItem = '<tr>';
+		newItem = newItem + '<td>';
+			newItem = newItem + '<i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + ';
+		newItem = newItem + '</td>';
+		newItem = newItem + '<td>.' + /[^.]+$/.exec(file.name) + '</td>';
+		newItem = newItem + '<td>';
         <!--newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\' + targetPath + \'/\' + file.name + \');" class="btn btn-xs btn-default" href="#">';-->
-        newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-default" href="#">
-          ';
-          newItem = newItem + '<i class="fa fa-file-o fa-white"> </i> Pick
-        </a>
-      </td>
-    </tr>';
+        newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-default" href="#">';
+          newItem = newItem + '<i class="fa fa-file-o fa-white"> </i> Pick';
+			newItem = newItem + '</a>';
+			newItem = newItem + '</td>';
+		newItem = newItem + '</tr>';
   </xsl:template>
 
   <xsl:template match="folder" mode="FolderTree">

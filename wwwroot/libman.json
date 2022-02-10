@@ -53,21 +53,22 @@
     {
       "library": "bs5-lightbox@1.7.7",
       "destination": "ptn/libs/bs5-lightbox/"
+    },
+    {
+      "library": "blueimp-file-upload@10.32.0",
+      "destination": "ptn/libs/blueimp-file-upload/"
+    },
+    {
+      "library": "blueimp-load-image@5.16.0",
+      "destination": "ptn/libs/blueimp-load-image/"
+    },
+    {
+      "library": "blueimp-canvas-to-blob@3.29.0",
+      "destination": "ptn/libs/blueimp-canvas-to-blob/"
+    },
+    {
+      "library": "@spmeesseman/extjs-pkg-intltelinput@0.1.2",
+      "destination": "ptn/libs/spmeesseman/extjs-pkg-intltelinput/"
     }
-  ,
-{
-  "library": "blueimp-file-upload@10.32.0",
-  "destination": "ptn/libs/blueimp-file-upload/"
-}
-,
-{
-  "library": "blueimp-load-image@5.16.0",
-  "destination": "ptn/libs/blueimp-load-image/"
-}
-,
-{
-  "library": "blueimp-canvas-to-blob@3.29.0",
-  "destination": "ptn/libs/blueimp-canvas-to-blob/"
-}
-]
+  ]
 }
