@@ -321,3 +321,19 @@ section.bg-primary {
 .MembershipUserContacts .add {
     margin-bottom:1rem;
 }
+.FormattedText .alignleft {
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+
+    @include media-breakpoint-down(sm) {
+        max-width: 50%;
+    }
+}
+.FormattedText .alignright {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+
+    @include media-breakpoint-down(sm) {
+        max-width: 50%;
+    }
+}

@@ -42,6 +42,9 @@
         <xsl:when test="format-number($url,'0')!='NaN'">
           <xsl:apply-templates select="$page/descendant-or-self::MenuItem[@id=$url]" mode="getHref"/>
         </xsl:when>
+        <xsl:when test="@InPageID!=''">
+          <xsl:value-of select="@InPageID"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:if test="$preURL='www' or $preURL='WWW'">
             <xsl:text>http://</xsl:text>
