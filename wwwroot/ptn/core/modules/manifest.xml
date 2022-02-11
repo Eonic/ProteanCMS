@@ -18,6 +18,7 @@
       <ContentType type="FormattedText" formPath="generic/formattedtext" name="Formatted Text">Add text formatted into HTML</ContentType>
       <ContentType type="PlainText" formPath="generic/plaintext" name="Plain Text">Plain unformatted text</ContentType>
       <ContentType type="Image" formPath="generic/image" name="Image">Add an image</ContentType>
+		<ContentType type="Link" formPath="generic/link" name="Link">Add an link</ContentType>
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>

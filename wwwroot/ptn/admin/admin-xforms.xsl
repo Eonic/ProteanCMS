@@ -1633,6 +1633,9 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
+	  <xsl:variable name="ref2">
+		  <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
+	  </xsl:variable>
     <xsl:variable name="selectedValue">
       <xsl:value-of select="value/node()"/>
     </xsl:variable>
@@ -1640,18 +1643,18 @@
       <xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$selectedValue]/@name"/>
     </xsl:variable>
     <div class="pick-page">
-      <input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}"/>
+      <input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}" test="{$ref}"/>
       <div class="input-group">
         <input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{$ref}-modal">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{$ref2}-modal">
           <i class="fa fa-file-alt fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Pick Page
         </button>
 
       </div>
-      <div class="modal fade" id="{$ref}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal fade" id="{$ref2}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-body">
