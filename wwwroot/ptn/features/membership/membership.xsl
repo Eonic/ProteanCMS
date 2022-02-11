@@ -1169,7 +1169,7 @@
 						<!--Edit Contact-->
 						<xsl:call-template name="term4024" />
 					</xsl:attribute>
-          <i class="fa fa-pencil">
+          <i class="fa fa-pen">
             <xsl:text> </xsl:text>
           </i>
           <xsl:text> </xsl:text>
@@ -1183,7 +1183,7 @@
 						<!--Delete Contact-->
 						<xsl:call-template name="term4025" />
 					</xsl:attribute>
-          <i class="fa fa-trash-o">
+          <i class="fa fa-trash-alt">
             <xsl:text> </xsl:text>
           </i>
           <xsl:text> </xsl:text>

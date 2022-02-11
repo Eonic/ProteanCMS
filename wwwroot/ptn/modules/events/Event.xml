@@ -172,18 +172,21 @@
           <span>Content</span>
         </label>
         <group>
-          <label>Event Details</label>
+          <!--label>Event Details</label-->
           <group>
             <input bind="cContentEventName" class="required long">
               <label>Event name</label>
             </input>
             <group>
               <!-- label>Details</label -->
+              <input bind="cTeaserSlug" class="long">
+                <label>Strapline</label>
+              </input>
               <textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">
-                <label>Strapline details</label>
+                <label>Introduction</label>
               </textarea>
               <textarea bind="cContentBody" class="TextArea xhtml" rows="20" cols="70">
-                <label>Main details</label>
+                <label>Event details</label>
               </textarea>
             </group>
 
@@ -248,86 +251,6 @@
               </item>
             </select1>
           </group>
-          <group class="row">
-            <input bind="cEventBookingURL" class="long col-lg-6">
-              <label>External Booking URL</label>
-            </input>
-            <input bind="cTeaserSlug" class="long col-lg-6">
-              <label>Teaser Slug</label>
-            </input>
-
-          </group>
-
-
-        </group>
-
-      </group>
-
-      <group>
-        <label>
-          <i class="fas fa-image"> </i>
-          <span class="space"> </span>
-          <span>Images</span>
-        </label>
-
-        <group>
-          <group class="Content">
-            <label>Images</label>
-            <input bind="cContentFullSizePicture" class="short pickImage form-section-wrapper">
-              <label>Main event image</label>
-              <help class="inline">
-                <p>
-                  This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
-                </p>
-                <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
-                <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
-              </help>
-            </input>
-            <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
-            <input bind="cContentThumbnail" class="short pickImage form-section-wrapper">
-              <label>Alternative thumbnail</label>
-            </input>
-            <input bind="cContentPicture" class="short pickImage form-section-wrapper">
-              <label>Alternative picture</label>
-            </input>
-          </group>
-          <group class="form-section-wrapper">
-            <label>Image Gallery</label>
-            <help class="inline">Besides the main product images, You can add additional images below to display as a gallery.</help>
-            <relatedContent search="add" type="LibraryImage" relationType="" direction="1way" />
-          </group>
-
-        </group>
-      </group>
-
-      <group>
-        <label>
-          <i class="fas fa-paperclip"> </i>
-          <span class="space"> </span>
-          <span>Related Content</span>
-        </label>
-        <group>
-
-          <group>
-            <!-- label>Headliner</label -->
-            <relatedContent type="Contact" search="add find" relationType="Headliner" direction="2way" class="form-section-wrapper" />
-          </group>
-          <group>
-            <!-- label>Support</label -->
-            <relatedContent type="Contact" search="add find" relationType="Support" direction="2way" class="form-section-wrapper"/>
-          </group>
-          <group>
-            <!--label>Tickets</label-->
-            <relatedContent type="Ticket" search="add find" relationType="Tickets" direction="2way" class="form-section-wrapper"/>
-
-          </group>
-          <group class="form-section-wrapper">
-            <!-- label>Event Terms</label-->
-            <input bind="cContentSpecificationDocument" class="short pickDocument">
-              <label>Event Terms / Specification document</label>
-            </input>
-          </group>
-
           <group class="form-section-wrapper">
             <label>Location</label>
             <select1 bind="VenueType" appearance="full" >
@@ -414,7 +337,76 @@
             </switch>
           </group>
 
+        </group>
 
+      </group>
+
+      <group>
+        <label>
+          <i class="fas fa-image"> </i>
+          <span class="space"> </span>
+          <span>Images</span>
+        </label>
+
+        <group>
+          <group class="Content">
+            <label>Images</label>
+            <input bind="cContentFullSizePicture" class="short pickImage form-section-wrapper">
+              <label>Main event image</label>
+              <help class="inline">
+                <p>
+                  This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+                </p>
+                <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+                <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+              </help>
+            </input>
+            <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
+            <input bind="cContentThumbnail" class="short pickImage form-section-wrapper">
+              <label>Alternative thumbnail</label>
+            </input>
+            <input bind="cContentPicture" class="short pickImage form-section-wrapper">
+              <label>Alternative picture</label>
+            </input>
+          </group>
+          <group class="form-section-wrapper">
+            <label>Image Gallery</label>
+            <help class="inline">Besides the main product images, You can add additional images below to display as a gallery.</help>
+            <relatedContent search="add" type="LibraryImage" relationType="" direction="1way" />
+          </group>
+
+        </group>
+      </group>
+
+      <group>
+        <label>
+          <i class="fas fa-house-user"> </i>
+          <span class="space"> </span>
+          <span>Acts</span>
+        </label>
+        <group>
+
+          <group>
+            <!-- label>Headliner</label -->
+            <relatedContent type="Contact" search="add find" relationType="Headliner" direction="2way" class="form-section-wrapper" />
+          </group>
+          <group>
+            <!-- label>Support</label -->
+            <relatedContent type="Contact" search="add find" relationType="Support" direction="2way" class="form-section-wrapper"/>
+          </group>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-barcode"> </i>
+          <span class="space"> </span>
+          <span>Tickets</span>
+        </label>
+        <group>
+          <group>
+            <!--label>Tickets</label-->
+            <relatedContent type="Ticket" search="add find" relationType="Tickets" direction="2way" class="form-section-wrapper"/>
+          </group>
         </group>
       </group>
 
@@ -454,6 +446,19 @@
             <label>Meta Description</label>
             <help>Meta descriptions can be any length, but Google generally truncates snippets to ~155–160 characters. It's best to keep meta descriptions long enough that they're sufficiently descriptive, so we recommend descriptions between 50–160 characters. Keep in mind that the "optimal" length will vary depending on the situation, and your primary goal should be to provide value and drive clicks.</help>
           </input>
+
+          <group class="form-section-wrapper">
+            <!-- label>Event Terms</label-->
+            <input bind="cContentSpecificationDocument" class="short pickDocument">
+              <label>Event Terms / Specification document</label>
+            </input>
+          </group>
+          <group>
+            <input bind="cEventBookingURL" class="long">
+              <label>External Booking URL</label>
+            </input>
+          </group>
+
         </group>
 
 

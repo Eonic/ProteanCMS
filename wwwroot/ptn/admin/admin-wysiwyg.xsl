@@ -475,7 +475,7 @@
     <xsl:if test="/Page/@adminMode">
 
       <div class="ptn-edit options addmodule">
-        <a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddMailModule&amp;pgid={/Page/@id}&amp;position={$position}">
+        <a class="btn btn-primary btn-sm pull-right" href="?ewCmd=AddMailModule&amp;pgid={/Page/@id}&amp;position={$position}">
           <i class="fa fa-th-large">&#160;</i>&#160;
           <xsl:value-of select="$text"/>
         </a>

@@ -9191,6 +9191,7 @@
       </xsl:choose>
     </xsl:variable>
     <!--end responsive columns variables-->
+    
     <div class="clearfix Links">
       <xsl:if test="@carousel='true'">
         <xsl:attribute name="class">
@@ -9503,6 +9504,16 @@
             <xsl:text> content-cols-responsive</xsl:text>
           </xsl:if>
         </xsl:attribute>
+        <xsl:if test="@autoplay !=''">
+          <xsl:attribute name="data-autoplay">
+            <xsl:value-of select="@autoplay"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@autoPlaySpeed !=''">
+          <xsl:attribute name="data-autoPlaySpeed">
+            <xsl:value-of select="@autoPlaySpeed"/>
+          </xsl:attribute>
+        </xsl:if>
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="linkList" select="$contentList"/>

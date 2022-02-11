@@ -921,8 +921,13 @@ form .form-actions .required {
         margin-right: 0;
     }
 }*/
+#EditEage {
+    .form-check {
+        @extend .form-check-inline;
+    }
+}
 .card {
-    margin-bottom:1rem;
+    margin-bottom: 1rem;
 }
 #SetPassword {
     position: relative;

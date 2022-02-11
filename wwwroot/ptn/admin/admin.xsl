@@ -501,10 +501,11 @@
   <xsl:template match="Page[@ewCmd='CopyPage']" mode="adminBreadcrumb">
     <xsl:if test="/Page/@id != ''">
       <ol class="breadcrumb admin-breadcrumb breadcrumb-message">
-        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="breadcrumb"/>
+        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="breadcrumb"/>&#160;
+        <xsl:text> [Copying]</xsl:text>
       </ol>
     </xsl:if>
-    <xsl:text>[Copying]</xsl:text>
+
   </xsl:template>
 
   <xsl:template match="Page[@ewCmd='MoveContent']" mode="adminBreadcrumb">
@@ -8314,30 +8315,30 @@
             <div class="card-body">
               <p>This is where you manage all your Newsletters</p>
               <p>
-                <a class="btn btn-sm btn-primary">
+                <a class="btn btn-sm btn-outline-primary">
                   <i class="fa fa-envelope">
                     <xsl:text> </xsl:text>
                   </i>&#160;Add New Campaign
                 </a> - create a new newsletter
               </p>
               <p>
-                <a class="btn btn-xs btn-primary">
+                <a class="btn btn-sm btn-outline-primary">
                   <i class="fa fa-edit">&#160;</i>&#160;View / Edit
                 </a> - view and edit the newsletter
               </p>
               <p>
-                <a class="btn btn-xs btn-primary">
+                <a class="btn btn-sm btn-outline-primary">
                   <i class="fa fa-eye">&#160;</i>&#160;Preview
                 </a> - send a single copy of the newsletter to your chosen email address
               </p>
               <p>
-                <a class="btn btn-xs btn-primary">
+                <a class="btn btn-sm btn-outline-primary">
                   <i class="fa fa-envelope">&#160;</i>&#160;Send
                 </a> - send the newsletter to your mailing list
               </p>
               <p>
-                <a class="btn btn-xs btn-danger">
-                  <i class="fa fa-trash-o">&#160;</i>&#160;Delete
+                <a class="btn btn-sm btn-outline-danger">
+                  <i class="fa fa-trash-alt">&#160;</i>&#160;Delete
                 </a> - delete newsletter
               </p>
             </div>
@@ -8346,56 +8347,61 @@
         <div class="col-md-9 ">
           <div class="card card-default">
             <div class="card-header">
-              <h3 >&#160;</h3>
               <a href="{$appPath}?ewCmd=NewMail&amp;parId={$MailRoot}" class="btn btn-sm btn-primary float-end">
                 <i class="fa fa-envelope">
                   <xsl:text> </xsl:text>
                 </i>&#160;Add New Campaign
               </a>
             </div>
-            <table class="table">
-              <tr>
-                <th>Title</th>
-                <th>Options</th>
-              </tr>
-              <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem">
-                <xsl:sort select="Sent"/>
+            <table class="table table-mobile-cards-1col">
+              <thead>
                 <tr>
-                  <td>
-                    <xsl:value-of select="@name"/>
-                  </td>
-                  <td>
-                    <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
-                      <i class="fa fa-edit">&#160;</i>&#160;View / Edit
-                    </a>
-                    <a href="/{$appPath}?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
-                      <i class="fa fa-copy">&#160;</i>&#160;Copy
-                    </a>
-                    <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
-                      <i class="fa fa-eye">&#160;</i>&#160;Preview
-                    </a>
-                    <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
-                      <i class="fa fa-envelope">&#160;</i>&#160;Send
-                    </a>
-                    <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-danger">
-                      <i class="fa fa-trash-o">&#160;</i>&#160;Delete
-                    </a>
-                  </td>
+                  <th>Title</th>
+                  <th>Options</th>
                 </tr>
-                <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem/MenuItem">
+              </thead>
+              <tbody>
+                <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem">
+                  <xsl:sort select="Sent"/>
                   <tr>
                     <td>
-                      &#160;&#160;&#160;<xsl:value-of select="@name"/>
+                      <xsl:value-of select="@name"/>
                     </td>
                     <td>
-                      <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-primary">View / Edit</a>
-                      <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton show">Preview</a>
-                      <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton move">Send</a>
-                      <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton delete">Delete</a>
+                      <span class="btn-group-spaced">
+                        <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-edit">&#160;</i>&#160;View / Edit
+                        </a>
+                        <a href="/{$appPath}?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-copy">&#160;</i>&#160;Copy
+                        </a>
+                        <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-eye">&#160;</i>&#160;Preview
+                        </a>
+                        <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
+                          <i class="fa fa-envelope">&#160;</i>&#160;Send
+                        </a>
+                        <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-danger">
+                          <i class="fa fa-trash-alt">&#160;</i>&#160;Delete
+                        </a>
+                      </span>
                     </td>
                   </tr>
+                  <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem/MenuItem">
+                    <tr>
+                      <td>
+                        &#160;&#160;&#160;<xsl:value-of select="@name"/>
+                      </td>
+                      <td>
+                        <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-primary">View / Edit</a>
+                        <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton show">Preview</a>
+                        <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton move">Send</a>
+                        <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton delete">Delete</a>
+                      </td>
+                    </tr>
+                  </xsl:for-each>
                 </xsl:for-each>
-              </xsl:for-each>
+              </tbody>
             </table>
           </div>
         </div>
