@@ -1661,12 +1661,12 @@
               <ul id="MenuTree" class="list-group">
                 <xsl:apply-templates select="/Page/Menu/MenuItem" mode="siteTreePage">
                   <xsl:with-param name="level">1</xsl:with-param>
-                  <xsl:with-param name="ref" select="$ref" />
+                  <xsl:with-param name="ref" select="$ref2" />
                   <xsl:with-param name="selectedValue" select="$selectedValue" />
                 </xsl:apply-templates>
                 <xsl:apply-templates select="/Page/Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="siteTreePage">
                   <xsl:with-param name="level">1</xsl:with-param>
-                  <xsl:with-param name="ref" select="$ref" />
+                  <xsl:with-param name="ref" select="$ref2" />
                   <xsl:with-param name="selectedValue" select="$selectedValue" />
                 </xsl:apply-templates>
               </ul>
