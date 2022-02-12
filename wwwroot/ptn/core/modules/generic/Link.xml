@@ -46,6 +46,7 @@
         <bind id="cLinkType" nodeset="@type" required="false()" type="string"/>
         <bind id="cLinkTarget" nodeset="@target" required="false()" type="string"/>
       </bind>
+      <bind id="cContentID" nodeset="@InPageID" required="false()" type="string"/>
       <bind id="cContentCategory" nodeset="Category" required="false()" type="string"/>
       <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
     </bind>
@@ -107,6 +108,11 @@
             <value>internal</value>
             <toggle case="cLinkType_2" event="DOMActivate"/>
           </item>
+          <item>
+            <label>Within Page</label>
+            <value>InPage</value>
+            <toggle case="cLinkType_3" event="DOMActivate"/>
+          </item>
         </select1>
         <switch class="disable">
           <case id="cLinkType_1">
@@ -129,6 +135,11 @@
             <select1 bind="cContentURL" class="siteTree">
               <label>Page</label>
             </select1>
+          </case>
+          <case id="cLinkType_3">
+            <input bind="cContentID" class="short">
+              <label>ID</label>
+            </input>
           </case>
         </switch>
       </group>

@@ -52,7 +52,7 @@
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
   <group ref="EditContent" class="2col">
-    <label>Links List Module</label>
+    <label>Detailed Links Module</label>
     <group>
       <group>
         <label>Settings</label>

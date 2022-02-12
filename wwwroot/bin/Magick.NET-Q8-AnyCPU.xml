@@ -6264,6 +6264,18 @@
             Gets or sets a value indicating whether alpha unblending should be enabled or disabled (psd:alpha-unblend).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.PsdReadDefines.PreserveOpacityMask">
+            <summary>
+            Gets or sets a value indicating whether the opacity mask of a layer should be preserved and add it back to
+            the layer when the image is saved. This option should only be used when converting from a PSD file to another
+            PSD file (psd:preserve-opacity-mask).
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.PsdReadDefines.ReplicateProfile">
+            <summary>
+            Gets or sets a value indicating whether the profile should be replicate to all the layers (psd:replicate-profile).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.PsdReadDefines.Defines">
             <summary>
             Gets the defines that should be set as a define on an image.
@@ -6594,6 +6606,11 @@
         <member name="P:ImageMagick.Formats.WebPWriteDefines.EmulateJpegSize">
             <summary>
             Gets or sets a value indicating wether a similar compression to that of JPEG but with less degradation should be used. (webp:emulate-jpeg-size).
+            </summary>
+        </member>
+        <member name="P:ImageMagick.Formats.WebPWriteDefines.Exact">
+            <summary>
+            Gets or sets a value indicating wether RGB values should be preserved in transparent area. It's disabled by default to help compressibility.
             </summary>
         </member>
         <member name="P:ImageMagick.Formats.WebPWriteDefines.FilterSharpness">
@@ -13786,6 +13803,20 @@
             </summary>
             <param name="settings">The settings to copy the data from.</param>
         </member>
+        <member name="M:ImageMagick.MagickSettings.GetOption(System.String)">
+            <summary>
+            Gets an image option.
+            </summary>
+            <param name="key">The key of the option.</param>
+            <returns>The value of the option.</returns>
+        </member>
+        <member name="M:ImageMagick.MagickSettings.SetOption(System.String,System.String)">
+            <summary>
+            Sets an image option.
+            </summary>
+            <param name="key">The key of the option.</param>
+            <param name="value">The value of the option.</param>
+        </member>
         <member name="T:ImageMagick.MontageSettings">
             <summary>
             Class that contains setting for the montage operation.
@@ -14923,6 +14954,12 @@
         <member name="P:ImageMagick.MagickReadSettings.Height">
             <summary>
             Gets or sets the height.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.MagickReadSettings.SyncImageWithExifProfile">
+            <summary>
+            Gets or sets a value indicating whether the exif profile should be used to update some of the
+            properties of the image (e.g. <see cref="P:ImageMagick.IMagickImage.Density"/>, <see cref="P:ImageMagick.IMagickImage.Orientation"/>).
             </summary>
         </member>
         <member name="P:ImageMagick.MagickReadSettings.UseMonochrome">

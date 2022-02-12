@@ -21,35 +21,14 @@
       </xsl:choose>
     </xsl:variable>
     <div class="clearfix LinkListSimple">
-      <xsl:if test="@carousel='true'">
-        <xsl:attribute name="class">
-          <xsl:text>clearfix LinkListSimple content-scroller</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}">
-        <xsl:if test="@autoplay !=''">
-          <xsl:attribute name="data-autoplay">
-            <xsl:value-of select="@autoplay"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@autoPlaySpeed !=''">
-          <xsl:attribute name="data-autoPlaySpeed">
-            <xsl:value-of select="@autoPlaySpeed"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@stepCount != '0'">
-          <xsl:apply-templates select="/" mode="genericStepper">
-            <xsl:with-param name="linkList" select="$contentList"/>
-            <xsl:with-param name="noPerPage" select="@stepCount"/>
-            <xsl:with-param name="startPos" select="$startPos"/>
-            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-            <xsl:with-param name="totalCount" select="$totalCount"/>
-          </xsl:apply-templates>
+      <ul class="nav nav-module">
+        <xsl:if test="@align='vertical'">
+          <xsl:attribute name="class">nav nav-module flex-column</xsl:attribute>
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefSimple">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-      </div>
+      </ul>
     </div>
   </xsl:template>
 
@@ -63,6 +42,9 @@
         <xsl:when test="format-number($url,'0')!='NaN'">
           <xsl:apply-templates select="$page/descendant-or-self::MenuItem[@id=$url]" mode="getHref"/>
         </xsl:when>
+        <xsl:when test="@InPageID!=''">
+          <xsl:value-of select="@InPageID"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:if test="$preURL='www' or $preURL='WWW'">
             <xsl:text>http://</xsl:text>
@@ -72,26 +54,19 @@
       </xsl:choose>
     </xsl:variable>
 
-    <div class="list-group-item listItem linkSimple">
+    <li class="nav-item">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'list-group-item listItem linkSimple'"/>
+        <xsl:with-param name="class" select="'nav-item'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <xsl:if test="Images/img/@src!=''">
-        <a href="{$linkURL}" title="Click here to link to {Name}">
-          <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
-            <xsl:attribute name="rel">external</xsl:attribute>
-          </xsl:if>
-          <xsl:apply-templates select="." mode="displayThumbnail"/>
-        </a>
-      </xsl:if>
-      <a href="{$linkURL}" title="{Name}">
+     
+      <a href="{$linkURL}" title="{Name}" class="nav-link">
         <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
           <xsl:attribute name="rel">external</xsl:attribute>
           <xsl:attribute name="class">extLink</xsl:attribute>
         </xsl:if>
         <xsl:value-of select="Name"/>
       </a>
-    </div>
+    </li>
   </xsl:template>
 </xsl:stylesheet>
