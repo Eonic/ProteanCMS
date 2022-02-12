@@ -7285,6 +7285,15 @@
             </i><xsl:text> </xsl:text>complete order
           </a>
         </xsl:if>
+		  <xsl:if test="@statusId=10">
+			  <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=SendSettlementRequest&amp;id={@id}" target="_new" class="btn btn-xs btn-primary">
+				  <i class="fa fa-envelope">
+					  <xsl:text> </xsl:text>
+				  </i>
+				  <xsl:text> Send Settlement Request</xsl:text>
+			  </a>
+
+		  </xsl:if>
                 
       </td>
       <td>
@@ -7406,6 +7415,11 @@
     <div id="cartFull">
       <div class="panel panel-default">
         <div class="panel-heading">
+			<xsl:if test="Payment">
+				<a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary btn-sm pull-right" target="_new">
+					<i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
+				</a>
+			</xsl:if>
           <xsl:choose>
             <xsl:when test="(@statusId='6' or @statusId='10') and (PaymentDetails/@provider='JudoPay' or PaymentDetails/@provider='Pay360')">
               <div>
@@ -7486,7 +7500,7 @@
             <dd>
               <xsl:if test="ancestor::Content/User">
                 <a href="?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::Content/User/@id}">
-                  <span class="btn btn-primary btn-xs">
+                  <span class="">
                     <i class="fa fa-user fa-white"> </i>
                   <xsl:text> </xsl:text>
                   <xsl:value-of select="ancestor::Content/User/FirstName/node()"/>
@@ -7554,17 +7568,8 @@
             </xsl:for-each>
           </dl>
          </xsl:if>
-          <xsl:if test="Payment">
-            <a class="btn btn-primary" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
-              Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
-            </a><br/>
-            <br/>
-          </xsl:if>
-          <xsl:if test="Payment">
-            <a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary" target="_new">
-              <i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
-            </a>
-          </xsl:if>
+
+
       </div>
       <xsl:if test="Contact[@type='Billing Address']">
         <div id="billingAddress" class="cartAddress col-md-3">
@@ -7624,15 +7629,18 @@
       </div>
           </xsl:if>
         <xsl:if test="Payment">
+				<a class="btn btn-primary pull-right" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
+					Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
+				</a>
           <div class="col-md-12">
 
           <table class="table collapse" id="paymentTable">
             <thead>
             <tr>
-              <th scope="col">Provider</th>
               <th scope="col">Date</th>
+              <th scope="col">Provider</th>
               <th scope="col">Amount</th>
-              <th scope="col">Other Info</th>
+              <th scope="col">AuthCode</th>
             </tr>
               </thead>
             <tbody>
@@ -7646,15 +7654,14 @@
                     <xsl:with-param name="showTime">true</xsl:with-param>
                   </xsl:call-template>
                 </th>
-                <th scope="row">
-                  <xsl:value-of select="nPaymentAmount"/>
-                </th>
                 <td>
                   <xsl:value-of select="cPayMthdProviderName"/>
                 </td>
-                <td>
-                  AuthCode:
-                  <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+                <th scope="row">
+                  <xsl:value-of select="nPaymentAmount"/>
+                </th>
+                <td>                  
+                  <xsl:value-of select="cPayMthdProviderRef"/>
                 </td>
                 </tr>
             </xsl:for-each>
@@ -7662,12 +7669,11 @@
           </table>
             </div>
         </xsl:if>   
-        <xsl:if test="Notes/Notes"><div class="col-md-12">
-          <div class="notes alert alert-danger">
-              <i class="fas fa-lg fa-exclamation-triangle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;
+        <xsl:if test="Notes/Notes">
+			<br/>
+			<br/>
               <xsl:apply-templates select="Notes" mode="displayNotes"/>
-          </div>
-        </div>
+ 
         </xsl:if>
       </div>
 
@@ -7773,7 +7779,7 @@
             </td>
           </tr>
         </xsl:if>
-        <xsl:if test="@payableAmount">
+        <xsl:if test="@outstandingAmount">
           <tr>
             <td colspan="4">&#160;</td>
             <td class="total heading">
@@ -7784,7 +7790,7 @@
             </td>
             <td class="total amount">
               <xsl:value-of select="$currency"/>
-              <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
+              <xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
             </td>
           </tr>
         </xsl:if>
@@ -7803,6 +7809,9 @@
     <xsl:variable name="parentURL">
       <xsl:call-template name="getContentParURL"/>
     </xsl:variable>
+	  <div class="col-md-12">
+		  <div class="notes alert alert-info">
+			  <i class="fas fa-lg fa-info-circle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;
     <xsl:if test="Notes/Notes/node()!='' or Notes/PromotionalCode/node()!=''">
       <xsl:if test="Notes/Notes/node()!=''">
         <h3>
@@ -7847,6 +7856,8 @@
         </p>
       </xsl:if>
     </xsl:if>
+			  </div>
+		  </div>
   </xsl:template>
 
   <xsl:template match="Contact" mode="cart">

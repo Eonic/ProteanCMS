@@ -2177,13 +2177,13 @@
         <xsl:text>:&#160;</xsl:text>
         <xsl:value-of select="@InvoiceRef"/>
       </p>
-      <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
+      <xsl:if test="@payableType='deposit' and (@paymentMade &gt; 0) ">
         <p>
           <!--Payment Received-->
           <xsl:call-template name="term3024" />
           <xsl:text>:&#160;</xsl:text>
           <xsl:value-of select="$currency"/>
-          <xsl:value-of select="format-number(@payableAmount,'0.00')" />
+          <xsl:value-of select="format-number(@paymentMade,'0.00')" />
         </p>
         <p>
           <!--Final Payment Reference-->

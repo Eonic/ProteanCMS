@@ -1746,9 +1746,15 @@ processFlow:
                 'Add processing for deposits.
                 Select Case PayableType
                     Case "deposit"
+                        mcDepositAmount = CDbl("0" + oCartElmt.GetAttribute("payableAmount"))
+                        Dim outstandingAmount As Double
+                        If mcDepositAmount = 0 Then
+                            'no deposit payment paid in full
+                            outstandingAmount = 0
+                        Else
+                            outstandingAmount = CDbl("0" + oCartElmt.GetAttribute("total")) - mcDepositAmount
+                        End If
 
-                        Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - CDbl("0" + oCartElmt.GetAttribute("payableAmount"))
-                        mcDepositAmount = oCartElmt.GetAttribute("payableAmount")
                         ' Let's update the cart element
                         oCartElmt.SetAttribute("paymentMade", mcDepositAmount)
                         oCartElmt.SetAttribute("outstandingAmount", FormatNumber(outstandingAmount, 2, TriState.True, TriState.False, TriState.False))
@@ -1767,11 +1773,23 @@ processFlow:
                         oCartElmt.SetAttribute("settlementID", cUniqueLink)
                         oCartElmt.SetAttribute("transStatus", "Complete")
                         UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
-                        mnProcessId = 10
+                        If outstandingAmount = 0 Then
+                            mnProcessId = 6
+                        Else
+                            mnProcessId = 10
+                        End If
 
                     Case "settlement"
+                        Dim totalPaid As Double = oCartElmt.GetAttribute("paymentMade")
+                        totalPaid = totalPaid + amountPaid
+                        Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - totalPaid
+                        oCartElmt.SetAttribute("paymentMade", totalPaid)
+                        oCartElmt.SetAttribute("outstandingAmount", outstandingAmount)
+                        oCartElmt.SetAttribute("payableAmount", outstandingAmount)
 
+                        UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
 
+                        mnProcessId = 6
                     Case Else
                         PayableType = "full"
                 End Select
@@ -6244,7 +6262,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "AddPaymentMethod", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "SetPaymentMethod", ex, "", cProcessInfo, gbDebug)
             End Try
         End Function
 
