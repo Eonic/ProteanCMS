@@ -7125,6 +7125,12 @@
                     <th>Email</th>
                     <th>Time Placed</th>
                     <th>Value</th>
+					  <xsl:if test="$title='Deposit Paid'">
+
+						  <th>Paid</th>
+												<th>Outstanding</th>
+						  <th>Due by</th>
+					  </xsl:if>
                     <th>&#160;</th>
                     <th>
                       <a href="" class="btn btn-default">All</a>
@@ -7265,6 +7271,30 @@
         &#160;
         <xsl:value-of select="@currency"/>
       </td>
+		<xsl:if test="Order/@status='Deposit Paid'">
+			<td>
+				<xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@paymentMade,'0.00')"/>
+				<!-- COMMENTED THIS LINE AS @TOTAL ALREADY INCLUDES THE SHIPPING -->
+				<!--<xsl:value-of select="format-number(Order/@total + Order/@shippingCost,'0.00')"/>-->
+				&#160;
+				<xsl:value-of select="@currency"/>
+			</td>
+			<td>
+				<xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@outstandingAmount,'0.00')"/>
+				<!-- COMMENTED THIS LINE AS @TOTAL ALREADY INCLUDES THE SHIPPING -->
+				<!--<xsl:value-of select="format-number(Order/@total + Order/@shippingCost,'0.00')"/>-->
+				&#160;
+				<xsl:value-of select="@currency"/>
+			</td>
+			<td>
+				<xsl:call-template name="DD_Mon_YY">
+					<xsl:with-param name="date">
+						<xsl:value-of select="Order/Item[1]/productDetail/StartDate/node()"/>
+					</xsl:with-param>
+					<xsl:with-param name="showTime">false</xsl:with-param>
+				</xsl:call-template>
+			</td>
+		</xsl:if>
       <td>
         <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-xs btn-primary">
           <i class="fa fa-eye">
@@ -7286,11 +7316,11 @@
           </a>
         </xsl:if>
 		  <xsl:if test="@statusId=10">
-			  <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=SendSettlementRequest&amp;id={@id}" target="_new" class="btn btn-xs btn-primary">
+			  <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=RequestSettlement&amp;id={@id}" target="_new" class="btn btn-xs btn-primary">
 				  <i class="fa fa-envelope">
 					  <xsl:text> </xsl:text>
 				  </i>
-				  <xsl:text> Send Settlement Request</xsl:text>
+				  <xsl:text> Send Request Settlement </xsl:text>
 			  </a>
 
 		  </xsl:if>

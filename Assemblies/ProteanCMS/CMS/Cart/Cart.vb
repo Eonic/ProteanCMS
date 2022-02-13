@@ -1530,14 +1530,13 @@ processFlow:
                                 GetCart(oElmt)
                             End If
 
-                            If mnProcessId = Cart.cartProcess.Complete Or mnProcessId = Cart.cartProcess.AwaitingPayment Then
+                            If mnProcessId = Cart.cartProcess.Complete Or mnProcessId = Cart.cartProcess.DepositPaid Or mnProcessId = Cart.cartProcess.AwaitingPayment Then
 
                                 If moCartConfig("StockControl") = "on" Then
                                     UpdateStockLevels(oElmt)
                                 End If
                                 UpdateGiftListLevels()
                                 addDateAndRef(oElmt)
-
                                 If myWeb.mnUserId > 0 Then
                                     Dim userXml As XmlElement = myWeb.moDbHelper.GetUserXML(myWeb.mnUserId, False)
                                     If userXml IsNot Nothing Then
@@ -1547,22 +1546,21 @@ processFlow:
                                         End If
                                     End If
                                 End If
-
                                 purchaseActions(oContentElmt)
-                                AddToLists("Invoice", oContentElmt)
+                                If mnProcessId = Cart.cartProcess.DepositPaid Then
+                                    AddToLists("Deposit", oContentElmt)
+                                Else
+                                    AddToLists("Invoice", oContentElmt)
+                                End If
 
                                 If myWeb.mnUserId > 0 Then
                                     If Not moSubscription Is Nothing Then
                                         moSubscription.AddUserSubscriptions(Me.mnCartId, myWeb.mnUserId, mnPaymentId, oContentElmt)
                                     End If
                                 End If
-
                                 emailReceipts(oContentElmt)
-
                                 moDiscount.DisablePromotionalDiscounts()
-
                             End If
-
 
 
 
@@ -1955,6 +1953,12 @@ processFlow:
                                     xsltPath = moMailConfig("Pure360InvoiceList")
                                     oMessaging.Activities.RemoveFromList(moMailConfig("InvoiceList"), Email)
                                 End If
+                            Case "Deposit"
+                                If moMailConfig("DepositList") <> "" Then
+                                    xsltPath = moMailConfig("Pure360QuoteList")
+                                    oMessaging.Activities.RemoveFromList(moMailConfig("DepositList"), Email)
+                                End If
+                                ListId = moMailConfig("QuoteList")
                             Case "Quote"
                                 If moMailConfig("QuoteList") <> "" Then
                                     xsltPath = moMailConfig("Pure360QuoteList")
@@ -3081,6 +3085,40 @@ processFlow:
                             Next
                             oldCartId = nCartIdUse
                         End If
+
+                        If nStatusId = 10 Then
+                            Dim dDueDate As DateTime
+
+                            'get earliest event start date
+                            Dim itemElmt As XmlElement
+                            Dim eventDate As DateTime
+                            For Each itemElmt In oCartElmt.SelectNodes("Item")
+                                If Not itemElmt.SelectSingleNode("productDetail/StartDate") Is Nothing Then
+                                    eventDate = CDate(itemElmt.SelectSingleNode("productDetail/StartDate").InnerText)
+                                    If dDueDate = Nothing Then
+                                        dDueDate = eventDate
+                                    Else
+                                        If dDueDate < eventDate Then
+                                            dDueDate = eventDate
+                                        End If
+                                    End If
+                                End If
+                            Next
+                            If Not dDueDate = Nothing Then
+                                Dim DateInterval As Double = 30
+                                If moCartConfig("SettlementDays") <> "" Then
+                                    DateInterval = CDbl(moCartConfig("SettlementDays"))
+                                End If
+                                dDueDate = DateAndTime.DateAdd(Microsoft.VisualBasic.DateInterval.Day, DateInterval * -1, dDueDate)
+                                oCartElmt.SetAttribute("settlementDueDate", dDueDate.ToString())
+                            End If
+
+                            Dim sSql2 As String = "Select nSettlementId from tblCartOrder where nCartOrderKey=" & nCartIdUse
+                            Dim settlementId As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))
+                            oCartElmt.SetAttribute("settlementId", settlementId)
+
+                        End If
+
                         'Ensure we persist the invoice date and ref.
                         If nStatusId > 6 And oCartElmt.GetAttribute("InvoiceDate") = "" Then
                             'Persist invoice date and invoice ref

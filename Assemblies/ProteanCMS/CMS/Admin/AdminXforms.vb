@@ -9053,6 +9053,82 @@ Partial Public Class Cms
             End Function
 
 
+            Public Function xFrmRequestSettlement(ByVal nOrderId As Integer) As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim InstanceSessionName = "tempInstance_requestSettlement" & nOrderId.ToString()
+                Try
+
+
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    MyBase.NewFrm("Request Settlement")
+                    MyBase.bProcessRepeats = False
+
+                    'We load the xform from a file, it may be in local or in common folders.
+                    MyBase.load("/xforms/cart/requestSettlement.xml", myWeb.maCommonFolders)
+
+                    'We get the instance
+                    If nOrderId > 0 Then
+
+                        MyBase.bProcessRepeats = True
+                        If myWeb.moSession(InstanceSessionName) Is Nothing Then
+                            Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                            Dim oCart As Cart
+                            oCart = New Cart(myWeb)
+                            'Get Cart Xml
+                            Dim oCartListElmt As XmlElement = moPageXML.CreateElement("Order")
+                            oCart.GetCart(oCartListElmt, nOrderId)
+                            existingInstance.InnerXml = oCartListElmt.OuterXml
+
+                            MyBase.Instance.SelectNodes("emailer")
+
+                            Dim emailerNode As XmlNode = MyBase.Instance.SelectSingleNode("emailer")
+
+                            existingInstance.InsertBefore(emailerNode.CloneNode(True), existingInstance.FirstChild)
+
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession(InstanceSessionName) = MyBase.Instance
+
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                        End If
+                    End If
+
+                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+
+                            'Send Email
+                            Dim oMsg As New Protean.Messaging()
+                            oMsg.emailer(MyBase.Instance.SelectSingleNode("RegradeUser"), MyBase.Instance.SelectSingleNode("RegradeUser/emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/fromEmail").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/User/Email").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/SubjectLine").InnerText)
+
+                            myWeb.moSession(InstanceSessionName) = Nothing
+
+                        End If
+                    ElseIf MyBase.isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        MyBase.updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    Else
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    End If
+
+                    'we populate the values onto the form.
+                    MyBase.addValues()
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
         End Class
 
 
