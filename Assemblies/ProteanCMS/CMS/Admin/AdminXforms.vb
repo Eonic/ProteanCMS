@@ -9053,7 +9053,7 @@ Partial Public Class Cms
             End Function
 
 
-            Public Function xFrmRequestSettlement(ByVal nOrderId As Integer) As XmlElement
+            Public Function xFrmRequestSettlement(ByVal nOrderId As Integer, Optional bForceSend As Boolean = False) As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim InstanceSessionName = "tempInstance_requestSettlement" & nOrderId.ToString()
                 Try
@@ -9083,6 +9083,18 @@ Partial Public Class Cms
 
                             Dim emailerNode As XmlNode = MyBase.Instance.SelectSingleNode("emailer")
 
+                            Dim msgNode As XmlElement = emailerNode.SelectSingleNode("oBodyXML/Items/Message")
+
+                            Dim msgHtml As String = msgNode.InnerXml
+
+                            msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText)
+                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementId"))
+                            msgHtml = msgHtml.Replace("{PaymentDue}", oCartListElmt.GetAttribute("payableAmount"))
+                            msgHtml = msgHtml.Replace("{PaymentDueDate}", oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText)
+                            msgHtml = msgHtml.Replace("{CourseName}", oCartListElmt.SelectSingleNode("Item[1]/Name").InnerText)
+
+                            msgNode.InnerXml = msgHtml
+
                             existingInstance.InsertBefore(emailerNode.CloneNode(True), existingInstance.FirstChild)
 
                             MyBase.LoadInstance(existingInstance)
@@ -9095,17 +9107,16 @@ Partial Public Class Cms
 
                     moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
 
-                    If MyBase.isSubmitted Then
+                    If MyBase.isSubmitted Or bForceSend Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
                         If MyBase.valid Then
-
+                            Dim Name As String = MyBase.Instance.SelectSingleNode("Order/Contact[@type='Billing Address']/GivenName").InnerText
+                            Dim EmailTo As String = MyBase.Instance.SelectSingleNode("Order/Contact[@type='Billing Address']/Email").InnerText
                             'Send Email
                             Dim oMsg As New Protean.Messaging()
-                            oMsg.emailer(MyBase.Instance.SelectSingleNode("RegradeUser"), MyBase.Instance.SelectSingleNode("RegradeUser/emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/fromEmail").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/User/Email").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/SubjectLine").InnerText)
-
+                            oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
                             myWeb.moSession(InstanceSessionName) = Nothing
-
                         End If
                     ElseIf MyBase.isTriggered Then
                         'we have clicked a trigger so we must update the instance

@@ -7320,7 +7320,7 @@
 				  <i class="fa fa-envelope">
 					  <xsl:text> </xsl:text>
 				  </i>
-				  <xsl:text> Send Request Settlement </xsl:text>
+				  <xsl:text> Send Settlement Request</xsl:text>
 			  </a>
 
 		  </xsl:if>

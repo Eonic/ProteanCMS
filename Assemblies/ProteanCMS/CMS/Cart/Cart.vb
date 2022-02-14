@@ -3113,7 +3113,7 @@ processFlow:
                                 oCartElmt.SetAttribute("settlementDueDate", dDueDate.ToString())
                             End If
 
-                            Dim sSql2 As String = "Select nSettlementId from tblCartOrder where nCartOrderKey=" & nCartIdUse
+                            Dim sSql2 As String = "Select cSettlementId from tblCartOrder where nCartOrderKey=" & nCartIdUse
                             Dim settlementId As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))
                             oCartElmt.SetAttribute("settlementId", settlementId)
 
