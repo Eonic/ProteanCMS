@@ -22,6 +22,10 @@ Partial Public Class Cms
     Partial Public Class Cart
 
 #Region "JSON Actions"
+        Public Class SelectList
+            Public Property Text As String
+            Public Property Value As String
+        End Class
 
         Public Class JSONActions
             Inherits API.JsonActions
@@ -32,6 +36,7 @@ Partial Public Class Cms
             Private moLmsConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/lms")
             Private myWeb As Protean.Cms
             Private myCart As Protean.Cms.Cart
+            Dim moConfig As System.Collections.Specialized.NameValueCollection
 
             Public Sub New()
                 Dim ctest As String = "this constructor is being hit" 'for testing
@@ -757,7 +762,7 @@ Partial Public Class Cms
                     Dim cTown = IIf(jObj("town") IsNot Nothing, CStr(jObj("town")), "")
                     Dim cPostCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
 
-                    Dim cPaymentReceipt = ""
+                    Dim cPaymentReceipt As String = ""
                     Dim josResult As String = ""
                     If cProviderName <> "" Then
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
@@ -892,7 +897,69 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            ''get county for selected country
+            'Public Function PopulateCountiesDropDownResult(ByVal cCountry As String) As List(Of SelectList)
+            '    Dim sSql As String = ""
 
+            '    Try
+
+            '        If cCountry <> "" Then
+            '            sSql = "SELECT DISTINCT cLocationNameFull as Text, cLocationNameShort as Value FROM tblCartShippingLocations WHERE nLocationType = 4 And nLocationParId IN "
+            '            sSql = sSql & " (SELECT nLocationKey FROM tblCartShippingLocations WHERE nLocationType = 2 And (cLocationNameShort Like '" & cCountry & "')) ORDER BY cLocationNameShort"
+            '        End If
+
+            '        Dim countySelectList As New List(Of SelectList)
+            '        Using sdr As SqlDataReader = myWeb.moDbHelper.getDataReader(sSql, CommandType.Text)
+            '            While sdr.Read()
+            '                countySelectList.Add(New SelectList With {
+            '                              .Text = sdr("Text").ToString(),
+            '                              .Value = sdr("Value").ToString()
+            '                            })
+            '            End While
+            '        End Using
+            '        Return countySelectList
+            '    Catch ex As Exception
+            '        Return Nothing
+            '    End Try
+            'End Function
+
+            'get county for selected country
+            Public Function PopulateCounty(ByVal myApi As Protean.API, ByVal searchFilter As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    Dim JsonResult As String = ""
+                    Dim sSql As String = ""
+
+                    Dim strCountry As String = searchFilter("strCountry").ToObject(Of String)()
+                    'If (moConfig("CountryListforJudopayISOCode") IsNot Nothing) Then
+                    ' If (moConfig("CountryListforJudopayISOCode").ToLower().Contains(strCountry) And strCountry <> "") Then
+
+                    If strCountry <> "" Then
+                        sSql = "SELECT DISTINCT cLocationNameFull as Text, cLocationNameShort as Value FROM tblCartShippingLocations WHERE nLocationType = 4 And nLocationParId IN "
+                        sSql = sSql & " (SELECT nLocationKey FROM tblCartShippingLocations WHERE nLocationType = 2 And (cLocationNameShort Like '" & strCountry & "')) ORDER BY cLocationNameShort"
+                    End If
+
+                    Dim countySelectList As New List(Of SelectList)
+                    Using sdr As SqlDataReader = myWeb.moDbHelper.getDataReader(sSql, CommandType.Text)
+                        While sdr.Read()
+                            countySelectList.Add(New SelectList With {
+                                          .Text = sdr("Text").ToString(),
+                                          .Value = sdr("Value").ToString()
+                                        })
+                        End While
+                    End Using
+                    JsonResult = JsonConvert.SerializeObject(countySelectList)
+                    ''Dim SearchCountydetails = PopulateCountiesDropDownResult(strCountry)
+                    '' JsonResult = JsonConvert.SerializeObject(SearchCountydetails)
+                    ' End If
+                    ' End If
+
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "PopulateCounty", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
         End Class
 
 #End Region
