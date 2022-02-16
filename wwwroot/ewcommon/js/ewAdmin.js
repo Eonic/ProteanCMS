@@ -2165,15 +2165,13 @@ function ValidateContentForm(event) {
 function RedirectClick(redirectType) {
     
     //var redirectType = $("redirectType").val();
-    
+    $(".hiddenRedirectType").val(redirectType);
     if (redirectType == "404Redirect") {
-        $("input[name*='redirectOption']").val("");
-        if ($(".btnSubmitPage").length > 0) {
+          
             $(".hiddenParentCheck").val("false");
             $("#redirectModal").modal("hide");
-            $(".btnSubmitPage").click();
+            document.createElement('form').submit.call(document.EditContent);
         }
-    }
     else {
         
         $("input[name*='redirectOption']").val(redirectType);
@@ -2403,12 +2401,14 @@ function ValidateProductForm(event) {
 
     if (form_check(event)) {
         var productId = this.getQueryStringParam('id');
+        if (productId != null) {
         $(".hiddenParentCheck").val("False");
         $(".hiddenType").val("Product");
         $(".hiddenPageId").val(productId);
         var cNewContentPath = $("#cContentPath").val();
         return editProduct.UrlPathOnChange(cNewContentPath);
-
+    }
+    else { return true;}
     }
 }
 //Edit Product
@@ -2440,6 +2440,7 @@ if (editProductElement > 0) {
             UrlPathOnChange: function (newContentPath) {
 
                 if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
+                    var redirectType = $(".hiddenRedirectType").val();
                     $('.btnRedirectSave').removeAttr("disabled");
                     $("#redirectModal").modal("show");
                     $("#OldUrl").val(localStorage.originalPathName);
@@ -2448,7 +2449,7 @@ if (editProductElement > 0) {
                     $(".hiddenPageId").val(localStorage.pageId);
                     $(".hiddenProductOldUrl").val(localStorage.originalPathName);
                     $(".hiddenProductNewUrl").val(newContentPath);
-                    $(".hiddenRedirectType").val("301Redirect");
+                    $(".hiddenRedirectType").val(redirectType);
                     event.preventDefault();
 
                 }
