@@ -1347,6 +1347,27 @@ function displayErrorMessage() {
     } else { alert(arguments[0]); }
 }
 
+//bootstrap validation alert
+function displaySuccessMessage() {
+    if (document.getElementById("xFrmAlertModal") != null) {
+        var iconClassName = document.getElementById("errorIcon").className;
+        $('#xFrmAlertModal #errorMessage').text(arguments[0]);
+        $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
+        $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);
+       
+        if (arguments.length == 3) {
+            if (arguments[2] != '') {
+                
+                $('#xFrmAlertModal .modal-content').removeClass('alert alert-danger');
+                $('#xFrmAlertModal .modal-content').addClass(arguments[2]);
+            }
+        }
+
+        $('#xFrmAlertModal').modal();
+    } else { alert(arguments[0]); }
+}
+
+
 
 /////
 function form_alert(cAlertType, oElem) {
