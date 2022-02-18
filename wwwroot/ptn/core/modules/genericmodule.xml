@@ -404,6 +404,22 @@
                 <label>2</label>
                 <value>2</value>
               </item>
+				<item>
+					<label>3</label>
+					<value>3</value>
+				</item>
+				<item>
+					<label>4</label>
+					<value>4</value>
+				</item>
+				<item>
+					<label>5</label>
+					<value>5</value>
+				</item>
+				<item>
+					<label>6</label>
+					<value>6</value>
+				</item>
               <help class="inline">
                 <p>Extra small devices (under 576px), typically small phones. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
               </help>
