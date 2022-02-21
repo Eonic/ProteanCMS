@@ -349,9 +349,9 @@
         </label>
 
         <group>
-          <group class="Content">
+
             <label>Images</label>
-            <input bind="cContentFullSizePicture" class="short pickImage form-section-wrapper">
+            <input bind="cContentFullSizePicture" class="short pickImage">
               <label>Main event image</label>
               <help class="inline">
                 <p>
@@ -362,13 +362,13 @@
               </help>
             </input>
             <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
-            <input bind="cContentThumbnail" class="short pickImage form-section-wrapper">
+            <input bind="cContentThumbnail" class="short pickImage">
               <label>Alternative thumbnail</label>
             </input>
-            <input bind="cContentPicture" class="short pickImage form-section-wrapper">
+            <input bind="cContentPicture" class="short pickImage">
               <label>Alternative picture</label>
             </input>
-          </group>
+       
           <group class="form-section-wrapper">
             <label>Image Gallery</label>
             <help class="inline">Besides the main product images, You can add additional images below to display as a gallery.</help>

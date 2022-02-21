@@ -2,7 +2,7 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="Information">
-      <ContentType type="Organisation" formPath="organisation/organisation" name="Organisation">Organisation Details</ContentType>
+      <ContentType type="Organisation" formPath="organisations/organisation" name="Organisation">Organisation Details</ContentType>
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>
