@@ -2265,7 +2265,6 @@ $(document).on("click", "#btnYescreateRuleForChild", function (event) {
 
     var pageId = $(".hiddenPageId").val();
     var redirectType = $("input[name*='redirectOption']").val();
-    alert(redirectType);
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();

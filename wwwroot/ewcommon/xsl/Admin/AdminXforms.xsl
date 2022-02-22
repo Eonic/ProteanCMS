@@ -2920,7 +2920,7 @@
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
             <input name="IsParent" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
-      <input  name="redirectOption" type="textbox" class="hiddenRedirectType" />
+      <input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
       </div>
     </div>
    

@@ -6901,14 +6901,22 @@ restart:
             PerfMon.Log("DBHelper", "FindpageIsParent")
             Try
                 Dim oDs As DataSet
+                Dim result As Boolean = False
+                'check for page-subpage relation
                 Dim strSQL As String = "select * from tblcontentstructure P inner join  tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey= '" & pageId & "'"
                 oDs = GetDataSet(strSQL, "page", "Page")
-                If oDs.Tables(0).Rows.Count > 0 Then
-                    Return True
+                If oDs.Tables(0).Rows.Count = 0 Then
+                    'check for page-product relation
+                    strSQL = "select * from tblcontentstructure P inner join  tblContentLocation C on p.nStructKey = C.nStructId where p.nStructKey= '" & pageId & "'"
+                    oDs = GetDataSet(strSQL, "page", "Page")
                 End If
+                If oDs.Tables(0).Rows.Count > 0 Then
+                    result = True
+                End If
+                Return result
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "FindDirectoryByForiegn", ex, "AllowMigration"))
-                Return -1
+                Return False
 
             End Try
         End Function
