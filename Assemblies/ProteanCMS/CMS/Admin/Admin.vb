@@ -1529,7 +1529,7 @@ ProcessFlow:
 
                         ElseIf myWeb.moRequest("relId") <> "" Then
                             'sorting Related Content for an item
-                            myWeb.moDbHelper.ReorderContent(myWeb.moRequest("relId"), myWeb.moRequest("id"), myWeb.moRequest("ewCmd"), True,, nGroupId)
+                            myWeb.moDbHelper.ReorderContent(myWeb.moRequest("relId"), myWeb.moRequest("id"), myWeb.moRequest("ewCmd"), True, "", nGroupId)
                             If myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""

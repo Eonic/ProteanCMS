@@ -210,7 +210,7 @@ Public Class IndexerAsync
                 'checking index file size start
                 Dim TotalSize As String
 
-                Dim infoReader As System.IO.FileInfo = My.Computer.FileSystem.GetFileInfo(mcIndexWriteFolder & "indexInfo.xml")
+                Dim infoReader As New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath("\"))) & "\Index\Write\indexInfo.xml")
                 If (infoReader.Exists) Then
                     TotalSize = infoReader.Length
 
@@ -288,7 +288,7 @@ Public Class IndexerAsync
                         pageObj.pagename = oDR("cStructName")
 
                         'checking index file size start
-                        infoReader = My.Computer.FileSystem.GetFileInfo(mcIndexWriteFolder & "indexInfo.xml")
+                        infoReader = New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath("\"))) & "\Index\Write\indexInfo.xml")
                         If (infoReader.Exists) Then
                             TotalSize = infoReader.Length
 
