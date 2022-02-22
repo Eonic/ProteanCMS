@@ -5918,6 +5918,9 @@ Partial Public Class Cms
                                 oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                                 For Each oRow In oDs.Tables("Order").Rows
                                     If (IsRefund IsNot Nothing) Then
+
+                                        moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
+
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
                                     Else
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And Error is: " & IsRefund & "'"
@@ -9027,6 +9030,93 @@ Partial Public Class Cms
 
                             myWeb.moSession(InstanceSessionName) = Nothing
 
+                        End If
+                    ElseIf MyBase.isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        MyBase.updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    Else
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    End If
+
+                    'we populate the values onto the form.
+                    MyBase.addValues()
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
+            Public Function xFrmRequestSettlement(ByVal nOrderId As Integer, Optional bForceSend As Boolean = False) As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim InstanceSessionName = "tempInstance_requestSettlement" & nOrderId.ToString()
+                Try
+
+
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    MyBase.NewFrm("Request Settlement")
+                    MyBase.bProcessRepeats = False
+
+                    'We load the xform from a file, it may be in local or in common folders.
+                    MyBase.load("/xforms/cart/requestSettlement.xml", myWeb.maCommonFolders)
+
+                    'We get the instance
+                    If nOrderId > 0 Then
+
+                        MyBase.bProcessRepeats = True
+                        If myWeb.moSession(InstanceSessionName) Is Nothing Then
+                            Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                            Dim oCart As Cart
+                            oCart = New Cart(myWeb)
+                            'Get Cart Xml
+                            Dim oCartListElmt As XmlElement = moPageXML.CreateElement("Order")
+                            oCart.GetCart(oCartListElmt, nOrderId)
+                            existingInstance.InnerXml = oCartListElmt.OuterXml
+
+                            MyBase.Instance.SelectNodes("emailer")
+
+                            Dim emailerNode As XmlNode = MyBase.Instance.SelectSingleNode("emailer")
+
+                            Dim msgNode As XmlElement = emailerNode.SelectSingleNode("oBodyXML/Items/Message")
+
+                            Dim msgHtml As String = msgNode.InnerXml
+
+                            msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText)
+                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementId"))
+                            msgHtml = msgHtml.Replace("{PaymentDue}", oCartListElmt.GetAttribute("payableAmount"))
+                            msgHtml = msgHtml.Replace("{PaymentDueDate}", oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText)
+                            msgHtml = msgHtml.Replace("{CourseName}", oCartListElmt.SelectSingleNode("Item[1]/Name").InnerText)
+
+                            msgNode.InnerXml = msgHtml
+
+                            existingInstance.InsertBefore(emailerNode.CloneNode(True), existingInstance.FirstChild)
+
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession(InstanceSessionName) = MyBase.Instance
+
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                        End If
+                    End If
+
+                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+
+                    If MyBase.isSubmitted Or bForceSend Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            Dim Name As String = MyBase.Instance.SelectSingleNode("Order/Contact[@type='Billing Address']/GivenName").InnerText
+                            Dim EmailTo As String = MyBase.Instance.SelectSingleNode("Order/Contact[@type='Billing Address']/Email").InnerText
+                            'Send Email
+                            Dim oMsg As New Protean.Messaging()
+                            oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
+                            myWeb.moSession(InstanceSessionName) = Nothing
                         End If
                     ElseIf MyBase.isTriggered Then
                         'we have clicked a trigger so we must update the instance

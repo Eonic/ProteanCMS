@@ -6901,14 +6901,22 @@ restart:
             PerfMon.Log("DBHelper", "FindpageIsParent")
             Try
                 Dim oDs As DataSet
+                Dim result As Boolean = False
+                'check for page-subpage relation
                 Dim strSQL As String = "select * from tblcontentstructure P inner join  tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey= '" & pageId & "'"
                 oDs = GetDataSet(strSQL, "page", "Page")
-                If oDs.Tables(0).Rows.Count > 0 Then
-                    Return True
+                If oDs.Tables(0).Rows.Count = 0 Then
+                    'check for page-product relation
+                    strSQL = "select * from tblcontentstructure P inner join  tblContentLocation C on p.nStructKey = C.nStructId where p.nStructKey= '" & pageId & "'"
+                    oDs = GetDataSet(strSQL, "page", "Page")
                 End If
+                If oDs.Tables(0).Rows.Count > 0 Then
+                    result = True
+                End If
+                Return result
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "FindDirectoryByForiegn", ex, "AllowMigration"))
-                Return -1
+                Return False
 
             End Try
         End Function
@@ -10662,7 +10670,9 @@ ReturnMe:
             Dim cRes As String = ""
 
             Dim nPaymentMethodKey As Long = -1
-            oDetailXML.SetAttribute("AmountPaid", nAmountPaid)
+            If Not oDetailXML Is Nothing Then
+                oDetailXML.SetAttribute("AmountPaid", nAmountPaid)
+            End If
             Try
                 If bUserSaved Then
                     cSQL = "SELECT tblCartPaymentMethod.nPayMthdKey FROM tblCartPaymentMethod INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey" &
@@ -10684,15 +10694,17 @@ ReturnMe:
                 ' End If
 
                 'mask the credit card number
-                Dim oCcNum As XmlElement = oDetailXML.SelectSingleNode("number")
-                If Not oCcNum Is Nothing Then
-                    oCcNum.InnerText = MaskString(oCcNum.InnerText, "*", False, 4)
-                End If
+                If Not oDetailXML Is Nothing Then
+                    Dim oCcNum As XmlElement = oDetailXML.SelectSingleNode("number")
+                    If Not oCcNum Is Nothing Then
+                        oCcNum.InnerText = MaskString(oCcNum.InnerText, "*", False, 4)
+                    End If
 
-                'mask CV2 digits
-                Dim oCV2 As XmlElement = oDetailXML.SelectSingleNode("CV2")
-                If Not oCV2 Is Nothing Then
-                    oCV2.InnerText = ""
+                    'mask CV2 digits
+                    Dim oCV2 As XmlElement = oDetailXML.SelectSingleNode("CV2")
+                    If Not oCV2 Is Nothing Then
+                        oCV2.InnerText = ""
+                    End If
                 End If
 
                 Dim oXml As XmlDocument = New XmlDocument
@@ -10703,7 +10715,9 @@ ReturnMe:
                 addNewTextNode("cPayMthdProviderRef", oElmt, cProviderRef)
                 addNewTextNode("cPayMthdAcctName", oElmt, cMethodName)
                 Dim oElmt2 As XmlElement = addNewTextNode("cPayMthdDetailXml", oElmt, )
-                oElmt2.InnerXml = oDetailXML.OuterXml
+                If Not oDetailXML Is Nothing Then
+                    oElmt2.InnerXml = oDetailXML.OuterXml
+                End If
 
                 'addNewTextNode("dPayMthdExpire", oElmt, xmlDate(dExpire))
 

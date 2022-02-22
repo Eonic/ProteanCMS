@@ -10595,6 +10595,12 @@ ProteanCMS
  <returns></returns>
  <remarks></remarks>
 </member>
+<member name="M:Protean.xmlTools.xsltExtensions.GetFilterButtons">
+ <summary>
+ Its a m
+ </summary>
+ <returns></returns>
+</member>
 <member name="T:Protean.com.pclpls.www.XMLTransferEngine">
 <remarks/>
 </member>

@@ -171,14 +171,14 @@
       <xsl:with-param name="comma-separated-files">
         <xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/vuejs/protean-vue.js</xsl:text>
+        <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
+		  <xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
@@ -3011,60 +3011,73 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='EditStructure']" mode="Admin">
-    <div id="tpltEditStructure">
-      <ul id="MenuTree" class="list-group">
-        <xsl:apply-templates select="Menu/MenuItem" mode="editStructure">
-          <xsl:with-param name="level">1</xsl:with-param>
-        </xsl:apply-templates>
-      </ul>
-
-    </div>
-  </xsl:template>
+	<xsl:template match="Page[@layout='EditStructure']" mode="Admin">
+		<div id="tpltEditStructure">
+			<ul id="MenuTree" class="list-group">
+				<xsl:apply-templates select="Menu/MenuItem" mode="editStructure">
+					<xsl:with-param name="level">1</xsl:with-param>
+				</xsl:apply-templates>
+			    <xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="editStructure">
+				    <xsl:with-param name="level">1</xsl:with-param>
+			    </xsl:apply-templates>
+			</ul>
+		</div>
+	</xsl:template>
 
   <xsl:template name="quickjump">
 
-  </xsl:template>
-  <!-- -->
-  <!-- -->
-  <!-- -->
-  <xsl:template match="MenuItem" mode="editStructure">
-    <xsl:param name="level"/>
+	</xsl:template>
+	<!-- -->
+	<!-- -->
+	<!-- -->
 
-    <xsl:variable name="siteRoot">
-      <xsl:call-template name="getSettings">
-        <xsl:with-param name="sectionName" select="'web'"/>
-        <xsl:with-param name="valueName" select="'RootPageId'"/>
-      </xsl:call-template>
-    </xsl:variable>
+	<xsl:template match="MenuItem" mode="editStructure">
+		<xsl:param name="level"/>
+		
+		<xsl:variable name="thislevel">
+			<xsl:value-of select="$level"/>
+		</xsl:variable>
+			
+		<xsl:variable name="siteRoot">
+			<xsl:call-template name="getSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'RootPageId'"/>
+			</xsl:call-template>
+		</xsl:variable>
 
-    <xsl:variable name="getMenuLevelDepth">
-      <xsl:call-template name="getSettings">
-        <xsl:with-param name="sectionName" select="'web'"/>
-        <xsl:with-param name="valueName" select="'MenuTreeDepth'"/>
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="menuLevelDepth">
-      <xsl:choose>
-        <xsl:when test="$getMenuLevelDepth = ''">
-          <xsl:value-of select="'0'"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$getMenuLevelDepth"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
-      <xsl:attribute name="class">
-        <xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
-          <xsl:text>clone context</xsl:text>
-          <xsl:value-of select="@cloneparent"/>
-        </xsl:if>
-        <xsl:text> list-group-item level-</xsl:text>
-        <xsl:value-of select="$level"/>
-        <xsl:if test="MenuItem"> expandable</xsl:if>
-      </xsl:attribute>
+		<xsl:variable name="getMenuLevelDepth">
+			<xsl:call-template name="getSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'MenuTreeDepth'"/>
+			</xsl:call-template>
+		</xsl:variable>
+	
+		<xsl:variable name="menuLevelDepth">
+			<xsl:choose>
+				<xsl:when test="$getMenuLevelDepth = ''">
+					<xsl:value-of select="'0'"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$getMenuLevelDepth"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+		<li id="node{@id}" data-tree-level="{$thislevel}">
+			<xsl:attribute name="data-tree-parent">
+				<xsl:if test="not(DisplayName/@siteTemplate='micro' and $thislevel='1')">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:attribute name="class">
+				<xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
+					<xsl:text>clone context</xsl:text>
+					<xsl:value-of select="@cloneparent"/>
+				</xsl:if>
+				<xsl:text> list-group-item level-</xsl:text>
+				<xsl:value-of select="$thislevel"/>
+				<xsl:if test="MenuItem"> expandable</xsl:if>
+			</xsl:attribute>
 
       <div class="pageCell">
         <xsl:variable name="pageLink">
@@ -3080,7 +3093,7 @@
         </xsl:variable>
         <a href="{$pageLink}" title="{@name}" name="{@id}">
           <xsl:choose>
-            <xsl:when test="DisplayName/@siteTemplate='micro'">
+            <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
               <i class="fa fa-home fa-lg status activeParent" xmlns="http://www.w3.org/1999/xhtml">
                 &#160;
               </i>
@@ -3235,11 +3248,11 @@
           <xsl:if test="descendant-or-self::MenuItem[@id=/Page/Request/QueryString/Item[@name='parId']]/@id">
             <xsl:if test="MenuItem">
 
-              <xsl:apply-templates select="MenuItem" mode="editStructure">
-                <xsl:with-param name="level">
-                  <xsl:value-of select="$level + 1"/>
-                </xsl:with-param>
-              </xsl:apply-templates>
+							<xsl:apply-templates select="MenuItem" mode="editStructure">
+								<xsl:with-param name="level">
+									<xsl:value-of select="$thislevel + 1"/>
+								</xsl:with-param>
+							</xsl:apply-templates>
 
             </xsl:if>
           </xsl:if>
@@ -3249,106 +3262,118 @@
           <xsl:if test="descendant-or-self::MenuItem[@id=/Page/Request/QueryString/Item[@name='pgid']]/@id">
             <xsl:if test="MenuItem"></xsl:if>
 
-            <xsl:apply-templates select="MenuItem" mode="editStructure">
-              <xsl:with-param name="level">
-                <xsl:value-of select="$level + 1"/>
-              </xsl:with-param>
-            </xsl:apply-templates>
+						<xsl:apply-templates select="MenuItem" mode="editStructure">
+							<xsl:with-param name="level">
+								<xsl:value-of select="$thislevel + 1"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
 
-          </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:if test="descendant-or-self::MenuItem[@id=/Page/@id]/@id">
-            <xsl:if test="MenuItem">
-              <xsl:apply-templates select="MenuItem" mode="editStructure">
-                <xsl:with-param name="level">
-                  <xsl:value-of select="$level + 1"/>
-                </xsl:with-param>
-              </xsl:apply-templates>
-            </xsl:if>
-          </xsl:if>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
-  </xsl:template>
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="descendant-or-self::MenuItem[@id=/Page/@id]/@id">
+						<xsl:if test="MenuItem">
+							<xsl:apply-templates select="MenuItem" mode="editStructure">
+								<xsl:with-param name="level">
+									<xsl:value-of select="$thislevel + 1"/>
+								</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:if>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+
+
+		</xsl:if>
+		</xsl:if>
+	</xsl:template>
 
 
   <!-- -->
   <!--   ##################  Move Here - dynamically generated from menu   ##############################   -->
   <!-- -->
 
-  <xsl:template match="Page[@layout='MovePage']" mode="Admin">
-    <!-- -->
-    <div class="row" id="tpltMovePage">
-      <div class="col-md-3">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Instructions</h3>
-          </div>
-          <div class="panel-body">
-            <p>To move the page identified as "moving..." click the move here link on a another page.</p>
-            <p>The moved page will be added beneath the page you have selected.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="panel panel-default">
-          <ul id="MenuTree" class="list-group">
-            <xsl:apply-templates select="Menu/MenuItem" mode="movePage">
-              <xsl:with-param name="level">1</xsl:with-param>
-            </xsl:apply-templates>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </xsl:template>
+	<xsl:template match="Page[@layout='MovePage']" mode="Admin">
+		<!-- -->
+		<div class="row" id="tpltMovePage">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Instructions</h3>
+					</div>
+					<div class="panel-body">
+						<p>To move the page identified as "moving..." click the move here link on a another page.</p>
+						<p>The moved page will be added beneath the page you have selected...</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<ul id="MenuTree" class="list-group">
+						<xsl:apply-templates select="Menu/MenuItem" mode="movePage">
+							<xsl:with-param name="level">1</xsl:with-param>
+						</xsl:apply-templates>
+						<xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="movePage">
+							<xsl:with-param name="level">1</xsl:with-param>
+						</xsl:apply-templates>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
 
-  <xsl:template match="MenuItem" mode="movePage">
-    <xsl:param name="level"/>
-    <li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
-      <!--<xsl:apply-templates select="." mode="status_legend"/>-->
-      <!--<xsl:if test="(position()+1) mod 2=0">
+	<xsl:template match="MenuItem" mode="movePage">
+		<xsl:param name="level"/>
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+		<li id="node{@id}" data-tree-level="{$level}">
+			<xsl:attribute name="data-tree-parent">
+				<xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+				</xsl:if>
+			</xsl:attribute>
+			<!--<xsl:apply-templates select="." mode="status_legend"/>-->
+			<!--<xsl:if test="(position()+1) mod 2=0">
 				<xsl:attribute name="class">alternate</xsl:attribute>
 			</xsl:if>-->
-      <xsl:attribute name="class">
-        <xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
-          <xsl:text>clone context</xsl:text>
-          <xsl:value-of select="@cloneparent"/>
-        </xsl:if>
-        <xsl:text> list-group-item level-</xsl:text>
-        <xsl:value-of select="$level"/>
-      </xsl:attribute>
-      <div class="pageCell">
-        <xsl:choose>
-          <xsl:when test="DisplayName/@siteTemplate='micro'">
-            <i class="fa fa-home fa-lg status activeParent">
-              &#160;
-            </i>
-            <span class="pageName">
-              &#160;
-              <xsl:value-of select="@name"/>
-            </span>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="." mode="status_legend"/>
-            <span class="pageName">
-              <xsl:apply-templates select="." mode="getDisplayName" />
-            </span>
-          </xsl:otherwise>
-        </xsl:choose>
-
-      </div>
-      <div class="optionButtons">
-        <xsl:choose>
-          <!-- Picks up and test when Ajax request for pages -->
-          <xsl:when test="//Request/*/Item[@name='movingPageId']">
-            <xsl:variable name="movingPageId" select="//Request/*/Item[@name='movingPageId']"/>
-            <xsl:choose>
-              <!-- this when will never be hit - until componant fixed - need the moving MenuItem in Schema to check -->
-              <xsl:when test="ancestor-or-self::MenuItem/@id=$movingPageId">
-                <xsl:text>Moving...</xsl:text>
-              </xsl:when>
-              <xsl:otherwise>
+			<xsl:attribute name="class">
+				<xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
+					<xsl:text>clone context</xsl:text>
+					<xsl:value-of select="@cloneparent"/>
+				</xsl:if>
+				<xsl:text> list-group-item level-</xsl:text>
+				<xsl:value-of select="$level"/>
+			</xsl:attribute>
+			<div class="pageCell">
+	          <xsl:choose>
+                  <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
+                    <i class="fa fa-home fa-lg status activeParent">
+                      &#160;
+                    </i>
+                    <span class="pageName">
+                      &#160;
+                      <xsl:value-of select="@name"/>
+                    </span>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates select="." mode="status_legend"/>
+                    <span class="pageName">
+					                    <xsl:apply-templates select="." mode="getDisplayName" />
+                    </span>
+                  </xsl:otherwise>
+                </xsl:choose>
+				
+			</div>
+			<div class="optionButtons">
+				<xsl:choose>
+					<!-- Picks up and test when Ajax request for pages -->
+					<xsl:when test="//Request/*/Item[@name='movingPageId']">
+						<xsl:variable name="movingPageId" select="//Request/*/Item[@name='movingPageId']"/>
+						<xsl:choose>
+							<!-- this when will never be hit - until componant fixed - need the moving MenuItem in Schema to check -->
+							<xsl:when test="ancestor-or-self::MenuItem/@id=$movingPageId">
+								<xsl:text>Moving...</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
 
                 <a href="{$appPath}?ewCmd=MoveHere&amp;pgid={$movingPageId}&amp;parId={@id}" title="Move this item under here" class="btn btn-primary">
                   <i class="fa fa-hand-o-down fa-white">
@@ -3384,56 +3409,66 @@
         </xsl:with-param>
       </xsl:apply-templates>
 
-    </xsl:if>
-  </xsl:template>
+		</xsl:if>
+	</xsl:if>
+	</xsl:template>
 
-  <!-- -->
-  <!--   ##################  Move Content - dynamically generated from menu   ##############################   -->
-  <!-- -->
-  <xsl:template match="Page[@layout='MoveContent']" mode="Admin">
-    <div class="row" id="tpltMoveContent">
-      <div class="col-md-3">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Instructions</h3>
-          </div>
-          <div class="panel-body">
-            <p>Click the "Move Here" button on the page you want to move your content too.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="panel panel-default">
-          <ul id="MenuTree" class="list-group">
-            <xsl:apply-templates select="Menu/MenuItem" mode="moveContent">
-              <xsl:with-param name="level">1</xsl:with-param>
-            </xsl:apply-templates>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </xsl:template>
+	<!-- -->
+	<!--   ##################  Move Content - dynamically generated from menu   ##############################   -->
+	<!-- -->
+	<xsl:template match="Page[@layout='MoveContent']" mode="Admin">
+		<div class="row" id="tpltMoveContent">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Instructions</h3>
+					</div>
+					<div class="panel-body">
+						<p>Click the "Move Here" button on the page you want to move your content too.</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<ul id="MenuTree" class="list-group">
+						<xsl:apply-templates select="Menu/MenuItem" mode="moveContent">
+							<xsl:with-param name="level">1</xsl:with-param>
+						</xsl:apply-templates>
+						<xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="moveContent">
+							<xsl:with-param name="level">1</xsl:with-param>
+						</xsl:apply-templates>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
 
 
-  <xsl:template match="MenuItem" mode="moveContent">
-    <xsl:param name="level"/>
-    <xsl:variable name="oldpgid">
-      <xsl:choose>
-        <xsl:when test="/Page/Request/QueryString/Item[@name='oldPgId']/node()!=''">
-          <xsl:value-of select="/Page/Request/QueryString/Item[@name='oldPgId']/node()"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="/Page/@id"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="class">
-      <xsl:if test="MenuItem"> expandable</xsl:if>
-    </xsl:variable>
-    <li id="node{@id}" class="list-group-item level-{$level} {$class}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
-      <div class="pageCell">
+	<xsl:template match="MenuItem" mode="moveContent">
+		<xsl:param name="level"/>
+		<xsl:variable name="oldpgid">
+			<xsl:choose>
+				<xsl:when test="/Page/Request/QueryString/Item[@name='oldPgId']/node()!=''">
+					<xsl:value-of select="/Page/Request/QueryString/Item[@name='oldPgId']/node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="/Page/@id"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="class">
+			<xsl:if test="MenuItem"> expandable</xsl:if>
+		</xsl:variable>
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+		<li id="node{@id}" class="list-group-item level-{$level} {$class}" data-tree-level="{$level}">
+			<xsl:attribute name="data-tree-parent">
+				<xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+				</xsl:if>
+			</xsl:attribute>
+			<div class="pageCell">
         <xsl:choose>
-          <xsl:when test="DisplayName/@siteTemplate='micro'">
+          <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
             <i class="fa fa-home fa-lg status activeParent">
               &#160;
             </i>
@@ -3443,60 +3478,66 @@
             </span>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates select="." mode="status_legend"/>
-            <span class="pageName">
-              <xsl:value-of select="@name"/>
-            </span>
-          </xsl:otherwise>
-        </xsl:choose>
-      </div>
-      <div class="optionButtons">
-        <xsl:choose>
-          <xsl:when test="ancestor-or-self::MenuItem[@clone &gt; 0]">
-            <xsl:text>Cloned...</xsl:text>
-          </xsl:when>
-          <xsl:when test="@id!=/Page/@id">
-            <a href="{$appPath}?ewCmd=MoveContent&amp;pgid={$oldpgid}&amp;parId={@id}&amp;id={/Page/Request/*/Item[@name='id']/node()}" title="Move this item under here" class="btn btn-xs btn-primary">
-              <i class="fa fa-share fa-rotate-90 fa-white">
-                <xsl:text> </xsl:text>
-              </i><xsl:text> </xsl:text>Move Here
-            </a>
-          </xsl:when>
-        </xsl:choose>
-      </div>
-    </li>
-    <xsl:if test="PageVersion">
-
-      <xsl:for-each select="PageVersion">
-        <li id="node{@id}" class="list-group-item level-{$level} page-version">
-          <div class="pageCell">
-            <xsl:apply-templates select="." mode="status_legend"/>
-            <span class="pageName">
-              Version - <xsl:value-of select="@name"/> - <xsl:value-of select="@desc"/>
-            </span>
-          </div>
-          <div class="optionButtons">
-            <xsl:if test="@id!=/Page/@id">
-              <a href="{$appPath}?ewCmd=MoveContent&amp;pgid={$oldpgid}&amp;parId={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" title="Move this item under here" class="btn btn-xs btn-primary">
-                <i class="fa fa-share fa-rotate-90 fa-white">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Move Here
-              </a>
-            </xsl:if>
-          </div>
-        </li>
-      </xsl:for-each>
-    </xsl:if>
-    <xsl:if test="descendant-or-self::MenuItem[@id=/Page/@id]/@id">
-      <xsl:apply-templates select="MenuItem" mode="moveContent">
-        <xsl:with-param name="level">
-          <xsl:value-of select="$level + 1"/>
-        </xsl:with-param>
-      </xsl:apply-templates>
-    </xsl:if>
-  </xsl:template>
-  <!-- -->
-  <!--   ##################  Locate Content - dynamically generated from menu   ##############################   -->
+				<xsl:apply-templates select="." mode="status_legend"/>
+				<span class="pageName">
+					<xsl:value-of select="@name"/>
+				</span>
+            </xsl:otherwise>
+          </xsl:choose>
+			</div>
+			<div class="optionButtons">
+				<xsl:choose>
+					<xsl:when test="ancestor-or-self::MenuItem[@clone &gt; 0]">
+						<xsl:text>Cloned...</xsl:text>
+					</xsl:when>
+					<xsl:when test="@id!=/Page/@id">
+						<a href="{$appPath}?ewCmd=MoveContent&amp;pgid={$oldpgid}&amp;parId={@id}&amp;id={/Page/Request/*/Item[@name='id']/node()}" title="Move this item under here" class="btn btn-xs btn-primary">
+							<i class="fa fa-share fa-rotate-90 fa-white">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Move Here
+						</a>
+					</xsl:when>
+				</xsl:choose>
+			</div>
+		</li>
+			
+		<xsl:if test="PageVersion">
+			<xsl:variable name="data-tree-parent">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+			</xsl:variable>
+			<xsl:variable name="data-tree-level" select="number($level)+1"/>
+			<xsl:for-each select="PageVersion">
+				<li id="node{@id}" class="list-group-item level-{$data-tree-level} page-version" data-tree-level="{$data-tree-level}" data-tree-parent="{$data-tree-parent}">
+					<div class="pageCell">
+						<xsl:apply-templates select="." mode="status_legend"/>
+						<span class="pageName">
+							Version - <xsl:value-of select="@name"/> - <xsl:value-of select="@desc"/>
+							<xsl:value-of select="parent::*/@id"/>
+						</span>
+					</div>
+					<div class="optionButtons">
+						<xsl:if test="@id!=/Page/@id">
+							<a href="{$appPath}?ewCmd=MoveContent&amp;pgid={$oldpgid}&amp;parId={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" title="Move this item under here" class="btn btn-xs btn-primary">
+								<i class="fa fa-share fa-rotate-90 fa-white">
+									<xsl:text> </xsl:text>
+								</i><xsl:text> </xsl:text>Move Here
+							</a>
+						</xsl:if>
+					</div>
+				</li>
+			</xsl:for-each>
+		</xsl:if>
+		<xsl:if test="descendant-or-self::MenuItem[@id=/Page/@id]/@id">
+			<xsl:apply-templates select="MenuItem" mode="moveContent">
+				<xsl:with-param name="level">
+					<xsl:value-of select="$level + 1"/>
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</xsl:if>
+		</xsl:if>
+	</xsl:template>
+	<!-- -->
+	<!--   ##################  Locate Content - dynamically generated from menu   ##############################   -->
 
   <xsl:template match="Page[@layout='LocateContent']" mode="Admin">
     <div class="row" id="tpltLocateContent">
@@ -3505,71 +3546,80 @@
           <div class="panel-heading">Instructions</div>
           <div class="panel-body">
 
-            <p>Any content can be located on any page throughout the site. However it will not be displayed unless the page contains a module that displays that kind of content.</p>
-            <p>
-              There are two types of relationship, a primary location, that is the parent page of each piece of content every piece of content should have one of these. You can change this by clicking the <a class="adminButton edit">edit relationship</a> button
-            </p>
-          </div>
-        </div>
-      </div>
-      <form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/*/Item[@name='id']}" method="post" class="ewXform">
-        <input type="hidden" name="id" value="{/Page/Request/*/Item[@name='id']}"/>
-        <xsl:variable name="position">
-          <xsl:choose>
-            <xsl:when test="/Page/ContentDetail/Content/Location[@primary='true']/@position!=''">
-              <xsl:value-of select="/Page/ContentDetail/Content/Location[@primary='true']/@position"/>
-            </xsl:when>
-            <xsl:otherwise>column1</xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <input type="hidden" name="position" value="{$position}"/>
-        <div class="col-md-9">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <button type="submit" name="submit" class="pull-right btn btn-success btn-sm" value="submit">
-                <i class="fa fa-check">
-                  <xsl:text> </xsl:text>
-                </i> Save Locations
-              </button>
-              <div class="clearfix">&#160;</div>
-            </div>
-            <ul id="MenuTree" class="list-group">
-              <xsl:apply-templates select="Menu/MenuItem" mode="LocateContent">
-                <xsl:with-param name="level">1</xsl:with-param>
-              </xsl:apply-templates>
-            </ul>
-            <div class="panel-footer">
-              <button type="submit" name="submit" class="pull-right btn btn-success btn-sm" value="submit">
-                <i class="fa fa-check">
-                  <xsl:text> </xsl:text>
-                </i> Save Locations
-              </button>
-              <div class="clearfix">&#160;</div>
-            </div>
-          </div>
-        </div>
-      </form>
+						<p>Any content can be located on any page throughout the site. However it will not be displayed unless the page contains a module that displays that kind of content.</p>
+						<p>
+							There are two types of relationship, a primary location, that is the parent page of each piece of content every piece of content should have one of these. You can change this by clicking the <a class="adminButton edit">edit relationship</a> button
+						</p>
+					</div>
+				</div>
+			</div>
+			<form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/*/Item[@name='id']}" method="post" class="ewXform">
+				<input type="hidden" name="id" value="{/Page/Request/*/Item[@name='id']}"/>
+				<xsl:variable name="position">
+					<xsl:choose>
+						<xsl:when test="/Page/ContentDetail/Content/Location[@primary='true']/@position!=''">
+							<xsl:value-of select="/Page/ContentDetail/Content/Location[@primary='true']/@position"/>
+						</xsl:when>
+						<xsl:otherwise>column1</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<input type="hidden" name="position" value="{$position}"/>
+				<div class="col-md-9">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<button type="submit" name="submit" class="pull-right btn btn-success btn-sm" value="submit">
+								<i class="fa fa-check">
+									<xsl:text> </xsl:text>
+								</i> Save Locations
+							</button>
+							<div class="clearfix">&#160;</div>
+						</div>
+						<ul id="MenuTree" class="list-group">
+							<xsl:apply-templates select="Menu/MenuItem" mode="LocateContent">
+								<xsl:with-param name="level">1</xsl:with-param>
+							</xsl:apply-templates>
+							<xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="LocateContent">
+								<xsl:with-param name="level">1</xsl:with-param>
+							</xsl:apply-templates>
+						</ul>
+						<div class="panel-footer">
+							<button type="submit" name="submit" class="pull-right btn btn-success btn-sm" value="submit">
+								<i class="fa fa-check">
+									<xsl:text> </xsl:text>
+								</i> Save Locations
+							</button>
+							<div class="clearfix">&#160;</div>
+						</div>
+					</div>
+				</div>
+			</form>
 
 
     </div>
   </xsl:template>
 
-  <!-- ###### NEW AJAX TREE VIEW - COMMENTED UNTIL THE LOCATIONS AND THE TREE VIEW WORK ###### -->
-  <xsl:template match="MenuItem" mode="LocateContent">
-    <xsl:param name="level"/>
-    <li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
-      <xsl:attribute name="class">
-        <xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
-          <xsl:text>clone context</xsl:text>
-          <xsl:value-of select="@cloneparent"/>
-        </xsl:if>
-        <xsl:text> list-group-item level-</xsl:text>
-        <xsl:value-of select="$level"/>
-        <xsl:if test="MenuItem"> expandable</xsl:if>
-      </xsl:attribute>
-      <div class="pageCell">
+	<!-- ###### NEW AJAX TREE VIEW - COMMENTED UNTIL THE LOCATIONS AND THE TREE VIEW WORK ###### -->
+	<xsl:template match="MenuItem" mode="LocateContent">
+		<xsl:param name="level"/>
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+		<li id="node{@id}" data-tree-level="{$level}">
+			<xsl:attribute name="data-tree-parent">
+				<xsl:if test="not(DisplayName/@siteTemplate='micro' or @level='1')">
+					<xsl:value-of select="./parent::MenuItem/@id"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:attribute name="class">
+				<xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
+					<xsl:text>clone context</xsl:text>
+					<xsl:value-of select="@cloneparent"/>
+				</xsl:if>
+				<xsl:text> list-group-item level-</xsl:text>
+				<xsl:value-of select="$level"/>
+				<xsl:if test="MenuItem"> expandable</xsl:if>
+			</xsl:attribute>
+			<div class="pageCell">
         <xsl:choose>
-          <xsl:when test="DisplayName/@siteTemplate='micro'">
+          <xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
             <i class="fa fa-home fa-lg status activeParent">
               &#160;
             </i>
@@ -3680,8 +3730,9 @@
         </xsl:with-param>
       </xsl:apply-templates>
 
-    </xsl:if>
-  </xsl:template>
+		</xsl:if>
+		</xsl:if>
+	</xsl:template>
 
   <!-- OLD LOCATION TREE VIEW - BROUGHT BACK UNTIL THE LOCATIONS AND THE TREE VIEW WORK -->
   <!--xsl:template match="MenuItem" mode="LocateContent">
@@ -7173,62 +7224,68 @@
 
                   <input type="hidden" name="ewCmd" value="BulkCartAction"/>
                   <input type="hidden" name="pgid" value="{$page/@id}"/>
-                  <div class="panel-heading-buttons col-md-3 pull-right">
-                    <xsl:if test="@ewCmd='Orders'">
-                      <div class="form-group bulk-action">
-                        <div class="input-group">
-                          <label class="input-group-addon">Bulk Action</label>
-                          <select class="form-control" name="BulkAction" id="BulkAction">
-                            <option value="Print">Print Delivery</option>
-                            <option value="SetInProgress">Move to In Progress</option>
-                            <option value="SetShipped">Move to Shipped</option>
-                          </select>
-                          <span class="input-group-btn">
-                            <button type="submit" class="btn btn-primary">Go</button>
-                          </span>
-                        </div>
-                      </div>
-                    </xsl:if>
+                <div class="panel-heading-buttons col-md-3 pull-right">
+		      <xsl:if test="@ewCmd='Orders'">
+                  <div class="form-group bulk-action">
+                    <div class="input-group">
+                      <label class="input-group-addon">Bulk Action</label>
+                      <select class="form-control" name="BulkAction" id="BulkAction">
+                        <option value="Print">Print Delivery</option>
+                        <option value="SetInProgress">Move to In Progress</option>
+                        <option value="SetShipped">Move to Shipped</option>
+                      </select>
+                      <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">Go</button>
+                      </span>
+                    </div>
                   </div>
-                  <div class="pull-right">
-                    <xsl:apply-templates select="/" mode="adminStepper">
-                      <xsl:with-param name="itemCount" select="'100'"/>
-                      <xsl:with-param name="itemTotal" select="$total"/>
-                      <xsl:with-param name="startPos" select="$startPos"/>
-                      <xsl:with-param name="path" select="$queryString"/>
-                      <xsl:with-param name="itemName" select="$title"/>
-                    </xsl:apply-templates>
-                  </div>
-                  <h3 class="panel-title">
-                    <xsl:value-of select="$title"/>
-                  </h3>
-
-                  <div class="terminus">
-                    <xsl:text> </xsl:text>
-                  </div>
+		  </xsl:if>
                 </div>
-                <table class="panel-body table table-striped">
-                  <tbody>
-                    <tr>
-                      <th>Order Id</th>
-                      <th>Status</th>
-                      <th>Customer Name</th>
-                      <th>Email</th>
-                      <th>Time Placed</th>
-                      <th>Value</th>
-                      <th>&#160;</th>
-                      <th>
-                        <a href="" class="btn btn-default">All</a>
-                      </th>
-                    </tr>
-                    <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
-                      <xsl:with-param name="startPos"  select="$startPos"/>
-                      <xsl:with-param name="itemCount" select="'100'"/>
-                    </xsl:apply-templates>
-                  </tbody>
-                </table>
+                <div class="pull-right">
+                  <xsl:apply-templates select="/" mode="adminStepper">
+                    <xsl:with-param name="itemCount" select="'100'"/>
+                    <xsl:with-param name="itemTotal" select="$total"/>
+                    <xsl:with-param name="startPos" select="$startPos"/>
+                    <xsl:with-param name="path" select="$queryString"/>
+                    <xsl:with-param name="itemName" select="$title"/>
+                  </xsl:apply-templates>
+                </div>
+                <h3 class="panel-title">
+                  <xsl:value-of select="$title"/>
+                </h3>
+                
+                <div class="terminus">
+                  <xsl:text> </xsl:text>
+                </div>
+            </div>
+              <table class="panel-body table table-striped">
+                <tbody>
+                  <tr>
+                    <th>Order Id</th>
+                    <th>Status</th>
+                    <th>Customer Name</th>
+                    <th>Email</th>
+                    <th>Time Placed</th>
+                    <th>Value</th>
+					  <xsl:if test="$title='Deposit Paid'">
 
-              </form>
+						  <th>Paid</th>
+												<th>Outstanding</th>
+						  <th>Due by</th>
+					  </xsl:if>
+                    <th>&#160;</th>
+                    <th>
+                      <a href="" class="btn btn-default">All</a>
+                    </th>
+                  </tr>
+                  <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
+                    <xsl:with-param name="startPos"  select="$startPos"/>
+                    <xsl:with-param name="itemCount" select="'100'"/>
+                  </xsl:apply-templates>
+                </tbody>
+              </table>
+                
+                  </form>
               <div class="panel-footer">
                 <div class="pull-right">
                   <xsl:apply-templates select="/" mode="adminStepper">
@@ -7356,6 +7413,30 @@
         &#160;
         <xsl:value-of select="@currency"/>
       </td>
+		<xsl:if test="Order/@status='Deposit Paid'">
+			<td>
+				<xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@paymentMade,'0.00')"/>
+				<!-- COMMENTED THIS LINE AS @TOTAL ALREADY INCLUDES THE SHIPPING -->
+				<!--<xsl:value-of select="format-number(Order/@total + Order/@shippingCost,'0.00')"/>-->
+				&#160;
+				<xsl:value-of select="@currency"/>
+			</td>
+			<td>
+				<xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@outstandingAmount,'0.00')"/>
+				<!-- COMMENTED THIS LINE AS @TOTAL ALREADY INCLUDES THE SHIPPING -->
+				<!--<xsl:value-of select="format-number(Order/@total + Order/@shippingCost,'0.00')"/>-->
+				&#160;
+				<xsl:value-of select="@currency"/>
+			</td>
+			<td>
+				<xsl:call-template name="DD_Mon_YY">
+					<xsl:with-param name="date">
+						<xsl:value-of select="Order/Item[1]/productDetail/StartDate/node()"/>
+					</xsl:with-param>
+					<xsl:with-param name="showTime">false</xsl:with-param>
+				</xsl:call-template>
+			</td>
+		</xsl:if>
       <td>
         <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-xs btn-primary">
           <i class="fa fa-eye">
@@ -7378,7 +7459,16 @@
             </i><xsl:text> </xsl:text>complete order
           </a>
         </xsl:if>
+		  <xsl:if test="@statusId=10">
+			  <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=RequestSettlement&amp;id={@id}" target="_new" class="btn btn-xs btn-primary">
+				  <i class="fa fa-envelope">
+					  <xsl:text> </xsl:text>
+				  </i>
+				  <xsl:text> Send Settlement Request</xsl:text>
+			  </a>
 
+		  </xsl:if>
+                
       </td>
       <td>
         <xsl:if test="@statusId=6">
@@ -7499,6 +7589,11 @@
     <div id="cartFull">
       <div class="panel panel-default">
         <div class="panel-heading">
+			<xsl:if test="Payment">
+				<a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary btn-sm pull-right" target="_new">
+					<i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
+				</a>
+			</xsl:if>
           <xsl:choose>
             <xsl:when test="(@statusId='6' or @statusId='10') and (PaymentDetails/@provider='JudoPay' or PaymentDetails/@provider='Pay360')">
               <div>
@@ -7552,220 +7647,209 @@
 
           </h3>
         </div>
-        <div class="panel-body row">
-          <div class="col-md-3">
-            <h4>Order Details</h4>
-            <dl class="dl-horizontal">
-              <dt>
-                Order Date
-              </dt>
-              <dd>
-                <xsl:call-template name="DD_Mon_YYYY">
-                  <xsl:with-param name="date">
-                    <xsl:value-of select="$orderDate"/>
-                  </xsl:with-param>
-                  <xsl:with-param name="showTime">true</xsl:with-param>
-                </xsl:call-template>
-              </dd>
-              <dt>
-                Order Reference
-              </dt>
-              <dd>
-                <xsl:value-of select="$orderId"/>
-              </dd>
-              <dt>
-                Customer Account
-              </dt>
-              <dd>
-                <xsl:if test="ancestor::Content/User">
-                  <a href="?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::Content/User/@id}">
-                    <span class="btn btn-primary btn-xs">
-                      <i class="fa fa-user fa-white"> </i>
-                      <xsl:text> </xsl:text>
-                      <xsl:value-of select="ancestor::Content/User/FirstName/node()"/>
-                      <xsl:text> </xsl:text>
-                      <xsl:value-of select="ancestor::Content/User/LastName/node()"/>
-                    </span>
-                  </a>
-                </xsl:if>
-              </dd>
-
-              <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
-                <dt>
-                  Payment Received
-                </dt>
-                <dd>
-                  <xsl:value-of select="$currency"/>
-                  <xsl:value-of select="format-number(@paymentMade,'0.00')" />
-                </dd>
-                <dt>Final Payment Reference/Link</dt>
-                <dd>
-                  <xsl:variable name="secureURL">
-                    <xsl:text>http</xsl:text>
-                    <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-                    <xsl:text>://</xsl:text>
-                    <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-                  </xsl:variable>
-                  <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
-                    <xsl:value-of select="@settlementID" />
-                  </a>
-                </dd>
+      <div class="panel-body row">
+        <div class="col-md-3">
+          <h4>Order Details</h4>
+          <dl class="dl-horizontal">
+            <dt>
+              Order Date
+            </dt>
+            <dd>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="$orderDate"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">true</xsl:with-param>
+              </xsl:call-template>
+            </dd>
+            <dt>
+              Order Reference
+            </dt>
+            <dd>
+              <xsl:value-of select="$orderId"/>
+            </dd>
+            <dt>
+              Customer Account
+            </dt>
+            <dd>
+              <xsl:if test="ancestor::Content/User">
+                <a href="?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::Content/User/@id}">
+                  <span class="">
+                    <i class="fa fa-user fa-white"> </i>
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="ancestor::Content/User/FirstName/node()"/>
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="ancestor::Content/User/LastName/node()"/>
+                  </span>
+                </a>
               </xsl:if>
-              <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
-                <dt>Payment Made</dt>
-                <dd>
-                  <xsl:value-of select="$currency"/>
-                  <xsl:value-of select="format-number(@paymentMade,'0.00')" />
-                </dd>
-                <dt>Total Payment Received</dt>
-                <dd>
-                  <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-                </dd>
-              </xsl:if>
-            </dl>
-            <xsl:if test="not(Payment)">
-              <h4>Payment Details</h4>
-              <dl class="dl-horizontal">
-                <dt>Payment Method</dt>
-                <dd>
-                  <xsl:value-of select="PaymentDetails/@provider"/>
-                </dd>
-                <dt>Payment Ref.</dt>
-                <dd>
-                  <xsl:value-of select="PaymentDetails/@ref"/>
-                </dd>
-                <dt>Payment Acct</dt>
-                <dd>
-                  <xsl:value-of select="PaymentDetails/@acct"/>
-                </dd>
-                <xsl:for-each select="PaymentDetails/*[local-name()!='Ref' or node()!='']/*">
-                  <dt>
-                    <xsl:value-of select="local-name()"/>
-                  </dt>
-                  <dd>
-                    <xsl:value-of select="node()"/>
-                  </dd>
-                </xsl:for-each>
-              </dl>
-            </xsl:if>
-            <xsl:if test="Payment">
-              <a class="btn btn-primary" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
-                Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
-              </a>
-              <br/>
-              <br/>
-            </xsl:if>
-            <xsl:if test="Payment">
-              <a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary" target="_new">
-                <i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
-              </a>
-            </xsl:if>
-          </div>
-          <xsl:if test="Contact[@type='Billing Address']">
-            <div id="billingAddress" class="cartAddress col-md-3">
-              <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm pull-right">
-                <i class="fa fa-edit"> </i>
-                Edit
-              </a>
-              <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart"/>
-            </div>
-          </xsl:if>
-          <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
-            <div id="deliveryAddress" class="cartAddress col-md-3">
-              <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm pull-right">
-                <i class="fa fa-edit"> </i>
-                Edit
-              </a>
-              <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
-            </div>
-          </xsl:if>
-          <xsl:if test="DeliveryDetails">
-            <div id="carrier-info" class="col-md-3">
-              <h4>Shipping Details</h4>
-              <dl class="dl-horizontal">
-                <xsl:for-each select="DeliveryDetails">
-                  <dt>Carrier</dt>
-                  <dd>
-                    <xsl:value-of select="@carrierName"/>
-                  </dd>
-                  <dt>Ref</dt>
-                  <dd>
-                    <xsl:value-of select="@ref"/>
-                  </dd>
-                  <dt>Collected Date</dt>
-                  <dd>
-                    <xsl:call-template name="DD_Mon_YYYY">
-                      <xsl:with-param name="date">
-                        <xsl:value-of select="@collectionDate"/>
-                      </xsl:with-param>
-                      <xsl:with-param name="showTime">false</xsl:with-param>
-                    </xsl:call-template>
-                  </dd>
-                  <dt>Delivery Date</dt>
-                  <dd>
-                    <xsl:call-template name="DD_Mon_YYYY">
-                      <xsl:with-param name="date">
-                        <xsl:value-of select="@deliveryDate"/>
-                      </xsl:with-param>
-                      <xsl:with-param name="showTime">false</xsl:with-param>
-                    </xsl:call-template>
-                  </dd>
-                  <dt>Notes</dt>
-                  <dd>
-                    <xsl:value-of select="@notes"/>
-                  </dd>
-                </xsl:for-each>
-              </dl>
-            </div>
-          </xsl:if>
-          <xsl:if test="Payment">
-            <div class="col-md-12">
+            </dd>
 
-              <table class="table collapse" id="paymentTable">
-                <thead>
-                  <tr>
-                    <th scope="col">Provider</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Other Info</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <xsl:for-each select="Payment">
-                    <tr>
-                      <th scope="row">
-                        <xsl:call-template name="DD_Mon_YYYY">
-                          <xsl:with-param name="date">
-                            <xsl:value-of select="dInsertDate"/>
-                          </xsl:with-param>
-                          <xsl:with-param name="showTime">true</xsl:with-param>
-                        </xsl:call-template>
-                      </th>
-                      <th scope="row">
-                        <xsl:value-of select="nPaymentAmount"/>
-                      </th>
-                      <td>
-                        <xsl:value-of select="cPayMthdProviderName"/>
-                      </td>
-                      <td>
-                        AuthCode:
-                        <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
-                      </td>
-                    </tr>
-                  </xsl:for-each>
-                </tbody>
-              </table>
-            </div>
+          <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
+            <dt>
+              Payment Received
+            </dt>
+            <dd>
+              <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
+            </dd>
+            <dt>Final Payment Reference/Link</dt>
+            <dd>
+              <xsl:variable name="secureURL">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:variable>
+              <a href="{$secureURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
+                <xsl:value-of select="@settlementID" />
+              </a>
+            </dd>
           </xsl:if>
-          <xsl:if test="Notes/Notes">
-            <div class="col-md-12">
-              <div class="notes alert alert-danger">
-                <i class="fas fa-lg fa-exclamation-triangle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;
-                <xsl:apply-templates select="Notes" mode="displayNotes"/>
-              </div>
-            </div>
+          <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
+            <dt>Payment Made</dt>
+            <dd>
+              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="format-number(@paymentMade,'0.00')" />
+            </dd>
+            <dt>Total Payment Received</dt>
+            <dd>
+              <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
+            </dd>
           </xsl:if>
+          </dl>
+          <xsl:if test="not(Payment)">
+          <h4>Payment Details</h4>
+          <dl class="dl-horizontal">
+            <dt>Payment Method</dt>
+            <dd>
+              <xsl:value-of select="PaymentDetails/@provider"/>
+            </dd>
+            <dt>Payment Ref.</dt>
+            <dd>
+              <xsl:value-of select="PaymentDetails/@ref"/>
+            </dd>
+            <dt>Payment Acct</dt>
+            <dd>
+              <xsl:value-of select="PaymentDetails/@acct"/>
+            </dd>
+            <xsl:for-each select="PaymentDetails/*[local-name()!='Ref' or node()!='']/*">
+              <dt>
+                <xsl:value-of select="local-name()"/>
+              </dt>
+              <dd>
+                <xsl:value-of select="node()"/>
+              </dd>
+            </xsl:for-each>
+          </dl>
+         </xsl:if>
+
+
+      </div>
+      <xsl:if test="Contact[@type='Billing Address']">
+        <div id="billingAddress" class="cartAddress col-md-3">
+          <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm pull-right">
+            <i class="fa fa-edit"> </i>
+            Edit
+          </a>
+          <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart"/>
         </div>
+      </xsl:if>
+      <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
+        <div id="deliveryAddress" class="cartAddress col-md-3">
+          <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm pull-right">
+            <i class="fa fa-edit"> </i>
+            Edit
+          </a>
+          <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
+        </div>
+      </xsl:if>
+      <xsl:if test="DeliveryDetails">
+      <div id="carrier-info" class="col-md-3">
+        <h4>Shipping Details</h4>
+        <dl class="dl-horizontal">
+          <xsl:for-each select="DeliveryDetails">
+          <dt>Carrier</dt>
+          <dd>
+            <xsl:value-of select="@carrierName"/>
+          </dd>
+            <dt>Ref</dt>
+            <dd>
+              <xsl:value-of select="@ref"/>
+            </dd>
+            <dt>Collected Date</dt>
+            <dd>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="@collectionDate"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+            </dd>
+            <dt>Delivery Date</dt>
+            <dd>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="@deliveryDate"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+            </dd>
+            <dt>Notes</dt>
+            <dd>
+              <xsl:value-of select="@notes"/>
+            </dd>
+          </xsl:for-each>
+        </dl>
+      </div>
+          </xsl:if>
+        <xsl:if test="Payment">
+				<a class="btn btn-primary pull-right" role="button" data-toggle="collapse" href="#paymentTable" aria-expanded="false" aria-controls="paymentTable">
+					Show Payments&#160;&#160;<i class="fa fa-credit-card">&#160;</i>
+				</a>
+          <div class="col-md-12">
+
+          <table class="table collapse" id="paymentTable">
+            <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Provider</th>
+              <th scope="col">Amount</th>
+              <th scope="col">AuthCode</th>
+            </tr>
+              </thead>
+            <tbody>
+            <xsl:for-each select="Payment">
+              <tr>
+                <th scope="row">
+                  <xsl:call-template name="DD_Mon_YYYY">
+                    <xsl:with-param name="date">
+                      <xsl:value-of select="dInsertDate"/>
+                    </xsl:with-param>
+                    <xsl:with-param name="showTime">true</xsl:with-param>
+                  </xsl:call-template>
+                </th>
+                <td>
+                  <xsl:value-of select="cPayMthdProviderName"/>
+                </td>
+                <th scope="row">
+                  <xsl:value-of select="nPaymentAmount"/>
+                </th>
+                <td>                  
+                  <xsl:value-of select="cPayMthdProviderRef"/>
+                </td>
+                </tr>
+            </xsl:for-each>
+              </tbody>
+          </table>
+            </div>
+        </xsl:if>   
+        <xsl:if test="Notes/Notes">
+			<br/>
+			<br/>
+              <xsl:apply-templates select="Notes" mode="displayNotes"/>
+ 
+        </xsl:if>
+      </div>
 
 
         <table cellspacing="0" id="cartListing" summary="This table contains a list of the items which you have added to the shopping cart. To change the quantity of an item, replace the number under the Qty column and click on Update Cart." class="table table-striped">
@@ -7829,69 +7913,69 @@
               </td>
             </tr>
 
-            <tr>
-              <td colspan="4">&#160;</td>
-              <td class="vat heading">
-                <xsl:choose>
-                  <xsl:when test="//Cart/Contact/Address/Country='United Kingdom'">VAT at </xsl:when>
-                  <xsl:otherwise>Tax at </xsl:otherwise>
-                </xsl:choose>
-                <xsl:value-of select="format-number(@vatRate, '#.00')"/>%:
-              </td>
-              <td class="vat amount">
-                <span class="currency">
-                  <xsl:value-of select="$currency"/>
-                </span>
-                <xsl:value-of select="format-number(@vatAmt, '0.00')"/>
-              </td>
-            </tr>
-          </xsl:if>
           <tr>
             <td colspan="4">&#160;</td>
-            <td class="total heading">Total Value:</td>
+            <td class="vat heading">
+              <xsl:choose>
+                <xsl:when test="//Cart/Contact/Address/Country='United Kingdom'">VAT at </xsl:when>
+                <xsl:otherwise>Tax at </xsl:otherwise>
+              </xsl:choose>
+              <xsl:value-of select="format-number(@vatRate, '#.00')"/>%:
+            </td>
+            <td class="vat amount">
+              <span class="currency">
+                <xsl:value-of select="$currency"/>
+              </span>
+              <xsl:value-of select="format-number(@vatAmt, '0.00')"/>
+            </td>
+          </tr>
+        </xsl:if>
+        <tr>
+          <td colspan="4">&#160;</td>
+          <td class="total heading">Total Value:</td>
+          <td class="total amount">
+            <xsl:value-of select="$currency"/>
+            <xsl:value-of select="format-number(@total, '0.00')"/>
+          </td>
+        </tr>
+        <xsl:if test="@paymentMade">
+          <tr>
+            <td colspan="4">&#160;</td>
+            <td class="total heading">
+              <xsl:choose>
+                <xsl:when test="@transStatus">Transaction Made</xsl:when>
+                <xsl:when test="@payableType='settlement' and not(@transStatus)">Payment Received</xsl:when>
+              </xsl:choose>
+            </td>
             <td class="total amount">
               <xsl:value-of select="$currency"/>
-              <xsl:value-of select="format-number(@total, '0.00')"/>
+              <xsl:value-of select="format-number(@paymentMade, '0.00')"/>
             </td>
           </tr>
-          <xsl:if test="@paymentMade">
-            <tr>
-              <td colspan="4">&#160;</td>
-              <td class="total heading">
-                <xsl:choose>
-                  <xsl:when test="@transStatus">Transaction Made</xsl:when>
-                  <xsl:when test="@payableType='settlement' and not(@transStatus)">Payment Received</xsl:when>
-                </xsl:choose>
-              </td>
-              <td class="total amount">
-                <xsl:value-of select="$currency"/>
-                <xsl:value-of select="format-number(@paymentMade, '0.00')"/>
-              </td>
-            </tr>
-          </xsl:if>
-          <xsl:if test="@payableAmount">
-            <tr>
-              <td colspan="4">&#160;</td>
-              <td class="total heading">
-                <xsl:choose>
-                  <xsl:when test="@payableType='deposit' and not(@transStatus)">Deposit Payable</xsl:when>
-                  <xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">Amount Outstanding</xsl:when>
-                </xsl:choose>
-              </td>
-              <td class="total amount">
-                <xsl:value-of select="$currency"/>
-                <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
-              </td>
-            </tr>
-          </xsl:if>
+        </xsl:if>
+        <xsl:if test="@outstandingAmount">
           <tr>
-            <td colspan="6">
-              Seller Notes:<br/>
-              <xsl:copy-of select="SellerNotes/node()"/>
+            <td colspan="4">&#160;</td>
+            <td class="total heading">
+              <xsl:choose>
+                <xsl:when test="@payableType='deposit' and not(@transStatus)">Deposit Payable</xsl:when>
+                <xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">Amount Outstanding</xsl:when>
+              </xsl:choose>
+            </td>
+            <td class="total amount">
+              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
             </td>
           </tr>
-        </table>
-      </div>
+        </xsl:if>
+        <tr>
+          <td colspan="6">
+            Seller Notes:<br/>
+            <xsl:copy-of select="SellerNotes/node()"/>
+          </td>
+        </tr>
+      </table>
+        </div>
     </div>
   </xsl:template>
 
@@ -7899,6 +7983,9 @@
     <xsl:variable name="parentURL">
       <xsl:call-template name="getContentParURL"/>
     </xsl:variable>
+	  <div class="col-md-12">
+		  <div class="notes alert alert-info">
+			  <i class="fas fa-lg fa-info-circle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;
     <xsl:if test="Notes/Notes/node()!='' or Notes/PromotionalCode/node()!=''">
       <xsl:if test="Notes/Notes/node()!=''">
         <h3>
@@ -7943,6 +8030,8 @@
         </p>
       </xsl:if>
     </xsl:if>
+			  </div>
+		  </div>
   </xsl:template>
 
   <xsl:template match="Contact" mode="cart">

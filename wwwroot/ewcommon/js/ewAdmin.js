@@ -289,6 +289,12 @@ $(document).ready(function() {
         hide: true
     });
 
+    $('.pick-page #MenuTree').ajaxtreeview({
+        loadPath: treeviewPath,
+        ajaxCmd: '',
+        openLevel: 2,
+        hide: true
+    });
 
 
     $('div.module div.moduleDrag').closest('.module').draggable({
@@ -1088,7 +1094,7 @@ Original preload function has been kept but is unused.
 
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
-                            alert($(loadNode).html());
+                           // alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode)
@@ -2265,7 +2271,6 @@ $(document).on("click", "#btnYescreateRuleForChild", function (event) {
 
     var pageId = $(".hiddenPageId").val();
     var redirectType = $("input[name*='redirectOption']").val();
-    alert(redirectType);
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
@@ -2434,7 +2439,7 @@ if (editProductElement > 0) {
                     localStorage.removeItem('originalPathName');
                 }
                 localStorage.pageId = productId;
-               
+                alert(this.urlPathInput);
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
