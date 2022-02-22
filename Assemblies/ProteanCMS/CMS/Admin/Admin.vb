@@ -3478,7 +3478,8 @@ AfterProcessFlow:
 
                             oCart.ListOrders(myWeb.moRequest("id"), True, , oPageDetail)
 
-
+                        Case "RequestSettlement"
+                            oPageDetail.AppendChild(moAdXfm.xFrmRequestSettlement(myWeb.moRequest("id")))
                         Case Else
                             Select Case mcEwCmd
                                 Case "Orders"

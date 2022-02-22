@@ -458,7 +458,8 @@
           <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityMedLevel.sql"/>
           <Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityPagesPeriod.sql"/>
           <Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spCartActivityTopLevel.sql"/>
-		  <Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spPurchasersLast2Years.sql"/>			
+		  <Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/spPurchasersLast2Years.sql"/>
+		  <Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/6.0.52.0/getAllPageVersions.sql"/>
 		</Sub3>
       </Sub2>
     </Sub1>

@@ -32,8 +32,8 @@
   <xsl:variable name="subSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
-
-
+  <xsl:variable name="mediaWidth" select="'640'"/>
+  
   <xsl:variable name="responsiveImageSizes">off</xsl:variable>
 
   <xsl:variable name="sitename">
@@ -4760,7 +4760,15 @@
       <xsl:when test="@status=1 or @status='-1'">
         <i>
           <xsl:attribute name="class">
-            <xsl:text>fa fa-file-text-o fa-lg status active</xsl:text>
+			  <xsl:choose>
+				  <xsl:when test="name()='PageVersion'">
+					  <xsl:text>fa fa-files-o fa-lg status active</xsl:text>
+				  </xsl:when>
+				  <xsl:otherwise>
+					  <xsl:text>fa fa-file-text-o fa-lg status active</xsl:text>
+				  </xsl:otherwise>
+			  </xsl:choose>
+            
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           &#160;
@@ -9102,7 +9110,38 @@
     <xsl:apply-templates select="." mode="getDiscountInfo"/>
   </xsl:template>
 
-  <!-- Get Discount Info -->
+	<xsl:template match="Content" mode="PriceNumberic">
+
+		<xsl:variable name="price">
+			<xsl:choose>
+				<xsl:when test="Prices/Price[@currency=$currency and @type='sale']/node()!=''">
+					<xsl:value-of select="Prices/Price[@currency=$currency and @type='sale']/node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="Prices/Price[@currency=$currency and @type='rrp']/node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</xsl:variable>
+
+		<!-- RRP and standard prices must remain within the #price_{$id} -->
+
+				<xsl:choose>
+					<xsl:when test="format-number($price, '#.00')='NaN'">
+						<xsl:value-of select="$price"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="$page" mode="formatPrice">
+							<xsl:with-param name="price">
+								<xsl:value-of select="$price"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
+					</xsl:otherwise>
+				</xsl:choose>
+	</xsl:template>
+
+
+	<!-- Get Discount Info -->
   <xsl:template match="Content | option" mode="getDiscountInfo">
     <xsl:variable name="discount">
       <xsl:choose>

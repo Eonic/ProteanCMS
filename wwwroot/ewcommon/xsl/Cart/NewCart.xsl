@@ -92,7 +92,7 @@
         <div id="cartLogonBox" class="box blueEdge cartBox">
           <div class="tl">
             <div class="tr">
-              <h2 class="title">Logon - I have an account</h2>
+              <h2 class="title">Login - I have an account</h2>
             </div>
           </div>
           <div class="content">

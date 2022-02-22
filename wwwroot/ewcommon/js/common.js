@@ -1174,7 +1174,6 @@ function setupShipLocList(oLI, bChecked) {
             }
         }
     }
-
 }
 
 //validate forms, checking that all required fields/options have been specified
