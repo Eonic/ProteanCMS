@@ -7451,7 +7451,7 @@
 				</a>
 			</xsl:if>
           <xsl:choose>
-            <xsl:when test="(@statusId='6' or @statusId='10') and (PaymentDetails/@provider='JudoPay' or PaymentDetails/@provider='Pay360')">
+            <xsl:when test="(@statusId='6' or @statusId='10') and (PaymentDetails/@provider='JudoPay' or PaymentDetails/@provider='Pay360' or PaymentDetails/@provider='Stripe')">
               <div>
                 <a href="?ewCmd=RefundOrder&amp;orderId={$orderId}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-danger btn-sm pull-right">
                   <i class="fa fa-money"> </i>

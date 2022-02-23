@@ -1445,7 +1445,9 @@ processFlow:
 
                     Case "EnterPaymentDetails", "SubmitPaymentDetails" 'confirm order and submit for payment
                         mnProcessId = 5
-
+                        If myWeb.moRequest("PaymentMethod") <> "" Then
+                            Me.mcPaymentMethod = myWeb.moRequest("PaymentMethod")
+                        End If
                         If oElmt.FirstChild Is Nothing Then
                             GetCart(oElmt)
                         End If
@@ -8326,17 +8328,17 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim cReportType As String = ""
                 If nProductId > 0 Then
                     'Low Level
-                    cSQL &= "spCartActivityLowLevel"
+                    cSQL &= "spCartActivityLowLevel "
                     cCustomParam = nProductId
                     cReportType = "Item Totals"
                 ElseIf Not cProductType = "" Then
                     'Med Level
-                    cSQL &= "spCartActivityMedLevel"
+                    cSQL &= "spCartActivityMedLevel "
                     cCustomParam = "'" & cProductType & "'"
                     cReportType = "Type Totals"
                 Else
                     'HighLevel
-                    cSQL &= "spCartActivityTopLevel"
+                    cSQL &= "spCartActivityTopLevel "
                     cCustomParam = bSplit
                     cReportType = "All Totals"
                 End If
