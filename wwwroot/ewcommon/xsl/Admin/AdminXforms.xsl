@@ -1689,15 +1689,16 @@
      
       <xsl:for-each select="ms:node-set($filterButtons)/*">
         <xsl:variable name="buttonName" select="node()"/>
-        <!--<xsl:value-of select="count(ms:node-set($filterButtons)/*)"/>-->
+		    <xsl:value-of select="Content/Content/@filtertype"/>
+		  
         <xsl:choose>
-          <xsl:when test="ancestor::Content/Content[@filterType=$buttonName]">
+          <xsl:when test="ancestor::Content/Content[@filtertype=$buttonName]">
            <button type="button" name="Edit {$buttonName}" class="btn btn-primary">
               Edit <xsl:value-of select="$buttonName"/>
             </button>
           </xsl:when>
           <xsl:otherwise>
-            <button type="submit" name="RelateAdd_PageFilter_1Way_~inactive" class="btn btn-primary">
+            <button type="submit" name="RelateAdd_PageFilter_1Way_~inactive" filtertype="{$buttonName}" class="btn btn-primary">
               Add <xsl:value-of select="$buttonName"/>
             </button>
           </xsl:otherwise>
@@ -2953,7 +2954,7 @@
             <div>
                 <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick(this.value);">301 Permanant Redirect</button>
                 <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">302 Temporary Redirect</button>
-                <!--<button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>-->
+                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>
              </div>
 
             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
@@ -2992,7 +2993,7 @@
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
             <input name="IsParent" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
-      <input  name="redirectOption" type="textbox" class="hiddenRedirectType" />
+      <input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
       </div>
     </div>
    

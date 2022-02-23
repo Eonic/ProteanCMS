@@ -8,19 +8,18 @@ Imports Protean.xForm
 Namespace Providers
     Namespace Filter
 
-        Public Class PageFilter
+        Public Class PriceFilter
 
 
             Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
-                    Dim pageFilterSelect As XmlElement
+                    Dim pageFilterRange As XmlElement
                     Dim oDr As SqlDataReader
 
                     Dim sSql As String = "spGetPagesByParentPageId"
                     oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     'Adding controls to the form like dropdown, radiobuttons
-                    pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
-                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
+                    oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 10, 30, 1)
 
                 Catch ex As Exception
 
