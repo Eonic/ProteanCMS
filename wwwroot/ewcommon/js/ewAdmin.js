@@ -289,6 +289,12 @@ $(document).ready(function() {
         hide: true
     });
 
+    $('.pick-page #MenuTree').ajaxtreeview({
+        loadPath: treeviewPath,
+        ajaxCmd: '',
+        openLevel: 2,
+        hide: true
+    });
 
 
     $('div.module div.moduleDrag').closest('.module').draggable({
@@ -678,8 +684,9 @@ $.fn.prepareAdminXform = function () {
 };
 
 function passImgToForm(targetForm, targetField) {
-    cUrl = document.forms['imageDetailsForm'].elements['cPathName'].value
-    cAlt = document.forms['imageDetailsForm'].elements['cDesc'].value
+    
+    cUrl = (document.forms['imageDetailsForm'].elements['cPathName'].value).replace(/'/g, "")
+    cAlt = (document.forms['imageDetailsForm'].elements['cDesc'].value).replace(/'/g, "")
     cWidth = document.forms['imageDetailsForm'].elements['nWidth'].value
     cHeight = document.forms['imageDetailsForm'].elements['nHeight'].value
     cName = document.forms['imageDetailsForm'].elements['cName'].value
@@ -848,8 +855,6 @@ Original preload function has been kept but is unused.
                 if (settings.level > 0) {
                     $(this).expandToLevel(settings);
                 }
-
-
 
                 // Add the control classes to the tree
                 $(this).find('li').each(function () {
@@ -1089,7 +1094,7 @@ Original preload function has been kept but is unused.
 
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
-                            alert($(loadNode).html());
+                           // alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode)
@@ -2166,15 +2171,13 @@ function ValidateContentForm(event) {
 function RedirectClick(redirectType) {
     
     //var redirectType = $("redirectType").val();
-    alert(redirectType);
+    $(".hiddenRedirectType").val(redirectType);
     if (redirectType == "404Redirect") {
-        $("input[name*='redirectOption']").val("");
-        if ($(".btnSubmitPage").length > 0) {
+          
             $(".hiddenParentCheck").val("false");
             $("#redirectModal").modal("hide");
-            $(".btnSubmitPage").click();
+            document.createElement('form').submit.call(document.EditContent);
         }
-    }
     else {
         
         $("input[name*='redirectOption']").val(redirectType);
@@ -2268,7 +2271,6 @@ $(document).on("click", "#btnYescreateRuleForChild", function (event) {
 
     var pageId = $(".hiddenPageId").val();
     var redirectType = $("input[name*='redirectOption']").val();
-    alert(redirectType);
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
@@ -2390,7 +2392,9 @@ $(document).ready(function () {
         $('#MenuTree').animate({ scrollTop: aTag.position().top }, 'slow');
     }
     if ($("#MenuTree") != undefined) {
-        scrollToAnchor($("#MenuTree li.active").prop("id"));
+        if ($("#MenuTree li.active").prop("id") != undefined) {
+            scrollToAnchor($("#MenuTree li.active").prop("id"));
+        }
     }
 });
 
@@ -2402,12 +2406,14 @@ function ValidateProductForm(event) {
 
     if (form_check(event)) {
         var productId = this.getQueryStringParam('id');
+        if (productId != null) {
         $(".hiddenParentCheck").val("False");
         $(".hiddenType").val("Product");
         $(".hiddenPageId").val(productId);
         var cNewContentPath = $("#cContentPath").val();
         return editProduct.UrlPathOnChange(cNewContentPath);
-
+    }
+    else { return true;}
     }
 }
 //Edit Product
@@ -2439,6 +2445,7 @@ if (editProductElement > 0) {
             UrlPathOnChange: function (newContentPath) {
 
                 if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
+                    var redirectType = $(".hiddenRedirectType").val();
                     $('.btnRedirectSave').removeAttr("disabled");
                     $("#redirectModal").modal("show");
                     $("#OldUrl").val(localStorage.originalPathName);
@@ -2447,7 +2454,7 @@ if (editProductElement > 0) {
                     $(".hiddenPageId").val(localStorage.pageId);
                     $(".hiddenProductOldUrl").val(localStorage.originalPathName);
                     $(".hiddenProductNewUrl").val(newContentPath);
-                    $(".hiddenRedirectType").val("301Redirect");
+                    $(".hiddenRedirectType").val(redirectType);
                     event.preventDefault();
 
                 }

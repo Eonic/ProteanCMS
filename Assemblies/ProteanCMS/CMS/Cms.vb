@@ -522,7 +522,12 @@ Public Class Cms
             End If
             If moDbHelper.DatabaseName = "" Then
                 'redirect to setup
-                msRedirectOnEnd = "ewcommon/setup/default.ashx"
+                If moConfig("cssFramework") = "bs5" Then
+                    msRedirectOnEnd = "ptn-common/setup/default.ashx"
+                Else
+                    msRedirectOnEnd = "ewcommon/setup/default.ashx"
+                End If
+
 
             Else
 
@@ -880,23 +885,18 @@ Public Class Cms
             gcMenuContentCountTypes = moConfig("MenuContentCountTypes")
             gcMenuContentBriefTypes = moConfig("MenuContentBriefTypes")
 
-
-
             ' Get referenced assembly info
             ' Given that assemblies are loaded at an application level, we can store the info we find in an application object
             If String.IsNullOrEmpty(CStr(goCache("GENERATOR"))) Then
                 Dim CodeGenerator As Assembly = Me.Generator()
                 gcGenerator = CodeGenerator.FullName()
                 gcCodebase = CodeGenerator.CodeBase()
-
                 For Each ReferencedAssembly As AssemblyName In Me.ReferencedAssemblies()
                     gcReferencedAssemblies &= ReferencedAssembly.Name & " (" & ReferencedAssembly.Version.ToString & "); "
                 Next
-
                 goCache("GENERATOR") = gcGenerator
                 goCache("CODEBASE") = gcCodebase
                 goCache("REFERENCED_ASSEMBLIES") = gcReferencedAssemblies
-
             Else
                 gcGenerator = goCache("GENERATOR")
                 gcCodebase = goCache("CODEBASE")
@@ -921,9 +921,7 @@ Public Class Cms
         'Date:          2005-03-09
 
         mcModuleName = "Protean.Cms"
-
         Dim cProcessInfo As String = ""
-
         msException = ""
 
         Try
@@ -1934,15 +1932,16 @@ Public Class Cms
                         ' If the current page is a cloned page
                         oPageElmt.SetAttribute("clone", "true")
                     End If
-                Else
-                    'Invalid Licence
-                    mnProteanCMSError = 1008
-                    If mnProteanCMSError > 0 Then
-                        GetErrorXml(oPageElmt)
-                    End If
-
                 End If
+            Else
+                'Invalid Licence
+                mnProteanCMSError = 1008
+                If mnProteanCMSError > 0 Then
+                    GetErrorXml(oPageElmt)
+                End If
+
             End If
+
 
             Return moPageXml
 
@@ -2233,12 +2232,8 @@ Public Class Cms
 
                 'NB put the parId code here?
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Contents/Content")
-                    Dim sParId As String = oElmt.GetAttribute("parId")
-                    If sParId.Contains(",") Then
-                        'if multiple parents get the first one.
-                        sParId = sParId.Split(","c)(0)
-                    End If
-                    If CLng("0" & sParId) > 0 Then
+
+                    If CLng("0" & oElmt.GetAttribute("parId")) > 0 Then
                         processInfo = "Cleaning parId for: " & oElmt.OuterXml
                         Dim primaryParId As Long = 0
 
@@ -3628,6 +3623,7 @@ Public Class Cms
             sSql &= "FROM tblContent AS c INNER JOIN "
             sSql &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
             sSql &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
+            sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "
 
             ' GCF - sql replaced by the above - 24/06/2011
             ' replaced JOIN to tblContentLocation with  LEFT OUTER JOIN

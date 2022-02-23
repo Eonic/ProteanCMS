@@ -10,7 +10,8 @@ Public Class Handler : Implements IHttpHandler
         Dim oWeb As New Protean.Cms
 
 
-        Dim pa As New Protean.Cms.Cart.PurchaseAction
+        Dim pa As New Protean.Cms.Admin.JSONActions
+
 
         Dim type As Type = pa.GetType()
         Dim typeName As String = type.FullName

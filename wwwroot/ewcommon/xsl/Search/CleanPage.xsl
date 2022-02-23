@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes">
-  <xsl:import href="../Tools/Functions.xsl"/>
-  <xsl:import href="../PageLayouts/CommonLayouts.xsl"/>
-  <xsl:import href="../Admin/Admin.xsl"/>
-  <xsl:import href="../Search/Search.xsl"/>
-  <xsl:import href="../localisation/SystemTranslations.xsl"/>
+  <xsl:import href="../MinimalImports.xsl"/>
 
   <xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" encoding="UTF-8"/>
 
@@ -151,14 +147,6 @@
     </h1>
     <xsl:apply-templates select="." mode="mainLayout"/>
   </xsl:template>
-  <!-- -->
-  <xsl:template match="Page" mode="Layout">
-    <div>
-      <xsl:for-each select="/Page/Contents/Content[@moduleType='FormattedText']">
-        <xsl:apply-templates select="." mode="displayModule"/>
-      </xsl:for-each>
-    </div>
-  </xsl:template>
 
   <xsl:template name="getSiteURL"/>
   <xsl:template match="Content[@type='xform']" mode="displayBrief"></xsl:template>
@@ -167,4 +155,5 @@
   <xsl:template match="Content | MenuItem" mode="displayThumbnail"></xsl:template>
   <xsl:template match="Content | MenuItem" mode="displayDetailImage"></xsl:template>
   <xsl:template match="*" mode="backLink"></xsl:template>
+	
 </xsl:stylesheet>
