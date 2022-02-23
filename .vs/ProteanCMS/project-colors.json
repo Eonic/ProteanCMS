@@ -1,0 +1,31 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "6bba9f62-876f-4bb2-a4bb-502d696ead6c": {
+      "ProjectGuid": "6bba9f62-876f-4bb2-a4bb-502d696ead6c",
+      "DisplayName": "wwwroot",
+      "ColorIndex": 0
+    },
+    "7d93fd23-f739-4f09-a1b0-f5a8d0451533": {
+      "ProjectGuid": "7d93fd23-f739-4f09-a1b0-f5a8d0451533",
+      "DisplayName": "ProteanCMS",
+      "ColorIndex": 1
+    },
+    "76e7c871-9cec-4795-b6f2-66439dcd9367": {
+      "ProjectGuid": "76e7c871-9cec-4795-b6f2-66439dcd9367",
+      "DisplayName": "Protean.Tools",
+      "ColorIndex": 2
+    },
+    "12af6171-9aab-4c4d-a83b-85fe18a334c1": {
+      "ProjectGuid": "12af6171-9aab-4c4d-a83b-85fe18a334c1",
+      "DisplayName": "Protean.Tools.Csharp",
+      "ColorIndex": 3
+    }
+  },
+  "NextColorIndex": 4
+}
