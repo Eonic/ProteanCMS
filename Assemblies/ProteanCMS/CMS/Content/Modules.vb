@@ -321,131 +321,53 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                 Try
 
-                    'Test that all IndexDefs have been added to the database
 
+                    Dim filterForm As xForm = New xForm(myWeb)
+                    Dim oFrmInstance As XmlElement
+                    Dim pageFilter As New Protean.Providers.Filter.PageFilter()
 
-                    For Each oFilterElmt In oContentNode.SelectNodes("Content")
+                    filterForm.NewFrm(formName)
 
-                        'use reflection to apply filters
-                        Try
-                            '' create xform and output on screen.
-                            Dim filterForm As xForm = New xForm(myWeb)
-                            'Reference together the root Xml from objects
+                    filterForm.submission(formName, "", "POST", "return form_check(this);")
 
+                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "ProductFilterGroup", "ProductFilterGroup", "")
+                    filterForm.addBind("PageFilter", "PageFilter")
+                    pageFilter.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "submit", "contentSubmit", "")
+                    oContentNode.AppendChild(filterForm.moXformElmt)
 
-                            'First Define the xform
-                            filterForm.NewFrm(formName)
-                            filterForm.submission(formName, "", "POST", "return form_check(this);")
-                            oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "ProductFilterGroup", "ProductFilterGroup", "")
+                    If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
+                        If (myWeb.moRequest.Form("Submit").ToLower() <> "search") Then
+                            pageFilter.RemovePageFromFilter(myWeb, myWeb.moRequest.Form("Submit"))
+                        End If
+                    End If
+                    oFrmInstance = filterForm.Instance
+                    If (myWeb.moSession("PageIds") IsNot Nothing) Then
+                        Protean.Tools.Xml.addElement(oFrmInstance, "PageFilter", Convert.ToString(myWeb.moSession("PageIds")))
+                    Else
+                        Protean.Tools.Xml.addElement(oFrmInstance, "PageFilter")
+                    End If
 
-                            'PageFilter.AddControl
-                            'PageFilter.ApplyFilter
+                    filterForm.Instance = oFrmInstance
 
-                            Dim classPath As String = oFilterElmt.GetAttribute("type")
-                            Dim nPageId As Integer
-                            If (classPath = "PageFilter") Then
-                                If (myWeb.moRequest("PageId") IsNot Nothing) Then
-                                    nPageId = myWeb.moRequest("PageId")
-                                End If
-                                filters.PageFilter(myWeb, nPageId, filterForm, oFrmGroup) ' xform object from where need to pass settings.)
-                            End If
-
-
-                            ' Dim classPath As String = oFilterElmt.GetAttribute("type")
-                            'Dim assemblyName As String = oFilterElmt.GetAttribute("assembly")
-                            'Dim assemblyType As String = oFilterElmt.GetAttribute("assemblyType")
-                            'Dim providerName As String = oFilterElmt.GetAttribute("providerName")
-                            'Dim providerType As String = oFilterElmt.GetAttribute("providerType")
-                            'If providerType = "" Then providerType = "Filters"
-
-                            'Dim methodName As String = Right(classPath, Len(classPath) - classPath.LastIndexOf(".") - 1)
-
-                            'classPath = Left(classPath, classPath.LastIndexOf("."))
-
-                            'If classPath <> "" Then
-                            '    Try
-                            '        Dim calledType As Type
-
-                            '        If assemblyName <> "" Then
-                            '            classPath = classPath & ", " & assemblyName
-                            '        End If
-                            '        'Dim oModules As New Protean.Cms.Membership.Modules
-
-                            '        If providerName <> "" Then
-                            '            'case for external Providers
-                            '            Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/" & providerType & "Providers")
-                            '            Dim assemblyInstance As [Assembly]
-
-                            '            If Not moPrvConfig.Providers(providerName & "Local") Is Nothing Then
-                            '                If moPrvConfig.Providers(providerName & "Local").Parameters("path") <> "" Then
-                            '                    assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(moPrvConfig.Providers(providerName & "Local").Parameters("path")))
-                            '                    calledType = assemblyInstance.GetType(classPath, True)
-                            '                Else
-                            '                    assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName & "Local").Type)
-                            '                    calledType = assemblyInstance.GetType(classPath, True)
-                            '                End If
-                            '            Else
-                            '                Select Case moPrvConfig.Providers(providerName).Parameters("path")
-                            '                    Case ""
-                            '                        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
-                            '                        calledType = assemblyInstance.GetType(classPath, True)
-                            '                    Case "builtin"
-                            '                        Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
-                            '                        'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
-                            '                        prepProviderName = moPrvConfig.Providers(providerName).Type
-                            '                        calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
-                            '                    Case Else
-                            '                        assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
-                            '                        classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
-                            '                        calledType = assemblyInstance.GetType(classPath, True)
-                            '                End Select
-
-                            '                'If moPrvConfig.Providers(providerName).Parameters("path") <> "" Then
-                            '                '    assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
-                            '                'Else
-                            '                '    assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
-                            '                'End If
-                            '            End If
-
-                            '            '  calledType = assemblyInstance.GetType(classPath, True)
-
-                            '        ElseIf assemblyType <> "" Then
-                            '            'case for external DLL's
-                            '            Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)
-                            '            calledType = assemblyInstance.GetType(classPath, True)
-                            '        Else
-                            '            'case for methods within EonicWeb Core DLL
-                            '            calledType = System.Type.GetType(classPath, True)
-                            '        End If
-
-                            '        Dim o As Object = Activator.CreateInstance(calledType)
-
-                            '        Dim args(1) As Object
-                            '        args(0) = Me
-                            '        args(1) = oFilterElmt
-
-                            '        calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
-
-                            '        'Error Handling ?
-                            '        'Object Clearup ?
-
-                            '        calledType = Nothing
-
-                        Catch ex As Exception
-                            '  OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
-                            'sProcessInfo = classPath & "." & methodName & " not found"
-                            oFilterElmt.InnerXml = "<Content type=""error""><div>" & System.Web.HttpUtility.HtmlEncode(sProcessInfo & ex.Message & ex.StackTrace) & "</div></Content>"
-                            End Try
+                    filterForm.addSubmit(oFrmGroup, "Search", "Search")
+                    filterForm.addValues()
+                    If (filterForm.isSubmitted) Then
+                        'If (filterForm.valid) Then
+                        filterForm.updateInstanceFromRequest()
+                        pageFilter.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
                         'End If
 
+                    End If
 
-                    Next
+                    ' Next
 
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
                 End Try
             End Sub
+
 
 
             Public Sub Conditional(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
