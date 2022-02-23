@@ -10318,7 +10318,7 @@
                 </xsl:otherwise>
               </xsl:choose>
             </div>
-            <div class="panel-content">
+            <div class="card-body">
               <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
               <xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="DirectoryCodes"/>
             </div>
