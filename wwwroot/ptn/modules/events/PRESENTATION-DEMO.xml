@@ -2,68 +2,70 @@
 <Content type="xform" name="EditContent">
   <model>
   </model>
-  <group ref="EditContent">
-    <label>News List Module</label>
-    <group class="tabs">
-      <group>
-        <label>
-          <i class="fas fa-pen"> </i>
-          <span class="space"> </span>
-          <span>Content</span>
-        </label>
-        <group>
-         <!-- Main Content -->
-        </group>
-      </group>
-      <group>
-        <label>
-          <i class="fas fa-link"> </i>
-          <span class="space"> </span>
-          <span>Footer Links</span>
-        </label>
-        <group>
-          <group class="form-section-wrapper">
-            <!-- Link to URL -->
-          </group>
-        </group>
-      </group>
-      <group>
-        <label>
-          <i class="fas fa-brush"> </i>
-          <span class="space"> </span>
-          <span>Presentation</span>
-        </label>
-        <group>
-          <!-- Presentation -->
-        </group>
-      </group>
-      <group>
-        <label>
-          <i class="fas fa-tachometer-alt"> </i>
-          <span class="space"> </span>
-          <span>Animate</span>
-        </label>
-        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
-      </group>
-      <group>
-        <label>
-          <i class="fas fa-cog"> </i>
-          <span class="space"> </span>
-          <span>Advanced Settings</span>
-        </label>
-        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
-      </group>
+	<group ref="EditContent">
+		<label>News List Module</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<!-- Main Content -->
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Footer Links</span>
+				</label>
+				<group>
+					<group class="form-section-wrapper">
+						<!-- Link to URL -->
+					</group>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<group>
+					<!-- Presentation -->
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-tachometer-alt"> </i>
+					<span class="space"> </span>
+					<span>Animate</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+			</group>
 
-      <group>
-        <label>
-          <i class="fas fa-rss"> </i>
-          <span class="space"> </span>
-          <span>Content Syndication</span>
-        </label>
-        <group>
-          <!-- Stuff -->
-        </group>
-      </group>
+			<group>
+				<label>
+					<i class="fas fa-rss"> </i>
+					<span class="space"> </span>
+					<span>Content Syndication</span>
+				</label>
+				<group>
+					<!-- Stuff -->
+				</group>
+			</group>
+		</group>
+	</group>
         <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">
       <label>Save News List</label>

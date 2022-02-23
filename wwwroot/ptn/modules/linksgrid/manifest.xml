@@ -6,8 +6,8 @@
     </ContentTypeGroup>   
   </ContentTypes-->
   <ModuleTypes>
-    <ModuleGroup name="Navigation and Links" icon="fa-link">
+    <!--<ModuleGroup name="Navigation and Links" icon="fa-link">
       <Module type="LinkListGrid" formPath="linksgrid/link-list-grid" icon="fas fa-link" name="Link List Grid">Link Grid</Module>
-    </ModuleGroup>
+    </ModuleGroup>-->
   </ModuleTypes>
 </PageLayouts>
