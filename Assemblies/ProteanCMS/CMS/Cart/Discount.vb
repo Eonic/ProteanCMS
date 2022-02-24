@@ -267,10 +267,12 @@ Partial Public Class Cms
                             Else
                                 Dim oItemElmt As XmlElement
                                 For Each oItemElmt In oCartXML.SelectNodes("Item")
+                                    'later sites are dependant on these values
                                     oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), , , mbRoundUp))
                                     oItemElmt.SetAttribute("unitSaving", 0)
                                     oItemElmt.SetAttribute("itemSaving", 0)
                                     oItemElmt.SetAttribute("discount", 0)
+                                    oItemElmt.SetAttribute("itemTotal", oItemElmt.GetAttribute("price") * oItemElmt.GetAttribute("quantity"))
 
                                 Next
                                 oDsDiscounts = Nothing
