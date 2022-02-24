@@ -271,7 +271,7 @@ Partial Public Class Cms
                                     oItemElmt.SetAttribute("unitSaving", 0)
                                     oItemElmt.SetAttribute("itemSaving", 0)
                                     oItemElmt.SetAttribute("discount", 0)
-
+                                    oItemElmt.SetAttribute("itemTotal", oItemElmt.GetAttribute("price") * oItemElmt.GetAttribute("quantity"))
                                 Next
 
                                 oDsDiscounts = Nothing
