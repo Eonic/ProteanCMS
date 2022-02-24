@@ -265,6 +265,14 @@ Partial Public Class Cms
                                     End If
                                 End If
                             Else
+                                Dim oItemElmt As XmlElement
+                                For Each oItemElmt In oCartXML.SelectNodes("Item")
+                                    oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), , , mbRoundUp))
+                                    oItemElmt.SetAttribute("unitSaving", 0)
+                                    oItemElmt.SetAttribute("itemSaving", 0)
+                                    oItemElmt.SetAttribute("discount", 0)
+
+                                Next
                                 oDsDiscounts = Nothing
                             End If
                         End If
