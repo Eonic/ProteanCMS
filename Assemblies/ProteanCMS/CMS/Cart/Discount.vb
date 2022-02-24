@@ -243,9 +243,9 @@ Partial Public Class Cms
                         'If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                         'if total crossed more or less than defined range then it will remove promocode for the user.
                         If oDsDiscounts IsNot Nothing Then
-                            If oDsDiscounts.Tables("Discount").Rows.Count > 0 Then
+                            'If oDsDiscounts.Tables("Discount").Rows.Count > 0 Then
 
-                                If cPromoCodeUserEntered <> "" Then
+                            If cPromoCodeUserEntered <> "" Then
                                     Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                     Dim validateAddedDiscount As Boolean = True
                                     Dim totalAmount As Double = 0
@@ -264,9 +264,9 @@ Partial Public Class Cms
                                         oDsDiscounts = Nothing
                                     End If
                                 End If
-                            Else
-                                oDsDiscounts = Nothing
-                            End If
+                            'Else
+                            'oDsDiscounts = Nothing
+                            'End If
                         End If
 
 
