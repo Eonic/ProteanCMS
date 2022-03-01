@@ -4309,7 +4309,7 @@ restart:
                     Dim oMenuXml As New XmlDocument
                     oMenuXml.InnerXml = oDS.GetXml
                     'now select the menu item we need
-                    oMenuItem = oMenuXml.SelectSingleNode("descendant-Or-self::MenuItem[@nStructKey=" & nSourcePageId & "]")
+                    oMenuItem = oMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@nStructKey=" & nSourcePageId & "]")
                     oMenuXml = Nothing
                 End If
                 'we need to go through its children and create items
