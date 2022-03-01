@@ -603,8 +603,6 @@ Partial Public Class Cms
                             Next
                             Dim oTmpElmt As XmlElement = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/DiscountPrice")
                             oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oTmpElmt.CloneNode(True), True))
-                        Else
-
                         End If
 
                         'That was the Price Modifiers done, now for the unit modifiers (not group yet)
