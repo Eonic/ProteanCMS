@@ -1,32 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-
-  <!--<xsl:import href="../../../../../ewcommon_v5-1/xsl/Tools/Functions.xsl"/>-->
   <xsl:import href="ResponsiveEmailStyles.xsl"/>
-
-	<xsl:template match="*">
-		<html>
-			<head>
-				<title>
-					<xsl:apply-templates select="." mode="subject"/>
-				</title>
-				<xsl:apply-templates select="." mode="emailStyle"/>
-				<xsl:if test="/Page/@baseUrl">
-					<base href="{/Page/@baseUrl}"/>
-				</xsl:if>
-				<xsl:if test="/Page/@adminMode">
-					<xsl:apply-templates select="." mode="commonStyle"/>
-					<xsl:apply-templates select="." mode="js"/>
-				</xsl:if>
-			</head>
-			<xsl:apply-templates select="." mode="emailBody"/>
-		</html>
-	</xsl:template>
-
-	<xsl:template match="*" mode="pageTitle">
-		<xsl:apply-templates select="." mode="subject"/>
-	</xsl:template>
   
   <xsl:template match="*" mode="emailBody">
     <xsl:if test="@adminMode='false'">

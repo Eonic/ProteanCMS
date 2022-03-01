@@ -5868,7 +5868,7 @@ Partial Public Class Cms
                         If (xdoc.InnerXml <> "") Then
 
                             ' Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
-                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance")
+                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/*[1]")
                             If (xnInstance IsNot Nothing) Then
                                 amount = xnInstance.Attributes("AmountPaid").InnerText
                             End If
@@ -7686,13 +7686,17 @@ Partial Public Class Cms
                     Dim oSel1 As XmlElement = MyBase.addSelect1(oGrp0Elmt, "cCurrencySymbol", True, "Currency")
                     MyBase.addOption(oSel1, "All", "")
                     MyBase.addOption(oSel1, "GBP", "GBP")
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus", True, "nOrderStatus", "hidden")
 
-                    If myWeb.moConfig("Quote") <> "on" Then
+                    If LCase(myWeb.moConfig("Quote")) = "on" Then
                         oSel1 = MyBase.addSelect1(oGrp0Elmt, "cOrderType", True, "Cart Type")
-                        MyBase.addOption(oSel1, "Order", "Order")
-                        MyBase.addOption(oSel1, "Quote", "Quote")
+                        MyBase.addOption(oSel1, "Orders", "Order")
+                        MyBase.addOption(oSel1, "Quotes", "Quote")
                     End If
+
+                    oSel1 = MyBase.addSelect1(oGrp0Elmt, "nOrderStatus", True, "Cart Type")
+                    MyBase.addOption(oSel1, "Orders,In Progress,Shipped", "6,9,17")
+                    MyBase.addOption(oSel1, "Refunds", "7")
+                    MyBase.addOption(oSel1, "Payment Failed", "5")
 
                     ' Lets get the content types if we have more than 1
 
@@ -7739,7 +7743,9 @@ Partial Public Class Cms
                     MyBase.addBind("nProductId", "Criteria/nProductId", , "number")
                     MyBase.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", , "string")
                     MyBase.addBind("nOrderStatus", "Criteria/nOrderStatus", , "string")
-                    MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
+                    If LCase(myWeb.moConfig("Quote")) = "on" Then
+                        MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
+                    End If
 
 
                     If MyBase.isSubmitted Then
