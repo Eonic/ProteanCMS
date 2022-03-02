@@ -1503,9 +1503,18 @@ ProcessFlow:
 
                     Case "MoveTop", "MoveUp", "MoveDown", "MoveBottom", "SortAlphaAsc", "SortAlphaDesc"
                         bLoadStructure = True
+                        Dim nGroupId As Integer = 0
+                        If myWeb.moRequest("groupid") <> "" Then
+                            nGroupId = Convert.ToInt32(myWeb.moRequest("groupid"))
+                            If myWeb.moRequest("lastPage") IsNot Nothing Then
+                                If myWeb.moRequest("lastPage") = "ProductGroups" Then
+                                    myWeb.moSession("lastPage") = "?ewCmd=ProductGroups&GrpID=" & nGroupId
+                                End If
+                            End If
+                        End If
                         If myWeb.moRequest("id") <> "" And myWeb.moRequest("relId") = "" Then
-                            'we are sorting content on a page
-                            myWeb.moDbHelper.ReorderContent(CLng(myWeb.moRequest("pgid")), CLng(myWeb.moRequest("id")), myWeb.moRequest("ewCmd"), , myWeb.moRequest("position"))
+                            'we are sorting content on a page  
+                            myWeb.moDbHelper.ReorderContent(CLng(myWeb.moRequest("pgid")), CLng(myWeb.moRequest("id")), myWeb.moRequest("ewCmd"), , myWeb.moRequest("position"), nGroupId)
                             If myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""
@@ -1520,7 +1529,7 @@ ProcessFlow:
 
                         ElseIf myWeb.moRequest("relId") <> "" Then
                             'sorting Related Content for an item
-                            myWeb.moDbHelper.ReorderContent(myWeb.moRequest("relId"), myWeb.moRequest("id"), myWeb.moRequest("ewCmd"), True)
+                            myWeb.moDbHelper.ReorderContent(myWeb.moRequest("relId"), myWeb.moRequest("id"), myWeb.moRequest("ewCmd"), True, "", nGroupId)
                             If myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""
@@ -1761,6 +1770,16 @@ ProcessFlow:
 
                         Else
                             sAdminLayout = "AdminXForm"
+                        End If
+
+                    Case "RegradeUser"
+                        sAdminLayout = "AdminXForm"
+                        Dim xformPath As String = "/xforms/directory/regradeuser.xml"
+                        oPageDetail.AppendChild(moAdXfm.xFrmRegradeUser(myWeb.moRequest("id"), myWeb.moRequest("existingGroupId"), myWeb.moRequest("newGroupId"), "Regrade User", xformPath, myWeb.moRequest("messageId")))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "ListUsers"
+                            GoTo ProcessFlow
                         End If
 
                     Case "EditRole"
@@ -3459,7 +3478,8 @@ AfterProcessFlow:
 
                             oCart.ListOrders(myWeb.moRequest("id"), True, , oPageDetail)
 
-
+                        Case "RequestSettlement"
+                            oPageDetail.AppendChild(moAdXfm.xFrmRequestSettlement(myWeb.moRequest("id")))
                         Case Else
                             Select Case mcEwCmd
                                 Case "Orders"
@@ -3526,8 +3546,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cProductType").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nProductId").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
@@ -3543,8 +3562,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nDay").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
@@ -3559,8 +3577,7 @@ AfterProcessFlow:
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("nWeek").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText,
                         moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
@@ -3957,7 +3974,7 @@ listItems:
                     oDS.Tables("ProductCategory").Columns("cCatForeignRef").ColumnMapping = MappingType.Attribute
                 End If
                 cSql = "SELECT c.nContentKey AS id, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, tblCartCatProductRelations.nCatProductRelKey AS relid, tblCartCatProductRelations.nCatId AS catid FROM tblContent c INNER JOIN tblCartCatProductRelations ON c.nContentKey = tblCartCatProductRelations.nContentId " &
-                                    "WHERE (tblCartCatProductRelations.nCatId Is not Null)"
+                                    "WHERE (tblCartCatProductRelations.nCatId Is not Null) order by nDisplayOrder"
                 myWeb.moDbHelper.addTableToDataSet(oDS, cSql, "Content")
 
                 If oDS.Tables.Count = 2 Then

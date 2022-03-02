@@ -797,8 +797,8 @@ Recheck:
                                                                 errormsg = ""
                                                                 nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(oActionElmt.GetAttribute("ObjectName")), errormsg)
                                                                 If errormsg <> "" Then
-                                                                    AddResponse("WARNING: File execution generated an error")
-                                                                    AddResponse(errormsg)
+                                                                    AddResponse("<strong style=""color:#ff0000"">WARNING: File execution generated an error</strong>")
+                                                                    AddResponse("<p style=""color:#ff0000"">" & errormsg & "</p>")
                                                                 Else
                                                                     If nCount = -1 Then
                                                                         AddResponse("File execution Completed...")

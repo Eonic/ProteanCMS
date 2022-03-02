@@ -15,6 +15,8 @@ Partial Public Class Cms
 #Region "JSON Actions"
 
         Public Class JSONActions
+            Inherits API.JsonActions
+
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             Private Const mcModuleName As String = "Cms.Admin.JSONActions"
             Private moLmsConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/lms")
@@ -51,6 +53,27 @@ Partial Public Class Cms
                 End Try
             End Sub
 
+            Public Function QueryValue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    Dim bIsAuthorized As Boolean = False
+                    bIsAuthorized = ValidateAPICall(myWeb, "Administrator")
+                    If bIsAuthorized Then
+                        Dim count As String = "0"
+                        Dim sSql = myApi.moConfig(myApi.moRequest("query"))
+
+                        Dim result = myWeb.moDbHelper.GetDataValue(sSql, System.Data.CommandType.StoredProcedure)
+                        count = If(result Is Nothing, "", Convert.ToString(result))
+
+                        Return "[{""Key"":""" & myApi.moRequest("query") & """,""Value"":""" & count & """}]"
+                    End If
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
 
             Public Function LoadUrlsForPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
@@ -291,7 +314,7 @@ Partial Public Class Cms
                 End If
                 Try
                     If myApi.mbAdminMode Then
-                        JsonResult = moAdminRedirect.isParentPage(pageId)
+                        JsonResult = moAdminRedirect.IsParentPage(pageId)
                     End If
                     Return JsonResult
                 Catch ex As Exception

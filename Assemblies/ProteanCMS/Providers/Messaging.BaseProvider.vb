@@ -68,6 +68,7 @@ Namespace Providers
             End Property
 
             Public Sub New(ByRef myWeb As Protean.Cms, ByVal ProviderName As String)
+                Dim cProgressInfo As String = ""
                 Try
                     Dim calledType As Type
                     If ProviderName = "" Then
@@ -81,6 +82,7 @@ Namespace Providers
                         '= [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
 
                         If ourProvider.parameters("path") <> "" Then
+                            cProgressInfo = goServer.MapPath(ourProvider.parameters("path"))
                             assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(ourProvider.parameters("path")))
                         Else
                             assemblyInstance = [Assembly].Load(ourProvider.Type)
@@ -110,7 +112,7 @@ Namespace Providers
                     calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, Nothing, o, args)
 
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "New", ex,, cProgressInfo & " - " & ProviderName & " Could Not be Loaded", gbDebug)
                 End Try
 
             End Sub

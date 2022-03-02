@@ -2462,6 +2462,13 @@
         </xsl:variable>
 
         <a href="{$href}" title="{$title}">
+          <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($href,'.pdf')">
+              <xsl:attribute name="onclick">
+                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                <xsl:value-of select="$href"/>
+                <xsl:text>');</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
           <xsl:choose>
             <xsl:when test="img[contains(@src,'.svg')]">
               <svg id="svg-{@position}" width="{img/@width}" height="{img/@height}" viewbox="0 0 {img/@width} {img/@height}" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -2929,11 +2936,11 @@
     <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
       <xsl:variable name="apiKey">
         <xsl:choose>
-          <xsl:when test="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey!=''">
-            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+          <xsl:when test="$GoogleAPIKey!=''">
+            <xsl:value-of select="$GoogleAPIKey"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="$GoogleAPIKey"/>
+            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
            </xsl:otherwise>
         </xsl:choose>
        </xsl:variable>
@@ -3701,9 +3708,11 @@
     <xsl:apply-templates select="." mode="xform"/>
   </xsl:template>
 
-
   <!-- ############## News Articles ##############   -->
   <!-- NewsArticle Module -->
+
+	
+	
   <xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
     <!-- Set Variables -->
     <xsl:variable name="contentType" select="@contentType" />
@@ -6412,16 +6421,16 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:attribute name="class">col-md-12</xsl:attribute>
-              <div class="col-md-5 pull-right">
+              
               <xsl:apply-templates select="." mode="displayDetailImage"/>
-                <xsl:if test="@bookingURL!=''">
+                <!--<xsl:if test="@bookingURL!=''">
                   <xsl:text> </xsl:text>
                   <a href="{@bookingURL}" class="btn btn-success btn-block">
                     Book Here&#160;&#160;<i class="fa fa-mouse-pointer">&#160;</i>
                   </a>
                 </xsl:if>
-                <xsl:apply-templates select="Content[@type='Contact']" mode="displayContributor"/>
-              </div>
+                <xsl:apply-templates select="Content[@type='Contact']" mode="displayContributor"/>-->
+              
             </xsl:otherwise>
           </xsl:choose>
           <xsl:if test="StartDate!=''">
@@ -6663,7 +6672,7 @@
     ],
     "url": "<xsl:value-of select="$href"/>"
     <xsl:apply-templates select="." mode="organiser"/>
-    } } ]
+    } ]
   </xsl:template>
   <xsl:template match="Content[@type='Event' and ancestor::ContentDetail]" mode="organiser">
     <!-- Copy this to set the value site wide for the organiastion events.
@@ -6687,12 +6696,20 @@
     "addressRegion": "<xsl:value-of select="Organization/location/PostalAddress/addressRegion/node()"/>",
     "postalCode": "<xsl:value-of select="Organization/location/PostalAddress/postalCode/node()"/>",
     "addressCountry": "<xsl:value-of select="Organization/location/PostalAddress/addressCountry/node()"/>"
-    },
+    }},
   </xsl:template>
 
   <xsl:template match="Content[@type='Performer']" mode="JSONLD">
     {"@type": "MusicGroup",
-    "name": "<xsl:value-of select="Surname/node()"/>",
+    "name": "<xsl:apply-templates select="." mode="getDisplayName" />",
+	<xsl:if test="JobTitle/node()!=''">	
+    "additionalName": "<xsl:value-of select="JobTitle/node()"/>", 
+	"description": "<xsl:call-template name="escape-json">
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="Profile/*" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>",
+	</xsl:if>
     "sameAs": [
       "<xsl:apply-templates select="self::Content" mode="getHref">
       <xsl:with-param name="parId" select="@parId"/>
@@ -6724,10 +6741,10 @@
     "@type": "Offer",
     "description":"<xsl:value-of select="@name"/>",
     "url": "<xsl:value-of select="$href"/>",
-    "price": "<xsl:apply-templates select="." mode="displayPrice" />",
+    "price": "<xsl:apply-templates select="." mode="PriceNumberic" />",
     "priceCurrency": "GBP",
     "availability": "https://schema.org/InStock",
-    "validFrom": "<xsl:value-of select="@publishDate"/>"
+    "validFrom": "<xsl:value-of select="@publish"/>"
     }
     <xsl:if test="position()!=last()">,</xsl:if>
   </xsl:template>
@@ -9471,6 +9488,16 @@
             <xsl:text> content-cols-responsive</xsl:text>
           </xsl:if>
         </xsl:attribute>
+        <xsl:if test="@autoplay !=''">
+          <xsl:attribute name="data-autoplay">
+            <xsl:value-of select="@autoplay"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@autoPlaySpeed !=''">
+          <xsl:attribute name="data-autoPlaySpeed">
+            <xsl:value-of select="@autoPlaySpeed"/>
+          </xsl:attribute>
+        </xsl:if>
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="linkList" select="$contentList"/>
@@ -15070,8 +15097,8 @@
       <xsl:with-param name="contentType" select="@contentType"/>
     </xsl:apply-templates>
   </xsl:template>
-
-  <xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="contentJS">
+	<xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery')]" mode="contentJS">
+		<!--xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="contentJS"-->
     <!--Moved so we can use within Event / Product templates too-->
     <xsl:apply-templates select="."  mode="displaySlideGalleryJS"/>
   </xsl:template>

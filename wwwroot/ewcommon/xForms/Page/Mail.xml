@@ -52,30 +52,30 @@
         <input bind="nStructParId" class="hidden">
           <label>ParId</label>
         </input>
-        
+
         <input bind="dPublishDate" class="calendar">
           <label>Publish Date</label>
         </input>
         <input bind="dExpireDate" class="calendar">
           <label>Expire Date</label>
         </input>
-        
+
         <input bind="cDescription">
           <label>Change Notes</label>
         </input>
       </group>
     </group>
-	  <group class="col2">
+    <group class="col2">
       <group>
         <input bind="cStructName" class="required">
           <label>Mail Name</label>
         </input>
-		  <input bind="cDisplayName">
-			  <label>Subject Line</label>
-		  </input>
-		  <!--NOT NEEDED HERE -<textarea bind="cStructDescription" class="xhtml" rows="10">
-			  <label>Description</label>
-		  </textarea>-->
+        <input bind="cDisplayName">
+          <label>Subject Line</label>
+        </input>
+        <textarea bind="cStructDescription" rows="3">
+          <label>Preview Text</label>
+        </textarea>
         <select1 bind="nStatus" appearance="full">
           <label>Status</label>
           <item>
@@ -87,12 +87,12 @@
             <value>0</value>
           </item>
         </select1>
-      </group>	  
-	  </group>
+      </group>
+    </group>
   </group>
-	<group ref="submit" class="contentSubmit">
-	  <submit submission="" ref="submit" class="principle">
-		<label>Save E-Mail</label>
-	  </submit>
-   </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="submit" class="principle">
+      <label>Save E-Mail</label>
+    </submit>
+  </group>
 </Content>
