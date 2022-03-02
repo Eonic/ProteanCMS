@@ -5415,6 +5415,7 @@ processFlow:
                                                 newElmt.SelectSingleNode("AttTicketType").InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
                                                 newElmt.SetAttribute("id", ticketType & nCount)
                                                 newElmt = Nothing
+
                                                 'Update the binds
                                                 oBindRoot.AppendChild(blankBind.CloneNode(True))
                                                 newElmt = oBindRoot.LastChild
@@ -5422,6 +5423,9 @@ processFlow:
                                                 For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*")
                                                     If newElmt2.GetAttribute("id") <> "" Then
                                                         newElmt2.SetAttribute("id", newElmt2.GetAttribute("id") & "-" & ticketType & nCount)
+                                                    End If
+                                                    If i > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
+                                                        newElmt2.SetAttribute("required", "false()")
                                                     End If
                                                 Next
                                                 newElmt = Nothing
@@ -5448,6 +5452,11 @@ processFlow:
 
                                                         newElmt2.SetAttribute("bind", newElmt2.GetAttribute("bind") & "-" & ticketType & nCount)
                                                     End If
+
+                                                    If i > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
+                                                        newElmt2.ParentNode.RemoveChild(newElmt2)
+                                                    End If
+
                                                 Next
                                                 newElmt = Nothing
                                                 nCount = nCount + 1
