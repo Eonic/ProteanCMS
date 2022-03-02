@@ -9094,9 +9094,9 @@ Partial Public Class Cms
                             Dim msgHtml As String = msgNode.InnerXml
 
                             msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText)
-                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementId"))
+                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementID"))
                             msgHtml = msgHtml.Replace("{PaymentDue}", oCartListElmt.GetAttribute("payableAmount"))
-                            msgHtml = msgHtml.Replace("{PaymentDueDate}", oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText)
+                            msgHtml = msgHtml.Replace("{PaymentDueDate}", CDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText).ToString("dd MMM yyyy"))
                             msgHtml = msgHtml.Replace("{CourseName}", oCartListElmt.SelectSingleNode("Item[1]/Name").InnerText)
 
                             msgNode.InnerXml = msgHtml
@@ -9123,6 +9123,8 @@ Partial Public Class Cms
                             Dim oMsg As New Protean.Messaging()
                             oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
                             myWeb.moSession(InstanceSessionName) = Nothing
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Email, mnUserId, 0, 0, nOrderId, "Payment Reminder Sent - " & Now().ToString())
+
                         End If
                     ElseIf MyBase.isTriggered Then
                         'we have clicked a trigger so we must update the instance

@@ -3480,6 +3480,8 @@ AfterProcessFlow:
 
                         Case "RequestSettlement"
                             oPageDetail.AppendChild(moAdXfm.xFrmRequestSettlement(myWeb.moRequest("id")))
+                            oPageDetail.AppendChild(myWeb.moDbHelper.ActivityReport(dbHelper.ActivityType.Email, 0, 0, 0, CLng(myWeb.moRequest("id"))))
+
                         Case Else
                             Select Case mcEwCmd
                                 Case "Orders"

@@ -7307,6 +7307,9 @@
                   <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
                     <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
                   </a>
+
+					<xsl:apply-templates select="ContentDetail/ActivityLog" mode="activityReport"/>
+					
                   <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
                   <xsl:variable name="currency" select="ContentDetail/Content[@type='order']/@currencySymbol"/>
                   <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
@@ -7335,7 +7338,9 @@
       <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
-
+  
+  <xsl:template match="ActivityLog" mode="activityReport">
+  </xsl:template>
 
   <xsl:template match="Content[@type='order']" mode="ListOrders">
     <xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>

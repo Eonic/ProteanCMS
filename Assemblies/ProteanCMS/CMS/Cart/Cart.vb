@@ -3024,14 +3024,12 @@ processFlow:
                                     If nPayable > nTotalAmount Then nPayable = nTotalAmount
 
                                     ' Set the Payable Amount
-                                    If nPayable > 0 Then
+                                    If nPayable > 0 And nPayable < nTotalAmount Then
                                         oCartElmt.SetAttribute("payableType", "deposit")
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                         oCartElmt.SetAttribute("paymentMade", "0")
                                     End If
-                                    If nPayable = nTotalAmount Then
-                                        oCartElmt.SetAttribute("payableType", "full")
-                                    End If
+
                                 End If
                             Else
                                 ' A deposit has been paid - should I check if it's the same as the total amount?
@@ -3050,6 +3048,10 @@ processFlow:
                                 oCartElmt.SetAttribute("payableType", "deposit")
                             Else
                                 oCartElmt.SetAttribute("payableType", "settlement")
+                            End If
+
+                            If nPayable = 0 Then
+                                oCartElmt.SetAttribute("payableType", "full")
                             End If
 
                             If nPayable = 0 Then
@@ -3127,8 +3129,8 @@ processFlow:
                             End If
 
                             Dim sSql2 As String = "Select cSettlementId from tblCartOrder where nCartOrderKey=" & nCartIdUse
-                            Dim settlementId As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))
-                            oCartElmt.SetAttribute("settlementId", settlementId)
+                            Dim settlementId As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql2))
+                            oCartElmt.SetAttribute("settlementID", settlementId)
 
                         End If
 
