@@ -207,6 +207,23 @@ Public Class IndexerAsync
                 Return ResponseMessage
 
             Else
+                'checking index file size start
+                Dim TotalSize As String
+
+                Dim infoReader As New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath("\"))) & "\Index\Write\indexInfo.xml")
+                If (infoReader.Exists) Then
+                    TotalSize = infoReader.Length
+
+                    If (myWeb.moConfig("indexFileSize") IsNot Nothing) Then
+                        If ((myWeb.moConfig("indexFileSize") * 1048576) < TotalSize) Then 'converted config mb size to byte
+                            ' StopIndex()
+                            Exit Function
+                        End If
+                    End If
+                End If
+
+                'checking index file size end
+
 
                 Me.StartIndex()
 
@@ -269,6 +286,20 @@ Public Class IndexerAsync
                         Dim pageObj As New IndexPageAsync.oPage()
                         pageObj.pgid = oDR("nStructKey")
                         pageObj.pagename = oDR("cStructName")
+
+                        'checking index file size start
+                        infoReader = New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath("\"))) & "\Index\Write\indexInfo.xml")
+                        If (infoReader.Exists) Then
+                            TotalSize = infoReader.Length
+
+                            If (myWeb.moConfig("indexFileSize") IsNot Nothing) Then
+                                If ((myWeb.moConfig("indexFileSize") * 1048576) < TotalSize) Then 'converted config mb size to byte
+                                    StopIndex()
+                                    Exit Function
+                                End If
+                            End If
+                        End If
+                        'checking index file size end
 
                         'don't do async
                         'Tasks.IndexSinglePage(pageObj)

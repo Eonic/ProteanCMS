@@ -1521,7 +1521,7 @@ Partial Public Module xmlTools
                     Dim buttonElement As XmlElement = oXformDoc.CreateElement("button")
                     buttonElement.InnerText = oChoices.InnerText
                     buttonElement.SetAttribute("name", oChoices.InnerText)
-                    ' buttonElement.SetAttribute("type", oChoices.G)
+                    buttonElement.SetAttribute("filterType", oChoices.Attributes("type").Value)
                     xmlButtons.AppendChild(buttonElement)
 
                 Next

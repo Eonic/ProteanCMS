@@ -243,37 +243,51 @@ Partial Public Class Cms
                         'If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                         'if total crossed more or less than defined range then it will remove promocode for the user.
                         If oDsDiscounts IsNot Nothing Then
-                            If cPromoCodeUserEntered <> "" Then
-                                Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
-                                Dim validateAddedDiscount As Boolean = True
-                                Dim totalAmount As Double = 0
-                                If oDsCart.Tables("Item").Rows.Count > 0 Then
-                                    For Each drItem As DataRow In oDsCart.Tables("Item").Rows
-                                        If (drItem(15) = 0) Then
-                                            totalAmount = totalAmount + drItem(6)
-                                        End If
-                                    Next
+                            If oDsDiscounts.Tables("Discount").Rows.Count > 0 Then
 
-                                End If
+                                If cPromoCodeUserEntered <> "" Then
+                                    Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
+                                    Dim validateAddedDiscount As Boolean = True
+                                    Dim totalAmount As Double = 0
+                                    If oDsCart.Tables("Item").Rows.Count > 0 Then
+                                        For Each drItem As DataRow In oDsCart.Tables("Item").Rows
+                                            If (drItem(15) = 0) Then
+                                                totalAmount = totalAmount + drItem(6)
+                                            End If
+                                        Next
 
-                                validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
-                                If validateAddedDiscount = False Then
-                                    RemoveDiscountCode()
-                                    oDsDiscounts = Nothing
+                                    End If
+
+                                    validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
+                                    If validateAddedDiscount = False Then
+                                        RemoveDiscountCode()
+                                        oDsDiscounts = Nothing
+                                    End If
                                 End If
+                            Else
+                                Dim oItemElmt As XmlElement
+                                For Each oItemElmt In oCartXML.SelectNodes("Item")
+                                    'later sites are dependant on these values
+                                    oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), , , mbRoundUp))
+                                    oItemElmt.SetAttribute("unitSaving", 0)
+                                    oItemElmt.SetAttribute("itemSaving", 0)
+                                    oItemElmt.SetAttribute("discount", 0)
+                                    oItemElmt.SetAttribute("itemTotal", oItemElmt.GetAttribute("price") * oItemElmt.GetAttribute("quantity"))
+
+                                Next
+                                oDsDiscounts = Nothing
                             End If
                         End If
+
 
                         If oDsDiscounts Is Nothing Then
                             If cPromoCodeUserEntered <> "" Then
                                 Dim oDiscountMessage As XmlElement = oCartXML.OwnerDocument.CreateElement("DiscountMessage")
                                 oDiscountMessage.InnerXml = "<span class=""msg-1030"">The code you have provided is invalid for this transaction</span>"
-
                                 oCartXML.AppendChild(oDiscountMessage)
                             End If
                             Return 0
                         Else
-
 
                             Dim oDc As DataColumn
                             For Each oDc In oDsDiscounts.Tables("Discount").Columns

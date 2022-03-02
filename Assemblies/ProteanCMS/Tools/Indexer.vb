@@ -49,6 +49,7 @@ Public Class Indexer
 
     Dim myWeb As Cms
 
+
     Public Sub New(ByRef aWeb As Protean.Cms)
         PerfMon.Log("Indexer", "New")
         mcModuleName = "Eonic.Search.Indexer"
@@ -164,6 +165,21 @@ Public Class Indexer
             IndexDetailTypes = Split(Replace(cIndexDetailTypes, " ", ""), ",")
             dStartTime = Now
 
+            'checking index file size start
+            Dim TotalSize As String
+
+            Dim infoReader As New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath("\"))) & "\Index\Write\indexInfo.xml")
+            If (infoReader.Exists) Then
+                TotalSize = infoReader.Length
+
+                If (myWeb.moConfig("indexFileSize") IsNot Nothing) Then
+                    If ((myWeb.moConfig("indexFileSize") * 1048576) < TotalSize) Then 'converted config mb size to byte
+                        Exit Sub
+                    End If
+                End If
+            End If
+
+            'checking index file size end
             Me.StartIndex()
 
             If bIsError Then Exit Sub
@@ -200,14 +216,32 @@ Public Class Indexer
 
             'full pages
             cSQL = "Select nStructKey,cStructName From tblContentStructure" 'get all structure
-            'If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage 'unless a specific page
-            If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage & " Or nStructParId =" & nPage 'unless a specific page
+            If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage 'unless a specific page
+            ' If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage & " Or nStructParId =" & nPage 'unless a specific page
             oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Structure")
 
             'now we loop through the different tables and index the data
             'Do Pages
             If oDS.Tables.Contains("Structure") Then
                 For Each oDR In oDS.Tables("Structure").Rows
+
+                    'checking index file size start
+
+                    'infoReader = My.Computer.FileSystem.GetFileInfo(mcIndexWriteFolder & "indexInfo.xml")
+                    infoReader = New System.IO.FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath("\"))) & "\Index\Write\indexInfo.xml")
+                    If (infoReader.Exists) Then
+                        TotalSize = infoReader.Length
+                        If (myWeb.moConfig("indexFileSize") IsNot Nothing) Then
+                            If ((myWeb.moConfig("indexFileSize") * 1048576) < TotalSize) Then 'converted config mb size to byte
+                                StopIndex()
+                                Exit Sub
+                            End If
+                        End If
+                    End If
+
+                    'checking index file size end
+
+
                     'here we get a copy of the outputted html
                     'as the admin user would see it
                     'without bieng in admin mode
