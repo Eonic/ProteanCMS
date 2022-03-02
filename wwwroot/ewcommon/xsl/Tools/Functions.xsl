@@ -9065,7 +9065,7 @@
           <xsl:value-of select="@id"/>
         </xsl:otherwise>
       </xsl:choose>
-    </xsl:variable>
+    </xsl:variable>test2
     <!-- RRP and standard prices must remain within the #price_{$id} -->
     <span class="prices" id="price_{$id}">
       <!-- RRP First -->
