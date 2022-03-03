@@ -19,27 +19,36 @@
 
     .dropdown-menu {
         text-align: left;
-        background: $admin-header-bg-light;
+        background: #fff;
+        border: 2px solid $admin-primary;
         letter-spacing: normal;
+        border-radius: 0;
+        min-width: 11rem;
+        opacity: 1 !important;
 
         li {
             width: 100%;
         }
 
         li a {
-            color: $admin-header-color !important;
+            color: $admin-primary !important;
             display: block;
+            font-weight: 500;
+
+            i {
+                color: $admin-primary !important;
+            }
 
             &:hover {
-                color: $admin-header-color-link !important;
+                color: darken($admin-primary,10%) !important;
                 background: transparent;
 
                 i {
-                    color: $admin-header-color-link !important;
+                    color: darken($admin-primary,10%) !important;
                 }
             }
 
-            padding: 3px 20px !important;
+            padding: 3px 15px !important;
             background-image: none !important;
             background: none !important;
             text-transform: none !important;
@@ -48,6 +57,10 @@
             text-decoration: none !important;
             font-size: 13px !important;
             font-weight: 400 !important;
+        }
+
+        .divider {
+            display: none;
         }
 
         li.mansonary-size a.btn {
@@ -79,8 +92,8 @@
         }
 
         li.title {
-            font-size: 12px;
-            color: darken($admin-header-color, 30%) !important;
+            font-size: 14px;
+            color: #585858 !important;
         }
 
         .divider {
@@ -89,6 +102,20 @@
 }
 
 .normalMode {
+    .text-primary {
+        color: $admin-header-color-link !important;
+    }
+
+    .indicate-visibility {
+        padding: 6px 0px 5px 5px;
+    }
+
+    .text-primary.drag {
+        padding: 2px 5px 0;
+        font-size: 13px !important;
+        margin-right: -21px;
+    }
+
     a:hover {
         text-decoration: none;
     }
@@ -97,8 +124,13 @@
         z-index: 10;
     }
 
+    .ptn-edit.moduleDrag {
+        margin-bottom: 6px;
+    }
+
     .ptn-edit.over-content {
-        margin-bottom: -22px;
+        margin-bottom: -28px;
+        //margin-top:4px;
     }
 
     .ptn-edit > .btn-default,
@@ -122,7 +154,7 @@
 
     .ptn-edit > .btn-primary,
     .ptn-edit > .dropdown .btn-primary {
-        margin-left: 3px;
+        margin-left: 1px;
     }
 
     .ptn-edit > .dropdown .dropdown-menu li {
@@ -167,7 +199,7 @@
     .ptn-edit > .dropdown > .btn-default {
         //padding: 0px 3px 3px 5px !important;
         font-weight: 400;
-        border-radius: 4px;
+        border-radius: 0px;
         border: 1px solid #fff !important;
     }
 
@@ -316,8 +348,8 @@
     }
 
     .ptn-edit .dropdown-menu li.title {
-        margin: 3px 5px 2px 20px !important;
-        color: rgba(0,0,0,0.4);
+        margin: 3px 5px 2px 15px !important;
+        color: #333!important;
         padding: 0;
         width:auto!important;
     }
@@ -397,7 +429,7 @@
 .Site, .Email {
     .ptn-edit .btn, .ptn-edit .dropdown {
         font-weight: normal;
-        font-size: 13px !important;
+        font-size: 14px !important;
         line-height: 20px !important;
         text-decoration: none;
         height: auto !important;
@@ -405,7 +437,9 @@
     }
 
     .ptn-edit .btn-xs {
-        padding: 1px 5px;
+        //padding: 1px 5px;
+        padding: 3px 1px 3px 7px!important;
+        min-width:30px;
     }
 
     .ptn-edit .addHere {
@@ -446,7 +480,7 @@
         width: 100%;
 
         .btn {
-            margin-right: 3px;
+            //margin-right: 3px;
 
             &:focus {
                 box-shadow: 0 0 0 0.25rem transparentize($admin-header-color-link,0.7);
@@ -456,9 +490,9 @@
 
     .listItem,
     .grid-item,
-    .nav-module{
+    .nav-module {
         .ptn-edit.options {
-            margin-bottom: -22px;
+            margin-bottom: -28px;
 
             .dropdown > .btn {
                 opacity: 0.3;
@@ -489,12 +523,18 @@
 
     .module {
         > .editable .options {
-            opacity: 0.3;
+            .btn,
+            .text-primary {
+                opacity: 0.3;
+            }
         }
 
         &:hover {
             > .editable .options {
-                opacity: 1;
+                .btn,
+                .text-primary {
+                    opacity: 1;
+                }
             }
         }
     }
