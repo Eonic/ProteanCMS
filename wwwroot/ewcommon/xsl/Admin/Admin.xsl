@@ -5191,11 +5191,7 @@
       $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
       ev.preventDefault();
       $('.modal-dialog').addClass('loading')
-      $('.modal-body').html('<p class="text-center">
-        <h4>
-          <i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...
-        </h4>
-      </p>');
+      $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
       var target = $(this).attr("href");
       // load the url and show modal on success
       var currentModal = $('.pickImageModal')
@@ -5256,8 +5252,7 @@
             <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
           </a>
         </div>'
-        newItem = newItem + '<div class="description">
-          '
+        newItem = newItem + '<div class="description">'
           newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
             <i class="fa fa-trash-o fa-white">
               <xsl:text> </xsl:text>
