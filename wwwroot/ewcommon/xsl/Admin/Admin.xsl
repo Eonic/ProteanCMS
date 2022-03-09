@@ -3885,23 +3885,11 @@
     <xsl:param name="indent"/>
     <xsl:variable name="relationType" select="$page/Request/QueryString/Item[@name='relationType']/node()"/>
 
-    <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
+    <span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
       <tr>
         <td>
-          <xsl:value-of select="$indent"/>
-          <xsl:choose>
-
-            <xsl:when test="@name!=''">
-              <xsl:value-of select="@name"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:copy-of select="Name/node()"/>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:if test="StockCode/node()">
-            <xsl:text> - </xsl:text>
-            <xsl:value-of select="StockCode/node()"/>
-          </xsl:if>
+			<xsl:apply-templates select="." mode="ContentListName"/>
+         
         </td>
         <td>
           <xsl:if test="@publishDate!=''">
@@ -4051,9 +4039,8 @@
                       <tr>
                         <td> </td>
                         <td colspan="3">
-                          <strong>
-                            <xsl:value-of select="@name"/>
-                          </strong>
+							<xsl:apply-templates select="." mode="ContentListName"/>
+          
                         </td>
                         <td>
                           <a href="{$appPath}?ewCmd=RemoveProductGroupsProduct&amp;GroupId={../@nCatKey}&amp;RelId={@relid}" class="btn btn-xs btn-primary">
@@ -4086,6 +4073,22 @@
       </div>
     </div>
   </xsl:template>
+
+	<xsl:template match="Content" mode="ContentListName">
+		<xsl:value-of select="$indent"/>
+		<xsl:choose>
+			<xsl:when test="@name!=''">
+				<xsl:value-of select="@name"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:copy-of select="Name/node()"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:if test="StockCode/node()">
+			<xsl:text> - </xsl:text>
+			<xsl:value-of select="StockCode/node()"/>
+		</xsl:if>
+	</xsl:template>
   <!-- -->
   <!-- BJR -->
   <!--   ##################  Discount Rules   ##############################   -->
@@ -4128,6 +4131,9 @@
       <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
+
+
+	
 
   <xsl:template match="Page[@layout='DiscountRules']" mode="Admin">
     <div class="row" id="tpltDiscountRules">
