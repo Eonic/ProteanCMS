@@ -5859,6 +5859,11 @@ Partial Public Class Cms
                     Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
                     Dim amount As String = ""
+
+
+
+
+
                     If (nOrderId > 0) Then
                         Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
                         If (cartXmlSql <> "") Then
@@ -7159,11 +7164,18 @@ Partial Public Class Cms
                         ElseIf MyBase.getSubmitted = "Confirm" Then
                             Dim bEmailClient As Boolean = False
                             If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
-                            oSub.RenewSubscription(nSubscriptionId, bEmailClient)
-                            MyBase.valid = True
+                            Dim RenewResponse As String
+                            RenewResponse = oSub.RenewSubscription(nSubscriptionId, bEmailClient)
+                            If RenewResponse = "Success" Then
+                                MyBase.valid = True
+                            Else
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Payment Failed")
+                                MyBase.valid = False
+                            End If
+
                             Return MyBase.moXformElmt
+                            End If
                         End If
-                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)

@@ -5197,12 +5197,8 @@
       $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
       ev.preventDefault();
       $('.modal-dialog').addClass('loading')
-      $('.modal-body').html('<p class="text-center">
-        <h4>
-          <i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...
-        </h4>
-      </p>');
-      var target = $(this).attr("href");
+			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
+			var target = $(this).attr("href");
       // load the url and show modal on success
       var currentModal = $('.pickImageModal')
       currentModal.load(target, function () {
@@ -5248,35 +5244,11 @@
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
 
-    var newItem = '<div class="item item-image col-md-2 col-sm-4">
-      <div class="panel">
-        <div class="image-thumbnail">
-          <div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">
-            <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
-            <div class="popover-description">
-              <span class="image-description-name">' + file.name + '</span>
-              <br/>
-            </div>
-          </div>
-          <a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">
-            <img src="' + targetPath + '/' + file.name + '" class="img-responsive" />
-          </a>
-        </div>'
-        newItem = newItem + '<div class="description">
-          '
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
-            <i class="fa fa-trash-o fa-white">
-              <xsl:text> </xsl:text>
-            </i>Delete
-          </a>';
-          newItem = newItem + '
-        </div><div class="img-description">
-          <span class="image-description-name">' + file.name + '</span>
-          <br/>
-        </div>';
-        newItem = newItem + '
-      </div>
-    </div>';
+    var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
+    newItem = newItem + '<div class="description">'
+    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
+      newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
+      newItem = newItem + '</div></div>';
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
@@ -5507,16 +5479,8 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
-    var newItem = '<tr>
-      <td>
-        <i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '
-      </td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
-      newItem = newItem + '<td>
-        <a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
-          <i class="fa fa-trash-o fa-white"> </i> Delete
-        </a>
-      </td>
-    </tr>'
+    var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '</td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
+    newItem = newItem + '<td><a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
   </xsl:template>
 
 
@@ -5525,23 +5489,9 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='MediaLib']" mode="newItemScript">
-    var newItem = '<div class="item col-md-2 col-sm-4">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <div class="ItemThumbnail">
-            <img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" />
-          </div>'
-          newItem = newItem + '<div class="description">
-            ' + file.name + '<br />
-          </div>'
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
-            <i class="fa fa-trash-o fa-white">
-              <xsl:text> </xsl:text>
-            </i>Delete
-          </a>
-        </div>
-      </div>
-    </div>'
+    var newItem = '<div class="item col-md-2 col-sm-4"><div class="panel panel-default"><div class="panel-body"><div class="ItemThumbnail"><img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /></div>'
+    newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
+    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
   </xsl:template>
 
   <xsl:template match="folder" mode="MediaFolder">
@@ -7601,7 +7551,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">
 			<xsl:if test="Payment">
-				<a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=LoftLive-Tickets-{$orderId}" class="btn btn-primary btn-sm pull-right" target="_new">
+				<a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=Tickets-{$orderId}" class="btn btn-primary btn-sm pull-right" target="_new">
 					<i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
 				</a>
 			</xsl:if>

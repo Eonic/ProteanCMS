@@ -1360,8 +1360,10 @@ processFlow:
                         End If
 
                     Case "Billing" 'Check if order has Billing Address    
-                        'reset payment method
-                        ' mcPaymentMethod = Nothing
+                        'reset payment - TS this was commented out and I am not sure why, I have put back in as of 11-03-22
+                        mcPaymentMethod = Nothing
+                        myWeb.moSession("mcPaymentMethod") = Nothing
+
                         GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
@@ -7006,6 +7008,8 @@ processFlow:
                 mnCartId = 0
                 myWeb.moSession("CartId") = Nothing
                 mnTaxRate = moCartConfig("TaxRate")
+                mcPaymentMethod = Nothing
+                myWeb.moSession("mcPaymentMethod") = Nothing
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug)
