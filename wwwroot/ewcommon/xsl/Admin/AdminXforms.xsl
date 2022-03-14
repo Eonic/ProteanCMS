@@ -1411,6 +1411,9 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
+	  <xsl:variable name="ref2">
+		  <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
+	  </xsl:variable>
     <xsl:variable name="selectedValue">
       <xsl:value-of select="value/node()"/>
     </xsl:variable>
@@ -1423,24 +1426,24 @@
 		    <input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
 		    <span class="input-group-btn">
 			
-			    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{$ref}-modal"><i class="fa fa-file-text-o fa-white">
+			    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{$ref2}-modal"><i class="fa fa-file-text-o fa-white">
 				    <xsl:text> </xsl:text>
 			    </i><xsl:text> </xsl:text>Pick Page</button>
 		    </span>
         </div>
-		  <div class="modal fade" id="{$ref}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal fade" id="{$ref2}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			  <div class="modal-dialog" role="document">
 				  <div class="modal-content">
 					  <div class="modal-body">
 						  <ul id="MenuTree" class="list-group">
 							  <xsl:apply-templates select="/Page/Menu/MenuItem" mode="siteTreePage">
 								  <xsl:with-param name="level">1</xsl:with-param>
-								  <xsl:with-param name="ref" select="$ref" />
+								  <xsl:with-param name="ref" select="$ref2" />
 								  <xsl:with-param name="selectedValue" select="$selectedValue" />
 							  </xsl:apply-templates>
 							  <xsl:apply-templates select="/Page/Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="siteTreePage">
 								  <xsl:with-param name="level">1</xsl:with-param>
-								  <xsl:with-param name="ref" select="$ref" />
+								  <xsl:with-param name="ref" select="$ref2" />
 								  <xsl:with-param name="selectedValue" select="$selectedValue" />
 							  </xsl:apply-templates>
 						  </ul>
@@ -1689,15 +1692,16 @@
      
       <xsl:for-each select="ms:node-set($filterButtons)/*">
         <xsl:variable name="buttonName" select="node()"/>
-        <!--<xsl:value-of select="count(ms:node-set($filterButtons)/*)"/>-->
+		    <xsl:value-of select="Content/Content/@filtertype"/>
+		  
         <xsl:choose>
-          <xsl:when test="ancestor::Content/Content[@filterType=$buttonName]">
+          <xsl:when test="ancestor::Content/Content[@filtertype=$buttonName]">
            <button type="button" name="Edit {$buttonName}" class="btn btn-primary">
               Edit <xsl:value-of select="$buttonName"/>
             </button>
           </xsl:when>
           <xsl:otherwise>
-            <button type="submit" name="RelateAdd_PageFilter_1Way_~inactive" class="btn btn-primary">
+            <button type="submit" name="RelateAdd_PageFilter_1Way_~inactive" filtertype="{$buttonName}" class="btn btn-primary">
               Add <xsl:value-of select="$buttonName"/>
             </button>
           </xsl:otherwise>
@@ -2953,7 +2957,7 @@
             <div>
                 <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick(this.value);">301 Permanant Redirect</button>
                 <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">302 Temporary Redirect</button>
-                <!--<button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>-->
+                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick(this.value);">404 Page Not Found</button>
              </div>
 
             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
@@ -2992,7 +2996,7 @@
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
             <input name="IsParent" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
-      <input  name="redirectOption" type="textbox" class="hiddenRedirectType" />
+      	    <input name="redirectOption" type="hidden" class="hiddenRedirectType" />
       </div>
     </div>
    

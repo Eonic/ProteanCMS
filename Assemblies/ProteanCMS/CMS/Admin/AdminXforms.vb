@@ -5859,6 +5859,11 @@ Partial Public Class Cms
                     Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
                     Dim amount As String = ""
+
+
+
+
+
                     If (nOrderId > 0) Then
                         Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
                         If (cartXmlSql <> "") Then
@@ -5868,7 +5873,7 @@ Partial Public Class Cms
                         If (xdoc.InnerXml <> "") Then
 
                             ' Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
-                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance")
+                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/*[1]")
                             If (xnInstance IsNot Nothing) Then
                                 amount = xnInstance.Attributes("AmountPaid").InnerText
                             End If
@@ -7159,11 +7164,18 @@ Partial Public Class Cms
                         ElseIf MyBase.getSubmitted = "Confirm" Then
                             Dim bEmailClient As Boolean = False
                             If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
-                            oSub.RenewSubscription(nSubscriptionId, bEmailClient)
-                            MyBase.valid = True
+                            Dim RenewResponse As String
+                            RenewResponse = oSub.RenewSubscription(nSubscriptionId, bEmailClient)
+                            If RenewResponse = "Success" Then
+                                MyBase.valid = True
+                            Else
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Payment Failed")
+                                MyBase.valid = False
+                            End If
+
                             Return MyBase.moXformElmt
+                            End If
                         End If
-                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
@@ -7686,18 +7698,17 @@ Partial Public Class Cms
                     Dim oSel1 As XmlElement = MyBase.addSelect1(oGrp0Elmt, "cCurrencySymbol", True, "Currency")
                     MyBase.addOption(oSel1, "All", "")
                     MyBase.addOption(oSel1, "GBP", "GBP")
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus", True, "nOrderStatus", "hidden")
 
-                    Dim oSelStatus As XmlElement = MyBase.addSelect1(oGrp0Elmt, "nOrderStatus", True, "Ticket Status")
-                    MyBase.addOption(oSelStatus, "Total Sold", "")
-                    MyBase.addOption(oSelStatus, "GBP", "GBP")
-
-
-                    If myWeb.moConfig("Quote") <> "on" Then
+                    If LCase(myWeb.moConfig("Quote")) = "on" Then
                         oSel1 = MyBase.addSelect1(oGrp0Elmt, "cOrderType", True, "Cart Type")
-                        MyBase.addOption(oSel1, "Order", "Order")
-                        MyBase.addOption(oSel1, "Quote", "Quote")
+                        MyBase.addOption(oSel1, "Orders", "Order")
+                        MyBase.addOption(oSel1, "Quotes", "Quote")
                     End If
+
+                    oSel1 = MyBase.addSelect1(oGrp0Elmt, "nOrderStatus", True, "Cart Type")
+                    MyBase.addOption(oSel1, "Orders,In Progress,Shipped", "6,9,17")
+                    MyBase.addOption(oSel1, "Refunds", "7")
+                    MyBase.addOption(oSel1, "Payment Failed", "5")
 
                     ' Lets get the content types if we have more than 1
 
@@ -7744,7 +7755,9 @@ Partial Public Class Cms
                     MyBase.addBind("nProductId", "Criteria/nProductId", , "number")
                     MyBase.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", , "string")
                     MyBase.addBind("nOrderStatus", "Criteria/nOrderStatus", , "string")
-                    MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
+                    If LCase(myWeb.moConfig("Quote")) = "on" Then
+                        MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
+                    End If
 
 
                     If MyBase.isSubmitted Then
@@ -9093,9 +9106,9 @@ Partial Public Class Cms
                             Dim msgHtml As String = msgNode.InnerXml
 
                             msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText)
-                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementId"))
+                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementID"))
                             msgHtml = msgHtml.Replace("{PaymentDue}", oCartListElmt.GetAttribute("payableAmount"))
-                            msgHtml = msgHtml.Replace("{PaymentDueDate}", oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText)
+                            msgHtml = msgHtml.Replace("{PaymentDueDate}", CDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText).ToString("dd MMM yyyy"))
                             msgHtml = msgHtml.Replace("{CourseName}", oCartListElmt.SelectSingleNode("Item[1]/Name").InnerText)
 
                             msgNode.InnerXml = msgHtml
@@ -9122,6 +9135,8 @@ Partial Public Class Cms
                             Dim oMsg As New Protean.Messaging()
                             oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
                             myWeb.moSession(InstanceSessionName) = Nothing
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Email, mnUserId, 0, 0, nOrderId, "Payment Reminder Sent - " & Now().ToString())
+
                         End If
                     ElseIf MyBase.isTriggered Then
                         'we have clicked a trigger so we must update the instance
