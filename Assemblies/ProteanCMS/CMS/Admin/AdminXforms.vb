@@ -7688,6 +7688,11 @@ Partial Public Class Cms
                     MyBase.addOption(oSel1, "GBP", "GBP")
                     MyBase.addInput(oGrp0Elmt, "nOrderStatus", True, "nOrderStatus", "hidden")
 
+                    Dim oSelStatus As XmlElement = MyBase.addSelect1(oGrp0Elmt, "nOrderStatus", True, "Ticket Status")
+                    MyBase.addOption(oSelStatus, "Total Sold", "")
+                    MyBase.addOption(oSelStatus, "GBP", "GBP")
+
+
                     If myWeb.moConfig("Quote") <> "on" Then
                         oSel1 = MyBase.addSelect1(oGrp0Elmt, "cOrderType", True, "Cart Type")
                         MyBase.addOption(oSel1, "Order", "Order")
