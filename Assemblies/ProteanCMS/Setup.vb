@@ -1996,12 +1996,12 @@ DoOptions:
 
                 MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please enter your database connection details.")
 
-                If goConfig("DatabaseServer") = "" Then
+                '  If goConfig("DatabaseServer") = "" Then
 
-                    MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Server Hostname")
-                    MyBase.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
+                MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Server Hostname")
+                MyBase.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
 
-                End If
+                '  End If
 
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "DB Name")
                 MyBase.addBind("ewDatabaseName", "web/add[@key='DatabaseName']/@value", "true()")
