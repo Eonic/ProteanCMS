@@ -9642,6 +9642,42 @@ restart:
             End Try
         End Sub
 
+        Public Function ActivityReport(sActivityType As ActivityType, ByVal userDirId As Long, ByVal structId As Long, ByVal artId As Long, ByVal otherId As Long) As XmlElement
+            PerfMon.Log("DBHelper", "ViewMailHistory")
+            Dim cSQL As String = ""
+            Try
+                Dim cWhere As String = ""
+                If otherId > 0 Then
+                    cWhere = " and nOtherId = " & otherId & " "
+                End If
+
+
+                cSQL = "SELECT tblActivityLog.nActivityKey, tblDirectory.cDirName, tblActivityLog.dDateTime, tblActivityLog.cActivityDetail" &
+                " FROM tblActivityLog INNER JOIN" &
+                " tblDirectory ON tblActivityLog.nUserDirId = tblDirectory.nDirKey " &
+                " WHERE(tblActivityLog.nActivityType = " & sActivityType & cWhere & ")" &
+                " ORDER BY tblActivityLog.dDateTime DESC"
+
+                Dim oDs As DataSet = GetDataSet(cSQL, "Activity", "ActivityLog")
+
+                oDs.Tables("Activity").Columns("nActivityKey").ColumnMapping = MappingType.Attribute
+                oDs.Tables("Activity").Columns("cDirName").ColumnMapping = MappingType.Attribute
+                oDs.Tables("Activity").Columns("dDateTime").ColumnMapping = MappingType.Attribute
+                oDs.Tables("Activity").Columns("cActivityDetail").ColumnMapping = MappingType.Element
+
+                Dim oActivityElement As XmlElement = myWeb.moPageXml.CreateElement("ActivityLog")
+                oActivityElement.InnerXml = Replace(Replace(oDs.GetXml, "&gt;", ">"), "&lt;", "<")
+                Dim odtElement As XmlElement
+                'xmlDateTime
+                For Each odtElement In oActivityElement.SelectNodes("descendant-or-self::Activity")
+                    odtElement.SetAttribute("dDateTime", Protean.Tools.Xml.XmlDate(odtElement.GetAttribute("dDateTime"), True))
+                Next
+                Return oActivityElement.FirstChild
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ViewMailHistory", ex, cSQL))
+            End Try
+        End Function
+
         Public Function CheckOptOut(ByVal nCheckAddress As String) As Boolean
             PerfMon.Log("DBHelper", "CheckOptOut")
             Try

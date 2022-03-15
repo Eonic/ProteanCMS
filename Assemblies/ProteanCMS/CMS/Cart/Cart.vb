@@ -1360,8 +1360,10 @@ processFlow:
                         End If
 
                     Case "Billing" 'Check if order has Billing Address    
-                        'reset payment method
-                        ' mcPaymentMethod = Nothing
+                        'reset payment - TS this was commented out and I am not sure why, I have put back in as of 11-03-22
+                        mcPaymentMethod = Nothing
+                        myWeb.moSession("mcPaymentMethod") = Nothing
+
                         GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
@@ -3024,14 +3026,12 @@ processFlow:
                                     If nPayable > nTotalAmount Then nPayable = nTotalAmount
 
                                     ' Set the Payable Amount
-                                    If nPayable > 0 Then
+                                    If nPayable > 0 And nPayable < nTotalAmount Then
                                         oCartElmt.SetAttribute("payableType", "deposit")
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                         oCartElmt.SetAttribute("paymentMade", "0")
                                     End If
-                                    If nPayable = nTotalAmount Then
-                                        oCartElmt.SetAttribute("payableType", "full")
-                                    End If
+
                                 End If
                             Else
                                 ' A deposit has been paid - should I check if it's the same as the total amount?
@@ -3050,6 +3050,10 @@ processFlow:
                                 oCartElmt.SetAttribute("payableType", "deposit")
                             Else
                                 oCartElmt.SetAttribute("payableType", "settlement")
+                            End If
+
+                            If nPayable = 0 Then
+                                oCartElmt.SetAttribute("payableType", "full")
                             End If
 
                             If nPayable = 0 Then
@@ -3127,8 +3131,8 @@ processFlow:
                             End If
 
                             Dim sSql2 As String = "Select cSettlementId from tblCartOrder where nCartOrderKey=" & nCartIdUse
-                            Dim settlementId As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))
-                            oCartElmt.SetAttribute("settlementId", settlementId)
+                            Dim settlementId As String = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql2))
+                            oCartElmt.SetAttribute("settlementID", settlementId)
 
                         End If
 
@@ -5909,62 +5913,63 @@ processFlow:
                     bFirstRow = True
                     If Not oPaymentCfg Is Nothing Then
                         If nAmount = 0 And nRepeatAmount = 0 Then
-
-                            oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = "No Charge"
-                            Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
-                            oOptXform.addOption(oSelectElmt, "No Charge", "No Charge")
-                            bHidePayment = False
-                            AllowedPaymentMethods.Add("No Charge")
+                            If Not bPaymentTypeButtons Then
+                                oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = "No Charge"
+                                Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                oOptXform.addOption(oSelectElmt, "No Charge", "No Charge")
+                                bHidePayment = False
+                                AllowedPaymentMethods.Add("No Charge")
+                            End If
 
                         ElseIf oPaymentCfg.SelectNodes("provider").Count > 1 Then
 
-                            If Not bPaymentTypeButtons Then
-                                Dim oSelectElmt As XmlElement
-                                oSelectElmt = oOptXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@ref='cPaymentMethod']")
-                                If oSelectElmt Is Nothing Then
-                                    oSelectElmt = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                If Not bPaymentTypeButtons Then
+                                    Dim oSelectElmt As XmlElement
+                                    oSelectElmt = oOptXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@ref='cPaymentMethod']")
+                                    If oSelectElmt Is Nothing Then
+                                        oSelectElmt = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                    End If
+                                    Dim nOptCount As Integer = oPay.getPaymentMethods(oOptXform, oSelectElmt, nAmount, mcPaymentMethod)
+
+                                    'Code Moved to Get PaymentMethods
+
+                                    If nOptCount = 0 Then
+                                        oOptXform.valid = False
+                                        oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.")
+                                    ElseIf nOptCount = 1 Then
+                                        'hide the options
+                                        oSelectElmt.SetAttribute("class", "hidden")
+                                    End If
+
+                                    'step throught the payment methods to set as allowed.
+                                    Dim oOptElmt As XmlElement
+                                    For Each oOptElmt In oSelectElmt.SelectNodes("item")
+                                        AllowedPaymentMethods.Add(oOptElmt.SelectSingleNode("value").InnerText)
+                                    Next
                                 End If
-                                Dim nOptCount As Integer = oPay.getPaymentMethods(oOptXform, oSelectElmt, nAmount, mcPaymentMethod)
 
-                                'Code Moved to Get PaymentMethods
 
-                                If nOptCount = 0 Then
-                                    oOptXform.valid = False
-                                    oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.")
-                                ElseIf nOptCount = 1 Then
-                                    'hide the options
-                                    oSelectElmt.SetAttribute("class", "hidden")
+
+
+                            ElseIf oPaymentCfg.SelectNodes("provider").Count = 1 Then
+                                'or just one
+                                If Not bPaymentTypeButtons Then
+                                    If oPay.HasRepeatPayments Then
+                                        Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                        oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, oOptXform, oSelectElmt)
+
+                                        oOptXform.addOption(oSelectElmt, oPaymentCfg.SelectSingleNode("provider/description").Attributes("value").Value, oPaymentCfg.SelectSingleNode("provider").Attributes("name").Value)
+                                        bHidePayment = False
+                                        AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
+                                    Else
+                                        bHidePayment = True
+                                        oOptXform.addInput(oGrpElmt, "cPaymentMethod", False, oPaymentCfg.SelectSingleNode("provider/@name").InnerText, "hidden")
+                                        oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = oPaymentCfg.SelectSingleNode("provider/@name").InnerText
+                                        AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
+                                    End If
                                 End If
-
-                                'step throught the payment methods to set as allowed.
-                                Dim oOptElmt As XmlElement
-                                For Each oOptElmt In oSelectElmt.SelectNodes("item")
-                                    AllowedPaymentMethods.Add(oOptElmt.SelectSingleNode("value").InnerText)
-                                Next
-                            End If
-
-
-
-
-                        ElseIf oPaymentCfg.SelectNodes("provider").Count = 1 Then
-                            'or just one
-                            If Not bPaymentTypeButtons Then
-                                If oPay.HasRepeatPayments Then
-                                    Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
-                                    oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, oOptXform, oSelectElmt)
-
-                                    oOptXform.addOption(oSelectElmt, oPaymentCfg.SelectSingleNode("provider/description").Attributes("value").Value, oPaymentCfg.SelectSingleNode("provider").Attributes("name").Value)
-                                    bHidePayment = False
-                                    AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
-                                Else
-                                    bHidePayment = True
-                                    oOptXform.addInput(oGrpElmt, "cPaymentMethod", False, oPaymentCfg.SelectSingleNode("provider/@name").InnerText, "hidden")
-                                    oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = oPaymentCfg.SelectSingleNode("provider/@name").InnerText
-                                    AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
-                                End If
-                            End If
-                        Else
-                            oOptXform.valid = False
+                            Else
+                                oOptXform.valid = False
                             oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.")
                         End If
                     Else
@@ -6024,6 +6029,14 @@ processFlow:
                         For Each oSubmitBtn In oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit")
                             AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"))
                         Next
+
+                        If nAmount = 0 And nRepeatAmount = 0 Then
+                            'oOptXform.addSubmit(oGrpElmt, "optionsForm", "Complete Order")
+                            AllowedPaymentMethods.Add("No Charge")
+                            oOptXform.addSubmit(oGrpElmt, "No Charge", "Complete Order", "submit", "pay-button pay-nothing", "fas fa-check", "No Charge")
+
+                        End If
+
                     End If
                 End If
 
@@ -6073,7 +6086,7 @@ processFlow:
                                 cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
                                 nShippingCost = CDbl("0" & oRow("nShipOptCost"))
                                 cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
-                                moDBHelper.ExeProcessSql(cSqlUpdate)
+                            moDBHelper.ExeProcessSql(cSqlUpdate)
                             Next
 
                             ' update the cart xml
@@ -6995,6 +7008,8 @@ processFlow:
                 mnCartId = 0
                 myWeb.moSession("CartId") = Nothing
                 mnTaxRate = moCartConfig("TaxRate")
+                mcPaymentMethod = Nothing
+                myWeb.moSession("mcPaymentMethod") = Nothing
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug)

@@ -3,7 +3,7 @@
 Imports System
 Imports System.Web
 Imports System.Collections.Generic
-Imports Eonic.fsHelper
+Imports Protean.fsHelper
 
 Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
 
