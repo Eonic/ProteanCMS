@@ -328,7 +328,7 @@
             <p>Before it will run you need to give it the connection details.</p>
             <p>The servername will be hostname of the server hosting SQL Server. </p>
             <p>If the DB Name specified does not exist it will be created as long as the username and password have sufficent access rights to do so.</p>
-            <p>If for any reason this step fails you can edit these settings directly in the /protean.web.config file.</p>
+            <p>If for any reason this step fails you can edit these settings directly in the /wwwroot/protean.web.config file.</p>
           </div>
           <div class="col-md-6">
             <div class="panel">
