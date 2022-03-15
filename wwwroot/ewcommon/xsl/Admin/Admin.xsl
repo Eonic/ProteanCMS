@@ -7550,9 +7550,14 @@
     <div id="cartFull">
       <div class="panel panel-default">
         <div class="panel-heading">
-			<xsl:if test="Payment">
+			<xsl:if test="Item/productDetail/@type='Ticket' and Item/productDetail/Ticket">
 				<a href="/ewcommon/tools/pageAsPDF.ashx?ewCmd=Orders&amp;ewCmd2=Display&amp;id={$orderId}&amp;filename=Tickets-{$orderId}" class="btn btn-primary btn-sm pull-right" target="_new">
-					<i class="fas fa-file-pdf">&#160;</i>&#160;Print Tickets
+					<i class="fas fa-file-pdf">&#160;</i>&#160;Reprint Tickets
+				</a>
+			</xsl:if>
+			<xsl:if test="Item/productDetail/@type='Ticket' and not(Item/productDetail/Ticket)">
+				<a href="/ewcommon/tools/issuetickets.ashx?orderid={$orderId}" class="btn btn-primary btn-sm pull-right" target="_new">
+					<i class="fas fa-file-pdf">&#160;</i>&#160;Issue Tickets
 				</a>
 			</xsl:if>
           <xsl:choose>
