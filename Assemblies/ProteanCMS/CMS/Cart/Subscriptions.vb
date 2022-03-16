@@ -2320,6 +2320,8 @@ processFlow:
 
                                         pseudoOrder.SetAddress(oSubForm.Instance.SelectSingleNode("Contact/cContactName").InnerText,
                                         oSubForm.Instance.SelectSingleNode("Contact/cContactEmail").InnerText,
+                                        oSubForm.Instance.SelectSingleNode("Contact/cContactTel").InnerText,
+                                        oSubForm.Instance.SelectSingleNode("Contact/cContactTelCountryCode").InnerText,
                                         oSubForm.Instance.SelectSingleNode("Contact/cContactCompany").InnerText,
                                         oSubForm.Instance.SelectSingleNode("Contact/cContactAddress").InnerText,
                                         oSubForm.Instance.SelectSingleNode("Contact/cContactCity").InnerText,
@@ -2355,6 +2357,7 @@ processFlow:
                                 pseudoCart.mcPagePath = pseudoCart.mcCartURL & myWeb.mcPagePath
 
                                 ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, pseudoCart, pseudoOrder.xml, "?subCmd=updateSubPayment&subCmd2=PaymentForm&subId=" & myWeb.moRequest("subId"))
+                                myWeb.moPageXml.FirstChild.AppendChild(pseudoOrder.xml)
 
                                 If ccPaymentXform.valid Then
                                     ewCmd = "UpdateSubscription"

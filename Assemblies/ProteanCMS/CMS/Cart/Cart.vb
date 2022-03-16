@@ -372,12 +372,14 @@ Partial Public Class Cms
                 End Set
             End Property
 
-            Sub SetAddress(ByVal GivenName As String, ByVal Email As String, ByVal Company As String, ByVal Street As String, ByVal City As String, ByVal State As String, ByVal PostalCode As String, ByVal Country As String)
+            Sub SetAddress(ByVal GivenName As String, ByVal Email As String, ByVal Telephone As String, ByVal TelephoneCountryCode As String, ByVal Company As String, ByVal Street As String, ByVal City As String, ByVal State As String, ByVal PostalCode As String, ByVal Country As String)
 
                 Dim addElmt As XmlElement = moPageXml.CreateElement("Contact")
                 addElmt.SetAttribute("type", "Billing Address")
                 xmlTools.addElement(addElmt, "GivenName", GivenName)
                 xmlTools.addElement(addElmt, "Email", Email)
+                xmlTools.addElement(addElmt, "Telephone", Telephone)
+                xmlTools.addElement(addElmt, "TelephoneCountryCode", TelephoneCountryCode)
                 xmlTools.addElement(addElmt, "Company", Company)
                 xmlTools.addElement(addElmt, "Street", Street)
                 xmlTools.addElement(addElmt, "City", City)

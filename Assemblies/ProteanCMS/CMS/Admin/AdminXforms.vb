@@ -1664,6 +1664,7 @@ Partial Public Class Cms
                     MyBase.addOption(oSelElmt, "Same content with multiple locations", 2)
                     MyBase.addOption(oSelElmt, "Same content with multiple primary locations", 3)
                     MyBase.addOption(oSelElmt, "Create copies of the content", 1)
+                    MyBase.addOption(oSelElmt, "Force copies of the content", 4)
                     MyBase.addBind("nCopyContent", "tblContentStructure/@nCopyContent", "true()")
 
                     MyBase.addInput(oFrmElmt, "cStructName", True, "Page Name")
@@ -3179,7 +3180,7 @@ Partial Public Class Cms
                         bulkContentSchemaName = Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
                     bulkContentSchemaName = bulkContentSchemaName.Trim(" ").Trim(",").Trim(" ")
-                    MyBase.addSubmit(oFrmElmt, "", "Delete Products", , "principle btn-danger", "fa-trash-o")
+                    MyBase.addSubmit(oFrmElmt, "", "Delete", , "principle btn-danger", "fa-trash-o")
 
                     MyBase.Instance.InnerXml = "<delete/>"
 

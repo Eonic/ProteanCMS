@@ -5199,9 +5199,6 @@
       $('.modal-dialog').addClass('loading')
 			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
-          <i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...
-        </h4>
-      </p>');
       var target = $(this).attr("href");
       // load the url and show modal on success
       var currentModal = $('.pickImageModal')
