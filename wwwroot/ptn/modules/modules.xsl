@@ -36,5 +36,5 @@
   <xsl:import href="carouselslide/SlideCarousel.xsl"/>
   <xsl:import href="swipercarousel/swipercarousel.xsl"/>
   <xsl:import href="reviews/Reviews.xsl"/>
-
+  <xsl:import href="galleryimagelist/GalleryImageList.xsl"/>
 </xsl:stylesheet>

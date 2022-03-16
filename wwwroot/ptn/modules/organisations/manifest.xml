@@ -7,7 +7,7 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
-      <Module type="OrganisationList" formPath="organisations/organisation-list" icon="far fa-building" name="Organisation List">Organisation List</Module>
+      <Module type="OrganisationList" formPath="organisations/organisation-list" icon="far fa-building" name="Organisation List"></Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

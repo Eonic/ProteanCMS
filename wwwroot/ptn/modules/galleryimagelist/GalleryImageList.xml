@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="VacanciesList" contentType="Job" box="" title="" link="" linkType="internal" linkText="More vacancies" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="all" rss="false" position="" listGroup="true" Salary="High to Low" autoplay="true" autoPlaySpeed="2000"/>
+					<Content moduleType="GalleryImageList" contentType="LibraryImage" box="" title="" link="" linkType="internal" linkText="More images" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="all" position="" crop="" carousel="false" autoplay="true" autoPlaySpeed="2000" lightbox="true"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -36,30 +36,30 @@
 			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
 			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
 			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
-			<bind id="bLinkArticle" nodeset="@linkArticle" required="false()" type="string"/>
 			<bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
-			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
 			<bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
 			<bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
-			<bind id="cSortBy" nodeset="@sortBy" required="true()" type="string"/>
+			<bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
 			<bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
 			<bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
-			<bind id="cSalaryFigure" nodeset="@Salary" required="false()" type="string"/>
-			<bind id="cContentRSSFeed" nodeset="@rss" required="false()" type="string"/>
-			<bind id="nMaxDisplay" nodeset="@maxDisplay" required="false()" type="string"/>
-			<bind id="grabberRoot" nodeset="@grabberRoot" required="false()" type="string"/>
-			<bind id="grabberItems" nodeset="@grabberItems" required="false()" type="string"/>
-			<bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
+			<bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
+			<bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
+			<bind id="cTitles" nodeset="@showTitle" required="false()" type="string"/>
+			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
+			<bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
+			<bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
 			<bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
 			<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
 		</bind>
+
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+
 	</model>
 	<group ref="EditContent">
-		<label>Vacancy List Module</label>
+		<label>Gallery Image List Module</label>
 		<group class="tabs">
 			<group>
 				<label>
@@ -75,7 +75,7 @@
 						<select1 bind="cDisplay" appearance="full">
 							<label>Show Items</label>
 							<item>
-								<label>All items on the current page</label>
+								<label>All Items on the current page</label>
 								<value>all</value>
 								<toggle case="cDisplay_1" event="DOMActivate"/>
 							</item>
@@ -84,44 +84,16 @@
 								<value>related</value>
 								<toggle case="cDisplay_2" event="DOMActivate"/>
 							</item>
-							<item>
-								<label>Auto select</label>
-								<value>grabber</value>
-								<toggle case="cDisplay_3" event="DOMActivate"/>
-							</item>
 						</select1>
 						<switch class="disable">
 							<case id="cDisplay_1"/>
 							<case id="cDisplay_2">
-								<relatedContent search="find add" type="Job" relationType="" direction="1way">
-									<label>Vacancies</label>
+								<relatedContent search="find add" type="LibraryImage" relationType="" direction="1way">
+									<label>Library Image</label>
 								</relatedContent>
 							</case>
-							<case id="cDisplay_3">
-								<select1 bind="grabberRoot" class="siteTree">
-									<label>Source</label>
-								</select1>
-								<select bind="grabberItterate" appearance="full">
-									<label>Include Child Pages from Source</label>
-									<choices/>
-									<item>
-										<label/>
-										<value>true</value>
-									</item>
-								</select>
-								<input bind="grabberItems" class="textbox">
-									<label>No. of Items to grab</label>
-								</input>
-							</case>
 						</switch>
-
 					</group>
-					<select bind="bLinkArticle" appearance="full" class="multiline">
-						<item>
-							<label>Make whole article clickable</label>
-							<value>true</value>
-						</item>
-					</select>
 				</group>
 			</group>
 			<group>
@@ -188,19 +160,8 @@
 
 				<group class="row">
 					<group class="col-lg-6">
-						<select1 bind="cSortBy" appearance="full" class=" form-group">
+						<select1 bind="cSortBy" appearance="full" class="form-group">
 							<label>Sort By</label>
-							<item>
-								<label>Publish date</label>
-								<!-- This can be @attribute or Node() name() to sort by -->
-								<value>publish</value>
-								<toggle case="cSortBy_1" event="DOMActivate"/>
-							</item>
-							<item>
-								<label>Salary</label>
-								<value>figure</value>
-								<toggle case="cSortBy_4" event="DOMActivate"/>
-							</item>
 							<item>
 								<label>Alphabetical</label>
 								<!-- This can be @attribute or Node() name() to sort by -->
@@ -208,7 +169,14 @@
 								<toggle case="cSortBy_2" event="DOMActivate"/>
 							</item>
 							<item>
+								<label>Publish date</label>
+								<!-- This can be @attribute or Node() name() to sort by -->
+								<value>publish</value>
+								<toggle case="cSortBy_1" event="DOMActivate"/>
+							</item>
+							<item>
 								<label>Page position</label>
+								<!-- Allows manual ordering -->
 								<value>Position</value>
 								<toggle case="cSortBy_3" event="DOMActivate"/>
 							</item>
@@ -240,26 +208,12 @@
 									</item>
 								</select1>
 							</case>
-							<case id="cSortBy_4">
-								<select1 bind="cPageOrder" appearance="minimal" class="form-group">
-									<label>Order</label>
-									<item>
-										<label>Highest to Lowest</label>
-										<value>descending</value>
-									</item>
-									<item>
-										<label>Lowest to Highest</label>
-										<value>ascending</value>
-									</item>
-								</select1>
-							</case>
 							<case id="cSortBy_3" />
 						</switch>
-
 					</group>
 					<group class="col-lg-6">
-						<select1 bind="nStepCount" appearance="full" class="required form-group">
-							<label>Vacancies per page</label>
+						<select1 bind="nStepCount" appearance="full" class="form-group">
+							<label>Articles per page</label>
 							<item>
 								<label>All</label>
 								<value>0</value>
@@ -299,7 +253,7 @@
 							<case id="cStepCounter_4"/>
 							<case id="cStepCounter_5"/>
 							<case id="cStepCounter_6">
-								<input bind="nStepCount" class="">
+								<input bind="nStepCount" class="vshort">
 									<label>Other Stepper Value</label>
 								</input>
 							</case>
@@ -307,7 +261,48 @@
 					</group>
 
 				</group>
+				<group class="row">
+					<group class="col-lg-6">
+						<select1 bind="cCrop" appearance="full" class="vshort">
+							<label>Crop</label>
+							<item>
+								<label>Yes</label>
+								<value>true</value>
+							</item>
+							<item>
+								<label>No</label>
+								<value>false</value>
+							</item>
+						</select1>
 
+					</group>
+					<group class="col-lg-6">
+						<select1 bind="cTitles" appearance="full" class="vshort">
+							<label>Show Titles</label>
+							<item>
+								<label>Yes</label>
+								<value>true</value>
+							</item>
+							<item>
+								<label>No</label>
+								<value>false</value>
+							</item>
+						</select1>
+					</group>
+					<group class="col-lg-6">
+						<select1 bind="cLightbox" appearance="full" class="vshort">
+							<label>Lightbox</label>
+							<item>
+								<label>Yes</label>
+								<value>true</value>
+							</item>
+							<item>
+								<label>No</label>
+								<value>false</value>
+							</item>
+						</select1>
+					</group>
+				</group>
 				<group>
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='carousel']"/>
 				</group>
@@ -336,7 +331,7 @@
 					<span>Content Syndication</span>
 				</label>
 				<group>
-					<select1 bind="cContentRSSFeed" appearance="full">
+					<select1 bind="cContentRSSFeed" appearance="full" class="inline-items">
 						<label>RSS feed</label>
 						<item>
 							<label>None</label>
@@ -347,7 +342,7 @@
 							<value>this</value>
 						</item>
 						<item>
-							<label>All Job Vacancies</label>
+							<label>All Images</label>
 							<value>all</value>
 						</item>
 						<help class="inline">
@@ -355,16 +350,18 @@
 							<p>
 								An <b>RSS feed</b> is a way for users or other websites to subscribe to your content.
 							</p>
-							<p>Specify what content users can subsribe to here.</p>
+							<p>Specify what content users can subscribe to here.</p>
 						</help>
 					</select1>
 				</group>
 			</group>
 		</group>
 	</group>
+
+
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Vacancy List</label>
+			<label>Save Gallery Image List</label>
 		</submit>
 	</group>
 </Content>
