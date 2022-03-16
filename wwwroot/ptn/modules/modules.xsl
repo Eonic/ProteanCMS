@@ -34,6 +34,7 @@
   <xsl:import href="carousel/CarouselGallery.xsl"/>
   <xsl:import href="carouselbackground/BackgroundCarousel.xsl"/>
   <xsl:import href="carouselslide/SlideCarousel.xsl"/>
+  <xsl:import href="swipercarousel/swipercarousel.xsl"/>
   <xsl:import href="reviews/Reviews.xsl"/>
 
 </xsl:stylesheet>
