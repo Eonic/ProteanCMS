@@ -7,7 +7,7 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
-      <Module type="TestimonialList" formPath="testimonials/testimonial-list" icon="far fa-comment-alt" name="Testimonials List">List of Testimonials</Module>
+      <Module type="TestimonialList" formPath="testimonials/testimonial-list" icon="far fa-comment-alt" name="Testimonials List"></Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

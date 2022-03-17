@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+	<ContentTypes>
+		<ContentTypeGroup name="Image">
+			<ContentType type="LibraryImage" formPath="galleryimagelist/LibraryImage" name="Library Image">An image from the library</ContentType>
+		</ContentTypeGroup>
+	</ContentTypes>
+	<ModuleTypes>
+		<ModuleGroup name="Image Galleries" icon="fas fa-images">
+			<Module type="GalleryImageList" formPath="galleryimagelist/GalleryImageList" icon="fas fa-images" name="Gallery Image List" targetCssFramework="bs5"></Module>
+		</ModuleGroup>
+	</ModuleTypes>
+</PageLayouts>
