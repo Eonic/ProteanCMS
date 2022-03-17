@@ -263,7 +263,7 @@
 				</group>
 				<group class="row">
 					<group class="col-lg-6">
-						<select1 bind="cCrop" appearance="full" class="vshort">
+						<select1 bind="cCrop" appearance="full" class="vshort inline-items">
 							<label>Crop</label>
 							<item>
 								<label>Yes</label>
@@ -277,7 +277,7 @@
 
 					</group>
 					<group class="col-lg-6">
-						<select1 bind="cTitles" appearance="full" class="vshort">
+						<select1 bind="cTitles" appearance="full" class="vshort inline-items">
 							<label>Show Titles</label>
 							<item>
 								<label>Yes</label>
@@ -290,7 +290,7 @@
 						</select1>
 					</group>
 					<group class="col-lg-6">
-						<select1 bind="cLightbox" appearance="full" class="vshort">
+						<select1 bind="cLightbox" appearance="full" class="vshort inline-items">
 							<label>Lightbox</label>
 							<item>
 								<label>Yes</label>

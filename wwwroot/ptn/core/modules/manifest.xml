@@ -32,7 +32,7 @@
     <ModuleGroup name="Layout" icon="fas fa-columns">
       <!--<Module type="1Column" formPath="columns/1column" name="1 Column" icon="icon-1-col">1 column layout to allow alternative backgrounds to be used without multiple columns</Module>-->
       <Module type="MultiColumn" formPath="columns/MultiColumn" name="Basic Columns" icon="icon-3-col">Set 1-6 even columns</Module>
-      <Module type="2Columns" formPath="columns/2columns"  icon="icon-2-col" name="2 Columns">2 columns in various configurations</Module>
+      <Module type="2Columns" formPath="columns/2columns"  icon="icon-2-col" name="2 Columns">2 columns in various widths</Module>
       <Module type="AutoColumn" formPath="columns/AutoColumn" name="Auto Columns" icon="fa-th">Items arranged into columns automatically</Module>
       <!--<Module type="2Columns5050" formPath="columns/2columns5050"  icon="icon-2-col" name="2 Columns 50 50">2 equal columns</Module>-->
       <!--<Module type="2Columns4060" formPath="columns/2columns4060" name="2 Columns 40 60" icon="icon-2-col">2 columns, 2/5 and 3/5</Module>
