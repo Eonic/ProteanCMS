@@ -192,7 +192,7 @@
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="list-item lIinner">
-				<xsl:if test="not($imagePosition='below')">
+				<xsl:if test="$imagePosition='below'">
 					<h3 class="title">
 						<xsl:attribute name="class">
 							<xsl:text>title text-</xsl:text>
@@ -217,7 +217,7 @@
 						</xsl:apply-templates>
 					</a>
 				</xsl:if>
-				<xsl:if test="$imagePosition='below'">
+				<xsl:if test="not($imagePosition='below')">
 					<h3 class="title">
 						<xsl:attribute name="class">
 							<xsl:text>title text-</xsl:text>
@@ -242,7 +242,11 @@
 					</div>
 				</xsl:if>
 				<xsl:if test="not($button='false')">
-					<div class="entryFooter">
+					<div>
+						<xsl:attribute name="class">
+							<xsl:text>entryFooter light-flex justify-content-</xsl:text>
+							<xsl:value-of select="$alignment"/>
+						</xsl:attribute>
 						<xsl:apply-templates select="." mode="displayTags"/>
 						<xsl:apply-templates select="." mode="moreLink">
 							<xsl:with-param name="link" select="$linkURL"/>

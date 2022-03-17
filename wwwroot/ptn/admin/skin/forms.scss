@@ -684,6 +684,8 @@ form.xform .form-section-wrapper.relatedContent-group {
     .select-with-button {
         margin-right: 0.5rem;
     }
+
+    
 }
 form.xform .relatedContent-group {
     margin-left: -3px;
@@ -765,13 +767,18 @@ div[class^="col"] .admin-body {
         flex-grow:2;
     }
 }
-.form-section-wrapper {
+form.xform .form-section-wrapper {
     padding: 10px 15px 0;
     background: #f4f7f9;
     border-radius: 5px;
     margin-bottom: 15px;
     margin-top: 10px;
     border: 1px solid #b3d2d9;
+
+    legend {
+        float: left;
+        margin-bottom: 10px;
+    }
 }
 form.xform .relatedContent-group > label {
     font-weight: 400;
@@ -814,17 +821,24 @@ form.xform .pick-image-wrapper {
         flex-grow: 2;
         margin-bottom: 0;
     }
-    textarea{
-     //   display:none;
+
+    textarea {
+        //   display:none;
     }
+
     .previewImage {
         margin-right: 10px;
         width: 100px;
-        
+
         i {
             font-size: 70px;
             color: #b3d2d9;
         }
+    }
+
+    .btn-group-spaced {
+        margin-top: 7px;
+        margin-bottom: 0;
     }
 }
 form .form-actions .required {

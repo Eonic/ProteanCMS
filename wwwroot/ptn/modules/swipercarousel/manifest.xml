@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+  
+  <ModuleTypes>
+    <ModuleGroup name="Image Galleries" icon="far fa-image">     
+      <Module type="SwiperCarousel" formPath="swipercarousel/swipercarousel" icon="fas fa-images" name="Swiper Carousel">Create a carousel of background images with optional captions and links</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>
