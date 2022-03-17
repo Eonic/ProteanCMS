@@ -1,1 +1,0 @@
-﻿Xforms copied from the common folder and placed here will override on just this site.
