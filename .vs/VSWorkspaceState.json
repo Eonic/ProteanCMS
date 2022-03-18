@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Assemblies"
   ],
-  "SelectedNode": "\\ProteanCMS.sln (ProteanCMS.sln)",
+  "SelectedNode": "\\Assemblies\\ProteanCMS",
   "PreviewInSolutionExplorer": false
 }
