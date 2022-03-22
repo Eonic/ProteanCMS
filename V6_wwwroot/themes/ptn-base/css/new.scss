@@ -151,8 +151,8 @@ section.bg-primary {
 }
 // GRIDS
 .Grid {
-    .grid-item a {
-        @extend .bg-light;
+    .grid-item a.grid-link {
+       // @extend .bg-light;
         display: block;
         margin-bottom: $grid-gutter-y;
 
@@ -168,7 +168,20 @@ section.bg-primary {
         }
     }
 }
+.GalleryImageList {
+    .grid-item {
+        .thumbnail-wrapper {
+            height: 100%;
 
+            .thumbnail {
+                height: 100%;
+                display:flex;
+                flex-direction: column;
+                text-align:center;
+            }
+        }
+    }
+}
 // DETAIL PAGES
 .imageEnlarge {
     i {
