@@ -2338,6 +2338,7 @@ Partial Public Class Cms
                         Dim fld As DirectoryInfo
                         For Each fld In rootFolder.GetDirectories
                             EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+
                         Next
                         If myWeb.moConfig("ClientCommonFolder") <> "" Then
                             EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
@@ -2506,12 +2507,16 @@ Partial Public Class Cms
                                         Dim FormPath As String = oItem.GetAttribute("type")
                                         oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), FormPath)
                                         'lets add an image tag
+                                        ' If oItem.GetAttribute("type") = "LibraryImage" Then
+                                        '  oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
+                                        'End If
+
                                         oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
-                                        If oItem.GetAttribute("formPath") <> "" Then
-                                            oOptElmt.SetAttribute("formPath", oItem.GetAttribute("formPath"))
-                                        End If
-                                        oDescElmt = moPageXML.CreateElement("img")
-                                        oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
+                                            If oItem.GetAttribute("formPath") <> "" Then
+                                                oOptElmt.SetAttribute("formPath", oItem.GetAttribute("formPath"))
+                                            End If
+                                            oDescElmt = moPageXML.CreateElement("img")
+                                            oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
                                             If oItem.GetAttribute("icon") <> "" Then
                                                 oDescElmt.SetAttribute("icon", oItem.GetAttribute("icon"))
                                             End If
@@ -2795,10 +2800,6 @@ Partial Public Class Cms
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
-
-
-
-
 
                         If MyBase.valid Then
 

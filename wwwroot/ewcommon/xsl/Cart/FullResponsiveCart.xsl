@@ -581,7 +581,7 @@
           <div class="col-md-6">
             <div id="cartLogonBox" class="panel panel-default cartBox">
               <div class="panel-heading">
-                <h3 class="title">Logon - I have an account</h3>
+                <h3 class="title">Login - I have an account</h3>
               </div>
               <div class="panel-body">
                 <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
@@ -2177,13 +2177,13 @@
         <xsl:text>:&#160;</xsl:text>
         <xsl:value-of select="@InvoiceRef"/>
       </p>
-      <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
+      <xsl:if test="@payableType='deposit' and (@paymentMade &gt; 0) ">
         <p>
           <!--Payment Received-->
           <xsl:call-template name="term3024" />
           <xsl:text>:&#160;</xsl:text>
           <xsl:value-of select="$currency"/>
-          <xsl:value-of select="format-number(@payableAmount,'0.00')" />
+          <xsl:value-of select="format-number(@paymentMade,'0.00')" />
         </p>
         <p>
           <!--Final Payment Reference-->

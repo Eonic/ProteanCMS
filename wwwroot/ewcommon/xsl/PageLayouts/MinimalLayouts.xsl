@@ -3708,21 +3708,6 @@
     <xsl:apply-templates select="." mode="xform"/>
   </xsl:template>
 
-<!-- ################# Start Product Filter #########-->
-	<xsl:template match="Content[@type='Module' and @moduleType='ProductFilter']" mode="displayBrief">
-		<xsl:apply-templates select="Content[@type='PageFilter']" mode="displayBrief"></xsl:apply-templates>
-	</xsl:template>
-	
-	<xsl:template match="Content[@type='PageFilter']" mode="displayBrief">
-		 <select>
-			<option>Flying</option>
-			<option>Driving</option>
-	    </select>
-	</xsl:template>
-	<!--################ End Product Filter #########-->
-	
-	
-	
   <!-- ############## News Articles ##############   -->
   <!-- NewsArticle Module -->
 
@@ -5259,7 +5244,7 @@
           <span class="picture">
             <xsl:apply-templates select="." mode="displayLogo"/>
           </span>
-          <xsl:if test="Organization/contactPoint/ContactPoint/@facebookURL!='' or Organization/contactPoint/ContactPoint/@twitterURL!=''  or Organization/contactPoint/ContactPoint/@linkedInURL!=''  or Organization/contactPoint/ContactPoint/@googlePlusURL!=''  or Organization/contactPoint/ContactPoint/@pinterestURL!=''">
+          <xsl:if test="Organization/contactPoint/ContactPoint/@facebookURL!='' or Organization/contactPoint/ContactPoint/@twitterURL!=''  or Organization/contactPoint/ContactPoint/@linkedInURL!=''  or Organization/contactPoint/ContactPoint/@googlePlusURL!=''  or Organization/contactPoint/ContactPoint/@pinterestURL!='' or Organization/contactPoint/ContactPoint/@intsagramURL!=''">
             <xsl:apply-templates select="Organization/contactPoint/ContactPoint" mode="socialLinks">
               <xsl:with-param name="iconSet" select="'icons'"/>
               <xsl:with-param name="myName" select="name"/>
@@ -9191,7 +9176,6 @@
       </xsl:choose>
     </xsl:variable>
     <!--end responsive columns variables-->
-    
     <div class="clearfix Links">
       <xsl:if test="@carousel='true'">
         <xsl:attribute name="class">
