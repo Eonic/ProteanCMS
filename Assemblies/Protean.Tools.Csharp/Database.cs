@@ -7,6 +7,8 @@ using System.Data.SqlClient;
 using System.Collections;
 using System.Collections.Generic;
 
+
+
 namespace Protean.Tools
 {
     
@@ -225,7 +227,7 @@ namespace Protean.Tools
                     oConn.Close();
                     return true;
                 }
-                catch (Exception ex)
+                catch
                 {
                     return false;
                 }
@@ -244,7 +246,7 @@ namespace Protean.Tools
                     oConn.Close();
                     return true;
                 }
-                catch (Exception ex)
+                catch
                 {
                     return false;
                 }
@@ -785,7 +787,7 @@ namespace Protean.Tools
                 oCmd = null/* TODO Change to default(_) if this is not a reference type */;
             }
 
-            catch (Exception ex)
+            catch
             {
                 // Dont Handle errors!
                 nUpdateCount = -1;
@@ -1271,7 +1273,7 @@ namespace Protean.Tools
                 else
                     return "null";
         }
-            catch (Exception ex)
+            catch 
             {
                 return "date error";
             }
@@ -1304,7 +1306,7 @@ namespace Protean.Tools
                 text = "'" + text + "'";
                 return text;
             }
-            catch (Exception ex)
+            catch
             {
                 return text;
             }
@@ -1369,7 +1371,7 @@ namespace Protean.Tools
                 }
                 return bReturn;
             }
-            catch (Exception ex)
+            catch 
             {
                 return false;
             }
@@ -1392,7 +1394,7 @@ namespace Protean.Tools
 
                 return objectExists;
             }
-            catch (Exception ex)
+            catch 
             {
                 return false;
             }
@@ -1420,8 +1422,7 @@ namespace Protean.Tools
 
                 return columnExists;
             }
-            catch (Exception ex)
-            {
+            catch { 
                 return false;
             }
         }
@@ -1452,7 +1453,7 @@ namespace Protean.Tools
                         oConn.Close();
                 }
             }
-            catch (Exception ex)
+            catch
             {
             }
         }
