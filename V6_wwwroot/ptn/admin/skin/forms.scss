@@ -49,7 +49,7 @@ form.xform {
 
     legend {
         font-size: 1.25rem;
-        float:none;
+        float: none;
     }
 
     .principle {
@@ -79,6 +79,8 @@ form.xform {
     .inline-select > legend {
         font-size: 1rem;
     }
+
+    .time-divider{padding: 6px 12px 0;}
     //ACCORDION FORM
     .accordion {
         box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
@@ -186,8 +188,11 @@ form.xform {
     }
 
     .pick-page .selected {
-       background: $admin-primary;
-       a{ color: #ffffff;}
+        background: $admin-primary;
+
+        a {
+            color: #ffffff;
+        }
     }
 }
 .ewXform > div:first-child > h3 {
