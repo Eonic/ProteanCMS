@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
-
+	<ContentTypes>
+		<ContentTypeGroup name="Media">
+			<ContentType type="SwiperSlide" formPath="swipercarousel/swiperslide" name="Swiper Slide"></ContentType>
+		</ContentTypeGroup>
+	</ContentTypes>
   
   <ModuleTypes>
     <ModuleGroup name="Image Galleries" icon="far fa-image">     
