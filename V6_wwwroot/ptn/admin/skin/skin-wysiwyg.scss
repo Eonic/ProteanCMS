@@ -214,8 +214,23 @@
         color: #fff !important;
     }
 
-    .ptn-edit > .btn-default,
-    .ptn-edit > .dropdown > .btn-default {
+    .ptn-edit > .dropdown > .btn-primary-darker {
+        //background: darken($admin-header-color-link,10%) !important;
+        background: #1d6f97 !important;
+    }
+    /*.options .text-primary-darker {
+        color: #1d6f97;
+    }*/
+    .bg-primary {
+        .options {
+            .text-primary-darker,
+            .text-primary {
+                color: #fff !important;
+            }
+        }
+    }
+
+    .ptn-edit > .btn-default, .ptn-edit > .dropdown > .btn-default {
         //background: lighten($admin-header-color-link, 45%);
         border: 1px !important;
         color: $admin-header-color-link !important;
@@ -349,9 +364,9 @@
 
     .ptn-edit .dropdown-menu li.title {
         margin: 3px 5px 2px 15px !important;
-        color: #333!important;
+        color: #333 !important;
         padding: 0;
-        width:auto!important;
+        width: auto !important;
     }
 
     #mainTitle .ptn-edit .dropdown-menu {
@@ -438,8 +453,8 @@
 
     .ptn-edit .btn-xs {
         //padding: 1px 5px;
-        padding: 3px 1px 3px 7px!important;
-        min-width:30px;
+        padding: 3px 1px 3px 7px !important;
+        min-width: 30px;
     }
 
     .ptn-edit .addHere {
@@ -531,6 +546,24 @@
 
         &:hover {
             > .editable .options {
+                .btn,
+                .text-primary {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .grid-item {
+        &.editable .options {
+            .btn,
+            .text-primary {
+                opacity: 0.3;
+            }
+        }
+
+        &:hover {
+            &.editable .options {
                 .btn,
                 .text-primary {
                     opacity: 1;

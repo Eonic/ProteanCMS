@@ -50,6 +50,7 @@
 			<bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
 			<bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
 			<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
+			<bind id="alignment" nodeset="@alignment" required="false()" type="string" />
 		</bind>
 
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
@@ -262,7 +263,7 @@
 
 				</group>
 				<group class="row">
-					<group class="col-lg-6">
+					<group class="col-lg-4">
 						<select1 bind="cCrop" appearance="full" class="vshort inline-items">
 							<label>Crop</label>
 							<item>
@@ -276,7 +277,7 @@
 						</select1>
 
 					</group>
-					<group class="col-lg-6">
+					<group class="col-lg-4">
 						<select1 bind="cTitles" appearance="full" class="vshort inline-items">
 							<label>Show Titles</label>
 							<item>
@@ -289,7 +290,7 @@
 							</item>
 						</select1>
 					</group>
-					<group class="col-lg-6">
+					<!--<group class="col-lg-4">
 						<select1 bind="cLightbox" appearance="full" class="vshort inline-items">
 							<label>Lightbox</label>
 							<item>
@@ -301,7 +302,27 @@
 								<value>false</value>
 							</item>
 						</select1>
+					</group>-->
+					<group class="col-md-4">
+						<select1 bind="alignment">
+							<label>
+								Align Horizontally
+							</label>
+							<item>
+								<label>Left</label>
+								<value>start</value>
+							</item>
+							<item>
+								<label>Centre</label>
+								<value>center</value>
+							</item>
+							<item>
+								<label>Right</label>
+								<value>end</value>
+							</item>
+						</select1>
 					</group>
+					
 				</group>
 				<group>
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='carousel']"/>
