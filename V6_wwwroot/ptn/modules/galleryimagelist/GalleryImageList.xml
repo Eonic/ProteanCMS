@@ -51,7 +51,6 @@
 			<bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
 			<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
 			<bind id="alignment" nodeset="@alignment" required="false()" type="string" />
-			<bind id="alignmentV" nodeset="@alignmentV" required="false()" type="string" />
 		</bind>
 
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
@@ -291,7 +290,7 @@
 							</item>
 						</select1>
 					</group>
-					<group class="col-lg-4">
+					<!--<group class="col-lg-4">
 						<select1 bind="cLightbox" appearance="full" class="vshort inline-items">
 							<label>Lightbox</label>
 							<item>
@@ -303,10 +302,8 @@
 								<value>false</value>
 							</item>
 						</select1>
-					</group>
-				</group>
-				<group class="row">
-					<group class="col-md-6">
+					</group>-->
+					<group class="col-md-4">
 						<select1 bind="alignment">
 							<label>
 								Align Horizontally
@@ -325,25 +322,7 @@
 							</item>
 						</select1>
 					</group>
-					<group class="col-md-6">
-						<select1 bind="alignmentV">
-							<label>
-								Align Vertically
-							</label>
-							<item>
-								<label>Top</label>
-								<value>start</value>
-							</item>
-							<item>
-								<label>Centre</label>
-								<value>center</value>
-							</item>
-							<item>
-								<label>Bottom</label>
-								<value>end</value>
-							</item>
-						</select1>
-					</group>
+					
 				</group>
 				<group>
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='carousel']"/>

@@ -214,6 +214,10 @@
         color: #fff !important;
     }
 
+    .ptn-edit > .dropdown > .btn-primary-darker {
+        background: darken($admin-header-color-link,10%) !important;
+    }
+
     .ptn-edit > .btn-default,
     .ptn-edit > .dropdown > .btn-default {
         //background: lighten($admin-header-color-link, 45%);

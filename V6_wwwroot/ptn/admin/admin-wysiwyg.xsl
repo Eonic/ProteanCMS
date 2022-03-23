@@ -1042,7 +1042,7 @@
 					<xsl:choose>
 						<!-- NEED A TRIGGER FOR ONLY CASCADED STUFF TO EDIT ON PARID <xsl:when test="@parId=/Page/@id">-->
 						<xsl:when test="false()">
-							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}" title="Click here to edit this content" class="btn btn-primary btn-xs">
+							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}" title="Click here to edit this content" class="btn btn-primary btn-primary-darker btn-xs">
 								<xsl:choose>
 									<xsl:when test="@contentType!=''">
 										<i class="fas fa-cog fa-lg">&#160;</i>&#160;
@@ -1059,7 +1059,7 @@
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}" title="Click here to edit this content" class="btn btn-primary btn-xs">
+							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}" title="Click here to edit this content" class="btn btn-primary btn-primary-darker btn-xs">
 								<xsl:choose>
 									<xsl:when test="@contentType!=''">
 										<i class="fas fa-cog fa-lg">&#160;</i>&#160;

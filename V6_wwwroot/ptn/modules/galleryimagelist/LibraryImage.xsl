@@ -7,6 +7,7 @@
 		<xsl:param name="showTitle"/>
 		<xsl:param name="alignment"/>
 		<xsl:param name="alignmentV"/>
+		<xsl:param name="class"/>
 		<xsl:variable name="cropSetting">
 			<xsl:choose>
 				<xsl:when test="$crop='false'">
@@ -68,21 +69,22 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<div class="grid-item">
+		<div class="grid-item {$class}">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="'grid-item '"/>
+				<!--<xsl:with-param name="class" select="'grid-item '"/>-->
+				<xsl:with-param name="class" select="concat('grid-item  ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 
-			<xsl:choose>
-				<xsl:when test="$lightbox='false'">
-					<div class="thumbnail-wrapper h-100">
+			<!--<xsl:choose>
+				<xsl:when test="$lightbox='false'">-->
+					<div class="thumbnail-wrapper">
 						<div class="thumbnail">
-							<xsl:attribute name="class">
+							<!--<xsl:attribute name="class">
 								<xsl:text>thumbnail text-</xsl:text>
 								<xsl:value-of select="$alignment"/>
 								<xsl:text> d-flex h-100 flex-column</xsl:text>
-							</xsl:attribute>
+							</xsl:attribute>-->
 							<!--<xsl:attribute name="class">
 								<xsl:text>d-flex justify-content-</xsl:text>
 								<xsl:value-of select="$alignment"/>
@@ -93,15 +95,16 @@
 
 							<xsl:choose>
 								<xsl:when test="$url!=''">
-									<div class="align-self-center h-100 d-flex justify-content-center flex-column">
+									<div class="gallery-img-wrapper">
+										<xsl:if test="@maxWidth!=''">
+											<xsl:attribute name="style">
+												<xsl:text>max-width:</xsl:text>
+												<xsl:value-of select="@maxWidth"/>
+												<xsl:text>px;</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
 										<a href="{$linkURL}" title="{Name}">
-											<xsl:if test="@maxWidth!=''">
-												<xsl:attribute name="style">
-													<xsl:text>max-width:</xsl:text>
-													<xsl:value-of select="@maxWidth"/>
-													<xsl:text>px;display: inline-block;</xsl:text>
-												</xsl:attribute>
-											</xsl:if>
+
 											<xsl:apply-templates select="." mode="displayThumbnail">
 												<xsl:with-param name="crop" select="$cropSetting" />
 												<xsl:with-param name="class" select="'img-responsive'" />
@@ -124,12 +127,12 @@
 									</xsl:if>
 								</xsl:when>
 								<xsl:otherwise>
-									<div class="align-self-center h-100 d-flex justify-content-center flex-column">
+									<div class="gallery-img-wrapper">
 										<xsl:if test="@maxWidth!=''">
 											<xsl:attribute name="style">
 												<xsl:text>max-width:</xsl:text>
 												<xsl:value-of select="@maxWidth"/>
-												<xsl:text>px;display: inline-block;</xsl:text>
+												<xsl:text>px;</xsl:text>
 											</xsl:attribute>
 										</xsl:if>
 										<xsl:apply-templates select="." mode="displayThumbnail">
@@ -153,7 +156,7 @@
 
 						</div>
 					</div>
-				</xsl:when>
+				<!--</xsl:when>
 				<xsl:otherwise>
 					<a href="{$fullSize}" title="{Title/node()} - {Body/node()}" class="responsive-lightbox grid-link">
 						<div class="thumbnail">
@@ -175,7 +178,7 @@
 						</div>
 					</a>
 				</xsl:otherwise>
-			</xsl:choose>
+			</xsl:choose>-->
 
 		</div>
 	</xsl:template>
