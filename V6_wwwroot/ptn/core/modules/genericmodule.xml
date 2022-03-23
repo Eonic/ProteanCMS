@@ -386,6 +386,9 @@
               <label>Expire Date</label>
             </input>
           </group>
+			<input bind="cDescription" class="short">
+				<label>Change Notes</label>
+			</input>
         </group>
         <group id="columns" class="inline-select">
           <label>
@@ -597,7 +600,7 @@
         <textarea bind="cContentBody" class="TextArea xhtml" rows="25" cols="70">
         </textarea>
       </group>
-      <group>
+		<group id="FooterLinks">
         <label>Module links</label>
         <select1 bind="cLinkType" appearance="full" class="required">
           <label>Type of link</label>
