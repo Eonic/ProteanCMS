@@ -33,7 +33,8 @@
 		</xsl:variable>
 		<!-- Output Module -->
 		<xsl:variable name="id" select="concat('bscarousel-',@id)"></xsl:variable>
-		<div id="{$id}" class="swiper"  data-id="{@id}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0">
+		<div class="swiper-container">
+		<div id="{$id}" class="swiper"  data-id="{@id}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="true">
 			<xsl:if test="@bullets!='true'">
 				<ol class="carousel-indicators">
 					<xsl:for-each select="Content[@type='LibraryImageWithLink']">
@@ -51,9 +52,10 @@
 					<xsl:with-param name="sortBy" select="@sortBy"/>
 				</xsl:apply-templates>
 			</div>
+		</div>
 			<xsl:if test="@arrows!='true'">
-				<div class="swiper-button-prev"></div>
-				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev" id="swiper-button-prev-{@id}"></div>
+				<div class="swiper-button-next" id="swiper-button-next-{@id}"></div>
 			</xsl:if>
 		</div>
 	</xsl:template>

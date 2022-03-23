@@ -118,6 +118,9 @@
 			<div class="swiper-button-next" id="swiper-button-next-{@id}">
 				<xsl:text> </xsl:text>
 			</div>
+			<div class="row">
+				<span>&#160;</span>
+			</div>
 		</div>
 	</xsl:template>
 
