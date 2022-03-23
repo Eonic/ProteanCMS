@@ -52,6 +52,9 @@
 					<xsl:with-param name="sortBy" select="@sortBy"/>
 				</xsl:apply-templates>
 			</div>
+			<div class="swiper-pagination" id="swiper-pagination-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
 		</div>
 			<xsl:if test="@arrows!='true'">
 				<div class="swiper-button-prev" id="swiper-button-prev-{@id}"></div>
