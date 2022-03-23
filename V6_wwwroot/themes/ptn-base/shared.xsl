@@ -28,7 +28,7 @@
   <xsl:variable name="SideSubWidthCustom"></xsl:variable>
   <xsl:variable name="themeBreadcrumb">false</xsl:variable>
   <xsl:variable name="themeTitle">true</xsl:variable>
-  <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
+  <xsl:variable name="MatchHeightType" select="''"/>
   <xsl:variable name="thWidth">500</xsl:variable>
   <xsl:variable name="thHeight">350</xsl:variable>
 	

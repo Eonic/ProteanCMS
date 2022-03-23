@@ -39,7 +39,15 @@
 
 	<!--In admin WYSIWYG mode-->
 	<xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
-		<body id="pg_{@id}" class="normalMode">
+		<body class="normalMode">
+			<xsl:attribute name="id">
+				<xsl:text>pg</xsl:text>
+				<xsl:value-of select="@id"/>
+				<xsl:if test="@artid!=''">
+					<xsl:text>-art</xsl:text>
+					<xsl:value-of select="@artid"/>
+				</xsl:if>
+			</xsl:attribute>
 			<xsl:apply-templates select="." mode="bodyStyle"/>
 			<div class="ptn-edit">
 				<xsl:apply-templates select="AdminMenu"/>
@@ -58,7 +66,7 @@
 	<xsl:template match="Page[@previewMode]" mode="bodyBuilder">
 		<body>
 			<xsl:attribute name="id">
-				<xsl:text>page</xsl:text>
+				<xsl:text>pg</xsl:text>
 				<xsl:value-of select="@id"/>
 				<xsl:if test="@artid!=''">
 					<xsl:text>-art</xsl:text>
@@ -288,7 +296,7 @@
 
 					</button>
 					<xsl:if test="@status=0">
-						<i class="fas fa-eye-slash fa-lg text-primary">&#160;</i>
+						<i class="fas fa-eye-slash fa-lg text-primary indicate-visibility">&#160;</i>
 					</xsl:if>
 					<ul class="dropdown-menu">
 						<!--<li>
@@ -686,7 +694,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<div class="dropdown pull-right">
-										<a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
+										<a href="#" class="btn btn-primary btn-primary-darker btn-xs" data-bs-toggle="dropdown">
 											<i class="fa fa-plus">&#160;</i>&#160;
 											<span class="sr-only">Add&#160;</span>
 											<!--<i class="fa fa-caret-down">&#160;</i>-->
@@ -733,7 +741,7 @@
 
 							</xsl:variable>
 							<div class="dropdown pull-right">
-								<a href="#" class="btn btn-primary btn-xs dropdown-toggle" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
+								<a href="#" class="btn btn-primary btn-primary-darker btn-xs dropdown-toggle" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
 									<i class="fa fa-plus">&#160;</i>&#160;
 									<span class="sr-only">Add</span>
 								</a>
@@ -1045,6 +1053,7 @@
 							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}" title="Click here to edit this content" class="btn btn-primary btn-xs">
 								<xsl:choose>
 									<xsl:when test="@contentType!=''">
+										<xsl:attribute name="class">btn btn-primary btn-primary-darker btn-xs</xsl:attribute>
 										<i class="fas fa-cog fa-lg">&#160;</i>&#160;
 									</xsl:when>
 									<xsl:otherwise>
@@ -1062,6 +1071,7 @@
 							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}" title="Click here to edit this content" class="btn btn-primary btn-xs">
 								<xsl:choose>
 									<xsl:when test="@contentType!=''">
+										<xsl:attribute name="class">btn btn-primary btn-primary-darker btn-xs</xsl:attribute>
 										<i class="fas fa-cog fa-lg">&#160;</i>&#160;
 									</xsl:when>
 									<xsl:otherwise>
@@ -1074,6 +1084,9 @@
 
 
 					<a href="#" class="btn btn-primary btn-xs dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+						<xsl:if test="@contentType!=''">
+							<xsl:attribute name="class">btn btn-primary btn-primary-darker btn-xs dropdown-toggle</xsl:attribute>
+						</xsl:if>
 						<!--<xsl:choose>
               <xsl:when test="@contentType!=''">
                 <i class="fas fa-cog fa-lg">&#160;</i>&#160;
@@ -1318,7 +1331,7 @@
 					<i class="fas fa-eye-slash text-primary indicate-visibility">&#160;</i>
 				</xsl:if>
 				<xsl:if test="@type='Module' and not(starts-with(@position,'column1') and $page/@layout='Modules_Masonary')">
-					<a href="#" class="text-primary drag">
+					<a href="#" class="text-primary text-primary-darker drag">
 						<i class="fas fa-grip-vertical">&#160;</i>
 						<span>Move in page</span>
 					</a>

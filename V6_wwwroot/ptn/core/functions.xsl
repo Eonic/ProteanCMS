@@ -1438,7 +1438,7 @@
   <xsl:template match="Page" mode="bodyBuilder">
     <body>
       <xsl:attribute name="id">
-        <xsl:text>page</xsl:text>
+        <xsl:text>pg</xsl:text>
         <xsl:value-of select="@id"/>
         <xsl:if test="@artid!=''">
           <xsl:text>-art</xsl:text>
@@ -1465,10 +1465,8 @@
   <xsl:template match="Page" mode="bodyStyle">
     <!-- Placeholder to overide -->
     <xsl:attribute name="class">
-      <xsl:value-of select="$MatchHeightType"/>
-      <xsl:text>-body</xsl:text>
       <xsl:if test="@adminMode='false'">
-        normalMode
+		  <xsl:text> normalMode</xsl:text>
       </xsl:if>
       <xsl:if test="@previewMode='true'"> previewMode</xsl:if>
     </xsl:attribute>

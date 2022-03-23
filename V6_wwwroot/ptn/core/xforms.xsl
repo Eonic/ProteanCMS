@@ -1750,7 +1750,9 @@
           <xsl:with-param name="value" select="$hValue"/>
         </xsl:call-template>
       </select>
-      <xsl:text> : </xsl:text>
+		<span class="time-divider">
+			<xsl:text> : </xsl:text>
+		</span>
       <!-- MINUTES -->
       <select name="{$ref}" id="{$ref}">
         <xsl:attribute name="class">

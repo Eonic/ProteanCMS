@@ -64,6 +64,14 @@ function PageContentActions() {
 
 function contentSwiper() {
     $(".swiper").each(function () {
+
+        var padding = $(this).parent().find('.row span').css("padding-left");
+        if (padding != undefined) {
+            padding = padding.substring(0, padding.length - 2);
+        } else {
+            padding = 0;
+        }
+
         var swiperId = $(this).data("id");
         var slidestoShow = $(this).data("slidestoshow");
         var xsSlides = $(this).data("xscol");
@@ -72,8 +80,8 @@ function contentSwiper() {
         var lgSlides = $(this).data("lgcol");
         var xlSlides = $(this).data("xlcol");
         var xxlSlides = $(this).data("xxlcol");
-        var spaceBetween = $(this).data("spacebetween");
-        var spaceBetweenLg = $(this).data("spacebetweenlg");
+        var spaceBetween = parseInt(padding) * 2;
+        var spaceBetweenLg = parseInt(padding) * 2;
         var autoplay = $(this).data("autoplay");
         if (autoplay == undefined) { autoplay = false };
         var autoplaySpeed = $(this).data("autoplayspeed");
@@ -89,6 +97,7 @@ function contentSwiper() {
             slidesPerView: xsSlides,
             spaceBetween: spaceBetween,
             loop: true,
+            speed: 400,
             loopFillGroupWithBlank: true,
             watchOverflow: true,
             pagination: {
