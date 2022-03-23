@@ -33,7 +33,7 @@
 		</xsl:variable>
 		<!-- Output Module -->
 		<xsl:variable name="id" select="concat('bscarousel-',@id)"></xsl:variable>
-		<div id="{$id}" class="swiper">
+		<div id="{$id}" class="swiper"  data-id="{@id}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0">
 			<xsl:if test="@bullets!='true'">
 				<ol class="carousel-indicators">
 					<xsl:for-each select="Content[@type='LibraryImageWithLink']">
