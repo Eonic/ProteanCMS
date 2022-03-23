@@ -233,7 +233,6 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.AssemblyReference.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\tidy.x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\tidy.x86.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll.config
