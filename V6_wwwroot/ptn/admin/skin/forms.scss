@@ -159,7 +159,7 @@ form.xform {
     }
 
     .tab-content {
-        margin-top: -38px;
+        margin-top: -30px;
     }
 
     .tab-pane {
@@ -245,10 +245,27 @@ form.xform {
         }
     }
 
+    .form-3-col {
+        @include make-row();
+
+        legend {
+            padding-right: calc(var(--bs-gutter-x) * .5);
+            padding-left: calc(var(--bs-gutter-x) * .5);
+        }
+
+        > div {
+            @include make-col-ready();
+
+            @include media-breakpoint-up(sm) {
+                @include make-col(4);
+            }
+        }
+    }
+
     a.form-tip {
         color: lighten($admin-header-font-color,10%);
         padding-left: 3px;
-        cursor:pointer;
+        cursor: pointer;
     }
 
     .form-check-input:checked {
@@ -342,7 +359,7 @@ form.xform {
         }
 
         i {
-            display:none;
+            display: none;
         }
     }
 }

@@ -86,135 +86,134 @@
 			</bind>
 		</bind>
 	</model>
-	<group ref="EditContent" class="2col">
-		<label>Library Image (with link)</label>
-		<group>
+	<group ref="EditContent">
+		<label>Swiper Slide</label>
+		<group class="tabs">
 			<group>
-				<input bind="nContentKey" class="hidden">
-					<label>ContentId</label>
-				</input>
-				<label>Settings</label>
-				<input bind="dPublishDate" class="calendar short">
-					<label>Publish Date</label>
-				</input>
-				<input bind="dExpireDate" class="calendar short">
-					<label>Expire Date</label>
-				</input>
-				<select1 bind="nStatus" appearance="full" class="required vshort">
-					<label>Status</label>
-					<item>
-						<label>Live</label>
-						<value>1</value>
-					</item>
-					<item>
-						<label>Hidden</label>
-						<value>0</value>
-					</item>
-				</select1>
-				<input bind="cDescription" class="short">
-					<label>Change Notes</label>
-				</input>
-			</group>
-			<group class="Content">
-				<label>Image files</label>
-				<input bind="cContentDetail" class="short pickImage">
-					<label>Main image</label>
-				</input>
-				<help class="inline">
-					<p>
-						This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
-					</p>
-					<p>The main image is automatically resized for other smaller images such as thumbnails.</p>
-					<p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
-				</help>
-
-				<input bind="cContentThumbnail" class="short pickImage">
-					<label>Alternative thumbnail</label>
-				</input>
-				<!--<input bind="cContentPicture" class="short pickImage">
-					<label>Picture</label>
-				</input>-->
-
-			</group>
-		</group>
-		<group>
-			<group>
-				<label>Image Details</label>
-				<input bind="cContentImageTitle" class="long">
-					<label>Image Title</label>
-				</input>
-				<select1 bind="showHeading" appearance="full" class="vshort">
-					<label>Show title on slide?</label>
-					<item>
-						<label>Yes</label>
-						<value>true</value>
-					</item>
-					<item>
-						<label>No</label>
-						<value>false</value>
-					</item>
-				</select1>
-				<input bind="cContentImageAuthor" class="short">
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<input bind="cContentImageTitle" class="long">
+						<label>Title</label>
+					</input>
+					<select1 bind="showHeading" appearance="full" class="vshort inline-items">
+						<label>Show title on slide?</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>
+					<input bind="cContentDetail" class="short pickImage">
+						<label>Main image</label>
+					</input>
+					<group ref="mainContent" class="mainContent">
+						<label>Image Caption</label>
+						<textarea bind="cContentBody" class="TextArea xhtml" rows="20" cols="70"/>
+					</group>
+					<!--<input bind="cContentImageAuthor" class="short">
 					<label>Image Author</label>
 				</input>
 				<input bind="cContentImageCopyright" class="short">
 					<label>Image Copyright</label>
-				</input>
-			</group>
-			<group ref="mainContent" class="mainContent">
-				<label>Image Description</label>
-				<textarea bind="cContentBody" class="TextArea xhtml" rows="20" cols="70"/>
+				</input>-->
+				</group>
 			</group>
 
 			<group class="Content">
-				<label>Link</label>
-
-
-				<select1 bind="cLinkType" appearance="full">
-					<label>Type of link</label>
-					<item>
-						<label>Internal (Going to a page on this site)</label>
-						<value>internal</value>
-						<toggle case="cLinkType_1" event="DOMActivate"/>
-					</item>
-					<item>
-						<label>External (Going to another site)</label>
-						<value>external</value>
-						<toggle case="cLinkType_2" event="DOMActivate"/>
-					</item>
-				</select1>
-				<switch class="disable">
-					<case id="cLinkType_1">
-						<select1 bind="cModuleLink" class="siteTree">
-							<label>Link to page</label>
+				<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Link</span>
+				</label>
+				<group>
+					<group class="form-section-wrapper">
+						<select1 bind="cLinkType" appearance="full">
+							<label>Type of link</label>
+							<item>
+								<label>Internal (Going to a page on this site)</label>
+								<value>internal</value>
+								<toggle case="cLinkType_1" event="DOMActivate"/>
+							</item>
+							<item>
+								<label>External (Going to another site)</label>
+								<value>external</value>
+								<toggle case="cLinkType_2" event="DOMActivate"/>
+							</item>
 						</select1>
-					</case>
-					<case id="cLinkType_2">
-						<input bind="cModuleLink" class="short">
-							<label>Link to URL</label>
-						</input>
-					</case>
-				</switch>
-				<input bind="cModuleLinkText" class="long">
-					<label>Module footer link text</label>
-				</input>
-				<select1 bind="showButton" appearance="full" class="vshort">
-					<label>Show button on slide?</label>
-					<item>
-						<label>Yes</label>
-						<value>true</value>
-					</item>
-					<item>
-						<label>No</label>
-						<value>false</value>
-					</item>
-				</select1>
+						<switch class="disable">
+							<case id="cLinkType_1">
+								<select1 bind="cModuleLink" class="siteTree">
+									<label>Link to page</label>
+								</select1>
+							</case>
+							<case id="cLinkType_2">
+								<input bind="cModuleLink" class="short">
+									<label>Link to URL</label>
+								</input>
+							</case>
+						</switch>
+					</group>
+					<input bind="cModuleLinkText" class="long">
+						<label>Module footer link text</label>
+					</input>
+					<select1 bind="showButton" appearance="full" class="vshort inline-items">
+						<label>Show button on slide?</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group class="form-2-col">
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<label>Settings</label>
+					<input bind="dPublishDate" class="calendar short">
+						<label>Publish Date</label>
+					</input>
+					<input bind="dExpireDate" class="calendar short">
+						<label>Expire Date</label>
+					</input>
+					<select1 bind="nStatus" appearance="full" class="required vshort inline-items">
+						<label>Status</label>
+						<item>
+							<label>Live</label>
+							<value>1</value>
+						</item>
+						<item>
+							<label>Hidden</label>
+							<value>0</value>
+						</item>
+					</select1>
+					<input bind="cDescription" class="short">
+						<label>Change Notes</label>
+					</input>
+				</group>
 			</group>
 		</group>
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Library Image</label>
+			<label>Save Swiper Slide</label>
 		</submit>
 	</group>
 </Content>
