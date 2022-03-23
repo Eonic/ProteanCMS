@@ -150,6 +150,11 @@ section.bg-primary {
     img.thumbnail {
         margin-bottom: $image-spacer;
     }
+
+    a .summary,
+    a .description {
+        color: $body-color;
+    }
 }
 // GRIDS
 .Grid {
