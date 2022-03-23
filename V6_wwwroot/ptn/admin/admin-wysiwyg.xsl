@@ -39,7 +39,15 @@
 
 	<!--In admin WYSIWYG mode-->
 	<xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
-		<body id="pg_{@id}" class="normalMode">
+		<body class="normalMode">
+			<xsl:attribute name="id">
+				<xsl:text>pg</xsl:text>
+				<xsl:value-of select="@id"/>
+				<xsl:if test="@artid!=''">
+					<xsl:text>-art</xsl:text>
+					<xsl:value-of select="@artid"/>
+				</xsl:if>
+			</xsl:attribute>
 			<xsl:apply-templates select="." mode="bodyStyle"/>
 			<div class="ptn-edit">
 				<xsl:apply-templates select="AdminMenu"/>
@@ -58,7 +66,7 @@
 	<xsl:template match="Page[@previewMode]" mode="bodyBuilder">
 		<body>
 			<xsl:attribute name="id">
-				<xsl:text>page</xsl:text>
+				<xsl:text>pg</xsl:text>
 				<xsl:value-of select="@id"/>
 				<xsl:if test="@artid!=''">
 					<xsl:text>-art</xsl:text>
