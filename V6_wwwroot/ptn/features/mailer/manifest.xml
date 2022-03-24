@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
-  <LayoutGroup name="Modules">
+  <!--<LayoutGroup name="Modules">
     <Layout name="Modules_1_Column">Devise your own 1 column page layouts with any content types.</Layout>
     <Layout name="Modules_2_Columns">Devise your own 2 column page layouts with any content types.</Layout>
     <Layout name="Modules_2_Columns_66_33">Devise your own 2 column page layouts with any content types.</Layout>
     <Layout name="Modules_2_Columns_33_66">Devise your own 2 column page layouts with any content types.</Layout>
     <Layout name="Modules_3_Columns">Devise your own 3 column page layouts with any content types.</Layout>
-  </LayoutGroup>
+  </LayoutGroup>-->
   <ContentTypes><!--
     <ContentTypeGroup name="Text/HTML">
       <ContentType type="FormattedText" name="Formatted Text">Plain text that can be formatted into HTML using a simple word processor interface</ContentType>
@@ -54,24 +54,24 @@
 	-->
   </ContentTypes>
   <ModuleTypes>
-    <ModuleGroup name="Basic Types">
-      <Module type="FormattedText" name="Formatted Text">Plain text that can be formatted into HTML using a simple word processor interface</Module>
-      <Module type="Image" name="Image">An Image</Module>
+    <!--<ModuleGroup name="Basic Types">
+      --><!--<Module type="FormattedText" name="Formatted Text">Plain text that can be formatted into HTML using a simple word processor interface</Module>
+      <Module type="Image" name="Image">An Image</Module>--><!--
     </ModuleGroup>
     <ModuleGroup name="Content Lists">
-      <Module type="NewsListEmail" name="News Articles List">List of News Articles</Module>
+      --><!--<Module type="NewsListEmail" name="News Articles List">List of News Articles</Module>
       <Module type="EventListEmail" name="Event List">List of Events</Module>
       <Module type="ProductListEmail" name="Product List">List of Products</Module>
       <Module type="VacanciesListEmail" name="Vacancies List">List of Vacancies</Module>
-      <Module type="DocumentListEmail" name="Document List">List of Documents</Module>
-      <!--<Module type="ProductGallery" name="Product Gallery">Gallery of Products</Module>-->
-      <!--<Module type="ContactList" name="Contact List">Contacts List</Module>-->
-      <!--<Module type="LinkListEmail" name="Link List">Link List</Module>-->
-      <!--<Module type="GalleryImageList" name="Image Gallery">Image Gallery</Module>-->
-      <!--<Module type="TestimonialList" name="Testimonials List">List of Testimonials</Module>
-			<Module type="FAQList" name="FAQ List">List of Frequently Asked Questions</Module>-->
+      <Module type="DocumentListEmail" name="Document List">List of Documents</Module>--><!--
+      --><!--<Module type="ProductGallery" name="Product Gallery">Gallery of Products</Module>--><!--
+      --><!--<Module type="ContactList" name="Contact List">Contacts List</Module>--><!--
+      --><!--<Module type="LinkListEmail" name="Link List">Link List</Module>--><!--
+      --><!--<Module type="GalleryImageList" name="Image Gallery">Image Gallery</Module>--><!--
+      --><!--<Module type="TestimonialList" name="Testimonials List">List of Testimonials</Module>
+			<Module type="FAQList" name="FAQ List">List of Frequently Asked Questions</Module>--><!--
     </ModuleGroup>
-    <!--<ModuleGroup name="Navigation Lists">
+    --><!--<ModuleGroup name="Navigation Lists">
       <Module type="SubPageListEmail" name="SubPage Listing">Sub page Listing</Module>
       
     </ModuleGroup>-->

@@ -23,11 +23,11 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
-      <Module type="FormattedText" formPath="formattedtext/formattedtext" icon="fas fa-align-right" name="Formatted Text">Text formatted in HTML editor</Module>
-      <Module type="Image" formPath="image/image" icon="fas fa-image" name="Image">An Image, with option to add a link to it.</Module>
-      <Module type="Video" formPath="video/video" icon="fab fa-youtube" name="Video">Embed an uploaded or external video</Module>
-      <Module type="EmailForm" formPath="emailform/emailform" icon="fab fa-wpforms"  name="Email Form">Email Response Form</Module>
-      <Module type="SocialBookmarks" formPath="socialbookmarks/socialbookmarks" icon="fab fa-facebook-square"  name="Social Bookmarks">Social Bookmarks</Module>
+      <Module type="FormattedText" formPath="formattedtext/formattedtext" icon="fas fa-align-right" name="Formatted Text"></Module>
+      <Module type="Image" formPath="image/image" icon="fas fa-image" name="Image"></Module>
+      <Module type="Video" formPath="video/video" icon="fab fa-youtube" name="Video"></Module>
+      <Module type="EmailForm" formPath="emailform/email-form" icon="fab fa-wpforms"  name="Email Form"></Module>
+		<!-- Module type="SocialBookmarks" formPath="socialbookmarks/socialbookmarks" icon="fab fa-facebook-square"  name="Social Bookmarks">Social Bookmarks</Module -->
     </ModuleGroup>
     <ModuleGroup name="Layout" icon="fas fa-columns">
       <!--<Module type="1Column" formPath="columns/1column" name="1 Column" icon="icon-1-col">1 column layout to allow alternative backgrounds to be used without multiple columns</Module>-->

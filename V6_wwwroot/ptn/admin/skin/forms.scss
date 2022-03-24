@@ -12,6 +12,10 @@ body {
 .hidden {
     display:none;
 }
+textarea {
+    max-width:100%;
+}
+
 @mixin btn-spacing($space:4px) {
     margin-left: -$space;
     margin-right: -$space;
