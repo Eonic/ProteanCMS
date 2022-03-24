@@ -5827,6 +5827,14 @@
     </iframe>
   </xsl:template>
 
+	<xsl:template match="iframe[contains(@src,'youtube.com')]" mode="cleanXhtml">
+		<div class="responsive-video">
+			 <iframe title="YouTube video player" width="{@width}" height="{@height}" src="{@src}" frameborder="0" allowfullscreen="{@allowfullscreen}" style="{@style}">
+                <xsl:text> </xsl:text>
+            </iframe>
+		</div>
+	</xsl:template>
+
 
   <xsl:template match="a" mode="cleanXhtml">
 
