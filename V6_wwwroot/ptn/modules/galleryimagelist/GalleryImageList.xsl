@@ -96,7 +96,7 @@
 		<xsl:variable name="spacebetween">10</xsl:variable>
 		<xsl:variable name="spacebetweenLg">10</xsl:variable>
 		<!-- Output Module -->
-		<div class="swiper-container GalleryImageList Grid">
+		<div class="swiper-container content-carousel GalleryImageList Grid">
 			<div class="swiper" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$spacebetween}" data-spacebetweenlg="{$spacebetweenLg}" >
 
 				<!--responsive columns-->

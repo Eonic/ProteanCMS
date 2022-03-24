@@ -32,31 +32,34 @@
 			</xsl:choose>
 		</xsl:variable>
 		<!-- Output Module -->
-		<xsl:variable name="id" select="concat('bscarousel-',@id)"></xsl:variable>
+		<xsl:variable name="id" select="concat('scarousel-',@id)"></xsl:variable>
 		<div class="swiper-container">
-		<div id="{$id}" class="swiper"  data-id="{@id}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="true">
-			<xsl:if test="@bullets!='true'">
-				<ol class="carousel-indicators">
-					<xsl:for-each select="Content[@type='LibraryImageWithLink']">
-						<li data-target="#{$id}" data-slide-to="{position()-1}">
-							<xsl:if test="position()=1">
-								<xsl:attribute name="class">active</xsl:attribute>
-							</xsl:if>
-							<xsl:text></xsl:text>
-						</li>
-					</xsl:for-each>
-				</ol>
-			</xsl:if>
-			<div class="swiper-wrapper" style="height:{@height}px">
-				<xsl:apply-templates select="Content[@type='SwiperSlide']" mode="displayBrief">
-					<xsl:with-param name="sortBy" select="@sortBy"/>
-				</xsl:apply-templates>
+			<!--<xsl:apply-templates select="." mode="inlinePopupOptions">
+				<xsl:with-param name="class" select="swiper-container"/>
+			</xsl:apply-templates>-->
+			<div id="{$id}" class="swiper"  data-id="{@id}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="true">
+				<xsl:if test="@bullets!='true'">
+					<ol class="carousel-indicators">
+						<xsl:for-each select="Content[@type='LibraryImageWithLink']">
+							<li data-target="#{$id}" data-slide-to="{position()-1}">
+								<xsl:if test="position()=1">
+									<xsl:attribute name="class">active</xsl:attribute>
+								</xsl:if>
+								<xsl:text></xsl:text>
+							</li>
+						</xsl:for-each>
+					</ol>
+				</xsl:if>
+				<div class="swiper-wrapper" style="height:{@height}px">
+					<xsl:apply-templates select="Content[@type='SwiperSlide']" mode="displayBrief">
+						<xsl:with-param name="sortBy" select="@sortBy"/>
+					</xsl:apply-templates>
+				</div>
+				<div class="swiper-pagination" id="swiper-pagination-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
 			</div>
-			<div class="swiper-pagination" id="swiper-pagination-{@id}">
-				<xsl:text> </xsl:text>
-			</div>
-		</div>
-			<xsl:if test="@arrows!='true'">
+			<xsl:if test="@arrows!='false'">
 				<div class="swiper-button-prev" id="swiper-button-prev-{@id}"></div>
 				<div class="swiper-button-next" id="swiper-button-next-{@id}"></div>
 			</xsl:if>
@@ -65,22 +68,37 @@
 	<!-- Library Image Brief -->
 	<xsl:template match="Content[@type='SwiperSlide']" mode="displayBrief">
 		<div class="swiper-slide" style="background-image:url({Images/img[@class='detail']/@src})">
-			<xsl:if test="position()=1">
+			<xsl:attribute name="class">
+				<xsl:text>swiper-slide justify-content-</xsl:text>
+				<xsl:value-of select="@position-vertical"/>
+			</xsl:attribute>
+			<div class="swiper-admin-btns">
+				<xsl:apply-templates select="." mode="inlinePopupOptions">
+					<xsl:with-param name="class" select="swiper-admin-btns"/>
+				</xsl:apply-templates>
+			</div>
+			<!--<xsl:if test="position()=1">
 				<xsl:attribute name="class">swiper-slide</xsl:attribute>
-			</xsl:if>
+			</xsl:if>-->
 			<xsl:if test="(Title/node()!='' and not(@showHeading='false')) or Body/node()!=''">
 
 				<!--<img src="{Images/img[@class='detail']/@src}" alt="{Title/node()}" />-->
 				<div class="swiper-caption">
 					<xsl:attribute name="class">
-						<xsl:text>swiper-caption container carousel-v-</xsl:text>
-						<xsl:value-of select="@position-vertical"/>
-						<xsl:text> carousel-h-</xsl:text>
+						<xsl:text>swiper-caption</xsl:text>
+						<xsl:text> align-self-</xsl:text>
 						<xsl:value-of select="@position-horizontal"/>
+						<xsl:text> bg-</xsl:text>
+						<xsl:value-of select="@bg-color"/>
 					</xsl:attribute>
 					<div class="swiper-caption-inner">
+
 						<xsl:if test="Title/node()!='' and not(@showHeading='false')">
 							<h3 class="caption-title">
+								<xsl:attribute name="class">
+									<xsl:text>caption-title text-</xsl:text>
+									<xsl:value-of select="@title-horizontal"/>
+								</xsl:attribute>
 								<xsl:value-of select="Title/node()"/>
 							</h3>
 						</xsl:if>

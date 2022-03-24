@@ -71,6 +71,11 @@
 				<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
 				<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
 				<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+				<bind id="position-vertical" nodeset="@position-vertical" required="false()" type="string"/>
+				<bind id="position-horizontal" nodeset="@position-horizontal" required="false()" type="string"/>
+				<bind id="title-horizontal" nodeset="@title-horizontal" required="false()" type="string"/>
+				<bind id="bg-color" nodeset="@bg-color" required="false()" type="string"/>
+				<bind id="opacity" nodeset="@opacity" required="false()" type="string"/>
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
 				<bind id="cContentImageTitle" nodeset="Title" required="false()" type="string"/>
@@ -99,23 +104,126 @@
 					<input bind="cContentImageTitle" class="long">
 						<label>Title</label>
 					</input>
-					<select1 bind="showHeading" appearance="full" class="vshort inline-items">
-						<label>Show title on slide?</label>
-						<item>
-							<label>Yes</label>
-							<value>true</value>
-						</item>
-						<item>
-							<label>No</label>
-							<value>false</value>
-						</item>
-					</select1>
+					<group class="row">
+						<group class="col-lg-6">
+							<select1 bind="showHeading" appearance="full" class="vshort inline-items">
+								<label>Show title on slide?</label>
+								<item>
+									<label>Yes</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No</label>
+									<value>false</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-6">
+							<select1 appearance="minimal" bind="title-horizontal">
+								<label>Align title</label>
+								<item>
+									<label>left</label>
+									<value>start</value>
+								</item>
+								<item>
+									<label>centre</label>
+									<value>center</value>
+								</item>
+								<item>
+									<label>right</label>
+									<value>end</value>
+								</item>
+							</select1>
+						</group>
+					</group>
 					<input bind="cContentDetail" class="short pickImage">
 						<label>Main image</label>
 					</input>
 					<group ref="mainContent" class="mainContent">
 						<label>Image Caption</label>
 						<textarea bind="cContentBody" class="TextArea xhtml" rows="20" cols="70"/>
+					</group>
+					<group class="row">
+						<group class="col-lg-6">
+							<select1 appearance="minimal" bind="position-vertical">
+								<label>Vertical Caption Position</label>
+								<item>
+									<label>top</label>
+									<value>start</value>
+								</item>
+								<item>
+									<label>centre</label>
+									<value>center</value>
+								</item>
+								<item>
+									<label>bottom</label>
+									<value>end</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-6">
+							<select1 appearance="minimal" bind="position-horizontal">
+								<label>Horizontal Caption Position</label>
+								<item>
+									<label>left</label>
+									<value>start</value>
+								</item>
+								<item>
+									<label>centre</label>
+									<value>center</value>
+								</item>
+								<item>
+									<label>right</label>
+									<value>end</value>
+								</item>
+							</select1>
+						</group>
+						
+					</group>
+					<group class="row">
+						<group class="col-lg-6">
+							<select1 appearance="minimal" bind="bg-color">
+								<label>Background Colour</label>
+								<item>
+									<label>Dark Background</label>
+									<value>dark</value>
+								</item>
+								<item>
+									<label>Light Background</label>
+									<value>light</value>
+								</item>
+								<item>
+									<label>Primary Background</label>
+									<value>primary</value>
+								</item>
+								<item>
+									<label>Secondary Background</label>
+									<value>secondary</value>
+								</item>
+								<item>
+									<label>Info Background</label>
+									<value>info</value>
+								</item>
+							</select1>
+						</group>
+						<!--<group class="col-lg-6">
+							<select1 appearance="minimal" bind="opacity">
+								<label>Opacity</label>
+								<item>
+									<label>1</label>
+									<value>1</value>
+								</item>
+								<item>
+									<label>0.9</label>
+									<value>0.9</value>
+								</item>
+								<item>
+									<label>0.8</label>
+									<value>0.8</value>
+								</item>
+							</select1>
+						</group>-->
+
 					</group>
 					<!--<input bind="cContentImageAuthor" class="short">
 					<label>Image Author</label>

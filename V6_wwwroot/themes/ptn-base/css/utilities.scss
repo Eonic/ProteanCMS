@@ -16,4 +16,33 @@
 .light-flex{
     display:flex;
 }
-
+//bgs
+@mixin bg-contrast($background, $dark-contrast: $color-contrast-dark, $light-contrast: $color-contrast-light ) {
+    background: $background;
+    color: color-contrast($background, $dark-contrast, $light-contrast);
+    //color:color-yiq($background);
+}
+.bg-dark {
+    @include bg-contrast($dark);
+}
+.bg-light {
+    @include bg-contrast($light);
+}
+.bg-primary {
+    @include bg-contrast($primary);
+}
+.bg-secondary {
+    @include bg-contrast($secondary);
+}
+.bg-info {
+    @include bg-contrast($info);
+}
+.bg-success {
+    @include bg-contrast($success);
+}
+.bg-warning {
+    @include bg-contrast($warning);
+}
+.bg-danger {
+    @include bg-contrast($danger);
+}
