@@ -1511,3 +1511,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x86.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\EcmaScript.NET.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Buffers.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.xml
