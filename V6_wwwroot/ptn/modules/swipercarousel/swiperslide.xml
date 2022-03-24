@@ -75,7 +75,7 @@
 				<bind id="position-horizontal" nodeset="@position-horizontal" required="false()" type="string"/>
 				<bind id="title-horizontal" nodeset="@title-horizontal" required="false()" type="string"/>
 				<bind id="bg-color" nodeset="@bg-color" required="false()" type="string"/>
-				<bind id="opacity" nodeset="@opacity" required="false()" type="string"/>
+				<bind id="bg-cover" nodeset="@bg-cover" required="false()" type="string"/>
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
 				<bind id="cContentImageTitle" nodeset="Title" required="false()" type="string"/>
@@ -207,19 +207,15 @@
 							</select1>
 						</group>
 						<!--<group class="col-lg-6">
-							<select1 appearance="minimal" bind="opacity">
-								<label>Opacity</label>
+							<select1 appearance="minimal" bind="bg-cover">
+								<label>Background Cover</label>
 								<item>
-									<label>1</label>
-									<value>1</value>
+									<label>Contained</label>
+									<value></value>
 								</item>
 								<item>
-									<label>0.9</label>
-									<value>0.9</value>
-								</item>
-								<item>
-									<label>0.8</label>
-									<value>0.8</value>
+									<label>Cover Full Slide</label>
+									<value>full-slide</value>
 								</item>
 							</select1>
 						</group>-->

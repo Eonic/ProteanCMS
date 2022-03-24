@@ -90,6 +90,8 @@
 						<xsl:value-of select="@position-horizontal"/>
 						<xsl:text> bg-</xsl:text>
 						<xsl:value-of select="@bg-color"/>
+						<xsl:text>-o </xsl:text>
+						<!--<xsl:value-of select="@bg-cover"/>-->
 					</xsl:attribute>
 					<div class="swiper-caption-inner">
 

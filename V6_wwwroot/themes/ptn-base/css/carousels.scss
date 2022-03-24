@@ -70,6 +70,15 @@ SWIPER
     .swiper-caption {
         //color: #fff;
         text-shadow: 1px 1px #000;
+
+        /*&.full-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+        }*/
     }
 
     [class*="bg-"] {
@@ -77,10 +86,6 @@ SWIPER
         border-radius: $border-radius;
         //color: color-contrast(#fff);
         text-shadow: none;
-    }
-
-    .bg-light {
-        background-color: fade-out($light, 0.5)!important;
     }
     //controls
     .swiper-button-prev:after, .swiper-button-next:after {

@@ -6,43 +6,58 @@
     color: $color;
 
     &:hover,
-    &:focus{
+    &:focus {
         color: $hover;
         background: none;
         border: none;
-        outline:none;
+        outline: none;
     }
 }
-.light-flex{
-    display:flex;
+
+.light-flex {
+    display: flex;
 }
 //bgs
-@mixin bg-contrast($background, $dark-contrast: $color-contrast-dark, $light-contrast: $color-contrast-light ) {
-    background: $background;
+@mixin bg-contrast($background, $dark-contrast: $color-contrast-dark, $light-contrast: $color-contrast-light,$opacity: $slide-opacity ) {
     color: color-contrast($background, $dark-contrast, $light-contrast);
-    //color:color-yiq($background);
+
+    @if $opacity < 1 {
+        background: rgba($background, $opacity);
+    }
+    @else {
+        background: $background;
+        //color:color-yiq($background);
+    }
 }
-.bg-dark {
+
+.bg-dark-o {
     @include bg-contrast($dark);
 }
-.bg-light {
+
+.bg-light-o {
     @include bg-contrast($light);
 }
-.bg-primary {
+
+.bg-primary-o {
     @include bg-contrast($primary);
 }
-.bg-secondary {
+
+.bg-secondary-o {
     @include bg-contrast($secondary);
 }
-.bg-info {
+
+.bg-info-o {
     @include bg-contrast($info);
 }
-.bg-success {
+
+.bg-success-o {
     @include bg-contrast($success);
 }
-.bg-warning {
+
+.bg-warning-o {
     @include bg-contrast($warning);
 }
-.bg-danger {
+
+.bg-danger-o {
     @include bg-contrast($danger);
 }
