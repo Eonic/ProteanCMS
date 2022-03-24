@@ -1,1 +1,0 @@
-Guide for web designers to create templates and develop new types of content in ProteanCMS

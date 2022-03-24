@@ -130,11 +130,11 @@
       </tr>
       <xsl:if test="@paymentMade &gt; 0">
         <tr>
-          <td colspan="5">&#160;</td>
+          <td colspan="3">&#160;</td>
           <td class="total heading" align="right">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
-                <xsl:when test="@transStatus">Transaction Made</xsl:when>
+                <xsl:when test="@transStatus">Deposit Paid</xsl:when>
                 <xsl:when test="@payableType='settlement' and not(@transStatus)">Payment Received</xsl:when>
               </xsl:choose>
             </font>
@@ -149,7 +149,7 @@
       </xsl:if>
       <xsl:if test="@payableAmount &gt; 0">
         <tr>
-          <td colspan="4">&#160;</td>
+          <td colspan="3">&#160;</td>
           <td class="total heading" align="right">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
@@ -167,6 +167,13 @@
         </tr>
       </xsl:if>
     </table>
+
+	  <xsl:if test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">
+		  <br/>
+		  <a href="{$siteURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
+			 >> CLICK HERE TO PAY YOUR BALANCE 10 DAYS BEFORE YOUR EVENT
+		  </a><br/>
+	  </xsl:if>
     <xsl:if test="/Page/Contents/Content[@name='cartMessage']">
       <div class="cartMessage">
         <xsl:copy-of select="/Page/Contents/Content[@name='cartMessage']/node()"/>

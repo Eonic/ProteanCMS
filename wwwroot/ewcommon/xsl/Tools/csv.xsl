@@ -43,10 +43,12 @@
 		<xsl:text>"Bill Address",</xsl:text>
 		<xsl:text>"Billing Zip",</xsl:text>
 		<xsl:text>"Billing Town",</xsl:text>
+		<xsl:text>"Billing State",</xsl:text>
 		<xsl:text>"Billing Country",</xsl:text>
 		<xsl:text>"Delivery Address",</xsl:text>
 		<xsl:text>"Delivery Zip",</xsl:text>
 		<xsl:text>"Delivery Town",</xsl:text>
+		<xsl:text>"Delivery State",</xsl:text>
 		<xsl:text>"Delivery Country",</xsl:text>
 		<xsl:text>"Email",</xsl:text>
 		<xsl:text>"Shipping Cost",</xsl:text>
@@ -94,6 +96,9 @@
 			<xsl:value-of select="$billAddr/City"/>
 			<xsl:text>",</xsl:text>
 			<xsl:text>"</xsl:text>
+			<xsl:value-of select="$billAddr/State"/>
+			<xsl:text>",</xsl:text>
+			<xsl:text>"</xsl:text>
 			<xsl:value-of select="$billAddr/Country"/>
 			<xsl:text>",</xsl:text>
 			<xsl:text>"</xsl:text>
@@ -104,6 +109,9 @@
 			<xsl:text>",</xsl:text>
 			<xsl:text>"</xsl:text>
 			<xsl:value-of select="$delAddr/City"/>
+			<xsl:text>",</xsl:text>
+			<xsl:text>"</xsl:text>
+			<xsl:value-of select="$delAddr/State"/>
 			<xsl:text>",</xsl:text>
 			<xsl:text>"</xsl:text>
 			<xsl:value-of select="$delAddr/Country"/>

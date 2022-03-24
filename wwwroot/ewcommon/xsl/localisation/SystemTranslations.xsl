@@ -505,35 +505,14 @@
   </xsl:template>
 
 
-  <xsl:template name="term2003">
-    <xsl:choose>
-      <xsl:when test="$lang='en-pr'">
-        <h2>Unfortunately this site has experienced an error.</h2>
-        <h3>We take all errors very seriously.</h3>
-        <p>
-          This error has been recorded and details sent to <a href="http://www.eonic.co.uk">Eonic</a> who provide technical support for this website.
-        </p>
-        <p>
-          Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href="mailto:support@eonic.co.uk">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT.
-		</p>
-        <p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>
-        <a href="javascript:history.back();">Click here to return to the previous page.</a>
-      </xsl:when>
-      <xsl:otherwise>
-        <h2>Unfortunately this site has experienced an error.</h2>
-        <h3>We take all errors very seriously.</h3>
-        <p>
-          This error has been recorded and details sent to <a href="http://www.eonic.co.uk">Eonic</a> who provide technical support for this website.
-        </p>
-        <p>
-          Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href="mailto:support@eonic.co.uk">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT.
-		</p>
-        <p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>
-        <a href="javascript:history.back();">Click here to return to the previous page.</a>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
+	<xsl:template name="term2003">
 
+		<h2>Uh oh, something went wrong!</h2>
+		<h3>We need your help in reporting this.</h3>
+		<p>Please contact the owner of this website and let them know you have experienced an error.</p>
+		<p>Any information on how you arrived at this page would be much appreciated.</p>
+		<a href="javascript:history.back();">Click here to return to the previous page.</a>
+	</xsl:template>
 
   <xsl:template name="term2004">
     <xsl:choose>

@@ -8,7 +8,7 @@
         <nVersion/>
         <cContentForiegnRef/>
         <cContentName/>
-        <cContentSchemaName>Filter</cContentSchemaName>
+        <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
           <Content moduleType="ProductFilter" contentType="ProductFilter" box="" title="" link="" linkType="filter" order="Position" cols="1" stepBy="" stepCount="0" display="all" position="" action="Protean.Cms+Content+Modules.ProductFilter">
            <!--<Filter providerName="default" type="PageFilter" parentPageId="" active="true" order=""/>
