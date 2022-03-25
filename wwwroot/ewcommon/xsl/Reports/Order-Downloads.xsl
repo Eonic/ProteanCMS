@@ -17,10 +17,12 @@
 				<Billing_Address/>
 				<Billing_Zip/>
 				<Billing_Town/>
+				<Billing_State/>
 				<Billing_Country/>
 				<Delivery_Address/>
 				<Delivery_Zip/>
 				<Delivery_Town/>
+				<Delivery_State/>
 				<Delivery_Country/>
 				<Email/>
 				<Shipping_Cost/>
@@ -80,6 +82,9 @@
 				<Billing_Town>
 					<xsl:value-of select="$billAddr/City"/>
 				</Billing_Town>
+				<Billing_State>
+					<xsl:value-of select="$billAddr/State"/>
+				</Billing_State>
 				<Billing_Country>
 					<xsl:value-of select="$billAddr/Country"/>
 				</Billing_Country>
@@ -93,6 +98,9 @@
 				<Delivery_Town>
 					<xsl:value-of select="$delAddr/City"/>
 				</Delivery_Town>
+				<Delivery_State>
+					<xsl:value-of select="$delAddr/State"/>
+				</Delivery_State>
 				<Delivery_Country>
 					<xsl:value-of select="$delAddr/Country"/>
 				</Delivery_Country>

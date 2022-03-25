@@ -5827,6 +5827,14 @@
     </iframe>
   </xsl:template>
 
+	<xsl:template match="iframe[contains(@src,'youtube.com')]" mode="cleanXhtml">
+		<div class="responsive-video">
+			 <iframe title="YouTube video player" width="{@width}" height="{@height}" src="{@src}" frameborder="0" allowfullscreen="{@allowfullscreen}" style="{@style}">
+                <xsl:text> </xsl:text>
+            </iframe>
+		</div>
+	</xsl:template>
+
 
   <xsl:template match="a" mode="cleanXhtml">
 
@@ -8587,11 +8595,9 @@
     <xsl:if test="$parentClass!=''">
       <Parent class="{$parentClass}"/>
     </xsl:if>
-    test1
     <xsl:choose>
       <!-- When Page Order -->
       <xsl:when test="$sort='Position' or $sort='' or $order=''">
-        test2
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
             <xsl:copy-of select="."/>
@@ -8599,7 +8605,7 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        test3 <xsl:value-of select="$contentType"/>
+		 <xsl:value-of select="$contentType"/>
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
           <xsl:sort select="@update" order="{$order}" data-type="text"/>
@@ -10293,7 +10299,7 @@
             </xsl:if>
             <!--<xsl:if test="@data-stellar-background-ratio!='0'">
               <xsl:attribute name="data-stellar-background-ratio">
-                <xsl:value-of select="(@data-stellar-background-ratio div 10)"/> test2
+                <xsl:value-of select="(@data-stellar-background-ratio div 10)"/> 
               </xsl:attribute>
             </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">

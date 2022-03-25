@@ -3480,6 +3480,8 @@ AfterProcessFlow:
 
                         Case "RequestSettlement"
                             oPageDetail.AppendChild(moAdXfm.xFrmRequestSettlement(myWeb.moRequest("id")))
+                            oPageDetail.AppendChild(myWeb.moDbHelper.ActivityReport(dbHelper.ActivityType.Email, 0, 0, 0, CLng(myWeb.moRequest("id"))))
+
                         Case Else
                             Select Case mcEwCmd
                                 Case "Orders"
@@ -4003,8 +4005,20 @@ listItems:
 
                     End If
                 Next
+                Dim contentElmt As XmlElement
+
+
                 Dim oElmt As XmlElement = oPageDetail.OwnerDocument.CreateElement("ProductCats")
                 oElmt.InnerXml = Replace(Replace(oDS.GetXml, "&lt;", "<"), "&gt;", ">")
+
+                For Each contentElmt In oElmt.FirstChild.SelectNodes("ProductCategory/Content")
+                    Dim contentElmtL2 = contentElmt.FirstChild
+                    Dim ChildElmts As XmlElement
+                    For Each ChildElmts In contentElmtL2.SelectNodes("*")
+                        contentElmt.AppendChild(ChildElmts.Clone())
+                    Next
+                    contentElmt.RemoveChild(contentElmtL2)
+                Next
                 oPageDetail.AppendChild(oElmt.FirstChild)
 
 
