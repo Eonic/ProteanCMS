@@ -80,6 +80,7 @@ function contentSwiper() {
         var lgSlides = $(this).data("lgcol");
         var xlSlides = $(this).data("xlcol");
         var xxlSlides = $(this).data("xxlcol");
+        var lgHeight = $(this).data("lgHeight");
         var spaceBetween = parseInt(padding) * 2;
         var spaceBetweenLg = parseInt(padding) * 2;
         var autoplay = $(this).data("autoplay");
@@ -91,7 +92,6 @@ function contentSwiper() {
         var breakpoint = 768;
         var dots = $(this).data("dots");
         if (dots == true) { dots = false };
-       
         const swiper = new Swiper(this, {
             // Optional parameters
             slidesPerView: xsSlides,

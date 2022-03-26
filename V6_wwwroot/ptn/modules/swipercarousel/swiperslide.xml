@@ -68,6 +68,9 @@
 				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
 				<bind id="showHeading" nodeset="@showHeading" required="false()" type="string"/>
 				<bind id="showButton" nodeset="@showButton" required="false()" type="string"/>
+				<bind id="linkSlide" nodeset="@linkSlide" required="false()" type="string"/>
+				<bind id="alignButton" nodeset="@alignButton" required="false()" type="string"/>
+				<bind id="buttonClass" nodeset="@buttonClass" required="false()" type="string"/>
 				<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
 				<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
 				<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
@@ -178,7 +181,7 @@
 								</item>
 							</select1>
 						</group>
-						
+
 					</group>
 					<group class="row">
 						<group class="col-lg-6">
@@ -264,20 +267,83 @@
 							</case>
 						</switch>
 					</group>
-					<input bind="cModuleLinkText" class="long">
-						<label>Module footer link text</label>
-					</input>
-					<select1 bind="showButton" appearance="full" class="vshort inline-items">
-						<label>Show button on slide?</label>
-						<item>
-							<label>Yes</label>
-							<value>true</value>
-						</item>
-						<item>
-							<label>No</label>
-							<value>false</value>
-						</item>
-					</select1>
+					<group class="row">
+						<group class="col-lg-6">
+							<input bind="cModuleLinkText" class="long">
+								<label>Module footer link text</label>
+							</input>
+						</group>
+						<group class="col-lg-6">
+							<select1 bind="buttonClass" appearance="minimal" class="vshort inline-items">
+								<label>Button colour</label>
+								<item>
+									<label>Primary</label>
+									<value>btn-primary</value>
+								</item>
+								<item>
+									<label>Secondary</label>
+									<value>btn-secondary</value>
+								</item>
+								<item>
+									<label>Info</label>
+									<value>btn-info</value>
+								</item>
+								<item>
+									<label>Light</label>
+									<value>btn-light</value>
+								</item>
+								<item>
+									<label>Dark</label>
+									<value>btn-dark</value>
+								</item>
+							</select1>
+						</group>
+					</group>
+					<group class="row">
+						<group class="col-lg-4">
+							<select1 bind="linkSlide" appearance="full" class="vshort inline-items">
+								<label>Link whole slide?</label>
+								<item>
+									<label>Yes</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No</label>
+									<value>false</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-4">
+							<select1 bind="showButton" appearance="full" class="vshort inline-items">
+								<label>Show button on slide?</label>
+								<item>
+									<label>Yes</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No</label>
+									<value>false</value>
+								</item>
+							</select1>
+						</group>
+						<group class="col-lg-4">
+							<select1 bind="alignButton" appearance="full" class="vshort inline-items">
+								<label>Align button</label>
+								<item>
+									<label>Left</label>
+									<value>swiper-btn-left</value>
+								</item>
+								<item>
+									<label>Centre</label>
+									<value>swiper-btn-centre</value>
+								</item>
+								<item>
+									<label>Right</label>
+									<value>swiper-btn-right</value>
+								</item>
+							</select1>
+						</group>
+					</group>
 				</group>
 			</group>
 			<group>
