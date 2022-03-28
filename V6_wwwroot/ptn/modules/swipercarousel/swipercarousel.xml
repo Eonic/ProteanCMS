@@ -63,7 +63,7 @@
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
 	</model>
 	<group ref="EditContent">
-		<label>Swiper Carousel Module</label>
+		<label>Carousel Module</label>
 		<group class="tabs">
 			<group>
 				<label>

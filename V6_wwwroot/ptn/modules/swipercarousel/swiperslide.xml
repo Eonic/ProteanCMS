@@ -95,7 +95,7 @@
 		</bind>
 	</model>
 	<group ref="EditContent">
-		<label>Swiper Slide</label>
+		<label>Carousel Slide</label>
 		<group class="tabs">
 			<group>
 				<label>
@@ -383,7 +383,7 @@
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Swiper Slide</label>
+			<label>Save Carousel Slide</label>
 		</submit>
 	</group>
 </Content>
