@@ -2357,7 +2357,8 @@ processFlow:
                                 pseudoCart.mcPagePath = pseudoCart.mcCartURL & myWeb.mcPagePath
 
                                 ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, pseudoCart, pseudoOrder.xml, "?subCmd=updateSubPayment&subCmd2=PaymentForm&subId=" & myWeb.moRequest("subId"))
-                                myWeb.moPageXml.FirstChild.AppendChild(pseudoOrder.xml)
+
+                                '
 
                                 If ccPaymentXform.valid Then
                                     ewCmd = "UpdateSubscription"
@@ -2371,6 +2372,7 @@ processFlow:
                                     bPaymentMethodUpdated = True
                                     GoTo processFlow
                                 Else
+                                    myWeb.moPageXml.FirstChild.AppendChild(pseudoOrder.xml)
                                     ContentDetailElmt.AppendChild(ccPaymentXform.moXformElmt)
                                 End If
 

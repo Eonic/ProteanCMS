@@ -2832,7 +2832,7 @@ restart:
 
                                 ' If this was a pending item, supercede the copy in the version table (ie superceded anything that's pending)
                                 Dim cPreviousStatus As String = ""
-                                If NodeState(oInstance, "currentStatus", , , , , , cPreviousStatus) = XmlNodeState.HasContents Then
+                                If NodeState(oInstance, "currentStatus", "", "", Nothing, Nothing, "", cPreviousStatus) = XmlNodeState.HasContents Then
                                     If cPreviousStatus = "3" Or cPreviousStatus = "4" Then
                                         ' Update everything with a status of Pending to be DraftSuperceded
                                         ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.Superceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & nKey & " AND (a.nStatus = " & Status.Pending & " or a.nStatus = " & Status.InProgress & ")")

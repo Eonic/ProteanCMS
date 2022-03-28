@@ -25,8 +25,19 @@
   <xsl:variable name="cart" select="/Page/Cart"/>
   <xsl:variable name="cartPage" select="/Page/Cart[@type='order']/Order/@cmd!=''"/>
   <xsl:variable name="adminMode" select="/Page/@adminMode"/>
-  <xsl:variable name="currentPage" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]"/>
-  <xsl:variable name="sectionPage" select="/Page/Menu/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
+  <xsl:variable name="path" select="Request/QueryString/Item[@name='path']/node()"/>
+	<!--
+
+	<xsl:variable name="currentPage">
+
+		<xsl:copy-of select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id][1]"/>
+	</xsl:variable> 
+
+	  -->
+  <xsl:variable name="currentPage" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id][1]"/>
+	
+  <xsl:variable name="sectionPage" select="/Page/Menu/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id][1]]"/>
+	
   <xsl:variable name="subSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
@@ -2194,7 +2205,6 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:if>
-               
         ga('send', 'pageview');
 
         <!--Submission of Mailforms-->
@@ -2255,6 +2265,13 @@
     <xsl:value-of select="Cart/Order/@shippingCost"/>
     <xsl:text>'</xsl:text>
     <xsl:text>});</xsl:text>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+      ga('set', 'campaignSource', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>');
+    </xsl:if>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+      ga('set', 'campaignMedium', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>');
+
+    </xsl:if>
   </xsl:template>
 
   <!-- Log Order Items-->
@@ -3677,6 +3694,9 @@
     <xsl:choose>
       <xsl:when test="@url!=''">
         <xsl:choose>
+			<xsl:when test="DisplayName/@linkType='replicate'">
+				<xsl:value-of select="@url"/>
+			</xsl:when>
           <xsl:when test="format-number(@url,'0')!='NaN'">
             <xsl:value-of select="$siteURL"/>
             <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
@@ -8595,9 +8615,11 @@
     <xsl:if test="$parentClass!=''">
       <Parent class="{$parentClass}"/>
     </xsl:if>
+
     <xsl:choose>
       <!-- When Page Order -->
       <xsl:when test="$sort='Position' or $sort='' or $order=''">
+
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
             <xsl:copy-of select="."/>
@@ -8605,7 +8627,7 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-		 <xsl:value-of select="$contentType"/>
+        <xsl:value-of select="$contentType"/>
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
           <xsl:sort select="@update" order="{$order}" data-type="text"/>

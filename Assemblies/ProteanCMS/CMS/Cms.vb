@@ -1835,6 +1835,18 @@ Public Class Cms
                     oPageElmt.SetAttribute("cssFramework", moConfig("cssFramework"))
 
                     If mnPageId > 0 Then
+
+                        'is this page one that we need to replicate
+                        ' Dim thisPageMenu As XmlElement = oPageElmt.SelectSingleNode("Menu/descendant-or-self::MenuItem[@id = '" & mnPageId & "']")
+                        ' If thisPageMenu.SelectSingleNode("DisplayMenu/@linkType").InnerText = "replicate" Then
+
+
+
+                        'End If
+
+
+
+
                         GetContentXml(oPageElmt)
                         'only get the detail if we are not on a system page and not at root
                         If RootPageId = mnPageId Or Not (mnPageId = gnPageNotFoundId Or
@@ -1928,7 +1940,7 @@ Public Class Cms
                     ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
                     ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                     If gbClone _
-                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
+                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id=/Page/@id and (@clone > 0 or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
                         ' If the current page is a cloned page
                         oPageElmt.SetAttribute("clone", "true")
                     End If
@@ -5080,9 +5092,11 @@ Public Class Cms
                         For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName & "[@id='" & nTempRootId & "']/descendant-or-self::" & cMenuItemNodeName & "[@clone and not(@clone=0)]")
                             ' Go and get the cloned node
                             nCloneId = oMenuItem.GetAttribute("clone")
-                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", , , , oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                                If Not oClone Is Nothing Then
+                                    If Not (cNodeSnapshot.ContainsKey(nCloneId)) Then cNodeSnapshot.Add(nCloneId, oClone.InnerXml)
+                                End If
 
-                                If Not (cNodeSnapshot.ContainsKey(nCloneId)) Then cNodeSnapshot.Add(nCloneId, oClone.InnerXml)
                             End If
                         Next
 
@@ -5093,7 +5107,7 @@ Public Class Cms
                             ' Go and get the cloned node
                             nCloneId = oMenuItem.GetAttribute("clone")
                             nCloneParentId = oMenuItem.GetAttribute("id")
-                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", , , , oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
 
                                 oMenuItem.InnerXml = cNodeSnapshot(nCloneId)
 
@@ -5103,6 +5117,8 @@ Public Class Cms
                                 Next
                             End If
                         Next
+
+                        ' ADD PAGE VERSIONS
 
                     End If
 

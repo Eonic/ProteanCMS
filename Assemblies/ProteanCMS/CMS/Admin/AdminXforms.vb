@@ -1494,21 +1494,21 @@ Partial Public Class Cms
                     End If
 
 
-                    ' Account for the clone node 
-                    If gbClone Then
+                    ' Account for the clone node ' TS removed because added in to page xform on a per site basis if required see wanner.
+                    'If gbClone Then
 
-                        ' Check for the instance of Clone
-                        If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
-                        End If
+                    '    ' Check for the instance of Clone
+                    '    If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
+                    '    End If
 
-                        ' Check for the binding of clone
-                        If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
-                            MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
-                            MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
-                        End If
-                    End If
+                    '    ' Check for the binding of clone
+                    '    If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
+                    '        MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
+                    '        MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
+                    '    End If
+                    'End If
 
                     cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                     If MyBase.isSubmitted Then
