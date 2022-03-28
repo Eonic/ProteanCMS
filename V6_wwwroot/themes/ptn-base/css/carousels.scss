@@ -35,7 +35,14 @@ SWIPER
     justify-content: center;
     position: relative;
 }
-
+.swiper-slide-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+}
 .swiper-button-prev,
 .swiper-button-next {
     color: $primary;
@@ -63,14 +70,19 @@ SWIPER
 
 .module-SwiperCarousel {
     //slides
-    .swiper-slide {
-        padding: 20px 50px;
+    .swiper-slide-padding {
+        padding: 50px 50px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
     }
 
     .swiper-caption {
         //color: #fff;
         text-shadow: 1px 1px #000;
-
         /*&.full-slide {
             position: absolute;
             top: 0;
@@ -79,13 +91,33 @@ SWIPER
             bottom: 0;
             display: flex;
         }*/
+        .swiper-btn-left {
+            float: left;
+        }
+
+        .swiper-btn-centre {
+            margin: 0 auto;
+            display: block;
+        }
+
+        .swiper-btn-right {
+            float: right;
+        }
     }
 
     [class*="bg-"] {
-        padding: 10px 20px 4px;
+        padding: 15px 20px;
         border-radius: $border-radius;
         //color: color-contrast(#fff);
         text-shadow: none;
+
+        *:first-child {
+            margin-top: 0;
+        }
+
+        *:last-child {
+            margin-bottom: 0;
+        }
     }
     //controls
     .swiper-button-prev:after, .swiper-button-next:after {

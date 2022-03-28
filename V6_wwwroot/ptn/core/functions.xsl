@@ -4159,69 +4159,87 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@type='Module']" mode="moreLink">
-    <xsl:param name="class"/>
-    <xsl:variable name="link" select="@link"/>
-    <xsl:if test="$link!=''">
-      <xsl:variable name="numbertest">
-        <!-- Test if link is numeric then link is internal-->
-        <xsl:call-template name="IsNan">
-          <xsl:with-param name="var" select="$link"/>
-        </xsl:call-template>
-      </xsl:variable>
-      <div class="morelink">
-        <span>
-          <a title="{@linkText}" class="btn btn-primary {$class}">
-            <xsl:choose>
-              <xsl:when test="$numbertest = 'number'">
-                <xsl:variable name="pageId" select="@link"/>
-                <xsl:attribute name="href">
-                  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
-                </xsl:attribute>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:choose>
-                  <xsl:when test="contains($link,'#')">
-                    <xsl:attribute name="class">
-                      <xsl:text>btn btn-default scroll-to-anchor</xsl:text>
-                    </xsl:attribute>
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="$link"/>
-                    </xsl:attribute>
-                  </xsl:when>
-                  <xsl:when test="contains($link,'http')">
-                    <xsl:attribute name="href">
-                      <xsl:value-of select="$link"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="rel">external</xsl:attribute>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:attribute name="href">
-                      <xsl:text>http://</xsl:text>
-                      <xsl:value-of select="$link"/>
-                    </xsl:attribute>
-                    <xsl:attribute name="rel">external</xsl:attribute>
-                  </xsl:otherwise>
-                </xsl:choose>
+	<xsl:template match="Content[@type='Module']" mode="moreLink">
+		<xsl:param name="class"/>
+		<xsl:param name="linkWindow"/>
+		<xsl:param name="linkObject"/>
+		<xsl:variable name="link" select="@link"/>
+		<xsl:if test="$link!=''">
+			<xsl:variable name="numbertest">
+				<!-- Test if link is numeric then link is internal-->
+				<xsl:call-template name="IsNan">
+					<xsl:with-param name="var" select="$link"/>
+				</xsl:call-template>
+			</xsl:variable>
+			<div class="morelink">
+				<span>
+					<xsl:choose>
+						<xsl:when test="$linkObject='modal'">
+							<button type="button" data-bs-toggle="modal" data-bs-target="{$link}" class="btn btn-primary {$class}">
+								<xsl:value-of select="@linkText"/>
+							</button>
+						</xsl:when>
+						<xsl:otherwise>
+							<a title="{@linkText}" class="btn btn-primary {$class}">
+								<xsl:choose>
+									<xsl:when test="$numbertest = 'number'">
+										<xsl:variable name="pageId" select="@link"/>
+										<xsl:attribute name="href">
+											<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:choose>
+											<xsl:when test="contains($link,'#')">
+												<xsl:attribute name="class">
+													<xsl:text>btn btn-primary scroll-to-anchor </xsl:text>
+													<xsl:value-of select="class"/>
+												</xsl:attribute>
+												<xsl:attribute name="href">
+													<xsl:value-of select="$link"/>
+												</xsl:attribute>
+											</xsl:when>
+											<xsl:when test="contains($link,'http')">
+												<xsl:attribute name="href">
+													<xsl:value-of select="$link"/>
+												</xsl:attribute>
+												<xsl:attribute name="rel">external</xsl:attribute>
+												<xsl:attribute name="target">
+													<xsl:value-of select="$linkWindow"/>
+												</xsl:attribute>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:attribute name="href">
+													<xsl:text>http://</xsl:text>
+													<xsl:value-of select="$link"/>
+												</xsl:attribute>
+												<xsl:attribute name="rel">external</xsl:attribute>
+												<xsl:attribute name="target">
+													<xsl:value-of select="$linkWindow"/>
+												</xsl:attribute>
+											</xsl:otherwise>
+										</xsl:choose>
 
-              </xsl:otherwise>
-            </xsl:choose>
+									</xsl:otherwise>
+								</xsl:choose>
 
-            <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
-              <xsl:attribute name="onclick">
-                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-                <xsl:value-of select="$link"/>
-                <xsl:text>');</xsl:text>
-              </xsl:attribute>
-            </xsl:if>
+								<xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+									<xsl:attribute name="onclick">
+										<xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+										<xsl:value-of select="$link"/>
+										<xsl:text>');</xsl:text>
+									</xsl:attribute>
+								</xsl:if>
 
-            <xsl:value-of select="@linkText"/>
-          </a>
-        </span>
-      </div>
+								<xsl:value-of select="@linkText"/>
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+				</span>
+			</div>
 
-    </xsl:if>
-  </xsl:template>
+		</xsl:if>
+	</xsl:template>
 
   <xsl:template name="IsNan">
     <xsl:param name="var"/>
