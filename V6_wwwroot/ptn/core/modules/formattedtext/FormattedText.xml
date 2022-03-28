@@ -35,9 +35,9 @@
       <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
       <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
-      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <!--<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
-      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>-->
       <bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
       <bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
       <bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
@@ -71,7 +71,7 @@
           <span class="space"> </span>
           <span>Footer Links</span>
         </label>
-        <group>
+        <!--<group>
           <select1 bind="cLinkType" appearance="full">
             <label>Type of link</label>
             <item>
@@ -107,7 +107,9 @@
             </item>
             <help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
           </select>
-        </group>
+        </group>-->
+
+		  <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
 
       </group>
       <group>
