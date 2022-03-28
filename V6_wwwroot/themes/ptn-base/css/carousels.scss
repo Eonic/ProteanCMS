@@ -71,7 +71,13 @@ SWIPER
 .module-SwiperCarousel {
     //slides
     .swiper-slide-padding {
-        padding: 20px 50px;
+        padding: 50px 50px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
     }
 
     .swiper-caption {

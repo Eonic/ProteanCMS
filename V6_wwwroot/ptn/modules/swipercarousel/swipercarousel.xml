@@ -35,6 +35,8 @@
 			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
 			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
 			<bind id="cInterval" nodeset="@interval" required="false()" type="string"/>
+			<bind id="cHeightOptions" nodeset="@cHeightOptions" required="false()" type="string"/>
+			<bind id="cHeightxs" nodeset="@heightxs" required="false()" type="string"/>
 			<bind id="cHeight" nodeset="@height" required="false()" type="string"/>
 			<bind id="cBullets" nodeset="@bullets" required="false()" type="string"/>
 			<bind id="cArrows" nodeset="@arrows" required="false()" type="string"/>
@@ -55,6 +57,7 @@
 			<bind id="grabberRoot" nodeset="@grabberRoot" required="false()" type="string"/>
 			<bind id="grabberItems" nodeset="@grabberItems" required="false()" type="string"/>
 			<bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
+			<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
@@ -73,17 +76,24 @@
 						<label>Title or name</label>
 					</input>
 					<group class="row">
-						
+
+						<group class="col-lg-4">
+							<select1 appearance="full" bind="autoplay" class="short inline-items">
+								<label>Auto Play</label>
+								<item>
+									<label>Yes</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No</label>
+									<value>false</value>
+								</item>
+							</select1>
+						</group>
 						<group class="col-lg-4">
 							<input bind="cInterval" class="short">
 								<label>Interval</label>
 								<help class="inline">The amount of time in milliseconds to delay between automatically cycling an item</help>
-							</input>
-						</group>
-						<group class="col-lg-4">
-							<input bind="cHeight" class="short">
-								<label>height</label>
-								<help class="inline">The height of the carousel in pixels</help>
 							</input>
 						</group>
 						<group class="col-lg-4">
@@ -100,6 +110,39 @@
 								</item>
 							</select>
 						</group>
+					</group>
+					<group class="form-section-wrapper">
+						<select1 bind="cHeightOptions" appearance="full">
+							<label>Height</label>
+							<item>
+								<label>Set height</label>
+								<value>bg</value>
+								<toggle case="cHeightOptions_1" event="DOMActivate"/>
+							</item>
+							<item>
+								<label>Adapt to content</label>
+								<value>adapt</value>
+								<toggle case="cHeightOptions_2" event="DOMActivate"/>
+							</item>
+						</select1>
+						<switch class="disable">
+							<case id="cHeightOptions_1">
+								<group class="row">
+									<group class="col-lg-4">
+										<input bind="cHeightxs" class="short">
+											<label>height (mobile)</label>
+											<help class="inline">The height of the carousel in pixels</help>
+										</input>
+									</group>
+									<group class="col-lg-4">
+										<input bind="cHeight" class="short">
+											<label>height (desktop)</label>
+											<help class="inline">The height of the carousel in pixels</help>
+										</input>
+									</group>
+								</group>
+							</case>
+						</switch>
 					</group>
 				</group>
 				<group>
