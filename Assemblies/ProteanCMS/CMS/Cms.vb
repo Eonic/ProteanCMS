@@ -1835,18 +1835,6 @@ Public Class Cms
                     oPageElmt.SetAttribute("cssFramework", moConfig("cssFramework"))
 
                     If mnPageId > 0 Then
-
-                        'is this page one that we need to replicate
-                        ' Dim thisPageMenu As XmlElement = oPageElmt.SelectSingleNode("Menu/descendant-or-self::MenuItem[@id = '" & mnPageId & "']")
-                        ' If thisPageMenu.SelectSingleNode("DisplayMenu/@linkType").InnerText = "replicate" Then
-
-
-
-                        'End If
-
-
-
-
                         GetContentXml(oPageElmt)
                         'only get the detail if we are not on a system page and not at root
                         If RootPageId = mnPageId Or Not (mnPageId = gnPageNotFoundId Or
@@ -5324,7 +5312,9 @@ Public Class Cms
                             oMenuItem.SetAttribute("status", verNode.GetAttribute("status"))
                             oMenuItem.SetAttribute("access", verNode.GetAttribute("access"))
                             oMenuItem.SetAttribute("layout", verNode.GetAttribute("layout"))
+
                             oMenuItem.SetAttribute("clone", verNode.GetAttribute("clone"))
+
                             oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"))
                             oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("verDesc"))
                             oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"))
@@ -5890,8 +5880,10 @@ Public Class Cms
                         cXPathModifier = " and @cloneparent='" & Me.mnCloneContextPageId.ToString & "'"
                     Else
                         ' this is not a cloned page, make sure we don't accidentally look for the cloned pages.
-                        cXPathModifier = " and ((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0))"
+                        cXPathModifier = " and (((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0)) or contains(@url,'" & mcPageLanguageUrlPrefix & mcPagePath & "'))"
                     End If
+
+
                 End If
 
                 ' Check for blocked content
@@ -5900,8 +5892,10 @@ Public Class Cms
                 gcBlockContentType = moDbHelper.GetPageBlockedContent(mnPageId)
 
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
+                Dim parentXpath As String = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]"
+
                 'step through the tree from home to our current page
-                For Each oElmt In oPageElmt.SelectNodes("/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]")
+                For Each oElmt In oPageElmt.SelectNodes(parentXpath)
                     Dim nPageId As Long = oElmt.GetAttribute("id")
                     GetPageContentXml(nPageId)
                     nPageId = Nothing

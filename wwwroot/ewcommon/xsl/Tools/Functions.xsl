@@ -25,7 +25,7 @@
   <xsl:variable name="cart" select="/Page/Cart"/>
   <xsl:variable name="cartPage" select="/Page/Cart[@type='order']/Order/@cmd!=''"/>
   <xsl:variable name="adminMode" select="/Page/@adminMode"/>
-  <xsl:variable name="path" select="Request/QueryString/Item[@name='path']/node()"/>
+  <xsl:variable name="path" select="/Page/Request/QueryString/Item[@name='path']/node()"/>
 	<!--
 
 	<xsl:variable name="currentPage">
