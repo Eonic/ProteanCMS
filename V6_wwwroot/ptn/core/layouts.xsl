@@ -733,7 +733,7 @@
 			<xsl:if test="@iconStyle='Right'"> module-right</xsl:if>
 			<xsl:if test="@iconStyle='Left'"> module-left</xsl:if>
 		</xsl:variable>
-		<div id="mod_{@id}" class="module nobox pos-{@position}{$thisClass}">
+		<div id="mod_{@id}" class="module nobox pos-{@position} {$thisClass}">
 			<xsl:apply-templates select="." mode="themeModuleExtras"/>
 			<xsl:if test="@mobileview!=''">
 				<xsl:attribute name="data-isMobileView">
@@ -758,6 +758,12 @@
 				<xsl:apply-templates select="." mode="marginBelow" />
 				<xsl:apply-templates select="." mode="themeModuleClassExtras"/>
 				<xsl:value-of select="$thisClass"/>
+				<xsl:if test="@moduleType='Image'">
+					<xsl:text> img-module-flex justify-content-</xsl:text>
+					<xsl:value-of select="@position-vertical"/>
+					<xsl:text> align-items-</xsl:text>
+					<xsl:value-of select="@position-horizontal"/>
+				</xsl:if>
 			</xsl:attribute>
 			<xsl:if test="@contentType='Module'">
 				<xsl:attribute name="class">

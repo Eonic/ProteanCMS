@@ -53,9 +53,9 @@
 @import "../libs/bs5/scss/utilities/api";
 // scss-docs-end import-stack
 
+@import "../libs/jqueryui/jquery-ui.css";
 @import "skin/skin";
 @import "skin/header";
 @import "skin/forms";
 @import "../core/icons/custom/custom.scss";
 @import "../core/icons/fa5/css/all.css";
-@import "../libs/jqueryui/jquery-ui.css";
