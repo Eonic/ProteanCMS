@@ -29,8 +29,31 @@
 });
 
 
+function setMasonaryModuleWidth(pageId, contentId, newPos) {
+
+    var ajaxurl = '?ewCmd=UpdatePosition' + decodeURIComponent("%26") + 'pgid=' + pageId + decodeURIComponent("%26") + 'id=' + contentId + decodeURIComponent("%26") + 'position=' + newPos + decodeURIComponent("%26") + 'reorder=false'
+    //alert(ajaxurl);
+    $.ajax({
+        url: ajaxurl,
+        success: function () {
+            $('#mod_' + contentId).removeClass(function (index, css) {
+                return (css.match(/\bpos-\S+/g) || []).join(' ');
+            });
+            $('#mod_' + contentId).addClass('pos-' + newPos);
+            $('#isotope-module').isotope('reLayout');
+            $(function () {
+                var zIndexNumber = 9000;
+                $('.editable,div.options,div.ewPopMenu').each(function () {
+                    $(this).css('zIndex', zIndexNumber);
+                    zIndexNumber -= 1;
+                });
+            });
+        }
+    });
+};
+
 function acceptModule($drag, $drop) {
-    var pageId = $('body').attr('id').replace('pg_', '')
+    var pageId = $('body').attr('id').replace('pg', '')
     var contentId = $drag.attr('id').replace('mod_', '')
     var ajaxurl = '?ewCmd=UpdatePosition' + decodeURIComponent("%26") + 'pgid=' + pageId + decodeURIComponent("%26") + 'id=' + contentId + decodeURIComponent("%26") + 'position=' + $drop.parents('.moduleContainer').attr('id')
     //alert(ajaxurl);  
