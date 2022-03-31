@@ -21,6 +21,10 @@ img {
     height: auto;
     overflow:hidden;
 }
+.img-module-flex{
+    display:flex;
+    flex-direction:column;
+}
 //utilities
 .hidden {
     display: none;
