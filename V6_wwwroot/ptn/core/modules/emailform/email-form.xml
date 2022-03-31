@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!--<?xml version="1.0" encoding="utf-8"?>
 <Content type="xform" name="EditContent">
   <model>
     <instance>
@@ -118,7 +118,7 @@
       <bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/>
       
       <bind id="cXSLTPath" nodeset="ews2:xsltPath" required="false()" type="string"/>
-      <!--bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/-->
+      --><!--bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/--><!--
       <bind id="cInstanceItems" nodeset="ews2:oBodyXML" required="false()" type="string"/>
     </bind>
     <bind id="cSubmissionId"  nodeset="tblContent/cContentXmlBrief/Content/model/submission/@id" required="true()" type="string"/>
@@ -232,14 +232,14 @@
 					<span>Advanced Settings</span>
 				</label>
 				<group>
-					<!-- These hidden fields and bindings are required for the component-->
+					--><!-- These hidden fields and bindings are required for the component--><!--
 					<input bind="nContentKey" class="hidden">
 						<label>ContentId</label>
 					</input>
 					<input bind="cModuleType" class="hidden">
 						<label>ModuleType</label>
 					</input>
-					<!-- end of hidden fields -->
+					--><!-- end of hidden fields --><!--
 
 
 
@@ -256,4 +256,4 @@
       <label>Save Enquiry Form</label>
     </submit>
   </group>
-</Content>
+</Content>-->
