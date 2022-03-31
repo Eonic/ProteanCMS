@@ -124,22 +124,6 @@ ProteanCMS
  <param name="position"></param>
  <remarks></remarks>
 </member>
-<member name="M:Protean.Cms.Cart.JSONActions.CreatePaypalOrder(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
- <summary>
- 
- </summary>
- <param name="myApi"></param>
- <param name="jObj"></param>
- <returns></returns>
-</member>
-<member name="M:Protean.Cms.Cart.JSONActions.GetISOCodeforState(Protean.API,Newtonsoft.Json.Linq.JObject)">
- <summary>
- 
- </summary>
- <param name="myApi"></param>
- <param name="searchFilter"></param>
- <returns></returns>
-</member>
 <member name="M:Protean.Cms.Cart.JSONActions.RefundOrder(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
  <summary>
  Refund order 
