@@ -90,7 +90,7 @@
 		<!--end responsive columns variables-->
 		<!-- Output Module -->
 		<div class="swiper-container NewsList content-carousel">
-			<div class="swiper" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$spacebetween}" data-spacebetweenlg="{$spacebetweenLg}">
+			<div class="swiper" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$spacebetween}" data-spacebetweenlg="{$spacebetweenLg}">
 				<div class="swiper-wrapper">
 					<xsl:choose>
 						<xsl:when test="@linkArticle='true'">
