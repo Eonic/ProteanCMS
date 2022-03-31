@@ -289,12 +289,17 @@ $(document).ready(function() {
         hide: true
     });
 
-    $('.pick-page #MenuTree').ajaxtreeview({
-        loadPath: treeviewPath,
-        ajaxCmd: '',
-        openLevel: 2,
-        hide: true
+    $(".modal.pick-page").on('shown.bs.modal', function (e) {
+        
+        $(e.currentTarget).find('#MenuTree').ajaxtreeview({
+            loadPath: treeviewPath,
+            ajaxCmd: '',
+            openLevel: 2,
+            hide: true
+        });
     });
+
+
 
 
     $('div.module div.moduleDrag').closest('.module').draggable({
@@ -784,6 +789,12 @@ function xfrmClearImgFile(formRef, fieldRef) {
 function xfrmClearCalendar(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
     document.getElementById('dateDisplay-' + fieldRef).innerHTML = '';
+}
+
+function xfrmClearPickPage(formRef, fieldRef) {
+    alert(fieldRef);
+    document.forms[formRef].elements[fieldRef].value = '';
+    document.getElementById(fieldRef + '-name').innerHTML = '';
 }
 
 function passFilePathToForm(targetField, filepath) {

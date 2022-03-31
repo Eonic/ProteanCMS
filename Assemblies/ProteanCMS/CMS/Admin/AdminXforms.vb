@@ -5632,9 +5632,11 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 7 ' Refunded
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, "Refunded", 7)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 8 ' Failed
                             MyBase.addOption(oSelElmt, "Abandoned", 11)
                             MyBase.addOption(oSelElmt, "Delete", 12)
@@ -5646,6 +5648,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Deposit Paid", 10)
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 13 'Awaiting Payment
                             MyBase.addOption(oSelElmt, "Awaiting Payment", 13)
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
@@ -5657,6 +5660,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
+                            MyBase.addOption(oSelElmt, "Delete", 12)
 
                     End Select
                     MyBase.addBind("nStatus", "tblCartOrder/nCartStatus", "true()")
