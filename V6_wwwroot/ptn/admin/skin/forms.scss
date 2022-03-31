@@ -12,6 +12,10 @@ body {
 .hidden {
     display:none;
 }
+textarea {
+    max-width:100%;
+}
+
 @mixin btn-spacing($space:4px) {
     margin-left: -$space;
     margin-right: -$space;
@@ -209,10 +213,13 @@ form.xform {
 
 .ui-datepicker {
     @extend .popover;
+    z-index: 20!important;
+
     button {
         @extend .btn;
         @extend .btn-primary;
     }
+
     .ui-state-default {
         @extend .badge;
         color: #000;
@@ -220,12 +227,20 @@ form.xform {
         font-weight: 500;
         text-align: right;
         display: block;
+        padding: 0.35em 0.55em;
     }
+
     button.ui-state-default {
-       color: #fff;
+        // color: #fff;
     }
+
     .ui-state-hover {
         @extend .bg-primary;
+    }
+
+    .ui-datepicker-header {
+        background: $admin-primary;
+        border-color: $admin-primary;
     }
 }
 

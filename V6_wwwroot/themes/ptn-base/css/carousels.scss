@@ -1,6 +1,7 @@
 ﻿/*------------------
 SWIPER
 -------------------*/
+
 .swiper-container {
     position: relative;
 }
@@ -9,11 +10,12 @@ SWIPER
     width: 100%;
     height: 100%;
 }
+
 .swiper-wrapper {
     // margin-left: -1rem;
     // margin-right: -1rem;padding: 0 1rem;
-    
 }
+
 .swiper-container {
     padding: 0 2rem;
 
@@ -21,9 +23,11 @@ SWIPER
         padding: 0;
     }
 }
+
 .swiper {
-    padding:0 1rem;
+    padding: 0 1rem;
 }
+
 .swiper-slide {
     display: flex;
     flex-direction: column;
@@ -31,14 +35,118 @@ SWIPER
     justify-content: center;
     position: relative;
 }
+.swiper-slide-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+}
 .swiper-button-prev,
 .swiper-button-next {
-    color:$primary;
+    color: $primary;
 }
+
 .swiper-pagination-bullet-active {
     background-color: $primary;
 }
-.swiper-button-prev {
+//slide carousel
+.normalMode .module-SwiperCarousel {
+    .swiper-slide .ptn-edit {
+        position: absolute !important;
+        top: 0px;
+        right: 0;
+    }
+
+    .ptn-edit {
+        z-index: 10;
+    }
+
+    .over-content {
+        margin: 0;
+    }
+}
+
+.module-SwiperCarousel {
+    //slides
+    .swiper-slide-padding {
+        padding: 50px 50px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+    }
+
+    .swiper-caption {
+        //color: #fff;
+        text-shadow: 1px 1px #000;
+        /*&.full-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+        }*/
+        .swiper-btn-left {
+            float: left;
+        }
+
+        .swiper-btn-centre {
+            margin: 0 auto;
+            display: block;
+        }
+
+        .swiper-btn-right {
+            float: right;
+        }
+    }
+
+    [class*="bg-"] {
+        padding: 15px 20px;
+        border-radius: $border-radius;
+        //color: color-contrast(#fff);
+        text-shadow: none;
+
+        *:first-child {
+            margin-top: 0;
+        }
+
+        *:last-child {
+            margin-bottom: 0;
+        }
+    }
+    //controls
+    .swiper-button-prev:after, .swiper-button-next:after {
+        font-size: 30px;
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        color: #fff;
+    }
+
+    .swiper-button-prev:after {
+        // remove for default arrow:
+        content: '\f053';
+    }
+
+    .swiper-button-next:after {
+        // remove for default arrow:
+        content: '\f054';
+    }
+
+    .swiper-pagination-bullet-active {
+        background-color: #fff;
+    }
+    //general
+    .swiper-container {
+        padding: 0;
+    }
+}
+//content carousel
+.content-carousel .swiper-button-prev {
     left: 0px;
 
     @include media-breakpoint-up(sm) {
@@ -54,7 +162,7 @@ SWIPER
     }
 }
 
-.swiper-button-next {
+.content-carousel .swiper-button-next {
     right: 0px;
 
     @include media-breakpoint-up(sm) {
@@ -69,6 +177,7 @@ SWIPER
         font-weight: 900;
     }
 }
+
 
 @media only screen and (min-width: 769px) {
     .swiper-slide:first-child {
@@ -286,7 +395,6 @@ PRODUCT GALLERY
 #sp-prev:hover, #sp-next:hover {
     background: #444;
 }
-
 /* Tweak styles for small viewports */
 
 @media screen and (max-width: 400px) {

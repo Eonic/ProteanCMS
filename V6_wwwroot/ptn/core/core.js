@@ -80,10 +80,12 @@ function contentSwiper() {
         var lgSlides = $(this).data("lgcol");
         var xlSlides = $(this).data("xlcol");
         var xxlSlides = $(this).data("xxlcol");
+        var lgHeight = $(this).data("lgHeight");
         var spaceBetween = parseInt(padding) * 2;
         var spaceBetweenLg = parseInt(padding) * 2;
         var autoplay = $(this).data("autoplay");
         if (autoplay == undefined) { autoplay = false };
+        if ($(this).data("autoplay")!='true') { autoplay = false };
         var autoplaySpeed = $(this).data("autoplayspeed");
         var equalHeight = $(this).data("height");
         var vCssEase = ($(this).data("cssease") === undefined ? "ease" : $(this).data("cssease"));
@@ -91,7 +93,6 @@ function contentSwiper() {
         var breakpoint = 768;
         var dots = $(this).data("dots");
         if (dots == true) { dots = false };
-       
         const swiper = new Swiper(this, {
             // Optional parameters
             slidesPerView: xsSlides,
@@ -100,6 +101,9 @@ function contentSwiper() {
             speed: 400,
             loopFillGroupWithBlank: true,
             watchOverflow: true,
+            autoplay: {
+                delay: autoplaySpeed,
+            },
             pagination: {
                 el: "#swiper-pagination-" + swiperId,
                 clickable: true,

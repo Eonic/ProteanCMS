@@ -6,8 +6,8 @@
 		</ContentTypeGroup>
 	</ContentTypes>
 	<ModuleTypes>
-		<ModuleGroup name="Image Galleries" icon="fas fa-images">
-			<Module type="GalleryImageList" formPath="galleryimagelist/GalleryImageList" icon="fas fa-images" name="Gallery Image List" targetCssFramework="bs5"></Module>
+		<ModuleGroup name="Image Galleries" icon="fas fa-th">
+			<Module type="GalleryImageList" formPath="galleryimagelist/GalleryImageList" icon="fas fa-th" name="Gallery Image List" targetCssFramework="bs5"></Module>
 		</ModuleGroup>
 	</ModuleTypes>
 </PageLayouts>
