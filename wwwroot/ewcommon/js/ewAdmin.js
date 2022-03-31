@@ -565,7 +565,7 @@ function setMasonaryModuleWidth(pageId, contentId, newPos) {
 };
 
 function acceptModule($drag, $drop) {
-    var pageId = $('body').attr('id').replace('pg_', '')
+    var pageId = $('body').attr('id').replace('pg_', '').replace('page', '')
     var contentId = $drag.attr('id').replace('mod_', '')
     var ajaxurl = '?ewCmd=UpdatePosition' + decodeURIComponent("%26") + 'pgid=' + pageId + decodeURIComponent("%26") + 'id=' + contentId + decodeURIComponent("%26") + 'position=' + $drop.parents('.moduleContainer').attr('id')
     //alert(ajaxurl);  
@@ -958,7 +958,7 @@ Original preload function has been kept but is unused.
                 $(this).removeClass('collapsable-hitarea').addClass('expandable-hitarea');
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-right');
 
-                alert('empty');
+                
 
                 // Remove the child tree
 
@@ -1268,7 +1268,7 @@ Original preload function has been kept but is unused.
 
         moveTop: function (moveId) {
             var moveIdNode = "node" + moveId;
-            alert(moveId);
+          
             if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
                 $('#MenuTree li#' + moveIdNode).addClass("locked");
                 $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
@@ -2450,7 +2450,6 @@ if (editProductElement > 0) {
                     localStorage.removeItem('originalPathName');
                 }
                 localStorage.pageId = productId;
-                alert(this.urlPathInput);
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
