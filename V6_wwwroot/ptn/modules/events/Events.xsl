@@ -146,9 +146,9 @@
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
 
-    <div class="listItem list-group-item vevent">
+    <div class="listItem vevent">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item vevent'"/>
+        <xsl:with-param name="class" select="'listItem vevent'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner media">

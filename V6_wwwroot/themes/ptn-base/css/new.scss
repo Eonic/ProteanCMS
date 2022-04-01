@@ -19,11 +19,12 @@ a {
 img {
     max-width: 100%;
     height: auto;
-    overflow:hidden;
+    overflow: hidden;
 }
-.img-module-flex{
-    display:flex;
-    flex-direction:column;
+
+.img-module-flex {
+    display: flex;
+    flex-direction: column;
 }
 //utilities
 .hidden {
@@ -53,6 +54,7 @@ img {
         }
     }
 }
+
 .btn-clean {
     padding: 0;
     background: none;
@@ -81,12 +83,13 @@ img {
 .layout-title {
     text-align: center;
 }
+
 .layoutModule .align-items-stretch .col {
-    margin-bottom:$spacer;
+    margin-bottom: $spacer;
 
     > div {
         height: 100%;
-        margin-bottom:0;
+        margin-bottom: 0;
     }
 }
 // BACKGROUNDS
@@ -116,6 +119,7 @@ section.bg-primary {
         @extend .link-light;
     }
 }
+
 #header-banner .container {
     display: flex;
     min-height: 140px;
@@ -123,12 +127,28 @@ section.bg-primary {
     color: #fff;
     text-shadow: 1px 1px #000;
 }
+
 .fullwidthContainer {
     @extend .container-fluid;
+    padding: 0;
+
+    > .layoutModule > .row {
+        margin: 0;
+
+        > div {
+            padding: 0
+        }
+    }
 }
 // CONTENT LISTS
-.swiper{padding:0;}
-.swiper-slide{align-items:start;}
+.swiper {
+    padding: 0;
+}
+
+.swiper-slide {
+    align-items: start;
+}
+
 .date,
 .dtstamp {
     font-size: 0.75rem;
@@ -140,8 +160,9 @@ section.bg-primary {
         padding-right: 5px;
     }
 }
+
 .entryFooter .tags {
-    margin-bottom:$spacer;
+    margin-bottom: $spacer;
 }
 // LIST ITEMS
 .listItem {
@@ -163,22 +184,23 @@ section.bg-primary {
 // GRIDS
 .Grid {
     .grid-item a.grid-link {
-       // @extend .bg-light;
+        // @extend .bg-light;
         display: block;
         margin-bottom: $grid-gutter-y;
 
         .caption {
             padding: 10px;
-            text-align:center;
+            text-align: center;
 
             h4 {
-                margin:0;
-                font-size:1.1rem;
-                color:$dark;
+                margin: 0;
+                font-size: 1.1rem;
+                color: $dark;
             }
         }
     }
 }
+
 .GalleryImageList {
     > .cols {
         display: flex;
@@ -290,7 +312,7 @@ section.bg-primary {
         $social-spacing-detail: 0.5rem;
         //margin-left: -$social-spacing-detail;
         //margin-right: -$social-spacing-detail;
-        display:flex;
+        display: flex;
 
         a {
             padding-left: $social-spacing-detail;
@@ -300,7 +322,7 @@ section.bg-primary {
             float: left;
 
             &:first-child {
-                padding-left:0;
+                padding-left: 0;
             }
         }
     }
@@ -367,9 +389,11 @@ section.bg-primary {
         margin-right: -1rem;
     }
 }
+
 .module.nobox {
-    margin-bottom:$spacer;
+    margin-bottom: $spacer;
 }
+
 #Login {
     form .principle {
         float: right;
@@ -379,12 +403,15 @@ section.bg-primary {
         @extend .btn-clean;
     }
 }
+
 .modal-body #Login legend {
-    display:none;
+    display: none;
 }
+
 .MembershipUserContacts .add {
-    margin-bottom:1rem;
+    margin-bottom: 1rem;
 }
+
 .FormattedText .alignleft {
     margin-right: 1rem;
     margin-bottom: 1rem;
@@ -393,6 +420,7 @@ section.bg-primary {
         max-width: 50%;
     }
 }
+
 .FormattedText .alignright {
     margin-left: 1rem;
     margin-bottom: 1rem;

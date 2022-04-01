@@ -91,6 +91,10 @@ SWIPER
             bottom: 0;
             display: flex;
         }*/
+        &.plain-slide {
+            color: #fff;
+        }
+
         .swiper-btn-left {
             float: left;
         }
