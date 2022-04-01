@@ -117,9 +117,16 @@
 									<xsl:text>swiper-caption</xsl:text>
 									<xsl:text> align-self-</xsl:text>
 									<xsl:value-of select="@position-vertical"/>
-									<xsl:text> bg-</xsl:text>
-									<xsl:value-of select="@bg-color"/>
-									<xsl:text>-o </xsl:text>
+									<xsl:choose>
+										<xsl:when test="@bg-color!=''">
+											<xsl:text> bg-</xsl:text>
+											<xsl:value-of select="@bg-color"/>
+											<xsl:text>-o </xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:text> nobg-slide</xsl:text>
+										</xsl:otherwise>
+									</xsl:choose>
 									<!--<xsl:value-of select="@bg-cover"/>-->
 								</xsl:attribute>
 								<div class="swiper-caption-inner">
@@ -202,9 +209,16 @@
 									<xsl:text>swiper-caption</xsl:text>
 									<xsl:text> align-self-</xsl:text>
 									<xsl:value-of select="@position-vertical"/>
-									<xsl:text> bg-</xsl:text>
-									<xsl:value-of select="@bg-color"/>
-									<xsl:text>-o </xsl:text>
+									<xsl:choose>
+										<xsl:when test="@bg-color!=''">
+											<xsl:text> bg-</xsl:text>
+											<xsl:value-of select="@bg-color"/>
+											<xsl:text>-o </xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:text> plain-slide</xsl:text>
+										</xsl:otherwise>
+									</xsl:choose>
 									<!--<xsl:value-of select="@bg-cover"/>-->
 								</xsl:attribute>
 								<div class="swiper-caption-inner">
