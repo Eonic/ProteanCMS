@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Local settings (.vs)\\ProteanCMS",
+    "\\Local settings (.vs)\\ProteanCMS\\v17"
   ],
-  "SelectedNode": "\\ProteanCMS.sln (ProteanCMS.sln)",
+  "SelectedNode": "\\Local settings (.vs)",
   "PreviewInSolutionExplorer": false
 }

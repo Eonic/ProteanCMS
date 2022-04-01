@@ -6,9 +6,13 @@
       <label>none</label>
       <value></value>
     </item>
+	  <item>
+		  <label>fa-solid fa-list</label>
+		  <value>fa-solid fa-list</value>
+	  </item>
     <item>
-      <label>fa-adjust</label>
-      <value>fa-adjust</value>
+      <label>fa-brands fa-wpressr</label>
+      <value>fa-brands fa-wpressr</value>
     </item>
     <item>
       <label>fa-anchor</label>
