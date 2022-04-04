@@ -6674,6 +6674,7 @@
     <xsl:apply-templates select="." mode="organiser"/>
     } ]
   </xsl:template>
+	
   <xsl:template match="Content[@type='Event' and ancestor::ContentDetail]" mode="organiser">
     <!-- Copy this to set the value site wide for the organiastion events.
       ,
@@ -6684,11 +6685,14 @@
       }
       -->
   </xsl:template>
+	
   <xsl:template match="Content[@type='Organisation' and @rtype='venue']" mode="JSONLD">
     "location": {
     "@type": "Place",
     "name": "<xsl:value-of select="name/node()"/>",
-    "sameAs": "http://www.example.com",
+	<xsl:if test="url/node()!=''">
+		"sameAs": "<xsl:value-of select="url/node()"/>",
+	</xsl:if>
     "address": {
     "@type": "PostalAddress",
     "streetAddress": "<xsl:value-of select="Organization/location/PostalAddress/streetAddress/node()"/>",
@@ -8464,7 +8468,7 @@
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
     <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
     <xsl:variable name="link" select="@link"/>
-    <xsl:variable name="parentPage" select="//MenuItem[@id=$link]"/>
+    <xsl:variable name="parentPage" select="//MenuItem[@id=$link][1]"/>
     <xsl:variable name="contentList">
       <xsl:apply-templates select="." mode="getContent">
         <xsl:with-param name="contentType" select="$contentType" />
@@ -8549,6 +8553,7 @@
           <xsl:apply-templates select="ms:node-set($contentList)/*[not(DisplayName/@exclude='true')]" mode="displayMenuBrief">
             <xsl:with-param name="sortBy" select="@sortBy"/>
           </xsl:apply-templates>
+		
           <xsl:text> </xsl:text>
         </ul>
         <div class="terminus">&#160;</div>

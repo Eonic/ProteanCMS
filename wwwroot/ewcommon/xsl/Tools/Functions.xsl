@@ -8793,7 +8793,7 @@
       </xsl:choose>
     </xsl:param>
     <xsl:param name="stepCount" select="@stepCount" />
-    <xsl:param name="parentPage" select="//MenuItem[@id=$link]"/>
+    <xsl:param name="parentPage" select="//MenuItem[@id=$link and ancestor::MenuItem[@id=$pageId]]"/>
     <xsl:param name="endPos">
       <xsl:choose>
         <xsl:when test="@stepCount = '0'">
