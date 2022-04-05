@@ -1744,11 +1744,13 @@ Partial Public Module xmlTools
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
 
                     Case "availableIcons"
+                        Dim iconPath = "/ewcommon/icons/icons.xml"
+                        If myWeb.bs5 Then iconPath = "/ptn/core/icons/icons.xml"
 
-                        If IO.File.Exists(goServer.MapPath("/ewcommon/icons/icons.xml")) Then
+                        If IO.File.Exists(goServer.MapPath(iconPath)) Then
                             Dim newXml As New XmlDocument
                             newXml.PreserveWhitespace = True
-                            newXml.Load(goServer.MapPath("/ewcommon/icons/icons.xml"))
+                            newXml.Load(goServer.MapPath(iconPath))
                             SelectElmt.InnerXml = newXml.DocumentElement.InnerXml
                         End If
 
