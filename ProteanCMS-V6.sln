@@ -58,6 +58,27 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wwwroot", "wwwroot\", "{6BB
 		SlnRelativePath = "wwwroot\"
 	EndProjectSection
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ewcommon", "wwwroot\ewcommon\", "{F0617DFC-F066-4E7B-88A2-1EB8B779F906}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_50942"
+		Debug.AspNetCompiler.PhysicalPath = "wwwroot\ewcommon\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50942\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_50942"
+		Release.AspNetCompiler.PhysicalPath = "wwwroot\ewcommon\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50942\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "50942"
+		SlnRelativePath = "wwwroot\ewcommon\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +117,10 @@ Global
 		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
