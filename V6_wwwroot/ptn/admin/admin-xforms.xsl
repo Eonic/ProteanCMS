@@ -2838,6 +2838,9 @@
             <xsl:if test="../value/node()=$value">
               <xsl:attribute name="checked">checked</xsl:attribute>
             </xsl:if>
+			  <xsl:if test="not(../value/node()!='') and not($value!='')">
+				  <xsl:attribute name="checked">checked</xsl:attribute>
+			  </xsl:if>
             <!-- Check checkbox should be selected -->
             <xsl:if test="contains($class,'checkboxes') or (contains(ancestor::select/@appearance,'full'))">
               <!-- Run through CSL to see if this should be checked -->
@@ -2949,6 +2952,9 @@
         <xsl:if test="$selectedValue=$value">
           <xsl:attribute name="checked">checked</xsl:attribute>
         </xsl:if>
+		<xsl:if test="not($selectedValue!='') and not($value!='')">
+			 <xsl:attribute name="checked">checked</xsl:attribute>
+		</xsl:if>
 
         <!-- Check checkbox should be selected -->
         <xsl:if test="contains($type,'checkbox')">
