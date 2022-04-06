@@ -317,7 +317,8 @@
 							</item>
 							<help class="inline">This module will be shown on every child of the current page. If you use this feature when adding a module to the home page, the module will appear on every page.</help>
 						</select>
-						<select1 bind="marginBelow" appearance="full" class="inline-items">
+            <!-- removed as duplicated in most xforms-->
+						<!--<select1 bind="marginBelow" appearance="full" class="inline-items">
 							<label>Margin Below Module</label>
 							<item>
 								<label>Yes</label>
@@ -330,7 +331,7 @@
 							<help class="inline">
 								<p>By default modules have a margin below them. If you would like to remove this for this module, please select "no"</p>
 							</help>
-						</select1>
+						</select1>-->
 					</group>
 					<group class="col-lg-4">
 						<select bind="Screens" appearance="full" class="multiline bs-only">
