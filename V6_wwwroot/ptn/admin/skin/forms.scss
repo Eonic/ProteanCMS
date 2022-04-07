@@ -784,9 +784,12 @@ form.xform .relatedContent-group {
 .admin-body {
     padding:0 15px;
 }
+.card .admin-body,
+.card .footer-btn-padding,
 div[class^="col"] .admin-body {
-    padding:0;
+    padding: 0;
 }
+.card .footer-btn-padding{margin-bottom:0;}
 .btn-group-spaced {
     margin-left: -5px;
     margin-right: -5px;

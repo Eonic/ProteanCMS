@@ -48,18 +48,50 @@ $admin-header-bg-light:			darken($admin-header-bg, 10%);
 $admin-header-color:			#000;
 $admin-header-logo:				url(/ewcommon/images/admin/skin/eonic-admin-purple.png) 10px 13px no-repeat;*/
 // END VARIABLES
+.btn {
+    border-radius: 0
+}
+
+@mixin square-card() {
+    .card {
+        border-radius: 0;
+        border: 0;
+
+        .card-header {
+            background-color: rgb(205, 221, 225);
+            border-radius: 0;
+            border-bottom: 0;
+
+            h4 {
+                font-size: 1.2rem;
+                margin-bottom: 0;
+            }
+
+            * {
+                margin-bottom: 0;
+            }
+        }
+
+        .card-body {
+            border-radius: 0;
+        }
+
+        .card-footer {
+            border-radius: 0;
+        }
+    }
+}
 
 body.ptn-edit.layout-Logon {
-    background: url(/ptn/admin/skin/images/logon_bg.png) no-repeat #001834;
+    background: url(/ptn/admin/skin/images/iStock-1139397548-web.jpg) no-repeat #001834;
     background-size: cover;
-
+    @include square-card;
     #adminLayout .card {
         position: absolute;
         top: 40%;
         left: 50%;
         -ms-transform: translate(-50%, -40%);
         transform: translate(-50%, -40%);
-        border-radius: 10px !important;
         -webkit-box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
         box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
         width: 400px;
@@ -73,19 +105,36 @@ body.ptn-edit.layout-Logon {
 }
 
 body.ptn-edit.layout-AdmHome {
-    background: url(/ptn/admin/skin/images/logon_bg.png);
+    background: url(/ptn/admin/skin/images/iStock-1139397548-web.jpg) no-repeat #000;
+    //background-size: cover;
 
-    .admin-breadcrumb {
+
+    .admin-breadcrumb,
+    .admin-main-menu {
         display: none;
     }
 
+    h1.page-header {
+        color: #fff !important;
+        display: none;
+    }
+
+    .logo-text {
+        font-size: 1.3em;
+        padding-right: 17px;
+
+        img {
+            margin-right: 5px;
+        }
+    }
+
     #adminLayout {
-        margin: 60px 50px;
+        margin: 20px;
         padding-top: 0 !important;
         border-radius: 10px !important;
-        background-color: #edf1f3;
-        -webkit-box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
-        box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
+        //  background-color: #edf1f3;
+        //  -webkit-box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
+        //  box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
 
         .page-header {
             border-radius: 10px 10px 0 0 !important;
@@ -111,6 +160,8 @@ body.ptn-edit.layout-AdmHome {
             margin-right: 5px;
         }
     }
+
+    @include square-card;
 }
 
 .ptn-edit {
@@ -197,7 +248,7 @@ body.ptn-edit.layout-AdmHome {
 
 
         .status.active, .status.activeParent {
-          //  color: $admin-primary;
+            //  color: $admin-primary;
         }
 
         .status.inactive {
@@ -710,12 +761,12 @@ body.ptn-edit.layout-AdmHome {
         .optionButtons .btn {
             border: 0 !important;
             background: none !important;
-            color: #4a4a4a ;
+            color: #4a4a4a;
             font-weight: 600;
             font-size: 15px;
 
             i {
-                color: #4a4a4a ;
+                color: #4a4a4a;
                 font-size: 13px;
                 transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
             }
@@ -723,10 +774,10 @@ body.ptn-edit.layout-AdmHome {
             &:hover {
                 border: 0 !important;
                 background: none !important;
-                color: $admin-primary ;
+                color: $admin-primary;
 
                 i {
-                    color: $admin-primary ;
+                    color: $admin-primary;
                 }
             }
 
@@ -1109,12 +1160,14 @@ body.ptn-edit.layout-AdmHome {
 
     height: 2rem;
 }
+
 #fileupload {
     small {
         display: block;
         margin-bottom: 10px;
     }
 }
+
 .ptn-edit #files {
 
     .item.item-image {
@@ -1196,6 +1249,7 @@ body.ptn-edit.layout-AdmHome {
     margin-left: -5px;
     margin-right: -5px;
 }
+
 .pickImageModal {
     .popoverContent {
         display: none;
@@ -1219,6 +1273,7 @@ body.ptn-edit.layout-AdmHome {
         }
     }
 }
+
 #btnHelpEditing.open .fa-chevron-left {
     transform: rotate(-180deg);
     -ms-transform: rotate(-180deg); /* IE 9 */

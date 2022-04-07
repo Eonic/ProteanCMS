@@ -242,9 +242,16 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='Logon']" mode="Admin">
-    <div class="adminTemplate" id="template_Logon">
-      <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-      <xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
+    <div class="adminTemplate container" id="template_Logon">
+		<div class="card">
+			<div class="card-header">
+				<h5>Log in</h5>
+			</div>
+			<div class="card-body">
+				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+				<xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
+			</div>
+		</div>
     </div>
   </xsl:template>
 
@@ -256,13 +263,13 @@
         <xsl:value-of select="@class"/>
       </xsl:if>
     </xsl:variable>
-    <a href="{$appPath}?ewCmd=LogOff" class="btn btn-primary">
+    <a href="{$appPath}?ewCmd=LogOff" class="btn btn-outline-primary">
       <i class="fa fa-reply">
         <xsl:text> </xsl:text>
       </i> Back to Site
     </a>
 
-    <button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary {$class}"  onclick="disableButton(this);">
+    <button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary float-end"  onclick="disableButton(this);">
       Login<xsl:text> </xsl:text>
     </button>
 
@@ -660,10 +667,43 @@
     <section>
       <div class="container-fluid">
         <div class="row">
-          <div class="btn-group-spaced mb-1">
-              <a href="?ewCmd=Content" class="btn btn-primary">
-                <i class="fas fa-pen"></i> Edit Content</a>
-            
+          <div class="btn-group-spaced mb-3">
+			  <span class="text-light logo-text">
+				  <img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
+					  <strong>Protean</strong>CMS
+				  </span>
+				  <a href="?ewCmd=Content" class="btn btn-sm btn-primary">
+					  <i class="fas fa-pen"></i> Edit Content
+				  </a>
+				  <a href="?ewCmd=ListUsers" class="btn btn-sm btn-primary">
+					  <i class="fas fa-users"></i> Membership
+				  </a>
+				  <a href="?ewCmd=Orders" class="btn btn-sm btn-primary">
+					  <i class="fas fa-shopping-basket"></i> Ecommerce
+				  </a>
+			  <a href="/?ewCmd=UpcomingRenewals" title="" class="btn  btn-sm btn-primary">
+				  <i class="fa far fa-calendar-alt"> </i> Subscriptions
+			  </a>
+				  <a href="/?ewCmd=MailingList" title="" class="btn  btn-sm btn-primary">
+					  <i class="fa fa-envelope"> </i> Email Marketing
+				  </a>
+
+				  <a href="/?ewCmd=Orders" title="" class="btn  btn-sm btn-primary">
+					  <i class="fa fa-shopping-basket"> </i> Ecommerce
+				  </a>
+				  <a href="/?ewCmd=Reports" title="" class="btn  btn-sm btn-primary">
+					  <i class="fa fas fa-chart-bar"> </i> Reports
+				  </a>
+				  <a href="/?ewCmd=SettingsDash" title="" class="btn  btn-sm btn-primary">
+					  <i class="fa fa-cogs"> </i> Settings
+				  </a>
+				  <a id="myaccount" href="/?ewCmd=EditDirItem&amp;DirType=User&amp;id=1" class="btn  btn-sm btn-primary">
+					  <i class="fa fa-user"> </i> Admin
+				  </a>
+			  <a id="logoff" href="/?ewCmd=LogOff" title="Click here to log off from your active session" class="btn btn-sm btn-danger">
+				  <i class="fa fa-power-off"> </i>
+				  <span> Log Off </span>
+			  </a>
           </div>
           <div class="col-md-9">
             <div class="row">
