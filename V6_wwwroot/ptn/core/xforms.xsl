@@ -2505,11 +2505,10 @@
     <span>
       <xsl:attribute name="class">
         <xsl:text>form-check</xsl:text>
-
         <xsl:if test="contains($class,'multiline')">
           <xsl:text> multiline</xsl:text>
         </xsl:if>
-      </xsl:attribute>
+      </xsl:attribute>		
       <input type="{$type}" class="form-check-input">
         <xsl:if test="$ref!=''">
           <xsl:attribute name="name">
@@ -2533,8 +2532,12 @@
         <xsl:if test="$selectedValue=$value">
           <xsl:attribute name="checked">checked</xsl:attribute>
         </xsl:if>
+		<xsl:if test="not($selectedValue!='') and not($value!='')">
+		    <xsl:attribute name="checked">checked</xsl:attribute>
+		</xsl:if>
 
-        <!-- Check checkbox should be selected -->
+
+		  <!-- Check checkbox should be selected -->
         <xsl:if test="contains($type,'checkbox')">
           <!-- Run through CSL to see if this should be checked -->
           <xsl:variable name="valueMatch">
