@@ -221,8 +221,8 @@
           W: <a href="http://www.proteancms.com">www.proteancms.com</a>
 				</div>
 			</div>
-        <script type="text/javascript" src="/ptn/core/jquery/3.6.0/jquery.min.js">&#160;</script>
-        <script type="text/javascript" src="/ptn/core/bs5/dist/js/bootstrap.min.js">&#160;</script>
+        <script type="text/javascript" src="/ptn/libs/jquery/dist/jquery.min.js">&#160;</script>
+        <script type="text/javascript" src="/ptn/libs/bs5/js/bootstrap.min.js">&#160;</script>
         <script type="text/javascript" src="/ptn/setup/setup.js">&#160;</script>
 		</body>
     </html>
@@ -417,11 +417,11 @@
             </xsl:when>
             <xsl:otherwise>
               <p>Doing this will cause all DB tables and data to be removed. Are you sure you wish to continue?</p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel</a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=ClearDB&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=ClearDB&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Delete Database</a>
             </xsl:otherwise>
           </xsl:choose>
@@ -451,12 +451,12 @@
             </xsl:when>
             <xsl:otherwise>
               <p>Doing this will create all DB tables and default data. Are you sure you wish to continue?</p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=NewV4&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=NewV4&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Build New Database
               </a>
             </xsl:otherwise>
@@ -484,12 +484,12 @@
             </xsl:when>
             <xsl:otherwise>
               <p>Doing this will create all DB tables and default data. Are you sure you wish to continue?</p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=NewV4&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=NewV4&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Build New Database</a>
             </xsl:otherwise>
           </xsl:choose>
@@ -519,12 +519,12 @@
             <xsl:otherwise>
               <p>Doing this will update the database to the current version. <br/><br/><br/>
               <strong>Are you sure you wish to continue?</strong></p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=UpgradeDB&amp;ewCmd2=Do"  class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=UpgradeDB&amp;ewCmd2=Do"  class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Upgrade Database</a>
             </xsl:otherwise>
           </xsl:choose>
@@ -553,12 +553,12 @@
 						<xsl:otherwise>
 							<p>Doing this will replace all existing shipping locations <br/>
 							Are you sure you wish to continue?</p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
 							&#160;&#160;&#160;
-							<a href="/ewcommon/setup/default.ashx?ewCmd=ShipLoc&amp;ewCmd2=Do" class="btn btn-danger">
+							<a href="/ptn/setup/default.ashx?ewCmd=ShipLoc&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Import Shipping Locations</a>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -587,12 +587,12 @@
             <xsl:otherwise>
               <p>Doing this will clean out orphaned audit records. <br/>
               <strong>Are you sure you wish to continue?</strong><br/></p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=CleanAudit&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=CleanAudit&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-eraser">&#160;</i>&#160;Clean Audit Table</a>
             </xsl:otherwise>
           </xsl:choose>
@@ -623,12 +623,12 @@
                 Doing this will optimise all the images in the images folder. <br/>
                 <strong>Are you sure you wish to continue?</strong><br/>
               </p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx" class="btn btn-danger">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=OptimiseImages&amp;ewCmd2=Do" class="btn btn-success">
+              <a href="/ptn/setup/default.ashx?ewCmd=OptimiseImages&amp;ewCmd2=Do" class="btn btn-success">
                 <i class="fa fa-eraser">&#160;</i>&#160;Optimise Images
               </a>
             </xsl:otherwise>
@@ -736,12 +736,12 @@
 			  <xsl:otherwise>
              <p> Doing this will upgrade content schemas. <br/>
           <strong>Are you sure you wish to continue?</strong><br/></p>
-          <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+          <a href="/ptn/setup/default.ashx" class="btn btn-default">
             <i class="fa fa-times">&#160;</i>&#160;
             Cancel
           </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=UpgradeSchema&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=UpgradeSchema&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Upgrade Content / Directory</a>
             </xsl:otherwise>
           </xsl:choose>
@@ -807,12 +807,12 @@
             <xsl:otherwise>
               <p>Doing this will upgrade content schemas. <br/>
               <strong>Are you sure you wish to continue?</strong><br/></p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=ImportContent&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=ImportContent&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Continue</a>
             </xsl:otherwise>
           </xsl:choose>
@@ -838,7 +838,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times">&#160;</i></span></button>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times">&#160;</i></span></button>
             <h4 class="modal-title" id="completeModal">Completed</h4>
           </div>
           <div class="modal-body">
@@ -869,12 +869,12 @@
             <xsl:otherwise>
               <p>Doing this will create a backup of the current website database. <br/>
               <strong>Are you sure you wish to continue?</strong></p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=Backup&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=Backup&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Backup Database
               </a>
             </xsl:otherwise>
@@ -904,12 +904,12 @@
                 Doing this will restore the specificed database file and <strong>overwrite</strong> the current live data.<br/><br/>
                 <strong>Are you sure you wish to continue?</strong>
               </p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=Restore&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=Restore&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-warning">&#160;</i>&#160;Restore Database over current live data !
               </a>
             </xsl:otherwise>
