@@ -63,6 +63,7 @@ Public Class Cms
 
     ' Clone Page Info
     Public mnClonePageId As Integer = 0
+    Public mnClonePageVersionId As Integer = 0
     Public mbIsClonePage As Boolean = False
     Public mnCloneContextPageId As Integer = 0
 
@@ -130,6 +131,7 @@ Public Class Cms
     Public mbSuppressLastPageOverrides As Boolean = False
     Public mbIgnorePath As Boolean = False
     Public gcLang As String = "en-gb"
+    Public mcRequestDomain As String = ""
 
     Private mcLOCALEwSiteXsl As String = ""
 
@@ -1046,6 +1048,8 @@ Public Class Cms
                 gcEwBaseUrl = moConfig("BaseUrl")
             End If
 
+            mcRequestDomain = IIf(mbIsUsingHTTPS, "https://", "http://") & moRequest.ServerVariables("SERVER_NAME")
+
             ' Language sites.
             ' If LanguageStyleSheets is on, then we look for the xsl with the language as a suffix
             ' If it exists, we load that in as the stylesheet.
@@ -1943,7 +1947,7 @@ Public Class Cms
                     ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
                     ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                     If gbClone _
-                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
+                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id=/Page/@id and (@clone > 0 or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
                         ' If the current page is a cloned page
                         oPageElmt.SetAttribute("clone", "true")
                     End If
@@ -3638,6 +3642,7 @@ Public Class Cms
             sSql &= "FROM tblContent AS c INNER JOIN "
             sSql &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
             sSql &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
+            'sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "
 
             ' GCF - sql replaced by the above - 24/06/2011
             ' replaced JOIN to tblContentLocation with  LEFT OUTER JOIN
@@ -5094,9 +5099,11 @@ Public Class Cms
                         For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName & "[@id='" & nTempRootId & "']/descendant-or-self::" & cMenuItemNodeName & "[@clone and not(@clone=0)]")
                             ' Go and get the cloned node
                             nCloneId = oMenuItem.GetAttribute("clone")
-                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", , , , oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                                If Not oClone Is Nothing Then
+                                    If Not (cNodeSnapshot.ContainsKey(nCloneId)) Then cNodeSnapshot.Add(nCloneId, oClone.InnerXml)
+                                End If
 
-                                If Not (cNodeSnapshot.ContainsKey(nCloneId)) Then cNodeSnapshot.Add(nCloneId, oClone.InnerXml)
                             End If
                         Next
 
@@ -5107,7 +5114,7 @@ Public Class Cms
                             ' Go and get the cloned node
                             nCloneId = oMenuItem.GetAttribute("clone")
                             nCloneParentId = oMenuItem.GetAttribute("id")
-                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", , , , oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
 
                                 oMenuItem.InnerXml = cNodeSnapshot(nCloneId)
 
@@ -5117,6 +5124,8 @@ Public Class Cms
                                 Next
                             End If
                         Next
+
+                        ' ADD PAGE VERSIONS
 
                     End If
 
@@ -5236,12 +5245,7 @@ Public Class Cms
             Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
             Dim oPageVerElmts As XmlElement
 
-            Dim DomainURL As String = moRequest.ServerVariables("HTTP_HOST")
-            If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
-                DomainURL = "https://" & DomainURL
-            Else
-                DomainURL = "http://" & DomainURL
-            End If
+            Dim DomainURL As String = mcRequestDomain
 
             For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName)
                 Dim urlPrefix As String = ""
@@ -5322,10 +5326,16 @@ Public Class Cms
                             oMenuItem.SetAttribute("status", verNode.GetAttribute("status"))
                             oMenuItem.SetAttribute("access", verNode.GetAttribute("access"))
                             oMenuItem.SetAttribute("layout", verNode.GetAttribute("layout"))
+
                             oMenuItem.SetAttribute("clone", verNode.GetAttribute("clone"))
+
                             oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"))
                             oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("verDesc"))
                             oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"))
+
+
+
+
                             For Each oPageVerElmts In verNode.SelectNodes("*")
                                 Dim nodeName As String = oPageVerElmts.Name
                                 If Not oMenuItem.SelectSingleNode(nodeName) Is Nothing Then
@@ -5362,6 +5372,7 @@ Public Class Cms
                                 oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"))
                                 oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("desc"))
                                 oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"))
+
                                 For Each oPageVerElmts In verNode.SelectNodes("*")
                                     Dim nodeName As String = oPageVerElmts.Name
                                     If Not oMenuItem.SelectSingleNode(nodeName) Is Nothing Then
@@ -5442,19 +5453,17 @@ Public Class Cms
                         And moConfig("UsePageIdsForURLs") <> "on" _
                         Then sUrl = sUrl & "?pgid=" & oMenuItem.GetAttribute("id")
 
-                    ' Address the context of the page
-                    If gbClone Then
-                        cCloneParent = oMenuItem.GetAttribute("cloneparent")
-                        If IsNumeric(cCloneParent) AndAlso CInt(cCloneParent) > 0 Then
-                            sUrl += IIf(sUrl.Contains("?"), "&", "?")
-                            sUrl += "context=" + cCloneParent
-                        End If
-                    End If
+
+
                     If moConfig("LowerCaseUrl") = "on" Then
                         sUrl = sUrl.ToLower()
                     End If
 
                     oMenuItem.SetAttribute("url", sUrl)
+
+                    If oMenuItem.GetAttribute("id") = "609" Then
+                        mbIgnorePath = mbIgnorePath
+                    End If
 
                     'If this matches the path requested then change the pageId
                     If Not mbIgnorePath Then
@@ -5476,6 +5485,11 @@ Public Class Cms
                                             'case for personalisation and admin TS 14/02/2021
                                             mnPageId = oMenuItem.GetAttribute("id")
                                         End If
+                                        ' If oMenuItem.GetAttribute("verType") = "3" Then
+                                        mnClonePageVersionId = mnPageId
+                                        'this is used in clone mode to determine the page content in GetPageContent.
+                                        '  End If
+                                        oMenuItem.SetAttribute("requestedPage", "1")
                                     End If
 
                                 End If
@@ -5483,6 +5497,16 @@ Public Class Cms
                         End If
                     End If
                     'set the URL for each language pageversion so we can link between
+
+                    ' Address the context of the page
+                    If gbClone Then
+                        cCloneParent = oMenuItem.GetAttribute("cloneparent")
+                        If IsNumeric(cCloneParent) AndAlso CInt(cCloneParent) > 0 Then
+                            sUrl += IIf(sUrl.Contains("?"), "&", "?")
+                            sUrl += "context=" + cCloneParent
+                        End If
+                    End If
+
                     Dim parPvElmt As XmlElement
 
                     For Each pvElmt In oMenuItem.SelectNodes("PageVersion")
@@ -5886,10 +5910,23 @@ Public Class Cms
                     ElseIf mnCloneContextPageId > 0 Then
                         ' Is this a child of a clone page
                         cXPathModifier = " and @cloneparent='" & Me.mnCloneContextPageId.ToString & "'"
+
+                    ElseIf mnClonePageVersionId > 0 Then
+
+                        cXPathModifier = " and @requestedPage='1'"
+                        'Page Version of a cloned page.
+
                     Else
                         ' this is not a cloned page, make sure we don't accidentally look for the cloned pages.
-                        cXPathModifier = " and ((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0))"
+
+                        'this version works on clone language variations but wrong menu
+                        cXPathModifier = " and (((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0)) or (starts-with(@url,'" & mcPageLanguageUrlPrefix & mcPagePath & "') or starts-with(@url,'" & mcRequestDomain & mcPageLanguageUrlPrefix.Replace(mcRequestDomain, "") & mcPagePath & "')))"
+
+                        'cXPathModifier = " and (((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0)) and contains(@url,'" & mcPageLanguageUrlPrefix & mcPagePath & "'))"
                     End If
+
+
+
                 End If
 
                 ' Check for blocked content
@@ -5898,8 +5935,11 @@ Public Class Cms
                 gcBlockContentType = moDbHelper.GetPageBlockedContent(mnPageId)
 
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
+                Dim parentXpath As String = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]"
+
                 'step through the tree from home to our current page
-                For Each oElmt In oPageElmt.SelectNodes("/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]")
+                For Each oElmt In oPageElmt.SelectNodes(parentXpath)
+                    oElmt.SetAttribute("active", "1")
                     Dim nPageId As Long = oElmt.GetAttribute("id")
                     GetPageContentXml(nPageId)
                     nPageId = Nothing

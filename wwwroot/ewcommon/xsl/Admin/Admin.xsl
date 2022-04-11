@@ -3834,7 +3834,9 @@
                   <xsl:for-each select="ContentDetail/RelatedResults/Content">
                     <xsl:sort select="@name" />
 
-                    <xsl:apply-templates select="." mode="LocateContentNode"/>
+					  <xsl:apply-templates select="." mode="LocateContentNode">
+						  <xsl:with-param name="indent">&#160;</xsl:with-param>
+					  </xsl:apply-templates>
 
                   </xsl:for-each>
                 </tr>
@@ -3888,7 +3890,9 @@
     <span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
       <tr>
         <td>
-			<xsl:apply-templates select="." mode="ContentListName"/>
+			<xsl:apply-templates select="." mode="ContentListName">
+				<xsl:with-param name="indent" select="$indent"/>
+			</xsl:apply-templates>
          
         </td>
         <td>
@@ -3928,12 +3932,14 @@
         </td>
       </tr>
     </span>
+	  <!--
     <xsl:apply-templates select="Content" mode="LocateContentNode">
       <xsl:with-param name="indent">
         <xsl:value-of select="$indent"/>
         &#160;&#160;&#160;
       </xsl:with-param>
     </xsl:apply-templates>
+	-->
 
   </xsl:template>
   <!-- -->
@@ -4075,6 +4081,7 @@
   </xsl:template>
 
 	<xsl:template match="Content" mode="ContentListName">
+		<xsl:param name="indent"/>
 		<xsl:value-of select="$indent"/>
 		<xsl:choose>
 			<xsl:when test="@name!=''">
@@ -5199,6 +5206,7 @@
       $('.modal-dialog').addClass('loading')
 			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
+      var target = $(this).attr("href");
       // load the url and show modal on success
       var currentModal = $('.pickImageModal')
       currentModal.load(target, function () {

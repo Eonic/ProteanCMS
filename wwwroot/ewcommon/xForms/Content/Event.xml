@@ -306,7 +306,7 @@
         <switch class="disable">
           <case id="cVenue_1">
             <label>Venue</label>
-            <relatedContent type="Organisation" search="add find" relationType="venue" direction="2way" />
+            <relatedContent type="Organisation" search="add find" relationType="related" direction="2way" />
           </case>
           <case id="cVenue_2">
             <group>

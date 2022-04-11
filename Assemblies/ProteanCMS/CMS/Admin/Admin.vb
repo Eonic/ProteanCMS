@@ -1509,9 +1509,18 @@ ProcessFlow:
 
                     Case "MoveTop", "MoveUp", "MoveDown", "MoveBottom", "SortAlphaAsc", "SortAlphaDesc"
                         bLoadStructure = True
+                        Dim nGroupId As Integer = 0
+                        If myWeb.moRequest("groupid") <> "" Then
+                            nGroupId = Convert.ToInt32(myWeb.moRequest("groupid"))
+                            If myWeb.moRequest("lastPage") IsNot Nothing Then
+                                If myWeb.moRequest("lastPage") = "ProductGroups" Then
+                                    myWeb.moSession("lastPage") = "?ewCmd=ProductGroups&GrpID=" & nGroupId
+                                End If
+                            End If
+                        End If
                         If myWeb.moRequest("id") <> "" And myWeb.moRequest("relId") = "" Then
-                            'we are sorting content on a page
-                            myWeb.moDbHelper.ReorderContent(CLng(myWeb.moRequest("pgid")), CLng(myWeb.moRequest("id")), myWeb.moRequest("ewCmd"), , myWeb.moRequest("position"))
+                            'we are sorting content on a page  
+                            myWeb.moDbHelper.ReorderContent(CLng(myWeb.moRequest("pgid")), CLng(myWeb.moRequest("id")), myWeb.moRequest("ewCmd"), , myWeb.moRequest("position"), nGroupId)
                             If myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""
@@ -1526,7 +1535,7 @@ ProcessFlow:
 
                         ElseIf myWeb.moRequest("relId") <> "" Then
                             'sorting Related Content for an item
-                            myWeb.moDbHelper.ReorderContent(myWeb.moRequest("relId"), myWeb.moRequest("id"), myWeb.moRequest("ewCmd"), True)
+                            myWeb.moDbHelper.ReorderContent(myWeb.moRequest("relId"), myWeb.moRequest("id"), myWeb.moRequest("ewCmd"), True, "", nGroupId)
                             If myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""
@@ -3477,6 +3486,9 @@ AfterProcessFlow:
 
                             oCart.ListOrders(myWeb.moRequest("id"), True, , oPageDetail)
 
+                        Case "RequestSettlement"
+                            oPageDetail.AppendChild(moAdXfm.xFrmRequestSettlement(myWeb.moRequest("id")))
+                            oPageDetail.AppendChild(myWeb.moDbHelper.ActivityReport(dbHelper.ActivityType.Email, 0, 0, 0, CLng(myWeb.moRequest("id"))))
 
                         Case Else
                             Select Case mcEwCmd
@@ -3972,7 +3984,7 @@ listItems:
                     oDS.Tables("ProductCategory").Columns("cCatForeignRef").ColumnMapping = MappingType.Attribute
                 End If
                 cSql = "SELECT c.nContentKey AS id, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, tblCartCatProductRelations.nCatProductRelKey AS relid, tblCartCatProductRelations.nCatId AS catid FROM tblContent c INNER JOIN tblCartCatProductRelations ON c.nContentKey = tblCartCatProductRelations.nContentId " &
-                                    "WHERE (tblCartCatProductRelations.nCatId Is not Null)"
+                                    "WHERE (tblCartCatProductRelations.nCatId Is not Null) order by nDisplayOrder"
                 myWeb.moDbHelper.addTableToDataSet(oDS, cSql, "Content")
 
                 If oDS.Tables.Count = 2 Then
@@ -4001,8 +4013,20 @@ listItems:
 
                     End If
                 Next
+                Dim contentElmt As XmlElement
+
+
                 Dim oElmt As XmlElement = oPageDetail.OwnerDocument.CreateElement("ProductCats")
                 oElmt.InnerXml = Replace(Replace(oDS.GetXml, "&lt;", "<"), "&gt;", ">")
+
+                For Each contentElmt In oElmt.FirstChild.SelectNodes("ProductCategory/Content")
+                    Dim contentElmtL2 = contentElmt.FirstChild
+                    Dim ChildElmts As XmlElement
+                    For Each ChildElmts In contentElmtL2.SelectNodes("*")
+                        contentElmt.AppendChild(ChildElmts.Clone())
+                    Next
+                    contentElmt.RemoveChild(contentElmtL2)
+                Next
                 oPageDetail.AppendChild(oElmt.FirstChild)
 
 

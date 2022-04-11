@@ -2,26 +2,25 @@
 
 Imports System.Data.SqlClient
 Imports System.Xml
+Imports Protean.Cms
+Imports Protean.xForm
 
 Namespace Providers
     Namespace Filter
 
-        'Extending the class path
-        ' Public Class BaseProvider
         Public Class PageFilter
+
 
             Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim pageFilterSelect As XmlElement
                     Dim oDr As SqlDataReader
-                    'Create Stored procedure 
-                    'oDr
+
+                    Dim sSql As String = "spGetPagesByParentPageId"
+                    oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     'Adding controls to the form like dropdown, radiobuttons
-                    pageFilterSelect = oXform.addSelect1(oFromGroup, "PageFilter", False, "Select By Page")
-                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr)
-
-
-
+                    pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
+                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
 
                 Catch ex As Exception
 
@@ -32,23 +31,26 @@ Namespace Providers
             Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
 
+
                     Dim cWhereSql As String = String.Empty
-                    'If (oFilterNode.SelectNodes("Filter/PageId") Is Nothing) Then
-                    '    nPageId = oFilterNode.SelectNodes("Filter/PageId").ToString()
-                    'End If
+                    Dim cPageIds As String = String.Empty
+                    Dim cnt As Integer
 
+                    If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
+                        cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
+                        If (aWeb.moSession("PageIds") Is Nothing) Then
+                            aWeb.moSession("PageIds") = cPageIds
+                        Else
+                            aWeb.moSession("PageIds") = cPageIds
+                            cPageIds = aWeb.moSession("PageIds")
+                        End If
 
+                    End If
 
-                    Dim oMenuItem As XmlElement
-                    If (nPageId <> 0) Then
+                    If (cPageIds <> String.Empty) Then
 
-                        'Dim oMenuElmt As XmlElement = aWeb.GetStructureXML(aWeb.mnUserId, nPageId, 0, "Site", False, False, False, True, False, "MenuItem", "Menu")
-                        Dim oSubMenuList As XmlNodeList = aWeb.moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & nPageId & "']").SelectNodes("MenuItem")
-                        For Each oMenuItem In oSubMenuList
-                            cWhereSql = cWhereSql + oMenuItem.Attributes("id").InnerText.ToString() + ","
-                        Next
                         If (cWhereSql = String.Empty) Then
-                            cWhereSql = cWhereSql + nPageId.ToString() + ","
+                            cWhereSql = cWhereSql + cPageIds.ToString() + ","
                         End If
                         'call sp and return xml data
                         If (cWhereSql <> String.Empty) Then
@@ -57,12 +59,57 @@ Namespace Providers
                             aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
                         End If
 
+                        Dim aPageId() As String = cPageIds.Split(",")
+                        For cnt = 0 To aPageId.Length - 1 Step 1
+                            If (aPageId(cnt) <> String.Empty) Then
+
+                                ' oXform.addRepeat(oFromGroup, aPageId(cnt), "search-filter", aPageId(cnt))
+                                oXform.addSubmit(oFromGroup, "removePage", aPageId(cnt), "submit", "", aPageId(cnt))
+
+                            End If
+                        Next
+
                     End If
 
                 Catch ex As Exception
 
                 End Try
             End Sub
+
+            Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
+                Try
+                    Dim cnt As Integer
+                    Dim cntPages As Integer = 0
+                    Dim cPageIds As String = String.Empty
+                    If (aWeb.moSession("PageIds") IsNot Nothing) Then
+                        cPageIds = aWeb.moSession("PageIds")
+                        cPageIds = cPageIds.Replace(cPageId, "")
+
+                        Dim aPageId() As String = cPageIds.Split(",")
+                        For cnt = 0 To aPageId.Length - 1 Step 1
+                            If (aPageId(cnt) <> String.Empty) Then
+                                If aPageId(cnt) <> "" Then
+                                    cPageIds = cPageIds + aPageId(cnt) + ","
+                                End If
+                            End If
+                        Next
+                        aWeb.moSession("PageIds") = Left(cPageIds, cPageIds.Length - 1)
+                    End If
+
+                Catch ex As Exception
+
+                End Try
+            End Sub
+            'Public Function RemovePageFromFilter(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            '    Try
+            '        If (myA.moSession("PageIds") IsNot Nothing) Then
+
+            '            aWeb.moSession.Remove("PageIds")
+            '        End If
+            '    Catch ex As Exception
+
+            '    End Try
+            'End Function
 
         End Class
         ' End Class

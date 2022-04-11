@@ -1320,7 +1320,7 @@
     </xsl:if>
 
     <!--LinkedIn-->
-    
+    <!--
     <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
       <script type="text/javascript">
         <xsl:text>_linkedin_partner_id = "</xsl:text>
@@ -1334,6 +1334,7 @@
         <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
       </noscript>       
     </xsl:if>
+	-->
     <!-- End Linked In Insight Tag Code -->
     
     <!--END-->
@@ -2194,7 +2195,6 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:if>
-               
         ga('send', 'pageview');
 
         <!--Submission of Mailforms-->
@@ -2255,6 +2255,13 @@
     <xsl:value-of select="Cart/Order/@shippingCost"/>
     <xsl:text>'</xsl:text>
     <xsl:text>});</xsl:text>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+      ga('set', 'campaignSource', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>');
+    </xsl:if>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+      ga('set', 'campaignMedium', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>');
+
+    </xsl:if>
   </xsl:template>
 
   <!-- Log Order Items-->
@@ -3677,6 +3684,9 @@
     <xsl:choose>
       <xsl:when test="@url!=''">
         <xsl:choose>
+			<xsl:when test="DisplayName/@linkType='replicate'">
+				<xsl:value-of select="@url"/>
+			</xsl:when>
           <xsl:when test="format-number(@url,'0')!='NaN'">
             <xsl:value-of select="$siteURL"/>
             <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
@@ -5826,6 +5836,14 @@
       <xsl:text> </xsl:text>
     </iframe>
   </xsl:template>
+
+	<xsl:template match="iframe[contains(@src,'youtube.com')]" mode="cleanXhtml">
+		<div class="responsive-video">
+			 <iframe title="YouTube video player" width="{@width}" height="{@height}" src="{@src}" frameborder="0" allowfullscreen="{@allowfullscreen}" style="{@style}">
+                <xsl:text> </xsl:text>
+            </iframe>
+		</div>
+	</xsl:template>
 
 
   <xsl:template match="a" mode="cleanXhtml">
@@ -8587,9 +8605,11 @@
     <xsl:if test="$parentClass!=''">
       <Parent class="{$parentClass}"/>
     </xsl:if>
+
     <xsl:choose>
       <!-- When Page Order -->
       <xsl:when test="$sort='Position' or $sort='' or $order=''">
+
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
             <xsl:copy-of select="."/>
@@ -8597,7 +8617,7 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-		 <xsl:value-of select="$contentType"/>
+        <xsl:value-of select="$contentType"/>
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
           <xsl:sort select="@update" order="{$order}" data-type="text"/>
@@ -8773,7 +8793,7 @@
       </xsl:choose>
     </xsl:param>
     <xsl:param name="stepCount" select="@stepCount" />
-    <xsl:param name="parentPage" select="//MenuItem[@id=$link]"/>
+    <xsl:param name="parentPage" select="//MenuItem[@id=$link and ancestor::MenuItem[@id=$pageId]]"/>
     <xsl:param name="endPos">
       <xsl:choose>
         <xsl:when test="@stepCount = '0'">

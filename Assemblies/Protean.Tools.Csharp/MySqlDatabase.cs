@@ -473,6 +473,32 @@ namespace Protean.Tools
             return iResult;
         }
 
+        public MySqlDataReader ExecuteReader(string sql, Hashtable parameters = null)
+        {
+            string cProcessInfo = "Running Sql:  " + sql;
+            MySqlDataReader iResult;
+            if (oConn == null)
+                ResetConnection();
+            try
+            {
+                MySqlCommand myCommand = new MySqlCommand(sql, oConn);
+                oConn.Open();
+                iResult = myCommand.ExecuteReader();
+                oConn.Close();
+            }
+            catch (Exception ex)
+            {
+                iResult = null;
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ExecuteScalar", ex, cProcessInfo));
+            }
+
+            finally
+            {
+                CloseConnection();
+            }
+            return iResult;
+        }
+
         public int ExecuteNonQuery(string sql, string parameters, int commandType)
         {
             string cProcessInfo = "Running Sql:  " + sql;

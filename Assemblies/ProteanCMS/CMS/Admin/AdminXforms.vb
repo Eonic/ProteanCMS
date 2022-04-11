@@ -44,10 +44,10 @@ Partial Public Class Cms
             Public moRequest As System.Web.HttpRequest
 
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
-            Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Shadows Event OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs)
 
-            Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
-                returnException(myWeb.msException, mcModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
+            Private Sub _OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
+                returnException(myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug)
             End Sub
 
             'Public myWeb As Protean.Cms
@@ -1500,21 +1500,21 @@ Partial Public Class Cms
                     End If
 
 
-                    ' Account for the clone node 
-                    If gbClone Then
+                    ' Account for the clone node ' TS removed because added in to page xform on a per site basis if required see wanner.
+                    'If gbClone Then
 
-                        ' Check for the instance of Clone
-                        If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
-                        End If
+                    '    ' Check for the instance of Clone
+                    '    If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
+                    '    End If
 
-                        ' Check for the binding of clone
-                        If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
-                            MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
-                            MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
-                        End If
-                    End If
+                    '    ' Check for the binding of clone
+                    '    If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
+                    '        MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
+                    '        MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
+                    '    End If
+                    'End If
 
                     cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                     If MyBase.isSubmitted Then
@@ -1670,6 +1670,7 @@ Partial Public Class Cms
                     MyBase.addOption(oSelElmt, "Same content with multiple locations", 2)
                     MyBase.addOption(oSelElmt, "Same content with multiple primary locations", 3)
                     MyBase.addOption(oSelElmt, "Create copies of the content", 1)
+                    MyBase.addOption(oSelElmt, "Force copies of the content", 4)
                     MyBase.addBind("nCopyContent", "tblContentStructure/@nCopyContent", "true()")
 
                     MyBase.addInput(oFrmElmt, "cStructName", True, "Page Name")
@@ -2512,23 +2513,23 @@ Partial Public Class Cms
                                         'End If
 
                                         oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
-                                            If oItem.GetAttribute("formPath") <> "" Then
-                                                oOptElmt.SetAttribute("formPath", oItem.GetAttribute("formPath"))
-                                            End If
-                                            oDescElmt = moPageXML.CreateElement("img")
-                                            oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
-                                            If oItem.GetAttribute("icon") <> "" Then
-                                                oDescElmt.SetAttribute("icon", oItem.GetAttribute("icon"))
-                                            End If
-                                            oOptElmt.AppendChild(oDescElmt)
-                                            'lets insert a description html tag
-                                            If oItem.InnerXml <> "" Then
-                                                oDescElmt = moPageXML.CreateElement("div")
-                                                oDescElmt.SetAttribute("class", "description")
-                                                oDescElmt.InnerXml = oItem.InnerXml
-                                                oOptElmt.AppendChild(oDescElmt)
-                                            End If
+                                        If oItem.GetAttribute("formPath") <> "" Then
+                                            oOptElmt.SetAttribute("formPath", oItem.GetAttribute("formPath"))
                                         End If
+                                        oDescElmt = moPageXML.CreateElement("img")
+                                        oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
+                                        If oItem.GetAttribute("icon") <> "" Then
+                                            oDescElmt.SetAttribute("icon", oItem.GetAttribute("icon"))
+                                        End If
+                                        oOptElmt.AppendChild(oDescElmt)
+                                        'lets insert a description html tag
+                                        If oItem.InnerXml <> "" Then
+                                            oDescElmt = moPageXML.CreateElement("div")
+                                            oDescElmt.SetAttribute("class", "description")
+                                            oDescElmt.InnerXml = oItem.InnerXml
+                                            oOptElmt.AppendChild(oDescElmt)
+                                        End If
+                                    End If
                                 Next
                             End If
 
@@ -3345,7 +3346,7 @@ Partial Public Class Cms
                         bulkContentSchemaName = Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
                     bulkContentSchemaName = bulkContentSchemaName.Trim(" ").Trim(",").Trim(" ")
-                    MyBase.addSubmit(oFrmElmt, "", "Delete " & sContentSchemaName, , "principle btn-danger", "fa-trash-o")
+                    MyBase.addSubmit(oFrmElmt, "", "Delete", , "principle btn-danger", "fa-trash-o")
 
                     MyBase.Instance.InnerXml = "<delete/>"
 
@@ -5799,9 +5800,11 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 7 ' Refunded
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, "Refunded", 7)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 8 ' Failed
                             MyBase.addOption(oSelElmt, "Abandoned", 11)
                             MyBase.addOption(oSelElmt, "Delete", 12)
@@ -5813,6 +5816,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Deposit Paid", 10)
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 13 'Awaiting Payment
                             MyBase.addOption(oSelElmt, "Awaiting Payment", 13)
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
@@ -5824,6 +5828,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
+                            MyBase.addOption(oSelElmt, "Delete", 12)
 
                     End Select
                     MyBase.addBind("nStatus", "tblCartOrder/nCartStatus", "true()")
@@ -6027,6 +6032,11 @@ Partial Public Class Cms
                     Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
                     Dim amount As String = ""
+
+
+
+
+
                     If (nOrderId > 0) Then
                         Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
                         If (cartXmlSql <> "") Then
@@ -6036,7 +6046,7 @@ Partial Public Class Cms
                         If (xdoc.InnerXml <> "") Then
 
                             ' Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
-                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance")
+                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/*[1]")
                             If (xnInstance IsNot Nothing) Then
                                 amount = xnInstance.Attributes("AmountPaid").InnerText
                             End If
@@ -6086,6 +6096,9 @@ Partial Public Class Cms
                                 oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                                 For Each oRow In oDs.Tables("Order").Rows
                                     If (IsRefund IsNot Nothing) Then
+
+                                        moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
+
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
                                     Else
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And Error is: " & IsRefund & "'"
@@ -7324,8 +7337,15 @@ Partial Public Class Cms
                         ElseIf MyBase.getSubmitted = "Confirm" Then
                             Dim bEmailClient As Boolean = False
                             If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
-                            oSub.RenewSubscription(nSubscriptionId, bEmailClient)
-                            MyBase.valid = True
+                            Dim RenewResponse As String
+                            RenewResponse = oSub.RenewSubscription(nSubscriptionId, bEmailClient)
+                            If RenewResponse = "Success" Then
+                                MyBase.valid = True
+                            Else
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Payment Failed")
+                                MyBase.valid = False
+                            End If
+
                             Return MyBase.moXformElmt
                         End If
                     End If
@@ -7851,13 +7871,17 @@ Partial Public Class Cms
                     Dim oSel1 As XmlElement = MyBase.addSelect1(oGrp0Elmt, "cCurrencySymbol", True, "Currency")
                     MyBase.addOption(oSel1, "All", "")
                     MyBase.addOption(oSel1, "GBP", "GBP")
-                    MyBase.addInput(oGrp0Elmt, "nOrderStatus", True, "nOrderStatus", "hidden")
 
-                    If myWeb.moConfig("Quote") <> "on" Then
+                    If LCase(myWeb.moConfig("Quote")) = "on" Then
                         oSel1 = MyBase.addSelect1(oGrp0Elmt, "cOrderType", True, "Cart Type")
-                        MyBase.addOption(oSel1, "Order", "Order")
-                        MyBase.addOption(oSel1, "Quote", "Quote")
+                        MyBase.addOption(oSel1, "Orders", "Order")
+                        MyBase.addOption(oSel1, "Quotes", "Quote")
                     End If
+
+                    oSel1 = MyBase.addSelect1(oGrp0Elmt, "nOrderStatus", True, "Cart Type")
+                    MyBase.addOption(oSel1, "Orders,In Progress,Shipped", "6,9,17")
+                    MyBase.addOption(oSel1, "Refunds", "7")
+                    MyBase.addOption(oSel1, "Payment Failed", "5")
 
                     ' Lets get the content types if we have more than 1
 
@@ -7904,7 +7928,9 @@ Partial Public Class Cms
                     MyBase.addBind("nProductId", "Criteria/nProductId", , "number")
                     MyBase.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", , "string")
                     MyBase.addBind("nOrderStatus", "Criteria/nOrderStatus", , "string")
-                    MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
+                    If LCase(myWeb.moConfig("Quote")) = "on" Then
+                        MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
+                    End If
 
 
                     If MyBase.isSubmitted Then
@@ -9191,6 +9217,95 @@ Partial Public Class Cms
                             oMsg.emailer(MyBase.Instance.SelectSingleNode("RegradeUser"), MyBase.Instance.SelectSingleNode("RegradeUser/emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/fromEmail").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/User/Email").InnerText, MyBase.Instance.SelectSingleNode("RegradeUser/emailer/SubjectLine").InnerText)
 
                             myWeb.moSession(InstanceSessionName) = Nothing
+
+                        End If
+                    ElseIf MyBase.isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        MyBase.updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    Else
+                        goSession(InstanceSessionName) = MyBase.Instance
+                    End If
+
+                    'we populate the values onto the form.
+                    MyBase.addValues()
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
+            Public Function xFrmRequestSettlement(ByVal nOrderId As Integer, Optional bForceSend As Boolean = False) As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim InstanceSessionName = "tempInstance_requestSettlement" & nOrderId.ToString()
+                Try
+
+
+                    myWeb.moSession(InstanceSessionName) = Nothing
+                    MyBase.NewFrm("Request Settlement")
+                    MyBase.bProcessRepeats = False
+
+                    'We load the xform from a file, it may be in local or in common folders.
+                    MyBase.load("/xforms/cart/requestSettlement.xml", myWeb.maCommonFolders)
+
+                    'We get the instance
+                    If nOrderId > 0 Then
+
+                        MyBase.bProcessRepeats = True
+                        If myWeb.moSession(InstanceSessionName) Is Nothing Then
+                            Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+                            Dim oCart As Cart
+                            oCart = New Cart(myWeb)
+                            'Get Cart Xml
+                            Dim oCartListElmt As XmlElement = moPageXML.CreateElement("Order")
+                            oCart.GetCart(oCartListElmt, nOrderId)
+                            existingInstance.InnerXml = oCartListElmt.OuterXml
+
+                            MyBase.Instance.SelectNodes("emailer")
+
+                            Dim emailerNode As XmlNode = MyBase.Instance.SelectSingleNode("emailer")
+
+                            Dim msgNode As XmlElement = emailerNode.SelectSingleNode("oBodyXML/Items/Message")
+
+                            Dim msgHtml As String = msgNode.InnerXml
+
+                            msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText)
+                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementID"))
+                            msgHtml = msgHtml.Replace("{PaymentDue}", oCartListElmt.GetAttribute("payableAmount"))
+                            msgHtml = msgHtml.Replace("{PaymentDueDate}", CDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText).ToString("dd MMM yyyy"))
+                            msgHtml = msgHtml.Replace("{CourseName}", oCartListElmt.SelectSingleNode("Item[1]/Name").InnerText)
+
+                            msgNode.InnerXml = msgHtml
+
+                            existingInstance.InsertBefore(emailerNode.CloneNode(True), existingInstance.FirstChild)
+
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession(InstanceSessionName) = MyBase.Instance
+
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                        End If
+                    End If
+
+                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+
+                    If MyBase.isSubmitted Or bForceSend Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            Dim Name As String = MyBase.Instance.SelectSingleNode("Order/Contact[@type='Billing Address']/GivenName").InnerText
+                            Dim EmailTo As String = MyBase.Instance.SelectSingleNode("Order/Contact[@type='Billing Address']/Email").InnerText
+                            'Send Email
+                            Dim oMsg As New Protean.Messaging()
+                            oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
+                            myWeb.moSession(InstanceSessionName) = Nothing
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Email, mnUserId, 0, 0, nOrderId, "Payment Reminder Sent - " & Now().ToString())
 
                         End If
                     ElseIf MyBase.isTriggered Then
