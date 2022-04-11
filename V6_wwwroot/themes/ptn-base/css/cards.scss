@@ -1,0 +1,18 @@
+﻿.Site {
+    .card {
+        margin-bottom: $grid-gutter-y;
+    }
+
+    .card.bg-primary,
+    .card.bg-dark {
+        @extend .text-white;
+
+        a {
+            @extend .link-light;
+        }
+
+        .btn-primary {
+            @extend .btn-dark;
+        }
+    }
+}

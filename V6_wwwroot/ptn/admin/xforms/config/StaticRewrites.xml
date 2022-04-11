@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Content type="xform" name="WebSettings">
+   <model>
+     <instance>
+       <rewriteMap name="StaticRewrite" defaultValue="">
+         <add key="" value=""/>
+       </rewriteMap>
+    </instance>
+    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+     <bind nodeset="rewriteMap">
+       <bind id="urlRepeat" nodeset="add">
+         <bind id="OldUrl" nodeset="@key" required="true()" type="string" />
+         <bind id="NewUrl" nodeset="@value" required="true()" type="string" />
+       </bind>
+     </bind>
+   </model>
+   <group ref="WebSettings">
+    <label>Static URL Rewrites</label>
+     <group class="StaticRewritesRedirectBody">
+       <input class="RedirectPage"/>
+     </group>
+     <!--<group>
+       <repeat bind="urlRepeat" class="row">
+         <input bind="OldUrl" class="col-md-5">
+           <label>Old URL</label>
+         </input>
+         <input bind="NewUrl" class="col-md-5">
+           <label>New URL</label>
+         </input>
+         <trigger class="col-md-2">
+           <label>Del</label>
+           <delete bind="urlRepeat" at="index('urlRepeat')"/>
+         </trigger>
+       </repeat>
+     </group>-->
+     
+       <!--<trigger>
+         <label>Add New URL</label>
+         <insert position="after" bind="urlRepeat" at="index('urlRepeat')" class="add"/>
+       </trigger>
+     </group>
+
+     
+     <submit submission="" ref="submit" class="principle">
+      <label>Save Settings</label>
+    </submit>-->
+   </group>
+</Content>

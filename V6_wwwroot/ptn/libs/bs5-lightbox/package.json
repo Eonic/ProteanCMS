@@ -1,0 +1,64 @@
+{
+  "name": "bs5-lightbox",
+  "version": "1.7.7",
+  "author": {
+    "name": "Travis Aaron Wagner",
+    "email": "travis@travisaw.com"
+  },
+  "bugs": {
+    "url": "https://github.com/trvswgnr/bs5-lightbox/issues"
+  },
+  "description": "A pure JS lightbox gallery plugin for Bootstrap 5 based on the modal and carousel plugins",
+  "homepage": "https://github.com/trvswgnr/bs5-lightbox",
+  "keywords": [
+    "lightbox",
+    "gallery",
+    "bootstrap",
+    "bootstrap 5",
+    "modal",
+    "carousel"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "jsdelivr": "dist/index.bundle.min.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trvswgnr/bs5-lightbox.git"
+  },
+  "peerDependencies": {
+    "bootstrap": "^5.1.1"
+  },
+  "scripts": {
+    "build": "tsc && webpack --mode=production",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "eslint src --ext .js,.ts"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "funding": "https://github.com/sponsors/trvswgnr",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "eslint": "^7.32.0",
+    "prettier": "^2.4.1",
+    "terser-webpack-plugin": "^5.2.4",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.4.3",
+    "webpack": "^5.56.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "browserslist": [
+    ">= 0.5%",
+    "last 2 major versions",
+    "not dead",
+    "Chrome >= 60",
+    "Firefox >= 60",
+    "Firefox ESR",
+    "iOS >= 12",
+    "Safari >= 12",
+    "not Explorer <= 11"
+  ],
+  "files": [
+    "dist/**/*"
+  ]
+}

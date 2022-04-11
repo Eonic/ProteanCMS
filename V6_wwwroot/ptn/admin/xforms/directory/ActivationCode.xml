@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="ActivationCode" subType="ActivationCodeXform">
+	<model>
+		<instance>
+			<RegistrationCode/>
+			<RedirectPage/>
+			<Codeset/>
+			<SuccessMessage>
+				<h2>Actvation Code Successful</h2>
+				<p>The activation code was applied successfully.</p>
+			</SuccessMessage>
+		</instance>
+		<submission id="activate" action="" method="post" event="return form_check(this)"/>
+		<bind id="RegistrationCode" nodeset="RegistrationCode" required="true()" type="string"/>
+	</model>
+	<group ref="EditContent" class="1Col">
+		<label>Enter your Activation Code</label>
+		<input bind="RegistrationCode" class="required">
+			<label>Code</label>
+		</input>
+		<input class="ie-one-element-bodge"/>
+		<submit submission="activate" ref="ewSubmit" class="principle">
+			<label>Activate</label>
+		</submit>
+	</group>
+</Content>
