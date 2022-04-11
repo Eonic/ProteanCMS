@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="UserMyAccount">
+	<model>
+		<instance>
+			<tblDirectory>
+				<nDirKey/>
+				<cDirName/>
+				<cDirPassword/>
+				<cDirForiegnRef/>
+				<cDirSchema>User</cDirSchema>
+				<cDirXml>
+          <User>
+            <FirstName label="First name"/>
+            <MiddleName label="Middle name"/>
+            <LastName label="Surname"/>
+            <Company/>
+            <Position/>
+            <Country/>
+            <Email/>
+            <Notes/>
+          </User>
+				</cDirXml>
+				<cDirEmail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>-1</nStatus>
+				<cDescription/>
+			</tblDirectory>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cDirName" nodeset="tblDirectory/cDirName" required="true()" type="string"/>
+    <bind id="cDirName" nodeset="tblDirectory/cDirEmail" required="true()" type="string"/>
+    <bind id="cDirPassword" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
+    <bind id="cDirPassword2" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
+    <bind nodeset="tblDirectory/cDirXml/User">
+      <bind id="cFirstName" nodeset="FirstName" required="true()" type="string"/>
+      <bind id="cMiddleName" nodeset="MiddleName" required="false()" type="string"/>
+      <bind id="cLastName" nodeset="LastName" required="true()" type="string"/>
+      <bind id="cCompany" nodeset="Company" required="false()" type="string"/>
+      <bind id="cPosition" nodeset="Position" required="false()" type="string"/>
+      <bind id="cJobSector" nodeset="JobSector" required="false()" type="string"/>
+      <bind id="cIndustry" nodeset="Industry" required="false()" type="string"/>
+      <bind id="cUserCountry" nodeset="Country" required="false()" type="string"/>
+      <bind id="cEmail" nodeset="Email" required="true()" type="email"/>
+      <bind id="cNotes" nodeset="Notes" required="false()" type="string"/>
+      <bind id="cTechniques" nodeset="Techniques" required="true()" type="string"/>
+    </bind>
+    <bind nodeset="groups">
+      <bind id="grpNews" nodeset="group[@name='Newsletter' and @type='Group']/@isMember" required="false()" type="string"/>
+    </bind>
+	</model>
+	<group ref="EditContent" class="1Col">
+		<group>
+      <!--<label>Register on this site</label>-->
+      <input bind="nDirKey" class="hidden">
+        <label>DirId</label>
+      </input>
+      <input bind="cDirName" class="required">
+        <label>Email Address</label>
+      </input>
+      <input bind="cFirstName" class="required">
+        <label>First Name</label>
+      </input>
+      <input bind="cLastName" class="required">
+        <label>Last Name</label>
+      </input>
+      <select bind="grpNews" appearance="full">
+        <label>Newsletter</label>
+        <item>
+          <label>Subscribe to regular email updates</label>
+          <value>true</value>
+        </item>
+      </select>
+    </group>
+    <submit submission="" ref="ewSubmit" class="principle">
+			<label>Update Account Details</label>
+		</submit>
+	</group>
+</Content>

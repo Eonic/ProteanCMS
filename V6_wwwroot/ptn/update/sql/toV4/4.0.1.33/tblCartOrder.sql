@@ -1,0 +1,1 @@
+ALTER TABLE [tblCartOrder] ADD cCurrency nvarchar(50) NULL;

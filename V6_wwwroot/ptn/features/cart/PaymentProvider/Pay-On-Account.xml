@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<provider name="PayOnAccount" validGroups="all" validCurrencies="GBP">
+				<description value="Place order, you will be contacted to arrange payment and delivery." />
+				<AccountXform value="/ewcommon/xforms/cart/payonaccount.xml"/>
+			</provider>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="provider">
+			<bind id="description" nodeset="description/@value" required="true()" type="string"/>
+			<bind id="accountXform" nodeset="AccountXform/@value" required="false()" type="string"/>
+			<bind id="validGroups" nodeset="@validGroups" required="false()" type="string"/>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>Pay On Account Settings</label>
+		<input bind="validGroups" class="long">
+			<label>Valid Groups</label>
+			<hint>Comma Separated List of Group Names (for all groups use 'all')</hint>
+		</input>
+		<input bind="description" class="long">
+			<label>Description</label>
+		</input>
+		<input bind="accountXform" class="long">
+			<label>Bespoke Xform</label>
+		</input>
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Settings</label>
+		</submit>
+	</group>
+</Content>

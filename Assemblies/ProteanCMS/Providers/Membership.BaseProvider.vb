@@ -178,11 +178,13 @@ Namespace Providers
 BuildForm:
                         MyBase.submission("UserLogon", "", "post", "form_check(this)")
 
-                        oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "UserDetails", "", "Please fill in your login details below.")
+                        oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "UserDetails", "", "Login to ProteanCMS")
 
-                        MyBase.addInput(oFrmElmt, "cUserName", True, "Username")
+                        Dim userIpt As XmlElement = MyBase.addInput(oFrmElmt, "cUserName", True, "Username")
+                        MyBase.addClientSideValidation(userIpt, True, "Please enter Username")
                         MyBase.addBind("cUserName", "user/username", "true()")
-                        MyBase.addSecret(oFrmElmt, "cPassword", True, "Password")
+                        Dim pwdIpt As XmlElement = MyBase.addSecret(oFrmElmt, "cPassword", True, "Password")
+                        MyBase.addClientSideValidation(pwdIpt, True, "Please enter Password")
                         MyBase.addBind("cPassword", "user/password", "true()")
 
                         MyBase.addSubmit(oFrmElmt, "ewSubmit", "Login")
@@ -771,12 +773,15 @@ Check:
 
                         ' ok lets load in an xform from the file location.
                         If FormXML = "" Then
-                            If Not MyBase.load("/xforms/directory/" & cXformName & ".xml", myWeb.maCommonFolders) Then
-                                ' load a default content xform if no alternative.
-
+                            Dim formPath As String = "/xforms/directory/" & cXformName & ".xml"
+                            If myWeb.moConfig("cssFramework") = "bs5" Then
+                                formPath = "/admin" & formPath
                             End If
-                        Else
-                            MyBase.NewFrm(cXformName)
+                            If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
+                                ' load a default content xform if no alternative.
+                            End If
+                            Else
+                                MyBase.NewFrm(cXformName)
                             MyBase.loadtext(FormXML)
 
                         End If

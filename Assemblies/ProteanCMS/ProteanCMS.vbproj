@@ -2,6 +2,8 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <Import Project="..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props" Condition="Exists('..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props')" />
   <Import Project="..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props" Condition="Exists('..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props')" />
+  <Import Project="..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props" Condition="Exists('..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props')" />
+  <Import Project="..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props" Condition="Exists('..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props')" />
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -178,6 +180,7 @@
     </Reference>
     <Reference Include="EcmaScript.NET, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ephtmltopdf">
       <HintPath>..\ReferencedAssemblies\HtmlToPdf\Bin\ephtmltopdf.dll</HintPath>
@@ -192,8 +195,8 @@
     <Reference Include="Google.Protobuf, Version=3.6.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.Protobuf.3.6.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.3.3.11, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpZipLib.1.3.3\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Imazen.WebP, Version=10.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -216,15 +219,6 @@
     </Reference>
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="Magick.NET-Q8-AnyCPU, Version=10.1.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Magick.NET-Q8-AnyCPU.10.1.0\lib\netstandard20\Magick.NET-Q8-AnyCPU.dll</HintPath>
-    </Reference>
-    <Reference Include="Magick.NET-Q8-x64, Version=8.4.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Magick.NET-Q8-x64.8.4.0\lib\net20\Magick.NET-Q8-x64.dll</HintPath>
-    </Reference>
-    <Reference Include="Magick.NET.Core, Version=10.1.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Magick.NET.Core.10.1.0\lib\net20\Magick.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=5.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -267,7 +261,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="QRCoder, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="QRCoder, Version=1.4.2.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NonNuget\QRCoder.dll</HintPath>
     </Reference>
@@ -283,9 +277,6 @@
       <HintPath>..\..\ReferencedAssemblies\dynamic-image-master\src\SoundInTheory.DynamicImage.Extensions.Pdf\bin\Release\SoundInTheory.DynamicImage.Extensions.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Buffers.4.0.0\lib\netstandard1.1\System.Buffers.dll</HintPath>
-    </Reference>
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -331,9 +322,11 @@
     <Reference Include="System.Linq, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Linq.4.3.0\lib\net463\System.Linq.dll</HintPath>
       <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Linq.Expressions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Linq.Expressions.4.3.0\lib\net463\System.Linq.Expressions.dll</HintPath>
+      <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Management" />
@@ -344,10 +337,12 @@
     <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
       <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Runtime.4.3.1\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Caching" />
@@ -373,6 +368,7 @@
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
@@ -396,6 +392,7 @@
     <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.RegularExpressions.4.3.1\lib\net463\System.Text.RegularExpressions.dll</HintPath>
       <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web">
@@ -416,6 +413,7 @@
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="TidyHTML5Managed, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\TidyHtml5ManagedRepack.1.1.4\lib\net46\TidyHTML5Managed.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\..\ReferencedAssemblies\dynamic-image-master\src\packages\WebActivatorEx.2.0.2\lib\net40\WebActivatorEx.dll</HintPath>
@@ -911,7 +909,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_DetectChanges="False" BuildVersion_IncrementBeforeBuild="False" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateFileVersion="False" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -922,10 +920,10 @@
     <Error Condition="!Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets'))" />
     <Error Condition="!Exists('..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props'))" />
     <Error Condition="!Exists('..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props'))" />
-    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-AnyCPU.10.1.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-AnyCPU.10.1.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-x64.8.4.0\build\net20\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-x64.8.4.0\build\net20\Magick.NET-Q8-x64.targets'))" />
+    <Error Condition="!Exists('..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props'))" />
+    <Error Condition="!Exists('..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props'))" />
+    <Error Condition="!Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets'))" />
   </Target>
   <Import Project="..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets" Condition="Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" />
-  <Import Project="..\..\packages\Magick.NET-Q8-AnyCPU.10.1.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-AnyCPU.10.1.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" />
-  <Import Project="..\..\packages\Magick.NET-Q8-x64.8.4.0\build\net20\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-x64.8.4.0\build\net20\Magick.NET-Q8-x64.targets')" />
+  <Import Project="..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets" Condition="Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" />
 </Project>

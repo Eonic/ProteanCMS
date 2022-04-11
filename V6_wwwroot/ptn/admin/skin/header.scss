@@ -1,0 +1,359 @@
+﻿//this shouldn't be needed here
+.fab {
+    font-family: "Font Awesome 5 Brands";
+    font-weight: 400;
+}
+
+.far {
+    font-weight: 400;
+}
+//end
+
+body.ptn-edit {
+    background-color: $admin-bg;
+}
+
+body.normalMode, #adminLayout {
+    @include media-breakpoint-up(md) {
+        padding-top: 45px !important;
+    }
+}
+.normalMode .ptn-edit #adminHeader {
+    z-index: 9990;
+}
+
+.ptn-edit #adminHeader {
+    background: $admin-header-bg;
+    z-index: 1000;
+    font-size: 15px;
+    font-family: $admin-header-font;
+    font-weight: 300;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    a {
+        text-decoration: none;
+        color: #fff;
+    }
+
+    i {
+        padding-right: 7px;
+    }
+
+    .navbar {
+        padding: 0;
+        background-color: $admin-header-bg;
+        border-color: $admin-header-bg;
+        padding-right: 35px;
+        margin-bottom:0;
+        .container-fluid {
+            padding: 0;
+        }
+    }
+
+    .navbar-brand {
+        padding: 0;
+        margin: 0;
+
+        &.highlight-logo-dd,
+        &:hover {
+            background-color: $admin-header-bg;
+        }
+
+        &.show .admin-logo-dropdown,
+        &.show-click .admin-logo-dropdown {
+            display: block;
+        }
+
+        > a,
+        > button {
+            padding: 3px 11px 7px;
+            margin: 0;
+            min-height: 46px;
+            //display: block;
+            background: none;
+            border: 0;
+
+            &.highlight-logo-dd,
+            &:hover {
+                background-color: $admin-header-bg;
+            }
+
+            &:after {
+                content: '';
+                display: inline-block;
+                margin-left: 0.3em;
+                vertical-align: 0.15em;
+                border-top: 0.2em solid #fff;
+                border-right: 0.2em solid transparent;
+                border-bottom: 0;
+                border-left: 0.2em solid transparent;
+            }
+        }
+    }
+    /*.navbar-brand:hover {
+        .admin-logo-dropdown {
+            @include media-breakpoint-up(xl) {
+                display: block;
+            }
+        }
+    }*/
+    .dropdown:hover {
+        .dropdown-menu {
+            @include media-breakpoint-up(xl) {
+                display: block;
+            }
+        }
+    }
+
+    .navbar-nav {
+        > li > a {
+            padding-left: 14px;
+            padding-right: 14px;
+            line-height: 21px;
+            color: $admin-header-color;
+            display: block;
+        }
+
+        .add-more-dropdown > a {
+            float: left;
+
+            .caret {
+                display: none;
+            }
+
+            &:before {
+                content: '\f063';
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
+                padding-right: 6px;
+            }
+        }
+    }
+
+    /*.dashboard-logo {
+        position: static;
+    }
+
+    .dashboard-logo a, .dashboard-logo button {
+        @include media-breakpoint-up(xl) {
+            position: static;
+
+            &:hover {
+                background: none;
+            }
+
+            &:after {
+                display: none;
+            }
+        }
+    }*/
+
+    .admin-logo-dropdown {
+        display: none;
+        position: absolute;
+        top: 45px;
+        background: $admin-header-bg;
+        left: 0;
+        z-index: 11;
+        padding: 5px 0;
+        color: #fff;
+        padding-bottom: 0;
+        font-size: 14px;
+        border-radius: 0;
+
+
+
+        .dd-logo {
+            //border-bottom: 2px solid #464646;
+            font-size: 17px;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        .cms-logo-dd {
+            width: 17px;
+            margin: 8px 6px 10px 12px;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+
+            li {
+                list-style: none;
+
+                a {
+                    padding: 10px 15px;
+                    display: block;
+
+                    &.on, &.active, &:hover {
+                        color: $admin-primary;
+                    }
+                }
+            }
+        }
+
+        ul.department-menu-dd {
+            column-count: 2;
+            background: #212529;
+            padding-bottom: 5px;
+
+            li a {
+                display: inline-block;
+            }
+        }
+
+
+        a#logoff {
+            border-radius: 4px;
+            //border: 1px solid #fff;
+            display: inline-block;
+            margin: 3px 12px;
+            padding: 3px 14px 3px 7px;
+            float: right;
+            font-size: 12px;
+            background: #c9302c;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-right:45px;
+        }
+
+
+        i {
+            min-width: 25px;
+            text-align: center;
+        }
+
+
+
+        /*&.dashboard-menu {
+            @include media-breakpoint-up(xl) {
+                display: block !important;
+                position: absolute;
+                top: 0;
+                left: 50px;
+                right: 0;
+                padding: 0;
+                min-height: 45px;
+                background: none;
+                border: 0;
+
+                .department-menu-dd {
+                    column-count: 1 !important;
+                    padding-bottom: 0;
+                }
+
+                .dd-logo {
+                    float: right;
+                    margin-top: 6px;
+
+                    a#logoff {
+                        padding-top: 5px;
+                        padding-bottom: 5px;
+                    }
+
+                    > span {
+                        display: none;
+                    }
+                }
+
+                ul li {
+                    float: left;
+
+                    a {
+                        padding-top: 12px;
+                        padding-bottom: 12px;
+
+                        &:hover {
+                            background-color: $admin-header-bg;
+                            color: #fff;
+                        }
+                    }
+
+                    &:first-child {
+                        a {
+                            background: $admin-header-bg;
+                            min-height: 45px;
+                            padding-top: 12px;
+
+                            &.on, &.active {
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
+    }
+    // - MAIN MENU
+    .admin-main-menu {
+        font-size: 14px;
+        background-color: $admin-header-bg-light;
+        min-height: 45px;
+
+        ul.nav {
+            a {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                line-height: 22px;
+            }
+
+            a:hover, a:focus, a.show {
+                background-color: $admin-header-bg;
+                color: #fff;
+            }
+
+            .on, .active {
+                background-color: $admin-header-bg;
+                //font-weight: 600;
+                &:hover {
+                    background-color: $admin-header-bg;
+                }
+            }
+
+            .add-more-dropdown {
+                z-index: 9994;
+            }
+
+            .dropdown-menu {
+                background: $admin-header-bg;
+                border-radius: 0;
+                font-size: 12px;
+                margin: 0;
+
+                i {
+                    min-width: 25px;
+                    text-align: center;
+                }
+
+                a {
+                    color: #fff;
+                    padding: 8px 15px;
+
+                    &:hover, &.on, &.active {
+                        background: none;
+                        color: $admin-primary;
+                    }
+                }
+            }
+        }
+    }
+
+    .navbar-toggler {
+        color: #fff;
+        min-height: 45px;
+        border: 0;
+        border-radius: 0;
+
+        &:focus {
+            border: 0;
+            box-shadow: none;
+        }
+    }
+}
