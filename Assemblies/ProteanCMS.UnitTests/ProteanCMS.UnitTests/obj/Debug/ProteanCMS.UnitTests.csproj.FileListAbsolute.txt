@@ -550,7 +550,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\tidy.x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\tidy.x86.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.Native-Q8-x64.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.Native-Q8-x86.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\x64\ClearScriptV8-64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\x64\v8-base-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\x64\v8-x64.dll
