@@ -598,3 +598,5 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbp
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.Native-Q8-x64.dll

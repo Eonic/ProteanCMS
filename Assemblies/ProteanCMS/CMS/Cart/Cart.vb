@@ -2660,7 +2660,7 @@ processFlow:
                                     'create the key with the current user
                                     Dim sSessionId As String = Convert.ToString(myWeb.moSession.SessionID)
                                     'generate the key with current session id
-                                    Dim sEncryptedKey As String = Protean.Tools.RC4.Encrypt(sSessionId, sKey)
+                                    Dim sEncryptedKey As String = Protean.Tools.Encryption.RC4.Encrypt(sSessionId, sKey)
                                     If (sEncryptedKey = sSessionKey) Then 'if both matches allow to overrdide price
                                         bOverridePrice = True
                                     End If
@@ -7284,7 +7284,7 @@ processFlow:
             Dim Folder As String = "/ewcommon/xforms/PaymentProvider/"
             Dim fi As FileInfo
             Dim ProviderName As String
-
+            If bs5 Then Folder = "/ptn/features/cart/PaymentProvider/"
             Try
 
                 oPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")

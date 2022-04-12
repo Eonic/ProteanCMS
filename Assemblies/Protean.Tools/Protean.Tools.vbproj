@@ -310,7 +310,6 @@
     <Compile Include="DelegateWrappers.vb" />
     <Compile Include="Dictionary.vb" />
     <Compile Include="DocReader.vb" />
-    <Compile Include="Encryption.vb" />
     <Compile Include="Enum.vb" />
     <Compile Include="GnuPG.vb" />
     <Compile Include="FileHelper.vb" />

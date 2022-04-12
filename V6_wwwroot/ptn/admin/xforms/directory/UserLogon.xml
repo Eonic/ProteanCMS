@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="UserLogon">
+  <model>
+    <instance>
+      <user rememberMe="">
+        <username/>
+        <password/>
+      </user>
+    </instance>
+    <submission id="UserLogon" action="" method="post"  event="return form_check(this)" getSiteURL="true"/>
+    <bind id="cUserName" nodeset="user/username" required="true()" type="string"/>
+    <bind id="cPassword" nodeset="user/password" required="true()" type="string"/>
+    <bind id="cRemember" nodeset="user/@rememberMe" required="false()" type="string"/>
+  </model>
+  <group ref="UserDetails">
+    <group ref="userDetails">
+      <input bind="cUserName">
+        <label>
+          <!--Username-->
+          <span class="term4000" />
+        </label>
+        <value/>
+      </input>
+      <secret bind="cPassword">
+        <label>
+          <!--Password-->
+          <span class="term4001" />
+        </label>
+        <value/>
+      </secret>
+    </group>
+    <group ref="userSubmission" class="hideLabels">
+      <select bind="cRemember" class="smaller" appearance="full">
+        <item>
+         <label>Remember me</label>
+          <value>true</value>
+        </item>
+        <value>true</value>
+      </select>
+      <submit submission="ewSubmit" ref="ewSubmit" class="principle">
+        <label>Logon</label>
+      </submit>
+      
+    </group>
+  </group>
+</Content>

@@ -1,11 +1,10 @@
-
---To get distinct events
 CREATE VIEW dbo.vw_GetDistinctEvents AS  
 SELECT distinct [tblContentRelation].nContentParentId, [dbo].[tblContent].[nContentKey], [tblContent].cContentName,
 		[dbo].[tblContent].cContentSchemaName
 FROM [dbo].[tblContentRelation] INNER JOIN [dbo].[tblContent] ON [tblContentRelation].nContentParentId = [tblContent].nContentKey
 WHERE [dbo].[tblContent].[cContentSchemaName] = 'Event'
 
+GO
 
 --To get distinct tickets
 CREATE VIEW dbo.vw_GetDistinctTickets AS  
@@ -14,12 +13,14 @@ SELECT distinct [tblContentRelation].nContentParentId, [tblContentRelation].nCon
 FROM [dbo].[tblContentRelation] LEFT OUTER JOIN [dbo].[tblContent] ON [tblContentRelation].nContentParentId = [tblContent].nContentKey
 WHERE [dbo].[tblContent].[cContentSchemaName] IN ('Ticket')
  
+ GO
 --To get distinct events and tickets
 CREATE VIEW dbo.vw_GetDistinctEventsTickets AS 
 SELECT vw_GetDistinctEvents.nContentKey As 'EventKey', vw_GetDistinctEvents.nContentParentId, vw_GetDistinctEvents.cContentName AS 'EventName', vw_GetDistinctEvents.cContentSchemaName AS 'TypeE',
 vw_GetDistinctTickets.nContentKey AS 'TicketId', vw_GetDistinctTickets.cContentName AS 'TicketName', vw_GetDistinctTickets.cContentSchemaName AS 'TypeT'
 FROM vw_GetDistinctEvents INNER JOIN vw_GetDistinctTickets ON vw_GetDistinctEvents.nContentParentId = vw_GetDistinctTickets.nContentChildId
 
+GO
 
 --To get list of events/tickets with contact and price. This is for the carts with status 6, 9 and 17 (complete, shipped and inprogress)
 CREATE VIEW dbo.vw_GetEventsTicketWithCartContact AS 
@@ -38,3 +39,4 @@ WHERE
 		(Items.nParentId IS NULL OR Items.nParentId = 0) AND (dbo.tblCartContact.cContactType LIKE N'Billing Address')  
 		AND nCartStatus IN (6, 9, 17)
 
+		GO

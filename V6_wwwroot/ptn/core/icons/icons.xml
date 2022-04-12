@@ -1,0 +1,5842 @@
+<?xml version="1.0" encoding="utf-8"?>
+<select1>
+  <itemset>
+    <h3>Web Application Icons</h3>
+    <item>
+      <label>none</label>
+      <value></value>
+    </item>
+    <item>
+      <label>fa-brands fa-500px</label>
+      <value>fa-brands fa-500px</value>
+    </item>
+    <item>
+      <label>fa-brands fa-accessible-icon</label>
+      <value>fa-brands fa-accessible-icon</value>
+    </item>
+    <item>
+      <label>fa-brands fa-accusoft</label>
+      <value>fa-brands fa-accusoft</value>
+    </item>
+    <item>
+      <label>fa-brands fa-acquisitions-incorporated</label>
+      <value>fa-brands fa-acquisitions-incorporated</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ad</label>
+      <value>fa-solid fa-ad</value>
+    </item>
+    <item>
+      <label>fa-solid fa-address-book</label>
+      <value>fa-solid fa-address-book</value>
+    </item>
+    <item>
+      <label>fa-solid fa-address-card</label>
+      <value>fa-solid fa-address-card</value>
+    </item>
+    <item>
+      <label>fa-solid fa-adjust</label>
+      <value>fa-solid fa-adjust</value>
+    </item>
+    <item>
+      <label>fa-brands fa-adn</label>
+      <value>fa-brands fa-adn</value>
+    </item>
+    <item>
+      <label>fa-brands fa-adversal</label>
+      <value>fa-brands fa-adversal</value>
+    </item>
+    <item>
+      <label>fa-brands fa-affiliatetheme</label>
+      <value>fa-brands fa-affiliatetheme</value>
+    </item>
+    <item>
+      <label>fa-solid fa-air-freshener</label>
+      <value>fa-solid fa-air-freshener</value>
+    </item>
+    <item>
+      <label>fa-brands fa-airbnb</label>
+      <value>fa-brands fa-airbnb</value>
+    </item>
+    <item>
+      <label>fa-brands fa-algolia</label>
+      <value>fa-brands fa-algolia</value>
+    </item>
+    <item>
+      <label>fa-solid fa-align-center</label>
+      <value>fa-solid fa-align-center</value>
+    </item>
+    <item>
+      <label>fa-solid fa-align-justify</label>
+      <value>fa-solid fa-align-justify</value>
+    </item>
+    <item>
+      <label>fa-solid fa-align-left</label>
+      <value>fa-solid fa-align-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-align-right</label>
+      <value>fa-solid fa-align-right</value>
+    </item>
+    <item>
+      <label>fa-brands fa-alipay</label>
+      <value>fa-brands fa-alipay</value>
+    </item>
+    <item>
+      <label>fa-solid fa-allergies</label>
+      <value>fa-solid fa-allergies</value>
+    </item>
+    <item>
+      <label>fa-brands fa-amazon</label>
+      <value>fa-brands fa-amazon</value>
+    </item>
+    <item>
+      <label>fa-brands fa-amazon-pay</label>
+      <value>fa-brands fa-amazon-pay</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ambulance</label>
+      <value>fa-solid fa-ambulance</value>
+    </item>
+    <item>
+      <label>fa-solid fa-american-sign-language-interpreting</label>
+      <value>fa-solid fa-american-sign-language-interpreting</value>
+    </item>
+    <item>
+      <label>fa-brands fa-amilia</label>
+      <value>fa-brands fa-amilia</value>
+    </item>
+    <item>
+      <label>fa-solid fa-anchor</label>
+      <value>fa-solid fa-anchor</value>
+    </item>
+    <item>
+      <label>fa-brands fa-android</label>
+      <value>fa-brands fa-android</value>
+    </item>
+    <item>
+      <label>fa-brands fa-angellist</label>
+      <value>fa-brands fa-angellist</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angle-double-down</label>
+      <value>fa-solid fa-angle-double-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angle-double-left</label>
+      <value>fa-solid fa-angle-double-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angle-double-right</label>
+      <value>fa-solid fa-angle-double-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angle-double-up</label>
+      <value>fa-solid fa-angle-double-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angle-down</label>
+      <value>fa-solid fa-angle-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angle-left</label>
+      <value>fa-solid fa-angle-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angle-right</label>
+      <value>fa-solid fa-angle-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angle-up</label>
+      <value>fa-solid fa-angle-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-angry</label>
+      <value>fa-solid fa-angry</value>
+    </item>
+    <item>
+      <label>fa-brands fa-angrycreative</label>
+      <value>fa-brands fa-angrycreative</value>
+    </item>
+    <item>
+      <label>fa-brands fa-angular</label>
+      <value>fa-brands fa-angular</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ankh</label>
+      <value>fa-solid fa-ankh</value>
+    </item>
+    <item>
+      <label>fa-brands fa-app-store</label>
+      <value>fa-brands fa-app-store</value>
+    </item>
+    <item>
+      <label>fa-brands fa-app-store-ios</label>
+      <value>fa-brands fa-app-store-ios</value>
+    </item>
+    <item>
+      <label>fa-brands fa-apper</label>
+      <value>fa-brands fa-apper</value>
+    </item>
+    <item>
+      <label>fa-brands fa-apple</label>
+      <value>fa-brands fa-apple</value>
+    </item>
+    <item>
+      <label>fa-solid fa-apple-alt</label>
+      <value>fa-solid fa-apple-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-apple-pay</label>
+      <value>fa-brands fa-apple-pay</value>
+    </item>
+    <item>
+      <label>fa-solid fa-archive</label>
+      <value>fa-solid fa-archive</value>
+    </item>
+    <item>
+      <label>fa-solid fa-archway</label>
+      <value>fa-solid fa-archway</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-alt-circle-down</label>
+      <value>fa-solid fa-arrow-alt-circle-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-alt-circle-left</label>
+      <value>fa-solid fa-arrow-alt-circle-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-alt-circle-right</label>
+      <value>fa-solid fa-arrow-alt-circle-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-alt-circle-up</label>
+      <value>fa-solid fa-arrow-alt-circle-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-circle-down</label>
+      <value>fa-solid fa-arrow-circle-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-circle-left</label>
+      <value>fa-solid fa-arrow-circle-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-circle-right</label>
+      <value>fa-solid fa-arrow-circle-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-circle-up</label>
+      <value>fa-solid fa-arrow-circle-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-down</label>
+      <value>fa-solid fa-arrow-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-left</label>
+      <value>fa-solid fa-arrow-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-right</label>
+      <value>fa-solid fa-arrow-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrow-up</label>
+      <value>fa-solid fa-arrow-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrows-alt</label>
+      <value>fa-solid fa-arrows-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrows-alt-h</label>
+      <value>fa-solid fa-arrows-alt-h</value>
+    </item>
+    <item>
+      <label>fa-solid fa-arrows-alt-v</label>
+      <value>fa-solid fa-arrows-alt-v</value>
+    </item>
+    <item>
+      <label>fa-brands fa-artstation</label>
+      <value>fa-brands fa-artstation</value>
+    </item>
+    <item>
+      <label>fa-solid fa-assistive-listening-systems</label>
+      <value>fa-solid fa-assistive-listening-systems</value>
+    </item>
+    <item>
+      <label>fa-solid fa-asterisk</label>
+      <value>fa-solid fa-asterisk</value>
+    </item>
+    <item>
+      <label>fa-brands fa-asymmetrik</label>
+      <value>fa-brands fa-asymmetrik</value>
+    </item>
+    <item>
+      <label>fa-solid fa-at</label>
+      <value>fa-solid fa-at</value>
+    </item>
+    <item>
+      <label>fa-solid fa-atlas</label>
+      <value>fa-solid fa-atlas</value>
+    </item>
+    <item>
+      <label>fa-brands fa-atlassian</label>
+      <value>fa-brands fa-atlassian</value>
+    </item>
+    <item>
+      <label>fa-solid fa-atom</label>
+      <value>fa-solid fa-atom</value>
+    </item>
+    <item>
+      <label>fa-brands fa-audible</label>
+      <value>fa-brands fa-audible</value>
+    </item>
+    <item>
+      <label>fa-solid fa-audio-description</label>
+      <value>fa-solid fa-audio-description</value>
+    </item>
+    <item>
+      <label>fa-brands fa-autoprefixer</label>
+      <value>fa-brands fa-autoprefixer</value>
+    </item>
+    <item>
+      <label>fa-brands fa-avianex</label>
+      <value>fa-brands fa-avianex</value>
+    </item>
+    <item>
+      <label>fa-brands fa-aviato</label>
+      <value>fa-brands fa-aviato</value>
+    </item>
+    <item>
+      <label>fa-solid fa-award</label>
+      <value>fa-solid fa-award</value>
+    </item>
+    <item>
+      <label>fa-brands fa-aws</label>
+      <value>fa-brands fa-aws</value>
+    </item>
+    <item>
+      <label>fa-solid fa-baby</label>
+      <value>fa-solid fa-baby</value>
+    </item>
+    <item>
+      <label>fa-solid fa-baby-carriage</label>
+      <value>fa-solid fa-baby-carriage</value>
+    </item>
+    <item>
+      <label>fa-solid fa-backspace</label>
+      <value>fa-solid fa-backspace</value>
+    </item>
+    <item>
+      <label>fa-solid fa-backward</label>
+      <value>fa-solid fa-backward</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bacon</label>
+      <value>fa-solid fa-bacon</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bacteria</label>
+      <value>fa-solid fa-bacteria</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bacterium</label>
+      <value>fa-solid fa-bacterium</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bahai</label>
+      <value>fa-solid fa-bahai</value>
+    </item>
+    <item>
+      <label>fa-solid fa-balance-scale</label>
+      <value>fa-solid fa-balance-scale</value>
+    </item>
+    <item>
+      <label>fa-solid fa-balance-scale-left</label>
+      <value>fa-solid fa-balance-scale-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-balance-scale-right</label>
+      <value>fa-solid fa-balance-scale-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ban</label>
+      <value>fa-solid fa-ban</value>
+    </item>
+    <item>
+      <label>fa-solid fa-band-aid</label>
+      <value>fa-solid fa-band-aid</value>
+    </item>
+    <item>
+      <label>fa-brands fa-bandcamp</label>
+      <value>fa-brands fa-bandcamp</value>
+    </item>
+    <item>
+      <label>fa-solid fa-barcode</label>
+      <value>fa-solid fa-barcode</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bars</label>
+      <value>fa-solid fa-bars</value>
+    </item>
+    <item>
+      <label>fa-solid fa-baseball-ball</label>
+      <value>fa-solid fa-baseball-ball</value>
+    </item>
+    <item>
+      <label>fa-solid fa-basketball-ball</label>
+      <value>fa-solid fa-basketball-ball</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bath</label>
+      <value>fa-solid fa-bath</value>
+    </item>
+    <item>
+      <label>fa-solid fa-battery-empty</label>
+      <value>fa-solid fa-battery-empty</value>
+    </item>
+    <item>
+      <label>fa-solid fa-battery-full</label>
+      <value>fa-solid fa-battery-full</value>
+    </item>
+    <item>
+      <label>fa-solid fa-battery-half</label>
+      <value>fa-solid fa-battery-half</value>
+    </item>
+    <item>
+      <label>fa-solid fa-battery-quarter</label>
+      <value>fa-solid fa-battery-quarter</value>
+    </item>
+    <item>
+      <label>fa-solid fa-battery-three-quarters</label>
+      <value>fa-solid fa-battery-three-quarters</value>
+    </item>
+    <item>
+      <label>fa-brands fa-battle-net</label>
+      <value>fa-brands fa-battle-net</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bed</label>
+      <value>fa-solid fa-bed</value>
+    </item>
+    <item>
+      <label>fa-solid fa-beer</label>
+      <value>fa-solid fa-beer</value>
+    </item>
+    <item>
+      <label>fa-brands fa-behance</label>
+      <value>fa-brands fa-behance</value>
+    </item>
+    <item>
+      <label>fa-brands fa-behance-square</label>
+      <value>fa-brands fa-behance-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bell</label>
+      <value>fa-solid fa-bell</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bell-slash</label>
+      <value>fa-solid fa-bell-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bezier-curve</label>
+      <value>fa-solid fa-bezier-curve</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bible</label>
+      <value>fa-solid fa-bible</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bicycle</label>
+      <value>fa-solid fa-bicycle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-biking</label>
+      <value>fa-solid fa-biking</value>
+    </item>
+    <item>
+      <label>fa-brands fa-bimobject</label>
+      <value>fa-brands fa-bimobject</value>
+    </item>
+    <item>
+      <label>fa-solid fa-binoculars</label>
+      <value>fa-solid fa-binoculars</value>
+    </item>
+    <item>
+      <label>fa-solid fa-biohazard</label>
+      <value>fa-solid fa-biohazard</value>
+    </item>
+    <item>
+      <label>fa-solid fa-birthday-cake</label>
+      <value>fa-solid fa-birthday-cake</value>
+    </item>
+    <item>
+      <label>fa-brands fa-bitbucket</label>
+      <value>fa-brands fa-bitbucket</value>
+    </item>
+    <item>
+      <label>fa-brands fa-bitcoin</label>
+      <value>fa-brands fa-bitcoin</value>
+    </item>
+    <item>
+      <label>fa-brands fa-bity</label>
+      <value>fa-brands fa-bity</value>
+    </item>
+    <item>
+      <label>fa-brands fa-black-tie</label>
+      <value>fa-brands fa-black-tie</value>
+    </item>
+    <item>
+      <label>fa-brands fa-blackberry</label>
+      <value>fa-brands fa-blackberry</value>
+    </item>
+    <item>
+      <label>fa-solid fa-blender</label>
+      <value>fa-solid fa-blender</value>
+    </item>
+    <item>
+      <label>fa-solid fa-blender-phone</label>
+      <value>fa-solid fa-blender-phone</value>
+    </item>
+    <item>
+      <label>fa-solid fa-blind</label>
+      <value>fa-solid fa-blind</value>
+    </item>
+    <item>
+      <label>fa-solid fa-blog</label>
+      <value>fa-solid fa-blog</value>
+    </item>
+    <item>
+      <label>fa-brands fa-blogger</label>
+      <value>fa-brands fa-blogger</value>
+    </item>
+    <item>
+      <label>fa-brands fa-blogger-b</label>
+      <value>fa-brands fa-blogger-b</value>
+    </item>
+    <item>
+      <label>fa-brands fa-bluetooth</label>
+      <value>fa-brands fa-bluetooth</value>
+    </item>
+    <item>
+      <label>fa-brands fa-bluetooth-b</label>
+      <value>fa-brands fa-bluetooth-b</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bold</label>
+      <value>fa-solid fa-bold</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bolt</label>
+      <value>fa-solid fa-bolt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bomb</label>
+      <value>fa-solid fa-bomb</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bone</label>
+      <value>fa-solid fa-bone</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bong</label>
+      <value>fa-solid fa-bong</value>
+    </item>
+    <item>
+      <label>fa-solid fa-book</label>
+      <value>fa-solid fa-book</value>
+    </item>
+    <item>
+      <label>fa-solid fa-book-dead</label>
+      <value>fa-solid fa-book-dead</value>
+    </item>
+    <item>
+      <label>fa-solid fa-book-medical</label>
+      <value>fa-solid fa-book-medical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-book-open</label>
+      <value>fa-solid fa-book-open</value>
+    </item>
+    <item>
+      <label>fa-solid fa-book-reader</label>
+      <value>fa-solid fa-book-reader</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bookmark</label>
+      <value>fa-solid fa-bookmark</value>
+    </item>
+    <item>
+      <label>fa-brands fa-bootstrap</label>
+      <value>fa-brands fa-bootstrap</value>
+    </item>
+    <item>
+      <label>fa-solid fa-border-all</label>
+      <value>fa-solid fa-border-all</value>
+    </item>
+    <item>
+      <label>fa-solid fa-border-none</label>
+      <value>fa-solid fa-border-none</value>
+    </item>
+    <item>
+      <label>fa-solid fa-border-style</label>
+      <value>fa-solid fa-border-style</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bowling-ball</label>
+      <value>fa-solid fa-bowling-ball</value>
+    </item>
+    <item>
+      <label>fa-solid fa-box</label>
+      <value>fa-solid fa-box</value>
+    </item>
+    <item>
+      <label>fa-solid fa-box-open</label>
+      <value>fa-solid fa-box-open</value>
+    </item>
+    <item>
+      <label>fa-solid fa-box-tissue</label>
+      <value>fa-solid fa-box-tissue</value>
+    </item>
+    <item>
+      <label>fa-solid fa-boxes</label>
+      <value>fa-solid fa-boxes</value>
+    </item>
+    <item>
+      <label>fa-solid fa-braille</label>
+      <value>fa-solid fa-braille</value>
+    </item>
+    <item>
+      <label>fa-solid fa-brain</label>
+      <value>fa-solid fa-brain</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bread-slice</label>
+      <value>fa-solid fa-bread-slice</value>
+    </item>
+    <item>
+      <label>fa-solid fa-briefcase</label>
+      <value>fa-solid fa-briefcase</value>
+    </item>
+    <item>
+      <label>fa-solid fa-briefcase-medical</label>
+      <value>fa-solid fa-briefcase-medical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-broadcast-tower</label>
+      <value>fa-solid fa-broadcast-tower</value>
+    </item>
+    <item>
+      <label>fa-solid fa-broom</label>
+      <value>fa-solid fa-broom</value>
+    </item>
+    <item>
+      <label>fa-solid fa-brush</label>
+      <value>fa-solid fa-brush</value>
+    </item>
+    <item>
+      <label>fa-brands fa-btc</label>
+      <value>fa-brands fa-btc</value>
+    </item>
+    <item>
+      <label>fa-brands fa-buffer</label>
+      <value>fa-brands fa-buffer</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bug</label>
+      <value>fa-solid fa-bug</value>
+    </item>
+    <item>
+      <label>fa-solid fa-building</label>
+      <value>fa-solid fa-building</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bullhorn</label>
+      <value>fa-solid fa-bullhorn</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bullseye</label>
+      <value>fa-solid fa-bullseye</value>
+    </item>
+    <item>
+      <label>fa-solid fa-burn</label>
+      <value>fa-solid fa-burn</value>
+    </item>
+    <item>
+      <label>fa-brands fa-buromobelexperte</label>
+      <value>fa-brands fa-buromobelexperte</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bus</label>
+      <value>fa-solid fa-bus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-bus-alt</label>
+      <value>fa-solid fa-bus-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-business-time</label>
+      <value>fa-solid fa-business-time</value>
+    </item>
+    <item>
+      <label>fa-brands fa-buy-n-large</label>
+      <value>fa-brands fa-buy-n-large</value>
+    </item>
+    <item>
+      <label>fa-brands fa-buysellads</label>
+      <value>fa-brands fa-buysellads</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calculator</label>
+      <value>fa-solid fa-calculator</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calendar</label>
+      <value>fa-solid fa-calendar</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calendar-alt</label>
+      <value>fa-solid fa-calendar-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calendar-check</label>
+      <value>fa-solid fa-calendar-check</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calendar-day</label>
+      <value>fa-solid fa-calendar-day</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calendar-minus</label>
+      <value>fa-solid fa-calendar-minus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calendar-plus</label>
+      <value>fa-solid fa-calendar-plus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calendar-times</label>
+      <value>fa-solid fa-calendar-times</value>
+    </item>
+    <item>
+      <label>fa-solid fa-calendar-week</label>
+      <value>fa-solid fa-calendar-week</value>
+    </item>
+    <item>
+      <label>fa-solid fa-camera</label>
+      <value>fa-solid fa-camera</value>
+    </item>
+    <item>
+      <label>fa-solid fa-camera-retro</label>
+      <value>fa-solid fa-camera-retro</value>
+    </item>
+    <item>
+      <label>fa-solid fa-campground</label>
+      <value>fa-solid fa-campground</value>
+    </item>
+    <item>
+      <label>fa-brands fa-canadian-maple-leaf</label>
+      <value>fa-brands fa-canadian-maple-leaf</value>
+    </item>
+    <item>
+      <label>fa-solid fa-candy-cane</label>
+      <value>fa-solid fa-candy-cane</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cannabis</label>
+      <value>fa-solid fa-cannabis</value>
+    </item>
+    <item>
+      <label>fa-solid fa-capsules</label>
+      <value>fa-solid fa-capsules</value>
+    </item>
+    <item>
+      <label>fa-solid fa-car</label>
+      <value>fa-solid fa-car</value>
+    </item>
+    <item>
+      <label>fa-solid fa-car-alt</label>
+      <value>fa-solid fa-car-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-car-battery</label>
+      <value>fa-solid fa-car-battery</value>
+    </item>
+    <item>
+      <label>fa-solid fa-car-crash</label>
+      <value>fa-solid fa-car-crash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-car-side</label>
+      <value>fa-solid fa-car-side</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caravan</label>
+      <value>fa-solid fa-caravan</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caret-down</label>
+      <value>fa-solid fa-caret-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caret-left</label>
+      <value>fa-solid fa-caret-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caret-right</label>
+      <value>fa-solid fa-caret-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caret-square-down</label>
+      <value>fa-solid fa-caret-square-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caret-square-left</label>
+      <value>fa-solid fa-caret-square-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caret-square-right</label>
+      <value>fa-solid fa-caret-square-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caret-square-up</label>
+      <value>fa-solid fa-caret-square-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-caret-up</label>
+      <value>fa-solid fa-caret-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-carrot</label>
+      <value>fa-solid fa-carrot</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cart-arrow-down</label>
+      <value>fa-solid fa-cart-arrow-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cart-plus</label>
+      <value>fa-solid fa-cart-plus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cash-register</label>
+      <value>fa-solid fa-cash-register</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cat</label>
+      <value>fa-solid fa-cat</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-amazon-pay</label>
+      <value>fa-brands fa-cc-amazon-pay</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-amex</label>
+      <value>fa-brands fa-cc-amex</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-apple-pay</label>
+      <value>fa-brands fa-cc-apple-pay</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-diners-club</label>
+      <value>fa-brands fa-cc-diners-club</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-discover</label>
+      <value>fa-brands fa-cc-discover</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-jcb</label>
+      <value>fa-brands fa-cc-jcb</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-mastercard</label>
+      <value>fa-brands fa-cc-mastercard</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-paypal</label>
+      <value>fa-brands fa-cc-paypal</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-stripe</label>
+      <value>fa-brands fa-cc-stripe</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cc-visa</label>
+      <value>fa-brands fa-cc-visa</value>
+    </item>
+    <item>
+      <label>fa-brands fa-centercode</label>
+      <value>fa-brands fa-centercode</value>
+    </item>
+    <item>
+      <label>fa-brands fa-centos</label>
+      <value>fa-brands fa-centos</value>
+    </item>
+    <item>
+      <label>fa-solid fa-certificate</label>
+      <value>fa-solid fa-certificate</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chair</label>
+      <value>fa-solid fa-chair</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chalkboard</label>
+      <value>fa-solid fa-chalkboard</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chalkboard-teacher</label>
+      <value>fa-solid fa-chalkboard-teacher</value>
+    </item>
+    <item>
+      <label>fa-solid fa-charging-station</label>
+      <value>fa-solid fa-charging-station</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chart-area</label>
+      <value>fa-solid fa-chart-area</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chart-bar</label>
+      <value>fa-solid fa-chart-bar</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chart-line</label>
+      <value>fa-solid fa-chart-line</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chart-pie</label>
+      <value>fa-solid fa-chart-pie</value>
+    </item>
+    <item>
+      <label>fa-solid fa-check</label>
+      <value>fa-solid fa-check</value>
+    </item>
+    <item>
+      <label>fa-solid fa-check-circle</label>
+      <value>fa-solid fa-check-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-check-double</label>
+      <value>fa-solid fa-check-double</value>
+    </item>
+    <item>
+      <label>fa-solid fa-check-square</label>
+      <value>fa-solid fa-check-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cheese</label>
+      <value>fa-solid fa-cheese</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chess</label>
+      <value>fa-solid fa-chess</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chess-bishop</label>
+      <value>fa-solid fa-chess-bishop</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chess-board</label>
+      <value>fa-solid fa-chess-board</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chess-king</label>
+      <value>fa-solid fa-chess-king</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chess-knight</label>
+      <value>fa-solid fa-chess-knight</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chess-pawn</label>
+      <value>fa-solid fa-chess-pawn</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chess-queen</label>
+      <value>fa-solid fa-chess-queen</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chess-rook</label>
+      <value>fa-solid fa-chess-rook</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chevron-circle-down</label>
+      <value>fa-solid fa-chevron-circle-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chevron-circle-left</label>
+      <value>fa-solid fa-chevron-circle-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chevron-circle-right</label>
+      <value>fa-solid fa-chevron-circle-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chevron-circle-up</label>
+      <value>fa-solid fa-chevron-circle-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chevron-down</label>
+      <value>fa-solid fa-chevron-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chevron-left</label>
+      <value>fa-solid fa-chevron-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chevron-right</label>
+      <value>fa-solid fa-chevron-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-chevron-up</label>
+      <value>fa-solid fa-chevron-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-child</label>
+      <value>fa-solid fa-child</value>
+    </item>
+    <item>
+      <label>fa-brands fa-chrome</label>
+      <value>fa-brands fa-chrome</value>
+    </item>
+    <item>
+      <label>fa-brands fa-chromecast</label>
+      <value>fa-brands fa-chromecast</value>
+    </item>
+    <item>
+      <label>fa-solid fa-church</label>
+      <value>fa-solid fa-church</value>
+    </item>
+    <item>
+      <label>fa-solid fa-circle</label>
+      <value>fa-solid fa-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-circle-notch</label>
+      <value>fa-solid fa-circle-notch</value>
+    </item>
+    <item>
+      <label>fa-solid fa-city</label>
+      <value>fa-solid fa-city</value>
+    </item>
+    <item>
+      <label>fa-solid fa-clinic-medical</label>
+      <value>fa-solid fa-clinic-medical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-clipboard</label>
+      <value>fa-solid fa-clipboard</value>
+    </item>
+    <item>
+      <label>fa-solid fa-clipboard-check</label>
+      <value>fa-solid fa-clipboard-check</value>
+    </item>
+    <item>
+      <label>fa-solid fa-clipboard-list</label>
+      <value>fa-solid fa-clipboard-list</value>
+    </item>
+    <item>
+      <label>fa-solid fa-clock</label>
+      <value>fa-solid fa-clock</value>
+    </item>
+    <item>
+      <label>fa-solid fa-clone</label>
+      <value>fa-solid fa-clone</value>
+    </item>
+    <item>
+      <label>fa-solid fa-closed-captioning</label>
+      <value>fa-solid fa-closed-captioning</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud</label>
+      <value>fa-solid fa-cloud</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-download-alt</label>
+      <value>fa-solid fa-cloud-download-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-meatball</label>
+      <value>fa-solid fa-cloud-meatball</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-moon</label>
+      <value>fa-solid fa-cloud-moon</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-moon-rain</label>
+      <value>fa-solid fa-cloud-moon-rain</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-rain</label>
+      <value>fa-solid fa-cloud-rain</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-showers-heavy</label>
+      <value>fa-solid fa-cloud-showers-heavy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-sun</label>
+      <value>fa-solid fa-cloud-sun</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-sun-rain</label>
+      <value>fa-solid fa-cloud-sun-rain</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cloud-upload-alt</label>
+      <value>fa-solid fa-cloud-upload-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cloudflare</label>
+      <value>fa-brands fa-cloudflare</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cloudscale</label>
+      <value>fa-brands fa-cloudscale</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cloudsmith</label>
+      <value>fa-brands fa-cloudsmith</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cloudversify</label>
+      <value>fa-brands fa-cloudversify</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cocktail</label>
+      <value>fa-solid fa-cocktail</value>
+    </item>
+    <item>
+      <label>fa-solid fa-code</label>
+      <value>fa-solid fa-code</value>
+    </item>
+    <item>
+      <label>fa-solid fa-code-branch</label>
+      <value>fa-solid fa-code-branch</value>
+    </item>
+    <item>
+      <label>fa-brands fa-codepen</label>
+      <value>fa-brands fa-codepen</value>
+    </item>
+    <item>
+      <label>fa-brands fa-codiepie</label>
+      <value>fa-brands fa-codiepie</value>
+    </item>
+    <item>
+      <label>fa-solid fa-coffee</label>
+      <value>fa-solid fa-coffee</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cog</label>
+      <value>fa-solid fa-cog</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cogs</label>
+      <value>fa-solid fa-cogs</value>
+    </item>
+    <item>
+      <label>fa-solid fa-coins</label>
+      <value>fa-solid fa-coins</value>
+    </item>
+    <item>
+      <label>fa-solid fa-columns</label>
+      <value>fa-solid fa-columns</value>
+    </item>
+    <item>
+      <label>fa-solid fa-comment</label>
+      <value>fa-solid fa-comment</value>
+    </item>
+    <item>
+      <label>fa-solid fa-comment-alt</label>
+      <value>fa-solid fa-comment-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-comment-dollar</label>
+      <value>fa-solid fa-comment-dollar</value>
+    </item>
+    <item>
+      <label>fa-solid fa-comment-dots</label>
+      <value>fa-solid fa-comment-dots</value>
+    </item>
+    <item>
+      <label>fa-solid fa-comment-medical</label>
+      <value>fa-solid fa-comment-medical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-comment-slash</label>
+      <value>fa-solid fa-comment-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-comments</label>
+      <value>fa-solid fa-comments</value>
+    </item>
+    <item>
+      <label>fa-solid fa-comments-dollar</label>
+      <value>fa-solid fa-comments-dollar</value>
+    </item>
+    <item>
+      <label>fa-solid fa-compact-disc</label>
+      <value>fa-solid fa-compact-disc</value>
+    </item>
+    <item>
+      <label>fa-solid fa-compass</label>
+      <value>fa-solid fa-compass</value>
+    </item>
+    <item>
+      <label>fa-solid fa-compress</label>
+      <value>fa-solid fa-compress</value>
+    </item>
+    <item>
+      <label>fa-solid fa-compress-alt</label>
+      <value>fa-solid fa-compress-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-compress-arrows-alt</label>
+      <value>fa-solid fa-compress-arrows-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-concierge-bell</label>
+      <value>fa-solid fa-concierge-bell</value>
+    </item>
+    <item>
+      <label>fa-brands fa-confluence</label>
+      <value>fa-brands fa-confluence</value>
+    </item>
+    <item>
+      <label>fa-brands fa-connectdevelop</label>
+      <value>fa-brands fa-connectdevelop</value>
+    </item>
+    <item>
+      <label>fa-brands fa-contao</label>
+      <value>fa-brands fa-contao</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cookie</label>
+      <value>fa-solid fa-cookie</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cookie-bite</label>
+      <value>fa-solid fa-cookie-bite</value>
+    </item>
+    <item>
+      <label>fa-solid fa-copy</label>
+      <value>fa-solid fa-copy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-copyright</label>
+      <value>fa-solid fa-copyright</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cotton-bureau</label>
+      <value>fa-brands fa-cotton-bureau</value>
+    </item>
+    <item>
+      <label>fa-solid fa-couch</label>
+      <value>fa-solid fa-couch</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cpanel</label>
+      <value>fa-brands fa-cpanel</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons</label>
+      <value>fa-brands fa-creative-commons</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-by</label>
+      <value>fa-brands fa-creative-commons-by</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-nc</label>
+      <value>fa-brands fa-creative-commons-nc</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-nc-eu</label>
+      <value>fa-brands fa-creative-commons-nc-eu</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-nc-jp</label>
+      <value>fa-brands fa-creative-commons-nc-jp</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-nd</label>
+      <value>fa-brands fa-creative-commons-nd</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-pd</label>
+      <value>fa-brands fa-creative-commons-pd</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-pd-alt</label>
+      <value>fa-brands fa-creative-commons-pd-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-remix</label>
+      <value>fa-brands fa-creative-commons-remix</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-sa</label>
+      <value>fa-brands fa-creative-commons-sa</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-sampling</label>
+      <value>fa-brands fa-creative-commons-sampling</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-sampling-plus</label>
+      <value>fa-brands fa-creative-commons-sampling-plus</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-share</label>
+      <value>fa-brands fa-creative-commons-share</value>
+    </item>
+    <item>
+      <label>fa-brands fa-creative-commons-zero</label>
+      <value>fa-brands fa-creative-commons-zero</value>
+    </item>
+    <item>
+      <label>fa-solid fa-credit-card</label>
+      <value>fa-solid fa-credit-card</value>
+    </item>
+    <item>
+      <label>fa-brands fa-critical-role</label>
+      <value>fa-brands fa-critical-role</value>
+    </item>
+    <item>
+      <label>fa-solid fa-crop</label>
+      <value>fa-solid fa-crop</value>
+    </item>
+    <item>
+      <label>fa-solid fa-crop-alt</label>
+      <value>fa-solid fa-crop-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cross</label>
+      <value>fa-solid fa-cross</value>
+    </item>
+    <item>
+      <label>fa-solid fa-crosshairs</label>
+      <value>fa-solid fa-crosshairs</value>
+    </item>
+    <item>
+      <label>fa-solid fa-crow</label>
+      <value>fa-solid fa-crow</value>
+    </item>
+    <item>
+      <label>fa-solid fa-crown</label>
+      <value>fa-solid fa-crown</value>
+    </item>
+    <item>
+      <label>fa-solid fa-crutch</label>
+      <value>fa-solid fa-crutch</value>
+    </item>
+    <item>
+      <label>fa-brands fa-css3</label>
+      <value>fa-brands fa-css3</value>
+    </item>
+    <item>
+      <label>fa-brands fa-css3-alt</label>
+      <value>fa-brands fa-css3-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cube</label>
+      <value>fa-solid fa-cube</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cubes</label>
+      <value>fa-solid fa-cubes</value>
+    </item>
+    <item>
+      <label>fa-solid fa-cut</label>
+      <value>fa-solid fa-cut</value>
+    </item>
+    <item>
+      <label>fa-brands fa-cuttlefish</label>
+      <value>fa-brands fa-cuttlefish</value>
+    </item>
+    <item>
+      <label>fa-brands fa-d-and-d</label>
+      <value>fa-brands fa-d-and-d</value>
+    </item>
+    <item>
+      <label>fa-brands fa-d-and-d-beyond</label>
+      <value>fa-brands fa-d-and-d-beyond</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dailymotion</label>
+      <value>fa-brands fa-dailymotion</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dashcube</label>
+      <value>fa-brands fa-dashcube</value>
+    </item>
+    <item>
+      <label>fa-solid fa-database</label>
+      <value>fa-solid fa-database</value>
+    </item>
+    <item>
+      <label>fa-solid fa-deaf</label>
+      <value>fa-solid fa-deaf</value>
+    </item>
+    <item>
+      <label>fa-brands fa-deezer</label>
+      <value>fa-brands fa-deezer</value>
+    </item>
+    <item>
+      <label>fa-brands fa-delicious</label>
+      <value>fa-brands fa-delicious</value>
+    </item>
+    <item>
+      <label>fa-solid fa-democrat</label>
+      <value>fa-solid fa-democrat</value>
+    </item>
+    <item>
+      <label>fa-brands fa-deploydog</label>
+      <value>fa-brands fa-deploydog</value>
+    </item>
+    <item>
+      <label>fa-brands fa-deskpro</label>
+      <value>fa-brands fa-deskpro</value>
+    </item>
+    <item>
+      <label>fa-solid fa-desktop</label>
+      <value>fa-solid fa-desktop</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dev</label>
+      <value>fa-brands fa-dev</value>
+    </item>
+    <item>
+      <label>fa-brands fa-deviantart</label>
+      <value>fa-brands fa-deviantart</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dharmachakra</label>
+      <value>fa-solid fa-dharmachakra</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dhl</label>
+      <value>fa-brands fa-dhl</value>
+    </item>
+    <item>
+      <label>fa-solid fa-diagnoses</label>
+      <value>fa-solid fa-diagnoses</value>
+    </item>
+    <item>
+      <label>fa-brands fa-diaspora</label>
+      <value>fa-brands fa-diaspora</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice</label>
+      <value>fa-solid fa-dice</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice-d20</label>
+      <value>fa-solid fa-dice-d20</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice-d6</label>
+      <value>fa-solid fa-dice-d6</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice-five</label>
+      <value>fa-solid fa-dice-five</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice-four</label>
+      <value>fa-solid fa-dice-four</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice-one</label>
+      <value>fa-solid fa-dice-one</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice-six</label>
+      <value>fa-solid fa-dice-six</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice-three</label>
+      <value>fa-solid fa-dice-three</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dice-two</label>
+      <value>fa-solid fa-dice-two</value>
+    </item>
+    <item>
+      <label>fa-brands fa-digg</label>
+      <value>fa-brands fa-digg</value>
+    </item>
+    <item>
+      <label>fa-brands fa-digital-ocean</label>
+      <value>fa-brands fa-digital-ocean</value>
+    </item>
+    <item>
+      <label>fa-solid fa-digital-tachograph</label>
+      <value>fa-solid fa-digital-tachograph</value>
+    </item>
+    <item>
+      <label>fa-solid fa-directions</label>
+      <value>fa-solid fa-directions</value>
+    </item>
+    <item>
+      <label>fa-brands fa-discord</label>
+      <value>fa-brands fa-discord</value>
+    </item>
+    <item>
+      <label>fa-brands fa-discourse</label>
+      <value>fa-brands fa-discourse</value>
+    </item>
+    <item>
+      <label>fa-solid fa-disease</label>
+      <value>fa-solid fa-disease</value>
+    </item>
+    <item>
+      <label>fa-solid fa-divide</label>
+      <value>fa-solid fa-divide</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dizzy</label>
+      <value>fa-solid fa-dizzy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dna</label>
+      <value>fa-solid fa-dna</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dochub</label>
+      <value>fa-brands fa-dochub</value>
+    </item>
+    <item>
+      <label>fa-brands fa-docker</label>
+      <value>fa-brands fa-docker</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dog</label>
+      <value>fa-solid fa-dog</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dollar-sign</label>
+      <value>fa-solid fa-dollar-sign</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dolly</label>
+      <value>fa-solid fa-dolly</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dolly-flatbed</label>
+      <value>fa-solid fa-dolly-flatbed</value>
+    </item>
+    <item>
+      <label>fa-solid fa-donate</label>
+      <value>fa-solid fa-donate</value>
+    </item>
+    <item>
+      <label>fa-solid fa-door-closed</label>
+      <value>fa-solid fa-door-closed</value>
+    </item>
+    <item>
+      <label>fa-solid fa-door-open</label>
+      <value>fa-solid fa-door-open</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dot-circle</label>
+      <value>fa-solid fa-dot-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dove</label>
+      <value>fa-solid fa-dove</value>
+    </item>
+    <item>
+      <label>fa-solid fa-download</label>
+      <value>fa-solid fa-download</value>
+    </item>
+    <item>
+      <label>fa-brands fa-draft2digital</label>
+      <value>fa-brands fa-draft2digital</value>
+    </item>
+    <item>
+      <label>fa-solid fa-drafting-compass</label>
+      <value>fa-solid fa-drafting-compass</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dragon</label>
+      <value>fa-solid fa-dragon</value>
+    </item>
+    <item>
+      <label>fa-solid fa-draw-polygon</label>
+      <value>fa-solid fa-draw-polygon</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dribbble</label>
+      <value>fa-brands fa-dribbble</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dribbble-square</label>
+      <value>fa-brands fa-dribbble-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dropbox</label>
+      <value>fa-brands fa-dropbox</value>
+    </item>
+    <item>
+      <label>fa-solid fa-drum</label>
+      <value>fa-solid fa-drum</value>
+    </item>
+    <item>
+      <label>fa-solid fa-drum-steelpan</label>
+      <value>fa-solid fa-drum-steelpan</value>
+    </item>
+    <item>
+      <label>fa-solid fa-drumstick-bite</label>
+      <value>fa-solid fa-drumstick-bite</value>
+    </item>
+    <item>
+      <label>fa-brands fa-drupal</label>
+      <value>fa-brands fa-drupal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dumbbell</label>
+      <value>fa-solid fa-dumbbell</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dumpster</label>
+      <value>fa-solid fa-dumpster</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dumpster-fire</label>
+      <value>fa-solid fa-dumpster-fire</value>
+    </item>
+    <item>
+      <label>fa-solid fa-dungeon</label>
+      <value>fa-solid fa-dungeon</value>
+    </item>
+    <item>
+      <label>fa-brands fa-dyalog</label>
+      <value>fa-brands fa-dyalog</value>
+    </item>
+    <item>
+      <label>fa-brands fa-earlybirds</label>
+      <value>fa-brands fa-earlybirds</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ebay</label>
+      <value>fa-brands fa-ebay</value>
+    </item>
+    <item>
+      <label>fa-brands fa-edge</label>
+      <value>fa-brands fa-edge</value>
+    </item>
+    <item>
+      <label>fa-brands fa-edge-legacy</label>
+      <value>fa-brands fa-edge-legacy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-edit</label>
+      <value>fa-solid fa-edit</value>
+    </item>
+    <item>
+      <label>fa-solid fa-egg</label>
+      <value>fa-solid fa-egg</value>
+    </item>
+    <item>
+      <label>fa-solid fa-eject</label>
+      <value>fa-solid fa-eject</value>
+    </item>
+    <item>
+      <label>fa-brands fa-elementor</label>
+      <value>fa-brands fa-elementor</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ellipsis-h</label>
+      <value>fa-solid fa-ellipsis-h</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ellipsis-v</label>
+      <value>fa-solid fa-ellipsis-v</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ello</label>
+      <value>fa-brands fa-ello</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ember</label>
+      <value>fa-brands fa-ember</value>
+    </item>
+    <item>
+      <label>fa-brands fa-empire</label>
+      <value>fa-brands fa-empire</value>
+    </item>
+    <item>
+      <label>fa-solid fa-envelope</label>
+      <value>fa-solid fa-envelope</value>
+    </item>
+    <item>
+      <label>fa-solid fa-envelope-open</label>
+      <value>fa-solid fa-envelope-open</value>
+    </item>
+    <item>
+      <label>fa-solid fa-envelope-open-text</label>
+      <value>fa-solid fa-envelope-open-text</value>
+    </item>
+    <item>
+      <label>fa-solid fa-envelope-square</label>
+      <value>fa-solid fa-envelope-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-envira</label>
+      <value>fa-brands fa-envira</value>
+    </item>
+    <item>
+      <label>fa-solid fa-equals</label>
+      <value>fa-solid fa-equals</value>
+    </item>
+    <item>
+      <label>fa-solid fa-eraser</label>
+      <value>fa-solid fa-eraser</value>
+    </item>
+    <item>
+      <label>fa-brands fa-erlang</label>
+      <value>fa-brands fa-erlang</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ethereum</label>
+      <value>fa-brands fa-ethereum</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ethernet</label>
+      <value>fa-solid fa-ethernet</value>
+    </item>
+    <item>
+      <label>fa-brands fa-etsy</label>
+      <value>fa-brands fa-etsy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-euro-sign</label>
+      <value>fa-solid fa-euro-sign</value>
+    </item>
+    <item>
+      <label>fa-brands fa-evernote</label>
+      <value>fa-brands fa-evernote</value>
+    </item>
+    <item>
+      <label>fa-solid fa-exchange-alt</label>
+      <value>fa-solid fa-exchange-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-exclamation</label>
+      <value>fa-solid fa-exclamation</value>
+    </item>
+    <item>
+      <label>fa-solid fa-exclamation-circle</label>
+      <value>fa-solid fa-exclamation-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-exclamation-triangle</label>
+      <value>fa-solid fa-exclamation-triangle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-expand</label>
+      <value>fa-solid fa-expand</value>
+    </item>
+    <item>
+      <label>fa-solid fa-expand-alt</label>
+      <value>fa-solid fa-expand-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-expand-arrows-alt</label>
+      <value>fa-solid fa-expand-arrows-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-expeditedssl</label>
+      <value>fa-brands fa-expeditedssl</value>
+    </item>
+    <item>
+      <label>fa-solid fa-external-link-alt</label>
+      <value>fa-solid fa-external-link-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-external-link-square-alt</label>
+      <value>fa-solid fa-external-link-square-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-eye</label>
+      <value>fa-solid fa-eye</value>
+    </item>
+    <item>
+      <label>fa-solid fa-eye-dropper</label>
+      <value>fa-solid fa-eye-dropper</value>
+    </item>
+    <item>
+      <label>fa-solid fa-eye-slash</label>
+      <value>fa-solid fa-eye-slash</value>
+    </item>
+    <item>
+      <label>fa-brands fa-facebook</label>
+      <value>fa-brands fa-facebook</value>
+    </item>
+    <item>
+      <label>fa-brands fa-facebook-f</label>
+      <value>fa-brands fa-facebook-f</value>
+    </item>
+    <item>
+      <label>fa-brands fa-facebook-messenger</label>
+      <value>fa-brands fa-facebook-messenger</value>
+    </item>
+    <item>
+      <label>fa-brands fa-facebook-square</label>
+      <value>fa-brands fa-facebook-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fan</label>
+      <value>fa-solid fa-fan</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fantasy-flight-games</label>
+      <value>fa-brands fa-fantasy-flight-games</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fast-backward</label>
+      <value>fa-solid fa-fast-backward</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fast-forward</label>
+      <value>fa-solid fa-fast-forward</value>
+    </item>
+    <item>
+      <label>fa-solid fa-faucet</label>
+      <value>fa-solid fa-faucet</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fax</label>
+      <value>fa-solid fa-fax</value>
+    </item>
+    <item>
+      <label>fa-solid fa-feather</label>
+      <value>fa-solid fa-feather</value>
+    </item>
+    <item>
+      <label>fa-solid fa-feather-alt</label>
+      <value>fa-solid fa-feather-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fedex</label>
+      <value>fa-brands fa-fedex</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fedora</label>
+      <value>fa-brands fa-fedora</value>
+    </item>
+    <item>
+      <label>fa-solid fa-female</label>
+      <value>fa-solid fa-female</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fighter-jet</label>
+      <value>fa-solid fa-fighter-jet</value>
+    </item>
+    <item>
+      <label>fa-brands fa-figma</label>
+      <value>fa-brands fa-figma</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file</label>
+      <value>fa-solid fa-file</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-alt</label>
+      <value>fa-solid fa-file-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-archive</label>
+      <value>fa-solid fa-file-archive</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-audio</label>
+      <value>fa-solid fa-file-audio</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-code</label>
+      <value>fa-solid fa-file-code</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-contract</label>
+      <value>fa-solid fa-file-contract</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-csv</label>
+      <value>fa-solid fa-file-csv</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-download</label>
+      <value>fa-solid fa-file-download</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-excel</label>
+      <value>fa-solid fa-file-excel</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-export</label>
+      <value>fa-solid fa-file-export</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-image</label>
+      <value>fa-solid fa-file-image</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-import</label>
+      <value>fa-solid fa-file-import</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-invoice</label>
+      <value>fa-solid fa-file-invoice</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-invoice-dollar</label>
+      <value>fa-solid fa-file-invoice-dollar</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-medical</label>
+      <value>fa-solid fa-file-medical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-medical-alt</label>
+      <value>fa-solid fa-file-medical-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-pdf</label>
+      <value>fa-solid fa-file-pdf</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-powerpoint</label>
+      <value>fa-solid fa-file-powerpoint</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-prescription</label>
+      <value>fa-solid fa-file-prescription</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-signature</label>
+      <value>fa-solid fa-file-signature</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-upload</label>
+      <value>fa-solid fa-file-upload</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-video</label>
+      <value>fa-solid fa-file-video</value>
+    </item>
+    <item>
+      <label>fa-solid fa-file-word</label>
+      <value>fa-solid fa-file-word</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fill</label>
+      <value>fa-solid fa-fill</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fill-drip</label>
+      <value>fa-solid fa-fill-drip</value>
+    </item>
+    <item>
+      <label>fa-solid fa-film</label>
+      <value>fa-solid fa-film</value>
+    </item>
+    <item>
+      <label>fa-solid fa-filter</label>
+      <value>fa-solid fa-filter</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fingerprint</label>
+      <value>fa-solid fa-fingerprint</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fire</label>
+      <value>fa-solid fa-fire</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fire-alt</label>
+      <value>fa-solid fa-fire-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fire-extinguisher</label>
+      <value>fa-solid fa-fire-extinguisher</value>
+    </item>
+    <item>
+      <label>fa-brands fa-firefox</label>
+      <value>fa-brands fa-firefox</value>
+    </item>
+    <item>
+      <label>fa-brands fa-firefox-browser</label>
+      <value>fa-brands fa-firefox-browser</value>
+    </item>
+    <item>
+      <label>fa-solid fa-first-aid</label>
+      <value>fa-solid fa-first-aid</value>
+    </item>
+    <item>
+      <label>fa-brands fa-first-order</label>
+      <value>fa-brands fa-first-order</value>
+    </item>
+    <item>
+      <label>fa-brands fa-first-order-alt</label>
+      <value>fa-brands fa-first-order-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-firstdraft</label>
+      <value>fa-brands fa-firstdraft</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fish</label>
+      <value>fa-solid fa-fish</value>
+    </item>
+    <item>
+      <label>fa-solid fa-fist-raised</label>
+      <value>fa-solid fa-fist-raised</value>
+    </item>
+    <item>
+      <label>fa-solid fa-flag</label>
+      <value>fa-solid fa-flag</value>
+    </item>
+    <item>
+      <label>fa-solid fa-flag-checkered</label>
+      <value>fa-solid fa-flag-checkered</value>
+    </item>
+    <item>
+      <label>fa-solid fa-flag-usa</label>
+      <value>fa-solid fa-flag-usa</value>
+    </item>
+    <item>
+      <label>fa-solid fa-flask</label>
+      <value>fa-solid fa-flask</value>
+    </item>
+    <item>
+      <label>fa-brands fa-flickr</label>
+      <value>fa-brands fa-flickr</value>
+    </item>
+    <item>
+      <label>fa-brands fa-flipboard</label>
+      <value>fa-brands fa-flipboard</value>
+    </item>
+    <item>
+      <label>fa-solid fa-flushed</label>
+      <value>fa-solid fa-flushed</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fly</label>
+      <value>fa-brands fa-fly</value>
+    </item>
+    <item>
+      <label>fa-solid fa-folder</label>
+      <value>fa-solid fa-folder</value>
+    </item>
+    <item>
+      <label>fa-solid fa-folder-minus</label>
+      <value>fa-solid fa-folder-minus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-folder-open</label>
+      <value>fa-solid fa-folder-open</value>
+    </item>
+    <item>
+      <label>fa-solid fa-folder-plus</label>
+      <value>fa-solid fa-folder-plus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-font</label>
+      <value>fa-solid fa-font</value>
+    </item>
+    <item>
+      <label>fa-brands fa-font-awesome</label>
+      <value>fa-brands fa-font-awesome</value>
+    </item>
+    <item>
+      <label>fa-brands fa-font-awesome-alt</label>
+      <value>fa-brands fa-font-awesome-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-font-awesome-flag</label>
+      <value>fa-brands fa-font-awesome-flag</value>
+    </item>
+    <item>
+      <label>fa-regular fa-font-awesome-logo-full</label>
+      <value>fa-regular fa-font-awesome-logo-full</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fonticons</label>
+      <value>fa-brands fa-fonticons</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fonticons-fi</label>
+      <value>fa-brands fa-fonticons-fi</value>
+    </item>
+    <item>
+      <label>fa-solid fa-football-ball</label>
+      <value>fa-solid fa-football-ball</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fort-awesome</label>
+      <value>fa-brands fa-fort-awesome</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fort-awesome-alt</label>
+      <value>fa-brands fa-fort-awesome-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-forumbee</label>
+      <value>fa-brands fa-forumbee</value>
+    </item>
+    <item>
+      <label>fa-solid fa-forward</label>
+      <value>fa-solid fa-forward</value>
+    </item>
+    <item>
+      <label>fa-brands fa-foursquare</label>
+      <value>fa-brands fa-foursquare</value>
+    </item>
+    <item>
+      <label>fa-brands fa-free-code-camp</label>
+      <value>fa-brands fa-free-code-camp</value>
+    </item>
+    <item>
+      <label>fa-brands fa-freebsd</label>
+      <value>fa-brands fa-freebsd</value>
+    </item>
+    <item>
+      <label>fa-solid fa-frog</label>
+      <value>fa-solid fa-frog</value>
+    </item>
+    <item>
+      <label>fa-solid fa-frown</label>
+      <value>fa-solid fa-frown</value>
+    </item>
+    <item>
+      <label>fa-solid fa-frown-open</label>
+      <value>fa-solid fa-frown-open</value>
+    </item>
+    <item>
+      <label>fa-brands fa-fulcrum</label>
+      <value>fa-brands fa-fulcrum</value>
+    </item>
+    <item>
+      <label>fa-solid fa-funnel-dollar</label>
+      <value>fa-solid fa-funnel-dollar</value>
+    </item>
+    <item>
+      <label>fa-solid fa-futbol</label>
+      <value>fa-solid fa-futbol</value>
+    </item>
+    <item>
+      <label>fa-brands fa-galactic-republic</label>
+      <value>fa-brands fa-galactic-republic</value>
+    </item>
+    <item>
+      <label>fa-brands fa-galactic-senate</label>
+      <value>fa-brands fa-galactic-senate</value>
+    </item>
+    <item>
+      <label>fa-solid fa-gamepad</label>
+      <value>fa-solid fa-gamepad</value>
+    </item>
+    <item>
+      <label>fa-solid fa-gas-pump</label>
+      <value>fa-solid fa-gas-pump</value>
+    </item>
+    <item>
+      <label>fa-solid fa-gavel</label>
+      <value>fa-solid fa-gavel</value>
+    </item>
+    <item>
+      <label>fa-solid fa-gem</label>
+      <value>fa-solid fa-gem</value>
+    </item>
+    <item>
+      <label>fa-solid fa-genderless</label>
+      <value>fa-solid fa-genderless</value>
+    </item>
+    <item>
+      <label>fa-brands fa-get-pocket</label>
+      <value>fa-brands fa-get-pocket</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gg</label>
+      <value>fa-brands fa-gg</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gg-circle</label>
+      <value>fa-brands fa-gg-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ghost</label>
+      <value>fa-solid fa-ghost</value>
+    </item>
+    <item>
+      <label>fa-solid fa-gift</label>
+      <value>fa-solid fa-gift</value>
+    </item>
+    <item>
+      <label>fa-solid fa-gifts</label>
+      <value>fa-solid fa-gifts</value>
+    </item>
+    <item>
+      <label>fa-brands fa-git</label>
+      <value>fa-brands fa-git</value>
+    </item>
+    <item>
+      <label>fa-brands fa-git-alt</label>
+      <value>fa-brands fa-git-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-git-square</label>
+      <value>fa-brands fa-git-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-github</label>
+      <value>fa-brands fa-github</value>
+    </item>
+    <item>
+      <label>fa-brands fa-github-alt</label>
+      <value>fa-brands fa-github-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-github-square</label>
+      <value>fa-brands fa-github-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gitkraken</label>
+      <value>fa-brands fa-gitkraken</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gitlab</label>
+      <value>fa-brands fa-gitlab</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gitter</label>
+      <value>fa-brands fa-gitter</value>
+    </item>
+    <item>
+      <label>fa-solid fa-glass-cheers</label>
+      <value>fa-solid fa-glass-cheers</value>
+    </item>
+    <item>
+      <label>fa-solid fa-glass-martini</label>
+      <value>fa-solid fa-glass-martini</value>
+    </item>
+    <item>
+      <label>fa-solid fa-glass-martini-alt</label>
+      <value>fa-solid fa-glass-martini-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-glass-whiskey</label>
+      <value>fa-solid fa-glass-whiskey</value>
+    </item>
+    <item>
+      <label>fa-solid fa-glasses</label>
+      <value>fa-solid fa-glasses</value>
+    </item>
+    <item>
+      <label>fa-brands fa-glide</label>
+      <value>fa-brands fa-glide</value>
+    </item>
+    <item>
+      <label>fa-brands fa-glide-g</label>
+      <value>fa-brands fa-glide-g</value>
+    </item>
+    <item>
+      <label>fa-solid fa-globe</label>
+      <value>fa-solid fa-globe</value>
+    </item>
+    <item>
+      <label>fa-solid fa-globe-africa</label>
+      <value>fa-solid fa-globe-africa</value>
+    </item>
+    <item>
+      <label>fa-solid fa-globe-americas</label>
+      <value>fa-solid fa-globe-americas</value>
+    </item>
+    <item>
+      <label>fa-solid fa-globe-asia</label>
+      <value>fa-solid fa-globe-asia</value>
+    </item>
+    <item>
+      <label>fa-solid fa-globe-europe</label>
+      <value>fa-solid fa-globe-europe</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gofore</label>
+      <value>fa-brands fa-gofore</value>
+    </item>
+    <item>
+      <label>fa-solid fa-golf-ball</label>
+      <value>fa-solid fa-golf-ball</value>
+    </item>
+    <item>
+      <label>fa-brands fa-goodreads</label>
+      <value>fa-brands fa-goodreads</value>
+    </item>
+    <item>
+      <label>fa-brands fa-goodreads-g</label>
+      <value>fa-brands fa-goodreads-g</value>
+    </item>
+    <item>
+      <label>fa-brands fa-google</label>
+      <value>fa-brands fa-google</value>
+    </item>
+    <item>
+      <label>fa-brands fa-google-drive</label>
+      <value>fa-brands fa-google-drive</value>
+    </item>
+    <item>
+      <label>fa-brands fa-google-pay</label>
+      <value>fa-brands fa-google-pay</value>
+    </item>
+    <item>
+      <label>fa-brands fa-google-play</label>
+      <value>fa-brands fa-google-play</value>
+    </item>
+    <item>
+      <label>fa-brands fa-google-plus</label>
+      <value>fa-brands fa-google-plus</value>
+    </item>
+    <item>
+      <label>fa-brands fa-google-plus-g</label>
+      <value>fa-brands fa-google-plus-g</value>
+    </item>
+    <item>
+      <label>fa-brands fa-google-plus-square</label>
+      <value>fa-brands fa-google-plus-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-google-wallet</label>
+      <value>fa-brands fa-google-wallet</value>
+    </item>
+    <item>
+      <label>fa-solid fa-gopuram</label>
+      <value>fa-solid fa-gopuram</value>
+    </item>
+    <item>
+      <label>fa-solid fa-graduation-cap</label>
+      <value>fa-solid fa-graduation-cap</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gratipay</label>
+      <value>fa-brands fa-gratipay</value>
+    </item>
+    <item>
+      <label>fa-brands fa-grav</label>
+      <value>fa-brands fa-grav</value>
+    </item>
+    <item>
+      <label>fa-solid fa-greater-than</label>
+      <value>fa-solid fa-greater-than</value>
+    </item>
+    <item>
+      <label>fa-solid fa-greater-than-equal</label>
+      <value>fa-solid fa-greater-than-equal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grimace</label>
+      <value>fa-solid fa-grimace</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin</label>
+      <value>fa-solid fa-grin</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-alt</label>
+      <value>fa-solid fa-grin-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-beam</label>
+      <value>fa-solid fa-grin-beam</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-beam-sweat</label>
+      <value>fa-solid fa-grin-beam-sweat</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-hearts</label>
+      <value>fa-solid fa-grin-hearts</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-squint</label>
+      <value>fa-solid fa-grin-squint</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-squint-tears</label>
+      <value>fa-solid fa-grin-squint-tears</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-stars</label>
+      <value>fa-solid fa-grin-stars</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-tears</label>
+      <value>fa-solid fa-grin-tears</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-tongue</label>
+      <value>fa-solid fa-grin-tongue</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-tongue-squint</label>
+      <value>fa-solid fa-grin-tongue-squint</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-tongue-wink</label>
+      <value>fa-solid fa-grin-tongue-wink</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grin-wink</label>
+      <value>fa-solid fa-grin-wink</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grip-horizontal</label>
+      <value>fa-solid fa-grip-horizontal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grip-lines</label>
+      <value>fa-solid fa-grip-lines</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grip-lines-vertical</label>
+      <value>fa-solid fa-grip-lines-vertical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-grip-vertical</label>
+      <value>fa-solid fa-grip-vertical</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gripfire</label>
+      <value>fa-brands fa-gripfire</value>
+    </item>
+    <item>
+      <label>fa-brands fa-grunt</label>
+      <value>fa-brands fa-grunt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-guilded</label>
+      <value>fa-brands fa-guilded</value>
+    </item>
+    <item>
+      <label>fa-solid fa-guitar</label>
+      <value>fa-solid fa-guitar</value>
+    </item>
+    <item>
+      <label>fa-brands fa-gulp</label>
+      <value>fa-brands fa-gulp</value>
+    </item>
+    <item>
+      <label>fa-solid fa-h-square</label>
+      <value>fa-solid fa-h-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hacker-news</label>
+      <value>fa-brands fa-hacker-news</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hacker-news-square</label>
+      <value>fa-brands fa-hacker-news-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hackerrank</label>
+      <value>fa-brands fa-hackerrank</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hamburger</label>
+      <value>fa-solid fa-hamburger</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hammer</label>
+      <value>fa-solid fa-hammer</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hamsa</label>
+      <value>fa-solid fa-hamsa</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-holding</label>
+      <value>fa-solid fa-hand-holding</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-holding-heart</label>
+      <value>fa-solid fa-hand-holding-heart</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-holding-medical</label>
+      <value>fa-solid fa-hand-holding-medical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-holding-usd</label>
+      <value>fa-solid fa-hand-holding-usd</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-holding-water</label>
+      <value>fa-solid fa-hand-holding-water</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-lizard</label>
+      <value>fa-solid fa-hand-lizard</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-middle-finger</label>
+      <value>fa-solid fa-hand-middle-finger</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-paper</label>
+      <value>fa-solid fa-hand-paper</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-peace</label>
+      <value>fa-solid fa-hand-peace</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-point-down</label>
+      <value>fa-solid fa-hand-point-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-point-left</label>
+      <value>fa-solid fa-hand-point-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-point-right</label>
+      <value>fa-solid fa-hand-point-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-point-up</label>
+      <value>fa-solid fa-hand-point-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-pointer</label>
+      <value>fa-solid fa-hand-pointer</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-rock</label>
+      <value>fa-solid fa-hand-rock</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-scissors</label>
+      <value>fa-solid fa-hand-scissors</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-sparkles</label>
+      <value>fa-solid fa-hand-sparkles</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hand-spock</label>
+      <value>fa-solid fa-hand-spock</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hands</label>
+      <value>fa-solid fa-hands</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hands-helping</label>
+      <value>fa-solid fa-hands-helping</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hands-wash</label>
+      <value>fa-solid fa-hands-wash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-handshake</label>
+      <value>fa-solid fa-handshake</value>
+    </item>
+    <item>
+      <label>fa-solid fa-handshake-alt-slash</label>
+      <value>fa-solid fa-handshake-alt-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-handshake-slash</label>
+      <value>fa-solid fa-handshake-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hanukiah</label>
+      <value>fa-solid fa-hanukiah</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hard-hat</label>
+      <value>fa-solid fa-hard-hat</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hashtag</label>
+      <value>fa-solid fa-hashtag</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hat-cowboy</label>
+      <value>fa-solid fa-hat-cowboy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hat-cowboy-side</label>
+      <value>fa-solid fa-hat-cowboy-side</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hat-wizard</label>
+      <value>fa-solid fa-hat-wizard</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hdd</label>
+      <value>fa-solid fa-hdd</value>
+    </item>
+    <item>
+      <label>fa-solid fa-head-side-cough</label>
+      <value>fa-solid fa-head-side-cough</value>
+    </item>
+    <item>
+      <label>fa-solid fa-head-side-cough-slash</label>
+      <value>fa-solid fa-head-side-cough-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-head-side-mask</label>
+      <value>fa-solid fa-head-side-mask</value>
+    </item>
+    <item>
+      <label>fa-solid fa-head-side-virus</label>
+      <value>fa-solid fa-head-side-virus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-heading</label>
+      <value>fa-solid fa-heading</value>
+    </item>
+    <item>
+      <label>fa-solid fa-headphones</label>
+      <value>fa-solid fa-headphones</value>
+    </item>
+    <item>
+      <label>fa-solid fa-headphones-alt</label>
+      <value>fa-solid fa-headphones-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-headset</label>
+      <value>fa-solid fa-headset</value>
+    </item>
+    <item>
+      <label>fa-solid fa-heart</label>
+      <value>fa-solid fa-heart</value>
+    </item>
+    <item>
+      <label>fa-solid fa-heart-broken</label>
+      <value>fa-solid fa-heart-broken</value>
+    </item>
+    <item>
+      <label>fa-solid fa-heartbeat</label>
+      <value>fa-solid fa-heartbeat</value>
+    </item>
+    <item>
+      <label>fa-solid fa-helicopter</label>
+      <value>fa-solid fa-helicopter</value>
+    </item>
+    <item>
+      <label>fa-solid fa-highlighter</label>
+      <value>fa-solid fa-highlighter</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hiking</label>
+      <value>fa-solid fa-hiking</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hippo</label>
+      <value>fa-solid fa-hippo</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hips</label>
+      <value>fa-brands fa-hips</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hire-a-helper</label>
+      <value>fa-brands fa-hire-a-helper</value>
+    </item>
+    <item>
+      <label>fa-solid fa-history</label>
+      <value>fa-solid fa-history</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hive</label>
+      <value>fa-brands fa-hive</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hockey-puck</label>
+      <value>fa-solid fa-hockey-puck</value>
+    </item>
+    <item>
+      <label>fa-solid fa-holly-berry</label>
+      <value>fa-solid fa-holly-berry</value>
+    </item>
+    <item>
+      <label>fa-solid fa-home</label>
+      <value>fa-solid fa-home</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hooli</label>
+      <value>fa-brands fa-hooli</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hornbill</label>
+      <value>fa-brands fa-hornbill</value>
+    </item>
+    <item>
+      <label>fa-solid fa-horse</label>
+      <value>fa-solid fa-horse</value>
+    </item>
+    <item>
+      <label>fa-solid fa-horse-head</label>
+      <value>fa-solid fa-horse-head</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hospital</label>
+      <value>fa-solid fa-hospital</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hospital-alt</label>
+      <value>fa-solid fa-hospital-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hospital-symbol</label>
+      <value>fa-solid fa-hospital-symbol</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hospital-user</label>
+      <value>fa-solid fa-hospital-user</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hot-tub</label>
+      <value>fa-solid fa-hot-tub</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hotdog</label>
+      <value>fa-solid fa-hotdog</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hotel</label>
+      <value>fa-solid fa-hotel</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hotjar</label>
+      <value>fa-brands fa-hotjar</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hourglass</label>
+      <value>fa-solid fa-hourglass</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hourglass-end</label>
+      <value>fa-solid fa-hourglass-end</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hourglass-half</label>
+      <value>fa-solid fa-hourglass-half</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hourglass-start</label>
+      <value>fa-solid fa-hourglass-start</value>
+    </item>
+    <item>
+      <label>fa-solid fa-house-damage</label>
+      <value>fa-solid fa-house-damage</value>
+    </item>
+    <item>
+      <label>fa-solid fa-house-user</label>
+      <value>fa-solid fa-house-user</value>
+    </item>
+    <item>
+      <label>fa-brands fa-houzz</label>
+      <value>fa-brands fa-houzz</value>
+    </item>
+    <item>
+      <label>fa-solid fa-hryvnia</label>
+      <value>fa-solid fa-hryvnia</value>
+    </item>
+    <item>
+      <label>fa-brands fa-html5</label>
+      <value>fa-brands fa-html5</value>
+    </item>
+    <item>
+      <label>fa-brands fa-hubspot</label>
+      <value>fa-brands fa-hubspot</value>
+    </item>
+    <item>
+      <label>fa-solid fa-i-cursor</label>
+      <value>fa-solid fa-i-cursor</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ice-cream</label>
+      <value>fa-solid fa-ice-cream</value>
+    </item>
+    <item>
+      <label>fa-solid fa-icicles</label>
+      <value>fa-solid fa-icicles</value>
+    </item>
+    <item>
+      <label>fa-solid fa-icons</label>
+      <value>fa-solid fa-icons</value>
+    </item>
+    <item>
+      <label>fa-solid fa-id-badge</label>
+      <value>fa-solid fa-id-badge</value>
+    </item>
+    <item>
+      <label>fa-solid fa-id-card</label>
+      <value>fa-solid fa-id-card</value>
+    </item>
+    <item>
+      <label>fa-solid fa-id-card-alt</label>
+      <value>fa-solid fa-id-card-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ideal</label>
+      <value>fa-brands fa-ideal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-igloo</label>
+      <value>fa-solid fa-igloo</value>
+    </item>
+    <item>
+      <label>fa-solid fa-image</label>
+      <value>fa-solid fa-image</value>
+    </item>
+    <item>
+      <label>fa-solid fa-images</label>
+      <value>fa-solid fa-images</value>
+    </item>
+    <item>
+      <label>fa-brands fa-imdb</label>
+      <value>fa-brands fa-imdb</value>
+    </item>
+    <item>
+      <label>fa-solid fa-inbox</label>
+      <value>fa-solid fa-inbox</value>
+    </item>
+    <item>
+      <label>fa-solid fa-indent</label>
+      <value>fa-solid fa-indent</value>
+    </item>
+    <item>
+      <label>fa-solid fa-industry</label>
+      <value>fa-solid fa-industry</value>
+    </item>
+    <item>
+      <label>fa-solid fa-infinity</label>
+      <value>fa-solid fa-infinity</value>
+    </item>
+    <item>
+      <label>fa-solid fa-info</label>
+      <value>fa-solid fa-info</value>
+    </item>
+    <item>
+      <label>fa-solid fa-info-circle</label>
+      <value>fa-solid fa-info-circle</value>
+    </item>
+    <item>
+      <label>fa-brands fa-innosoft</label>
+      <value>fa-brands fa-innosoft</value>
+    </item>
+    <item>
+      <label>fa-brands fa-instagram</label>
+      <value>fa-brands fa-instagram</value>
+    </item>
+    <item>
+      <label>fa-brands fa-instagram-square</label>
+      <value>fa-brands fa-instagram-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-instalod</label>
+      <value>fa-brands fa-instalod</value>
+    </item>
+    <item>
+      <label>fa-brands fa-intercom</label>
+      <value>fa-brands fa-intercom</value>
+    </item>
+    <item>
+      <label>fa-brands fa-internet-explorer</label>
+      <value>fa-brands fa-internet-explorer</value>
+    </item>
+    <item>
+      <label>fa-brands fa-invision</label>
+      <value>fa-brands fa-invision</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ioxhost</label>
+      <value>fa-brands fa-ioxhost</value>
+    </item>
+    <item>
+      <label>fa-solid fa-italic</label>
+      <value>fa-solid fa-italic</value>
+    </item>
+    <item>
+      <label>fa-brands fa-itch-io</label>
+      <value>fa-brands fa-itch-io</value>
+    </item>
+    <item>
+      <label>fa-brands fa-itunes</label>
+      <value>fa-brands fa-itunes</value>
+    </item>
+    <item>
+      <label>fa-brands fa-itunes-note</label>
+      <value>fa-brands fa-itunes-note</value>
+    </item>
+    <item>
+      <label>fa-brands fa-java</label>
+      <value>fa-brands fa-java</value>
+    </item>
+    <item>
+      <label>fa-solid fa-jedi</label>
+      <value>fa-solid fa-jedi</value>
+    </item>
+    <item>
+      <label>fa-brands fa-jedi-order</label>
+      <value>fa-brands fa-jedi-order</value>
+    </item>
+    <item>
+      <label>fa-brands fa-jenkins</label>
+      <value>fa-brands fa-jenkins</value>
+    </item>
+    <item>
+      <label>fa-brands fa-jira</label>
+      <value>fa-brands fa-jira</value>
+    </item>
+    <item>
+      <label>fa-brands fa-joget</label>
+      <value>fa-brands fa-joget</value>
+    </item>
+    <item>
+      <label>fa-solid fa-joint</label>
+      <value>fa-solid fa-joint</value>
+    </item>
+    <item>
+      <label>fa-brands fa-joomla</label>
+      <value>fa-brands fa-joomla</value>
+    </item>
+    <item>
+      <label>fa-solid fa-journal-whills</label>
+      <value>fa-solid fa-journal-whills</value>
+    </item>
+    <item>
+      <label>fa-brands fa-js</label>
+      <value>fa-brands fa-js</value>
+    </item>
+    <item>
+      <label>fa-brands fa-js-square</label>
+      <value>fa-brands fa-js-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-jsfiddle</label>
+      <value>fa-brands fa-jsfiddle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-kaaba</label>
+      <value>fa-solid fa-kaaba</value>
+    </item>
+    <item>
+      <label>fa-brands fa-kaggle</label>
+      <value>fa-brands fa-kaggle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-key</label>
+      <value>fa-solid fa-key</value>
+    </item>
+    <item>
+      <label>fa-brands fa-keybase</label>
+      <value>fa-brands fa-keybase</value>
+    </item>
+    <item>
+      <label>fa-solid fa-keyboard</label>
+      <value>fa-solid fa-keyboard</value>
+    </item>
+    <item>
+      <label>fa-brands fa-keycdn</label>
+      <value>fa-brands fa-keycdn</value>
+    </item>
+    <item>
+      <label>fa-solid fa-khanda</label>
+      <value>fa-solid fa-khanda</value>
+    </item>
+    <item>
+      <label>fa-brands fa-kickstarter</label>
+      <value>fa-brands fa-kickstarter</value>
+    </item>
+    <item>
+      <label>fa-brands fa-kickstarter-k</label>
+      <value>fa-brands fa-kickstarter-k</value>
+    </item>
+    <item>
+      <label>fa-solid fa-kiss</label>
+      <value>fa-solid fa-kiss</value>
+    </item>
+    <item>
+      <label>fa-solid fa-kiss-beam</label>
+      <value>fa-solid fa-kiss-beam</value>
+    </item>
+    <item>
+      <label>fa-solid fa-kiss-wink-heart</label>
+      <value>fa-solid fa-kiss-wink-heart</value>
+    </item>
+    <item>
+      <label>fa-solid fa-kiwi-bird</label>
+      <value>fa-solid fa-kiwi-bird</value>
+    </item>
+    <item>
+      <label>fa-brands fa-korvue</label>
+      <value>fa-brands fa-korvue</value>
+    </item>
+    <item>
+      <label>fa-solid fa-landmark</label>
+      <value>fa-solid fa-landmark</value>
+    </item>
+    <item>
+      <label>fa-solid fa-language</label>
+      <value>fa-solid fa-language</value>
+    </item>
+    <item>
+      <label>fa-solid fa-laptop</label>
+      <value>fa-solid fa-laptop</value>
+    </item>
+    <item>
+      <label>fa-solid fa-laptop-code</label>
+      <value>fa-solid fa-laptop-code</value>
+    </item>
+    <item>
+      <label>fa-solid fa-laptop-house</label>
+      <value>fa-solid fa-laptop-house</value>
+    </item>
+    <item>
+      <label>fa-solid fa-laptop-medical</label>
+      <value>fa-solid fa-laptop-medical</value>
+    </item>
+    <item>
+      <label>fa-brands fa-laravel</label>
+      <value>fa-brands fa-laravel</value>
+    </item>
+    <item>
+      <label>fa-brands fa-lastfm</label>
+      <value>fa-brands fa-lastfm</value>
+    </item>
+    <item>
+      <label>fa-brands fa-lastfm-square</label>
+      <value>fa-brands fa-lastfm-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-laugh</label>
+      <value>fa-solid fa-laugh</value>
+    </item>
+    <item>
+      <label>fa-solid fa-laugh-beam</label>
+      <value>fa-solid fa-laugh-beam</value>
+    </item>
+    <item>
+      <label>fa-solid fa-laugh-squint</label>
+      <value>fa-solid fa-laugh-squint</value>
+    </item>
+    <item>
+      <label>fa-solid fa-laugh-wink</label>
+      <value>fa-solid fa-laugh-wink</value>
+    </item>
+    <item>
+      <label>fa-solid fa-layer-group</label>
+      <value>fa-solid fa-layer-group</value>
+    </item>
+    <item>
+      <label>fa-solid fa-leaf</label>
+      <value>fa-solid fa-leaf</value>
+    </item>
+    <item>
+      <label>fa-brands fa-leanpub</label>
+      <value>fa-brands fa-leanpub</value>
+    </item>
+    <item>
+      <label>fa-solid fa-lemon</label>
+      <value>fa-solid fa-lemon</value>
+    </item>
+    <item>
+      <label>fa-brands fa-less</label>
+      <value>fa-brands fa-less</value>
+    </item>
+    <item>
+      <label>fa-solid fa-less-than</label>
+      <value>fa-solid fa-less-than</value>
+    </item>
+    <item>
+      <label>fa-solid fa-less-than-equal</label>
+      <value>fa-solid fa-less-than-equal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-level-down-alt</label>
+      <value>fa-solid fa-level-down-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-level-up-alt</label>
+      <value>fa-solid fa-level-up-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-life-ring</label>
+      <value>fa-solid fa-life-ring</value>
+    </item>
+    <item>
+      <label>fa-solid fa-lightbulb</label>
+      <value>fa-solid fa-lightbulb</value>
+    </item>
+    <item>
+      <label>fa-brands fa-line</label>
+      <value>fa-brands fa-line</value>
+    </item>
+    <item>
+      <label>fa-solid fa-link</label>
+      <value>fa-solid fa-link</value>
+    </item>
+    <item>
+      <label>fa-brands fa-linkedin</label>
+      <value>fa-brands fa-linkedin</value>
+    </item>
+    <item>
+      <label>fa-brands fa-linkedin-in</label>
+      <value>fa-brands fa-linkedin-in</value>
+    </item>
+    <item>
+      <label>fa-brands fa-linode</label>
+      <value>fa-brands fa-linode</value>
+    </item>
+    <item>
+      <label>fa-brands fa-linux</label>
+      <value>fa-brands fa-linux</value>
+    </item>
+    <item>
+      <label>fa-solid fa-lira-sign</label>
+      <value>fa-solid fa-lira-sign</value>
+    </item>
+    <item>
+      <label>fa-solid fa-list</label>
+      <value>fa-solid fa-list</value>
+    </item>
+    <item>
+      <label>fa-solid fa-list-alt</label>
+      <value>fa-solid fa-list-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-list-ol</label>
+      <value>fa-solid fa-list-ol</value>
+    </item>
+    <item>
+      <label>fa-solid fa-list-ul</label>
+      <value>fa-solid fa-list-ul</value>
+    </item>
+    <item>
+      <label>fa-solid fa-location-arrow</label>
+      <value>fa-solid fa-location-arrow</value>
+    </item>
+    <item>
+      <label>fa-solid fa-lock</label>
+      <value>fa-solid fa-lock</value>
+    </item>
+    <item>
+      <label>fa-solid fa-lock-open</label>
+      <value>fa-solid fa-lock-open</value>
+    </item>
+    <item>
+      <label>fa-solid fa-long-arrow-alt-down</label>
+      <value>fa-solid fa-long-arrow-alt-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-long-arrow-alt-left</label>
+      <value>fa-solid fa-long-arrow-alt-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-long-arrow-alt-right</label>
+      <value>fa-solid fa-long-arrow-alt-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-long-arrow-alt-up</label>
+      <value>fa-solid fa-long-arrow-alt-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-low-vision</label>
+      <value>fa-solid fa-low-vision</value>
+    </item>
+    <item>
+      <label>fa-solid fa-luggage-cart</label>
+      <value>fa-solid fa-luggage-cart</value>
+    </item>
+    <item>
+      <label>fa-solid fa-lungs</label>
+      <value>fa-solid fa-lungs</value>
+    </item>
+    <item>
+      <label>fa-solid fa-lungs-virus</label>
+      <value>fa-solid fa-lungs-virus</value>
+    </item>
+    <item>
+      <label>fa-brands fa-lyft</label>
+      <value>fa-brands fa-lyft</value>
+    </item>
+    <item>
+      <label>fa-brands fa-magento</label>
+      <value>fa-brands fa-magento</value>
+    </item>
+    <item>
+      <label>fa-solid fa-magic</label>
+      <value>fa-solid fa-magic</value>
+    </item>
+    <item>
+      <label>fa-solid fa-magnet</label>
+      <value>fa-solid fa-magnet</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mail-bulk</label>
+      <value>fa-solid fa-mail-bulk</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mailchimp</label>
+      <value>fa-brands fa-mailchimp</value>
+    </item>
+    <item>
+      <label>fa-solid fa-male</label>
+      <value>fa-solid fa-male</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mandalorian</label>
+      <value>fa-brands fa-mandalorian</value>
+    </item>
+    <item>
+      <label>fa-solid fa-map</label>
+      <value>fa-solid fa-map</value>
+    </item>
+    <item>
+      <label>fa-solid fa-map-marked</label>
+      <value>fa-solid fa-map-marked</value>
+    </item>
+    <item>
+      <label>fa-solid fa-map-marked-alt</label>
+      <value>fa-solid fa-map-marked-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-map-marker</label>
+      <value>fa-solid fa-map-marker</value>
+    </item>
+    <item>
+      <label>fa-solid fa-map-marker-alt</label>
+      <value>fa-solid fa-map-marker-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-map-pin</label>
+      <value>fa-solid fa-map-pin</value>
+    </item>
+    <item>
+      <label>fa-solid fa-map-signs</label>
+      <value>fa-solid fa-map-signs</value>
+    </item>
+    <item>
+      <label>fa-brands fa-markdown</label>
+      <value>fa-brands fa-markdown</value>
+    </item>
+    <item>
+      <label>fa-solid fa-marker</label>
+      <value>fa-solid fa-marker</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mars</label>
+      <value>fa-solid fa-mars</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mars-double</label>
+      <value>fa-solid fa-mars-double</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mars-stroke</label>
+      <value>fa-solid fa-mars-stroke</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mars-stroke-h</label>
+      <value>fa-solid fa-mars-stroke-h</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mars-stroke-v</label>
+      <value>fa-solid fa-mars-stroke-v</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mask</label>
+      <value>fa-solid fa-mask</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mastodon</label>
+      <value>fa-brands fa-mastodon</value>
+    </item>
+    <item>
+      <label>fa-brands fa-maxcdn</label>
+      <value>fa-brands fa-maxcdn</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mdb</label>
+      <value>fa-brands fa-mdb</value>
+    </item>
+    <item>
+      <label>fa-solid fa-medal</label>
+      <value>fa-solid fa-medal</value>
+    </item>
+    <item>
+      <label>fa-brands fa-medapps</label>
+      <value>fa-brands fa-medapps</value>
+    </item>
+    <item>
+      <label>fa-brands fa-medium</label>
+      <value>fa-brands fa-medium</value>
+    </item>
+    <item>
+      <label>fa-brands fa-medium-m</label>
+      <value>fa-brands fa-medium-m</value>
+    </item>
+    <item>
+      <label>fa-solid fa-medkit</label>
+      <value>fa-solid fa-medkit</value>
+    </item>
+    <item>
+      <label>fa-brands fa-medrt</label>
+      <value>fa-brands fa-medrt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-meetup</label>
+      <value>fa-brands fa-meetup</value>
+    </item>
+    <item>
+      <label>fa-brands fa-megaport</label>
+      <value>fa-brands fa-megaport</value>
+    </item>
+    <item>
+      <label>fa-solid fa-meh</label>
+      <value>fa-solid fa-meh</value>
+    </item>
+    <item>
+      <label>fa-solid fa-meh-blank</label>
+      <value>fa-solid fa-meh-blank</value>
+    </item>
+    <item>
+      <label>fa-solid fa-meh-rolling-eyes</label>
+      <value>fa-solid fa-meh-rolling-eyes</value>
+    </item>
+    <item>
+      <label>fa-solid fa-memory</label>
+      <value>fa-solid fa-memory</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mendeley</label>
+      <value>fa-brands fa-mendeley</value>
+    </item>
+    <item>
+      <label>fa-solid fa-menorah</label>
+      <value>fa-solid fa-menorah</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mercury</label>
+      <value>fa-solid fa-mercury</value>
+    </item>
+    <item>
+      <label>fa-solid fa-meteor</label>
+      <value>fa-solid fa-meteor</value>
+    </item>
+    <item>
+      <label>fa-brands fa-microblog</label>
+      <value>fa-brands fa-microblog</value>
+    </item>
+    <item>
+      <label>fa-solid fa-microchip</label>
+      <value>fa-solid fa-microchip</value>
+    </item>
+    <item>
+      <label>fa-solid fa-microphone</label>
+      <value>fa-solid fa-microphone</value>
+    </item>
+    <item>
+      <label>fa-solid fa-microphone-alt</label>
+      <value>fa-solid fa-microphone-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-microphone-alt-slash</label>
+      <value>fa-solid fa-microphone-alt-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-microphone-slash</label>
+      <value>fa-solid fa-microphone-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-microscope</label>
+      <value>fa-solid fa-microscope</value>
+    </item>
+    <item>
+      <label>fa-brands fa-microsoft</label>
+      <value>fa-brands fa-microsoft</value>
+    </item>
+    <item>
+      <label>fa-solid fa-minus</label>
+      <value>fa-solid fa-minus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-minus-circle</label>
+      <value>fa-solid fa-minus-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-minus-square</label>
+      <value>fa-solid fa-minus-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mitten</label>
+      <value>fa-solid fa-mitten</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mix</label>
+      <value>fa-brands fa-mix</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mixcloud</label>
+      <value>fa-brands fa-mixcloud</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mixer</label>
+      <value>fa-brands fa-mixer</value>
+    </item>
+    <item>
+      <label>fa-brands fa-mizuni</label>
+      <value>fa-brands fa-mizuni</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mobile</label>
+      <value>fa-solid fa-mobile</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mobile-alt</label>
+      <value>fa-solid fa-mobile-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-modx</label>
+      <value>fa-brands fa-modx</value>
+    </item>
+    <item>
+      <label>fa-brands fa-monero</label>
+      <value>fa-brands fa-monero</value>
+    </item>
+    <item>
+      <label>fa-solid fa-money-bill</label>
+      <value>fa-solid fa-money-bill</value>
+    </item>
+    <item>
+      <label>fa-solid fa-money-bill-alt</label>
+      <value>fa-solid fa-money-bill-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-money-bill-wave</label>
+      <value>fa-solid fa-money-bill-wave</value>
+    </item>
+    <item>
+      <label>fa-solid fa-money-bill-wave-alt</label>
+      <value>fa-solid fa-money-bill-wave-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-money-check</label>
+      <value>fa-solid fa-money-check</value>
+    </item>
+    <item>
+      <label>fa-solid fa-money-check-alt</label>
+      <value>fa-solid fa-money-check-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-monument</label>
+      <value>fa-solid fa-monument</value>
+    </item>
+    <item>
+      <label>fa-solid fa-moon</label>
+      <value>fa-solid fa-moon</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mortar-pestle</label>
+      <value>fa-solid fa-mortar-pestle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mosque</label>
+      <value>fa-solid fa-mosque</value>
+    </item>
+    <item>
+      <label>fa-solid fa-motorcycle</label>
+      <value>fa-solid fa-motorcycle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mountain</label>
+      <value>fa-solid fa-mountain</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mouse</label>
+      <value>fa-solid fa-mouse</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mouse-pointer</label>
+      <value>fa-solid fa-mouse-pointer</value>
+    </item>
+    <item>
+      <label>fa-solid fa-mug-hot</label>
+      <value>fa-solid fa-mug-hot</value>
+    </item>
+    <item>
+      <label>fa-solid fa-music</label>
+      <value>fa-solid fa-music</value>
+    </item>
+    <item>
+      <label>fa-brands fa-napster</label>
+      <value>fa-brands fa-napster</value>
+    </item>
+    <item>
+      <label>fa-brands fa-neos</label>
+      <value>fa-brands fa-neos</value>
+    </item>
+    <item>
+      <label>fa-solid fa-network-wired</label>
+      <value>fa-solid fa-network-wired</value>
+    </item>
+    <item>
+      <label>fa-solid fa-neuter</label>
+      <value>fa-solid fa-neuter</value>
+    </item>
+    <item>
+      <label>fa-solid fa-newspaper</label>
+      <value>fa-solid fa-newspaper</value>
+    </item>
+    <item>
+      <label>fa-brands fa-nimblr</label>
+      <value>fa-brands fa-nimblr</value>
+    </item>
+    <item>
+      <label>fa-brands fa-node</label>
+      <value>fa-brands fa-node</value>
+    </item>
+    <item>
+      <label>fa-brands fa-node-js</label>
+      <value>fa-brands fa-node-js</value>
+    </item>
+    <item>
+      <label>fa-solid fa-not-equal</label>
+      <value>fa-solid fa-not-equal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-notes-medical</label>
+      <value>fa-solid fa-notes-medical</value>
+    </item>
+    <item>
+      <label>fa-brands fa-npm</label>
+      <value>fa-brands fa-npm</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ns8</label>
+      <value>fa-brands fa-ns8</value>
+    </item>
+    <item>
+      <label>fa-brands fa-nutritionix</label>
+      <value>fa-brands fa-nutritionix</value>
+    </item>
+    <item>
+      <label>fa-solid fa-object-group</label>
+      <value>fa-solid fa-object-group</value>
+    </item>
+    <item>
+      <label>fa-solid fa-object-ungroup</label>
+      <value>fa-solid fa-object-ungroup</value>
+    </item>
+    <item>
+      <label>fa-brands fa-octopus-deploy</label>
+      <value>fa-brands fa-octopus-deploy</value>
+    </item>
+    <item>
+      <label>fa-brands fa-odnoklassniki</label>
+      <value>fa-brands fa-odnoklassniki</value>
+    </item>
+    <item>
+      <label>fa-brands fa-odnoklassniki-square</label>
+      <value>fa-brands fa-odnoklassniki-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-oil-can</label>
+      <value>fa-solid fa-oil-can</value>
+    </item>
+    <item>
+      <label>fa-brands fa-old-republic</label>
+      <value>fa-brands fa-old-republic</value>
+    </item>
+    <item>
+      <label>fa-solid fa-om</label>
+      <value>fa-solid fa-om</value>
+    </item>
+    <item>
+      <label>fa-brands fa-opencart</label>
+      <value>fa-brands fa-opencart</value>
+    </item>
+    <item>
+      <label>fa-brands fa-openid</label>
+      <value>fa-brands fa-openid</value>
+    </item>
+    <item>
+      <label>fa-brands fa-opera</label>
+      <value>fa-brands fa-opera</value>
+    </item>
+    <item>
+      <label>fa-brands fa-optin-monster</label>
+      <value>fa-brands fa-optin-monster</value>
+    </item>
+    <item>
+      <label>fa-brands fa-orcid</label>
+      <value>fa-brands fa-orcid</value>
+    </item>
+    <item>
+      <label>fa-brands fa-osi</label>
+      <value>fa-brands fa-osi</value>
+    </item>
+    <item>
+      <label>fa-solid fa-otter</label>
+      <value>fa-solid fa-otter</value>
+    </item>
+    <item>
+      <label>fa-solid fa-outdent</label>
+      <value>fa-solid fa-outdent</value>
+    </item>
+    <item>
+      <label>fa-brands fa-page4</label>
+      <value>fa-brands fa-page4</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pagelines</label>
+      <value>fa-brands fa-pagelines</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pager</label>
+      <value>fa-solid fa-pager</value>
+    </item>
+    <item>
+      <label>fa-solid fa-paint-brush</label>
+      <value>fa-solid fa-paint-brush</value>
+    </item>
+    <item>
+      <label>fa-solid fa-paint-roller</label>
+      <value>fa-solid fa-paint-roller</value>
+    </item>
+    <item>
+      <label>fa-solid fa-palette</label>
+      <value>fa-solid fa-palette</value>
+    </item>
+    <item>
+      <label>fa-brands fa-palfed</label>
+      <value>fa-brands fa-palfed</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pallet</label>
+      <value>fa-solid fa-pallet</value>
+    </item>
+    <item>
+      <label>fa-solid fa-paper-plane</label>
+      <value>fa-solid fa-paper-plane</value>
+    </item>
+    <item>
+      <label>fa-solid fa-paperclip</label>
+      <value>fa-solid fa-paperclip</value>
+    </item>
+    <item>
+      <label>fa-solid fa-parachute-box</label>
+      <value>fa-solid fa-parachute-box</value>
+    </item>
+    <item>
+      <label>fa-solid fa-paragraph</label>
+      <value>fa-solid fa-paragraph</value>
+    </item>
+    <item>
+      <label>fa-solid fa-parking</label>
+      <value>fa-solid fa-parking</value>
+    </item>
+    <item>
+      <label>fa-solid fa-passport</label>
+      <value>fa-solid fa-passport</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pastafarianism</label>
+      <value>fa-solid fa-pastafarianism</value>
+    </item>
+    <item>
+      <label>fa-solid fa-paste</label>
+      <value>fa-solid fa-paste</value>
+    </item>
+    <item>
+      <label>fa-brands fa-patreon</label>
+      <value>fa-brands fa-patreon</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pause</label>
+      <value>fa-solid fa-pause</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pause-circle</label>
+      <value>fa-solid fa-pause-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-paw</label>
+      <value>fa-solid fa-paw</value>
+    </item>
+    <item>
+      <label>fa-brands fa-paypal</label>
+      <value>fa-brands fa-paypal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-peace</label>
+      <value>fa-solid fa-peace</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pen</label>
+      <value>fa-solid fa-pen</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pen-alt</label>
+      <value>fa-solid fa-pen-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pen-fancy</label>
+      <value>fa-solid fa-pen-fancy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pen-nib</label>
+      <value>fa-solid fa-pen-nib</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pen-square</label>
+      <value>fa-solid fa-pen-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pencil-alt</label>
+      <value>fa-solid fa-pencil-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pencil-ruler</label>
+      <value>fa-solid fa-pencil-ruler</value>
+    </item>
+    <item>
+      <label>fa-brands fa-penny-arcade</label>
+      <value>fa-brands fa-penny-arcade</value>
+    </item>
+    <item>
+      <label>fa-solid fa-people-arrows</label>
+      <value>fa-solid fa-people-arrows</value>
+    </item>
+    <item>
+      <label>fa-solid fa-people-carry</label>
+      <value>fa-solid fa-people-carry</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pepper-hot</label>
+      <value>fa-solid fa-pepper-hot</value>
+    </item>
+    <item>
+      <label>fa-brands fa-perbyte</label>
+      <value>fa-brands fa-perbyte</value>
+    </item>
+    <item>
+      <label>fa-solid fa-percent</label>
+      <value>fa-solid fa-percent</value>
+    </item>
+    <item>
+      <label>fa-solid fa-percentage</label>
+      <value>fa-solid fa-percentage</value>
+    </item>
+    <item>
+      <label>fa-brands fa-periscope</label>
+      <value>fa-brands fa-periscope</value>
+    </item>
+    <item>
+      <label>fa-solid fa-person-booth</label>
+      <value>fa-solid fa-person-booth</value>
+    </item>
+    <item>
+      <label>fa-brands fa-phabricator</label>
+      <value>fa-brands fa-phabricator</value>
+    </item>
+    <item>
+      <label>fa-brands fa-phoenix-framework</label>
+      <value>fa-brands fa-phoenix-framework</value>
+    </item>
+    <item>
+      <label>fa-brands fa-phoenix-squadron</label>
+      <value>fa-brands fa-phoenix-squadron</value>
+    </item>
+    <item>
+      <label>fa-solid fa-phone</label>
+      <value>fa-solid fa-phone</value>
+    </item>
+    <item>
+      <label>fa-solid fa-phone-alt</label>
+      <value>fa-solid fa-phone-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-phone-slash</label>
+      <value>fa-solid fa-phone-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-phone-square</label>
+      <value>fa-solid fa-phone-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-phone-square-alt</label>
+      <value>fa-solid fa-phone-square-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-phone-volume</label>
+      <value>fa-solid fa-phone-volume</value>
+    </item>
+    <item>
+      <label>fa-solid fa-photo-video</label>
+      <value>fa-solid fa-photo-video</value>
+    </item>
+    <item>
+      <label>fa-brands fa-php</label>
+      <value>fa-brands fa-php</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pied-piper</label>
+      <value>fa-brands fa-pied-piper</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pied-piper-alt</label>
+      <value>fa-brands fa-pied-piper-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pied-piper-hat</label>
+      <value>fa-brands fa-pied-piper-hat</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pied-piper-pp</label>
+      <value>fa-brands fa-pied-piper-pp</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pied-piper-square</label>
+      <value>fa-brands fa-pied-piper-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-piggy-bank</label>
+      <value>fa-solid fa-piggy-bank</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pills</label>
+      <value>fa-solid fa-pills</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pinterest</label>
+      <value>fa-brands fa-pinterest</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pinterest-p</label>
+      <value>fa-brands fa-pinterest-p</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pinterest-square</label>
+      <value>fa-brands fa-pinterest-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pizza-slice</label>
+      <value>fa-solid fa-pizza-slice</value>
+    </item>
+    <item>
+      <label>fa-solid fa-place-of-worship</label>
+      <value>fa-solid fa-place-of-worship</value>
+    </item>
+    <item>
+      <label>fa-solid fa-plane</label>
+      <value>fa-solid fa-plane</value>
+    </item>
+    <item>
+      <label>fa-solid fa-plane-arrival</label>
+      <value>fa-solid fa-plane-arrival</value>
+    </item>
+    <item>
+      <label>fa-solid fa-plane-departure</label>
+      <value>fa-solid fa-plane-departure</value>
+    </item>
+    <item>
+      <label>fa-solid fa-plane-slash</label>
+      <value>fa-solid fa-plane-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-play</label>
+      <value>fa-solid fa-play</value>
+    </item>
+    <item>
+      <label>fa-solid fa-play-circle</label>
+      <value>fa-solid fa-play-circle</value>
+    </item>
+    <item>
+      <label>fa-brands fa-playstation</label>
+      <value>fa-brands fa-playstation</value>
+    </item>
+    <item>
+      <label>fa-solid fa-plug</label>
+      <value>fa-solid fa-plug</value>
+    </item>
+    <item>
+      <label>fa-solid fa-plus</label>
+      <value>fa-solid fa-plus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-plus-circle</label>
+      <value>fa-solid fa-plus-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-plus-square</label>
+      <value>fa-solid fa-plus-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-podcast</label>
+      <value>fa-solid fa-podcast</value>
+    </item>
+    <item>
+      <label>fa-solid fa-poll</label>
+      <value>fa-solid fa-poll</value>
+    </item>
+    <item>
+      <label>fa-solid fa-poll-h</label>
+      <value>fa-solid fa-poll-h</value>
+    </item>
+    <item>
+      <label>fa-solid fa-poo</label>
+      <value>fa-solid fa-poo</value>
+    </item>
+    <item>
+      <label>fa-solid fa-poo-storm</label>
+      <value>fa-solid fa-poo-storm</value>
+    </item>
+    <item>
+      <label>fa-solid fa-poop</label>
+      <value>fa-solid fa-poop</value>
+    </item>
+    <item>
+      <label>fa-solid fa-portrait</label>
+      <value>fa-solid fa-portrait</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pound-sign</label>
+      <value>fa-solid fa-pound-sign</value>
+    </item>
+    <item>
+      <label>fa-solid fa-power-off</label>
+      <value>fa-solid fa-power-off</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pray</label>
+      <value>fa-solid fa-pray</value>
+    </item>
+    <item>
+      <label>fa-solid fa-praying-hands</label>
+      <value>fa-solid fa-praying-hands</value>
+    </item>
+    <item>
+      <label>fa-solid fa-prescription</label>
+      <value>fa-solid fa-prescription</value>
+    </item>
+    <item>
+      <label>fa-solid fa-prescription-bottle</label>
+      <value>fa-solid fa-prescription-bottle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-prescription-bottle-alt</label>
+      <value>fa-solid fa-prescription-bottle-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-print</label>
+      <value>fa-solid fa-print</value>
+    </item>
+    <item>
+      <label>fa-solid fa-procedures</label>
+      <value>fa-solid fa-procedures</value>
+    </item>
+    <item>
+      <label>fa-brands fa-product-hunt</label>
+      <value>fa-brands fa-product-hunt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-project-diagram</label>
+      <value>fa-solid fa-project-diagram</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pump-medical</label>
+      <value>fa-solid fa-pump-medical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-pump-soap</label>
+      <value>fa-solid fa-pump-soap</value>
+    </item>
+    <item>
+      <label>fa-brands fa-pushed</label>
+      <value>fa-brands fa-pushed</value>
+    </item>
+    <item>
+      <label>fa-solid fa-puzzle-piece</label>
+      <value>fa-solid fa-puzzle-piece</value>
+    </item>
+    <item>
+      <label>fa-brands fa-python</label>
+      <value>fa-brands fa-python</value>
+    </item>
+    <item>
+      <label>fa-brands fa-qq</label>
+      <value>fa-brands fa-qq</value>
+    </item>
+    <item>
+      <label>fa-solid fa-qrcode</label>
+      <value>fa-solid fa-qrcode</value>
+    </item>
+    <item>
+      <label>fa-solid fa-question</label>
+      <value>fa-solid fa-question</value>
+    </item>
+    <item>
+      <label>fa-solid fa-question-circle</label>
+      <value>fa-solid fa-question-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-quidditch</label>
+      <value>fa-solid fa-quidditch</value>
+    </item>
+    <item>
+      <label>fa-brands fa-quinscape</label>
+      <value>fa-brands fa-quinscape</value>
+    </item>
+    <item>
+      <label>fa-brands fa-quora</label>
+      <value>fa-brands fa-quora</value>
+    </item>
+    <item>
+      <label>fa-solid fa-quote-left</label>
+      <value>fa-solid fa-quote-left</value>
+    </item>
+    <item>
+      <label>fa-solid fa-quote-right</label>
+      <value>fa-solid fa-quote-right</value>
+    </item>
+    <item>
+      <label>fa-solid fa-quran</label>
+      <value>fa-solid fa-quran</value>
+    </item>
+    <item>
+      <label>fa-brands fa-r-project</label>
+      <value>fa-brands fa-r-project</value>
+    </item>
+    <item>
+      <label>fa-solid fa-radiation</label>
+      <value>fa-solid fa-radiation</value>
+    </item>
+    <item>
+      <label>fa-solid fa-radiation-alt</label>
+      <value>fa-solid fa-radiation-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-rainbow</label>
+      <value>fa-solid fa-rainbow</value>
+    </item>
+    <item>
+      <label>fa-solid fa-random</label>
+      <value>fa-solid fa-random</value>
+    </item>
+    <item>
+      <label>fa-brands fa-raspberry-pi</label>
+      <value>fa-brands fa-raspberry-pi</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ravelry</label>
+      <value>fa-brands fa-ravelry</value>
+    </item>
+    <item>
+      <label>fa-brands fa-react</label>
+      <value>fa-brands fa-react</value>
+    </item>
+    <item>
+      <label>fa-brands fa-reacteurope</label>
+      <value>fa-brands fa-reacteurope</value>
+    </item>
+    <item>
+      <label>fa-brands fa-readme</label>
+      <value>fa-brands fa-readme</value>
+    </item>
+    <item>
+      <label>fa-brands fa-rebel</label>
+      <value>fa-brands fa-rebel</value>
+    </item>
+    <item>
+      <label>fa-solid fa-receipt</label>
+      <value>fa-solid fa-receipt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-record-vinyl</label>
+      <value>fa-solid fa-record-vinyl</value>
+    </item>
+    <item>
+      <label>fa-solid fa-recycle</label>
+      <value>fa-solid fa-recycle</value>
+    </item>
+    <item>
+      <label>fa-brands fa-red-river</label>
+      <value>fa-brands fa-red-river</value>
+    </item>
+    <item>
+      <label>fa-brands fa-reddit</label>
+      <value>fa-brands fa-reddit</value>
+    </item>
+    <item>
+      <label>fa-brands fa-reddit-alien</label>
+      <value>fa-brands fa-reddit-alien</value>
+    </item>
+    <item>
+      <label>fa-brands fa-reddit-square</label>
+      <value>fa-brands fa-reddit-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-redhat</label>
+      <value>fa-brands fa-redhat</value>
+    </item>
+    <item>
+      <label>fa-solid fa-redo</label>
+      <value>fa-solid fa-redo</value>
+    </item>
+    <item>
+      <label>fa-solid fa-redo-alt</label>
+      <value>fa-solid fa-redo-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-registered</label>
+      <value>fa-solid fa-registered</value>
+    </item>
+    <item>
+      <label>fa-solid fa-remove-format</label>
+      <value>fa-solid fa-remove-format</value>
+    </item>
+    <item>
+      <label>fa-brands fa-renren</label>
+      <value>fa-brands fa-renren</value>
+    </item>
+    <item>
+      <label>fa-solid fa-reply</label>
+      <value>fa-solid fa-reply</value>
+    </item>
+    <item>
+      <label>fa-solid fa-reply-all</label>
+      <value>fa-solid fa-reply-all</value>
+    </item>
+    <item>
+      <label>fa-brands fa-replyd</label>
+      <value>fa-brands fa-replyd</value>
+    </item>
+    <item>
+      <label>fa-solid fa-republican</label>
+      <value>fa-solid fa-republican</value>
+    </item>
+    <item>
+      <label>fa-brands fa-researchgate</label>
+      <value>fa-brands fa-researchgate</value>
+    </item>
+    <item>
+      <label>fa-brands fa-resolving</label>
+      <value>fa-brands fa-resolving</value>
+    </item>
+    <item>
+      <label>fa-solid fa-restroom</label>
+      <value>fa-solid fa-restroom</value>
+    </item>
+    <item>
+      <label>fa-solid fa-retweet</label>
+      <value>fa-solid fa-retweet</value>
+    </item>
+    <item>
+      <label>fa-brands fa-rev</label>
+      <value>fa-brands fa-rev</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ribbon</label>
+      <value>fa-solid fa-ribbon</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ring</label>
+      <value>fa-solid fa-ring</value>
+    </item>
+    <item>
+      <label>fa-solid fa-road</label>
+      <value>fa-solid fa-road</value>
+    </item>
+    <item>
+      <label>fa-solid fa-robot</label>
+      <value>fa-solid fa-robot</value>
+    </item>
+    <item>
+      <label>fa-solid fa-rocket</label>
+      <value>fa-solid fa-rocket</value>
+    </item>
+    <item>
+      <label>fa-brands fa-rocketchat</label>
+      <value>fa-brands fa-rocketchat</value>
+    </item>
+    <item>
+      <label>fa-brands fa-rockrms</label>
+      <value>fa-brands fa-rockrms</value>
+    </item>
+    <item>
+      <label>fa-solid fa-route</label>
+      <value>fa-solid fa-route</value>
+    </item>
+    <item>
+      <label>fa-solid fa-rss</label>
+      <value>fa-solid fa-rss</value>
+    </item>
+    <item>
+      <label>fa-solid fa-rss-square</label>
+      <value>fa-solid fa-rss-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ruble-sign</label>
+      <value>fa-solid fa-ruble-sign</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ruler</label>
+      <value>fa-solid fa-ruler</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ruler-combined</label>
+      <value>fa-solid fa-ruler-combined</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ruler-horizontal</label>
+      <value>fa-solid fa-ruler-horizontal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ruler-vertical</label>
+      <value>fa-solid fa-ruler-vertical</value>
+    </item>
+    <item>
+      <label>fa-solid fa-running</label>
+      <value>fa-solid fa-running</value>
+    </item>
+    <item>
+      <label>fa-solid fa-rupee-sign</label>
+      <value>fa-solid fa-rupee-sign</value>
+    </item>
+    <item>
+      <label>fa-brands fa-rust</label>
+      <value>fa-brands fa-rust</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sad-cry</label>
+      <value>fa-solid fa-sad-cry</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sad-tear</label>
+      <value>fa-solid fa-sad-tear</value>
+    </item>
+    <item>
+      <label>fa-brands fa-safari</label>
+      <value>fa-brands fa-safari</value>
+    </item>
+    <item>
+      <label>fa-brands fa-salesforce</label>
+      <value>fa-brands fa-salesforce</value>
+    </item>
+    <item>
+      <label>fa-brands fa-sass</label>
+      <value>fa-brands fa-sass</value>
+    </item>
+    <item>
+      <label>fa-solid fa-satellite</label>
+      <value>fa-solid fa-satellite</value>
+    </item>
+    <item>
+      <label>fa-solid fa-satellite-dish</label>
+      <value>fa-solid fa-satellite-dish</value>
+    </item>
+    <item>
+      <label>fa-solid fa-save</label>
+      <value>fa-solid fa-save</value>
+    </item>
+    <item>
+      <label>fa-brands fa-schlix</label>
+      <value>fa-brands fa-schlix</value>
+    </item>
+    <item>
+      <label>fa-solid fa-school</label>
+      <value>fa-solid fa-school</value>
+    </item>
+    <item>
+      <label>fa-solid fa-screwdriver</label>
+      <value>fa-solid fa-screwdriver</value>
+    </item>
+    <item>
+      <label>fa-brands fa-scribd</label>
+      <value>fa-brands fa-scribd</value>
+    </item>
+    <item>
+      <label>fa-solid fa-scroll</label>
+      <value>fa-solid fa-scroll</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sd-card</label>
+      <value>fa-solid fa-sd-card</value>
+    </item>
+    <item>
+      <label>fa-solid fa-search</label>
+      <value>fa-solid fa-search</value>
+    </item>
+    <item>
+      <label>fa-solid fa-search-dollar</label>
+      <value>fa-solid fa-search-dollar</value>
+    </item>
+    <item>
+      <label>fa-solid fa-search-location</label>
+      <value>fa-solid fa-search-location</value>
+    </item>
+    <item>
+      <label>fa-solid fa-search-minus</label>
+      <value>fa-solid fa-search-minus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-search-plus</label>
+      <value>fa-solid fa-search-plus</value>
+    </item>
+    <item>
+      <label>fa-brands fa-searchengin</label>
+      <value>fa-brands fa-searchengin</value>
+    </item>
+    <item>
+      <label>fa-solid fa-seedling</label>
+      <value>fa-solid fa-seedling</value>
+    </item>
+    <item>
+      <label>fa-brands fa-sellcast</label>
+      <value>fa-brands fa-sellcast</value>
+    </item>
+    <item>
+      <label>fa-brands fa-sellsy</label>
+      <value>fa-brands fa-sellsy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-server</label>
+      <value>fa-solid fa-server</value>
+    </item>
+    <item>
+      <label>fa-brands fa-servicestack</label>
+      <value>fa-brands fa-servicestack</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shapes</label>
+      <value>fa-solid fa-shapes</value>
+    </item>
+    <item>
+      <label>fa-solid fa-share</label>
+      <value>fa-solid fa-share</value>
+    </item>
+    <item>
+      <label>fa-solid fa-share-alt</label>
+      <value>fa-solid fa-share-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-share-alt-square</label>
+      <value>fa-solid fa-share-alt-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-share-square</label>
+      <value>fa-solid fa-share-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shekel-sign</label>
+      <value>fa-solid fa-shekel-sign</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shield-alt</label>
+      <value>fa-solid fa-shield-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shield-virus</label>
+      <value>fa-solid fa-shield-virus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ship</label>
+      <value>fa-solid fa-ship</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shipping-fast</label>
+      <value>fa-solid fa-shipping-fast</value>
+    </item>
+    <item>
+      <label>fa-brands fa-shirtsinbulk</label>
+      <value>fa-brands fa-shirtsinbulk</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shoe-prints</label>
+      <value>fa-solid fa-shoe-prints</value>
+    </item>
+    <item>
+      <label>fa-brands fa-shopify</label>
+      <value>fa-brands fa-shopify</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shopping-bag</label>
+      <value>fa-solid fa-shopping-bag</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shopping-basket</label>
+      <value>fa-solid fa-shopping-basket</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shopping-cart</label>
+      <value>fa-solid fa-shopping-cart</value>
+    </item>
+    <item>
+      <label>fa-brands fa-shopware</label>
+      <value>fa-brands fa-shopware</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shower</label>
+      <value>fa-solid fa-shower</value>
+    </item>
+    <item>
+      <label>fa-solid fa-shuttle-van</label>
+      <value>fa-solid fa-shuttle-van</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sign</label>
+      <value>fa-solid fa-sign</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sign-in-alt</label>
+      <value>fa-solid fa-sign-in-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sign-language</label>
+      <value>fa-solid fa-sign-language</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sign-out-alt</label>
+      <value>fa-solid fa-sign-out-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-signal</label>
+      <value>fa-solid fa-signal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-signature</label>
+      <value>fa-solid fa-signature</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sim-card</label>
+      <value>fa-solid fa-sim-card</value>
+    </item>
+    <item>
+      <label>fa-brands fa-simplybuilt</label>
+      <value>fa-brands fa-simplybuilt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sink</label>
+      <value>fa-solid fa-sink</value>
+    </item>
+    <item>
+      <label>fa-brands fa-sistrix</label>
+      <value>fa-brands fa-sistrix</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sitemap</label>
+      <value>fa-solid fa-sitemap</value>
+    </item>
+    <item>
+      <label>fa-brands fa-sith</label>
+      <value>fa-brands fa-sith</value>
+    </item>
+    <item>
+      <label>fa-solid fa-skating</label>
+      <value>fa-solid fa-skating</value>
+    </item>
+    <item>
+      <label>fa-brands fa-sketch</label>
+      <value>fa-brands fa-sketch</value>
+    </item>
+    <item>
+      <label>fa-solid fa-skiing</label>
+      <value>fa-solid fa-skiing</value>
+    </item>
+    <item>
+      <label>fa-solid fa-skiing-nordic</label>
+      <value>fa-solid fa-skiing-nordic</value>
+    </item>
+    <item>
+      <label>fa-solid fa-skull</label>
+      <value>fa-solid fa-skull</value>
+    </item>
+    <item>
+      <label>fa-solid fa-skull-crossbones</label>
+      <value>fa-solid fa-skull-crossbones</value>
+    </item>
+    <item>
+      <label>fa-brands fa-skyatlas</label>
+      <value>fa-brands fa-skyatlas</value>
+    </item>
+    <item>
+      <label>fa-brands fa-skype</label>
+      <value>fa-brands fa-skype</value>
+    </item>
+    <item>
+      <label>fa-brands fa-slack</label>
+      <value>fa-brands fa-slack</value>
+    </item>
+    <item>
+      <label>fa-brands fa-slack-hash</label>
+      <value>fa-brands fa-slack-hash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-slash</label>
+      <value>fa-solid fa-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sleigh</label>
+      <value>fa-solid fa-sleigh</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sliders-h</label>
+      <value>fa-solid fa-sliders-h</value>
+    </item>
+    <item>
+      <label>fa-brands fa-slideshare</label>
+      <value>fa-brands fa-slideshare</value>
+    </item>
+    <item>
+      <label>fa-solid fa-smile</label>
+      <value>fa-solid fa-smile</value>
+    </item>
+    <item>
+      <label>fa-solid fa-smile-beam</label>
+      <value>fa-solid fa-smile-beam</value>
+    </item>
+    <item>
+      <label>fa-solid fa-smile-wink</label>
+      <value>fa-solid fa-smile-wink</value>
+    </item>
+    <item>
+      <label>fa-solid fa-smog</label>
+      <value>fa-solid fa-smog</value>
+    </item>
+    <item>
+      <label>fa-solid fa-smoking</label>
+      <value>fa-solid fa-smoking</value>
+    </item>
+    <item>
+      <label>fa-solid fa-smoking-ban</label>
+      <value>fa-solid fa-smoking-ban</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sms</label>
+      <value>fa-solid fa-sms</value>
+    </item>
+    <item>
+      <label>fa-brands fa-snapchat</label>
+      <value>fa-brands fa-snapchat</value>
+    </item>
+    <item>
+      <label>fa-brands fa-snapchat-ghost</label>
+      <value>fa-brands fa-snapchat-ghost</value>
+    </item>
+    <item>
+      <label>fa-brands fa-snapchat-square</label>
+      <value>fa-brands fa-snapchat-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-snowboarding</label>
+      <value>fa-solid fa-snowboarding</value>
+    </item>
+    <item>
+      <label>fa-solid fa-snowflake</label>
+      <value>fa-solid fa-snowflake</value>
+    </item>
+    <item>
+      <label>fa-solid fa-snowman</label>
+      <value>fa-solid fa-snowman</value>
+    </item>
+    <item>
+      <label>fa-solid fa-snowplow</label>
+      <value>fa-solid fa-snowplow</value>
+    </item>
+    <item>
+      <label>fa-solid fa-soap</label>
+      <value>fa-solid fa-soap</value>
+    </item>
+    <item>
+      <label>fa-solid fa-socks</label>
+      <value>fa-solid fa-socks</value>
+    </item>
+    <item>
+      <label>fa-solid fa-solar-panel</label>
+      <value>fa-solid fa-solar-panel</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort</label>
+      <value>fa-solid fa-sort</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-alpha-down</label>
+      <value>fa-solid fa-sort-alpha-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-alpha-down-alt</label>
+      <value>fa-solid fa-sort-alpha-down-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-alpha-up</label>
+      <value>fa-solid fa-sort-alpha-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-alpha-up-alt</label>
+      <value>fa-solid fa-sort-alpha-up-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-amount-down</label>
+      <value>fa-solid fa-sort-amount-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-amount-down-alt</label>
+      <value>fa-solid fa-sort-amount-down-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-amount-up</label>
+      <value>fa-solid fa-sort-amount-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-amount-up-alt</label>
+      <value>fa-solid fa-sort-amount-up-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-down</label>
+      <value>fa-solid fa-sort-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-numeric-down</label>
+      <value>fa-solid fa-sort-numeric-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-numeric-down-alt</label>
+      <value>fa-solid fa-sort-numeric-down-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-numeric-up</label>
+      <value>fa-solid fa-sort-numeric-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-numeric-up-alt</label>
+      <value>fa-solid fa-sort-numeric-up-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sort-up</label>
+      <value>fa-solid fa-sort-up</value>
+    </item>
+    <item>
+      <label>fa-brands fa-soundcloud</label>
+      <value>fa-brands fa-soundcloud</value>
+    </item>
+    <item>
+      <label>fa-brands fa-sourcetree</label>
+      <value>fa-brands fa-sourcetree</value>
+    </item>
+    <item>
+      <label>fa-solid fa-spa</label>
+      <value>fa-solid fa-spa</value>
+    </item>
+    <item>
+      <label>fa-solid fa-space-shuttle</label>
+      <value>fa-solid fa-space-shuttle</value>
+    </item>
+    <item>
+      <label>fa-brands fa-speakap</label>
+      <value>fa-brands fa-speakap</value>
+    </item>
+    <item>
+      <label>fa-brands fa-speaker-deck</label>
+      <value>fa-brands fa-speaker-deck</value>
+    </item>
+    <item>
+      <label>fa-solid fa-spell-check</label>
+      <value>fa-solid fa-spell-check</value>
+    </item>
+    <item>
+      <label>fa-solid fa-spider</label>
+      <value>fa-solid fa-spider</value>
+    </item>
+    <item>
+      <label>fa-solid fa-spinner</label>
+      <value>fa-solid fa-spinner</value>
+    </item>
+    <item>
+      <label>fa-solid fa-splotch</label>
+      <value>fa-solid fa-splotch</value>
+    </item>
+    <item>
+      <label>fa-brands fa-spotify</label>
+      <value>fa-brands fa-spotify</value>
+    </item>
+    <item>
+      <label>fa-solid fa-spray-can</label>
+      <value>fa-solid fa-spray-can</value>
+    </item>
+    <item>
+      <label>fa-solid fa-square</label>
+      <value>fa-solid fa-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-square-full</label>
+      <value>fa-solid fa-square-full</value>
+    </item>
+    <item>
+      <label>fa-solid fa-square-root-alt</label>
+      <value>fa-solid fa-square-root-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-squarespace</label>
+      <value>fa-brands fa-squarespace</value>
+    </item>
+    <item>
+      <label>fa-brands fa-stack-exchange</label>
+      <value>fa-brands fa-stack-exchange</value>
+    </item>
+    <item>
+      <label>fa-brands fa-stack-overflow</label>
+      <value>fa-brands fa-stack-overflow</value>
+    </item>
+    <item>
+      <label>fa-brands fa-stackpath</label>
+      <value>fa-brands fa-stackpath</value>
+    </item>
+    <item>
+      <label>fa-solid fa-stamp</label>
+      <value>fa-solid fa-stamp</value>
+    </item>
+    <item>
+      <label>fa-solid fa-star</label>
+      <value>fa-solid fa-star</value>
+    </item>
+    <item>
+      <label>fa-solid fa-star-and-crescent</label>
+      <value>fa-solid fa-star-and-crescent</value>
+    </item>
+    <item>
+      <label>fa-solid fa-star-half</label>
+      <value>fa-solid fa-star-half</value>
+    </item>
+    <item>
+      <label>fa-solid fa-star-half-alt</label>
+      <value>fa-solid fa-star-half-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-star-of-david</label>
+      <value>fa-solid fa-star-of-david</value>
+    </item>
+    <item>
+      <label>fa-solid fa-star-of-life</label>
+      <value>fa-solid fa-star-of-life</value>
+    </item>
+    <item>
+      <label>fa-brands fa-staylinked</label>
+      <value>fa-brands fa-staylinked</value>
+    </item>
+    <item>
+      <label>fa-brands fa-steam</label>
+      <value>fa-brands fa-steam</value>
+    </item>
+    <item>
+      <label>fa-brands fa-steam-square</label>
+      <value>fa-brands fa-steam-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-steam-symbol</label>
+      <value>fa-brands fa-steam-symbol</value>
+    </item>
+    <item>
+      <label>fa-solid fa-step-backward</label>
+      <value>fa-solid fa-step-backward</value>
+    </item>
+    <item>
+      <label>fa-solid fa-step-forward</label>
+      <value>fa-solid fa-step-forward</value>
+    </item>
+    <item>
+      <label>fa-solid fa-stethoscope</label>
+      <value>fa-solid fa-stethoscope</value>
+    </item>
+    <item>
+      <label>fa-brands fa-sticker-mule</label>
+      <value>fa-brands fa-sticker-mule</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sticky-note</label>
+      <value>fa-solid fa-sticky-note</value>
+    </item>
+    <item>
+      <label>fa-solid fa-stop</label>
+      <value>fa-solid fa-stop</value>
+    </item>
+    <item>
+      <label>fa-solid fa-stop-circle</label>
+      <value>fa-solid fa-stop-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-stopwatch</label>
+      <value>fa-solid fa-stopwatch</value>
+    </item>
+    <item>
+      <label>fa-solid fa-stopwatch-20</label>
+      <value>fa-solid fa-stopwatch-20</value>
+    </item>
+    <item>
+      <label>fa-solid fa-store</label>
+      <value>fa-solid fa-store</value>
+    </item>
+    <item>
+      <label>fa-solid fa-store-alt</label>
+      <value>fa-solid fa-store-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-store-alt-slash</label>
+      <value>fa-solid fa-store-alt-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-store-slash</label>
+      <value>fa-solid fa-store-slash</value>
+    </item>
+    <item>
+      <label>fa-brands fa-strava</label>
+      <value>fa-brands fa-strava</value>
+    </item>
+    <item>
+      <label>fa-solid fa-stream</label>
+      <value>fa-solid fa-stream</value>
+    </item>
+    <item>
+      <label>fa-solid fa-street-view</label>
+      <value>fa-solid fa-street-view</value>
+    </item>
+    <item>
+      <label>fa-solid fa-strikethrough</label>
+      <value>fa-solid fa-strikethrough</value>
+    </item>
+    <item>
+      <label>fa-brands fa-stripe</label>
+      <value>fa-brands fa-stripe</value>
+    </item>
+    <item>
+      <label>fa-brands fa-stripe-s</label>
+      <value>fa-brands fa-stripe-s</value>
+    </item>
+    <item>
+      <label>fa-solid fa-stroopwafel</label>
+      <value>fa-solid fa-stroopwafel</value>
+    </item>
+    <item>
+      <label>fa-brands fa-studiovinari</label>
+      <value>fa-brands fa-studiovinari</value>
+    </item>
+    <item>
+      <label>fa-brands fa-stumbleupon</label>
+      <value>fa-brands fa-stumbleupon</value>
+    </item>
+    <item>
+      <label>fa-brands fa-stumbleupon-circle</label>
+      <value>fa-brands fa-stumbleupon-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-subscript</label>
+      <value>fa-solid fa-subscript</value>
+    </item>
+    <item>
+      <label>fa-solid fa-subway</label>
+      <value>fa-solid fa-subway</value>
+    </item>
+    <item>
+      <label>fa-solid fa-suitcase</label>
+      <value>fa-solid fa-suitcase</value>
+    </item>
+    <item>
+      <label>fa-solid fa-suitcase-rolling</label>
+      <value>fa-solid fa-suitcase-rolling</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sun</label>
+      <value>fa-solid fa-sun</value>
+    </item>
+    <item>
+      <label>fa-brands fa-superpowers</label>
+      <value>fa-brands fa-superpowers</value>
+    </item>
+    <item>
+      <label>fa-solid fa-superscript</label>
+      <value>fa-solid fa-superscript</value>
+    </item>
+    <item>
+      <label>fa-brands fa-supple</label>
+      <value>fa-brands fa-supple</value>
+    </item>
+    <item>
+      <label>fa-solid fa-surprise</label>
+      <value>fa-solid fa-surprise</value>
+    </item>
+    <item>
+      <label>fa-brands fa-suse</label>
+      <value>fa-brands fa-suse</value>
+    </item>
+    <item>
+      <label>fa-solid fa-swatchbook</label>
+      <value>fa-solid fa-swatchbook</value>
+    </item>
+    <item>
+      <label>fa-brands fa-swift</label>
+      <value>fa-brands fa-swift</value>
+    </item>
+    <item>
+      <label>fa-solid fa-swimmer</label>
+      <value>fa-solid fa-swimmer</value>
+    </item>
+    <item>
+      <label>fa-solid fa-swimming-pool</label>
+      <value>fa-solid fa-swimming-pool</value>
+    </item>
+    <item>
+      <label>fa-brands fa-symfony</label>
+      <value>fa-brands fa-symfony</value>
+    </item>
+    <item>
+      <label>fa-solid fa-synagogue</label>
+      <value>fa-solid fa-synagogue</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sync</label>
+      <value>fa-solid fa-sync</value>
+    </item>
+    <item>
+      <label>fa-solid fa-sync-alt</label>
+      <value>fa-solid fa-sync-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-syringe</label>
+      <value>fa-solid fa-syringe</value>
+    </item>
+    <item>
+      <label>fa-solid fa-table</label>
+      <value>fa-solid fa-table</value>
+    </item>
+    <item>
+      <label>fa-solid fa-table-tennis</label>
+      <value>fa-solid fa-table-tennis</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tablet</label>
+      <value>fa-solid fa-tablet</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tablet-alt</label>
+      <value>fa-solid fa-tablet-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tablets</label>
+      <value>fa-solid fa-tablets</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tachometer-alt</label>
+      <value>fa-solid fa-tachometer-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tag</label>
+      <value>fa-solid fa-tag</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tags</label>
+      <value>fa-solid fa-tags</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tape</label>
+      <value>fa-solid fa-tape</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tasks</label>
+      <value>fa-solid fa-tasks</value>
+    </item>
+    <item>
+      <label>fa-solid fa-taxi</label>
+      <value>fa-solid fa-taxi</value>
+    </item>
+    <item>
+      <label>fa-brands fa-teamspeak</label>
+      <value>fa-brands fa-teamspeak</value>
+    </item>
+    <item>
+      <label>fa-solid fa-teeth</label>
+      <value>fa-solid fa-teeth</value>
+    </item>
+    <item>
+      <label>fa-solid fa-teeth-open</label>
+      <value>fa-solid fa-teeth-open</value>
+    </item>
+    <item>
+      <label>fa-brands fa-telegram</label>
+      <value>fa-brands fa-telegram</value>
+    </item>
+    <item>
+      <label>fa-brands fa-telegram-plane</label>
+      <value>fa-brands fa-telegram-plane</value>
+    </item>
+    <item>
+      <label>fa-solid fa-temperature-high</label>
+      <value>fa-solid fa-temperature-high</value>
+    </item>
+    <item>
+      <label>fa-solid fa-temperature-low</label>
+      <value>fa-solid fa-temperature-low</value>
+    </item>
+    <item>
+      <label>fa-brands fa-tencent-weibo</label>
+      <value>fa-brands fa-tencent-weibo</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tenge</label>
+      <value>fa-solid fa-tenge</value>
+    </item>
+    <item>
+      <label>fa-solid fa-terminal</label>
+      <value>fa-solid fa-terminal</value>
+    </item>
+    <item>
+      <label>fa-solid fa-text-height</label>
+      <value>fa-solid fa-text-height</value>
+    </item>
+    <item>
+      <label>fa-solid fa-text-width</label>
+      <value>fa-solid fa-text-width</value>
+    </item>
+    <item>
+      <label>fa-solid fa-th</label>
+      <value>fa-solid fa-th</value>
+    </item>
+    <item>
+      <label>fa-solid fa-th-large</label>
+      <value>fa-solid fa-th-large</value>
+    </item>
+    <item>
+      <label>fa-solid fa-th-list</label>
+      <value>fa-solid fa-th-list</value>
+    </item>
+    <item>
+      <label>fa-brands fa-the-red-yeti</label>
+      <value>fa-brands fa-the-red-yeti</value>
+    </item>
+    <item>
+      <label>fa-solid fa-theater-masks</label>
+      <value>fa-solid fa-theater-masks</value>
+    </item>
+    <item>
+      <label>fa-brands fa-themeco</label>
+      <value>fa-brands fa-themeco</value>
+    </item>
+    <item>
+      <label>fa-brands fa-themeisle</label>
+      <value>fa-brands fa-themeisle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thermometer</label>
+      <value>fa-solid fa-thermometer</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thermometer-empty</label>
+      <value>fa-solid fa-thermometer-empty</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thermometer-full</label>
+      <value>fa-solid fa-thermometer-full</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thermometer-half</label>
+      <value>fa-solid fa-thermometer-half</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thermometer-quarter</label>
+      <value>fa-solid fa-thermometer-quarter</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thermometer-three-quarters</label>
+      <value>fa-solid fa-thermometer-three-quarters</value>
+    </item>
+    <item>
+      <label>fa-brands fa-think-peaks</label>
+      <value>fa-brands fa-think-peaks</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thumbs-down</label>
+      <value>fa-solid fa-thumbs-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thumbs-up</label>
+      <value>fa-solid fa-thumbs-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-thumbtack</label>
+      <value>fa-solid fa-thumbtack</value>
+    </item>
+    <item>
+      <label>fa-solid fa-ticket-alt</label>
+      <value>fa-solid fa-ticket-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-tiktok</label>
+      <value>fa-brands fa-tiktok</value>
+    </item>
+    <item>
+      <label>fa-solid fa-times</label>
+      <value>fa-solid fa-times</value>
+    </item>
+    <item>
+      <label>fa-solid fa-times-circle</label>
+      <value>fa-solid fa-times-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tint</label>
+      <value>fa-solid fa-tint</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tint-slash</label>
+      <value>fa-solid fa-tint-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tired</label>
+      <value>fa-solid fa-tired</value>
+    </item>
+    <item>
+      <label>fa-solid fa-toggle-off</label>
+      <value>fa-solid fa-toggle-off</value>
+    </item>
+    <item>
+      <label>fa-solid fa-toggle-on</label>
+      <value>fa-solid fa-toggle-on</value>
+    </item>
+    <item>
+      <label>fa-solid fa-toilet</label>
+      <value>fa-solid fa-toilet</value>
+    </item>
+    <item>
+      <label>fa-solid fa-toilet-paper</label>
+      <value>fa-solid fa-toilet-paper</value>
+    </item>
+    <item>
+      <label>fa-solid fa-toilet-paper-slash</label>
+      <value>fa-solid fa-toilet-paper-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-toolbox</label>
+      <value>fa-solid fa-toolbox</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tools</label>
+      <value>fa-solid fa-tools</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tooth</label>
+      <value>fa-solid fa-tooth</value>
+    </item>
+    <item>
+      <label>fa-solid fa-torah</label>
+      <value>fa-solid fa-torah</value>
+    </item>
+    <item>
+      <label>fa-solid fa-torii-gate</label>
+      <value>fa-solid fa-torii-gate</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tractor</label>
+      <value>fa-solid fa-tractor</value>
+    </item>
+    <item>
+      <label>fa-brands fa-trade-federation</label>
+      <value>fa-brands fa-trade-federation</value>
+    </item>
+    <item>
+      <label>fa-solid fa-trademark</label>
+      <value>fa-solid fa-trademark</value>
+    </item>
+    <item>
+      <label>fa-solid fa-traffic-light</label>
+      <value>fa-solid fa-traffic-light</value>
+    </item>
+    <item>
+      <label>fa-solid fa-trailer</label>
+      <value>fa-solid fa-trailer</value>
+    </item>
+    <item>
+      <label>fa-solid fa-train</label>
+      <value>fa-solid fa-train</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tram</label>
+      <value>fa-solid fa-tram</value>
+    </item>
+    <item>
+      <label>fa-solid fa-transgender</label>
+      <value>fa-solid fa-transgender</value>
+    </item>
+    <item>
+      <label>fa-solid fa-transgender-alt</label>
+      <value>fa-solid fa-transgender-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-trash</label>
+      <value>fa-solid fa-trash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-trash-alt</label>
+      <value>fa-solid fa-trash-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-trash-restore</label>
+      <value>fa-solid fa-trash-restore</value>
+    </item>
+    <item>
+      <label>fa-solid fa-trash-restore-alt</label>
+      <value>fa-solid fa-trash-restore-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tree</label>
+      <value>fa-solid fa-tree</value>
+    </item>
+    <item>
+      <label>fa-brands fa-trello</label>
+      <value>fa-brands fa-trello</value>
+    </item>
+    <item>
+      <label>fa-solid fa-trophy</label>
+      <value>fa-solid fa-trophy</value>
+    </item>
+    <item>
+      <label>fa-solid fa-truck</label>
+      <value>fa-solid fa-truck</value>
+    </item>
+    <item>
+      <label>fa-solid fa-truck-loading</label>
+      <value>fa-solid fa-truck-loading</value>
+    </item>
+    <item>
+      <label>fa-solid fa-truck-monster</label>
+      <value>fa-solid fa-truck-monster</value>
+    </item>
+    <item>
+      <label>fa-solid fa-truck-moving</label>
+      <value>fa-solid fa-truck-moving</value>
+    </item>
+    <item>
+      <label>fa-solid fa-truck-pickup</label>
+      <value>fa-solid fa-truck-pickup</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tshirt</label>
+      <value>fa-solid fa-tshirt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tty</label>
+      <value>fa-solid fa-tty</value>
+    </item>
+    <item>
+      <label>fa-brands fa-tumblr</label>
+      <value>fa-brands fa-tumblr</value>
+    </item>
+    <item>
+      <label>fa-brands fa-tumblr-square</label>
+      <value>fa-brands fa-tumblr-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-tv</label>
+      <value>fa-solid fa-tv</value>
+    </item>
+    <item>
+      <label>fa-brands fa-twitch</label>
+      <value>fa-brands fa-twitch</value>
+    </item>
+    <item>
+      <label>fa-brands fa-twitter</label>
+      <value>fa-brands fa-twitter</value>
+    </item>
+    <item>
+      <label>fa-brands fa-twitter-square</label>
+      <value>fa-brands fa-twitter-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-typo3</label>
+      <value>fa-brands fa-typo3</value>
+    </item>
+    <item>
+      <label>fa-brands fa-uber</label>
+      <value>fa-brands fa-uber</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ubuntu</label>
+      <value>fa-brands fa-ubuntu</value>
+    </item>
+    <item>
+      <label>fa-brands fa-uikit</label>
+      <value>fa-brands fa-uikit</value>
+    </item>
+    <item>
+      <label>fa-brands fa-umbraco</label>
+      <value>fa-brands fa-umbraco</value>
+    </item>
+    <item>
+      <label>fa-solid fa-umbrella</label>
+      <value>fa-solid fa-umbrella</value>
+    </item>
+    <item>
+      <label>fa-solid fa-umbrella-beach</label>
+      <value>fa-solid fa-umbrella-beach</value>
+    </item>
+    <item>
+      <label>fa-brands fa-uncharted</label>
+      <value>fa-brands fa-uncharted</value>
+    </item>
+    <item>
+      <label>fa-solid fa-underline</label>
+      <value>fa-solid fa-underline</value>
+    </item>
+    <item>
+      <label>fa-solid fa-undo</label>
+      <value>fa-solid fa-undo</value>
+    </item>
+    <item>
+      <label>fa-solid fa-undo-alt</label>
+      <value>fa-solid fa-undo-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-uniregistry</label>
+      <value>fa-brands fa-uniregistry</value>
+    </item>
+    <item>
+      <label>fa-brands fa-unity</label>
+      <value>fa-brands fa-unity</value>
+    </item>
+    <item>
+      <label>fa-solid fa-universal-access</label>
+      <value>fa-solid fa-universal-access</value>
+    </item>
+    <item>
+      <label>fa-solid fa-university</label>
+      <value>fa-solid fa-university</value>
+    </item>
+    <item>
+      <label>fa-solid fa-unlink</label>
+      <value>fa-solid fa-unlink</value>
+    </item>
+    <item>
+      <label>fa-solid fa-unlock</label>
+      <value>fa-solid fa-unlock</value>
+    </item>
+    <item>
+      <label>fa-solid fa-unlock-alt</label>
+      <value>fa-solid fa-unlock-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-unsplash</label>
+      <value>fa-brands fa-unsplash</value>
+    </item>
+    <item>
+      <label>fa-brands fa-untappd</label>
+      <value>fa-brands fa-untappd</value>
+    </item>
+    <item>
+      <label>fa-solid fa-upload</label>
+      <value>fa-solid fa-upload</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ups</label>
+      <value>fa-brands fa-ups</value>
+    </item>
+    <item>
+      <label>fa-brands fa-usb</label>
+      <value>fa-brands fa-usb</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user</label>
+      <value>fa-solid fa-user</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-alt</label>
+      <value>fa-solid fa-user-alt</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-alt-slash</label>
+      <value>fa-solid fa-user-alt-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-astronaut</label>
+      <value>fa-solid fa-user-astronaut</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-check</label>
+      <value>fa-solid fa-user-check</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-circle</label>
+      <value>fa-solid fa-user-circle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-clock</label>
+      <value>fa-solid fa-user-clock</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-cog</label>
+      <value>fa-solid fa-user-cog</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-edit</label>
+      <value>fa-solid fa-user-edit</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-friends</label>
+      <value>fa-solid fa-user-friends</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-graduate</label>
+      <value>fa-solid fa-user-graduate</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-injured</label>
+      <value>fa-solid fa-user-injured</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-lock</label>
+      <value>fa-solid fa-user-lock</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-md</label>
+      <value>fa-solid fa-user-md</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-minus</label>
+      <value>fa-solid fa-user-minus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-ninja</label>
+      <value>fa-solid fa-user-ninja</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-nurse</label>
+      <value>fa-solid fa-user-nurse</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-plus</label>
+      <value>fa-solid fa-user-plus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-secret</label>
+      <value>fa-solid fa-user-secret</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-shield</label>
+      <value>fa-solid fa-user-shield</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-slash</label>
+      <value>fa-solid fa-user-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-tag</label>
+      <value>fa-solid fa-user-tag</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-tie</label>
+      <value>fa-solid fa-user-tie</value>
+    </item>
+    <item>
+      <label>fa-solid fa-user-times</label>
+      <value>fa-solid fa-user-times</value>
+    </item>
+    <item>
+      <label>fa-solid fa-users</label>
+      <value>fa-solid fa-users</value>
+    </item>
+    <item>
+      <label>fa-solid fa-users-cog</label>
+      <value>fa-solid fa-users-cog</value>
+    </item>
+    <item>
+      <label>fa-solid fa-users-slash</label>
+      <value>fa-solid fa-users-slash</value>
+    </item>
+    <item>
+      <label>fa-brands fa-usps</label>
+      <value>fa-brands fa-usps</value>
+    </item>
+    <item>
+      <label>fa-brands fa-ussunnah</label>
+      <value>fa-brands fa-ussunnah</value>
+    </item>
+    <item>
+      <label>fa-solid fa-utensil-spoon</label>
+      <value>fa-solid fa-utensil-spoon</value>
+    </item>
+    <item>
+      <label>fa-solid fa-utensils</label>
+      <value>fa-solid fa-utensils</value>
+    </item>
+    <item>
+      <label>fa-brands fa-vaadin</label>
+      <value>fa-brands fa-vaadin</value>
+    </item>
+    <item>
+      <label>fa-solid fa-vector-square</label>
+      <value>fa-solid fa-vector-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-venus</label>
+      <value>fa-solid fa-venus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-venus-double</label>
+      <value>fa-solid fa-venus-double</value>
+    </item>
+    <item>
+      <label>fa-solid fa-venus-mars</label>
+      <value>fa-solid fa-venus-mars</value>
+    </item>
+    <item>
+      <label>fa-solid fa-vest</label>
+      <value>fa-solid fa-vest</value>
+    </item>
+    <item>
+      <label>fa-solid fa-vest-patches</label>
+      <value>fa-solid fa-vest-patches</value>
+    </item>
+    <item>
+      <label>fa-brands fa-viacoin</label>
+      <value>fa-brands fa-viacoin</value>
+    </item>
+    <item>
+      <label>fa-brands fa-viadeo</label>
+      <value>fa-brands fa-viadeo</value>
+    </item>
+    <item>
+      <label>fa-brands fa-viadeo-square</label>
+      <value>fa-brands fa-viadeo-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-vial</label>
+      <value>fa-solid fa-vial</value>
+    </item>
+    <item>
+      <label>fa-solid fa-vials</label>
+      <value>fa-solid fa-vials</value>
+    </item>
+    <item>
+      <label>fa-brands fa-viber</label>
+      <value>fa-brands fa-viber</value>
+    </item>
+    <item>
+      <label>fa-solid fa-video</label>
+      <value>fa-solid fa-video</value>
+    </item>
+    <item>
+      <label>fa-solid fa-video-slash</label>
+      <value>fa-solid fa-video-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-vihara</label>
+      <value>fa-solid fa-vihara</value>
+    </item>
+    <item>
+      <label>fa-brands fa-vimeo</label>
+      <value>fa-brands fa-vimeo</value>
+    </item>
+    <item>
+      <label>fa-brands fa-vimeo-square</label>
+      <value>fa-brands fa-vimeo-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-vimeo-v</label>
+      <value>fa-brands fa-vimeo-v</value>
+    </item>
+    <item>
+      <label>fa-brands fa-vine</label>
+      <value>fa-brands fa-vine</value>
+    </item>
+    <item>
+      <label>fa-solid fa-virus</label>
+      <value>fa-solid fa-virus</value>
+    </item>
+    <item>
+      <label>fa-solid fa-virus-slash</label>
+      <value>fa-solid fa-virus-slash</value>
+    </item>
+    <item>
+      <label>fa-solid fa-viruses</label>
+      <value>fa-solid fa-viruses</value>
+    </item>
+    <item>
+      <label>fa-brands fa-vk</label>
+      <value>fa-brands fa-vk</value>
+    </item>
+    <item>
+      <label>fa-brands fa-vnv</label>
+      <value>fa-brands fa-vnv</value>
+    </item>
+    <item>
+      <label>fa-solid fa-voicemail</label>
+      <value>fa-solid fa-voicemail</value>
+    </item>
+    <item>
+      <label>fa-solid fa-volleyball-ball</label>
+      <value>fa-solid fa-volleyball-ball</value>
+    </item>
+    <item>
+      <label>fa-solid fa-volume-down</label>
+      <value>fa-solid fa-volume-down</value>
+    </item>
+    <item>
+      <label>fa-solid fa-volume-mute</label>
+      <value>fa-solid fa-volume-mute</value>
+    </item>
+    <item>
+      <label>fa-solid fa-volume-off</label>
+      <value>fa-solid fa-volume-off</value>
+    </item>
+    <item>
+      <label>fa-solid fa-volume-up</label>
+      <value>fa-solid fa-volume-up</value>
+    </item>
+    <item>
+      <label>fa-solid fa-vote-yea</label>
+      <value>fa-solid fa-vote-yea</value>
+    </item>
+    <item>
+      <label>fa-solid fa-vr-cardboard</label>
+      <value>fa-solid fa-vr-cardboard</value>
+    </item>
+    <item>
+      <label>fa-brands fa-vuejs</label>
+      <value>fa-brands fa-vuejs</value>
+    </item>
+    <item>
+      <label>fa-solid fa-walking</label>
+      <value>fa-solid fa-walking</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wallet</label>
+      <value>fa-solid fa-wallet</value>
+    </item>
+    <item>
+      <label>fa-solid fa-warehouse</label>
+      <value>fa-solid fa-warehouse</value>
+    </item>
+    <item>
+      <label>fa-brands fa-watchman-monitoring</label>
+      <value>fa-brands fa-watchman-monitoring</value>
+    </item>
+    <item>
+      <label>fa-solid fa-water</label>
+      <value>fa-solid fa-water</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wave-square</label>
+      <value>fa-solid fa-wave-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-waze</label>
+      <value>fa-brands fa-waze</value>
+    </item>
+    <item>
+      <label>fa-brands fa-weebly</label>
+      <value>fa-brands fa-weebly</value>
+    </item>
+    <item>
+      <label>fa-brands fa-weibo</label>
+      <value>fa-brands fa-weibo</value>
+    </item>
+    <item>
+      <label>fa-solid fa-weight</label>
+      <value>fa-solid fa-weight</value>
+    </item>
+    <item>
+      <label>fa-solid fa-weight-hanging</label>
+      <value>fa-solid fa-weight-hanging</value>
+    </item>
+    <item>
+      <label>fa-brands fa-weixin</label>
+      <value>fa-brands fa-weixin</value>
+    </item>
+    <item>
+      <label>fa-brands fa-whatsapp</label>
+      <value>fa-brands fa-whatsapp</value>
+    </item>
+    <item>
+      <label>fa-brands fa-whatsapp-square</label>
+      <value>fa-brands fa-whatsapp-square</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wheelchair</label>
+      <value>fa-solid fa-wheelchair</value>
+    </item>
+    <item>
+      <label>fa-brands fa-whmcs</label>
+      <value>fa-brands fa-whmcs</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wifi</label>
+      <value>fa-solid fa-wifi</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wikipedia-w</label>
+      <value>fa-brands fa-wikipedia-w</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wind</label>
+      <value>fa-solid fa-wind</value>
+    </item>
+    <item>
+      <label>fa-solid fa-window-close</label>
+      <value>fa-solid fa-window-close</value>
+    </item>
+    <item>
+      <label>fa-solid fa-window-maximize</label>
+      <value>fa-solid fa-window-maximize</value>
+    </item>
+    <item>
+      <label>fa-solid fa-window-minimize</label>
+      <value>fa-solid fa-window-minimize</value>
+    </item>
+    <item>
+      <label>fa-solid fa-window-restore</label>
+      <value>fa-solid fa-window-restore</value>
+    </item>
+    <item>
+      <label>fa-brands fa-windows</label>
+      <value>fa-brands fa-windows</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wine-bottle</label>
+      <value>fa-solid fa-wine-bottle</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wine-glass</label>
+      <value>fa-solid fa-wine-glass</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wine-glass-alt</label>
+      <value>fa-solid fa-wine-glass-alt</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wix</label>
+      <value>fa-brands fa-wix</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wizards-of-the-coast</label>
+      <value>fa-brands fa-wizards-of-the-coast</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wodu</label>
+      <value>fa-brands fa-wodu</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wolf-pack-battalion</label>
+      <value>fa-brands fa-wolf-pack-battalion</value>
+    </item>
+    <item>
+      <label>fa-solid fa-won-sign</label>
+      <value>fa-solid fa-won-sign</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wordpress</label>
+      <value>fa-brands fa-wordpress</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wordpress-simple</label>
+      <value>fa-brands fa-wordpress-simple</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wpbeginner</label>
+      <value>fa-brands fa-wpbeginner</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wpexplorer</label>
+      <value>fa-brands fa-wpexplorer</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wpforms</label>
+      <value>fa-brands fa-wpforms</value>
+    </item>
+    <item>
+      <label>fa-brands fa-wpressr</label>
+      <value>fa-brands fa-wpressr</value>
+    </item>
+    <item>
+      <label>fa-solid fa-wrench</label>
+      <value>fa-solid fa-wrench</value>
+    </item>
+    <item>
+      <label>fa-solid fa-x-ray</label>
+      <value>fa-solid fa-x-ray</value>
+    </item>
+    <item>
+      <label>fa-brands fa-xbox</label>
+      <value>fa-brands fa-xbox</value>
+    </item>
+    <item>
+      <label>fa-brands fa-xing</label>
+      <value>fa-brands fa-xing</value>
+    </item>
+    <item>
+      <label>fa-brands fa-xing-square</label>
+      <value>fa-brands fa-xing-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-y-combinator</label>
+      <value>fa-brands fa-y-combinator</value>
+    </item>
+    <item>
+      <label>fa-brands fa-yahoo</label>
+      <value>fa-brands fa-yahoo</value>
+    </item>
+    <item>
+      <label>fa-brands fa-yammer</label>
+      <value>fa-brands fa-yammer</value>
+    </item>
+    <item>
+      <label>fa-brands fa-yandex</label>
+      <value>fa-brands fa-yandex</value>
+    </item>
+    <item>
+      <label>fa-brands fa-yandex-international</label>
+      <value>fa-brands fa-yandex-international</value>
+    </item>
+    <item>
+      <label>fa-brands fa-yarn</label>
+      <value>fa-brands fa-yarn</value>
+    </item>
+    <item>
+      <label>fa-brands fa-yelp</label>
+      <value>fa-brands fa-yelp</value>
+    </item>
+    <item>
+      <label>fa-solid fa-yen-sign</label>
+      <value>fa-solid fa-yen-sign</value>
+    </item>
+    <item>
+      <label>fa-solid fa-yin-yang</label>
+      <value>fa-solid fa-yin-yang</value>
+    </item>
+    <item>
+      <label>fa-brands fa-yoast</label>
+      <value>fa-brands fa-yoast</value>
+    </item>
+    <item>
+      <label>fa-brands fa-youtube</label>
+      <value>fa-brands fa-youtube</value>
+    </item>
+    <item>
+      <label>fa-brands fa-youtube-square</label>
+      <value>fa-brands fa-youtube-square</value>
+    </item>
+    <item>
+      <label>fa-brands fa-zhihu</label>
+      <value>fa-brands fa-zhihu</value>
+    </item>
+  </itemset>
+</select1>
