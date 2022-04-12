@@ -71,44 +71,6 @@
           <span class="space"> </span>
           <span>Footer Links</span>
         </label>
-        <!--<group>
-          <select1 bind="cLinkType" appearance="full">
-            <label>Type of link</label>
-            <item>
-              <label>Internal (Going to a page on this site)</label>
-              <value>internal</value>
-              <toggle case="cLinkType_1" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>External (Going to another site)</label>
-              <value>external</value>
-              <toggle case="cLinkType_2" event="DOMActivate"/>
-            </item>
-          </select1>
-          <switch class="disable">
-            <case id="cLinkType_1">
-              <select1 bind="cModuleLink" class="siteTree">
-                <label>Link to page</label>
-              </select1>
-            </case>
-            <case id="cLinkType_2">
-              <input bind="cModuleLink" class="short">
-                <label>Link to URL</label>
-              </input>
-            </case>
-          </switch>
-          <input bind="cModuleLinkText" class="long">
-            <label>Module footer link text</label>
-          </input>
-          <select bind="bLinkBox" appearance="full" class="multiline bs-only">
-            <item>
-              <label>Link entire box</label>
-              <value>true</value>
-            </item>
-            <help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
-          </select>
-        </group>-->
-
 		  <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
 		  <group>
 			  <select bind="bLinkBox" appearance="full" class="multiline bs-only">
