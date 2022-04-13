@@ -1958,35 +1958,25 @@ processFlow:
                             lastName = fullName(2)
                         End If
 
-
-
-
-
                         Dim ListId As String = ""
                         Select Case StepName
                             Case "Invoice"
                                 ListId = moMailConfig("InvoiceList")
-                                If moMailConfig("InvoiceList") <> "" Then
-                                    xsltPath = moMailConfig("Pure360InvoiceList")
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("InvoiceList"), Email)
-                                End If
-                            Case "Deposit"
-                                If moMailConfig("DepositList") <> "" Then
-                                    xsltPath = moMailConfig("Pure360QuoteList")
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("DepositList"), Email)
-                                End If
-                                ListId = moMailConfig("QuoteList")
-                            Case "Quote"
+                                xsltPath = moMailConfig("Pure360InvoiceList")
                                 If moMailConfig("QuoteList") <> "" Then
-                                    xsltPath = moMailConfig("Pure360QuoteList")
+                                    'if we have invoiced the customer we don't want to send them quote reminders
                                     oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
                                 End If
+                            Case "Quote"
                                 ListId = moMailConfig("QuoteList")
+                                xsltPath = moMailConfig("Pure360QuoteList")
+                            Case "Deposit"
+                                ListId = moMailConfig("DepositList")
                             Case "Newsletter"
+                                ListId = moMailConfig("NewsletterList")
                                 If moMailConfig("NewsletterList") <> "" Then
                                     oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
                                 End If
-                                ListId = moMailConfig("NewsletterList")
                         End Select
                         If ListId <> "" Then
 
@@ -1997,6 +1987,7 @@ processFlow:
                                 valDict.Add("FirstName", firstName)
                                 valDict.Add("LastName", lastName)
                             End If
+
                             oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
                         End If
 

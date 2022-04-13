@@ -274,4 +274,9 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Tinify.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.AssemblyReference.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbprojAssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CoreCompileInputs.cache
