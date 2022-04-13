@@ -33,9 +33,6 @@
       <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
       <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
-      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
-      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
-      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
       <bind id="bLinkArticle" nodeset="@linkArticle" required="false()" type="string"/>
       <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
       <bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
@@ -339,35 +336,7 @@
         </select1>
       </group>
       <group>
-        <label>Module Links</label>
-        <select1 bind="cLinkType" appearance="full">
-          <label>Type of link</label>
-          <item>
-            <label>Internal (Going to a page on this site)</label>
-            <value>internal</value>
-            <toggle case="cLinkType_1" event="DOMActivate"/>
-          </item>
-          <item>
-            <label>External (Going to another site)</label>
-            <value>external</value>
-            <toggle case="cLinkType_2" event="DOMActivate"/>
-          </item>
-        </select1>
-        <switch class="disable">
-          <case id="cLinkType_1">
-            <select1 bind="cModuleLink" class="siteTree">
-              <label>Link to page</label>
-            </select1>
-          </case>
-          <case id="cLinkType_2">
-            <input bind="cModuleLink" class="short">
-              <label>Link to URL</label>
-            </input>
-          </case>
-        </switch>
-        <input bind="cModuleLinkText" class="long">
-          <label>Module footer link text</label>
-        </input>
+		  <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
         <select bind="bLinkArticle" appearance="full" class="multiline">
           <item>
             <label>Make whole article clickable</label>

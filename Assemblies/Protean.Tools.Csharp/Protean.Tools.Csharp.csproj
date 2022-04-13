@@ -164,14 +164,11 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\ProteanCMS Addons\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\ProteanCMS Addons\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets'))" />
     <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-x64.8.4.0\build\net20\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-x64.8.4.0\build\net20\Magick.NET-Q8-x64.targets'))" />
   </Target>
-  <Import Project="..\..\..\ProteanCMS Addons\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\..\ProteanCMS Addons\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets')" />
   <Import Project="..\..\packages\Magick.NET-Q8-x64.8.4.0\build\net20\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-x64.8.4.0\build\net20\Magick.NET-Q8-x64.targets')" />
 </Project>
