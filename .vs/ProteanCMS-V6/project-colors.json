@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "f029cda1-f973-463a-ba08-6fcba7c77919": {
+      "ProjectGuid": "f029cda1-f973-463a-ba08-6fcba7c77919",
+      "DisplayName": "V6_wwwroot",
+      "ColorIndex": 0
+    },
+    "7d93fd23-f739-4f09-a1b0-f5a8d0451533": {
+      "ProjectGuid": "7d93fd23-f739-4f09-a1b0-f5a8d0451533",
+      "DisplayName": "ProteanCMS",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

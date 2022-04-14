@@ -1411,6 +1411,9 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
+	  <xsl:variable name="ref2">
+		  <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
+	  </xsl:variable>
     <xsl:variable name="selectedValue">
       <xsl:value-of select="value/node()"/>
     </xsl:variable>
@@ -1423,24 +1426,24 @@
 		    <input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
 		    <span class="input-group-btn">
 			
-			    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{$ref}-modal"><i class="fa fa-file-text-o fa-white">
+			    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{$ref2}-modal"><i class="fa fa-file-text-o fa-white">
 				    <xsl:text> </xsl:text>
 			    </i><xsl:text> </xsl:text>Pick Page</button>
 		    </span>
         </div>
-		  <div class="modal fade" id="{$ref}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal fade" id="{$ref2}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			  <div class="modal-dialog" role="document">
 				  <div class="modal-content">
 					  <div class="modal-body">
 						  <ul id="MenuTree" class="list-group">
 							  <xsl:apply-templates select="/Page/Menu/MenuItem" mode="siteTreePage">
 								  <xsl:with-param name="level">1</xsl:with-param>
-								  <xsl:with-param name="ref" select="$ref" />
+								  <xsl:with-param name="ref" select="$ref2" />
 								  <xsl:with-param name="selectedValue" select="$selectedValue" />
 							  </xsl:apply-templates>
 							  <xsl:apply-templates select="/Page/Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="siteTreePage">
 								  <xsl:with-param name="level">1</xsl:with-param>
-								  <xsl:with-param name="ref" select="$ref" />
+								  <xsl:with-param name="ref" select="$ref2" />
 								  <xsl:with-param name="selectedValue" select="$selectedValue" />
 							  </xsl:apply-templates>
 						  </ul>
@@ -2993,7 +2996,7 @@
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
             <input name="IsParent" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
-      <input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
+      	    <input name="redirectOption" type="hidden" class="hiddenRedirectType" />
       </div>
     </div>
    

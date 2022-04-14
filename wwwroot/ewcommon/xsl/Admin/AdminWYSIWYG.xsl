@@ -167,7 +167,7 @@
   
   <!--In admin WYSIWYG mode-->
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
-    <body id="pg_{@id}" class="normalMode">
+    <body id="page{@id}" class="normalMode">
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <div class="ewAdmin">
         <xsl:apply-templates select="AdminMenu"/>

@@ -93,7 +93,6 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.NET.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.NET.Core.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.AssemblyReference.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Protean.Tools.Csharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Protean.Tools.Csharp.pdb
