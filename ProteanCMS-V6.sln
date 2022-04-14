@@ -9,12 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protean.Tools.Csharp", "Ass
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ProteanCMS", "Assemblies\ProteanCMS\ProteanCMS.vbproj", "{7D93FD23-F739-4F09-A1B0-F5A8D0451533}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProteanCMS.UnitTests", "Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\ProteanCMS.UnitTests.csproj", "{38E4392F-2E38-450D-9F3C-AC12F11EBFF7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protean.Tools.UnitTests", "Assemblies\Protean.Tools.UnitTests\Protean.Tools.UnitTests.csproj", "{67F47060-427B-4D03-9607-0829CD6B8408}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProteanCMS.IntegrationTests", "Assemblies\ProteanCMS.IntegrationTests\ProteanCMS.IntegrationTests.csproj", "{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}"
-EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "V6_wwwroot", "V6_wwwroot\", "{F029CDA1-F973-463A-BA08-6FCBA7C77919}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
@@ -35,27 +29,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "V6_wwwroot", "V6_wwwroot\",
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "52108"
 		SlnRelativePath = "V6_wwwroot\"
-	EndProjectSection
-EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wwwroot", "wwwroot\", "{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_52465"
-		Debug.AspNetCompiler.PhysicalPath = "wwwroot\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52465\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_52465"
-		Release.AspNetCompiler.PhysicalPath = "wwwroot\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52465\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "52465"
-		SlnRelativePath = "wwwroot\"
 	EndProjectSection
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ewcommon", "wwwroot\ewcommon\", "{F0617DFC-F066-4E7B-88A2-1EB8B779F906}"
@@ -97,26 +70,10 @@ Global
 		{7D93FD23-F739-4F09-A1B0-F5A8D0451533}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D93FD23-F739-4F09-A1B0-F5A8D0451533}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D93FD23-F739-4F09-A1B0-F5A8D0451533}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38E4392F-2E38-450D-9F3C-AC12F11EBFF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38E4392F-2E38-450D-9F3C-AC12F11EBFF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38E4392F-2E38-450D-9F3C-AC12F11EBFF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38E4392F-2E38-450D-9F3C-AC12F11EBFF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67F47060-427B-4D03-9607-0829CD6B8408}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67F47060-427B-4D03-9607-0829CD6B8408}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67F47060-427B-4D03-9607-0829CD6B8408}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67F47060-427B-4D03-9607-0829CD6B8408}.Release|Any CPU.Build.0 = Release|Any CPU
-		{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58CA7ED9-D49F-42DC-83EA-04A4A5BCBB28}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|Any CPU.ActiveCfg = Debug|Any CPU

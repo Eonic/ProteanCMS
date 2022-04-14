@@ -530,7 +530,7 @@ public static class Text
             shtml = shtml.Replace("&amp;nbsp;", "&#160;");
             shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
 
-                oTdyManaged = TidyManaged.Document.FromString(shtml);
+            oTdyManaged = TidyManaged.Document.FromString(shtml);
             oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
             oTdyManaged.MakeClean = true;
             oTdyManaged.DropFontTags = true;
