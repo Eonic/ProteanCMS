@@ -6720,8 +6720,8 @@ processFlow:
         End Function
 
         Public Function RemoveItem(Optional ByVal nItemId As Long = 0, Optional ByVal nContentId As Long = 0) As Integer
-            Dim orderStatus As String = GetOrderStatusByCartId()
-            If moCartConfig("OrderPaymentStatusId") = orderStatus Then
+            Dim orderStatusId As String = GetOrderStatusByCartId()
+            If moCartConfig("OrderPaymentStatusId") = orderStatusId Then
                 Return 1
 
             End If

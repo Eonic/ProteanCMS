@@ -112,8 +112,8 @@ Partial Public Class Cms
                             End If
                             myCart.mnProcessId = 1
                         End If
-                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
-                    If (myCart.moCartConfig("OrderPaymentStatusId") = orderStatus) Then
+                    Dim orderStatusId As String = myCart.GetOrderStatusByCartId()
+                    If (myCart.moCartConfig("OrderPaymentStatusId") = orderStatusId) Then
                         Return ""
 
                     End If
@@ -163,8 +163,8 @@ Partial Public Class Cms
 
             Public Function RemoveItems(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
-                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatus Then
+                    Dim orderStatusId As String = myCart.GetOrderStatusByCartId()
+                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatusId Then
                         Return ""
                     End If
                     Dim cProcessInfo As String = ""
@@ -346,8 +346,8 @@ Partial Public Class Cms
             End Function
 
             Public Function UpdateDeliveryOptionByCountry(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-                Dim orderStatus As String = myCart.GetOrderStatusByCartId()
-                If myCart.moCartConfig("OrderPaymentStatusId") = orderStatus Then
+                Dim orderStatusId As String = myCart.GetOrderStatusByCartId()
+                If myCart.moCartConfig("OrderPaymentStatusId") = orderStatusId Then
                     'Status of order is "Pass for payment"
                     Return "5"
                 End If
@@ -479,8 +479,8 @@ Partial Public Class Cms
 
             Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
-                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatus Then
+                    Dim orderStatusId As String = myCart.GetOrderStatusByCartId()
+                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatusId Then
                         Return "You can not change cart!!"
                     End If
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
@@ -513,8 +513,8 @@ Partial Public Class Cms
 
             Public Function RemoveDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
-                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatus Then
+                    Dim orderStatusId As String = myCart.GetOrderStatusByCartId()
+                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatusId Then
                         Return "You can not change cart!!"
                     End If
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
