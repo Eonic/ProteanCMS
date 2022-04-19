@@ -72,6 +72,9 @@
       <xsl:value-of select="City/node()"/>
     </fo:block>
     <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format"  font-size="12pt" font-family="{$bodyfont}">
+      <xsl:value-of select="State/node()"/>
+    </fo:block>
+    <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format"  font-size="12pt" font-family="{$bodyfont}">
       <xsl:value-of select="PostalCode/node()"/>
     </fo:block>
     <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format"  font-size="12pt" font-family="{$bodyfont}">
