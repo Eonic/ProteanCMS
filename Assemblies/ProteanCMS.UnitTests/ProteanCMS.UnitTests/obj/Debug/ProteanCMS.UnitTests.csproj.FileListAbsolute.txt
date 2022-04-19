@@ -547,9 +547,9 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.csproj.CopyComplete
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\tidy.x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\tidy.x86.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\x64\ClearScriptV8-64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\x64\v8-base-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\x64\v8-x64.dll
@@ -626,6 +626,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\AlphaFS.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\AlphaFS.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\JavaScriptEngineSwitcher.V8.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Google.Protobuf.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Google.Protobuf.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Renci.SshNet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.NET.Core.xml
@@ -642,3 +643,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\Debug\ProteanCMS.UnitTests.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.Native-Q8-x86.dll
