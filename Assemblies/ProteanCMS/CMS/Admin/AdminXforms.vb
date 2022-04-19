@@ -8442,12 +8442,31 @@ Partial Public Class Cms
                 Dim oGrp1Elmt As XmlElement
                 Dim cProcessInfo As String = ""
 
+
                 Try
 
                     Dim parentOptions As String = "" & myWeb.moConfig("LookupParentOptions")
 
                     Dim oDict As New Dictionary(Of String, String)
                     Dim s As String
+
+                    ' Append data for particular lookup id when edit, change by nita on 18Apr22
+                    Dim cLkpKey As String = ""
+                    Dim cLkpValue As String = ""
+                    Dim sSqlcheck As String = ""
+                    Dim lookupsSingleDataset As DataSet
+
+                    If nLookupId > 0 Then
+                        sSqlcheck = "select nLkpId as id, * from tblLookup " _
+                                            & "WHERE nLkpId = " & nLookupId
+                        lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "Lookup", "Lookups")
+                        If lookupsSingleDataset.Tables.Count > 0 Then
+
+                            cLkpKey = lookupsSingleDataset.Tables(0).Rows(0)("cLkpKey").ToString
+                            cLkpValue = lookupsSingleDataset.Tables(0).Rows(0)("cLkpValue").ToString
+
+                        End If
+                    End If
 
                     If parentOptions <> "" Then
                         For Each s In Split(parentOptions, ";")
@@ -8457,7 +8476,12 @@ Partial Public Class Cms
                     End If
 
                     MyBase.NewFrm("EditProductGroup")
-                    MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey/><cLkpValue/><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    If nLookupId > 0 Then
+                        MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey>" & cLkpKey & "</cLkpKey><cLkpValue>" & cLkpValue & "</cLkpValue><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    Else
+                        MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey/><cLkpValue/><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    End If
+
                     If nLookupId > 0 Then
                         'MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Lookup, nLookupId)
                         Category = MyBase.Instance.SelectSingleNode("tblLookup/cLkpCategory").InnerText
