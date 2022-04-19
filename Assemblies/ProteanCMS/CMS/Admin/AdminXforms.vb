@@ -44,10 +44,10 @@ Partial Public Class Cms
             Public moRequest As System.Web.HttpRequest
 
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
-            Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Shadows Event OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs)
 
-            Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
-                returnException(myWeb.msException, mcModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
+            Private Sub _OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
+                returnException(myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug)
             End Sub
 
             'Public myWeb As Protean.Cms
@@ -1494,21 +1494,21 @@ Partial Public Class Cms
                     End If
 
 
-                    ' Account for the clone node 
-                    If gbClone Then
+                    ' Account for the clone node ' TS removed because added in to page xform on a per site basis if required see wanner.
+                    'If gbClone Then
 
-                        ' Check for the instance of Clone
-                        If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
-                        End If
+                    '    ' Check for the instance of Clone
+                    '    If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
+                    '    End If
 
-                        ' Check for the binding of clone
-                        If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
-                            MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
-                            MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
-                        End If
-                    End If
+                    '    ' Check for the binding of clone
+                    '    If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
+                    '        MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
+                    '        MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
+                    '    End If
+                    'End If
 
                     cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                     If MyBase.isSubmitted Then
@@ -1664,6 +1664,7 @@ Partial Public Class Cms
                     MyBase.addOption(oSelElmt, "Same content with multiple locations", 2)
                     MyBase.addOption(oSelElmt, "Same content with multiple primary locations", 3)
                     MyBase.addOption(oSelElmt, "Create copies of the content", 1)
+                    MyBase.addOption(oSelElmt, "Force copies of the content", 4)
                     MyBase.addBind("nCopyContent", "tblContentStructure/@nCopyContent", "true()")
 
                     MyBase.addInput(oFrmElmt, "cStructName", True, "Page Name")
@@ -3179,7 +3180,7 @@ Partial Public Class Cms
                         bulkContentSchemaName = Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
                     bulkContentSchemaName = bulkContentSchemaName.Trim(" ").Trim(",").Trim(" ")
-                    MyBase.addSubmit(oFrmElmt, "", "Delete Products", , "principle btn-danger", "fa-trash-o")
+                    MyBase.addSubmit(oFrmElmt, "", "Delete", , "principle btn-danger", "fa-trash-o")
 
                     MyBase.Instance.InnerXml = "<delete/>"
 
@@ -5859,6 +5860,11 @@ Partial Public Class Cms
                     Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
                     Dim amount As String = ""
+
+
+
+
+
                     If (nOrderId > 0) Then
                         Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
                         If (cartXmlSql <> "") Then
@@ -7159,11 +7165,18 @@ Partial Public Class Cms
                         ElseIf MyBase.getSubmitted = "Confirm" Then
                             Dim bEmailClient As Boolean = False
                             If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
-                            oSub.RenewSubscription(nSubscriptionId, bEmailClient)
-                            MyBase.valid = True
+                            Dim RenewResponse As String
+                            RenewResponse = oSub.RenewSubscription(nSubscriptionId, bEmailClient)
+                            If RenewResponse = "Success" Then
+                                MyBase.valid = True
+                            Else
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Payment Failed")
+                                MyBase.valid = False
+                            End If
+
                             Return MyBase.moXformElmt
+                            End If
                         End If
-                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
@@ -9118,9 +9131,9 @@ Partial Public Class Cms
                             Dim msgHtml As String = msgNode.InnerXml
 
                             msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText)
-                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementId"))
+                            msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementID"))
                             msgHtml = msgHtml.Replace("{PaymentDue}", oCartListElmt.GetAttribute("payableAmount"))
-                            msgHtml = msgHtml.Replace("{PaymentDueDate}", oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText)
+                            msgHtml = msgHtml.Replace("{PaymentDueDate}", CDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText).ToString("dd MMM yyyy"))
                             msgHtml = msgHtml.Replace("{CourseName}", oCartListElmt.SelectSingleNode("Item[1]/Name").InnerText)
 
                             msgNode.InnerXml = msgHtml
@@ -9147,6 +9160,8 @@ Partial Public Class Cms
                             Dim oMsg As New Protean.Messaging()
                             oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
                             myWeb.moSession(InstanceSessionName) = Nothing
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Email, mnUserId, 0, 0, nOrderId, "Payment Reminder Sent - " & Now().ToString())
+
                         End If
                     ElseIf MyBase.isTriggered Then
                         'we have clicked a trigger so we must update the instance
