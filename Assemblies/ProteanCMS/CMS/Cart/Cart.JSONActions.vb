@@ -102,51 +102,57 @@ Partial Public Class Cms
                     Dim oDoc As New XmlDocument
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
 
+
                     If myCart.mnCartId < 1 Then
-                        myCart.CreateNewCart(CartXml, "Order")
-                        If myCart.mcItemOrderType <> "" Then
-                            myCart.mmcOrderType = myCart.mcItemOrderType
-                        Else
-                            myCart.mmcOrderType = ""
+                            myCart.CreateNewCart(CartXml, "Order")
+                            If myCart.mcItemOrderType <> "" Then
+                                myCart.mmcOrderType = myCart.mcItemOrderType
+                            Else
+                                myCart.mmcOrderType = ""
+                            End If
+                            myCart.mnProcessId = 1
                         End If
-                        myCart.mnProcessId = 1
-                    End If
+                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
+                    If (myCart.moCartConfig("OrderPaymentStatusId") = orderStatus) Then
+                        Return ""
 
+                    End If
                     Dim item As Newtonsoft.Json.Linq.JObject
-                    If (jObj("Item") IsNot Nothing) Then
-                        For Each item In jObj("Item")
-                            Dim bUnique As Boolean = False
-                            Dim cProductPrice As Double = 0
-                            Dim sProductName As String = ""
-                            Dim bPackegingRequired As Boolean = False
-                            Dim sOverideURL As String = ""
-                            If item.ContainsKey("UniqueProduct") Then
-                                bUnique = item("UniqueProduct")
-                            End If
-                            If item.ContainsKey("itemPrice") Then
-                                cProductPrice = item("itemPrice")
-                            End If
-                            If item.ContainsKey("productName") Then
-                                sProductName = item("productName")
-                            End If
-                            If item.ContainsKey("url") Then
-                                sOverideURL = item("url")
-                            End If
-                            myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL)
+                        If (jObj("Item") IsNot Nothing) Then
+                            For Each item In jObj("Item")
+                                Dim bUnique As Boolean = False
+                                Dim cProductPrice As Double = 0
+                                Dim sProductName As String = ""
+                                Dim bPackegingRequired As Boolean = False
+                                Dim sOverideURL As String = ""
+                                If item.ContainsKey("UniqueProduct") Then
+                                    bUnique = item("UniqueProduct")
+                                End If
+                                If item.ContainsKey("itemPrice") Then
+                                    cProductPrice = item("itemPrice")
+                                End If
+                                If item.ContainsKey("productName") Then
+                                    sProductName = item("productName")
+                                End If
+                                If item.ContainsKey("url") Then
+                                    sOverideURL = item("url")
+                                End If
+                                myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL)
 
-                        Next
-                    End If
+                            Next
+                        End If
+
                     'Output the new cart
                     myCart.GetCart(CartXml.FirstChild)
-                    CartXml = updateCartforJSON(CartXml)
-                    'persist cart
-                    myCart.close()
+                        CartXml = updateCartforJSON(CartXml)
+                        'persist cart
+                        myCart.close()
 
-                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None)
-                    jsonString = jsonString.Replace("""@", """_")
-                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None)
+                        jsonString = jsonString.Replace("""@", """_")
+                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
 
-                    Return jsonString
+                        Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -157,36 +163,40 @@ Partial Public Class Cms
 
             Public Function RemoveItems(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-                    Dim cProcessInfo As String = ""
-                    Dim ItemCount As Long = 1
-
-                    Dim item As Newtonsoft.Json.Linq.JObject
-
-                    For Each item In jObj("Item")
-                        If item("contentId") Is Nothing Then
-                            ItemCount = myCart.RemoveItem(item("itemId"), 0)
-                        Else
-                            ItemCount = myCart.RemoveItem(0, item("contentId"))
-                        End If
-                    Next
-
-
-                    If ItemCount = 0 Then
-                        myCart.QuitCart()
-                        myCart.EndSession()
+                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
+                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatus Then
+                        Return ""
                     End If
+                    Dim cProcessInfo As String = ""
+                        Dim ItemCount As Long = 1
+
+                        Dim item As Newtonsoft.Json.Linq.JObject
+
+                        For Each item In jObj("Item")
+                            If item("contentId") Is Nothing Then
+                                ItemCount = myCart.RemoveItem(item("itemId"), 0)
+                            Else
+                                ItemCount = myCart.RemoveItem(0, item("contentId"))
+                            End If
+                        Next
+
+
+                        If ItemCount = 0 Then
+                            myCart.QuitCart()
+                            myCart.EndSession()
+                        End If
 
                     'Output the new cart   
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                    myCart.GetCart(CartXml.FirstChild)
-                    'persist cart
-                    myCart.close()
-                    CartXml = updateCartforJSON(CartXml)
+                        myCart.GetCart(CartXml.FirstChild)
+                        'persist cart
+                        myCart.close()
+                        CartXml = updateCartforJSON(CartXml)
 
-                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    jsonString = jsonString.Replace("""@", """_")
-                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
-                    Return jsonString
+                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                        jsonString = jsonString.Replace("""@", """_")
+                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                        Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -197,53 +207,54 @@ Partial Public Class Cms
 
             Public Function UpdateItems(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
+
                     Dim cProcessInfo As String = ""
-                    Dim ItemCount As Long = 1
+                        Dim ItemCount As Long = 1
 
-                    Dim item As Newtonsoft.Json.Linq.JObject
-                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                        Dim item As Newtonsoft.Json.Linq.JObject
+                        Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
 
-                    If myCart.mnCartId < 1 Then
-                        myCart.CreateNewCart(CartXml)
-                        If myCart.mcItemOrderType <> "" Then
-                            myCart.mmcOrderType = myCart.mcItemOrderType
-                        Else
-                            myCart.mmcOrderType = ""
-                        End If
-                        myCart.mnProcessId = 1
-                    End If
-
-                    For Each item In jObj("Item")
-                        If item("contentId") Is Nothing Then
-                            If item("qty") = "0" Then
-                                ItemCount = myCart.RemoveItem(item("itemId"), 0)
+                        If myCart.mnCartId < 1 Then
+                            myCart.CreateNewCart(CartXml)
+                            If myCart.mcItemOrderType <> "" Then
+                                myCart.mmcOrderType = myCart.mcItemOrderType
                             Else
-                                ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"), item("skipPackaging"))
+                                myCart.mmcOrderType = ""
                             End If
-                        Else
-                            If item("qty") = "0" Then
-                                ItemCount = myCart.RemoveItem(0, item("contentId"))
-                            Else
-                                ItemCount = myCart.UpdateItem(0, item("contentId"), item("qty"))
-                            End If
+                            myCart.mnProcessId = 1
                         End If
-                    Next
 
-                    If ItemCount = 0 Then
-                        myCart.QuitCart()
-                        myCart.EndSession()
-                    End If
+                        For Each item In jObj("Item")
+                            If item("contentId") Is Nothing Then
+                                If item("qty") = "0" Then
+                                    ItemCount = myCart.RemoveItem(item("itemId"), 0)
+                                Else
+                                    ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"), item("skipPackaging"))
+                                End If
+                            Else
+                                If item("qty") = "0" Then
+                                    ItemCount = myCart.RemoveItem(0, item("contentId"))
+                                Else
+                                    ItemCount = myCart.UpdateItem(0, item("contentId"), item("qty"))
+                                End If
+                            End If
+                        Next
 
-                    'Output the new cart
-                    myCart.GetCart(CartXml.FirstChild)
-                    'persist cart
-                    myCart.close()
-                    CartXml = updateCartforJSON(CartXml)
+                        If ItemCount = 0 Then
+                            myCart.QuitCart()
+                            myCart.EndSession()
+                        End If
 
-                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    jsonString = jsonString.Replace("""@", """_")
-                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
-                    Return jsonString
+                        'Output the new cart
+                        myCart.GetCart(CartXml.FirstChild)
+                        'persist cart
+                        myCart.close()
+                        CartXml = updateCartforJSON(CartXml)
+
+                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                        jsonString = jsonString.Replace("""@", """_")
+                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                        Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -335,21 +346,29 @@ Partial Public Class Cms
             End Function
 
             Public Function UpdateDeliveryOptionByCountry(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-                Dim country As String = jObj("country")
-
-                Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                'check config setting here so that it will take order option which is optional.
-                Dim cOrderofDeliveryOption As String = myCart.moCartConfig("ShippingTotalIsNotZero")
-                cOrderofDeliveryOption = myCart.updateDeliveryOptionByCountry(CartXml.FirstChild, country, cOrderofDeliveryOption)
-                If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
-                    RemoveDiscountCode(myApi, jObj)
-                    'this will remove discount section from address page in vuemain.js
-                    cOrderofDeliveryOption = cOrderofDeliveryOption & "#1"
-                Else
-                    cOrderofDeliveryOption = cOrderofDeliveryOption & "#0"
+                Dim orderStatus As String = myCart.GetOrderStatusByCartId()
+                If myCart.moCartConfig("OrderPaymentStatusId") = orderStatus Then
+                    'Status of order is "Pass for payment"
+                    Return "5"
                 End If
 
-                Return cOrderofDeliveryOption
+
+                Dim country As String = jObj("country")
+
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    'check config setting here so that it will take order option which is optional.
+                    Dim cOrderofDeliveryOption As String = myCart.moCartConfig("ShippingTotalIsNotZero")
+                    cOrderofDeliveryOption = myCart.updateDeliveryOptionByCountry(CartXml.FirstChild, country, cOrderofDeliveryOption)
+                    If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
+                        RemoveDiscountCode(myApi, jObj)
+                        'this will remove discount section from address page in vuemain.js
+                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#1"
+                    Else
+                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#0"
+                    End If
+
+                    Return cOrderofDeliveryOption
+
             End Function
 
             Public Function GetContacts(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
@@ -460,29 +479,33 @@ Partial Public Class Cms
 
             Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
+                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
+                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatus Then
+                        Return "You can not change cart!!"
+                    End If
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     Dim strMessage As String = String.Empty
-                    Dim jsonString As String = String.Empty
-                    If Not (jObj("Code") Is Nothing) Then
-                        strMessage = myCart.moDiscount.AddDiscountCode(jObj("Code"))
-                        If (strMessage = jObj("Code")) Then
-                            myCart.GetCart(CartXml.FirstChild)
-                            'persist cart
-                            myCart.close()
-                            CartXml = updateCartforJSON(CartXml)
+                        Dim jsonString As String = String.Empty
+                        If Not (jObj("Code") Is Nothing) Then
+                            strMessage = myCart.moDiscount.AddDiscountCode(jObj("Code"))
+                            If (strMessage = jObj("Code")) Then
+                                myCart.GetCart(CartXml.FirstChild)
+                                'persist cart
+                                myCart.close()
+                                CartXml = updateCartforJSON(CartXml)
 
-                            'jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                            'jsonString = jsonString.Replace("""@", """_")
-                            'jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                                'jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                                'jsonString = jsonString.Replace("""@", """_")
+                                'jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                            End If
+                            If (strMessage <> String.Empty) Then
+                                Return strMessage
+                            End If
 
                         End If
-                        If (strMessage <> String.Empty) Then
-                            Return strMessage
-                        End If
-
-                    End If
-                    Return strMessage
+                        Return strMessage
+                    ' End If
                 Catch ex As Exception
 
                 End Try
@@ -490,7 +513,10 @@ Partial Public Class Cms
 
             Public Function RemoveDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
+                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
+                    If myCart.moCartConfig("OrderPaymentStatusId") = orderStatus Then
+                        Return "You can not change cart!!"
+                    End If
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
 
                     myCart.moDiscount.RemoveDiscountCode()
@@ -503,7 +529,7 @@ Partial Public Class Cms
                     jsonString = jsonString.Replace("""@", """_")
                     jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
-
+                    ' End If
                 Catch ex As Exception
 
                 End Try
