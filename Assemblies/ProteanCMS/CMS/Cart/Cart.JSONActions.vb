@@ -481,7 +481,7 @@ Partial Public Class Cms
                 Try
                     Dim orderStatusId As String = myCart.GetOrderStatusByCartId()
                     If myCart.moCartConfig("OrderPaymentStatusId") = orderStatusId Then
-                        Return "You can not change cart!!"
+                        Return ""
                     End If
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     Dim strMessage As String = String.Empty
@@ -515,7 +515,7 @@ Partial Public Class Cms
                 Try
                     Dim orderStatusId As String = myCart.GetOrderStatusByCartId()
                     If myCart.moCartConfig("OrderPaymentStatusId") = orderStatusId Then
-                        Return "You can not change cart!!"
+                        Return ""
                     End If
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
 

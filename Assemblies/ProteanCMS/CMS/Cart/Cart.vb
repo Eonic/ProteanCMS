@@ -5926,53 +5926,53 @@ processFlow:
 
                         ElseIf oPaymentCfg.SelectNodes("provider").Count > 1 Then
 
-                                If Not bPaymentTypeButtons Then
-                                    Dim oSelectElmt As XmlElement
-                                    oSelectElmt = oOptXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@ref='cPaymentMethod']")
-                                    If oSelectElmt Is Nothing Then
-                                        oSelectElmt = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
-                                    End If
-                                    Dim nOptCount As Integer = oPay.getPaymentMethods(oOptXform, oSelectElmt, nAmount, mcPaymentMethod)
+                            If Not bPaymentTypeButtons Then
+                                Dim oSelectElmt As XmlElement
+                                oSelectElmt = oOptXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@ref='cPaymentMethod']")
+                                If oSelectElmt Is Nothing Then
+                                    oSelectElmt = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                End If
+                                Dim nOptCount As Integer = oPay.getPaymentMethods(oOptXform, oSelectElmt, nAmount, mcPaymentMethod)
 
-                                    'Code Moved to Get PaymentMethods
+                                'Code Moved to Get PaymentMethods
 
-                                    If nOptCount = 0 Then
-                                        oOptXform.valid = False
-                                        oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.")
-                                    ElseIf nOptCount = 1 Then
-                                        'hide the options
-                                        oSelectElmt.SetAttribute("class", "hidden")
-                                    End If
-
-                                    'step throught the payment methods to set as allowed.
-                                    Dim oOptElmt As XmlElement
-                                    For Each oOptElmt In oSelectElmt.SelectNodes("item")
-                                        AllowedPaymentMethods.Add(oOptElmt.SelectSingleNode("value").InnerText)
-                                    Next
+                                If nOptCount = 0 Then
+                                    oOptXform.valid = False
+                                    oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.")
+                                ElseIf nOptCount = 1 Then
+                                    'hide the options
+                                    oSelectElmt.SetAttribute("class", "hidden")
                                 End If
 
+                                'step throught the payment methods to set as allowed.
+                                Dim oOptElmt As XmlElement
+                                For Each oOptElmt In oSelectElmt.SelectNodes("item")
+                                    AllowedPaymentMethods.Add(oOptElmt.SelectSingleNode("value").InnerText)
+                                Next
+                            End If
 
 
 
-                            ElseIf oPaymentCfg.SelectNodes("provider").Count = 1 Then
-                                'or just one
-                                If Not bPaymentTypeButtons Then
-                                    If oPay.HasRepeatPayments Then
-                                        Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
-                                        oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, oOptXform, oSelectElmt)
 
-                                        oOptXform.addOption(oSelectElmt, oPaymentCfg.SelectSingleNode("provider/description").Attributes("value").Value, oPaymentCfg.SelectSingleNode("provider").Attributes("name").Value)
-                                        bHidePayment = False
-                                        AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
-                                    Else
-                                        bHidePayment = True
-                                        oOptXform.addInput(oGrpElmt, "cPaymentMethod", False, oPaymentCfg.SelectSingleNode("provider/@name").InnerText, "hidden")
-                                        oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = oPaymentCfg.SelectSingleNode("provider/@name").InnerText
-                                        AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
-                                    End If
+                        ElseIf oPaymentCfg.SelectNodes("provider").Count = 1 Then
+                            'or just one
+                            If Not bPaymentTypeButtons Then
+                                If oPay.HasRepeatPayments Then
+                                    Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
+                                    oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, oOptXform, oSelectElmt)
+
+                                    oOptXform.addOption(oSelectElmt, oPaymentCfg.SelectSingleNode("provider/description").Attributes("value").Value, oPaymentCfg.SelectSingleNode("provider").Attributes("name").Value)
+                                    bHidePayment = False
+                                    AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
+                                Else
+                                    bHidePayment = True
+                                    oOptXform.addInput(oGrpElmt, "cPaymentMethod", False, oPaymentCfg.SelectSingleNode("provider/@name").InnerText, "hidden")
+                                    oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = oPaymentCfg.SelectSingleNode("provider/@name").InnerText
+                                    AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText)
                                 End If
-                            Else
-                                oOptXform.valid = False
+                            End If
+                        Else
+                            oOptXform.valid = False
                             oOptXform.addNote(oGrpElmt, xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.")
                         End If
                     Else
@@ -6089,7 +6089,7 @@ processFlow:
                                 cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
                                 nShippingCost = CDbl("0" & oRow("nShipOptCost"))
                                 cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
-                            moDBHelper.ExeProcessSql(cSqlUpdate)
+                                moDBHelper.ExeProcessSql(cSqlUpdate)
                             Next
 
                             ' update the cart xml
@@ -6381,8 +6381,8 @@ processFlow:
 
             Dim i As Integer
             Try
-                Dim orderStatus As String = GetOrderStatusByCartId()
-                If moCartConfig("OrderPaymentStatusId") <> orderStatus Then
+                Dim orderStatusId As String = GetOrderStatusByCartId()
+                If moCartConfig("OrderPaymentStatusId") <> orderStatusId Then
                     oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart")
                     oDS.EnforceConstraints = False
                     'create relationship
@@ -6750,49 +6750,49 @@ processFlow:
 
             End If
             PerfMon.Log("Cart", "RemoveItem")
-                '   deletes record from item table in db
+            '   deletes record from item table in db
 
-                Dim oDr As SqlDataReader
-                Dim sSql As String
-                Dim oDs As DataSet
-                Dim oRow As DataRow
-                Dim cProcessInfo As String = ""
-                Dim itemCount As Long
-                If IsNumeric(myWeb.moRequest("id")) Then nItemId = myWeb.moRequest("id")
-                Try
-                    'If myWeb.moRequest("id") <> "" Then
+            Dim oDr As SqlDataReader
+            Dim sSql As String
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim cProcessInfo As String = ""
+            Dim itemCount As Long
+            If IsNumeric(myWeb.moRequest("id")) Then nItemId = myWeb.moRequest("id")
+            Try
+                'If myWeb.moRequest("id") <> "" Then
 
-                    If nContentId = 0 Then
-                        sSql = "select nCartItemKey from tblCartItem where (nCartItemKey = " & nItemId & " Or nParentId = " & nItemId & ") and nCartOrderId = " & mnCartId
-                    Else
-                        sSql = "select nCartItemKey from tblCartItem where nItemId = " & nContentId & " and nCartOrderId = " & mnCartId
-                    End If
-
-
-                    oDs = moDBHelper.GetDataSet(sSql, "Item")
-                    If oDs.Tables("Item").Rows.Count > 0 Then
-                        For Each oRow In oDs.Tables("Item").Rows
-                            moDBHelper.DeleteObject(dbHelper.objectTypes.CartItem, oRow("nCartItemKey"))
-                        Next
-                    End If
+                If nContentId = 0 Then
+                    sSql = "select nCartItemKey from tblCartItem where (nCartItemKey = " & nItemId & " Or nParentId = " & nItemId & ") and nCartOrderId = " & mnCartId
+                Else
+                    sSql = "select nCartItemKey from tblCartItem where nItemId = " & nContentId & " and nCartOrderId = " & mnCartId
+                End If
 
 
-                    ' REturn the cart order item count
-                    sSql = "select count(*) As ItemCount from tblCartItem where nCartOrderId = " & mnCartId
-                    oDr = moDBHelper.getDataReader(sSql)
-                    If oDr.HasRows Then
-                        While oDr.Read
-                            itemCount = CInt(oDr("ItemCount"))
-                        End While
-                    End If
+                oDs = moDBHelper.GetDataSet(sSql, "Item")
+                If oDs.Tables("Item").Rows.Count > 0 Then
+                    For Each oRow In oDs.Tables("Item").Rows
+                        moDBHelper.DeleteObject(dbHelper.objectTypes.CartItem, oRow("nCartItemKey"))
+                    Next
+                End If
 
-                    oDr.Close()
-                    oDr = Nothing
-                    Return itemCount
 
-                Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
-                End Try
+                ' REturn the cart order item count
+                sSql = "select count(*) As ItemCount from tblCartItem where nCartOrderId = " & mnCartId
+                oDr = moDBHelper.getDataReader(sSql)
+                If oDr.HasRows Then
+                    While oDr.Read
+                        itemCount = CInt(oDr("ItemCount"))
+                    End While
+                End If
+
+                oDr.Close()
+                oDr = Nothing
+                Return itemCount
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
+            End Try
 
         End Function
 
@@ -9161,30 +9161,16 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         Public Function GetOrderStatusByCartId() As String
             Dim sSql As String
-            Dim oDs As DataSet
-            Dim doc As New XmlDocument()
-            Dim oRow As DataRow
             Dim cartStatusId As String = ""
             Try
                 'get status
-                sSql = "select * from tblCartOrder where nCartOrderKey=" & mnCartId
-                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
-
-
-                For Each oRow In oDs.Tables("Order").Rows
-                    cartStatusId = oRow("nCartStatus")
-                Next
-                oDs.Clear()
-                oDs = Nothing
-
-                Return cartStatusId
+                sSql = "select ISNULL(nCartStatus,0) AS nCartStatus from tblCartOrder where nCartOrderKey=" & mnCartId
+                cartStatusId = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "GetOrderStatusByCartId", ex, "", "", gbDebug)
             End Try
+            Return cartStatusId
         End Function
     End Class
-
-
-
 End Class
 
