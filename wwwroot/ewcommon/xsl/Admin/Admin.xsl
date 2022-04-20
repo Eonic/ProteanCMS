@@ -1033,8 +1033,11 @@
     <xsl:text>Adding New Page below : </xsl:text>
   </xsl:template>
 
+	<xsl:template match="Page[@ewCmd='MailingList.CMSession']" mode="adminBreadcrumb">
+	
+	</xsl:template>
 
-  <xsl:template match="MenuItem" mode="adminBreadcrumb">
+	<xsl:template match="MenuItem" mode="adminBreadcrumb">
 
     <ol class="breadcrumb admin-breadcrumb">
       <xsl:if test="@cmd!='AdmHome'">
@@ -5206,15 +5209,14 @@
       $('.modal-dialog').addClass('loading')
 			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
-      var target = $(this).attr("href");
-      // load the url and show modal on success
-      var currentModal = $('.pickImageModal')
-      currentModal.load(target, function () {
-      $('.modal-dialog').removeClass('loading')
-      currentModal.modal("show");
-      });
-      });
-      };
+			// load the url and show modal on success
+			var currentModal = $('.pickImageModal')
+			currentModal.load(target, function () {
+			$('.modal-dialog').removeClass('loading')
+			currentModal.modal("show");
+			});
+			});
+			};
 
 
       });
@@ -12972,6 +12974,8 @@
       </iframe>
       <xsl:apply-templates select="." mode="adminFooter"/>
       <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
+
+	   <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
 
