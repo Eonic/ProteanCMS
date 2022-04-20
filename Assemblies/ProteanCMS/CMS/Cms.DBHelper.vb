@@ -10895,7 +10895,9 @@ ReturnMe:
 
                 For Each folder As String In foldersToCheck
 
-                    dir = New DirectoryInfo(myWeb.moCtx.Server.MapPath(folder) & "/xforms/Reports")
+                    Dim reportsFolder As String = "/xforms/Reports"
+                    If bs5 Then reportsFolder = "/admin/xforms/reports"
+                    dir = New DirectoryInfo(myWeb.moCtx.Server.MapPath(folder) & reportsFolder)
                     If dir.Exists Then
                         files = dir.GetFiles("*.xml")
 

@@ -2930,10 +2930,12 @@
       <xsl:apply-templates select="Content[@type='Location']" mode="displayBrief"/>
     </xsl:if>
   </xsl:template>
+	
+  <xsl:template match="Page" mode="googleMapJS">		
+  </xsl:template>
 
-  <xsl:template match="Page" mode="googleMapJS">
+  <xsl:template match="Content[@type='Module' and @moduleType='GoogleMapv3']" mode="contentJS">
     <!-- Initialise any Google Maps -->
-    <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
       <xsl:variable name="apiKey">
         <xsl:choose>
           <xsl:when test="$GoogleAPIKey!=''">
@@ -2947,13 +2949,32 @@
       <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
       <script type="text/javascript">
         <xsl:text>function initialiseGMaps(){</xsl:text>
-        <xsl:apply-templates select="//Content[@moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation'] " mode="initialiseGoogleMap"/>
+        <xsl:apply-templates select="." mode="initialiseGoogleMap"/>
         <xsl:text>};</xsl:text>
       </script>
-    </xsl:if>
   </xsl:template>
 
-  <!-- Each Map has it's set of values - unique by content id -->
+	<xsl:template match="Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]" mode="contentDetailJS">
+		<!-- Initialise any Google Maps -->
+			<xsl:variable name="apiKey">
+				<xsl:choose>
+					<xsl:when test="$GoogleAPIKey!=''">
+						<xsl:value-of select="$GoogleAPIKey"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
+			<script type="text/javascript">
+				<xsl:text>function initialiseGMaps(){</xsl:text>
+				<xsl:apply-templates select="." mode="initialiseGoogleMap"/>
+				<xsl:text>};</xsl:text>
+			</script>
+	</xsl:template>
+
+	<!-- Each Map has it's set of values - unique by content id -->
   <xsl:template match="Content" mode="initialiseGoogleMap">
     <xsl:variable name="gMapId" select="concat('gmap',@id)"/>
     <xsl:variable name="mOptionsName" select="concat('mOptions',@id)"/>
@@ -6674,6 +6695,7 @@
     <xsl:apply-templates select="." mode="organiser"/>
     } ]
   </xsl:template>
+	
   <xsl:template match="Content[@type='Event' and ancestor::ContentDetail]" mode="organiser">
     <!-- Copy this to set the value site wide for the organiastion events.
       ,
@@ -6684,11 +6706,14 @@
       }
       -->
   </xsl:template>
+	
   <xsl:template match="Content[@type='Organisation' and @rtype='venue']" mode="JSONLD">
     "location": {
     "@type": "Place",
     "name": "<xsl:value-of select="name/node()"/>",
-    "sameAs": "http://www.example.com",
+	<xsl:if test="url/node()!=''">
+		"sameAs": "<xsl:value-of select="url/node()"/>",
+	</xsl:if>
     "address": {
     "@type": "PostalAddress",
     "streetAddress": "<xsl:value-of select="Organization/location/PostalAddress/streetAddress/node()"/>",
@@ -8464,7 +8489,7 @@
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
     <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
     <xsl:variable name="link" select="@link"/>
-    <xsl:variable name="parentPage" select="//MenuItem[@id=$link]"/>
+    <xsl:variable name="parentPage" select="//MenuItem[@id=$link][1]"/>
     <xsl:variable name="contentList">
       <xsl:apply-templates select="." mode="getContent">
         <xsl:with-param name="contentType" select="$contentType" />
@@ -8549,6 +8574,7 @@
           <xsl:apply-templates select="ms:node-set($contentList)/*[not(DisplayName/@exclude='true')]" mode="displayMenuBrief">
             <xsl:with-param name="sortBy" select="@sortBy"/>
           </xsl:apply-templates>
+		
           <xsl:text> </xsl:text>
         </ul>
         <div class="terminus">&#160;</div>

@@ -1958,35 +1958,25 @@ processFlow:
                             lastName = fullName(2)
                         End If
 
-
-
-
-
                         Dim ListId As String = ""
                         Select Case StepName
                             Case "Invoice"
                                 ListId = moMailConfig("InvoiceList")
-                                If moMailConfig("InvoiceList") <> "" Then
-                                    xsltPath = moMailConfig("Pure360InvoiceList")
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("InvoiceList"), Email)
-                                End If
-                            Case "Deposit"
-                                If moMailConfig("DepositList") <> "" Then
-                                    xsltPath = moMailConfig("Pure360QuoteList")
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("DepositList"), Email)
-                                End If
-                                ListId = moMailConfig("QuoteList")
-                            Case "Quote"
+                                xsltPath = moMailConfig("Pure360InvoiceList")
                                 If moMailConfig("QuoteList") <> "" Then
-                                    xsltPath = moMailConfig("Pure360QuoteList")
+                                    'if we have invoiced the customer we don't want to send them quote reminders
                                     oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
                                 End If
+                            Case "Quote"
                                 ListId = moMailConfig("QuoteList")
+                                xsltPath = moMailConfig("Pure360QuoteList")
+                            Case "Deposit"
+                                ListId = moMailConfig("DepositList")
                             Case "Newsletter"
+                                ListId = moMailConfig("NewsletterList")
                                 If moMailConfig("NewsletterList") <> "" Then
                                     oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
                                 End If
-                                ListId = moMailConfig("NewsletterList")
                         End Select
                         If ListId <> "" Then
 
@@ -1997,6 +1987,7 @@ processFlow:
                                 valDict.Add("FirstName", firstName)
                                 valDict.Add("LastName", lastName)
                             End If
+
                             oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
                         End If
 
@@ -2660,7 +2651,7 @@ processFlow:
                                     'create the key with the current user
                                     Dim sSessionId As String = Convert.ToString(myWeb.moSession.SessionID)
                                     'generate the key with current session id
-                                    Dim sEncryptedKey As String = Protean.Tools.RC4.Encrypt(sSessionId, sKey)
+                                    Dim sEncryptedKey As String = Protean.Tools.Encryption.RC4.Encrypt(sSessionId, sKey)
                                     If (sEncryptedKey = sSessionKey) Then 'if both matches allow to overrdide price
                                         bOverridePrice = True
                                     End If
@@ -7293,7 +7284,7 @@ processFlow:
             Dim Folder As String = "/ewcommon/xforms/PaymentProvider/"
             Dim fi As FileInfo
             Dim ProviderName As String
-
+            If bs5 Then Folder = "/ptn/features/cart/PaymentProvider/"
             Try
 
                 oPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")

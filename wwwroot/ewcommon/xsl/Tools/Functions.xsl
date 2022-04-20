@@ -25,19 +25,8 @@
   <xsl:variable name="cart" select="/Page/Cart"/>
   <xsl:variable name="cartPage" select="/Page/Cart[@type='order']/Order/@cmd!=''"/>
   <xsl:variable name="adminMode" select="/Page/@adminMode"/>
-  <xsl:variable name="path" select="/Page/Request/QueryString/Item[@name='path']/node()"/>
-	<!--
-
-	<xsl:variable name="currentPage">
-
-		<xsl:copy-of select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id][1]"/>
-	</xsl:variable> 
-
-	  -->
-  <xsl:variable name="currentPage" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id][1]"/>
-	
-  <xsl:variable name="sectionPage" select="/Page/Menu/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id][1]]"/>
-	
+  <xsl:variable name="currentPage" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]"/>
+  <xsl:variable name="sectionPage" select="/Page/Menu/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
@@ -1331,7 +1320,7 @@
     </xsl:if>
 
     <!--LinkedIn-->
-    
+    <!--
     <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
       <script type="text/javascript">
         <xsl:text>_linkedin_partner_id = "</xsl:text>
@@ -1345,6 +1334,7 @@
         <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
       </noscript>       
     </xsl:if>
+	-->
     <!-- End Linked In Insight Tag Code -->
     
     <!--END-->
@@ -8803,7 +8793,7 @@
       </xsl:choose>
     </xsl:param>
     <xsl:param name="stepCount" select="@stepCount" />
-    <xsl:param name="parentPage" select="//MenuItem[@id=$link]"/>
+    <xsl:param name="parentPage" select="//MenuItem[@id=$link and ancestor::MenuItem[@id=$pageId]]"/>
     <xsl:param name="endPos">
       <xsl:choose>
         <xsl:when test="@stepCount = '0'">

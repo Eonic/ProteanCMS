@@ -195,6 +195,7 @@ Namespace Providers
 
                                 Dim cMailingXsl As String = moMailConfig("MailingXsl")
                                 If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
+                                If myWeb.moConfig("cssFramework") = "bs5" Then cMailingXsl = "/features/mailer/mailer-core.xsl"
                                 Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
@@ -294,6 +295,7 @@ Namespace Providers
                                 'get the email addresses for these groups
                                 Dim cMailingXsl As String = moMailConfig("MailingXsl")
                                 If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
+                                If myWeb.moConfig("cssFramework") = "bs5" Then cMailingXsl = "/features/mailer/mailer-core.xsl"
                                 Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
@@ -411,6 +413,7 @@ Namespace Providers
 
                         Dim cMailingXsl As String = moMailConfig("MailingXsl")
                         If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
+                        If myWeb.moConfig("cssFramework") = "bs5" Then cMailingXsl = "/features/mailer/mailer-core.xsl"
                         Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                         cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 

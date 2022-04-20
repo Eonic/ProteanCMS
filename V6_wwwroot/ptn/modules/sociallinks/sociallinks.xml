@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content position="" moduleType="SocialLinks" box="" title="" link="" linkType="internal" linkText="Read more" bookmarkSettings="global" iconSet="default" align="right" blank="false"/>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+			<bind id="cContentMyName" nodeset="@myName" required="true()" type="string"/>
+			<bind id="cIconSet" nodeset="@iconSet" required="true()" type="string"/>
+			<bind id="cAlign" nodeset="@align" required="true()" type="string"/>
+			<bind id="cBlank" nodeset="@blank" required="true()" type="string"/>
+			<bind id="uploadSprite" nodeset="@uploadSprite" required="false()" type="string" />
+			<bind id="cContentFacebook" nodeset="@facebookURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?facebook\.com\/*"/>
+			<bind id="cContentTwitter" nodeset="@twitterURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?twitter\.com\/*"/>
+			<bind id="cContentLinkedIn" nodeset="@linkedInURL" required="false()" type="format:/(?:https:\/\/)?(?:*\.)?linkedin\.com\/*"/>
+			<bind id="cContentGooglePlus" nodeset="@googlePlusURL" required="false()" type="format:/(?:https:\/\/)?:www\.)\/*"/>
+			<bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)\/*"/>
+			<bind id="cContentYoutube" nodeset="@youtubeURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?youtube\.com\/*"/>
+			<bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?instagram\.com\/*"/>
+		</bind>
+		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+		</model>
+		<group ref="EditContent">
+			<label>Social Icons</label>
+			<group class="tabs">
+				<group>
+					<label>
+						<i class="fas fa-pen"> </i>
+						<span class="space"> </span>
+						<span>Content</span>
+					</label>
+					<group>
+						<input bind="cContentMyName" class="short required">
+							<label>Organisation Name</label>
+						</input>
+						<select1 bind="cIconSet" appearance="minimal" class="required vshort">
+							<label>Icon Set</label>
+							<item>
+								<label>Default Icons</label>
+								<value>icons</value>
+							</item>
+							<item>
+								<label>Square Icons</label>
+								<value>icons-square</value>
+							</item>
+							<item>
+								<label>Circle Icons</label>
+								<value>icons-circle</value>
+							</item>
+							<item>
+								<label>Squared Images</label>
+								<value>default</value>
+							</item>
+							<item>
+								<label>Circular Images</label>
+								<value>circular</value>
+							</item>
+							<item>
+								<label>Plain Icons</label>
+								<value>plain</value>
+							</item>
+						</select1>
+						<group class="row">
+							<group class="col-lg-6">
+								<select1 bind="cAlign" appearance="full" class="inline-items">
+									<label>Alignment</label>
+									<item>
+										<label>Left</label>
+										<value>left</value>
+									</item>
+									<item>
+										<label>Center</label>
+										<value>center</value>
+									</item>
+									<item>
+										<label>Right</label>
+										<value>right</value>
+									</item>
+								</select1>
+							</group>
+							<group class="col-lg-6">
+								<select1 bind="cBlank" appearance="full" class="inline-items">
+									<label>Open in a new window</label>
+									<item>
+										<label>Yes</label>
+										<value>true</value>
+									</item>
+									<item>
+										<label>No</label>
+										<value>false</value>
+									</item>
+								</select1>
+							</group>
+						</group>
+					</group>
+					<group class="row">
+						<div>All web links require the https:// prefix</div>
+						<group class="col-lg-6">
+							<input bind="cContentFacebook" class="short">
+								<label>Facebook URL</label>
+							</input>
+							<input bind="cContentTwitter" class="short">
+								<label>Twitter URL</label>
+							</input>
+							<input bind="cContentLinkedIn" class="short">
+								<label>LinkedIn URL</label>
+							</input>
+							<input bind="cContentGooglePlus" class="short">
+								<label>Google+ URL</label>
+							</input>
+							</group>
+							<group class="col-lg-6">
+								<input bind="cContentPinterest" class="short">
+									<label>Pinterest URL</label>
+								</input>
+								<input bind="cContentYoutube" class="short">
+									<label>Youtube URL</label>
+								</input>
+								<input bind="cContentInstagram" class="short">
+									<label>Instagram URL</label>
+								</input>		
+							</group>
+					</group>
+					<!-- group class="inline">		
+						<hint class="long">
+							All URL's must start with http:// ... etc.
+						</hint>
+						<input bind="uploadSprite" class="pickImageFile bs-only">
+							<label>Upload sprite from file</label>
+							<value></value>
+							<hint>
+								Here is an example sprite to <a href="/ptn/core/icons/social/social-sprite.png">download</a>
+							</hint>
+						</input>
+					</group -->
+				</group>
+				<group>
+					<label>
+						<i class="fas fa-brush"> </i>
+						<span class="space"> </span>
+						<span>Presentation</span>
+					</label>
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+				</group>
+				<group>
+					<label>
+						<i class="fas fa-link"> </i>
+						<span class="space"> </span>
+						<span>Footer Links</span>
+					</label>
+					<group>
+						<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+					</group>
+				</group>
+				<group>
+					<label>
+						<i class="fas fa-tachometer-alt"> </i>
+						<span class="space"> </span>
+						<span>Animate</span>
+					</label>
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+				</group>
+				<group>
+					<label>
+						<i class="fas fa-cog"> </i>
+						<span class="space"> </span>
+						<span>Advanced Settings</span>
+					</label>
+					<group>
+						<!-- These hidden fields and bindings are required for the component-->
+						<input bind="nContentKey" class="hidden">
+							<label>ContentId</label>
+						</input>
+						<input bind="cModuleType" class="hidden">
+							<label>ModuleType</label>
+						</input>
+						<!-- end of hidden fields -->
+						<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+					</group>
+				</group>
+			</group>
+		</group>
+		<group ref="submit" class="contentSubmit">
+			<submit submission="" ref="ewSubmit" class="principle">
+				<label>Save Links</label>
+			</submit>
+		</group>
+	</Content>
