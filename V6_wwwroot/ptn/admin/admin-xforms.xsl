@@ -1645,6 +1645,14 @@
     <div class="pick-page">
       <input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}" test="{$ref}"/>
       <div class="input-group">
+		  <span class="input-group-btn">
+			  <!--<a onclick="xfrmClearPickPage('{ancestor::Content/model/submission/@id}','{$ref}')" title="remove page" class="btn btn-default">-->
+			  <a href="javascript:$('#{$ref}').val('');$('#{$ref}-name').val('');" title="remove page" class="btn btn-default">
+				  <i class="fa fa-times fa-white">
+					  <xsl:text> </xsl:text>
+				  </i>
+			  </a>
+		  </span>
         <input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{$ref2}-modal">
