@@ -2415,7 +2415,15 @@ Partial Public Class Cms
                         If myWeb.moConfig("ClientCommonFolder") <> "" Then
                             EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
                         End If
-                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+
+                        'new local modules
+                        rootFolder = New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & "/modules"))
+                        For Each fld In rootFolder.GetDirectories
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+                        Next
+
+                        'legacy local modules
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
 
                         If myWeb.moConfig("Search") = "on" Then
                             EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")

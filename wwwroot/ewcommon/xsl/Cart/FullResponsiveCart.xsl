@@ -1355,7 +1355,7 @@
                               <xsl:value-of select="format-number(@UnitSaving,'#0.00')"/>
 							  -->
             <xsl:apply-templates select="/Page" mode="formatPrice">
-              <xsl:with-param name="price" select="@UnitSaving"/>
+              <xsl:with-param name="price" select="parent::*/@TotalSaving"/>
               <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
             </xsl:apply-templates>
           </div>
