@@ -3689,13 +3689,16 @@ Partial Public Class Cms
                         MyBase.validate()
                         If MyBase.valid Then
 
+                            Dim FolderName As String = goRequest("cFolderName")
+
                             Dim oFs As fsHelper = New fsHelper
                             oFs.initialiseVariables(nType)
-                            sValidResponse = oFs.CreateFolder(HtmlDecode(goRequest("cFolderName")), cPath)
+                            sValidResponse = oFs.CreateFolder(HtmlDecode(FolderName), cPath)
 
                             If IsNumeric(sValidResponse) Then
                                 valid = True
-                                cPath &= "\" & goRequest("cFolderName")
+                                cPath &= "\" & FolderName.Replace(" ", "-")
+                                cPath = cPath.Replace("\\", "\")
                             Else
                                 valid = False
                                 MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, sValidResponse)
