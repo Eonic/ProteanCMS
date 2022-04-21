@@ -243,6 +243,10 @@
 
   <xsl:template match="Page[@layout='Logon']" mode="Admin">
     <div class="adminTemplate container" id="template_Logon">
+		<span class="text-light logo-text login-logo">
+			<img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
+			<strong>Protean</strong>CMS
+		</span>
 		<div class="card">
 			<div class="card-header">
 				<h5>Log in</h5>
