@@ -83,10 +83,15 @@ function contentSwiper() {
         var lgHeight = $(this).data("lgHeight");
         var spaceBetween = parseInt(padding) * 2;
         var spaceBetweenLg = parseInt(padding) * 2;
-        var autoplay = $(this).data("autoplay");
-        if (autoplay == undefined) { autoplay = false };
-        if ($(this).data("autoplay")!='true') { autoplay = false };
+        var objAutoplay = $(this).data("autoplay");
         var autoplaySpeed = $(this).data("autoplayspeed");
+        if (objAutoplay == false) {
+            objAutoplay = undefined
+        }
+        else {
+            objAutoplay = { delay: autoplaySpeed }
+        };
+        if ($(this).data("autoplay")!='true') { autoplay = false };
         var equalHeight = $(this).data("height");
         var vCssEase = ($(this).data("cssease") === undefined ? "ease" : $(this).data("cssease"));
         var vSpeed = ($(this).data("speed") === undefined ? "300" : $(this).data("speed"));
@@ -101,9 +106,8 @@ function contentSwiper() {
             speed: 400,
             loopFillGroupWithBlank: true,
             watchOverflow: true,
-            autoplay: {
-                delay: autoplaySpeed,
-            },
+            autoplay: objAutoplay,
+            stopOnLastSlide: false,
             pagination: {
                 el: "#swiper-pagination-" + swiperId,
                 clickable: true,
