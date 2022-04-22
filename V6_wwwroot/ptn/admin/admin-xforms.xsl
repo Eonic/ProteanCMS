@@ -264,11 +264,11 @@
   </xsl:template>
 
 
-	<!-- Template for login-->
-	<xsl:template match="Content[@name='UserLogon']" mode="xform">
+	<!-- Template for login, pick page-->
+	<xsl:template match="Content[@name='UserLogon' or @name='EditPageLayout']" mode="xform">
 		<form method="{model/submission/@method}" action=""  novalidate="novalidate">
 			<xsl:attribute name="class">
-				<xsl:text>xform needs-validation container</xsl:text>
+				<xsl:text>xform needs-validation</xsl:text>
 				<xsl:if test="model/submission/@class!=''">
 					<xsl:text> </xsl:text>
 					<xsl:value-of select="model/submission/@class"/>
