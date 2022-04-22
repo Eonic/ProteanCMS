@@ -167,7 +167,7 @@
     <bind id="ServerSenderEmailName" nodeset="web/add[@key='ServerSenderEmailName']/@value" required="false()" type="email" />
     <bind id="DisableServerSenderEmail" nodeset="web/add[@key='DisableServerSenderEmail']/@value" required="false()" type="string" />
   </model>
-  <group ref="WebSettings">
+  <group ref="WebSettings" class="admin-form-style">
     <label>Web Settings</label>
     <alert>Saving this form will log you out of the admin system.</alert>
     <alert>Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call Technical Support on the number below.</alert>
