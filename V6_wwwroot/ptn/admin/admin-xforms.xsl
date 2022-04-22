@@ -7,6 +7,8 @@
                   xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                   xmlns:v-model="http://example.com/xml/v-model">
 
+	
+	<!-- Default template for all admin forms-->
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
       <xsl:attribute name="class">
@@ -112,34 +114,6 @@
     <xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
   </xsl:template>
 
-  <!--<xsl:template match="group[@ref='EditContent']" mode="xform">
-		<xsl:param name="class"/>
-		<div class="{@class}">
-			<xsl:if test=" @id!='' ">
-				<xsl:attribute name="id">
-					<xsl:value-of select="@id"/>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
-			<xsl:if test="count(submit) &gt; 0">
-				<xsl:if test="not(submit[contains(@class,'hideRequired')])">
-					-->
-  <!--<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
-						<label class="required required-message">
-							<span class="req">*</span>
-							<xsl:text> </xsl:text>
-							<xsl:call-template name="msg_required"/>
-						</label>
-					</xsl:if>-->
-  <!--
-				</xsl:if>
-				-->
-  <!-- For xFormQuiz change how these buttons work -->
-  <!--
-				<xsl:apply-templates select="submit" mode="xform"/>
-			</xsl:if>
-		</div>
-	</xsl:template>-->
 
   <xsl:template match="group[@ref='EditContent' and parent::Content]" mode="xform">
     <xsl:param name="class"/>
@@ -165,11 +139,12 @@
       </xsl:if>
     </div>
   </xsl:template>
-
+	
+  <!-- Default template for admin forms with a single group at the top level-->
   <xsl:template match="Content[ancestor::Page[@adminMode='true'] and count(group) = 1] | div[@class='xform' and count(group) = 1 and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action=""  novalidate="novalidate">
       <xsl:attribute name="class">
-        <xsl:text>xform needs-validation</xsl:text>
+        <xsl:text>xform needs-validation container form-single-group</xsl:text>
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>
@@ -204,7 +179,7 @@
         </div>
       </xsl:if>-->
       <xsl:for-each select="group">
-        <div class="admin-body">
+        <div class="admin-body {@class}">
           <xsl:choose>
             <xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
               <div class="row">
@@ -268,7 +243,8 @@
           <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="control-outer"/>
         </div>
         <xsl:if test="count(submit) &gt; 0">
-          <div class=" clearfix footer-btn-padding">
+          <div class="clearfix navbar-fixed-bottom">
+			  <div class="container">
             <xsl:if test="ancestor-or-self::group/descendant-or-self::*[contains(@class,'required')]">
               <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
               <span class="required">
@@ -280,6 +256,7 @@
             <xsl:apply-templates select="submit" mode="xform"/>
             <!--<div class="clearfix">&#160;</div>-->
           </div>
+		  </div>
         </xsl:if>
       </xsl:for-each>
     </form>

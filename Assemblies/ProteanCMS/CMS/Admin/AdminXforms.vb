@@ -3673,7 +3673,7 @@ Partial Public Class Cms
 
                     MyBase.submission("AddFolder", "/?ewcmd=" & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField"), "post", "")
 
-                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "", "Please enter the folder name")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "ptn-admin-form", "Please enter the folder name")
                     MyBase.addInput(oFrmElmt, "fld", True, "Path", "readonly")
                     MyBase.addBind("fld", "folder/@path", "false() ")
 
