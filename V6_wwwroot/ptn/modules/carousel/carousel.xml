@@ -34,7 +34,8 @@
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
-      <bind id="cInterval" nodeset="@interval" required="false()" type="string"/>
+      <bind id="cInterval" nodeset="@interval" required="false()" type="number"/>
+	  <bind id="nSpeed" nodeset="@speed" required="false()" type="number"/>
       <bind id="cBullets" nodeset="@bullets" required="false()" type="string"/>
       <bind id="cArrows" nodeset="@arrows" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
@@ -97,6 +98,10 @@
           <label>Interval</label>
           <help class="inline">The amount of time in milliseconds to delay between automatically cycling an item</help>
         </input>
+		  <input bind="nSpeed" class="short">
+			  <label>Transition Speed</label>
+			  <help class="inline">The amount of time in milliseconds to it takes to transition an item</help>
+		  </input>
       </group>
       <group>
         <label>Images</label>

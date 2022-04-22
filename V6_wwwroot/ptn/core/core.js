@@ -91,10 +91,16 @@ function contentSwiper() {
         else {
             objAutoplay = { delay: autoplaySpeed }
         };
-        if ($(this).data("autoplay")!='true') { autoplay = false };
+
         var equalHeight = $(this).data("height");
         var vCssEase = ($(this).data("cssease") === undefined ? "ease" : $(this).data("cssease"));
-        var vSpeed = ($(this).data("speed") === undefined ? "300" : $(this).data("speed"));
+        var vSpeed = ($(this).data("speed") === undefined ? 300 : $(this).data("speed"));
+        var vDirection = ($(this).data("direction") === undefined ? 'horizontal' : $(this).data("direction"));
+        var vEffect = ($(this).data("effect") === undefined ? undefined : $(this).data("effect"));
+        var vFadeEffect = undefined;
+        if (vEffect === 'fade') {
+            vFadeEffect =  {  crossFade: true   }
+        }
         var breakpoint = 768;
         var dots = $(this).data("dots");
         if (dots == true) { dots = false };
@@ -103,7 +109,10 @@ function contentSwiper() {
             slidesPerView: xsSlides,
             spaceBetween: spaceBetween,
             loop: true,
-            speed: 400,
+            speed: vSpeed,
+            direction: vDirection,
+            effect: vEffect,
+            fadeEffect: vFadeEffect,
             loopFillGroupWithBlank: true,
             watchOverflow: true,
             autoplay: objAutoplay,
