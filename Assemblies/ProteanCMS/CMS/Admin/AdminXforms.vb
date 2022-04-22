@@ -2418,33 +2418,35 @@ Partial Public Class Cms
 
                         'new local modules
                         rootFolder = New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & "/modules"))
-                        For Each fld In rootFolder.GetDirectories
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
-                        Next
+                        If rootFolder.Exists Then
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+                            Next
+                        End If
 
                         'legacy local modules
                         EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
 
-                        If myWeb.moConfig("Search") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                        End If
-                        If myWeb.moConfig("Membership") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                        End If
-                        If myWeb.moConfig("Cart") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                        End If
-                        If myWeb.moConfig("Quote") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                        End If
-                        If myWeb.moConfig("MailingList") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                        End If
-                        If myWeb.moConfig("Subscriptions") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
-                        End If
-                    Else
-                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+                            If myWeb.moConfig("Search") = "on" Then
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Membership") = "on" Then
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Cart") = "on" Then
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Quote") = "on" Then
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                            End If
+                            If myWeb.moConfig("MailingList") = "on" Then
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Subscriptions") = "on" Then
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                            End If
+                        Else
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
 
                         '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
 
