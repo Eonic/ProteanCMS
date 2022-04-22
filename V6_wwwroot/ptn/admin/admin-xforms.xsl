@@ -1745,8 +1745,8 @@
       <div class="input-group">
 		  <span class="input-group-btn">
 			  <!--<a onclick="xfrmClearPickPage('{ancestor::Content/model/submission/@id}','{$ref}')" title="remove page" class="btn btn-default">-->
-			  <a href="javascript:$('#{$ref}').val('');$('#{$ref}-name').val('');" title="remove page" class="btn btn-default">
-				  <i class="fa fa-times fa-white">
+			  <a href="javascript:$('#{$ref}').val('');$('#{$ref}-name').val('');" title="remove page" class="btn btn-outline-primary">
+				  <i class="fa fa-times fa-white pe-0">
 					  <xsl:text> </xsl:text>
 				  </i>
 			  </a>
