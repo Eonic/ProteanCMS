@@ -2,6 +2,7 @@
 
   <xsl:import href="Events/Events.xsl"/>
   <xsl:import href="news/News.xsl"/>
+	<xsl:import href="medications/medications.xsl"/>
   <xsl:import href="linklist/LinkList.xsl"/>
   <xsl:import href="linksgrid/LinksGrid.xsl"/>
   <xsl:import href="linklistsimple/LinkListSimple.xsl"/>

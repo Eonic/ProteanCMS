@@ -2142,7 +2142,7 @@
 
   <!-- ## Select1 for Radio Buttons with Dependant options ############################################# -->
 
-  <xsl:template match="select1[@appearance='full' and item[toggle]][ancestor::Page[@cssFramework='bs3' or @adminMode='true']]" mode="control-outer">
+  <xsl:template match="select1[@appearance='full' and item[toggle]][ancestor::Page[@cssFramework='bs5' or @adminMode='true']]" mode="control-outer">
 
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
@@ -2261,7 +2261,7 @@
         </xsl:with-param>
       </xsl:apply-templates>
     </div>
-    <xsl:apply-templates select="." mode="xform_legend"/>
+  
     <xsl:if test="item[@bindTo]">
       <script>
         psuedoRadioButtonControl('<xsl:value-of select="$ref"/>','<xsl:value-of select="item[@bindTo]/@bindTo"/>','<xsl:value-of select="item[@bindTo]/value"/>');

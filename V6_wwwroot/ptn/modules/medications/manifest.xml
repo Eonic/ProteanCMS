@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+    <ContentTypes>
+    <ContentTypeGroup name="Medications">
+      <ContentType type="Meds" formPath="medications/Meds" name="Medication"></ContentType>
+    </ContentTypeGroup>   
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Bespoke from common" icon="fas fa-clinic-medical">
+      <Module type="MedsList" formPath="medications/MedsList" icon="fas fa-pills" name="Medication List"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>
+
