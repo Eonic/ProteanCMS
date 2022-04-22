@@ -47,7 +47,7 @@
     <bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
     <!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
   </model>
-  <group ref="EditContent" class="2col">
+  <group ref="EditContent">
     <label>Image</label>
     <group>
       <group>

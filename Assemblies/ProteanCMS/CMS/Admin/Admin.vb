@@ -3337,7 +3337,7 @@ AfterProcessFlow:
                         If moAdXfm.valid = False Then
                             sAdminLayout = "AdminXForm"
                         Else
-                            myWeb.msRedirectOnEnd = "?ewCmd=ImageLib&fld=\"
+                            myWeb.msRedirectOnEnd = "?ewCmd=" & LibType.ToString() & "Lib&fld=\"
                             bShowTree = True
                         End If
                     Case "deleteFile"
