@@ -204,7 +204,7 @@
         </div>
       </xsl:if>-->
       <xsl:for-each select="group">
-        <div class="admin-body">
+        <div class="admin-body {@class}">
           <xsl:choose>
             <xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
               <div class="row">
