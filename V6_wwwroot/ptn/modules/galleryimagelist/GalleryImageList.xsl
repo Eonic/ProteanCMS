@@ -105,7 +105,7 @@
 				<div class="swiper-wrapper">
 
 					<!-- If Stepper, display Stepper -->
-					<xsl:if test="@stepCount != '0'">
+					<!--<xsl:if test="@stepCount != '0'">
 						<xsl:apply-templates select="/" mode="genericStepper">
 							<xsl:with-param name="GalleryImageList" select="$contentList"/>
 							<xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -113,7 +113,7 @@
 							<xsl:with-param name="queryStringParam" select="$queryStringParam"/>
 							<xsl:with-param name="totalCount" select="$totalCount"/>
 						</xsl:apply-templates>
-					</xsl:if>
+					</xsl:if>-->
 					<xsl:apply-templates select="ms:node-set($contentList)/*/*" mode="displayBrief">
 						<xsl:with-param name="sortBy" select="@sortBy"/>
 						<xsl:with-param name="crop" select="@crop"/>
@@ -123,16 +123,19 @@
 						<xsl:with-param name="alignmentV" select="@alignmentV"/>
 						<xsl:with-param name="class" select="'swiper-slide'"/>
 					</xsl:apply-templates>
+				</div>
+				<xsl:if test="@carouselBullets='true'">
 					<div class="swiper-pagination" id="swiper-pagination-{@id}">
 						<xsl:text> </xsl:text>
 					</div>
-				</div>
-				<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
-					<xsl:text> </xsl:text>
-				</div>
-				<div class="swiper-button-next" id="swiper-button-next-{@id}">
-					<xsl:text> </xsl:text>
-				</div>
+				</xsl:if>
+
+			</div>
+			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="swiper-button-next" id="swiper-button-next-{@id}">
+				<xsl:text> </xsl:text>
 			</div>
 		</div>
 	</xsl:template>
