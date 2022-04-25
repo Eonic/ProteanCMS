@@ -43,7 +43,7 @@
 			<!--<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="swiper-container"/>
 			</xsl:apply-templates>-->
-			<div id="{$id}" class="swiper" data-id="{@id}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="{@autoplay}" data-autoplayspeed="{@interval}">
+			<div id="{$id}" class="swiper" data-id="{@id}" data-speed="{@speed}" data-effect="{@effect}" data-direction="{@direction}" data-xscol="1" data-smcol="1" data-mdcol="1" data-lgcol="1" data-xlcol="1" data-xxlcol="1" data-spacebetween="0" data-spacebetweenlg="0" data-autoplay="{@autoplay}" data-autoplayspeed="{@interval}">
 				<xsl:if test="@bullets!='true'">
 					<ol class="carousel-indicators">
 						<xsl:for-each select="Content[@type='LibraryImageWithLink']">

@@ -243,6 +243,10 @@
 
   <xsl:template match="Page[@layout='Logon']" mode="Admin">
     <div class="adminTemplate container" id="template_Logon">
+		<span class="text-light logo-text login-logo">
+			<img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
+			<strong>Protean</strong>CMS
+		</span>
 		<div class="card">
 			<div class="card-header">
 				<h5>Log in</h5>
@@ -4586,13 +4590,16 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
-    var newItem = '<tr>     <td>        <i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '      </td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
-    newItem = newItem + '<td>
-        <a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
-          <i class="fa fa-trash-o fa-white"> </i> Delete
-        </a>
-      </td>
-    </tr>'
+    var newItem = '<tr>';
+		newItem = newItem + '<td>';
+			newItem = newItem + '<i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i>' + file.name.replace(/\ /g,'-') + '</td>';
+		newItem = newItem + '<td>.' + /[^.]+$/.exec(file.name) + '</td>';
+    newItem = newItem + '<td>';
+		newItem = newItem + '<a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">';
+			newItem = newItem + '<i class="fa fa-trash-o fa-white"> </i> Delete';
+			newItem = newItem + '</a>';
+		newItem = newItem + '</td>';
+		newItem = newItem + '</tr>';
   </xsl:template>
 
 
@@ -4601,23 +4608,21 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='MediaLib']" mode="newItemScript">
-    var newItem = '<div class="item col-md-2 col-sm-4">
-      <div class="card card-default">
-        <div class="card-body">
-          <div class="ItemThumbnail">
-            <img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" />
-          </div>'
-          newItem = newItem + '<div class="description">
-            ' + file.name + '<br />
-          </div>'
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">
-            <i class="fa fa-trash-o fa-white">
-              <xsl:text> </xsl:text>
-            </i>Delete
-          </a>
-        </div>
-      </div>
-    </div>'
+    var newItem = '<div class="item col-md-2 col-sm-4">';
+		newItem = newItem + '<div class="card card-default">';
+			newItem = newItem + '<div class="card-body">';
+				newItem = newItem + '<div class="ItemThumbnail">';
+					newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" />';
+					newItem = newItem + '</div>';
+          newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
+          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">';
+			  newItem = newItem + '<i class="fa fa-trash-o fa-white">';
+				newItem = newItem + '<xsl:text> </xsl:text>';
+				  newItem = newItem + '  </i>Delete';
+			  newItem = newItem + ' </a>';
+				newItem = newItem + '</div>';
+			newItem = newItem + '</div>';
+		newItem = newItem + '</div>';
   </xsl:template>
 
   <xsl:template match="folder" mode="MediaFolder">

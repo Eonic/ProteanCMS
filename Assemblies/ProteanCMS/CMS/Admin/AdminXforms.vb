@@ -2344,7 +2344,16 @@ Partial Public Class Cms
                         If myWeb.moConfig("ClientCommonFolder") <> "" Then
                             EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
                         End If
-                        EnumberateManifestOptions(oSelElmt, "/xsl", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+
+                        'new local modules
+                        rootFolder = New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & "/modules"))
+                        If rootFolder.Exists Then
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", True, "manifest.xml")
+                            Next
+                        End If
+
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ContentTypes/ContentTypeGroup", "ContentType", False)
 
                         If myWeb.moConfig("Search") = "on" Then
                             EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
@@ -2415,7 +2424,17 @@ Partial Public Class Cms
                         If myWeb.moConfig("ClientCommonFolder") <> "" Then
                             EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
                         End If
-                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+
+                        'new local modules
+                        rootFolder = New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & "/modules"))
+                        If rootFolder.Exists Then
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+                            Next
+                        End If
+
+                        'legacy local modules
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
 
                         If myWeb.moConfig("Search") = "on" Then
                             EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
@@ -3665,7 +3684,7 @@ Partial Public Class Cms
 
                     MyBase.submission("AddFolder", "/?ewcmd=" & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField"), "post", "")
 
-                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "", "Please enter the folder name")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "ptn-admin-form", "Please enter the folder name")
                     MyBase.addInput(oFrmElmt, "fld", True, "Path", "readonly")
                     MyBase.addBind("fld", "folder/@path", "false() ")
 
@@ -3681,13 +3700,16 @@ Partial Public Class Cms
                         MyBase.validate()
                         If MyBase.valid Then
 
+                            Dim FolderName As String = goRequest("cFolderName")
+
                             Dim oFs As fsHelper = New fsHelper
                             oFs.initialiseVariables(nType)
-                            sValidResponse = oFs.CreateFolder(HtmlDecode(goRequest("cFolderName")), cPath)
+                            sValidResponse = oFs.CreateFolder(HtmlDecode(FolderName), cPath)
 
                             If IsNumeric(sValidResponse) Then
                                 valid = True
-                                cPath &= "\" & goRequest("cFolderName")
+                                cPath &= "\" & FolderName.Replace(" ", "-")
+                                cPath = cPath.Replace("\\", "\")
                             Else
                                 valid = False
                                 MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, sValidResponse)

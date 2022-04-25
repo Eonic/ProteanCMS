@@ -5057,24 +5057,30 @@ processFlow:
             Dim sCartCmd As String = mcCartCmd
             Dim cProcessInfo As String = ""
             Dim bAlwaysAskForDiscountCode As Boolean = IIf(LCase(moCartConfig("AlwaysAskForDiscountCode")) = "on", True, False)
+            Dim bSkipDiscountCode As Boolean = IIf(LCase(moCartConfig("SkipDiscountCode")) = "on", True, False)
             Try
 
                 myWeb.moSession("cLogonCmd") = ""
                 GetCart(oElmt)
+                If bSkipDiscountCode Then
+                    oElmt.RemoveAll()
+                    sCartCmd = "RedirectSecure"
+                Else
+                    If moDiscount.bHasPromotionalDiscounts Or bAlwaysAskForDiscountCode Then
+                        Dim oDiscountsXform As xForm = discountsXform("discountsForm", "?pgid=" & myWeb.mnPageId & "&cartCmd=Discounts")
+                        If oDiscountsXform.valid = False Then
+                            moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oDiscountsXform.moXformElmt)
 
-                If moDiscount.bHasPromotionalDiscounts Or bAlwaysAskForDiscountCode Then
-                    Dim oDiscountsXform As xForm = discountsXform("discountsForm", "?pgid=" & myWeb.mnPageId & "&cartCmd=Discounts")
-                    If oDiscountsXform.valid = False Then
-                        moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oDiscountsXform.moXformElmt)
-
+                        Else
+                            oElmt.RemoveAll()
+                            sCartCmd = "RedirectSecure"
+                        End If
                     Else
                         oElmt.RemoveAll()
                         sCartCmd = "RedirectSecure"
                     End If
-                Else
-                    oElmt.RemoveAll()
-                    sCartCmd = "RedirectSecure"
                 End If
+
 
                 'if this returns Notes then we display for otherwise we goto processflow
                 Return sCartCmd
