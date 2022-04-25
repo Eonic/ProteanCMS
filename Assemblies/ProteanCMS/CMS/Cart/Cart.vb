@@ -6372,8 +6372,8 @@ processFlow:
 
             Dim i As Integer
             Try
-                Dim orderStatusId As String = GetOrderStatusByCartId()
-                If moCartConfig("OrderPaymentStatusId") <> orderStatusId Then
+
+                If mnProcessId < 5 Then
                     oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart")
                     oDS.EnforceConstraints = False
                     'create relationship
@@ -6735,56 +6735,56 @@ processFlow:
         End Function
 
         Public Function RemoveItem(Optional ByVal nItemId As Long = 0, Optional ByVal nContentId As Long = 0) As Integer
-            Dim orderStatusId As String = GetOrderStatusByCartId()
-            If moCartConfig("OrderPaymentStatusId") = orderStatusId Then
+            If mnProcessId > 4 Then
                 Return 1
 
+            Else
+
+                PerfMon.Log("Cart", "RemoveItem")
+                '   deletes record from item table in db
+
+                Dim oDr As SqlDataReader
+                Dim sSql As String
+                Dim oDs As DataSet
+                Dim oRow As DataRow
+                Dim cProcessInfo As String = ""
+                Dim itemCount As Long
+                If IsNumeric(myWeb.moRequest("id")) Then nItemId = myWeb.moRequest("id")
+                Try
+                    'If myWeb.moRequest("id") <> "" Then
+
+                    If nContentId = 0 Then
+                        sSql = "select nCartItemKey from tblCartItem where (nCartItemKey = " & nItemId & " Or nParentId = " & nItemId & ") and nCartOrderId = " & mnCartId
+                    Else
+                        sSql = "select nCartItemKey from tblCartItem where nItemId = " & nContentId & " and nCartOrderId = " & mnCartId
+                    End If
+
+
+                    oDs = moDBHelper.GetDataSet(sSql, "Item")
+                    If oDs.Tables("Item").Rows.Count > 0 Then
+                        For Each oRow In oDs.Tables("Item").Rows
+                            moDBHelper.DeleteObject(dbHelper.objectTypes.CartItem, oRow("nCartItemKey"))
+                        Next
+                    End If
+
+
+                    ' REturn the cart order item count
+                    sSql = "select count(*) As ItemCount from tblCartItem where nCartOrderId = " & mnCartId
+                    oDr = moDBHelper.getDataReader(sSql)
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            itemCount = CInt(oDr("ItemCount"))
+                        End While
+                    End If
+
+                    oDr.Close()
+                    oDr = Nothing
+                    Return itemCount
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
+                End Try
             End If
-            PerfMon.Log("Cart", "RemoveItem")
-            '   deletes record from item table in db
-
-            Dim oDr As SqlDataReader
-            Dim sSql As String
-            Dim oDs As DataSet
-            Dim oRow As DataRow
-            Dim cProcessInfo As String = ""
-            Dim itemCount As Long
-            If IsNumeric(myWeb.moRequest("id")) Then nItemId = myWeb.moRequest("id")
-            Try
-                'If myWeb.moRequest("id") <> "" Then
-
-                If nContentId = 0 Then
-                    sSql = "select nCartItemKey from tblCartItem where (nCartItemKey = " & nItemId & " Or nParentId = " & nItemId & ") and nCartOrderId = " & mnCartId
-                Else
-                    sSql = "select nCartItemKey from tblCartItem where nItemId = " & nContentId & " and nCartOrderId = " & mnCartId
-                End If
-
-
-                oDs = moDBHelper.GetDataSet(sSql, "Item")
-                If oDs.Tables("Item").Rows.Count > 0 Then
-                    For Each oRow In oDs.Tables("Item").Rows
-                        moDBHelper.DeleteObject(dbHelper.objectTypes.CartItem, oRow("nCartItemKey"))
-                    Next
-                End If
-
-
-                ' REturn the cart order item count
-                sSql = "select count(*) As ItemCount from tblCartItem where nCartOrderId = " & mnCartId
-                oDr = moDBHelper.getDataReader(sSql)
-                If oDr.HasRows Then
-                    While oDr.Read
-                        itemCount = CInt(oDr("ItemCount"))
-                    End While
-                End If
-
-                oDr.Close()
-                oDr = Nothing
-                Return itemCount
-
-            Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
-            End Try
-
         End Function
 
         Public Function UpdateItem(Optional ByVal nItemId As Long = 0, Optional ByVal nContentId As Long = 0, Optional ByVal qty As Long = 1, Optional ByVal SkipPackaging As Boolean = False) As Integer
@@ -9150,18 +9150,6 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Function
 
-        Public Function GetOrderStatusByCartId() As String
-            Dim sSql As String
-            Dim cartStatusId As String = ""
-            Try
-                'get status
-                sSql = "select ISNULL(nCartStatus,0) AS nCartStatus from tblCartOrder where nCartOrderKey=" & mnCartId
-                cartStatusId = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
-            Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "GetOrderStatusByCartId", ex, "", "", gbDebug)
-            End Try
-            Return cartStatusId
-        End Function
     End Class
 End Class
 

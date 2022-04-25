@@ -1442,8 +1442,9 @@ NoDiscount:
 
                 Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
                 Try
-                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
-                    If myCart.moCartConfig("OrderPaymentStatusId") <> orderStatus Then
+                    If myCart.mnProcessId > 4 Then
+                        Return ""
+                    Else
                         If myCart.mnCartId > 0 Then
                             sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
                             oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
@@ -1930,8 +1931,9 @@ NoDiscount:
                 Dim oRow As DataRow
                 Dim sPromoCode As String = ""
                 Try
-                    Dim orderStatus As String = myCart.GetOrderStatusByCartId()
-                    If myCart.moCartConfig("OrderPaymentStatusId") <> orderStatus Then
+                    If myCart.mnProcessId > 4 Then
+                        Return ""
+                    Else
                         'myCart.moCartXml
                         If myCart.mnCartId > 0 Then
                         sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
