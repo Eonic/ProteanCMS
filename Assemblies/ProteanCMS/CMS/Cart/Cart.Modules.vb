@@ -168,7 +168,10 @@ Partial Public Class Cms
             Public Sub RedeemTickets(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Try
 
-                    'we write the logic to query the ticket code.
+                    'we write the logic to query the ticket code. 
+
+                    Dim redeemticketsGroupId = myWeb.moConfig("TicketOfficeGroupId")
+                    Dim userId As Long = myWeb.mnUserId
 
 
                     oContentNode.SetAttribute("ticketValid", "true")
