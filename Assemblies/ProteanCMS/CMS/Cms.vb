@@ -5927,6 +5927,7 @@ Public Class Cms
 
 
                 gcBlockContentType = moDbHelper.GetPageBlockedContent(mnPageId)
+                Dim parentXpath As String = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]"
 
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
                 'step through the tree from home to our current page
