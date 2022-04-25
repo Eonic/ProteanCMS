@@ -92,6 +92,17 @@
 									<value>false</value>
 								</item>
 							</select1>
+							<select1 appearance="full" bind="effect" class="short inline-items">
+								<label>Effect</label>
+								<item>
+									<label>Slide</label>
+									<value></value>
+								</item>
+								<item>
+									<label>Fade</label>
+									<value>fade</value>
+								</item>
+							</select1>
 						</group>
 						<group class="col-lg-4">
 							<input bind="cInterval" class="short">
@@ -125,17 +136,6 @@
 								<item>
 									<label>Vertical</label>
 									<value>vertical</value>
-								</item>
-							</select1>
-							<select1 appearance="full" bind="effect" class="short inline-items">
-								<label>Effect</label>
-								<item>
-									<label>Slide</label>
-									<value></value>
-								</item>
-								<item>
-									<label>Fade</label>
-									<value>fade</value>
 								</item>
 							</select1>
 						</group>

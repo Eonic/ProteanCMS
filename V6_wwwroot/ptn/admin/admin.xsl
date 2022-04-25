@@ -168,7 +168,7 @@
 
   <xsl:template match="Page[@ewCmd='AddContent']" mode="adminPageHeader">
 	  <div class="form-header-strip">
-		  <div class="container">
+		  <div class="container-fluid">
 			  <div class="row">
 				  <h1 class="page-header">
 					  <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
@@ -181,7 +181,7 @@
 
 	<xsl:template match="Page[@ewCmd='EditContent']" mode="adminPageHeader">
 		<div class="form-header-strip">
-			<div class="container">
+			<div class="container-fluid">
 				<div class="row">
 					<h1 class="page-header">
 						<i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
