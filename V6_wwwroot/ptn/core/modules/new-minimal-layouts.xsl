@@ -124,6 +124,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="contentColumns">
+	  <xsl:param name="class"/>
     <xsl:variable name="xsColsToShow">
       <xsl:choose>
         <xsl:when test="@xsCol='2'">2</xsl:when>
@@ -204,6 +205,7 @@
         <xsl:text> row-cols-xxl-</xsl:text>
         <xsl:value-of select="@cols"/>
       </xsl:if>
+		<xsl:value-of select="$class"/>
     </xsl:attribute>
   </xsl:template>
 </xsl:stylesheet>

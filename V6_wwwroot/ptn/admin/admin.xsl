@@ -158,25 +158,47 @@
   <!--   ################################################   menu setup   ##################################################   -->
   <!-- -->
   <xsl:template match="Page[@adminMode='true']" mode="adminPageHeader">
-    <h1 class="page-header">
-      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][position()=last()]/@icon}">&#160;</i>&#160;
-      <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][position()=last()]/@name"/>
-    </h1>
+	  <div class="form-header-strip">
+				  <h1 class="page-header">
+					  <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][position()=last()]/@icon}">&#160;</i>&#160;
+					  <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][position()=last()]/@name"/>
+				  </h1>
+	  </div>
   </xsl:template>
 
   <xsl:template match="Page[@ewCmd='AddContent']" mode="adminPageHeader">
-    <h1 class="page-header">
-      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
-      Add <xsl:value-of select="ContentDetail/Content/group/label/node()"/>
-    </h1>
+	  <div class="form-header-strip">
+		  <div class="container">
+			  <div class="row">
+				  <h1 class="page-header">
+					  <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
+					  Add <xsl:value-of select="ContentDetail/Content/group/label/node()"/>
+				  </h1>
+			  </div>
+		  </div>
+	  </div>
   </xsl:template>
 
-  <xsl:template match="Page[@ewCmd='EditContent']" mode="adminPageHeader">
-    <h1 class="page-header">
-      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
-      Edit <xsl:value-of select="ContentDetail/Content/group/label/node()"/>
-    </h1>
-  </xsl:template>
+	<xsl:template match="Page[@ewCmd='EditContent']" mode="adminPageHeader">
+		<div class="form-header-strip">
+			<div class="container">
+				<div class="row">
+					<h1 class="page-header">
+						<i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
+						Edit <xsl:value-of select="ContentDetail/Content/group/label/node()"/>
+					</h1>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
+	<xsl:template match="Page[@ewCmd='AddModule']" mode="adminPageHeader">
+		<div class="form-header-strip">
+					<h1 class="page-header">
+						<i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
+						<xsl:value-of select="ContentDetail/Content/group/label/node()"/>
+					</h1>
+		</div>
+	</xsl:template>
 
   <!--In admin but not WYSIWYG-->
   <xsl:template match="Page[@adminMode='true']" mode="bodyBuilder">
