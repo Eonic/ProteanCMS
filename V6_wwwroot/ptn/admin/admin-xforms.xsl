@@ -7,6 +7,8 @@
                   xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                   xmlns:v-model="http://example.com/xml/v-model">
 
+	
+	<!-- Default template for all admin forms-->
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
       <xsl:attribute name="class">
@@ -112,34 +114,6 @@
     <xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
   </xsl:template>
 
-  <!--<xsl:template match="group[@ref='EditContent']" mode="xform">
-		<xsl:param name="class"/>
-		<div class="{@class}">
-			<xsl:if test=" @id!='' ">
-				<xsl:attribute name="id">
-					<xsl:value-of select="@id"/>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
-			<xsl:if test="count(submit) &gt; 0">
-				<xsl:if test="not(submit[contains(@class,'hideRequired')])">
-					-->
-  <!--<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
-						<label class="required required-message">
-							<span class="req">*</span>
-							<xsl:text> </xsl:text>
-							<xsl:call-template name="msg_required"/>
-						</label>
-					</xsl:if>-->
-  <!--
-				</xsl:if>
-				-->
-  <!-- For xFormQuiz change how these buttons work -->
-  <!--
-				<xsl:apply-templates select="submit" mode="xform"/>
-			</xsl:if>
-		</div>
-	</xsl:template>-->
 
   <xsl:template match="group[@ref='EditContent' and parent::Content]" mode="xform">
     <xsl:param name="class"/>
@@ -165,11 +139,12 @@
       </xsl:if>
     </div>
   </xsl:template>
-
+	
+  <!-- Default template for admin forms with a single group at the top level-->
   <xsl:template match="Content[ancestor::Page[@adminMode='true'] and count(group) = 1] | div[@class='xform' and count(group) = 1 and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action=""  novalidate="novalidate">
       <xsl:attribute name="class">
-        <xsl:text>xform needs-validation</xsl:text>
+        <xsl:text>xform needs-validation container form-single-group</xsl:text>
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>
@@ -204,7 +179,7 @@
         </div>
       </xsl:if>-->
       <xsl:for-each select="group">
-        <div class="admin-body">
+        <div class="admin-body {@class}">
           <xsl:choose>
             <xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
               <div class="row">
@@ -268,7 +243,8 @@
           <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="control-outer"/>
         </div>
         <xsl:if test="count(submit) &gt; 0">
-          <div class=" clearfix footer-btn-padding">
+          <div class="clearfix navbar-fixed-bottom">
+			  <div class="container">
             <xsl:if test="ancestor-or-self::group/descendant-or-self::*[contains(@class,'required')]">
               <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
               <span class="required">
@@ -280,11 +256,134 @@
             <xsl:apply-templates select="submit" mode="xform"/>
             <!--<div class="clearfix">&#160;</div>-->
           </div>
+		  </div>
         </xsl:if>
       </xsl:for-each>
     </form>
     <xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
   </xsl:template>
+
+
+	<!-- Template for login, pick page-->
+	<xsl:template match="Content[@name='UserLogon' or @name='EditPageLayout']" mode="xform">
+		<form method="{model/submission/@method}" action=""  novalidate="novalidate">
+			<xsl:attribute name="class">
+				<xsl:text>xform needs-validation</xsl:text>
+				<xsl:if test="model/submission/@class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="model/submission/@class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+				<xsl:attribute name="action">
+					<xsl:value-of select="model/submission/@action"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@id!=''">
+				<xsl:attribute name="id">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+				<xsl:attribute name="name">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@event!=''">
+				<xsl:attribute name="onsubmit">
+					<xsl:value-of select="model/submission/@event"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="descendant::upload">
+				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+			</xsl:if>
+			<!--<xsl:if test="group/label[position()=1]">
+        <div>
+          <h3>
+            <xsl:apply-templates select="group/label" mode="legend"/>
+          </h3>
+        </div>
+      </xsl:if>-->
+			<xsl:for-each select="group">
+				<div class="admin-body {@class}">
+					<xsl:choose>
+						<xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-md-</xsl:text>
+											<xsl:choose>
+												<xsl:when test="position()='1'">4</xsl:when>
+												<xsl:when test="position()='2'">8</xsl:when>
+											</xsl:choose>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<xsl:when test="contains(@class,'2col5050') or contains(@class,'2Col5050') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-md-</xsl:text>
+											<xsl:choose>
+												<xsl:when test="position()='1'">6</xsl:when>
+												<xsl:when test="position()='2'">6</xsl:when>
+											</xsl:choose>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<xsl:when test="contains(@class,'3col') or contains(@class,'3Col') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-lg-4</xsl:text>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<!--<xsl:when test="contains(@class,'accordion-form-container') ">
+              -->
+						<!--<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">-->
+						<!--
+                <xsl:for-each select="group | repeat">
+                  <xsl:apply-templates select="." mode="xform">
+                    <xsl:with-param name="class">
+                      <xsl:text>accordion-collapse collapse show</xsl:text>
+                    </xsl:with-param>
+                  </xsl:apply-templates>
+                </xsl:for-each>
+              
+            </xsl:when>-->
+						<xsl:otherwise>
+							<xsl:apply-templates select="group | repeat " mode="xform"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:apply-templates select="parent::*/alert" mode="xform"/>
+					<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="control-outer"/>
+				</div>
+				<xsl:if test="count(submit) &gt; 0">
+					<div class="clearfix">
+							<xsl:if test="ancestor-or-self::group/descendant-or-self::*[contains(@class,'required')]">
+								<!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">-->
+								<span class="required">
+									<span class="req">*</span>
+									<xsl:text> </xsl:text>
+									<xsl:call-template name="msg_required"/>
+								</span>
+							</xsl:if>
+							<xsl:apply-templates select="submit" mode="xform"/>
+							<!--<div class="clearfix">&#160;</div>-->
+					</div>
+				</xsl:if>
+			</xsl:for-each>
+		</form>
+		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
+	</xsl:template>
 
 
 
@@ -1175,7 +1274,6 @@
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
     <div id="uploadFiles">
-      test
       <xsl:choose>
         <xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
           <div class="drophere">Drag and drop files here to upload them</div>
@@ -1645,6 +1743,14 @@
     <div class="pick-page">
       <input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}" test="{$ref}"/>
       <div class="input-group">
+		  <span class="input-group-btn">
+			  <!--<a onclick="xfrmClearPickPage('{ancestor::Content/model/submission/@id}','{$ref}')" title="remove page" class="btn btn-default">-->
+			  <a href="javascript:$('#{$ref}').val('');$('#{$ref}-name').val('');" title="remove page" class="btn btn-outline-primary">
+				  <i class="fa fa-times fa-white pe-0">
+					  <xsl:text> </xsl:text>
+				  </i>
+			  </a>
+		  </span>
         <input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
 
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{$ref2}-modal">

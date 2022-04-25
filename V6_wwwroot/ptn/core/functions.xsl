@@ -201,6 +201,10 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+			  <xsl:if test="/Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '80' and  /Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '443'">
+				  <xsl:text>:</xsl:text>
+				  <xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_PORT']"/>
+			  </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:otherwise>
@@ -4411,6 +4415,10 @@
         <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+		  <xsl:if test="/Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '80' and  /Page/Request/ServerVariables/Item[@name='SERVER_PORT'] != '443'">
+			  <xsl:text>:</xsl:text>
+			  <xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_PORT']"/>
+		  </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$thisPageUrl"/>

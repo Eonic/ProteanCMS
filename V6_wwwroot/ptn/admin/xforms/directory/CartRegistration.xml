@@ -31,7 +31,7 @@
 			</tblDirectory>
 		</instance>
 		<submission id="CreateUser" action="" method="post" event="return form_check(this)"/>
-		<bind id="cDirName" nodeset="tblDirectory/cDirName" required="true()" type="string"/>
+		<bind id="cEmail" nodeset="tblDirectory/cDirName" required="true()" type="string"/>
 		<bind id="cDirPassword" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
 		<bind id="cDirPassword2" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
 		<bind nodeset="tblDirectory/cDirXml/User">
@@ -59,63 +59,9 @@
 			<value>User</value>
 		</input>
 		<group>
-			<label>Your Details</label>
-			<select1 bind="cPosition" class="short">
-				<label>Title</label>
-				<item>
-					<label>Mr</label>
-					<value>Mr</value>
-				</item>
-				<item>
-					<label>Mrs</label>
-					<value>Mrs</value>
-				</item>
-				<item>
-					<label>Ms</label>
-					<value>Ms</value>
-				</item>
-				<item>
-					<label>Miss</label>
-					<value>Miss</value>
-				</item>
-				<item>
-					<label>Dr</label>
-					<value>Dr</value>
-				</item>
-				<item>
-					<label>Prof</label>
-					<value>Prof</value>
-				</item>
-				<item>
-					<label>Rev</label>
-					<value>Rev</value>
-				</item>
-				<item>
-					<label>Lord</label>
-					<value>Lord</value>
-				</item>
-				<item>
-					<label>Other</label>
-					<value>Other</value>
-				</item>
-			</select1>
-			
-			<input bind="cFirstName" class="required">
-				<label>First Name</label>
-				<hint>Please enter your full first name and do not use initials or nicknames.</hint>
-			</input>
-			<input bind="cLastName" class="required">
-				<label>Last Name</label>
-				<hint>Sometimes referred to as your surname or family name.</hint>
-			</input>
+			<label>Login Details</label>
 			<input bind="cEmail" class="required">
 				<label>Email Address</label>
-			</input>
-		</group>
-		<group>
-			<label>Security Details</label>
-			<input bind="cDirName" class="required">
-				<label>Username</label>
 			</input>
 			<secret bind="cDirPassword" class="required">
 				<label>Password</label>
@@ -124,6 +70,19 @@
 				<label>Re-type Password</label>
 			</secret>
 		</group>
+		<group>
+			<label>Your Details</label>		
+			<input bind="cFirstName" class="required">
+				<label>First Name</label>
+				<hint>Please enter your full first name and do not use initials or nicknames.</hint>
+			</input>
+			<input bind="cLastName" class="required">
+				<label>Last Name</label>
+				<hint>Sometimes referred to as your surname or family name.</hint>
+			</input>
+
+		</group>
+		
 		<group>
 			<label>Communication</label>
 		<select bind="grpNews" appearance="full">
