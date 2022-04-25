@@ -165,6 +165,24 @@ Partial Public Class Cms
                 End Try
             End Sub
 
+            Public Sub RedeemTickets(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
+                Try
+
+                    'we write the logic to query the ticket code.
+
+
+                    oContentNode.SetAttribute("ticketValid", "true")
+
+                    oContentNode.SetAttribute("enteredTicketCode", myWeb.moRequest("code"))
+
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ListQuotes", ex, ""))
+                End Try
+            End Sub
+
+
         End Class
 #End Region
     End Class
