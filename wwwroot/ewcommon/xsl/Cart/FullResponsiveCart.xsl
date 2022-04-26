@@ -2625,6 +2625,18 @@
   </xsl:template>
 
 
+	<!-- List Voucher Module -->
+	<xsl:template match="Content[@type='Module' and @moduleType='RedeemTickets']" mode="displayBrief">
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<div id="redeem-tickets">
+			<div class="cols{@cols}">
+				<H1>REDEEM - TICKETS <xsl:value-of select="@ticketValid"/> <xsl:value-of select="@enteredTicketCode"/></H1>
+			</div>
+		</div>
+	</xsl:template>
+
 
 </xsl:stylesheet>
 

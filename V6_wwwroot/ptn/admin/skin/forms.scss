@@ -148,7 +148,7 @@ form.xform {
 
     .form-tab-wrapper {
         box-shadow: 0px 2px 11px rgba(0, 0, 0, 0.3);
-        margin: 20px 0 0;
+        margin: 50px 0 0;
     }
 
     .form-tab-content-wrapper {
@@ -170,7 +170,7 @@ form.xform {
 
     .tab-pane {
         //box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
-        border-radius: 3px;
+        border-radius: 0px;
 
         i {
             padding-right: 6px;
@@ -183,7 +183,7 @@ form.xform {
             font-size: 1.1rem;
             width: 100%;
             padding: 13px 20px;
-            border-radius: 3px 3px 0 0;
+            border-radius: 0px 0px 0 0;
         }
 
         > fieldset {
@@ -751,6 +751,17 @@ form.xform .relatedContent-group {
     //border-top: 1px solid #ccc;
     z-index: 10;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
+}
+.form-header-strip {
+    //box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid #e1dfdf;
+    margin-bottom: 13px;
+
+    h1.page-header {
+        font-size: 14px !important;
+        padding-top: 11px !important;
+        padding-bottom: 11px !important;
+    }
 }
 //buttons and colour overrides
 .ptn-edit #adminLayout {
