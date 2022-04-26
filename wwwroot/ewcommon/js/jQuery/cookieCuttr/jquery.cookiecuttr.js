@@ -35,7 +35,7 @@
             cookieMessage: 'We use cookies on this website, you can <a href="{{cookiePolicyLink}}" title="read about our cookies">read about them here</a>. To use the website as intended please...',
             cookieAnalyticsMessage: 'We use cookies, just to track visits to our website, we store no personal details.',
             cookieErrorMessage: "We\'re sorry, this feature places cookies in your browser and has been disabled. <br>To continue using this functionality, please",
-            cookieWhatAreTheyLink: "http://www.allaboutcookies.org/",
+            cookieWhatAreTheyLink: "https://www.allaboutcookies.org/",
             cookieDisable: '',
             cookieExpires: 365,
             cookieAcceptButtonText: "ACCEPT COOKIES",
@@ -218,7 +218,7 @@
         // for top bar
         $('.cc-cookie-accept, .cc-cookie-decline').click(function (e) {
             e.preventDefault();
-            if ($(this).is('[href$=#decline]')) {
+            if ($(this).attr("href") === "#decline") {
                 $.cookie("cc_cookie_accept", null, {
                     path: '/'
                 });

@@ -4717,6 +4717,12 @@
             <xsl:with-param name="name">CookiePolicy</xsl:with-param>
             <xsl:with-param name="type">CookiePolicy</xsl:with-param>
           </xsl:call-template>
+
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Free Cookie Consent from https://www.freeprivacypolicy.com/</xsl:with-param>
+				<xsl:with-param name="name">FreeCookieConsent</xsl:with-param>
+				<xsl:with-param name="type">FreeCookieConsent</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <div class="tab-pane panel" id="settings">

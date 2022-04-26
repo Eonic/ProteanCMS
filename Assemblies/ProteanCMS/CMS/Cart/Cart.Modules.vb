@@ -172,6 +172,7 @@ Partial Public Class Cms
 
                     Dim redeemticketsGroupId = myWeb.moConfig("TicketOfficeGroupId")
                     Dim userId As Long = myWeb.mnUserId
+                    Dim mbIsTicketOffice As Boolean = myWeb.moDbHelper.checkUserRole("Ticket Office", "Role", userId)
 
 
                     oContentNode.SetAttribute("ticketValid", "true")
