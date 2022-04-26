@@ -2987,6 +2987,10 @@
               <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
               <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
             </xsl:if>
+			   <xsl:variable name="objOldUrlFromXsl" select="/Page/ContentDetail/Content/model/instance/tblContent/cContentName" />
+              <input name="pageOldUrl" type="hidden" value="{$objOldUrlFromXsl}" class="hiddenProductOldUrlFromXsl" />
+			  
+			  
             <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
             <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
