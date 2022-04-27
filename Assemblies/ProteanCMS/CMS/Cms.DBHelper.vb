@@ -10143,7 +10143,12 @@ restart:
                                     " AND (tblAudit.dExpireDate >= " & cCurDate & " OR tblAudit.dExpireDate IS NULL)" &
                                     " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", , , 0)
                 If nKey > 0 Then
-                    MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+
+                    If nUseID = 0 Then
+                        MyBase.ExeProcessSql("UPDATE tblCodes SET dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    Else
+                        MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    End If
                     Return True
                 Else
                     Return False

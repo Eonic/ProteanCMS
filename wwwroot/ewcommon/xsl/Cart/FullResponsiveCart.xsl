@@ -2634,11 +2634,65 @@
 			<div class="cols{@cols}">
         <div class="d-grid gap-2">
           <xsl:choose>
-            <xsl:when test="@ticketValid!='failed'">
-              <button class="btn btn-block btn-success" type="button">Ticket validation success</button>
+            <xsl:when test="@ticketValid='validated'">
+				<div class="modal show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title text-success" id="myModalLabel">TICKET VALIDATED</h4>
+							</div>
+							<div class="modal-body text-success">
+								<i class="fa fa-check-circle fa-6">&#160;</i>
+								Allow customer entry. Cannot be reused.
+							</div>
+						</div>
+					</div>
+				</div>
             </xsl:when>
+			<xsl:when test="@ticketValid='valid'">
+				<div class="modal show" id="valid" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title text-success" id="myModalLabel">TICKET VALID</h4>
+							</div>
+							<div class="modal-body text-success">
+								<i class="fa fa-check-circle fa-6">&#160;</i>
+								Please proceed to venue to check in.
+							</div>
+						</div>
+					</div>
+				</div>
+			</xsl:when>
+			  <xsl:when test="@ticketValid='used'">
+				  <div class="modal show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					  <div class="modal-dialog" role="document">
+						  <div class="modal-content center-block">
+							  <div class="modal-header">
+								  <h1 class="modal-title text-danger" id="myModalLabel">TICKET USED</h1>
+							  </div>
+							  <div class="modal-body text-danger">
+								  <i class="fa fa-times-circle fa-5x">&#160;</i><br/>
+								  <h5>This ticket has allready been used for entry</h5>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+			  </xsl:when>
             <xsl:otherwise>
-              <button class="btn btn-block btn-primary" type="button">Ticket validation failed</button>
+				<div class="modal fade show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title text-warning" id="myModalLabel">TICKET USED</h4>
+							</div>
+							<div class="modal-body text-warning">
+								<i class="fa fa-question-circle fa-6">&#160;</i>
+								This ticket has not been found
+							</div>
+						</div>
+					</div>
+				</div>
             </xsl:otherwise>
           </xsl:choose>
         </div>
