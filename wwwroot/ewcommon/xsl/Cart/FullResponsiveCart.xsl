@@ -2632,7 +2632,16 @@
 		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
 		<div id="redeem-tickets">
 			<div class="cols{@cols}">
-				<H1>REDEEM - TICKETS <xsl:value-of select="@ticketValid"/> <xsl:value-of select="@enteredTicketCode"/></H1>
+        <div class="d-grid gap-2">
+          <xsl:choose>
+            <xsl:when test="@ticketValid!='failed'">
+              <button class="btn btn-block btn-success" type="button">Ticket validation success</button>
+            </xsl:when>
+            <xsl:otherwise>
+              <button class="btn btn-block btn-primary" type="button">Ticket validation failed</button>
+            </xsl:otherwise>
+          </xsl:choose>
+        </div>
 			</div>
 		</div>
 	</xsl:template>
