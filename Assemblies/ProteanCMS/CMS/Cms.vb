@@ -5469,7 +5469,7 @@ Public Class Cms
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then
                             If Not moRequest("path") Is Nothing Then
-                                If Replace(sUrl, DomainURL, "") = moRequest("path") Or Replace(sUrl, DomainURL, "") & "/" = moRequest("path") Then
+                                If Replace(sUrl, DomainURL, "").ToLower() = moRequest("path").ToLower() Or Replace(sUrl, DomainURL, "").ToLower() & "/" = moRequest("path").ToLower() Then
                                     If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
                                         'case for if newsletter has same page name as menu item
                                         If Features.ContainsKey("PageVersions") Then
