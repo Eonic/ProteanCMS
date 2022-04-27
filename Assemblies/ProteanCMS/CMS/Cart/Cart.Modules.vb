@@ -168,17 +168,40 @@ Partial Public Class Cms
             Public Sub RedeemTickets(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Try
 
-                    'we write the logic to query the ticket code. 
-
                     Dim redeemticketsGroupId = myWeb.moConfig("TicketOfficeGroupId")
                     Dim userId As Long = myWeb.mnUserId
 
-
-                    oContentNode.SetAttribute("ticketValid", "true")
-
+                    oContentNode.RemoveAttribute("ticketValid")
                     oContentNode.SetAttribute("enteredTicketCode", myWeb.moRequest("code"))
 
+                    If userId = 0 Then 'no user logged in
+                        Dim tktCode As String = myWeb.moRequest("code")
+                        Dim tktKey As String = String.Empty
 
+                        'get the key of the ticketcode - join against cartitem and cartorder
+                        Dim cdchkStr As String = "select tblCodes.nCodeKey, tblCodes.dUseDate from tblCodes inner join tblCartItem on tblCodes.nUseId = tblCartItem.nCartItemKey "
+                        cdchkStr = cdchkStr & "inner join tblCartOrder on tblCartItem.nCartOrderId = tblCartOrder.nCartOrderKey "
+                        cdchkStr = cdchkStr & "where tblCodes.cCode = '" & tktCode & "'"
+                        Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(cdchkStr)
+                        While oDr.Read()
+                            tktKey = oDr.GetInt32(0)
+                            If IsDBNull(oDr(1)) Then 'tkt has not been validated yet
+                                Dim uptStr = "update tblCodes set dUseDate = '" & DateAndTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & "' where nCodeKey = " & tktKey
+                                Dim rowCnt As Integer = myWeb.moDbHelper.ExeProcessSql(uptStr)
+                                If rowCnt = 1 Then
+                                    'display the ticket is validated successfulluy
+                                    oContentNode.SetAttribute("ticketValid", "success")
+                                Else
+                                    'display there was an issue validating the ticket
+                                End If
+                            Else 'tkt has been already validated
+                                'display the ticket was validated already
+                                oContentNode.SetAttribute("ticketValid", "failed")
+                            End If
+                        End While
+                        'ElseIf 'check if the user
+
+                    End If
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ListQuotes", ex, ""))
