@@ -2673,7 +2673,7 @@
 							  </div>
 							  <div class="modal-body text-danger">
 								  <i class="fa fa-times-circle fa-5x">&#160;</i><br/>
-								  <h5>This ticket has allready been used for entry</h5>
+								  <h2>This ticket has allready been used for entry</h2>
 							  </div>
 						  </div>
 					  </div>
@@ -2684,11 +2684,11 @@
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h4 class="modal-title text-warning" id="myModalLabel">TICKET USED</h4>
+								<h1 class="modal-title text-warning" id="myModalLabel">TICKET NOT FOUND</h1>
 							</div>
 							<div class="modal-body text-warning">
 								<i class="fa fa-question-circle fa-6">&#160;</i>
-								This ticket has not been found
+								<h2>This ticket has not been found</h2>
 							</div>
 						</div>
 					</div>
