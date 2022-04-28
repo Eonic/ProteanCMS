@@ -5465,11 +5465,14 @@ Public Class Cms
                         mbIgnorePath = mbIgnorePath
                     End If
 
-                    'If this matches the path requested then change the pageId
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then
                             If Not moRequest("path") Is Nothing Then
-                                If Replace(sUrl, DomainURL, "").ToLower() = moRequest("path").ToLower() Or Replace(sUrl, DomainURL, "").ToLower() & "/" = moRequest("path").ToLower() Then
+                                'If this matches the path requested then change the pageId
+                                Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
+                                Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
+                                Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
+                                If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
                                     If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
                                         'case for if newsletter has same page name as menu item
                                         If Features.ContainsKey("PageVersions") Then
