@@ -4,6 +4,23 @@
         <name>Magick.NET-Q8-AnyCPU</name>
     </assembly>
     <members>
+        <member name="T:ImageMagick.MagickAnyCPU">
+            <summary>
+            Class that can be used to initialize the AnyCPU version of Magick.NET.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.MagickAnyCPU.CacheDirectory">
+            <summary>
+            Gets or sets the directory that will be used by Magick.NET to store the embedded assemblies.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.MagickAnyCPU.HasSharedCacheDirectory">
+            <summary>
+            Gets or sets a value indicating whether the security permissions of the embeded library
+            should be changed when it is written to disk. Only set this to true when multiple
+            application pools with different idententies need to execute the same library.
+            </summary>
+        </member>
         <member name="T:ImageMagick.ColorBase">
             <summary>
             Base class for colors.
@@ -4942,7 +4959,6 @@
             <summary>
             Class that can be used to create <see cref="T:ImageMagick.IMagickImageCollection`1"/> instances.
             </summary>
-            <content />
         </member>
         <member name="M:ImageMagick.MagickImageCollectionFactory.Create">
             <summary>
@@ -5047,47 +5063,10 @@
             <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImageCollectionFactory.CreateAsync(System.IO.Stream)">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageCollection`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollectionFactory.CreateAsync(System.IO.Stream,System.Threading.CancellationToken)">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageCollection`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollectionFactory.CreateAsync(System.IO.Stream,ImageMagick.IMagickReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageCollection`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollectionFactory.CreateAsync(System.IO.Stream,ImageMagick.IMagickReadSettings{System.Byte},System.Threading.CancellationToken)">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImageCollection`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImageCollection`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.MagickImageFactory">
             <summary>
             Class that can be used to create <see cref="T:ImageMagick.IMagickImage`1"/> instances.
             </summary>
-            <content />
         </member>
         <member name="M:ImageMagick.MagickImageFactory.Create">
             <summary>
@@ -5248,61 +5227,6 @@
             </summary>
             <param name="fileName">The fully qualified name of the image file, or the relative image file name.</param>
             <param name="settings">The pixel settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.CreateAsync(System.IO.Stream)">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.CreateAsync(System.IO.Stream,System.Threading.CancellationToken)">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.CreateAsync(System.IO.Stream,ImageMagick.IMagickReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.CreateAsync(System.IO.Stream,ImageMagick.IMagickReadSettings{System.Byte},System.Threading.CancellationToken)">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.CreateAsync(System.IO.Stream,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.CreateAsync(System.IO.Stream,ImageMagick.IPixelReadSettings{System.Byte},System.Threading.CancellationToken)">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
@@ -6143,11 +6067,6 @@
             Gets or sets the size where the image should be scaled to fit the page (pdf:fit-page).
             </summary>
         </member>
-        <member name="P:ImageMagick.Formats.PdfReadDefines.HideAnnotations">
-            <summary>
-            Gets or sets a value indicating whether annotations should be hidden (pdf:hide-annotations).
-            </summary>
-        </member>
         <member name="P:ImageMagick.Formats.PdfReadDefines.Interpolate">
             <summary>
             Gets or sets a value indicating whether all images are forced to be interpolated at full device resolution.
@@ -6482,21 +6401,6 @@
             Gets the defines that should be set as a define on an image.
             </summary>
         </member>
-        <member name="T:ImageMagick.Formats.IntermediateFormat">
-            <summary>
-            Specifies the intermediate format for.
-            </summary>
-        </member>
-        <member name="F:ImageMagick.Formats.IntermediateFormat.Pam">
-            <summary>
-            Pam.
-            </summary>
-        </member>
-        <member name="F:ImageMagick.Formats.IntermediateFormat.WebP">
-            <summary>
-            WebP.
-            </summary>
-        </member>
         <member name="T:ImageMagick.Formats.VideoReadDefines">
             <summary>
             Class for defines that are used when a video image is read.
@@ -6507,11 +6411,6 @@
             Initializes a new instance of the <see cref="T:ImageMagick.Formats.VideoReadDefines"/> class.
             </summary>
             <param name="format">The video format.</param>
-        </member>
-        <member name="P:ImageMagick.Formats.VideoReadDefines.IntermediateFormat">
-            <summary>
-            Gets or sets the intermediate format (video:intermediate-format).
-            </summary>
         </member>
         <member name="P:ImageMagick.Formats.VideoReadDefines.PixelFormat">
             <summary>
@@ -6879,14 +6778,6 @@
             <param name="format">The image format.</param>
             <returns>The format information.</returns>
         </member>
-        <member name="M:ImageMagick.MagickFormatInfo.Create(System.Byte[])">
-            <summary>
-            Returns the format information. The header of the image in the array of bytes is used to
-            determine the format.
-            </summary>
-            <param name="data">The array of bytes to read the image header from.</param>
-            <returns>The format information.</returns>
-        </member>
         <member name="M:ImageMagick.MagickFormatInfo.Create(System.String)">
             <summary>
             Returns the format information. The extension of the supplied file name is used to
@@ -6931,7 +6822,6 @@
             <summary>
             Class that represents an ImageMagick image.
             </summary>
-            <content/>
         </member>
         <member name="M:ImageMagick.MagickImage.#ctor">
             <summary>
@@ -8679,8 +8569,8 @@
         </member>
         <member name="M:ImageMagick.MagickImage.Crop(System.Int32,System.Int32)">
             <summary>
-            Crop image (subregion of original image). RePage should be called unless the Page information
-            is needed.
+            Crop image (subregion of original image) using CropPosition.Center. You should call
+            RePage afterwards unless you need the Page information.
             </summary>
             <param name="width">The width of the subregion.</param>
             <param name="height">The height of the subregion.</param>
@@ -8688,8 +8578,8 @@
         </member>
         <member name="M:ImageMagick.MagickImage.Crop(System.Int32,System.Int32,ImageMagick.Gravity)">
             <summary>
-            Crop image (subregion of original image). RePage should be called unless the Page information
-            is needed.
+            Crop image (subregion of original image). You should call RePage afterwards unless you
+            need the Page information.
             </summary>
             <param name="width">The width of the subregion.</param>
             <param name="height">The height of the subregion.</param>
@@ -8698,16 +8588,16 @@
         </member>
         <member name="M:ImageMagick.MagickImage.Crop(ImageMagick.IMagickGeometry)">
             <summary>
-            Crop image (subregion of original image). RePage should be called unless the Page information
-            is needed.
+            Crop image (subregion of original image). You should call RePage afterwards unless you
+            need the Page information.
             </summary>
             <param name="geometry">The subregion to crop.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Crop(ImageMagick.IMagickGeometry,ImageMagick.Gravity)">
             <summary>
-            Crop image (subregion of original image). RePage should be called unless the Page information
-            is needed.
+            Crop image (subregion of original image). You should call RePage afterwards unless you
+            need the Page information.
             </summary>
             <param name="geometry">The subregion to crop.</param>
             <param name="gravity">The position where the cropping should start from.</param>
@@ -9396,13 +9286,6 @@
             <param name="method">Pixel interpolate method.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImage.Integral">
-            <summary>
-            Returns the sum of values (pixel values) in the image.
-            </summary>
-            <returns>The sum of values (pixel values) in the image.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="M:ImageMagick.MagickImage.InterpolativeResize(System.Int32,System.Int32,ImageMagick.PixelInterpolateMethod)">
             <summary>
             Resize image to specified size using the specified interpolation method.
@@ -9642,38 +9525,6 @@
             </summary>
             <param name="target">The color to replace.</param>
             <param name="fill">The color to replace opaque color with.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.InverseSigmoidalContrast(System.Double)">
-            <summary>
-            Adjust the image contrast with an inverse non-linear sigmoidal contrast algorithm.
-            </summary>
-            <param name="contrast">The contrast.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.InverseSigmoidalContrast(System.Double,System.Double)">
-            <summary>
-            Adjust the image contrast with an inverse non-linear sigmoidal contrast algorithm.
-            </summary>
-            <param name="contrast">The contrast to use.</param>
-            <param name="midpoint">The midpoint to use.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.InverseSigmoidalContrast(System.Double,System.Double,ImageMagick.Channels)">
-            <summary>
-            Adjust the image contrast with an inverse non-linear sigmoidal contrast algorithm.
-            </summary>
-            <param name="contrast">The contrast to use.</param>
-            <param name="midpoint">The midpoint to use.</param>
-            <param name="channels">The channel(s) that should be adjusted.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.InverseSigmoidalContrast(System.Double,ImageMagick.Percentage)">
-            <summary>
-            Adjust the image contrast with an inverse non-linear sigmoidal contrast algorithm.
-            </summary>
-            <param name="contrast">The contrast to use.</param>
-            <param name="midpointPercentage">The midpoint to use.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.InverseTransparent(ImageMagick.IMagickColor{System.Byte})">
@@ -11171,6 +11022,14 @@
             <param name="contrast">The contrast.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
+        <member name="M:ImageMagick.MagickImage.SigmoidalContrast(System.Boolean,System.Double)">
+            <summary>
+            Adjust the image contrast with a non-linear sigmoidal contrast algorithm.
+            </summary>
+            <param name="sharpen">Specifies if sharpening should be used.</param>
+            <param name="contrast">The contrast.</param>
+            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
+        </member>
         <member name="M:ImageMagick.MagickImage.SigmoidalContrast(System.Double,System.Double)">
             <summary>
             Adjust the image contrast with a non-linear sigmoidal contrast algorithm.
@@ -11179,19 +11038,28 @@
             <param name="midpoint">The midpoint to use.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImage.SigmoidalContrast(System.Double,System.Double,ImageMagick.Channels)">
+        <member name="M:ImageMagick.MagickImage.SigmoidalContrast(System.Boolean,System.Double,System.Double)">
             <summary>
             Adjust the image contrast with a non-linear sigmoidal contrast algorithm.
             </summary>
+            <param name="sharpen">Specifies if sharpening should be used.</param>
             <param name="contrast">The contrast to use.</param>
             <param name="midpoint">The midpoint to use.</param>
-            <param name="channels">The channel(s) that should be adjusted.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.SigmoidalContrast(System.Double,ImageMagick.Percentage)">
             <summary>
             Adjust the image contrast with a non-linear sigmoidal contrast algorithm.
             </summary>
+            <param name="contrast">The contrast to use.</param>
+            <param name="midpointPercentage">The midpoint to use.</param>
+            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
+        </member>
+        <member name="M:ImageMagick.MagickImage.SigmoidalContrast(System.Boolean,System.Double,ImageMagick.Percentage)">
+            <summary>
+            Adjust the image contrast with a non-linear sigmoidal contrast algorithm.
+            </summary>
+            <param name="sharpen">Specifies if sharpening should be used.</param>
             <param name="contrast">The contrast to use.</param>
             <param name="midpointPercentage">The midpoint to use.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
@@ -11832,140 +11700,10 @@
             <param name="format">The format to use.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImage.ReadAsync(System.IO.Stream)">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.ReadAsync(System.IO.Stream,System.Threading.CancellationToken)">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.ReadAsync(System.IO.Stream,ImageMagick.MagickFormat)">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="format">The format to use.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.ReadAsync(System.IO.Stream,ImageMagick.MagickFormat,System.Threading.CancellationToken)">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="format">The format to use.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.ReadAsync(System.IO.Stream,ImageMagick.IMagickReadSettings{System.Byte})">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.ReadAsync(System.IO.Stream,ImageMagick.IMagickReadSettings{System.Byte},System.Threading.CancellationToken)">
-            <summary>
-            Read single image frame.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.ReadPixelsAsync(System.IO.Stream,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Read single image frame from pixel data.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.ReadPixelsAsync(System.IO.Stream,ImageMagick.IPixelReadSettings{System.Byte},System.Threading.CancellationToken)">
-            <summary>
-            Read single image frame from pixel data.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.WriteAsync(System.IO.Stream)">
-            <summary>
-            Writes the image to the specified stream.
-            </summary>
-            <param name="stream">The stream to write the image data to.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.WriteAsync(System.IO.Stream,System.Threading.CancellationToken)">
-            <summary>
-            Writes the image to the specified stream.
-            </summary>
-            <param name="stream">The stream to write the image data to.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.WriteAsync(System.IO.Stream,ImageMagick.IWriteDefines)">
-            <summary>
-            Writes the image to the specified stream.
-            </summary>
-            <param name="stream">The stream to write the image data to.</param>
-            <param name="defines">The defines to set.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.WriteAsync(System.IO.Stream,ImageMagick.IWriteDefines,System.Threading.CancellationToken)">
-            <summary>
-            Writes the image to the specified stream.
-            </summary>
-            <param name="stream">The stream to write the image data to.</param>
-            <param name="defines">The defines to set.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.WriteAsync(System.IO.Stream,ImageMagick.MagickFormat)">
-            <summary>
-            Writes the image to the specified stream.
-            </summary>
-            <param name="stream">The stream to write the image data to.</param>
-            <param name="format">The format to use.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.WriteAsync(System.IO.Stream,ImageMagick.MagickFormat,System.Threading.CancellationToken)">
-            <summary>
-            Writes the image to the specified stream.
-            </summary>
-            <param name="stream">The stream to write the image data to.</param>
-            <param name="format">The format to use.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.MagickImageCollection">
             <summary>
             Represents the collection of images.
             </summary>
-            <content />
         </member>
         <member name="M:ImageMagick.MagickImageCollection.#ctor">
             <summary>
@@ -12785,120 +12523,6 @@
             <param name="format">The format to use.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImageCollection.ReadAsync(System.IO.Stream)">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.ReadAsync(System.IO.Stream,System.Threading.CancellationToken)">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.ReadAsync(System.IO.Stream,ImageMagick.MagickFormat)">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="format">The format to use.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.ReadAsync(System.IO.Stream,ImageMagick.MagickFormat,System.Threading.CancellationToken)">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="format">The format to use.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.ReadAsync(System.IO.Stream,ImageMagick.IMagickReadSettings{System.Byte})">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.ReadAsync(System.IO.Stream,ImageMagick.IMagickReadSettings{System.Byte},System.Threading.CancellationToken)">
-            <summary>
-            Read all image frames.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="readSettings">The settings to use when reading the image.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.WriteAsync(System.IO.Stream)">
-            <summary>
-            Writes the imagse to the specified stream. If the output image's file format does not
-            allow multi-image files multiple files will be written.
-            </summary>
-            <param name="stream">The stream to write the images to.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.WriteAsync(System.IO.Stream,System.Threading.CancellationToken)">
-            <summary>
-            Writes the imagse to the specified stream. If the output image's file format does not
-            allow multi-image files multiple files will be written.
-            </summary>
-            <param name="stream">The stream to write the images to.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.WriteAsync(System.IO.Stream,ImageMagick.IWriteDefines)">
-            <summary>
-            Writes the imagse to the specified stream. If the output image's file format does not
-            allow multi-image files multiple files will be written.
-            </summary>
-            <param name="stream">The stream to write the images to.</param>
-            <param name="defines">The defines to set.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.WriteAsync(System.IO.Stream,ImageMagick.IWriteDefines,System.Threading.CancellationToken)">
-            <summary>
-            Writes the imagse to the specified stream. If the output image's file format does not
-            allow multi-image files multiple files will be written.
-            </summary>
-            <param name="stream">The stream to write the images to.</param>
-            <param name="defines">The defines to set.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.WriteAsync(System.IO.Stream,ImageMagick.MagickFormat)">
-            <summary>
-            Writes the image to the specified stream.
-            </summary>
-            <param name="stream">The stream to write the image data to.</param>
-            <param name="format">The format to use.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageCollection.WriteAsync(System.IO.Stream,ImageMagick.MagickFormat,System.Threading.CancellationToken)">
-            <summary>
-            Writes the image to the specified stream.
-            </summary>
-            <param name="stream">The stream to write the image data to.</param>
-            <param name="format">The format to use.</param>
-            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="T:ImageMagick.MagickImageInfo">
             <summary>
             Class that contains basic information about an image.
@@ -13126,17 +12750,10 @@
         </member>
         <member name="M:ImageMagick.MagickNET.GetFormatInformation(System.String)">
             <summary>
-            Returns the format information of the specified format based on the extension of the file.
+            Returns the format information of the specified format based on the extension of the
+            file. If that fails the format will be determined by 'pinging' the file.
             </summary>
             <param name="fileName">The name of the file to get the format for.</param>
-            <returns>The format information.</returns>
-        </member>
-        <member name="M:ImageMagick.MagickNET.GetFormatInformation(System.Byte[])">
-            <summary>
-            Returns the format information. The header of the image in the array of bytes is used to
-            determine the format.
-            </summary>
-            <param name="data">The array of bytes to read the image header from.</param>
             <returns>The format information.</returns>
         </member>
         <member name="M:ImageMagick.MagickNET.Initialize">
@@ -14950,32 +14567,6 @@
             Gets the underline thickness.
             </summary>
         </member>
-        <member name="T:ImageMagick.DensityExtensions">
-            <summary>
-            Extension methods for the <see cref="T:ImageMagick.Density"/> class.
-            </summary>
-        </member>
-        <member name="M:ImageMagick.DensityExtensions.ToGeometry(ImageMagick.Density,System.Double,System.Double)">
-            <summary>
-            Returns a <see cref="T:ImageMagick.MagickGeometry"/> based on the specified width and height.
-            </summary>
-            <param name="self">The density.</param>
-            <param name="width">The width in cm or inches.</param>
-            <param name="height">The height in cm or inches.</param>
-            <returns>A <see cref="T:ImageMagick.MagickGeometry"/> based on the specified width and height in cm or inches.</returns>
-        </member>
-        <member name="T:ImageMagick.IExifProfileExtensions">
-            <summary>
-            Extension methods for the <see cref="T:ImageMagick.IExifProfile"/> interface.
-            </summary>
-        </member>
-        <member name="M:ImageMagick.IExifProfileExtensions.CreateThumbnail(ImageMagick.IExifProfile)">
-            <summary>
-            Returns the thumbnail in the exif profile when available.
-            </summary>
-            <param name="self">The exif profile.</param>
-            <returns>The thumbnail in the exif profile when available.</returns>
-        </member>
         <member name="T:ImageMagick.ImageOptimizer">
             <summary>
             Class that can be used to optimize an image.
@@ -15368,12 +14959,6 @@
         <member name="P:ImageMagick.MagickReadSettings.SyncImageWithExifProfile">
             <summary>
             Gets or sets a value indicating whether the exif profile should be used to update some of the
-            properties of the image (e.g. <see cref="P:ImageMagick.IMagickImage.Density"/>, <see cref="P:ImageMagick.IMagickImage.Orientation"/>).
-            </summary>
-        </member>
-        <member name="P:ImageMagick.MagickReadSettings.SyncImageWithTiffProperties">
-            <summary>
-            Gets or sets a value indicating whether the tiff profile should be used to update some of the
             properties of the image (e.g. <see cref="P:ImageMagick.IMagickImage.Density"/>, <see cref="P:ImageMagick.IMagickImage.Orientation"/>).
             </summary>
         </member>

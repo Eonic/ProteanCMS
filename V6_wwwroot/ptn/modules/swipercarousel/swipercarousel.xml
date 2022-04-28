@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="SwiperCarousel" contentType="SwiperSlide" interval="5000" height="400" box="" title="" link="" linkType="internal" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="related" rss="false" position="" commentPlatform="none" fbCommentsWidth="500"/>
+					<Content moduleType="SwiperCarousel" contentType="SwiperSlide" interval="5000" height="400" speed="400" box="" title="" link="" linkType="internal" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="related" rss="false" position="" commentPlatform="none" fbCommentsWidth="500"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -35,6 +35,9 @@
 			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
 			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
 			<bind id="cInterval" nodeset="@interval" required="false()" type="string"/>
+			<bind id="nSpeed" nodeset="@speed" required="false()" type="number"/>
+			<bind id="direction" nodeset="@direction" required="false()" type="number"/>s
+				<bind id="effect" nodeset="@effect" required="false()" type="number"/>
 			<bind id="cHeightOptions" nodeset="@cHeightOptions" required="false()" type="string"/>
 			<bind id="cHeightxs" nodeset="@heightxs" required="false()" type="string"/>
 			<bind id="cHeight" nodeset="@height" required="false()" type="string"/>
@@ -89,11 +92,26 @@
 									<value>false</value>
 								</item>
 							</select1>
+							<select1 appearance="full" bind="effect" class="short inline-items">
+								<label>Effect</label>
+								<item>
+									<label>Slide</label>
+									<value></value>
+								</item>
+								<item>
+									<label>Fade</label>
+									<value>fade</value>
+								</item>
+							</select1>
 						</group>
 						<group class="col-lg-4">
 							<input bind="cInterval" class="short">
 								<label>Interval</label>
 								<help class="inline">The amount of time in milliseconds to delay between automatically cycling an item</help>
+							</input>
+							<input bind="nSpeed" class="short">
+								<label>Transition Speed</label>
+								<help class="inline">The amount of time in milliseconds to it takes to transition an item</help>
 							</input>
 						</group>
 						<group class="col-lg-4">
@@ -109,6 +127,17 @@
 									<value>true</value>
 								</item>
 							</select>
+							<select1 appearance="full" bind="direction" class="short inline-items">
+								<label>Direction</label>
+								<item>
+									<label>Horizontal</label>
+									<value>horizontal</value>
+								</item>
+								<item>
+									<label>Vertical</label>
+									<value>vertical</value>
+								</item>
+							</select1>
 						</group>
 					</group>
 					<group class="form-section-wrapper">

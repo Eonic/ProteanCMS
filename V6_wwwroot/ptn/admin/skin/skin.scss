@@ -121,6 +121,7 @@ body.ptn-edit.layout-Logon {
 body.ptn-edit.layout-AdmHome {
     background: url(/ptn/admin/skin/images/iStock-1139397548-web.jpg) no-repeat #000;
     //background-size: cover;
+    .form-header-strip{border:none;}
     .btn-group-spaced {
         a {
 
@@ -155,7 +156,7 @@ body.ptn-edit.layout-AdmHome {
         margin: 20px;
         padding-top: 0 !important;
         border-radius: 10px !important;
-        padding-bottom:0;
+        padding-bottom: 0;
         //  background-color: #edf1f3;
         //  -webkit-box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
         //  box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);

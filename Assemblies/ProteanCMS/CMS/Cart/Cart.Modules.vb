@@ -165,6 +165,48 @@ Partial Public Class Cms
                 End Try
             End Sub
 
+            Public Sub RedeemTickets(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
+                Try
+
+                    ' Dim redeemticketsGroupId = myWeb.moConfig("TicketOfficeGroupId")
+                    Dim userId As Long = myWeb.mnUserId
+                    Dim mbIsTicketOffice As Boolean = myWeb.moDbHelper.checkUserRole("Ticket Office", "Role", userId)
+
+                    oContentNode.RemoveAttribute("ticketValid")
+                    oContentNode.SetAttribute("enteredTicketCode", myWeb.moRequest("code"))
+
+                    Dim tktCode As String = myWeb.moRequest("code")
+                    Dim tktKey As String = String.Empty
+
+                    'get the key of the ticketcode - join against cartitem and cartorder
+                    Dim cdchkStr As String = "select tblCodes.nCodeKey, tblCodes.dUseDate from tblCodes inner join tblCartItem on tblCodes.nUseId = tblCartItem.nCartItemKey "
+                    cdchkStr = cdchkStr & "inner join tblCartOrder on tblCartItem.nCartOrderId = tblCartOrder.nCartOrderKey "
+                    cdchkStr = cdchkStr & "where tblCodes.cCode = '" & tktCode & "'"
+                    Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(cdchkStr)
+
+                    oContentNode.SetAttribute("ticketValid", "invalid")
+
+                    While oDr.Read()
+                        If IsDBNull(oDr("dUseDate")) Then 'tkt has not been validated yet
+                            If mbIsTicketOffice Then
+                                myWeb.moDbHelper.UseCode(myWeb.moRequest("code"), 0)
+                                oContentNode.SetAttribute("ticketValid", "validated")
+                            Else
+                                oContentNode.SetAttribute("ticketValid", "valid")
+                            End If
+                        Else
+                            oContentNode.SetAttribute("ticketValid", "used")
+                            End If
+                    End While
+
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ListQuotes", ex, ""))
+                End Try
+            End Sub
+
+
         End Class
 #End Region
     End Class
