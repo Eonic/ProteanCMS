@@ -2680,14 +2680,14 @@
 				  </div>
 			  </xsl:when>
             <xsl:otherwise>
-				<div class="modal fade show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 					<div class="modal-dialog" role="document">
-						<div class="modal-content">
+						<div class="modal-content center-block">
 							<div class="modal-header">
 								<h1 class="modal-title text-warning" id="myModalLabel">TICKET NOT FOUND</h1>
 							</div>
 							<div class="modal-body text-warning">
-								<i class="fa fa-question-circle fa-6">&#160;</i>
+								<i class="fa fa-question-circle fa-5x">&#160;</i>
 								<h2>This ticket has not been found</h2>
 							</div>
 						</div>
