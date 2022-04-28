@@ -10,17 +10,17 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.52.0"
+    Public Shared ewAssemblyVersion As String = "6.0.53.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
-    Public Shared bundleLessAssemblyVersion As String = "1.10.4.0"
-    Public Shared jsSwitcherAssemblyVersion As String = "3.1.0.0"
-    Public Shared jsSwitcherMSIEAssemblyVersion As String = "3.1.0.0"
-    Public Shared jsSwitcherChakraAssemblyVersion As String = "3.1.1.0"
-    Public Shared jsSwitcherV8AssemblyVersion As String = "3.1.0.0"
-    Public Shared MSIEJsEngineAssemblyVersion As String = "3.0.3.0"
+    Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
+    Public Shared bundleSassAssemblyVersion As String = "1.12.36.0"
+    Public Shared LibSassHostAssemblyVersion As String = "1.3.3.0"
+    Public Shared jsSwitcherAssemblyVersion As String = "3.3.0.0"
+    Public Shared jsSwitcherV8AssemblyVersion As String = "3.17.4.0"
+    Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.17.4.0"
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
-    Public Shared JsonAssemblyVersion As String = "12.0.0.0" '"8.0.1.19229""
+    Public Shared JsonAssemblyVersion As String = "13.0.0.0" '"8.0.1.19229""
     Public Shared YUIAssemblyVersion As String = "1.9.23.0"
     Public Shared MicrosoftAjaxAssemblyVersion As String = "1.10.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
@@ -32,9 +32,13 @@ Public Class CustomActions
     Public Shared CreateSendAssemblyVersion As String = "4.2.2.0"
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
+    Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.2.4.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "8.3.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "8.3.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "11.1.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "11.1.0.0"
+
+    Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
+    Public Shared SharpZipLibAssemblyVersion As String = "1.3.3.11"
 
     <CustomAction()> _
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
@@ -123,6 +127,8 @@ Public Class CustomActions
 
                 UpdateConfigSection(oCgfSect, "bundleTransformer", "core", "BundleTransformer.Core.Configuration.CoreSettings, BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
                 UpdateConfigSection(oCgfSect, "bundleTransformer", "less", "BundleTransformer.Less.Configuration.LessSettings, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
+                UpdateConfigSection(oCgfSect, "bundleTransformer", "sass", "BundleTransformer.Sass.Configuration.SassSettings, BundleTransformer.Sass, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
+
                 '       UpdateConfigSection(oCgfSect, "bundleTransformer", "yui", "BundleTransformer.Yui.Configuration.YuiSettings, BundleTransformer.Yui, Version=" & YUIAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
                 UpdateConfigSection(oCgfSect, "bundleTransformer", "microsoftAjax", "BundleTransformer.MicrosoftAjax.Configuration.MicrosoftAjaxSettings, BundleTransformer.MicrosoftAjax, Version=" & MicrosoftAjaxAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
 
@@ -189,19 +195,39 @@ Public Class CustomActions
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCMS, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Sass, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Sass, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                    UpdateAssemblyRef(oAssembliesSect, "LibSassHost, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
+                    UpdateAssemblyRef(oAssembliesSect, "LibSassHost.Native.win-x64, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
+
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.MicrosoftAjax, Version=" & MicrosoftAjaxAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "AjaxMin, Version=" & AjaxMinAssemblyVersion & ", Culture=neutral, PublicKeyToken=21ef50ce11b5d80f")
                     UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.Core, Version=" & jsSwitcherAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
-                    UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.Msie, Version=" & jsSwitcherMSIEAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
-                    UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.ChakraCore, Version=" & jsSwitcherChakraAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
+                    'UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.Msie, Version=" & jsSwitcherMSIEAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
+                    'UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.ChakraCore, Version=" & jsSwitcherChakraAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
                     UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.V8, Version=" & jsSwitcherV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
-                    UpdateAssemblyRef(oAssembliesSect, "MsieJavaScriptEngine, Version=" & MSIEJsEngineAssemblyVersion & ", Culture=neutral, PublicKeyToken=A3A2846A37AC0D3E")
+                    UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.V8.Native.win-x64, Version=" & jsSwitcherV8NativeWinx64AssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
+                    UpdateAssemblyRef(oAssembliesSect, "ClearScript.Core, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+                    UpdateAssemblyRef(oAssembliesSect, "ClearScript.V8, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+
+                    ' UpdateAssemblyRef(oAssembliesSect, "MsieJavaScriptEngine, Version=" & MSIEJsEngineAssemblyVersion & ", Culture=neutral, PublicKeyToken=A3A2846A37AC0D3E")
                     ' UpdateAssemblyRef(oAssembliesSect, "EcmaScript.NET, Version=" & ECMAAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+
                     UpdateAssemblyRef(oAssembliesSect, "WebGrease, Version=" & WebGreaseAssemblyVersion & ", Culture=neutral, PublicKeyToken=31BF3856AD364E35")
                     UpdateAssemblyRef(oAssembliesSect, "Newtonsoft.Json, Version=" & JsonAssemblyVersion & ", Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed")
                     UpdateAssemblyRef(oAssembliesSect, "System.Net.FtpClient, Version=" & SystemNetFTPClientAssemblyVersion & ", Culture=neutral, PublicKeyToken=fa4be07daa57c2b7")
                     UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "Protean.AppStart, Version=" & ptnAppStartAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+
+                    UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+
+
+                    UpdateAssemblyRef(oAssembliesSect, "ICSharpCode.SharpZipLib, Version=" & SharpZipLibAssemblyVersion & ", Culture=neutral, PublicKeyToken=1b03e6acf1164f73")
+                    UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
+
+                    UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
+                    UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-AnyCPU, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
+
 
                     ' UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     ' UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
@@ -241,6 +267,7 @@ Public Class CustomActions
                                 "<translators>" &
                                 "<add name=""NullTranslator"" type=""BundleTransformer.Core.Translators.NullTranslator, BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D"" enabled=""false"" />" &
                                 "<add name=""LessTranslator"" type=""BundleTransformer.Less.Translators.LessTranslator, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D"" />" &
+                                "<add name=""SassAndScssTranslator"" type=""BundleTransformer.SassAndScss.Translators.SassAndScssTranslator, BundleTransformer.SassAndScsss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D""/>" &
                                 "</translators>" &
                                 "<postProcessors>" &
                                     "<add name=""UrlRewritingCssPostProcessor"" type=""BundleTransformer.Core.PostProcessors.UrlRewritingCssPostProcessor, BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D"" useInDebugMode=""false""/>" &
@@ -248,6 +275,8 @@ Public Class CustomActions
                                 "<fileExtensions>" &
                                     "<add fileExtension="".css"" assetTypeCode=""Css""/>" &
                                     "<add fileExtension="".less"" assetTypeCode=""Less""/>" &
+                                    "<add fileExtension="".sass"" assetTypeCode=""Sass""/>" &
+                                    "<add fileExtension="".scss"" assetTypeCode=""Scss""/>" &
                                 "</fileExtensions>" &
                                 "</css>" &
                                "<js defaultPostProcessors="""" defaultMinifier=""MicrosoftAjaxJsMinifier"" usePreMinifiedFiles=""true"" combineFilesBeforeMinification = ""false"" > " &
@@ -439,249 +468,44 @@ Public Class CustomActions
 
             Dim oElmt As XmlElement
 
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='ProteanCMS']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""ProteanCMS"" publicKeyToken=""0e5e11efc3341916""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='ProteanCMS']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "5.0.0.0-" & ewAssemblyVersion)
-                oElmt.SetAttribute("newVersion", ewAssemblyVersion)
-            Next
+            'Protean
+            UpdateDependantAssembly(oSectXml, "ProteanCMS", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
+            UpdateDependantAssembly(oSectXml, "Protean.Tools", "2030ce1af675e93f", ewAssemblyVersion, "5.0.0.0")
+            UpdateDependantAssembly(oSectXml, "Protean.Tools.Csharp", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
+            UpdateDependantAssembly(oSectXml, "Protean.Providers.Messaging.CampaignMonitor", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
 
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Protean.Tools']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""Protean.Tools"" publicKeyToken=""2030ce1af675e93f""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Protean.Tools']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "5.0.0.0-" & ewAssemblyVersion)
-                oElmt.SetAttribute("newVersion", ewAssemblyVersion)
-            Next
+            'BundleTransformer
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.Core", "973C344C93AAC60D", bundleAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.Less", "973C344C93AAC60D", bundleLessAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.Sass", "973C344C93AAC60D", bundleSassAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "LibSassHost", "3e24e88796a38e46", LibSassHostAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "LibSassHost.Native.win-x64", "3e24e88796a38e46", LibSassHostAssemblyVersion)
 
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Protean.Tools.Csharp']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""Protean.Tools.Csharp"" publicKeyToken=""0e5e11efc3341916""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Protean.Tools.Csharp']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "5.0.0.0-" & ewAssemblyVersion)
-                oElmt.SetAttribute("newVersion", ewAssemblyVersion)
-            Next
+            'JavascriptEngineSwitcher
+            UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Core", "C608B2A8CC9E4472", jsSwitcherAssemblyVersion)
+            'UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Msie", "C608B2A8CC9E4472", jsSwitcherMSIEAssemblyVersion)
+            'UpdateDependantAssembly(oSectXml, "MsieJavaScriptEngine", "A3A2846A37AC0D3E", MSIEJsEngineAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.ChakraCore", "C608B2A8CC9E4472", jsSwitcherChakraAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8", "C608B2A8CC9E4472", jsSwitcherV8AssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8.Native.win-x64", "C608B2A8CC9E4472", jsSwitcherV8NativeWinx64AssemblyVersion)
+
+            UpdateDependantAssembly(oSectXml, "ClearScript.Core", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "ClearScript.V8", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
 
 
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Protean.Providers.Messaging.CampaignMonitor']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""Protean.Providers.Messaging.CampaignMonitor"" publicKeyToken=""0e5e11efc3341916""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Protean.Providers.Messaging.CampaignMonitor']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "5.0.0.0-" & ewAssemblyVersion)
-                oElmt.SetAttribute("newVersion", ewAssemblyVersion)
-            Next
-
-            'BundleTransformer.Core
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='BundleTransformer.Core']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""BundleTransformer.Core"" publicKeyToken=""973C344C93AAC60D""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='BundleTransformer.Core']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "1.0.0.0-" & bundleAssemblyVersion)
-                oElmt.SetAttribute("newVersion", bundleAssemblyVersion)
-            Next
-            'BundleTransformer.Less
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='BundleTransformer.Less']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""BundleTransformer.Less"" publicKeyToken=""973C344C93AAC60D""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='BundleTransformer.Less']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "1.0.0.0-" & bundleLessAssemblyVersion)
-                oElmt.SetAttribute("newVersion", bundleLessAssemblyVersion)
-            Next
-            'JavaScriptEngineSwitcher.Core
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='JavaScriptEngineSwitcher.Core']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""JavaScriptEngineSwitcher.Core"" publicKeyToken=""C608B2A8CC9E4472""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='JavaScriptEngineSwitcher.Core']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & jsSwitcherAssemblyVersion)
-                oElmt.SetAttribute("newVersion", jsSwitcherAssemblyVersion)
-            Next
-
-            'JavaScriptEngineSwitcher.Msie
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='JavaScriptEngineSwitcher.Msie']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""JavaScriptEngineSwitcher.Msie"" publicKeyToken=""C608B2A8CC9E4472""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='JavaScriptEngineSwitcher.Msie']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & jsSwitcherMSIEAssemblyVersion)
-                oElmt.SetAttribute("newVersion", jsSwitcherMSIEAssemblyVersion)
-            Next
-
-            'MsieJavaScriptEngine
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='MsieJavaScriptEngine']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""MsieJavaScriptEngine"" publicKeyToken=""A3A2846A37AC0D3E""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='MsieJavaScriptEngine']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & MSIEJsEngineAssemblyVersion)
-                oElmt.SetAttribute("newVersion", MSIEJsEngineAssemblyVersion)
-            Next
-
-            'JavaScriptEngineSwitcher.ChakraCore
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='JavaScriptEngineSwitcher.ChakraCore']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""JavaScriptEngineSwitcher.ChakraCore"" publicKeyToken=""C608B2A8CC9E4472""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='JavaScriptEngineSwitcher.ChakraCore']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & jsSwitcherChakraAssemblyVersion)
-                oElmt.SetAttribute("newVersion", jsSwitcherChakraAssemblyVersion)
-            Next
-
-
-            'Newtonsoft.Json
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Newtonsoft.Json']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""Newtonsoft.Json"" publicKeyToken=""30AD4FE6B2A6AEED""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Newtonsoft.Json']/bindingRedirect")
-                If oElmt.GetAttribute("oldVersion").StartsWith("10.") Then
-                    oElmt.SetAttribute("oldVersion", "10.0.0.0-" & JsonAssemblyVersion)
-                Else
-                    oElmt.SetAttribute("oldVersion", "8.0.0.0-" & JsonAssemblyVersion)
-                End If
-
-                oElmt.SetAttribute("newVersion", JsonAssemblyVersion)
-            Next
-
-            'WebGrease
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='WebGrease']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""WebGrease"" publicKeyToken=""31bf3856ad364e35""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='WebGrease']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & WebGreaseAssemblyVersion)
-                oElmt.SetAttribute("newVersion", WebGreaseAssemblyVersion)
-            Next
-
-            'SoundInTheory.DynamicImage.Extensions.Pdf
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='SoundInTheory.DynamicImage.Extensions.Pdf']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""SoundInTheory.DynamicImage.Extensions.Pdf"" publicKeyToken=""fa44558110383067""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='SoundInTheory.DynamicImage.Extensions.Pdf']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & DynamicImagePDFAssemblyVersion)
-                oElmt.SetAttribute("newVersion", DynamicImagePDFAssemblyVersion)
-            Next
-
-
-            'System.Net.FTPClient
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='System.Net.FTPClient']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""System.Net.FTPClient"" publicKeyToken=""fa4be07daa57c2b7""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='System.Net.FTPClient']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & SystemNetFTPClientAssemblyVersion)
-                oElmt.SetAttribute("newVersion", SystemNetFTPClientAssemblyVersion)
-            Next
-
-            'System.Net.FTPClient
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='createsend-dotnet']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""createsend-dotnet"" publicKeyToken=""0e5e11efc3341916""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='createsend-dotnet']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & CreateSendAssemblyVersion)
-                oElmt.SetAttribute("newVersion", CreateSendAssemblyVersion)
-            Next
-
-            'System.Net.FTPClient
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='TidyHTML5Managed']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""TidyHTML5Managed"" publicKeyToken=""0e5e11efc3341916""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='TidyHTML5Managed']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & TidyHTML5ManagedAssemblyVersion)
-                oElmt.SetAttribute("newVersion", TidyHTML5ManagedAssemblyVersion)
-            Next
-
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='ClearScript']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""ClearScript"" publicKeyToken=""935d0c957da47c73""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='ClearScript']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & ClearScriptAssemblyVersion)
-                oElmt.SetAttribute("newVersion", ClearScriptAssemblyVersion)
-            Next
-
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='TidyHTML5Managed']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""TidyHTML5Managed"" publicKeyToken=""0e5e11efc3341916""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='TidyHTML5Managed']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & TidyHTML5ManagedAssemblyVersion)
-                oElmt.SetAttribute("newVersion", TidyHTML5ManagedAssemblyVersion)
-            Next
-
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='System.Text.Encoding.CodePages']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""System.Text.Encoding.CodePages"" publicKeyToken=""b03f5f7f11d50a3a""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='System.Text.Encoding.CodePages']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-4.6.0.0")
-                oElmt.SetAttribute("newVersion", SystemTextEncodingCodePagesAssemblyVersion)
-            Next
-
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='AlphaFS']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""AlphaFS"" publicKeyToken=""4d31a58f7d7ad5c9""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='AlphaFS']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & AlphaFSAssemblyVersion)
-                oElmt.SetAttribute("newVersion", AlphaFSAssemblyVersion)
-            Next
-
-
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Magick.NET-Q8-AnyCPU']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""Magick.NET-Q8-AnyCPU"" publicKeyToken=""2004825badfa91ec""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Magick.NET-Q8-AnyCPU']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & MagickNETAssemblyVersion)
-                oElmt.SetAttribute("newVersion", MagickNETAssemblyVersion)
-            Next
-
-            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Magick.NET.Core']") Is Nothing Then
-                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""Magick.NET.Core"" publicKeyToken=""2004825badfa91ec""/><bindingRedirect/>"
-                BindingElmt.AppendChild(newElmt)
-            End If
-            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Magick.NET.Core']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & MagickNETCoreAssemblyVersion)
-                oElmt.SetAttribute("newVersion", MagickNETCoreAssemblyVersion)
-            Next
-
-
+            UpdateDependantAssembly(oSectXml, "Newtonsoft.Json", "30AD4FE6B2A6AEED", JsonAssemblyVersion, "10.0.0.0")
+            UpdateDependantAssembly(oSectXml, "WebGrease", "31bf3856ad364e35", WebGreaseAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "SoundInTheory.DynamicImage.Extensions.Pdf", "fa44558110383067", DynamicImagePDFAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "System.Net.FTPClient", "fa4be07daa57c2b7", SystemNetFTPClientAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "createsend-dotnet", "0e5e11efc3341916", CreateSendAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "TidyHTML5Managed", "0E50e5e11efc3341916", TidyHTML5ManagedAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "ClearScript", "935d0c957da47c73", ClearScriptAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "System.Text.Encoding.CodePages", "b03f5f7f11d50a3a", SystemTextEncodingCodePagesAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
 
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
-
 
             oCgfRuntimeSect.SectionInformation.SetRawXml(oSectXml.OuterXml)
             config.Save()
@@ -984,5 +808,27 @@ Public Class CustomActions
         End Try
 
     End Sub
+
+    Public Shared Sub UpdateDependantAssembly(ByRef oSectXml As XmlElement, ByVal type As String, ByVal token As String, ByVal NewAssemblyVersion As String, Optional ByVal OldestAssemblyVerion As String = "0.0.0.0")
+    Public Shared Sub UpdateDependantAssembly(ByRef oSectXml As XmlElement, ByVal type As String, ByVal token As String, ByVal NewAssemblyVersion As String, Optional ByVal OldestAssemblyVerion As String = "0.0.0.0")
+
+        Try
+
+            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='" & type & "']") Is Nothing Then
+                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
+                newElmt.InnerXml = "<assemblyIdentity name=""" & type & """ publicKeyToken=""" & token & """/><bindingRedirect/>"
+                BindingElmt.AppendChild(newElmt)
+            End If
+            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='" & type & "']/bindingRedirect")
+                oElmt.SetAttribute("oldVersion", OldestAssemblyVerion & "-" & NewAssemblyVersion)
+                oElmt.SetAttribute("newVersion", NewAssemblyVersion)
+            Next
+
+        Catch ex As Exception
+            Dim errorstr As String = ex.InnerException.StackTrace
+        End Try
+
+    End Sub
+
 
 End Class
