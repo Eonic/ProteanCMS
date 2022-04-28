@@ -2640,6 +2640,33 @@
 						<div class="modal-content">
 							<div class="modal-header">
 								<h4 class="modal-title text-success" id="myModalLabel">TICKET VALIDATED</h4>
+                <br/>
+                <table border="1">
+                  <tr>
+                    <td>Purchaser: </td>
+                    <td>
+                      <xsl:value-of select="@PurchaserName"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Event name: </td>
+                    <td>
+                      <xsl:value-of select="@EventName"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Venue: </td>
+                    <td>
+                      <xsl:value-of select="@Venue"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Time: </td>
+                    <td>
+                      <xsl:value-of select="@Time"/>
+                    </td>
+                  </tr>
+                </table>
 							</div>
 							<div class="modal-body text-success">
 								<i class="fa fa-check-circle fa-6">&#160;</i>
@@ -2655,6 +2682,33 @@
 						<div class="modal-content">
 							<div class="modal-header">
 								<h4 class="modal-title text-success" id="myModalLabel">TICKET VALID</h4>
+                <br/>
+                <table border="1">
+                  <tr>
+                    <td>Purchaser: </td>
+                    <td>
+                      <xsl:value-of select="@PurchaserName"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Event name: </td>
+                    <td>
+                      <xsl:value-of select="@EventName"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Venue: </td>
+                    <td>
+                      <xsl:value-of select="@Venue"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Time: </td>
+                    <td>
+                      <xsl:value-of select="@Time"/>
+                    </td>
+                  </tr>
+                </table>
 							</div>
 							<div class="modal-body text-success">
 								<i class="fa fa-check-circle fa-6">&#160;</i>
@@ -2674,6 +2728,7 @@
 							  <div class="modal-body text-danger">
 								  <i class="fa fa-times-circle fa-5x">&#160;</i><br/>
 								  <h2>This ticket has allready been used for entry</h2>
+                  <p> on <xsl:value-of select="@lastUsedTime"/></p>
 							  </div>
 						  </div>
 					  </div>
