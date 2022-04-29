@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Eonic Digital LLP.")]
 [assembly: AssemblyProduct("ProteanCMS")]
-[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2021")]
+[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -127,7 +127,7 @@ Public Class CustomActions
 
                 UpdateConfigSection(oCgfSect, "bundleTransformer", "core", "BundleTransformer.Core.Configuration.CoreSettings, BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
                 UpdateConfigSection(oCgfSect, "bundleTransformer", "less", "BundleTransformer.Less.Configuration.LessSettings, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
-                UpdateConfigSection(oCgfSect, "bundleTransformer", "sass", "BundleTransformer.Sass.Configuration.SassSettings, BundleTransformer.Sass, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
+                UpdateConfigSection(oCgfSect, "bundleTransformer", "sassAndScss", "BundleTransformer.SassAndScss.Configuration.SassAndScssSettings, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
 
                 '       UpdateConfigSection(oCgfSect, "bundleTransformer", "yui", "BundleTransformer.Yui.Configuration.YuiSettings, BundleTransformer.Yui, Version=" & YUIAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
                 UpdateConfigSection(oCgfSect, "bundleTransformer", "microsoftAjax", "BundleTransformer.MicrosoftAjax.Configuration.MicrosoftAjaxSettings, BundleTransformer.MicrosoftAjax, Version=" & MicrosoftAjaxAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D", False)
@@ -195,8 +195,7 @@ Public Class CustomActions
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCMS, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
-                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Sass, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
-                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Sass, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                    UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "LibSassHost, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
                     UpdateAssemblyRef(oAssembliesSect, "LibSassHost.Native.win-x64, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
 
@@ -460,14 +459,6 @@ Public Class CustomActions
                 Dim testString As String = oCgfRuntimeSect64.SectionInformation.GetRawXml
             End If
 
-            Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
-            If BindingElmt Is Nothing Then
-                BindingElmt = oSectXml.CreateElement("assemblyBinding")
-                oSectXml.DocumentElement.AppendChild(BindingElmt)
-            End If
-
-            Dim oElmt As XmlElement
-
             'Protean
             UpdateDependantAssembly(oSectXml, "ProteanCMS", "0e5e11efc3341916", ewAssemblyVersion, "5.0.0.0")
             UpdateDependantAssembly(oSectXml, "Protean.Tools", "2030ce1af675e93f", ewAssemblyVersion, "5.0.0.0")
@@ -477,7 +468,7 @@ Public Class CustomActions
             'BundleTransformer
             UpdateDependantAssembly(oSectXml, "BundleTransformer.Core", "973C344C93AAC60D", bundleAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "BundleTransformer.Less", "973C344C93AAC60D", bundleLessAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "BundleTransformer.Sass", "973C344C93AAC60D", bundleSassAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "BundleTransformer.SassAndScss", "973C344C93AAC60D", bundleSassAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "LibSassHost", "3e24e88796a38e46", LibSassHostAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "LibSassHost.Native.win-x64", "3e24e88796a38e46", LibSassHostAssemblyVersion)
 
@@ -485,7 +476,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Core", "C608B2A8CC9E4472", jsSwitcherAssemblyVersion)
             'UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.Msie", "C608B2A8CC9E4472", jsSwitcherMSIEAssemblyVersion)
             'UpdateDependantAssembly(oSectXml, "MsieJavaScriptEngine", "A3A2846A37AC0D3E", MSIEJsEngineAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.ChakraCore", "C608B2A8CC9E4472", jsSwitcherChakraAssemblyVersion)
+            'UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.ChakraCore", "C608B2A8CC9E4472", jsSwitcherChakraAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8", "C608B2A8CC9E4472", jsSwitcherV8AssemblyVersion)
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8.Native.win-x64", "C608B2A8CC9E4472", jsSwitcherV8NativeWinx64AssemblyVersion)
 
@@ -505,6 +496,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
 
+            Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
 
             oCgfRuntimeSect.SectionInformation.SetRawXml(oSectXml.OuterXml)
@@ -809,10 +801,16 @@ Public Class CustomActions
 
     End Sub
 
-    Public Shared Sub UpdateDependantAssembly(ByRef oSectXml As XmlElement, ByVal type As String, ByVal token As String, ByVal NewAssemblyVersion As String, Optional ByVal OldestAssemblyVerion As String = "0.0.0.0")
-    Public Shared Sub UpdateDependantAssembly(ByRef oSectXml As XmlElement, ByVal type As String, ByVal token As String, ByVal NewAssemblyVersion As String, Optional ByVal OldestAssemblyVerion As String = "0.0.0.0")
+    Public Shared Sub UpdateDependantAssembly(ByRef oSectXml As XmlDocument, ByVal type As String, ByVal token As String, ByVal NewAssemblyVersion As String, Optional ByVal OldestAssemblyVerion As String = "0.0.0.0")
 
         Try
+
+            Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
+            If BindingElmt Is Nothing Then
+                BindingElmt = oSectXml.CreateElement("assemblyBinding")
+                BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
+                oSectXml.DocumentElement.AppendChild(BindingElmt)
+            End If
 
             If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='" & type & "']") Is Nothing Then
                 Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")

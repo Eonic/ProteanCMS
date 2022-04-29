@@ -14,7 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("ProteanCommon Tools")>
 <Assembly: AssemblyCompany("Eonic Digital LLP")>
 <Assembly: AssemblyProduct("Protean.Tools")>
-<Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2021")>
+<Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  20212")>
 <Assembly: AssemblyTrademark("Eonic")> 
 
 <Assembly: ComVisible(False)> 
