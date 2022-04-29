@@ -191,21 +191,28 @@ Partial Public Class Cms
 
                     While oDr.Read()
                         If IsDBNull(oDr("dUseDate")) Then 'tkt has not been validated yet
-                            If mbIsTicketOffice Then
-                                'get event name, datetime and purchaser name
-                                Dim tktDet As String = "select (CAST(cCartXml AS XML)).value('/Order[1]/Contact[1]/GivenName[1]', 'VARCHAR(255)') AS 'PurchaserName',"
-                                tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/Name[1]', 'VARCHAR(255)') AS 'EventName', (CAST(xItemXml AS XML)).value('/Content[1]/Description[1]', 'VARCHAR(1000)') AS 'Venue',"
-                                tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') + ' ' + (CAST(xItemXml AS XML)).value('/Content[1]/Times[1]/@start', 'VARCHAR(255)') AS 'Time'"
-                                tktDet += "From tblCartItem inner Join tblCartOrder On tblCartOrder.nCartOrderKey = tblCartItem.nCartOrderId"
-                                tktDet += " Where tblCartOrder.nCartOrderKey = " & oDr("nCartOrderKey") & " and tblCartItem.nCartItemKey = " & oDr("nCartItemKey")
-                                Dim oDr1 As SqlDataReader = myWeb.moDbHelper.getDataReader(tktDet)
-                                While oDr1.Read()
-                                    oContentNode.SetAttribute("PurchaserName", oDr1("PurchaserName"))
-                                    oContentNode.SetAttribute("EventName", oDr1("EventName"))
-                                    oContentNode.SetAttribute("Venue", oDr1("Venue"))
-                                    oContentNode.SetAttribute("Time", oDr1("Time"))
-                                End While
+                            'get event name, datetime and purchaser name
+                            Dim tktDet As String = "select (CAST(cCartXml AS XML)).value('/Order[1]/Contact[1]/GivenName[1]', 'VARCHAR(255)') AS 'PurchaserName',"
+                            tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/Name[1]', 'VARCHAR(255)') AS 'EventName', (CAST(xItemXml AS XML)).value('/Content[1]/Description[1]', 'VARCHAR(1000)') AS 'Venue',"
+                            tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') + ' ' + (CAST(xItemXml AS XML)).value('/Content[1]/Times[1]/@start', 'VARCHAR(255)') AS 'Time',"
+                            tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') AS 'EventDate'"
+                            tktDet += " From tblCartItem inner Join tblCartOrder On tblCartOrder.nCartOrderKey = tblCartItem.nCartOrderId"
+                            tktDet += " Where tblCartOrder.nCartOrderKey = " & oDr("nCartOrderKey") & " and tblCartItem.nCartItemKey = " & oDr("nCartItemKey")
+                            Dim oDr1 As SqlDataReader = myWeb.moDbHelper.getDataReader(tktDet)
+                            While oDr1.Read()
+                                oContentNode.SetAttribute("PurchaserName", oDr1("PurchaserName"))
+                                oContentNode.SetAttribute("EventName", oDr1("EventName"))
+                                oContentNode.SetAttribute("Venue", oDr1("Venue"))
+                                oContentNode.SetAttribute("Time", oDr1("Time"))
 
+                                Dim eDay As Date = CDate(oDr1("EventDate"))
+                                If eDay <> DateTime.Today Then
+                                    oContentNode.SetAttribute("ticketValid", "notToday")
+                                    Return
+                                End If
+                            End While
+
+                            If mbIsTicketOffice Then
                                 If myWeb.moDbHelper.RedeemCode(myWeb.moRequest("code")) Then 'if ticket got validated successfully
                                     oContentNode.SetAttribute("ticketValid", "validated")
                                 End If
@@ -213,8 +220,7 @@ Partial Public Class Cms
                                 oContentNode.SetAttribute("ticketValid", "valid")
                             End If
                         Else
-                            Dim useStr As String = "select top 1 dUseDate from tblCodes"
-                            useStr = useStr & " where cCode = '" & tktCode & "'"
+                            Dim useStr As String = "select top 1 dUseDate from tblCodes where cCode = '" & tktCode & "'"
                             Dim oDr2 As SqlDataReader = myWeb.moDbHelper.getDataReader(useStr)
                             While oDr2.Read()
                                 oContentNode.SetAttribute("lastUsedTime", oDr2("dUseDate"))
