@@ -197,7 +197,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "LibSassHost, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
-                    UpdateAssemblyRef(oAssembliesSect, "LibSassHost.Native.win-x64, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
+                    ' Not required for runtimes   UpdateAssemblyRef(oAssembliesSect, "LibSassHost.Native.win-x64, Version=" & LibSassHostAssemblyVersion & ", Culture=neutral, PublicKeyToken=3e24e88796a38e46")
 
                     UpdateAssemblyRef(oAssembliesSect, "BundleTransformer.MicrosoftAjax, Version=" & MicrosoftAjaxAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
                     UpdateAssemblyRef(oAssembliesSect, "AjaxMin, Version=" & AjaxMinAssemblyVersion & ", Culture=neutral, PublicKeyToken=21ef50ce11b5d80f")
@@ -205,7 +205,7 @@ Public Class CustomActions
                     'UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.Msie, Version=" & jsSwitcherMSIEAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
                     'UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.ChakraCore, Version=" & jsSwitcherChakraAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
                     UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.V8, Version=" & jsSwitcherV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
-                    UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.V8.Native.win-x64, Version=" & jsSwitcherV8NativeWinx64AssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
+                    ' Not required for runtimes      UpdateAssemblyRef(oAssembliesSect, "JavaScriptEngineSwitcher.V8.Native.win-x64, Version=" & jsSwitcherV8NativeWinx64AssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472")
                     UpdateAssemblyRef(oAssembliesSect, "ClearScript.Core, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
                     UpdateAssemblyRef(oAssembliesSect, "ClearScript.V8, Version=" & MicrosoftClearScriptV8AssemblyVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
 

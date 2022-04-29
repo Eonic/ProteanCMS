@@ -387,7 +387,6 @@ namespace Protean.Tools
         public bool BackupDatabase(string databasename, string filepath)
         {
             string cProcessInfo = "createDB";
-            bool bReturn = false;
             string backupName = null;
             string zipName = null;
             try
@@ -513,7 +512,6 @@ namespace Protean.Tools
             {
                 CloseConnection();
             }
-            return bReturn;
         }
 
 
@@ -906,7 +904,7 @@ namespace Protean.Tools
                 if (!(parameters == null))
                 {
                     foreach (DictionaryEntry oEntry in parameters)
-                        oDataAdpt.SelectCommand.Parameters.Add(oEntry.Key.ToString(), oEntry.Value);
+                        oDataAdpt.SelectCommand.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
                 }
                 if (pageSize > 0)
                     oDataAdpt.Fill(oDs, nStartIndex, pageSize, tablename);
