@@ -10,7 +10,7 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.53.0"
+    Public Shared ewAssemblyVersion As String = "6.0.54.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -34,7 +34,7 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.2.4.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "11.1.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "8.5.0.0"
     Public Shared MagickNETCoreAssemblyVersion As String = "11.1.0.0"
 
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
@@ -494,7 +494,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Text.Encoding.CodePages", "b03f5f7f11d50a3a", SystemTextEncodingCodePagesAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion,)
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
