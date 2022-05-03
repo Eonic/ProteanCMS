@@ -1,0 +1,600 @@
+﻿.ptn-edit .open,
+#mainTable .ptn-edit,
+#pagefooter .ptn-edit {
+    .dropdown {
+        width: auto;
+
+        a.btn-primary,
+        a:visited.btn-primary {
+            //color: #fff !important;
+            letter-spacing: normal;
+        }
+
+        a.btn:focus,
+        a.btn:hover {
+            outline: none;
+            text-decoration: none;
+        }
+    }
+
+    .dropdown-menu {
+        text-align: left;
+        background: #fff;
+        border: 2px solid $admin-primary;
+        letter-spacing: normal;
+        border-radius: 0;
+        min-width: 11rem;
+        opacity: 1 !important;
+
+        li {
+            width: 100%;
+        }
+
+        li a {
+            color: $admin-primary !important;
+            display: block;
+            font-weight: 500;
+
+            i {
+                color: $admin-primary !important;
+            }
+
+            &:hover {
+                color: darken($admin-primary,10%) !important;
+                background: transparent;
+
+                i {
+                    color: darken($admin-primary,10%) !important;
+                }
+            }
+
+            padding: 3px 15px !important;
+            background-image: none !important;
+            background: none !important;
+            text-transform: none !important;
+            height: auto !important;
+            letter-spacing: normal;
+            text-decoration: none !important;
+            font-size: 13px !important;
+            font-weight: 400 !important;
+        }
+
+        .divider {
+            display: none;
+        }
+
+        li.mansonary-size a.btn {
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            background-image: -moz-linear-gradient(center top, #FFFFFF, #E6E6E6);
+            border-image: none;
+            border-style: solid;
+            border-width: 1px;
+            box-shadow: inset 0px 1px 0px rgba(255,255,255,0.2), 0px 1px 2px rgba(0,0,0,0.05);
+            display: inline-block;
+            font-size: 14px;
+            line-height: 20px;
+            margin-bottom: 0px;
+            padding: 4px 8px;
+            text-align: center;
+            text-shadow: 0px 1px 1px rgba(255,255,255,0.75);
+            vertical-align: middle;
+        }
+
+        li.updown a {
+            padding: 0 !important;
+        }
+
+        li.mansonary-size a {
+            padding: 3px 5px !important;
+        }
+
+        li.title {
+            font-size: 14px;
+            color: #585858 !important;
+        }
+
+        .divider {
+        }
+    }
+}
+
+.normalMode {
+    .text-primary {
+        color: $admin-header-color-link !important;
+    }
+
+    .indicate-visibility {
+        padding: 6px 0px 5px 5px;
+    }
+
+    .text-primary.drag {
+        padding: 2px 5px 0;
+        font-size: 13px !important;
+        margin-right: -21px;
+    }
+    .fullwidthContainer .text-primary.drag{margin-right:0;}
+    a:hover {
+        text-decoration: none;
+    }
+
+    .slick-list .ptn-edit .btn-primary {
+        z-index: 10;
+    }
+
+    .ptn-edit.moduleDrag {
+        margin-bottom: 6px;
+    }
+
+    .ptn-edit.over-content {
+        margin-bottom: -28px;
+        //margin-top:4px;
+    }
+
+    .ptn-edit > .btn-default,
+    .ptn-edit > .btn-primary,
+    .ptn-edit > .dropdown > .btn-primary,
+    .ptn-edit > .dropdown .dropdown-menu a {
+        font-family: $admin-header-font;
+
+        i {
+            font-size: 13px !important;
+            color: $admin-header-color !important;
+            width: auto !important;
+            height: auto !important;
+            display: inline-block !important;
+
+            &:before {
+                display: inline !important;
+            }
+        }
+    }
+
+    .ptn-edit > .btn-primary,
+    .ptn-edit > .dropdown .btn-primary {
+        margin-left: 1px;
+    }
+
+    .ptn-edit > .dropdown .dropdown-menu li {
+        display: block;
+        text-align: left;
+
+        a {
+            border: 0;
+            text-align: left;
+        }
+    }
+
+    .grid-item > .ptn-edit {
+        margin-top: 3px;
+    }
+
+    span.editable {
+        .ptn-edit {
+            display: inline-block;
+            float: right;
+        }
+    }
+
+    .ptn-edit > .dropdown .dropdown-menu {
+        a {
+            margin: 0 !important;
+        }
+
+        .updown,
+        .divider {
+            clear: both
+        }
+    }
+
+    .ptn-edit > .btn-default i {
+        color: $admin-header-color-link !important;
+    }
+
+    .ptn-edit > .btn-default,
+    .ptn-edit > .btn-primary,
+    .ptn-edit > .dropdown > .btn-primary,
+    .ptn-edit > .dropdown > .btn-default {
+        //padding: 0px 3px 3px 5px !important;
+        font-weight: 400;
+        border-radius: 0px;
+        border: 1px solid #fff !important;
+    }
+
+    .ptn-edit > .ui-draggable-handle i {
+        top: 2px;
+        position: relative;
+    }
+
+    .ptn-edit > .btn-primary,
+    .ptn-edit > .dropdown > .btn-primary {
+        background: $admin-header-color-link !important;
+        color: #fff !important;
+    }
+
+    .ptn-edit > .dropdown > .btn-primary-darker {
+        //background: darken($admin-header-color-link,10%) !important;
+        background: #1d6f97 !important;
+    }
+    /*.options .text-primary-darker {
+        color: #1d6f97;
+    }*/
+    .bg-primary {
+        .options {
+            .text-primary-darker,
+            .text-primary {
+                color: #fff !important;
+            }
+        }
+    }
+
+    .ptn-edit > .btn-default, .ptn-edit > .dropdown > .btn-default {
+        //background: lighten($admin-header-color-link, 45%);
+        border: 1px !important;
+        color: $admin-header-color-link !important;
+
+        &:hover {
+            background: lighten($admin-header-color-link, 32%);
+        }
+
+        font-family: $admin-header-font;
+        text-shadow: none;
+        border-width: 1px;
+        letter-spacing: 0;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+
+        i {
+            margin: 0;
+        }
+    }
+
+    a.arrowbutton span, a.drag span {
+        display: none;
+    }
+
+    .btn-primary,
+    .btn-info,
+    .btn-default {
+        &:after {
+            content: none !important
+        }
+
+        &:before {
+            content: none !important
+        }
+    }
+
+    .editable > div.ptn-edit.options {
+        position: relative;
+    }
+
+    .accordion-module .editable > div.ptn-edit.options {
+        z-index: 2;
+    }
+
+    .ptn-edit.options.addmodule.droppable-hover {
+        border-color: $primary;
+        opacity: 1 !important;
+    }
+}
+
+.ptn-edit .open .dropdown-menu {
+    background-color: $admin-header-bg-light;
+    font-size: 1em !important;
+    margin-top: -1px;
+    min-width: 160px !important;
+
+    &:before,
+    &:after {
+        display: none !important
+    }
+
+    > li > a {
+        color: $admin-header-color;
+
+        &:hover,
+        &:focus {
+            color: $admin-header-color-link;
+            background-color: transparent;
+        }
+    }
+
+    li {
+        list-style: none !important;
+        margin-left: 0 !important;
+        background: none !important;
+        padding: 0px;
+        float: none !important;
+    }
+
+    > .active > a {
+        &,
+        &:hover,
+        &:focus {
+            color: $admin-header-color;
+            background-color: transparent;
+        }
+    }
+}
+// - In site edit button styling
+.Site, .Email {
+    .addmodule {
+        //   @include clearfix();
+    }
+
+    .ptn-edit.options.addmodule {
+        border-color: lighten($admin-header-color-link, 10%) !important;
+    }
+
+    .conditional-block {
+        border-color: lighten($admin-header-color-warning, 10%) !important;
+    }
+
+    .conditional-note {
+        color: lighten($admin-header-color-warning, 10%) !important;
+        font-size: 11px;
+        font-weight: 400;
+        padding: 3px;
+        letter-spacing: normal;
+    }
+
+    .ptn-edit {
+        .dropdown-menu a:hover {
+            background: $admin-header-color-link;
+            color: $admin-header-color;
+        }
+
+        .addHere {
+            color: lighten($admin-header-color-link, 10%);
+        }
+    }
+
+    .dragging {
+        padding: 3px;
+        margin-bottom: 3px;
+        border: dashed 1px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+        border-color: lighten($admin-header-color-link, 10%) !important;
+        z-index: 10000;
+    }
+
+    .ptn-edit .dropdown-menu li.title {
+        margin: 3px 5px 2px 15px !important;
+        color: #333 !important;
+        padding: 0;
+        width: auto !important;
+    }
+
+    #mainTitle .ptn-edit .dropdown-menu {
+        li a,
+        li.title {
+            font-size: 14px;
+        }
+    }
+
+    .ptn-edit.options.addmodule, .conditional-block {
+        padding: 3px;
+        margin-bottom: 3px;
+        border: dashed 1px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+    }
+
+    .ptn-edit.options.addmodule a.btn {
+        margin-right: 0;
+        margin-left: 4px;
+    }
+
+    .ptn-edit .dropdown {
+        font-weight: normal;
+        font-size: 13px !important;
+        line-height: 20px !important;
+        text-decoration: none;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+        height: auto !important;
+    }
+}
+//ACCORDIONS
+.normalMode .panel-group .panel {
+    overflow: visible;
+}
+
+
+
+
+.ptn-edit .dropdown-menu li.updown {
+    margin: 9px 5px 4px 20px !important;
+    min-width: 133px;
+    @include clearfix();
+}
+
+.ptn-edit .dropdown-menu li.updown a {
+    display: block;
+    margin: 0;
+    background: none !important;
+    border: 0;
+    float: left;
+    clear: none;
+    padding: 0 !important;
+}
+
+.ptn-edit .dropdown-menu li.updown a i {
+    vertical-align: middle;
+    text-align: center;
+    width: 10px;
+    display: block;
+    float: left;
+    margin-right: 27px;
+}
+
+.ptn-edit .dropdown-menu li.updown a i.fa-step-backward,
+.ptn-edit .dropdown-menu li.updown a i.fa-step-forward {
+    padding-top: 2px;
+}
+
+.ptn-edit .dropdown-menu li.updown a i.fa-step-forward {
+    margin-right: 0;
+}
+
+.Site, .Email {
+    .ptn-edit .btn, .ptn-edit .dropdown {
+        font-weight: normal;
+        font-size: 14px !important;
+        line-height: 20px !important;
+        text-decoration: none;
+        height: auto !important;
+        text-decoration: none !important;
+    }
+
+    .ptn-edit .btn-xs {
+        //padding: 1px 5px;
+        padding: 3px 1px 3px 7px !important;
+        min-width: 30px;
+    }
+
+    .ptn-edit .addHere {
+        font-size: 11px;
+        font-weight: 400;
+        padding: 3px;
+        letter-spacing: normal;
+    }
+
+    #isotope-module .editable {
+        position: relative;
+        display: block;
+    }
+
+    #isotope-module div.options {
+        position: relative;
+        display: block;
+    }
+
+    .ptn-edit .masonary-size .dropdown-menu li a {
+        padding: 3px 5px !important;
+    }
+}
+
+.normalMode {
+    .module > .editable {
+        width: 100%;
+    }
+
+    .module.module-centred > .editable h3 {
+        text-align: center;
+    }
+
+    .ptn-edit.options {
+        display: flex;
+        justify-content: right;
+        //margin-bottom: -22px;
+        width: 100%;
+
+        .btn {
+            //margin-right: 3px;
+
+            &:focus {
+                box-shadow: 0 0 0 0.25rem transparentize($admin-header-color-link,0.7);
+            }
+        }
+    }
+
+    .listItem,
+    .grid-item,
+    .nav-module {
+        .ptn-edit.options {
+            margin-bottom: -28px;
+
+            .dropdown > .btn {
+                opacity: 0.3;
+            }
+        }
+
+        &:hover {
+            .ptn-edit.options > .dropdown .btn {
+                opacity: 1;
+            }
+        }
+    }
+
+
+    .ptn-edit.options.addmodule {
+        justify-content: space-between;
+        opacity: 0.3;
+        align-items: flex-start;
+
+        a {
+            white-space: nowrap;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .module {
+        > .editable .options {
+            .btn,
+            .text-primary {
+                opacity: 0.3;
+            }
+        }
+
+        &:hover {
+            > .editable .options {
+                .btn,
+                .text-primary {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .grid-item {
+        &.editable .options {
+            .btn,
+            .text-primary {
+                opacity: 0.3;
+            }
+        }
+
+        &:hover {
+            &.editable .options {
+                .btn,
+                .text-primary {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .layout-btn {
+        display: none;
+    }
+
+    .layout-btn + .btn, .layout-btn ~ .dropdown > .btn {
+        border: 1px solid $admin-header-color-link !important;
+        color: $admin-header-color-link !important;
+        background: #fff !important;
+
+        i {
+            color: $admin-header-color-link !important;
+        }
+    }
+
+    .addmodule .btn,
+    .tabbed-module .options .btn-primary,
+    .accordion-module .options .btn-primary {
+        border: 1px solid $admin-header-color-link !important;
+        color: $admin-header-color-link !important;
+        background: #fff !important;
+
+        i {
+            color: $admin-header-color-link !important;
+        }
+    }
+}

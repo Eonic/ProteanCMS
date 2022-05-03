@@ -1770,7 +1770,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                         Dim cookieValue As String
                         cookieValue = lastSearch(0).ToString & "|"
-                        cookieValue &= Tools.Text.AscString(Tools.Encryption.HashString(Format(lastSearch(1).ToString, "s") & lastSearch(2).ToString, Tools.Hash.Provider.Md5, False), "|")
+                        cookieValue &= Tools.Text.AscString(Tools.Encryption.HashString(Format(lastSearch(1).ToString, "s") & lastSearch(2).ToString, Tools.Encryption.Hash.Provider.Md5, False), "|")
 
                         Dim trackingCookie As New System.Web.HttpCookie("search", cookieValue)
                         trackingCookie.Expires = Now.AddDays(2)

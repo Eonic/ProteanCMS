@@ -678,6 +678,42 @@ namespace Protean.Tools
         {
             try
             {
+                return NodeStateWithReturns(ref oNode, xPath, populateAsText, populateAsXml, populateState,ref returnElement,ref returnAsXml,ref returnAsText, bCheckTrimmedInnerText);
+
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "NodeState", ex, ""));
+                return default(XmlNodeState);
+            }
+        }
+
+
+        public static Xml.XmlNodeState NodeState(ref XmlElement oNode, string xPath ,ref XmlElement returnElement)
+        {
+            string populateAsText = ""; 
+            string populateAsXml = ""; 
+            Xml.XmlNodeState populateState = XmlNodeState.IsEmpty;
+            string returnAsXml = ""; 
+            string returnAsText = ""; 
+            bool bCheckTrimmedInnerText = false;
+
+            try
+            {
+                return NodeStateWithReturns(ref oNode, xPath, populateAsText, populateAsXml, populateState,ref returnElement,ref returnAsXml,ref returnAsText, bCheckTrimmedInnerText);
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "NodeState", ex, ""));
+                return default(XmlNodeState);
+            }
+        }
+
+
+        private static Xml.XmlNodeState NodeStateWithReturns(ref XmlElement oNode, string xPath, string populateAsText, string populateAsXml , Xml.XmlNodeState populateState,ref XmlElement returnElement,ref string returnAsXml,ref string returnAsText, bool bCheckTrimmedInnerText)
+        {
+            try
+            {
                 Xml.XmlNodeState oReturnState = XmlNodeState.NotInstantiated;
 
                 // Find the xPath if appropriate

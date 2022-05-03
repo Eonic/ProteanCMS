@@ -1,0 +1,174 @@
+﻿.qty-product {
+    float: left;
+    margin-right: 10px;
+
+    .qty-label {
+        @extend .visually-hidden;
+    }
+
+    .input-group {
+        max-width: 120px;
+    }
+}
+#MyWizard {
+    margin-bottom:2rem;
+    .nav {
+        @extend .justify-content-center;
+        font-weight: 600;
+    }
+
+    .step {
+        opacity:0.5;
+    }
+
+    .badge {
+        @extend .bg-dark;
+        @extend .rounded-pill;
+        margin-left: 20px;
+        margin-right: 6px;
+
+        &.complete {
+        }
+    }
+
+    .complete {
+        opacity: 0.5;
+    }
+
+    .active {
+        color: $primary;
+        opacity: 1;
+
+        .badge {
+            @extend .bg-primary;
+        }
+    }
+}
+@mixin cart-style1 {
+    .cart-headings,
+    .cart-btns-top {
+        display: none;
+    }
+
+    .cart-thumbnail {
+        float: left;
+        margin-right: 1rem;
+    }
+
+    .ref {
+        //  display: none;
+    }
+
+    .continue {
+        @include btn-clean;
+        float: left;
+    }
+
+    .principle {
+        float: right;
+    }
+
+    .lineTotal {
+        //  display: none;
+    }
+
+    .cart-item {
+        border: 1px solid darken($light,10%);
+        padding: 1rem;
+        margin-bottom: 0.4rem;
+
+        @include media-breakpoint-up(lg) {
+            display: flex;
+            align-items: center;
+        }
+
+        .description {
+            a {
+                font-size: 1.3rem;
+                font-weight: 600;
+            }
+
+            .ref {
+                font-size: 0.8rem;
+            }
+
+            @include media-breakpoint-up(lg) {
+                width: 40%;
+                float: left;
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        .quantity {
+            float: left;
+            margin-top: 5px;
+
+            @include media-breakpoint-up(lg) {
+                float: left;
+                width: 20%;
+                margin: 0;
+            }
+
+            .quantity-input {
+                margin-bottom: 3px;
+
+                label {
+                    @extend .visually-hidden;
+                }
+
+                select {
+                    padding: 3px 5px;
+                }
+            }
+
+            .delete {
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+        }
+
+        .cart-prices {
+            float: right;
+
+            @include media-breakpoint-up(lg) {
+                width: 40%;
+                text-align: right;
+            }
+
+            .lineTotal {
+                font-size: 1.2rem;
+                font-weight: 600;
+            }
+
+            .linePrice {
+                font-size: 0.9rem;
+            }
+        }
+    }
+
+    .totals-row {
+        text-align: right;
+        margin-bottom: 10px;
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+    }
+}
+#cartFull {
+    @include cart-style1;
+    margin-bottom: $spacer;
+
+    #deliveryAddress .btn,
+    #billingAddress .btn{
+        margin-bottom: 0.5rem;
+    }
+}
+.account-btns-top {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+

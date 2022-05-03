@@ -658,6 +658,12 @@ ProcessFlow:
                                     myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=Normal&pgid=" & myWeb.mnPageId 'myWeb.mcOriginalURL
                                 End If
                             End If
+
+                            If myWeb.moRequest("pgid") = "" And myWeb.mcPagePath = "" Then
+                                'this gets called only in WYSIWYG mode and I don't know why?
+                                'This Is a fudge to stop always redirect to the homepage.
+                                myWeb.mbSuppressLastPageOverrides = True
+                            End If
                             'we want to return here after editing
                             If Not myWeb.mbSuppressLastPageOverrides Then
                                 myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=Normal&pgid=" & myWeb.mnPageId '
@@ -3326,10 +3332,12 @@ AfterProcessFlow:
                             bShowTree = True
                         End If
                     Case "deleteFolder"
+                        Dim parentFolder
                         oPageDetail.AppendChild(moAdXfm.xFrmDeleteFolder(sFolder, LibType))
                         If moAdXfm.valid = False Then
                             sAdminLayout = "AdminXForm"
                         Else
+                            myWeb.msRedirectOnEnd = "?ewCmd=" & LibType.ToString() & "Lib&fld=\"
                             bShowTree = True
                         End If
                     Case "deleteFile"
@@ -3370,8 +3378,8 @@ AfterProcessFlow:
                         End If
                     Case "FolderSettings"
 
-                    Case "FileUpload"
 
+                    Case "FileUpload"
                         Dim oFS As New fsHelper(myWeb.moCtx)
                         oFS.UploadRequest(myWeb.moCtx)
                         oFS = Nothing

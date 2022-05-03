@@ -1,0 +1,71 @@
+﻿//------------------------
+//ICON SHORTCUTS
+//------------------------
+.angle-left() {
+    content:'a';
+	font-family:eonic-logo1;
+    font-size: 0.6em;
+}
+
+.angle-right() {
+    content:'b';
+	font-family:eonic-logo1;
+    font-size: 0.6em;
+}
+.angle-up() {
+    content: "c";
+	font-family:eonic-logo1;
+    font-size: 0.6em;
+}
+.angle-down() {
+    content: "d";
+	font-family:eonic-logo1;
+    font-size: 0.6em;
+}
+
+.chevron-left() {
+    content: "\f053";
+    font-weight: 900;
+    font-family: 'Font Awesome 5 Free';
+}
+
+.chevron-right() {
+    content: "\f054";
+    font-weight: 900;
+    font-family: 'Font Awesome 5 Free';
+}
+.chevron-down() {
+    content: "\f107";
+    font-weight: 900;
+    font-family: 'Font Awesome 5 Free';
+}
+.chevron-up() {
+    content: "\f106";
+    font-weight: 900;
+    font-family: 'Font Awesome 5 Free';
+}
+
+//------------------------
+//ICON CIRCLES
+//------------------------
+.icon-circles(@background:@brand-primary;@color:contrast(@background,@contrast-color,#fff);@width:90px;@height:90px;@padding:0px;@radius:100px;@size:40px;){
+    background:@background;
+    color:@color;
+    padding:@padding;
+    border-radius:@radius;
+    font-size:@size;
+    width:@width;
+    height:@height;
+    .flex-display;
+    .align-items(center);
+    &:before{
+        margin:0 auto;
+        display:block;
+    }
+}
+.icon-center(){
+    .flex-display;
+    .align-content(center);
+    .align-items(center);
+    text-align:center;
+}

@@ -1033,8 +1033,11 @@
     <xsl:text>Adding New Page below : </xsl:text>
   </xsl:template>
 
+	<xsl:template match="Page[@ewCmd='MailingList.CMSession']" mode="adminBreadcrumb">
+	
+	</xsl:template>
 
-  <xsl:template match="MenuItem" mode="adminBreadcrumb">
+	<xsl:template match="MenuItem" mode="adminBreadcrumb">
 
     <ol class="breadcrumb admin-breadcrumb">
       <xsl:if test="@cmd!='AdmHome'">
@@ -3834,7 +3837,9 @@
                   <xsl:for-each select="ContentDetail/RelatedResults/Content">
                     <xsl:sort select="@name" />
 
-                    <xsl:apply-templates select="." mode="LocateContentNode"/>
+					  <xsl:apply-templates select="." mode="LocateContentNode">
+						  <xsl:with-param name="indent">&#160;</xsl:with-param>
+					  </xsl:apply-templates>
 
                   </xsl:for-each>
                 </tr>
@@ -3888,7 +3893,9 @@
     <span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
       <tr>
         <td>
-			<xsl:apply-templates select="." mode="ContentListName"/>
+			<xsl:apply-templates select="." mode="ContentListName">
+				<xsl:with-param name="indent" select="$indent"/>
+			</xsl:apply-templates>
          
         </td>
         <td>
@@ -3928,12 +3935,14 @@
         </td>
       </tr>
     </span>
+	  <!--
     <xsl:apply-templates select="Content" mode="LocateContentNode">
       <xsl:with-param name="indent">
         <xsl:value-of select="$indent"/>
         &#160;&#160;&#160;
       </xsl:with-param>
     </xsl:apply-templates>
+	-->
 
   </xsl:template>
   <!-- -->
@@ -4075,6 +4084,7 @@
   </xsl:template>
 
 	<xsl:template match="Content" mode="ContentListName">
+		<xsl:param name="indent"/>
 		<xsl:value-of select="$indent"/>
 		<xsl:choose>
 			<xsl:when test="@name!=''">
@@ -4707,6 +4717,12 @@
             <xsl:with-param name="name">CookiePolicy</xsl:with-param>
             <xsl:with-param name="type">CookiePolicy</xsl:with-param>
           </xsl:call-template>
+
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Free Cookie Consent from https://www.freeprivacypolicy.com/</xsl:with-param>
+				<xsl:with-param name="name">FreeCookieConsent</xsl:with-param>
+				<xsl:with-param name="type">FreeCookieConsent</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <div class="tab-pane panel" id="settings">
@@ -5199,14 +5215,14 @@
       $('.modal-dialog').addClass('loading')
 			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
-      // load the url and show modal on success
-      var currentModal = $('.pickImageModal')
-      currentModal.load(target, function () {
-      $('.modal-dialog').removeClass('loading')
-      currentModal.modal("show");
-      });
-      });
-      };
+			// load the url and show modal on success
+			var currentModal = $('.pickImageModal')
+			currentModal.load(target, function () {
+			$('.modal-dialog').removeClass('loading')
+			currentModal.modal("show");
+			});
+			});
+			};
 
 
       });
@@ -12964,6 +12980,8 @@
       </iframe>
       <xsl:apply-templates select="." mode="adminFooter"/>
       <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
+
+	   <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
 

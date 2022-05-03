@@ -1355,7 +1355,7 @@
                               <xsl:value-of select="format-number(@UnitSaving,'#0.00')"/>
 							  -->
             <xsl:apply-templates select="/Page" mode="formatPrice">
-              <xsl:with-param name="price" select="@UnitSaving"/>
+              <xsl:with-param name="price" select="parent::*/@TotalSaving"/>
               <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
             </xsl:apply-templates>
           </div>
@@ -2624,6 +2624,155 @@
     <input type="hidden" name="opt_{ancestor::Content[1]/@id}_{$grpIdx}" value="" id="opt_{ancestor::Content[1]/@id}_{$grpIdx}_{position()}"/>
   </xsl:template>
 
+
+	<!-- List Voucher Module -->
+	<xsl:template match="Content[@type='Module' and @moduleType='RedeemTickets']" mode="displayBrief">
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<div id="redeem-tickets">
+			<div class="cols{@cols}">
+        <div class="d-grid gap-2">
+          <xsl:choose>
+            <xsl:when test="@ticketValid='validated'">
+				  <div class="modal show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					  <div class="modal-dialog" role="document">
+						  <div class="modal-content">
+							  <div class="modal-header">
+								  <h4 class="modal-title text-success" id="myModalLabel">TICKET VALIDATED</h4>
+                  <br/>
+                  <table border="1">
+                    <tr>
+                      <td>Purchaser: </td>
+                      <td>
+                        <xsl:value-of select="@PurchaserName"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Event name: </td>
+                      <td>
+                        <xsl:value-of select="@EventName"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Venue: </td>
+                      <td>
+                        <xsl:value-of select="@Venue"/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Time: </td>
+                      <td>
+                        <xsl:value-of select="@Time"/>
+                      </td>
+                    </tr>
+                  </table>
+							  </div>
+							  <div class="modal-body text-success">
+								  <i class="fa fa-check-circle fa-6">&#160;</i>
+								  Allow customer entry. Cannot be reused.
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+        </xsl:when>
+			<xsl:when test="@ticketValid='valid'">
+				<div class="modal show" id="valid" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title text-success" id="myModalLabel">TICKET VALID</h4>
+                <br/>
+                <table border="1">
+                  <tr>
+                    <td>Purchaser: </td>
+                    <td>
+                      <xsl:value-of select="@PurchaserName"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Event name: </td>
+                    <td>
+                      <xsl:value-of select="@EventName"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Venue: </td>
+                    <td>
+                      <xsl:value-of select="@Venue"/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Time: </td>
+                    <td>
+                      <xsl:value-of select="@Time"/>
+                    </td>
+                  </tr>
+                </table>
+							</div>
+							<div class="modal-body text-success">
+								<i class="fa fa-check-circle fa-6">&#160;</i>
+								Please proceed to venue to check in.
+							</div>
+						</div>
+					</div>
+				</div>
+			</xsl:when>
+			  <xsl:when test="@ticketValid='used'">
+				  <div class="modal show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					  <div class="modal-dialog" role="document">
+						  <div class="modal-content center-block">
+							  <div class="modal-header">
+								  <h1 class="modal-title text-danger" id="myModalLabel">TICKET USED</h1>
+							  </div>
+							  <div class="modal-body text-danger">
+								  <i class="fa fa-times-circle fa-5x">&#160;</i><br/>
+								  <h2>This ticket has allready been used for entry</h2>
+                  <p> on <xsl:value-of select="@lastUsedTime"/></p>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+			  </xsl:when>
+            <xsl:when test="@ticketValid='notToday'">
+              <div class="modal show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content center-block">
+                    <div class="modal-header">
+                      <h1 class="modal-title text-danger" id="myModalLabel">EVENT NOT TODAY</h1>
+                    </div>
+                    <div class="modal-body text-danger">
+                      <i class="fa fa-times-circle fa-5x">&#160;</i>
+                      <br/>
+                      <h2>This event is not scheduled for today.</h2>
+                      <p>
+                        This ticket details- <xsl:value-of select="@Venue"/>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+				<div class="modal show" id="validated" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content center-block">
+							<div class="modal-header">
+								<h1 class="modal-title text-warning" id="myModalLabel">TICKET NOT FOUND</h1>
+							</div>
+							<div class="modal-body text-warning">
+								<i class="fa fa-question-circle fa-5x">&#160;</i>
+								<h2>This ticket has not been found</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+            </xsl:otherwise>
+          </xsl:choose>
+        </div>
+			</div>
+		</div>
+	</xsl:template>
 
 
 </xsl:stylesheet>

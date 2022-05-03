@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>NewsArticle</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content showRelated="Tag,Contact">
+            <Headline/>
+            <Strapline/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail>
+          <Content>
+            <Headline/>
+            <Strapline/>
+            <Body/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+          </Content>
+        </cContentXmlDetail>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContent>
+      <Relation type="Author" relatedContentId="" direction="2way"/>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind nodeset="tblContent">
+      <bind id="cContentPath" nodeset="cContentName" required="true()" type="string"/>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+      <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+      <bind nodeset="cContentXmlBrief/Content">
+        <bind id="cContentHeadline" nodeset="Headline" required="true()" type="string"/>
+        <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+        <bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+      </bind>
+      <bind nodeset="cContentXmlDetail/Content">
+        <bind id="cMetaTitle" nodeset="@metaTitle" required="false()" type="string"/>
+        <bind id="cMetaDescription" nodeset="@metaDescription" required="false()" type="string"/>
+        <bind id="cContentHeadline" nodeset="Headline" required="true()" type="string"/>
+        <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+        <bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+      </bind>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+    </bind>
+    <bind nodeset="Relation">
+      <bind id="Related-Author" nodeset="@relatedContentId" required="false()" type="string"/>
+    </bind>
+  </model>
+  <group ref="EditContent">
+    <label>News Article</label>
+    <group class="tabs">
+      <group>
+        <label>
+          <i class="fas fa-pen"> </i>
+          <span class="space"> </span>
+          <span>Content</span>
+        </label>
+        <group ref="Content">
+          <label>Article Content</label>
+          <group class="row">
+            <input bind="cContentHeadline" class="required col-lg-6">
+              <label>Headline</label>
+            </input>
+            <input bind="cContentPath" class="required col-lg-6">
+              <label>Article URL</label>
+              <help>This forms the URL for the article which may be better optimised for SEO. Spaces are converted to hyphens and special characters are removed.</help>
+            </input>
+          </group>
+          <textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">
+            <label>Strapline</label>
+          </textarea>
+          <textarea bind="cContentBody" class="TextArea xhtml" rows="15" cols="70">
+            <label>Main Article</label>
+          </textarea>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-image"> </i>
+          <span class="space"> </span>
+          <span>Images</span>
+        </label>
+        <group>
+          <input bind="cContentFullSizePicture" class="short pickImage">
+            <label>Main News Article Image</label>
+            <help class="inline">
+              <p>
+                This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+              </p>
+              <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+              <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+            </help>
+          </input>
+          
+          <input bind="cContentThumbnail" class="short pickImage">
+            <label>Alternative Thumbnail</label>
+            <help>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</help>
+          </input>
+          <input bind="cContentDisplay" class="short pickImage">
+            <label>Alternative Picture</label>
+            <help>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</help>
+          </input>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-paperclip"> </i>
+          <span class="space"> </span>
+          <span>Related Content</span>
+        </label>
+        <group>
+          <relatedContent search="find add" type="FAQ" relationType="" direction="1way" class="form-section-wrapper">
+            <label>FAQ's</label>
+          </relatedContent>
+          <relatedContent bind="Related-Author" search="pick add" type="Contact" relationType="Author" direction="2way" maxRelationNo="1" class="form-section-wrapper">
+            <label>Related Author</label>
+          </relatedContent>
+          <relatedContent search="find add" type="Tag" relationType="Tag" direction="2way" class="form-section-wrapper">
+            <label>Related Tags</label>
+          </relatedContent>
+          <relatedContent search="find add" type="NewsArticle" relationType="NewsArticle" direction="2way" class="form-section-wrapper">
+            <label>Related Articles</label>
+          </relatedContent>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-cog"> </i>
+          <span class="space"> </span>
+          <span>Advanced Settings</span>
+        </label>
+        <group ref="Settings" class="leftSettings form-2-col">
+          <input bind="nContentKey" class="hidden">
+            <label>ContentId</label>
+          </input>
+          <input bind="dPublishDate" class="calendar short">
+            <label>Publish Date</label>
+          </input>
+          <input bind="dExpireDate" class="calendar short">
+            <label>Expire Date</label>
+          </input>
+          <select1 bind="nStatus" appearance="full" class="vshort inline-items">
+            <label>Status</label>
+            <item>
+              <label>Live</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>Hidden</label>
+              <value>0</value>
+            </item>
+          </select1>
+          <input bind="cDescription" class="short">
+            <label>Change Notes</label>
+          </input>
+          <input bind="cMetaTitle" class="short">
+            <label>Meta Title</label>
+            <help>Google typically displays the first 50–60 characters of a title tag. If you keep your titles under 60 characters, our research suggests that you can expect about 90% of your titles to display properly. There's no exact character limit, because characters can vary in width and Google's display titles max out (currently) at 600 pixels.</help>
+          </input>
+          <input bind="cMetaDescripton" class="short">
+            <label>Meta Description</label>
+            <help>Meta descriptions can be any length, but Google generally truncates snippets to ~155–160 characters. It's best to keep meta descriptions long enough that they're sufficiently descriptive, so we recommend descriptions between 50–160 characters. Keep in mind that the "optimal" length will vary depending on the situation, and your primary goal should be to provide value and drive clicks.</help>
+          </input>
+        </group>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save News Article</label>
+    </submit>
+  </group>
+</Content>

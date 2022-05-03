@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  
+  <ModuleTypes>
+	  <ModuleGroup name="Social Networking" icon="fab fa-twitter">
+		  <Module type="SocialLinks" formPath="sociallinks/sociallinks" name="Social Links"></Module>
+	
+	  </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

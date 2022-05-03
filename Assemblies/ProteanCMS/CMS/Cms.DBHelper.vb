@@ -432,6 +432,7 @@ Partial Public Class Cms
             Copy = 1
             Locate = 2
             LocateWithPrimary = 3
+            CopyForce = 4
         End Enum
 
         ' Note - base 2 so they can be combined
@@ -2831,7 +2832,7 @@ restart:
 
                                 ' If this was a pending item, supercede the copy in the version table (ie superceded anything that's pending)
                                 Dim cPreviousStatus As String = ""
-                                If NodeState(oInstance, "currentStatus", , , , , , cPreviousStatus) = XmlNodeState.HasContents Then
+                                If NodeState(oInstance, "currentStatus", "", "", Nothing, Nothing, "", cPreviousStatus) = XmlNodeState.HasContents Then
                                     If cPreviousStatus = "3" Or cPreviousStatus = "4" Then
                                         ' Update everything with a status of Pending to be DraftSuperceded
                                         ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.Superceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & nKey & " AND (a.nStatus = " & Status.Pending & " or a.nStatus = " & Status.InProgress & ")")
@@ -3400,11 +3401,13 @@ restart:
                     ' If nothing was found and checkRelatedIfOrphan is flagged up, then find related (parent) content and search that as well
                     If Not foundLocation And checkRelatedIfOrphan Then
 
-                        Dim relations As XmlElement = getRelationsByContentId(contentId, , RelationType.Parent)
+                        Dim relations As XmlElement = getRelationsByContentId(contentId, , RelationType.Child)
                         For Each relation As XmlElement In relations.SelectNodes("//Relation")
                             foundLocation = checkContentLocationsInCurrentMenu(relation.GetAttribute("relatedContentId"))
                             If foundLocation Then Exit For
                         Next
+
+
 
                     End If
 
@@ -4237,55 +4240,30 @@ restart:
                         'Debug.WriteLine(oDr("bPrimary"))
                         If mode = CopyContentType.Copy And oDr("bPrimary") = True Then
                             bNewItem = True
-                            ''if we are copying we need an instance
-                            'Dim oInstanceXML As New XmlDocument
-                            'oInstanceXML.AppendChild(oInstanceXML.CreateElement("instance"))
-                            'oInstanceXML.DocumentElement.InnerXml = getObjectInstance(objectTypes.Content, oDr("nContentId"))
-                            'Dim oContentElmt As XmlElement
-                            ''now we need to remove ids, audits etc
-                            'For Each oContentElmt In oInstanceXML.DocumentElement.FirstChild.SelectNodes("nContentKey | nContentPrimaryId | nAuditId | nAuditKey")
-                            '    oContentElmt.InnerText = ""
-                            'Next
-                            ''save it as a new piece of content and get the id
-                            'nContentId = setObjectInstance(objectTypes.Content, oInstanceXML.DocumentElement)
-                            ''get any items related to the origional that are not orphan (have no page) or are related to other items.
-                            '' - copy relations to the new object.
-                            'sSql = "Select nContentChildId, nDisplayOrder, cRelationtype," & _
-                            '"(Select COUNT(nContentId) from tblContentLocation l where l.nContentId = r.nContentChildId) As nLocations, " & _
-                            '"(Select COUNT(nContentParentId) from tblContentRelation r2 where r2.nContentChildId = r.nContentChildId) As nRelations, " & _
-                            '"(Select COUNT(nContentParentId) from tblContentRelation r3 where r3.nContentParentId = r.nContentChildId And r3.nContentChildId = r.nContentParentId) As twoWay " & _
-                            '"from tblContentRelation r where nContentParentId = " & oDr("nContentId")
-                            'Dim oDS2 As DataSet
-                            'Dim oDr2 As DataRow
-                            'oDS2 = GetDataSet(sSql, "Relations", "Relations")
-                            'For Each oDr2 In oDS.Tables("Relations").Rows
-                            '    If oDr2("nLocations") = 0 And oDr2("nRelations") = 1 Then
-                            '        'we copy and releate
-                            '    Else
-                            '        'we simply relate
-                            '        insertContentRelation(nContentId, oDr2("nContentId"), oDr2("twoWay"), oDr2("cRelationType"), True)
-                            '    End If
-                            'Next
-                            ''get orphan items that are only related to the origional 
-                            '' - copy the items and related them to our object
-
-                            nContentId = createContentCopy(oDr("nContentId"))
+                            nContentId = createContentCopy(oDr("nContentId"), Nothing, False)
                             positionReMap(0, copyCount) = oDr("nContentId")
                             positionReMap(1, copyCount) = nContentId
                             copyCount = copyCount + 1
                             ReDim Preserve positionReMap(1, copyCount)
-
+                        ElseIf mode = CopyContentType.CopyForce And oDr("bPrimary") = True Then
+                            bNewItem = True
+                            nContentId = createContentCopy(oDr("nContentId"), Nothing, True)
+                            positionReMap(0, copyCount) = oDr("nContentId")
+                            positionReMap(1, copyCount) = nContentId
+                            copyCount = copyCount + 1
+                            ReDim Preserve positionReMap(1, copyCount)
                         ElseIf mode = CopyContentType.Locate Then
-                            'just get the id
-                            nContentId = oDr("nContentId") 'just need to do a locations
-                        Else
-                            'locate with  new primaries
-                            nContentId = oDr("nContentId")
+                                'just get the id
+                                nContentId = oDr("nContentId") 'just need to do a locations
+                            Else
+                                'locate with  new primaries
+                                nContentId = oDr("nContentId")
                             If oDr("bPrimary") = True Then bNewItem = True
                         End If
                         'now set a location
                         setContentLocation(nTargetPageId, nContentId, bNewItem, IIf(IsDBNull(oDr("bCascade")), False, oDr("bCascade")), False, IIf(IsDBNull(oDr("cPosition")), "", oDr("cPosition")), True)
-                        'usgin a different one since this isnt working for some reason
+                        'using a different one since this isnt working for some reason
+
                         'setContentLocation2(nTargetPageId, nContentId, bNewItem, False)
 
 
@@ -4342,7 +4320,7 @@ restart:
             End Try
         End Sub
 
-        Public Function createContentCopy(ByVal contentId As Long) As Long
+        Public Function createContentCopy(ByVal contentId As Long, Optional copied As List(Of Long) = Nothing, Optional ForceCopy As Boolean = False) As Long
             PerfMon.Log("DBHelper", "insertContent")
             Dim cProcessInfo As String = ""
             Dim nContentId As Long
@@ -4350,6 +4328,11 @@ restart:
             Dim oDS2 As DataSet
             Dim oDr2 As DataRow
             Try
+
+                If copied Is Nothing Then
+                    copied = New List(Of Long)
+                End If
+                copied.Add(contentId)
 
                 Dim oInstanceXML As New XmlDocument
                 oInstanceXML.AppendChild(oInstanceXML.CreateElement("instance"))
@@ -4361,7 +4344,9 @@ restart:
                 Next
                 'save it as a new piece of content and get the id
                 nContentId = setObjectInstance(objectTypes.Content, oInstanceXML.DocumentElement)
-                'get any items related to the origional that are not orphan (have no page) or are related to other items.
+                'get any child items related to the origional parent that are
+                ''not orphan (have no page) or
+                ' are related to other items.
                 ' - copy relations to the new object.
                 sSql = "select nContentChildId, nDisplayOrder, cRelationtype," &
                 "(select COUNT(nContentId) from tblContentLocation l where l.nContentId = r.nContentChildId) as nLocations, " &
@@ -4371,13 +4356,20 @@ restart:
 
                 oDS2 = GetDataSet(sSql, "Relations", "Relations")
                 For Each oDr2 In oDS2.Tables("Relations").Rows
-                    If oDr2("nLocations") = 0 And oDr2("nRelations") = 1 Then
-                        'we copy and releate because it is orphan and only related to our item
-                        Dim newRelatedContentId As String = createContentCopy(oDr2("nContentChildId"))
-                        insertContentRelation(nContentId, newRelatedContentId, oDr2("twoWay"), oDr2("cRelationType"), True)
+                    If ForceCopy Then
+                        If Not copied.Contains(oDr2("nContentChildId")) Then
+                            Dim newRelatedContentId As String = createContentCopy(oDr2("nContentChildId"), copied)
+                            insertContentRelation(nContentId, newRelatedContentId, oDr2("twoWay"), oDr2("cRelationType"), True)
+                        End If
                     Else
-                        'we simply relate because it is either a page or has multiple relations
-                        insertContentRelation(nContentId, oDr2("nContentChildId"), oDr2("twoWay"), oDr2("cRelationType"), True)
+                        If oDr2("nLocations") = 0 And oDr2("nRelations") = 1 Then
+                            'we copy and releate because it is orphan and only related to our item
+                            Dim newRelatedContentId As String = createContentCopy(oDr2("nContentChildId"), copied)
+                            insertContentRelation(nContentId, newRelatedContentId, oDr2("twoWay"), oDr2("cRelationType"), True)
+                        Else
+                            'we simply relate because it is either a page or has multiple relations
+                            insertContentRelation(nContentId, oDr2("nContentChildId"), oDr2("twoWay"), oDr2("cRelationType"), True)
+                        End If
                     End If
                 Next
                 oContentElmt = Nothing
@@ -5552,6 +5544,10 @@ restart:
                     'now we want to get the admin permissions for this page
 
 
+                End If
+
+                If root.SelectSingleNode("cContactTelCountryCode") Is Nothing Then
+                    root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"))
                 End If
 
                 Return root
@@ -8901,10 +8897,13 @@ restart:
                         ' It appears to force a 2way relationship if this is an orphan content
                         '  Problem is if the parent is also an orphan, then this will recurse infinitely
                         '  hence we pass back the bHaltRecursion parameter.
-                        Dim nIsOrphan As Long = GetDataValue("SELECT nStructId  FROM tblContentLocation WHERE nContentId = " & nChilds(nIx), , , 0)
-                        If nIsOrphan = 0 And Not b2Way And Not bHaltRecursion Then
-                            insertContentRelation(nChilds(nIx), nParentID, , , True)
-                        End If
+
+                        'TS 16/03/22 commented this out, forces 2 way releationships I don't understand why this is nessesary or was added either.
+
+                        'Dim nIsOrphan As Long = GetDataValue("SELECT nStructId  FROM tblContentLocation WHERE nContentId = " & nChilds(nIx), , , 0)
+                        'If nIsOrphan = 0 And Not b2Way And Not bHaltRecursion Then
+                        ' insertContentRelation(nChilds(nIx), nParentID, , , True)
+                        'End If
 
 
                         nIDs &= GetIdInsertSql(cSQl) & ","
@@ -10093,8 +10092,8 @@ restart:
 
                 returnCode = MyBase.GetDataValue(cSql, , , 0)
                 If UseNow = False Then
-                    If myWeb.mnUserId > 0 Then
-                        Dim nKey As Integer = MyBase.GetDataValue(
+                    'If myWeb.mnUserId > 0 Then
+                    Dim nKey As Integer = MyBase.GetDataValue(
                                            " SELECT tblCodes.nCodeKey" &
                                            " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" &
                                            " WHERE (tblCodes.cCode = '" & returnCode & "')" &
@@ -10103,16 +10102,17 @@ restart:
                                            " AND (tblAudit.dExpireDate >= " & cCurDate & " OR tblAudit.dExpireDate IS NULL)" &
                                            " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", , , 0)
 
-                        MyBase.ExeProcessSql("UPDATE tblCodes SET nIssuedDirId = " & myWeb.mnUserId & ", dIssuedDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    'fix so that the cartitemkey is linked with tblCodes.nUseId
+                    MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseId & ", nIssuedDirId = " & myWeb.mnUserId & ", dIssuedDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
 
-                        If Not CodeXml Is Nothing Then
+                    If Not CodeXml Is Nothing Then
                             MyBase.ExeProcessSql("UPDATE tblCodes SET xUsageData = '" & SqlFmt(CodeXml.OuterXml) & "' WHERE nCodeKey = " & nKey)
                         End If
 
                         Return returnCode
-                    Else
-                        Return ""
-                    End If
+                    'Else
+                    'Return ""
+                    'If
                 Else
                     If returnCode <> "" Then
                         UseCode(returnCode, nUseId)
@@ -10144,6 +10144,7 @@ restart:
                                     " AND (tblAudit.dExpireDate >= " & cCurDate & " OR tblAudit.dExpireDate IS NULL)" &
                                     " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", , , 0)
                 If nKey > 0 Then
+
                     MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
                     Return True
                 Else
@@ -10168,7 +10169,26 @@ restart:
                                     " AND (tblAudit.dExpireDate >= " & cCurDate & " OR tblAudit.dExpireDate IS NULL)" &
                                     " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", , , 0)
                 If nKey > 0 Then
-                    MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", nOrderId = " & nOrderId & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    'MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", nOrderId = " & nOrderId & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    'fix where the nOrderId was there previously but the field is not part of the tblCodes table
+                    MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    Return True
+                Else
+                    Return False
+                End If
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UseCode", ex, ""))
+                Return False
+            End Try
+        End Function
+        Public Function RedeemCode(ByVal cCode As String) As Boolean
+            Try
+                'recheck the code
+                Dim cCurDate As String = Protean.Tools.Database.SqlDate(Now, True)
+                Dim nKey As Integer = MyBase.GetDataValue(" SELECT tblCodes.nCodeKey FROM tblCodes WHERE (tblCodes.cCode = '" & cCode & "')")
+                If nKey > 0 Then
+
+                    MyBase.ExeProcessSql("UPDATE tblCodes SET dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
                     Return True
                 Else
                     Return False
@@ -10896,7 +10916,9 @@ ReturnMe:
 
                 For Each folder As String In foldersToCheck
 
-                    dir = New DirectoryInfo(myWeb.moCtx.Server.MapPath(folder) & "/xforms/Reports")
+                    Dim reportsFolder As String = "/xforms/Reports"
+                    If bs5 Then reportsFolder = "/admin/xforms/reports"
+                    dir = New DirectoryInfo(myWeb.moCtx.Server.MapPath(folder) & reportsFolder)
                     If dir.Exists Then
                         files = dir.GetFiles("*.xml")
 
