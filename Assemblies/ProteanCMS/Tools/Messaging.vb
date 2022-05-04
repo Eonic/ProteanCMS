@@ -606,7 +606,7 @@ Public Class Messaging
                     ' the xsl:output element to be conditional and do things like output text and omit docTypes
                     ' so a little manual tidy up is needed
                     messagePlainText = Regex.Replace(messagePlainText, "<!DOCTYPE[^>]+?>", "", RegexOptions.IgnoreCase)
-                    oMailn.Body = messagePlainText
+                    oMailn.Body = messagePlainText.Replace("%0D%0A", Environment.NewLine)
                     oMailn.Headers.Set("Content-Type", "text/plain")
                     'moCtx.Response.ContentType = "text/plain"
 
@@ -616,7 +616,7 @@ Public Class Messaging
                     End If
 
                 Else
-                    oMailn.Body = messagePlainText
+                    oMailn.Body = messagePlainText.Replace("%0D%0A", Environment.NewLine)
                     Dim htmlView As AlternateView = AlternateView.CreateAlternateViewFromString(messageHtml, New System.Net.Mime.ContentType("text/html; charset=UTF-8"))
                     oMailn.AlternateViews.Add(htmlView)
 

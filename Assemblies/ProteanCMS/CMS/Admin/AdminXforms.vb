@@ -8969,15 +8969,18 @@ Partial Public Class Cms
                                                 ' Add the checkbox
                                                 _form.addOption(oChoices, menuName, menuId)
                                             Else
+                                                ' If oParentNode IsNot Nothing Then
                                                 If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
-                                                    Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
-                                                        menuName = oParentNode.GetAttribute("name") & " / " & menuName
-                                                        oParentNode = oParentNode.ParentNode
-                                                    Loop
-                                                End If
+                                                        Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
+                                                            menuName = oParentNode.GetAttribute("name") & " / " & menuName
+                                                            oParentNode = oParentNode.ParentNode
+                                                            If oParentNode Is Nothing Then Exit Do
+                                                        Loop
+                                                    End If
+                                                ' End If
                                             End If
-                                            ' Add the checkbox
-                                            _form.addOption(_selectItem, menuName, menuId)
+                                                ' Add the checkbox
+                                                _form.addOption(_selectItem, menuName, menuId)
                                         Else
 
                                             If menuItem.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
