@@ -2011,7 +2011,11 @@ Partial Public Class Cms
 
                     'Lets load in the available common templates from XML file
                     Try
-                        oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
+                        If goConfig("cssFramework") = "bs5" Then
+                            oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ptn/core") & "/layouts.xml")
+                        Else
+                            oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
+                        End If
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                     Catch ex As Exception
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/" & gcProjectPath & "ewcommon/xsl/pageLayouts/LayoutManifest.xml could not be found. - " & ex.Message)
@@ -2039,7 +2043,7 @@ Partial Public Class Cms
                     Next
 
                     Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-                    If oConfig("cart") = "on" Then
+                    If oConfig("cart") = "on" And goConfig("cssFramework") <> "bs5" Then
                         Try
                             oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/cart") & "/LayoutManifest.xml")
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
@@ -2068,7 +2072,7 @@ Partial Public Class Cms
                         Next
                     End If
 
-                    If oConfig("membership") = "on" Then
+                    If oConfig("membership") = "on" And goConfig("cssFramework") <> "bs5" Then
                         Try
                             oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/membership") & "/LayoutManifest.xml")
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
@@ -2455,10 +2459,6 @@ Partial Public Class Cms
                             EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
                         End If
                     Else
-                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
-
-                        '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
-
                         EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
 
                         If myWeb.moConfig("ClientCommonFolder") <> "" Then
@@ -8969,15 +8969,18 @@ Partial Public Class Cms
                                                 ' Add the checkbox
                                                 _form.addOption(oChoices, menuName, menuId)
                                             Else
+                                                ' If oParentNode IsNot Nothing Then
                                                 If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
-                                                    Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
-                                                        menuName = oParentNode.GetAttribute("name") & " / " & menuName
-                                                        oParentNode = oParentNode.ParentNode
-                                                    Loop
-                                                End If
+                                                        Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
+                                                            menuName = oParentNode.GetAttribute("name") & " / " & menuName
+                                                            oParentNode = oParentNode.ParentNode
+                                                            If oParentNode Is Nothing Then Exit Do
+                                                        Loop
+                                                    End If
+                                                ' End If
                                             End If
-                                            ' Add the checkbox
-                                            _form.addOption(_selectItem, menuName, menuId)
+                                                ' Add the checkbox
+                                                _form.addOption(_selectItem, menuName, menuId)
                                         Else
 
                                             If menuItem.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then

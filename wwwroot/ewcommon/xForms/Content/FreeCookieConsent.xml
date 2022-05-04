@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>FreeCookieConsent</cContentSchemaName>
+				<cContentXmlBrief>
+                  <Content>
+					<ConsentType>express</ConsentType>
+                    <SiteName></SiteName>
+                    <BannerStyle>simple</BannerStyle>
+                    <ColourPalette>light</ColourPalette>
+			        <DefaultLanguage>en</DefaultLanguage>
+			        <PageLoadConsentLevels>strictly-nessesary</PageLoadConsentLevels>
+					<PrivacyPolicyUrl></PrivacyPolicyUrl>
+	              </Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+                <bCascade>true</bCascade>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
+    <!--CookieBinds-->
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+        <bind id="ConsentType" nodeset="ConsentType" required="false()" type="string"/>
+        <bind id="SiteName" nodeset="SiteName" required="false()" type="string"/>
+        <bind id="BannerStyle" nodeset="BannerStyle" required="false()" type="string"/>
+        <bind id="ColourPalette" nodeset="ColourPalette" required="false()" type="string"/>
+        <bind id="DefaultLanguage" nodeset="DefaultLanguage" required="false()" type="string"/>
+        <bind id="PageLoadConsentLevels" nodeset="PageLoadConsentLevels" required="false()" type="string"/>
+		<bind id="PrivacyPolicyUrl" nodeset="PrivacyPolicyUrl" required="false()" type="string"/>
+    </bind>
+    <!--CookieBindsEnd-->
+		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
+		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
+		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
+		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
+		<!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
+	</model>
+	<group ref="EditContent" class="2col">
+		<label>Edit Cookie Policy</label>
+		<group>
+      <group>
+			  <input bind="nContentKey" class="hidden">
+				  <label>ContentId</label>
+			  </input>
+			  <label>Settings</label>
+			  <input bind="cContentName" class="required short">
+				  <label>Text Location</label>
+			  </input>
+			  <input bind="dPublishDate" class="calendar short">
+				  <label>Publish Date</label>
+			  </input>
+			  <input bind="dExpireDate" class="calendar short">
+				  <label>Expire Date</label>
+			  </input>
+			  <select1 bind="nStatus" appearance="full" class="required vshort">
+				  <label>Status</label>
+				  <item>
+					  <label>Live</label>
+					  <value>1</value>
+				  </item>
+				  <item>
+					  <label>Hidden</label>
+					  <value>0</value>
+				  </item>
+			  </select1>
+			  <select bind="bCascade" appearance="full" class="">
+				  <label>Cascade to Child Pages</label>
+				  <item>
+					  <label></label>
+					  <value>true</value>
+				  </item>
+			  </select>
+			  <input bind="cDescription" class="short">
+				  <label>Change Notes</label>
+			  </input>
+      </group>
+		</group>
+		<group>
+      <group>
+        <label>Enter Policy Settings</label>
+        <!--textarea bind="cContentBody" rows="10" cols="100">
+			  </textarea-->
+        <select1 bind="ConsentType" appearance="full" class="">
+          <label>Consent Type</label>
+          <item>
+            <label>ePrivacy Directive - Tagged JavaScript scripts will load automatically.</label>
+            <value>implied</value>
+          </item>
+          <item>
+            <label>GDPR + ePrivacy Directive - Tagged JavaScript scripts will load after the user clicks the "I agree" button.</label>
+            <value>express</value>
+          </item>
+   
+        </select1>
+		  <input bind="SiteName" class="short">
+			  <label>SiteName</label>
+		  </input>
+        <select1 bind="BannerStyle" appearance="full" class="">
+          <label>Banner Style</label>
+          <item>
+            <label>Simple Dialog</label>
+            <value>simple</value>
+          </item>
+          <item>
+            <label>Headline Dialog</label>
+            <value>headline</value>
+          </item>
+			<item>
+				<label>Interstitial dialog</label>
+				<value>interstitial</value>
+			</item>
+			<item>
+				<label>Interstitial standalone</label>
+				<value>standalone</value>
+			</item>
+        </select1>
+        <select1 bind="ColourPalette" appearance="full" class="">
+          <label>ColourPalette</label>
+          <item>
+            <label>Dark</label>
+            <value>dark</value>
+          </item>
+          <item>
+            <label>Light</label>
+            <value>light</value>
+          </item>
+        </select1>
+        <select1 bind="DefaultLanguage" appearance="full" class="">
+          <label>DefaultLanguage</label>
+          <item>
+            <label>English</label>
+            <value>en</value>
+          </item>
+        </select1>
+		  <input bind="PrivacyPolicyUrl" class="short">
+			  <label>Policy Link</label>
+			  <hint>if applicable, enter the link to your privacy policy in here - this is as soon as cookieAnalytics is set to false.</hint>
+		  </input>
+        <select1 bind="PageLoadConsentLevels" appearance="full" class="">
+          <label>PageLoad Consent Levels</label>
+          <item>
+            <label>Strictly Necessary</label>
+            <value>strictly-nessesary</value>
+          </item>
+          <item>
+            <label>Functionality</label>
+            <value>functionality</value>
+          </item>
+			<item>
+				<label>Targeting &amp; Advertising</label>
+				<value>false</value>
+			</item>
+			<item>
+				<label>Tracking &amp; Performance</label>
+				<value>false</value>
+			</item>
+        </select1>
+      </group>
+    
+			<submit submission="" ref="ewSubmit" class="principle">
+				<label>Save Cookie Consent</label>
+			</submit>
+   </group>
+		
+	</group>
+</Content>

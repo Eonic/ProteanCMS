@@ -10092,8 +10092,8 @@ restart:
 
                 returnCode = MyBase.GetDataValue(cSql, , , 0)
                 If UseNow = False Then
-                    If myWeb.mnUserId > 0 Then
-                        Dim nKey As Integer = MyBase.GetDataValue(
+                    'If myWeb.mnUserId > 0 Then
+                    Dim nKey As Integer = MyBase.GetDataValue(
                                            " SELECT tblCodes.nCodeKey" &
                                            " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" &
                                            " WHERE (tblCodes.cCode = '" & returnCode & "')" &
@@ -10102,16 +10102,17 @@ restart:
                                            " AND (tblAudit.dExpireDate >= " & cCurDate & " OR tblAudit.dExpireDate IS NULL)" &
                                            " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", , , 0)
 
-                        MyBase.ExeProcessSql("UPDATE tblCodes SET nIssuedDirId = " & myWeb.mnUserId & ", dIssuedDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    'fix so that the cartitemkey is linked with tblCodes.nUseId
+                    MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseId & ", nIssuedDirId = " & myWeb.mnUserId & ", dIssuedDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
 
-                        If Not CodeXml Is Nothing Then
+                    If Not CodeXml Is Nothing Then
                             MyBase.ExeProcessSql("UPDATE tblCodes SET xUsageData = '" & SqlFmt(CodeXml.OuterXml) & "' WHERE nCodeKey = " & nKey)
                         End If
 
                         Return returnCode
-                    Else
-                        Return ""
-                    End If
+                    'Else
+                    'Return ""
+                    'If
                 Else
                     If returnCode <> "" Then
                         UseCode(returnCode, nUseId)
@@ -10143,6 +10144,7 @@ restart:
                                     " AND (tblAudit.dExpireDate >= " & cCurDate & " OR tblAudit.dExpireDate IS NULL)" &
                                     " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", , , 0)
                 If nKey > 0 Then
+
                     MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
                     Return True
                 Else
@@ -10167,7 +10169,26 @@ restart:
                                     " AND (tblAudit.dExpireDate >= " & cCurDate & " OR tblAudit.dExpireDate IS NULL)" &
                                     " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", , , 0)
                 If nKey > 0 Then
-                    MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", nOrderId = " & nOrderId & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    'MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", nOrderId = " & nOrderId & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    'fix where the nOrderId was there previously but the field is not part of the tblCodes table
+                    MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
+                    Return True
+                Else
+                    Return False
+                End If
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UseCode", ex, ""))
+                Return False
+            End Try
+        End Function
+        Public Function RedeemCode(ByVal cCode As String) As Boolean
+            Try
+                'recheck the code
+                Dim cCurDate As String = Protean.Tools.Database.SqlDate(Now, True)
+                Dim nKey As Integer = MyBase.GetDataValue(" SELECT tblCodes.nCodeKey FROM tblCodes WHERE (tblCodes.cCode = '" & cCode & "')")
+                If nKey > 0 Then
+
+                    MyBase.ExeProcessSql("UPDATE tblCodes SET dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
                     Return True
                 Else
                     Return False
