@@ -59,9 +59,7 @@
 				</label>
 
 				<group>
-					<input bind="cModuleTitle" class="long">
-						<label>Title or Name</label>
-					</input>
+				
 
 					 <group>
       <group>

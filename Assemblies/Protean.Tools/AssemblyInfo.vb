@@ -1,4 +1,4 @@
-﻿Imports System.Resources
+Imports System.Resources
 
 Imports System
 Imports System.Reflection
@@ -14,10 +14,10 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("ProteanCommon Tools")>
 <Assembly: AssemblyCompany("Eonic Digital LLP")>
 <Assembly: AssemblyProduct("Protean.Tools")>
-<Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2021")>
-<Assembly: AssemblyTrademark("Eonic")> 
+<Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  20212")>
+<Assembly: AssemblyTrademark("Eonic")>
 
-<Assembly: ComVisible(False)> 
+<Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
 <Assembly: Guid("406511f4-dc78-4c5f-8416-92eb1d64df15")>
@@ -33,9 +33,7 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("6.0.52.54")>
-<Assembly: AssemblyFileVersion("6.0.52.51")>
+<Assembly: AssemblyVersion("6.0.54.0")>
+<Assembly: AssemblyFileVersion("6.0.54.0")>
 
 '<Assembly: System.Security.AllowPartiallyTrustedCallersAttribute()> 
-
-

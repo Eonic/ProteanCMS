@@ -188,7 +188,7 @@
           </item>
           <hint>don't want a discreet toolbar? this makes the whole message into a 100% height</hint>
         </select1>
-        <input bind="cookiePolicyLink " class="short">
+        <input bind="cookiePolicyLink" class="short">
           <label>Policy Link</label>
           <hint>if applicable, enter the link to your privacy policy in here - this is as soon as cookieAnalytics is set to false.</hint>
         </input>
@@ -241,7 +241,7 @@
           <hint>edit the link for the 'What are Cookies' link.</hint>
         </input>
         <input bind="cookiePolicyPage" class="short">
-          <label>cookiePolicyPage</label>
+          <label>Cookie Policy Page</label>
           <hint>set this to true to display the message you want to appear on your privacy or cookie policy page.</hint>
         </input>
         <input bind="cookiePolicyPageMessage" class="short">
@@ -284,7 +284,7 @@
           </item>
         </select1>
 
-        <input bind="cookieDomain " class="short">
+        <input bind="cookieDomain" class="short">
           <label>cookieDomain</label>
           <hint>empty by default, add your domain name in here without www. or https:// or http:// to remove Google Analytics cookies on decline.</hint>
         </input>
