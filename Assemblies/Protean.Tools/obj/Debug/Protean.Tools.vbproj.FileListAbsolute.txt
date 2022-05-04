@@ -590,7 +590,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.x
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\MySql.Data.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Fonet.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.AssemblyReference.cache
@@ -599,3 +598,10 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbp
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Management.Sdk.Sfc.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Smo.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SmoExtended.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ServiceBrokerEnum.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.RegSvrEnum.dll
