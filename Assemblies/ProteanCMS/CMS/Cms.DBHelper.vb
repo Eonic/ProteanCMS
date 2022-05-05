@@ -3334,6 +3334,30 @@ restart:
 
         End Function
 
+
+        Public Function setObjectFRef(ByVal objectType As objectTypes, ByVal id As Long, ByVal cForeignRef As String) As Long
+            Dim cProcName As String = "setObjectFRef (ObjectTypes,String,[String])"
+            PerfMon.Log("DBHelper", cProcName)
+            Dim nId As String = 0
+            Dim cProcessInfo As String = ""
+            Try
+
+                Dim cTableName As String = getTable(objectType)
+                Dim cTableKey As String = getKey(objectType)
+                Dim cTableFRef As String = getFRef(objectType)
+
+                'SQL to save the fref value
+
+
+                Return nId
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, cProcName, ex, cProcessInfo))
+
+            End Try
+
+        End Function
+
         Public Function getAuditId(Optional ByVal nStatus As Integer = 1, Optional ByVal nDirId As Long = 0, Optional ByVal cDescription As String = "", Optional ByVal dPublishDate As Object = Nothing, Optional ByVal dExpireDate As Object = Nothing, Optional ByVal dInsertDate As Object = Nothing, Optional ByVal dUpdateDate As Object = Nothing) As Integer
             PerfMon.Log("DBHelper", "getAuditId")
             Dim sSql As String
