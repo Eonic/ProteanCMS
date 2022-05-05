@@ -4141,7 +4141,7 @@
     <xsl:param name="linkType"/>
     <div class="morelink">
       <span>
-        <a href="{$link}" title="{$altText}" class="btn btn-primary" itemprop="mainEntityOfPage">
+        <a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
           <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
             <xsl:attribute name="rel">external</xsl:attribute>
             <xsl:attribute name="class">extLink</xsl:attribute>
