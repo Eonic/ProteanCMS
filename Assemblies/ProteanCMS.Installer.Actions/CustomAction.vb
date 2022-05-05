@@ -497,7 +497,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", MagickNETAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
