@@ -6043,6 +6043,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+	  <xsl:variable name="cropSetting">
+		  <xsl:choose>
+			  <xsl:when test="@crop='true'">
+				  <xsl:text>true</xsl:text>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:text>false</xsl:text>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -6127,6 +6137,7 @@
           <xsl:otherwise>
             <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
               <xsl:with-param name="sortBy" select="@sortBy"/>
+				<xsl:with-param name="crop" select="$cropSetting"/>
             </xsl:apply-templates>
           </xsl:otherwise>
         </xsl:choose>
@@ -6170,11 +6181,21 @@
   <!-- Event Brief -->
   <xsl:template match="Content[@type='Event']" mode="displayBrief">
     <xsl:param name="sortBy"/>
+	  <xsl:param name="crop"/>
     <!-- articleBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    
+	  <xsl:variable name="cropSetting">
+		  <xsl:choose>
+			  <xsl:when test="$crop='true'">
+				  <xsl:value-of select="true()"/>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="false()"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
     <div class="listItem list-group-item vevent">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem list-group-item vevent'"/>
@@ -6207,7 +6228,9 @@
       </xsl:if>    
         <xsl:if test="Images/img/@src!=''">
           <a href="{$parentURL}" title="Read More - {Headline/node()}">
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
+			  <xsl:apply-templates select="." mode="displayThumbnail">
+				  <xsl:with-param name="crop" select="$cropSetting" />
+			  </xsl:apply-templates>
           </a>
         </xsl:if>
         <div class="media-body">

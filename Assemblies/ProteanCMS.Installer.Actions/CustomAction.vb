@@ -10,7 +10,7 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.54.0"
+    Public Shared ewAssemblyVersion As String = "6.0.55.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -39,6 +39,7 @@ Public Class CustomActions
 
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.3.3.11"
+    Public Shared SystemBuffersVersion As String = "4.0.3.0"
 
     <CustomAction()> _
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
@@ -227,6 +228,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-AnyCPU, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
 
+                    UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
                     ' UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     ' UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
@@ -266,7 +268,7 @@ Public Class CustomActions
                                 "<translators>" &
                                 "<add name=""NullTranslator"" type=""BundleTransformer.Core.Translators.NullTranslator, BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D"" enabled=""false"" />" &
                                 "<add name=""LessTranslator"" type=""BundleTransformer.Less.Translators.LessTranslator, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D"" />" &
-                                "<add name=""SassAndScssTranslator"" type=""BundleTransformer.SassAndScss.Translators.SassAndScssTranslator, BundleTransformer.SassAndScsss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D""/>" &
+                                "<add name=""SassAndScssTranslator"" type=""BundleTransformer.SassAndScss.Translators.SassAndScssTranslator, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D""/>" &
                                 "</translators>" &
                                 "<postProcessors>" &
                                     "<add name=""UrlRewritingCssPostProcessor"" type=""BundleTransformer.Core.PostProcessors.UrlRewritingCssPostProcessor, BundleTransformer.Core, Version=" & bundleAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D"" useInDebugMode=""false""/>" &
@@ -494,7 +496,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Text.Encoding.CodePages", "b03f5f7f11d50a3a", SystemTextEncodingCodePagesAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion,)
+            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
