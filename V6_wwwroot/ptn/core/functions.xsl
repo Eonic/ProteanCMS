@@ -4179,12 +4179,12 @@
 				<span>
 					<xsl:choose>
 						<xsl:when test="$linkObject='modal'">
-							<button type="button" data-bs-toggle="modal" data-bs-target="{$link}" class="btn btn-primary {$class}">
+							<button type="button" data-bs-toggle="modal" data-bs-target="{$link}" class="btn btn-custom {$class}">
 								<xsl:value-of select="@linkText"/>
 							</button>
 						</xsl:when>
 						<xsl:otherwise>
-							<a title="{@linkText}" class="btn btn-primary {$class}">
+							<a title="{@linkText}" class="btn btn-custom {$class}">
 								<xsl:choose>
 									<xsl:when test="$numbertest = 'number'">
 										<xsl:variable name="pageId" select="@link"/>
@@ -4196,7 +4196,7 @@
 										<xsl:choose>
 											<xsl:when test="contains($link,'#')">
 												<xsl:attribute name="class">
-													<xsl:text>btn btn-primary scroll-to-anchor </xsl:text>
+													<xsl:text>btn btn-custom scroll-to-anchor </xsl:text>
 													<xsl:value-of select="class"/>
 												</xsl:attribute>
 												<xsl:attribute name="href">
