@@ -3351,7 +3351,7 @@ restart:
                 'SQL to save the fref value
                 Select Case objectType
                     Case objectTypes.Content
-                        sSql = "update " & cTableName & " set " & cTableFRef & " = " & cForeignRef & " where " & cTableKey & " = " & id
+                        sSql = "update " & cTableName & " set " & cTableFRef & " = '" & cForeignRef & "' where " & cTableKey & " = " & id
                 End Select
 
                 nRowAff = ExeProcessSql(sSql)
