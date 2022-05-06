@@ -1092,6 +1092,8 @@
               </xsl:otherwise>
             </xsl:choose>
             <xsl:text> module</xsl:text>
+			  <xsl:text> module-</xsl:text>
+		  <xsl:value-of select="@moduleType"/>
             <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
               stled differently to a title bar. -->
             <xsl:if test="@title=''">
