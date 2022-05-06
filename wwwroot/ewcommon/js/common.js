@@ -4,6 +4,9 @@
 var obj = null;
 var oQueryParams = {};
 
+// Simple .exists() function - $(selector).exists(); - return true or false
+jQuery.fn.exists = function () { return jQuery(this).length > 0; }
+
 /* MAIN PAGE READY METHOD or All site, All pages - Keep Smart! */
 $(document).ready(function () {
     oQueryParams = $.getURLParams();
@@ -406,8 +409,7 @@ function initialiseProductSKUs() {
 /*  ==  EXTEND JQUERY  ============================================================================  */
 /*  ===============================================================================================  */
 
-// Simple .exists() function - $(selector).exists(); - return true or false
-jQuery.fn.exists = function () { return jQuery(this).length > 0; }
+
 
 // EXTENTION TO GET ALL URL PARAMS IN AN OBJECT
 $.extend({

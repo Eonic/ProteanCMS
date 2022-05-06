@@ -5461,9 +5461,9 @@ Public Class Cms
 
                     oMenuItem.SetAttribute("url", sUrl)
 
-                    If oMenuItem.GetAttribute("id") = "609" Then
-                        mbIgnorePath = mbIgnorePath
-                    End If
+                    ' If oMenuItem.GetAttribute("id") = "609" Then
+                    ' mbIgnorePath = mbIgnorePath
+                    ' If
 
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then

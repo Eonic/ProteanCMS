@@ -21,7 +21,29 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="Page" mode="googleMapJS">
+
+	<xsl:template match="Content[@type='Module' and @moduleType='GoogleMapv3']" mode="contentJS">
+		<!-- Initialise any Google Maps -->
+		<xsl:variable name="apiKey">
+			<xsl:choose>
+				<xsl:when test="$GoogleAPIKey!=''">
+					<xsl:value-of select="$GoogleAPIKey"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
+		<script type="text/javascript">
+			<xsl:text>function initialiseGMaps(){</xsl:text>
+			<xsl:apply-templates select="." mode="initialiseGoogleMap"/>
+			<xsl:text>};</xsl:text>
+		</script>
+	</xsl:template>
+
+
+	<xsl:template match="Page" mode="googleMapJS">
     <!-- Initialise any Google Maps -->
     <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
       <xsl:variable name="apiKey">
