@@ -1947,7 +1947,7 @@ Public Class Cms
                     ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
                     ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                     If gbClone _
-                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
+                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
                         ' If the current page is a cloned page
                         oPageElmt.SetAttribute("clone", "true")
                     End If
@@ -5099,9 +5099,11 @@ Public Class Cms
                         For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName & "[@id='" & nTempRootId & "']/descendant-or-self::" & cMenuItemNodeName & "[@clone and not(@clone=0)]")
                             ' Go and get the cloned node
                             nCloneId = oMenuItem.GetAttribute("clone")
-                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", , , , oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                                If Not oClone Is Nothing Then
+                                    If Not (cNodeSnapshot.ContainsKey(nCloneId)) Then cNodeSnapshot.Add(nCloneId, oClone.InnerXml)
+                                End If
 
-                                If Not (cNodeSnapshot.ContainsKey(nCloneId)) Then cNodeSnapshot.Add(nCloneId, oClone.InnerXml)
                             End If
                         Next
 

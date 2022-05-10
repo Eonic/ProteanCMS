@@ -5545,11 +5545,11 @@ restart:
 
 
                 End If
-
-                If root.SelectSingleNode("cContactTelCountryCode") Is Nothing Then
-                    root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"))
+                If Not (root Is Nothing) Then
+                    If root.SelectSingleNode("cContactTelCountryCode") Is Nothing Then
+                        root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"))
+                    End If
                 End If
-
                 Return root
 
             Catch ex As Exception
