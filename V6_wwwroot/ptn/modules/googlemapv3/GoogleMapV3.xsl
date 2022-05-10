@@ -34,36 +34,30 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">/* */</script>
 		<script type="text/javascript">
 			<xsl:text>function initialiseGMaps(){</xsl:text>
 			<xsl:apply-templates select="." mode="initialiseGoogleMap"/>
 			<xsl:text>};</xsl:text>
+			
+		  initialiseGMaps();
+		  
+		  function adjustGMapSizes(mapCanvas) {
+    if (mapCanvas.data('mapheight') == undefined || mapCanvas.data('mapheight') == '0') {
+        /* take 20% off height - odd optical illusion where height looks longer than width even when square */
+        var mapWidth = mapCanvas.width();
+        mapHeight = mapWidth - Math.round((mapWidth / 100) * 20);
+        mapCanvas.css('height', mapHeight);
+
+    }
+    else {
+        mapCanvas.css('height', mapCanvas.data('mapheight') + 'px');
+    }
+}
 		</script>
 	</xsl:template>
 
 
-	<xsl:template match="Page" mode="googleMapJS">
-    <!-- Initialise any Google Maps -->
-    <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
-      <xsl:variable name="apiKey">
-        <xsl:choose>
-          <xsl:when test="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey!=''">
-            <xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$GoogleAPIKey"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
-      <script type="text/javascript">
-        <xsl:text>function initialiseGMaps(){</xsl:text>
-        <xsl:apply-templates select="//Content[@moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation'] " mode="initialiseGoogleMap"/>
-        <xsl:text>};</xsl:text>
-      </script>
-    </xsl:if>
-  </xsl:template>
 
   <!-- Each Map has it's set of values - unique by content id -->
   <xsl:template match="Content" mode="initialiseGoogleMap">

@@ -1245,7 +1245,7 @@
       </td>
       <td>
         <div class="checkbox checkbox-primary">
-          <input type="checkbox" name="id" value="{@id}" class="styled inventory-bulk-checkbox" data-status="{@status}"/>
+          <input type="checkbox" name="id" value="{@id}" class="form-check-input styled inventory-bulk-checkbox" data-status="{@status}"/>
           <label>
             <xsl:text> </xsl:text>
           </label>
