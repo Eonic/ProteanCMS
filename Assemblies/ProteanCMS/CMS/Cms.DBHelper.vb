@@ -3336,10 +3336,12 @@ restart:
 
 
         Public Function setObjectFRef(ByVal objectType As objectTypes, ByVal id As Long, ByVal cForeignRef As String) As Long
-            Dim cProcName As String = "setObjectFRef (ObjectTypes,String,[String])"
+            Dim cProcName As String = "setObjectFRef (ObjectTypes,Int,[String])"
             PerfMon.Log("DBHelper", cProcName)
-            Dim nId As String = 0
+            Dim sSql As String = ""
+            Dim nRowAff As Long = 0
             Dim cProcessInfo As String = ""
+
             Try
 
                 Dim cTableName As String = getTable(objectType)
@@ -3347,9 +3349,13 @@ restart:
                 Dim cTableFRef As String = getFRef(objectType)
 
                 'SQL to save the fref value
+                Select Case objectType
+                    Case objectTypes.Content
+                        sSql = "update " & cTableName & " set " & cTableFRef & " = '" & cForeignRef & "' where " & cTableKey & " = " & id
+                End Select
 
-
-                Return nId
+                nRowAff = ExeProcessSql(sSql)
+                Return nRowAff
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, cProcName, ex, cProcessInfo))
