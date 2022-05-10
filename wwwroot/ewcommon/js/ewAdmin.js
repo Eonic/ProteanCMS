@@ -2362,7 +2362,8 @@ if (editPageElement) {
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
                     $('.btnRedirectSave').removeAttr("disabled");
                     $("#redirectModal").modal("show");
-                    $("#OldUrl").val(localStorage.originalStructName);
+                    var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                    $("#OldUrl").val(oldURLFromXsl);
                     $("#NewUrl").val(newStructName);
                     this.structName = newStructName;
                     $(".hiddenPageId").val(localStorage.pageId);
@@ -2453,16 +2454,17 @@ if (editProductElement > 0) {
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
-
+                
                 if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
                     var redirectType = $(".hiddenRedirectType").val();
                     $('.btnRedirectSave').removeAttr("disabled");
                     $("#redirectModal").modal("show");
-                    $("#OldUrl").val(localStorage.originalPathName);
+                    var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                    $("#OldUrl").val(oldURLFromXsl);
                     $("#NewUrl").val(newContentPath);
                     this.cContentPath = newContentPath;
                     $(".hiddenPageId").val(localStorage.pageId);
-                    $(".hiddenProductOldUrl").val(localStorage.originalPathName);
+                    $(".hiddenProductOldUrl").val(oldURLFromXsl); 
                     $(".hiddenProductNewUrl").val(newContentPath);
                     $(".hiddenRedirectType").val(redirectType);
                     event.preventDefault();

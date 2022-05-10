@@ -2076,7 +2076,7 @@ namespace Protean.Tools
                 maxIndex = Strings.Len(hex);
 
                 for (index = 1; index <= maxIndex; index += 2)
-                    sb.Append(Strings.Chr(System.Convert.ToInt32("&h" + Strings.Mid(hex, System.Convert.ToInt32(index), 2))));
+                    sb.Append(Strings.Chr(System.Convert.ToInt32( Strings.Mid(hex, System.Convert.ToInt32(index), 2),16)));
 
                 returnString = sb.ToString();
                 sb.Length = 0;

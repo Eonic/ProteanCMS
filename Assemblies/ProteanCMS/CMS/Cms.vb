@@ -455,7 +455,7 @@ Public Class Cms
             Dim dbUpgradeFile As String = "/ewcommon/sqlUpdate/DatabaseUpgrade.xml"
             If bs5 Then dbUpgradeFile = "/ptn/update/sql/databaseupgrade.xml"
             LatestDBVersion = New XmlTextReader(goServer.MapPath(dbUpgradeFile))
-                LatestDBVersion.WhitespaceHandling = WhitespaceHandling.None
+            LatestDBVersion.WhitespaceHandling = WhitespaceHandling.None
             'Disable whitespace so that it doesn't have to read over whitespaces
             LatestDBVersion.Read()
             LatestDBVersion.Read()
@@ -1947,7 +1947,7 @@ Public Class Cms
                     ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
                     ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                     If gbClone _
-                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id=/Page/@id and (@clone > 0 or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
+                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
                         ' If the current page is a cloned page
                         oPageElmt.SetAttribute("clone", "true")
                     End If
@@ -3642,7 +3642,7 @@ Public Class Cms
             sSql &= "FROM tblContent AS c INNER JOIN "
             sSql &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
             sSql &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
-            'sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "
+            sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
 
             ' GCF - sql replaced by the above - 24/06/2011
             ' replaced JOIN to tblContentLocation with  LEFT OUTER JOIN
@@ -5114,7 +5114,7 @@ Public Class Cms
                             ' Go and get the cloned node
                             nCloneId = oMenuItem.GetAttribute("clone")
                             nCloneParentId = oMenuItem.GetAttribute("id")
-                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", , , , oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
 
                                 oMenuItem.InnerXml = cNodeSnapshot(nCloneId)
 
@@ -5124,8 +5124,6 @@ Public Class Cms
                                 Next
                             End If
                         Next
-
-                        ' ADD PAGE VERSIONS
 
                     End If
 
@@ -5326,9 +5324,7 @@ Public Class Cms
                             oMenuItem.SetAttribute("status", verNode.GetAttribute("status"))
                             oMenuItem.SetAttribute("access", verNode.GetAttribute("access"))
                             oMenuItem.SetAttribute("layout", verNode.GetAttribute("layout"))
-
                             oMenuItem.SetAttribute("clone", verNode.GetAttribute("clone"))
-
                             oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"))
                             oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("verDesc"))
                             oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"))
@@ -5936,10 +5932,9 @@ Public Class Cms
 
 
                 gcBlockContentType = moDbHelper.GetPageBlockedContent(mnPageId)
-
-                oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
                 Dim parentXpath As String = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]"
 
+                oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
                 'step through the tree from home to our current page
                 For Each oElmt In oPageElmt.SelectNodes(parentXpath)
                     oElmt.SetAttribute("active", "1")
