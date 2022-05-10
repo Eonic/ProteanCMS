@@ -3864,7 +3864,9 @@ processFlow:
                         ' 
                         If moCartConfig("TaxFromDeliveryAddress") <> "on" Or (myWeb.moRequest("cIsDelivery") = "True" And moCartConfig("TaxFromDeliveryAddress") = "on") Then
                             If Not oContactXform.Instance.SelectSingleNode("tblCartContact[@type='Billing Address']") Is Nothing Then
-                                UpdateTaxRate(oCartElmt.SelectSingleNode("Contact[@type='Billing Address']/Country").InnerText)
+                                If Not (oCartElmt.SelectSingleNode("Contact[@type='Billing Address']") Is Nothing) Then
+                                    UpdateTaxRate(oCartElmt.SelectSingleNode("Contact[@type='Billing Address']/Country").InnerText)
+                                End If
                             End If
                         End If
 
