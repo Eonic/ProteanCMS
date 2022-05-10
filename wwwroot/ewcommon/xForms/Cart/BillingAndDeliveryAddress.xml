@@ -76,6 +76,7 @@
 		<bind id="cContactZip" nodeset="cContactZip" required="true()" type="string" />
 		<bind id="cContactCountry" nodeset="cContactCountry" required="true()" type="string" />
 		<bind id="cContactTel" nodeset="cContactTel" required="true()" type="string" />
+		  <bind id="cContactTel" nodeset="cContactTel" type="string" calculate="concat(tblCartContact[@type='Billing Address']/cContactTelCountryCode,' ',tblCartContact[@type='Billing Address']/cContactTel)" />
 		<bind id="cContactFax" nodeset="cContactFax" required="false()" type="string" />
 		<bind id="cContactEmail" nodeset="cContactEmail" required="true()" type="email" />
       <bind nodeset="cContactXml">
@@ -131,7 +132,7 @@
 				<select1 bind="cContactCountry" class="dropdown country required" appearance="minimal">
 					<label>Country</label>
 				</select1>
-				<input bind="cContactTel" class="textbox required">
+				<input bind="cContactTel" id="cContactTel" class="textbox required">
 					<label>Tel</label>
 					<value />
 				</input>
