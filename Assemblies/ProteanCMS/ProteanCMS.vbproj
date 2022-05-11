@@ -817,6 +817,8 @@
     <None Include="Web References\uk.co.postcodeanywhere.services\wsdlnew.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\icsharpcode.sharpziplib.dll" />
+    <Content Include="bin\icsharpcode.sharpziplib.pdb" />
     <Content Include="DebugReadme.txt" />
     <Content Include="ReleaseNotes.txt" />
     <None Include="Service References\proteancms.com\Reference.svcmap">

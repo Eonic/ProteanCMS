@@ -91,7 +91,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Adva
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Text.Encoding.CodePages.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Antlr3.Runtime.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csprojAssemblyReference.cache
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csproj.CoreCompileInputs.cache
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.pdb
@@ -187,10 +186,6 @@ D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.Native-Q8-x64.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\tidy.x64.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\tidy.x86.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\x64\ClearScriptV8-64.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\x64\v8-base-x64.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\x64\v8-x64.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\x64\ChakraCore.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
@@ -229,7 +224,6 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Inte
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\AngleSharp.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\WebGrease.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.Web.Infrastructure.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ClearScript.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Text.Encoding.CodePages.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Antlr3.Runtime.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
@@ -243,12 +237,9 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Inte
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ProteanCMS.dll.config
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\MySql.Data.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ICSharpCode.SharpZipLib.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Fonet.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Newtonsoft.Json.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\DocumentFormat.OpenXml.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Lucene.Net.pdb
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Lucene.Net.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\PayPal.xml
@@ -259,8 +250,6 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Inte
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\AlphaFS.pdb
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\AlphaFS.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\JavaScriptEngineSwitcher.V8.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Google.Protobuf.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Renci.SshNet.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\AdvancedStringBuilder.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.Web.Infrastructure.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Text.Encoding.CodePages.xml
@@ -644,3 +633,13 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\Pro
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.Native-Q8-x86.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.Native-Q8-x86.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ClearScriptV8.win-x64.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.NET-Q8-AnyCPU.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\QRCoder.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.NET.Core.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ClearScript.V8.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ClearScript.Core.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ClearScript.V8.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ClearScript.Core.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csproj.AssemblyReference.cache

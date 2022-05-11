@@ -4,21 +4,6 @@
         <name>JavaScriptEngineSwitcher.V8</name>
     </assembly>
     <members>
-        <member name="T:JavaScriptEngineSwitcher.V8.AssemblyResolver">
-            <summary>
-            Assembly resolver
-            </summary>
-        </member>
-        <member name="M:JavaScriptEngineSwitcher.V8.AssemblyResolver.Initialize">
-            <summary>
-            Initialize a assembly resolver
-            </summary>
-        </member>
-        <member name="T:JavaScriptEngineSwitcher.V8.Constants.DllName">
-            <summary>
-            DLL names
-            </summary>
-        </member>
         <member name="T:JavaScriptEngineSwitcher.V8.JsEngineFactoryCollectionExtensions">
             <summary>
             JS engine factory collection extensions
@@ -66,14 +51,9 @@
             resource lookups using this strongly typed resource class
             </summary>
         </member>
-        <member name="P:JavaScriptEngineSwitcher.V8.Resources.Strings.Engines_ClearScriptUndefinedValueNotLoaded">
+        <member name="P:JavaScriptEngineSwitcher.V8.Resources.Strings.Engine_InternationalizationApiNotFullySupported">
             <summary>
-            Looks up a localized string similar to "Failed to load the ClearScript `undefined` value."
-            </summary>
-        </member>
-        <member name="P:JavaScriptEngineSwitcher.V8.Resources.Strings.Engine_VcRedist2017InstallationRequired">
-            <summary>
-            Looks up a localized string similar to "In addition, you still need to install the Microsoft Visual C++ Redistributable for Visual Studio..."
+            Looks up a localized string similar to "By default, some features of the JavaScript Internationalization API are not supported."
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.V8.Resources.Strings.Usage_PrecompiledScriptNotAccepted">
@@ -101,29 +81,19 @@
             V8 JS engine
             </summary>
         </member>
-        <member name="F:JavaScriptEngineSwitcher.V8.V8JsEngine._originalUndefinedValue">
-            <summary>
-            ClearScript <code>undefined</code> value
-            </summary>
-        </member>
         <member name="F:JavaScriptEngineSwitcher.V8.V8JsEngine._errorMessageWithTypeRegex">
             <summary>
             Regular expression for working with the error message with type
             </summary>
         </member>
-        <member name="F:JavaScriptEngineSwitcher.V8.V8JsEngine._interfaceAssemblyLoadErrorMessage">
+        <member name="F:JavaScriptEngineSwitcher.V8.V8JsEngine._libraryLoadErrorMessage">
             <summary>
-            Regular expression for working with the interface assembly load error message
+            Regular expression for working with the library load error message
             </summary>
         </member>
-        <member name="F:JavaScriptEngineSwitcher.V8.V8JsEngine._initializationSynchronizer">
+        <member name="F:JavaScriptEngineSwitcher.V8.V8JsEngine._nativeAssemblyPackageMap">
             <summary>
-            Synchronizer of JS engine initialization
-            </summary>
-        </member>
-        <member name="F:JavaScriptEngineSwitcher.V8.V8JsEngine._initialized">
-            <summary>
-            Flag indicating whether the JS engine is initialized
+            Mapping of native assemblies and NuGet packages
             </summary>
         </member>
         <member name="M:JavaScriptEngineSwitcher.V8.V8JsEngine.#ctor">
@@ -136,16 +106,6 @@
             Constructs an instance of adapter for the V8 JS engine (Microsoft ClearScript.V8)
             </summary>
             <param name="settings">Settings of the V8 JS engine</param>
-        </member>
-        <member name="M:JavaScriptEngineSwitcher.V8.V8JsEngine.Initialize">
-            <summary>
-            Initializes a JS engine
-            </summary>
-        </member>
-        <member name="M:JavaScriptEngineSwitcher.V8.V8JsEngine.LoadUndefinedValue">
-            <summary>
-            Loads a ClearScript <code>undefined</code> value
-            </summary>
         </member>
         <member name="M:JavaScriptEngineSwitcher.V8.V8JsEngine.MapToScriptType(System.Object)">
             <summary>
@@ -292,6 +252,22 @@
             Gets or sets a flag for whether to disable global members
             </summary>
         </member>
+        <member name="P:JavaScriptEngineSwitcher.V8.V8Settings.HeapExpansionMultiplier">
+            <summary>
+            Gets or sets a heap expansion multiplier
+            </summary>
+            <remarks>
+            <para>
+            When set to a value greater than 1, this property enables on-demand heap expansion,
+            which automatically increases the maximum heap size by the specified multiplier
+            whenever the script engine is close to exceeding the current limit. Note that a buggy
+            or malicious script can still cause an application to fail by exhausting its address
+            space or total available memory. On-demand heap expansion is recommended for use in
+            conjunction with heap size monitoring (see <see cref="P:JavaScriptEngineSwitcher.V8.V8Settings.MaxHeapSize"/> property to help
+            contain runaway scripts).
+            </para>
+            </remarks>
+        </member>
         <member name="P:JavaScriptEngineSwitcher.V8.V8Settings.HeapSizeSampleInterval">
             <summary>
             Gets or sets a minimum time interval between consecutive heap size samples
@@ -301,6 +277,17 @@
             This property is effective only when heap size monitoring is enabled (see
             <see cref="P:JavaScriptEngineSwitcher.V8.V8Settings.MaxHeapSize"/> property)
             </para>
+            </remarks>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.V8.V8Settings.MaxArrayBufferAllocation">
+            <summary>
+            Gets or sets a maximum amount of <code>ArrayBuffer</code> memory the runtime may allocate
+            </summary>
+            <remarks>
+            This property is specified in bytes. <code>ArrayBuffer</code> memory is allocated outside
+            the runtime's heap and released when its garbage collector reclaims the corresponding
+            JavaScript <code>ArrayBuffer</code> object. Leave this property at its default value to
+            enforce no limit.
             </remarks>
         </member>
         <member name="P:JavaScriptEngineSwitcher.V8.V8Settings.MaxExecutableSize">
@@ -328,6 +315,11 @@
             <para>
             Exceeding this limit causes the V8 runtime to interrupt script execution and throw
             an exception.
+            </para>
+            <para>
+            Note that <code>ArrayBuffer</code> memory is allocated outside the runtime's heap and is
+            therefore not tracked by heap size monitoring. See <see cref="P:JavaScriptEngineSwitcher.V8.V8Settings.MaxArrayBufferAllocation"/>
+            property for additional information.
             </para>
             </remarks>
         </member>
