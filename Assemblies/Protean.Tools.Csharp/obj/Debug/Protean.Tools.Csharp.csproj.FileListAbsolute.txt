@@ -247,6 +247,11 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.To
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\tidy.x64.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\tidy.x86.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET.Core.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\DocumentFormat.OpenXml.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.pdb
@@ -277,8 +282,3 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.To
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\tidy.x64.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\tidy.x86.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET.Core.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\DocumentFormat.OpenXml.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\DocumentFormat.OpenXml.xml
