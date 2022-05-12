@@ -5419,7 +5419,11 @@ Public Class Cms
                                 Else
                                     cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                                 End If
-                                sUrl = sUrl & "/" & cPageName
+                                'read paths to exclude from url
+                                Dim exclFoldPaths As String() = moConfig("ExcludeFoldersFromPaths").Split(",")
+                                If Array.Find(exclFoldPaths, Function(s) s = cPageName) = Nothing Then 'add folder to url only if it's not on the list
+                                    sUrl = sUrl & "/" & cPageName
+                                End If
                             End If
                         Next
                     End If
