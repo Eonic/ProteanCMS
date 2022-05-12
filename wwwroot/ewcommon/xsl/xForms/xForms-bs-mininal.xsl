@@ -2911,9 +2911,9 @@
             <xsl:value-of select="translate(toggle/@case,'[]#=/','')"/>
             <xsl:text>-dependant','</xsl:text>
             <xsl:value-of select="$dependantClass"/>
-            <xsl:text>'</xsl:text>
+            <xsl:text>','</xsl:text>
 			  <xsl:value-of select="$donothide"/>
-			  <xsl:text>);alert(test);</xsl:text>
+			  <xsl:text>');</xsl:text>
           </xsl:attribute>
           <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
             <xsl:attribute name="data-fv-notempty">

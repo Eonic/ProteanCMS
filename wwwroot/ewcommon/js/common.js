@@ -806,14 +806,9 @@ function showDependant(dependant, allDependants) {
     $("#" + dependant).trigger('bespokeXform');
 }
 
-function showHideDependant(thisId, allDependants) {
-
-    var isChecked = $('#' + thisId).is(":checked");
-
-    alert('#' + thisId + ' ' + isChecked);
-
+function hideAllDependants(thisId, allDependants) {
     // Hide unwanted Dependants
-    if (donothide != true) {
+    //if (donothide != true) {
         $("." + allDependants).addClass('hidden');
 
         // Make required inactive to avoid JS validation
@@ -830,7 +825,10 @@ function showHideDependant(thisId, allDependants) {
             $(this).attr('name', tempFieldName);
             //   $(this).attr('id', $(this).attr('id') + '~inactive');
         });
-    }
+    //}
+}
+
+function showWantedDependants(thisId) {
     // Show wanted Dependants
     $("#" + thisId + '-dependant').removeClass('hidden');
 
@@ -855,6 +853,49 @@ function showHideDependant(thisId, allDependants) {
 
     $("#" + thisId + '-dependant').prepareXform();
     $("#" + thisId + '-dependant').trigger('bespokeXform');
+}
+function showHideDependant(thisId, allDependants, donothide) {
+    //var isChecked = $('#' + thisId).is(":checked");
+    //alert('#' + thisId + ' ' + isChecked);
+    
+    hideAllDependants(thisId, allDependants);
+    var serviceChoiceCommon = thisId.slice(0, -1);//slicing 1/2 out of the element id string
+    
+    if ($('#' + serviceChoiceCommon + '1').is(":checked") && $('#' + serviceChoiceCommon + '2').is(":checked")) { //Basic & other services checked
+        showWantedDependants(serviceChoiceCommon + '1');
+        showWantedDependants(serviceChoiceCommon + '2');
+    }
+    else if ($('#' + serviceChoiceCommon + '1').is(":checked") && !($('#' + serviceChoiceCommon + '2').is(":checked"))) { //only basic service checked
+        showWantedDependants(serviceChoiceCommon + '1');
+    }
+    else if (!($('#' + serviceChoiceCommon + '1').is(":checked")) && $('#' + serviceChoiceCommon + '2').is(":checked")) { //only other service checked
+        showWantedDependants(serviceChoiceCommon + '2');
+    }
+    
+    //// Show wanted Dependants
+    //$("#" + thisId + '-dependant').removeClass('hidden');
+
+    //// Find all inactive required fields and make required again for JS Validation
+    //$("#" + thisId + '-dependant').find('.reqinactive').each(function () {
+    //    $(this).removeClass('reqinactive');
+    //    $(this).addClass('required');
+    //});
+
+    //// Find all inactive inputs, and re-activate,
+    //$("#" + thisId + '-dependant').find(":input").not(':submit').each(function () {
+    //    var fieldName = $(this).attr('name');
+    //    var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+    //    $(this).attr('name', tempFieldName);
+
+    //    var fieldId = $(this).attr('id');
+    //    var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+    //    $(this).attr('id', tempFieldId);
+    //    //  alert("enable " + tempFieldName);
+    //    //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
+    //});
+
+    //$("#" + thisId + '-dependant').prepareXform();
+    //$("#" + thisId + '-dependant').trigger('bespokeXform');
 }
 
 
