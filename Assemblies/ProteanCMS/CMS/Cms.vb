@@ -5420,7 +5420,8 @@ Public Class Cms
                                     cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                                 End If
                                 'read paths to exclude from url
-                                Dim exclFoldPaths As String() = moConfig("ExcludeFoldersFromPaths").Split(",")
+                                Dim excludePaths As String = CStr(moConfig("ExcludeFoldersFromPaths") & "")
+                                Dim exclFoldPaths As String() = excludePaths.Split(",")
                                 If Array.Find(exclFoldPaths, Function(s) s = cPageName) = Nothing Then 'add folder to url only if it's not on the list
                                     sUrl = sUrl & "/" & cPageName
                                 End If
@@ -5469,7 +5470,7 @@ Public Class Cms
                         If moRequest.QueryString.Count > 0 Then
                             If Not moRequest("path") Is Nothing Then
                                 'If this matches the path requested then change the pageId
-                                Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
+                                Dim PathToMatch As String = CStr(Replace(sUrl, DomainURL, "") + "").ToLower()
                                 Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
                                 Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
                                 If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
