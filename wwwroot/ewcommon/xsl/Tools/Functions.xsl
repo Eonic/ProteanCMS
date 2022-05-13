@@ -247,6 +247,15 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
+	
+  <xsl:variable name="GoogleGA4MeasurementID">
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'GoogleGA4MeasurementID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
 
   <xsl:variable name="GoogleOptimizeID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -372,17 +381,33 @@
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
-
+   
+	   
+         <xsl:if test="$GoogleGA4MeasurementID!=''">
+			    <!-- GA4 Tag Manager -->
+				<script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+                    <script cookie-consent="tracking">
+                      window.dataLayer = window.dataLayer || [];
+                      function gtag(){dataLayer.push(arguments);}
+                      gtag('js', new Date());
+                      gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
+					  <xsl:apply-templates select="." mode="google-ga4-event"/>
+                </script>
+				<!-- End GA4 Tag Manager -->		 
+		 </xsl:if>
         <xsl:if test="$GoogleTagManagerID!=''">
-          <!-- Google Tag Manager -->
-			<script cookie-consent="tracking">
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
-          </script>
-          <!-- End Google Tag Manager -->
+
+	
+			    <!-- Google Tag Manager -->
+			        <script cookie-consent="tracking">
+                    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                    })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
+                  </script>
+                <!-- End Google Tag Manager -->
+
         </xsl:if>
         <xsl:if test="$PayPalTagManagerID!=''">
           <!-- PayPal BEGIN -->
@@ -464,6 +489,11 @@
     </html>
   </xsl:template>
 
+  <xsl:template match="Page" mode="google-ga4-event">
+      <!-- for overloading on specific actions -->
+  </xsl:template>
+	
+		
   <xsl:template match="Page" mode="criticalPathCSS">
     <style>
       <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
@@ -2612,6 +2642,41 @@
 
     </xsl:if>
   </xsl:template>
+	
+	
+  <!-- GA4 Ecommerce Events -->
+  <xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
+          gtag("event", "add_to_cart", 
+		  <xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		  );
+  </xsl:template>
+	
+  <xsl:template match="Page" mode="google-ga4-transaction">
+        {
+          currency: "<xsl:value-of select="Cart/@currency"/>,
+          value: <xsl:value-of select="Cart/@total"/>,
+          items: [
+            <xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
+          ]
+        }	
+  </xsl:template>
+	
+  <xsl:template match="Item" mode="google-ga4-transaction-item">
+	    {
+              item_id: "<xsl:value-of select="productDetail/StockCode/node()"/>",
+              item_name: "<xsl:value-of select="Name/node()"/>",
+              affiliation: "",
+              currency: "ancestor::Cart/@currency",
+              discount: 0,
+              index: 0,
+              item_brand: "<xsl:value-of select="productDetail/Manufacturer/node()"/>",
+              price: <xsl:value-of select="@price"/>,
+              quantity: <xsl:value-of select="@quantity"/>
+          }  
+		  <xsl:if test="following-sibling()::Item">
+			  <xsl:text>,</xsl:text>
+	    </xsl:if>
+  </xsl:template>			
 
   <xsl:template match="Page" mode="BingTrackingCode">   
       <xsl:if test="$BingTrackingID!=''">
@@ -8914,7 +8979,7 @@
       </xsl:choose>
     </xsl:param>
     <xsl:param name="stepCount" select="@stepCount" />
-    <xsl:param name="parentPage" select="//MenuItem[@id=$link and ancestor::MenuItem[@id=$pageId]]"/>
+    <xsl:param name="parentPage" select="//MenuItem[@id=$link]"/>
     <xsl:param name="endPos">
       <xsl:choose>
         <xsl:when test="@stepCount = '0'">
@@ -10630,5 +10695,8 @@
     <xsl:value-of select="$defaultWidth"/>
     <xsl:text> </xsl:text>
   </xsl:template>
+
+
+
 
 </xsl:stylesheet>
