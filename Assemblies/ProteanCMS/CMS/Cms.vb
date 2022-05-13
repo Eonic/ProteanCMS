@@ -5458,38 +5458,41 @@ Public Class Cms
                     If oMenuItem.GetAttribute("id") = "609" Then
                         mbIgnorePath = mbIgnorePath
                     End If
-
+                    Dim PathToMatch As String = ""
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then
                             If Not moRequest("path") Is Nothing Then
-                                'If this matches the path requested then change the pageId
-                                Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
+                                If sUrl <> String.Empty Then
+                                    'If this matches the path requested then change the pageId
+                                    PathToMatch = Replace(sUrl, DomainURL, "").ToLower()
+                                End If
                                 Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
-                                Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
-                                If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
-                                    If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
-                                        'case for if newsletter has same page name as menu item
-                                        If Features.ContainsKey("PageVersions") Then
-                                            'catch for page version
-                                            If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                    Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
+                                    If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
+                                        If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
+                                            'case for if newsletter has same page name as menu item
+                                            If Features.ContainsKey("PageVersions") Then
+                                                'catch for page version
+                                                If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                                    mnPageId = oMenuItem.GetAttribute("id")
+                                                End If
+                                            Else
                                                 mnPageId = oMenuItem.GetAttribute("id")
                                             End If
-                                        Else
-                                            mnPageId = oMenuItem.GetAttribute("id")
+
+                                            If mnUserId <> 0 Or mbAdminMode <> True Then
+                                                'case for personalisation and admin TS 14/02/2021
+                                                mnPageId = oMenuItem.GetAttribute("id")
+                                            End If
+                                            ' If oMenuItem.GetAttribute("verType") = "3" Then
+                                            mnClonePageVersionId = mnPageId
+                                            'this is used in clone mode to determine the page content in GetPageContent.
+                                            '  End If
+                                            oMenuItem.SetAttribute("requestedPage", "1")
                                         End If
 
-                                        If mnUserId <> 0 Or mbAdminMode <> True Then
-                                            'case for personalisation and admin TS 14/02/2021
-                                            mnPageId = oMenuItem.GetAttribute("id")
-                                        End If
-                                        ' If oMenuItem.GetAttribute("verType") = "3" Then
-                                        mnClonePageVersionId = mnPageId
-                                        'this is used in clone mode to determine the page content in GetPageContent.
-                                        '  End If
-                                        oMenuItem.SetAttribute("requestedPage", "1")
+
                                     End If
-
-                                End If
                             End If
                         End If
                     End If

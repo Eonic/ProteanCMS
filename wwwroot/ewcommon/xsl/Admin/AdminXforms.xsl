@@ -1713,9 +1713,15 @@
     <div>
    
      
-      <xsl:for-each select="ms:node-set($filterButtons)/*">
-        <xsl:variable name="buttonName" select="node()"/>
-		    <xsl:value-of select="Content/Content/@filtertype"/>
+      <xsl:for-each select="ms:node-set($filterButtons)/*/*">
+		  <xsl:variable name="buttonType" >
+			  <xsl:value-of select="@type"/>
+		  </xsl:variable>
+		  <xsl:value-of select="Content/Content/@filtertype"/>
+
+		  <xsl:variable name="buttonName" select="node()"/>
+
+
 		  
         <xsl:choose>
           <xsl:when test="ancestor::Content/Content[@filtertype=$buttonName]">
@@ -1724,7 +1730,11 @@
             </button>
           </xsl:when>
           <xsl:otherwise>
-            <button type="submit" name="RelateAdd_PageFilter_1Way_~inactive" filtertype="{$buttonName}" class="btn btn-primary">
+			  <xsl:variable name="IDCreation1" select="concat('RelateAdd_',$buttonName)" />
+				  <xsl:variable name="FilterType" select="concat($IDCreation1,'_1Way_~inactive')" />
+				  
+			 
+            <button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-primary">
               Add <xsl:value-of select="$buttonName"/>
             </button>
           </xsl:otherwise>
