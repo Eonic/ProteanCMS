@@ -32,7 +32,7 @@ Partial Public Class Cms
 
         Public moPageXML As XmlDocument = New XmlDocument
 
-        Public Shadows mcModuleName As String = "Protea.Admin"
+        Public Shared Shadows mcModuleName As String = "Protean.Admin"
         Public mcEwCmd As String
         Public mcEwCmd2 As String
         Public mcEwCmd3 As String
@@ -677,7 +677,7 @@ ProcessFlow:
 
                         Dim oSiteManifest As New XmlDocument
                         If myWeb.moConfig("cssFramework") = "bs5" Then
-                            oSiteManifest = GetSiteManifest()
+                            oSiteManifest = moAdXfm.GetSiteManifest()
                         Else
                             If IO.File.Exists(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml")) Then
                                 oSiteManifest.Load(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"))
@@ -709,7 +709,6 @@ ProcessFlow:
 
                         'now to add it to the pagexml
                         oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oSiteManifest.SelectSingleNode("/PageLayouts/ContentTypes"), True))
-
 
                         If myWeb.moRequest("pgid") <> "" Then
                             'lets save the page we are editing to the session
@@ -4807,127 +4806,6 @@ SP:
         End Sub
 
 
-        Function GetSiteManifest() As XmlDocument
-            Dim cProcessInfo As String = ""
-            Try
-                Dim PathPrefix = "ptn\"
-                Dim ManifestDoc As XmlDocument = Nothing
-
-                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "core\modules", "manifest.xml")
-                Dim rootFolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
-                Dim fld As DirectoryInfo
-                For Each fld In rootFolder.GetDirectories
-                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
-
-                Next
-                If myWeb.moConfig("ClientCommonFolder") <> "" Then
-                    EnumberateManifest(ManifestDoc, myWeb.moConfig("ClientCommonFolder") & "\xsl", "manifest.xml")
-                End If
-
-                'new local modules
-                rootFolder = New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & "/modules"))
-                If rootFolder.Exists Then
-                    For Each fld In rootFolder.GetDirectories
-                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "\modules\" & fld.Name, "manifest.xml")
-                    Next
-                End If
-
-                EnumberateManifest(ManifestDoc, "/xsl", "manifest.xml")
-
-                If myWeb.moConfig("Search") = "on" Then
-                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\search", "manifest.xml")
-                End If
-                If myWeb.moConfig("Membership") = "on" Then
-                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\membership", "manifest.xml")
-                End If
-                If myWeb.moConfig("Cart") = "on" Then
-                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\cart", "manifest.xml")
-                End If
-                If myWeb.moConfig("Quote") = "on" Then
-                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\quote", "manifest.xml")
-                End If
-                If myWeb.moConfig("MailingList") = "on" Then
-                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\mailer", "manifest.xml")
-                End If
-                If myWeb.moConfig("Subscriptions") = "on" Then
-                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "manifest.xml")
-                End If
-
-                Return ManifestDoc
-
-            Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
-            End Try
-        End Function
-
-
-        Protected Sub EnumberateManifest(ByRef ManifestDoc As XmlDocument, ByVal filepath As String, Optional ByVal manifestFilename As String = "LayoutManifest.xml")
-
-            Dim cProcessInfo As String = ""
-            Dim sImgPath As String = ""
-            Dim oContentType As XmlElement
-            Dim oModuleType As XmlElement
-            Dim oItem As XmlElement
-            Dim oOptElmt As XmlElement
-            Dim oDescElmt As XmlElement
-
-            Try
-                If filepath = "" Then filepath = "/"
-
-
-
-                If IO.File.Exists(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename) Then
-                    'if this file exists then add the bespoke templates
-
-                    If ManifestDoc Is Nothing Then
-                        ManifestDoc = New XmlDocument
-                        ManifestDoc.Load(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename)
-                    Else
-                        Dim ManifestTemp As New XmlDocument
-                        ManifestTemp.Load(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename)
-
-                        'step through contentTypes to add to ManifestDoc
-
-                        For Each oContentType In ManifestTemp.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType")
-                            Dim contentTypeGroupName As String = oContentType.SelectSingleNode("parent::ContentTypeGroup/@name").InnerText()
-                            Dim contentTypeGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" & contentTypeGroupName & "']")
-                            If contentTypeGroup Is Nothing Then
-                                Dim oContentTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes")
-                                oContentTypes.AppendChild(oContentTypes.OwnerDocument.ImportNode(oContentType.SelectSingleNode("parent::ContentTypeGroup"), True))
-                            Else
-                                Dim ContentTypeName = oContentType.GetAttribute("name")
-                                If contentTypeGroup.SelectSingleNode("ContentType[@name='" & ContentTypeName & "']") Is Nothing Then
-                                    contentTypeGroup.AppendChild(contentTypeGroup.OwnerDocument.ImportNode(oContentType, True))
-                                End If
-                            End If
-                        Next
-
-                        'step through moduleTypes to add to ManifestDoc
-                        For Each oModuleType In ManifestTemp.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module")
-                            Dim moduleGroupName As String = oModuleType.SelectSingleNode("parent::ModuleGroup/@name").InnerText()
-                            Dim moduleGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ModuleTypes/ModuleGroup[@name='" & moduleGroupName & "']")
-                            If moduleGroup Is Nothing Then
-                                Dim oModuleTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ModuleTypes")
-                                oModuleTypes.AppendChild(oModuleTypes.OwnerDocument.ImportNode(oModuleType.SelectSingleNode("parent::ModuleGroup"), True))
-                            Else
-                                Dim ModuleTypeName = oModuleType.GetAttribute("name")
-                                If moduleGroup.SelectSingleNode("ModuleType[@name='" & ModuleTypeName & "']") Is Nothing Then
-                                    moduleGroup.AppendChild(moduleGroup.OwnerDocument.ImportNode(oModuleType.CloneNode(True), True))
-                                End If
-                            End If
-                        Next
-
-                    End If
-                Else
-                    'do nothing
-                End If
-
-
-            Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug)
-            End Try
-
-        End Sub
 
 
 
