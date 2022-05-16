@@ -4555,7 +4555,12 @@ Public Class Cms
             If mnUserId <> 0 Then
                 oUserXml = moPageXml.SelectSingleNode("/Page/User")
                 If oUserXml Is Nothing Then
-                    moPageXml.DocumentElement.AppendChild(Me.GetUserXML(mnUserId))
+                    Dim userXml As XmlElement = Me.GetUserXML(mnUserId)
+                    If moPageXml IsNot userXml.OwnerDocument Then
+                        moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(userXml.CloneNode(True), True))
+                    Else
+                        moPageXml.DocumentElement.AppendChild(userXml)
+                    End If
                 Else
                     moPageXml.DocumentElement.ReplaceChild(Me.GetUserXML(mnUserId), oUserXml)
                 End If
@@ -5803,7 +5808,7 @@ Public Class Cms
             " FROM tblContent INNER JOIN" &
             " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" &
             " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" &
-            " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " or tblAudit.dPublishDate is null) AND " &
+            " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <=" & Protean.Tools.Database.SqlDate(mdDate) & " or tblAudit.dPublishDate is null) AND " &
             " (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(mdDate) & " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" & cContentTypes & ")) "
 
 
@@ -6083,7 +6088,7 @@ Public Class Cms
             " tblCartCatProductRelations On tblCartProductCategories.nCatKey = tblCartCatProductRelations.nCatId"
             If Not Me.mbAdminMode Then
                 cSQL &= " WHERE tblAudit.nStatus = 1 " &
-                " And (tblAudit.dPublishDate Is null Or tblAudit.dPublishDate = 0 Or tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & " )" &
+                " And (tblAudit.dPublishDate Is null Or tblAudit.dPublishDate = 0 Or tblAudit.dPublishDate <=" & Protean.Tools.Database.SqlDate(Now) & " )" &
                 " And (tblAudit.dExpireDate Is null Or tblAudit.dExpireDate = 0 Or tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & " )" &
                 " And " + InStatement
             Else
@@ -6643,7 +6648,7 @@ Public Class Cms
             Dim ochkStr As String = ""
             If IsNumeric(cTop) Then nMax = CInt(cTop)
             For Each oDR In oDS.Tables("Content1").Rows
-                If oDS.Tables("Content").Rows.Count < nMax Or nMax = 0 Then
+                If oDS.Tables("Content").Rows.Count <nMax Or nMax= 0 Then
                     If IsNumeric(oDR("parId")) And Not oDR("parId").Contains(",") Then
                         ochkStr = moDbHelper.checkPagePermission(oDR("parId"))
                         If IsNumeric(ochkStr) Then
