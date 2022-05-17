@@ -867,14 +867,101 @@ function showWantedDependants(thisId) {
     $("#" + thisId + '-dependant').trigger('bespokeXform');
 }
 
-function showHideDependant(thisId, allDependants, donothide) {
+function hideCase(thisId) {
+    // Show wanted Dependants
+    $("#" + thisId).addClass('hidden');
 
-    if ($('#' + thisId).is(":checked")) { //getting checked
-        showWantedDependants(thisId);
+    // Find all inactive required fields and make required again for JS Validation
+    $("#" + thisId).find('.reqinactive').each(function () {
+        $(this).removeClass('required');
+        $(this).addClass('reqinactive');
+    });
+}
+
+function showCase(thisId) {
+    // Show wanted Dependants
+    $("#" + thisId).removeClass('hidden');
+
+    // Find all inactive required fields and make required again for JS Validation
+    $("#" + thisId).find('.reqinactive').each(function () {
+        $(this).removeClass('reqinactive');
+        $(this).addClass('required');
+    });
+
+    // Find all inactive inputs, and re-activate,
+    $("#" + thisId).find(":input").not(':submit').each(function () {
+        var fieldName = $(this).attr('name');
+        var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('name', tempFieldName);
+
+        var fieldId = $(this).attr('id');
+        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('id', tempFieldId);
+        //  alert("enable " + tempFieldName);
+        //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
+    });
+
+    $("#" + thisId).prepareXform();
+    $("#" + thisId).trigger('bespokeXform');
+}
+
+function showHideDependant(thisId,bindVar) {//, allDependants, donothide) {
+    var idArray = [];
+    $('.' + bindVar + '-dependant').each(function () {
+        idArray.push(this.id);
+    });
+    //alert(idArray);
+
+    var str_array = [];
+    str_array = $(thisId).data('showhide').split(',');
+    var newArr = str_array.map(el => el + "-dependant");
+    //alert(newArr);
+
+
+    var matches = [];
+    var diff = [];
+
+    $.grep(idArray, function (el) {
+
+        if ($.inArray(el, newArr) != -1) {
+            matches.push(el);
+        }
+        else {
+            diff.push(el);
+        }
+
+    });
+
+    //alert(" they have the same " + matches);
+    //alert(" they have the diff " + diff);
+    if ($('#' + thisId.id).is(":checked")) {
+        $.each(matches, function (key, value) {
+            showCase(value);
+        });
     }
-    else { //getting unchecked
-        hideWantedDependants(thisId);
+    else {
+        $.each(diff, function (key, value) {
+            hideCase(value);
+        });
     }
+
+    //alert($(thisId).attr("data-showhide"));
+    //alert($("#ServiceChoice_1").attr("data-showhide"));
+    
+    //alert(str_array[1]);
+    //for (var i = 0; i < str_array.length; i++) {
+    //    // Trim the excess whitespace.
+    //    str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
+    //    // Add additional code here, such as:
+    //    alert(str_array[i]);
+    //}
+
+    //if ($('#' + thisId).is(":checked")) { //getting checked
+    //    showWantedDependants(thisId);
+    //}
+    //else { //getting unchecked
+    //    hideWantedDependants(thisId);
+    //}
 }
 
 
