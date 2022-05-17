@@ -171,8 +171,8 @@
         <ProductName>Windows Installer 3.1</ProductName>
       </BootstrapperFile>
     </ItemGroup>
-    <GenerateBootstrapper ApplicationFile="$(TargetFileName)" ApplicationName="EonicWeb5 into GAC 5.0.54 (64bit)" BootstrapperItems="@(BootstrapperFile)" ComponentsLocation="HomeSite" CopyComponents="False" OutputPath="$(OutputPath)" Path="C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\BootStrapper" ApplicationRequiresElevation="True" Culture="en-US" Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' " />
-    <GenerateBootstrapper ApplicationFile="$(TargetFileName)" ApplicationName="EonicWeb5 into GAC 5.0.54 (64bit)" BootstrapperItems="@(BootstrapperFile)" ComponentsLocation="HomeSite" CopyComponents="False" OutputPath="$(OutputPath)" Path="C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\BootStrapper" ApplicationRequiresElevation="True" Culture="en-US" Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' " />
+    <GenerateBootstrapper ApplicationFile="$(TargetFileName)" ApplicationName="ProteanCMS into GAC(64bit)" BootstrapperItems="@(BootstrapperFile)" ComponentsLocation="HomeSite" CopyComponents="False" OutputPath="$(OutputPath)" Path="C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\BootStrapper" ApplicationRequiresElevation="True" Culture="en-US" Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' " />
+    <GenerateBootstrapper ApplicationFile="$(TargetFileName)" ApplicationName="ProteanCMS into GAC 64bit)" BootstrapperItems="@(BootstrapperFile)" ComponentsLocation="HomeSite" CopyComponents="False" OutputPath="$(OutputPath)" Path="C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\BootStrapper" ApplicationRequiresElevation="True" Culture="en-US" Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' " />
   </Target>
   <PropertyGroup>
     <PreBuildEvent>

@@ -4,6 +4,9 @@
 var obj = null;
 var oQueryParams = {};
 
+// Simple .exists() function - $(selector).exists(); - return true or false
+jQuery.fn.exists = function () { return jQuery(this).length > 0; }
+
 /* MAIN PAGE READY METHOD or All site, All pages - Keep Smart! */
 $(document).ready(function () {
     oQueryParams = $.getURLParams();
@@ -406,8 +409,7 @@ function initialiseProductSKUs() {
 /*  ==  EXTEND JQUERY  ============================================================================  */
 /*  ===============================================================================================  */
 
-// Simple .exists() function - $(selector).exists(); - return true or false
-jQuery.fn.exists = function () { return jQuery(this).length > 0; }
+
 
 // EXTENTION TO GET ALL URL PARAMS IN AN OBJECT
 $.extend({
@@ -760,22 +762,23 @@ function cleanDatepicker() {
 function showDependant(dependant, allDependants) {
 
     // Hide unwanted Dependants
-    $("." + allDependants).addClass('hidden');
 
-    // Make required inactive to avoid JS validation
-    $("." + allDependants).find('.required').each(function () {
-        $(this).removeClass('required');
-        $(this).addClass('reqinactive');
-    })
+        $("." + allDependants).addClass('hidden');
 
-    // Make all now hidden fields inactive so values are lost when submitted.
-    $("." + allDependants).find(":input").not(':submit').each(function () {
-        var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName + '~inactive';
-        //    alert("hide as " + tempFieldName);
-        $(this).attr('name', tempFieldName);
-        //   $(this).attr('id', $(this).attr('id') + '~inactive');
-    });
+        // Make required inactive to avoid JS validation
+        $("." + allDependants).find('.required').each(function () {
+            $(this).removeClass('required');
+            $(this).addClass('reqinactive');
+        })
+
+        // Make all now hidden fields inactive so values are lost when submitted.
+        $("." + allDependants).find(":input").not(':submit').each(function () {
+            var fieldName = $(this).attr('name');
+            var tempFieldName = fieldName + '~inactive';
+            //    alert("hide as " + tempFieldName);
+            $(this).attr('name', tempFieldName);
+            //   $(this).attr('id', $(this).attr('id') + '~inactive');
+        });
 
     // Show wanted Dependants
     $("#" + dependant).removeClass('hidden');
@@ -802,6 +805,78 @@ function showDependant(dependant, allDependants) {
     $("#" + dependant).prepareXform();
     $("#" + dependant).trigger('bespokeXform');
 }
+
+function hideAllDependants(thisId, allDependants) {
+    
+    // Hide unwanted Dependants
+    //if (donothide != true) {
+        $("." + allDependants).addClass('hidden');
+
+        // Make required inactive to avoid JS validation
+        $("." + allDependants).find('.required').each(function () {
+            $(this).removeClass('required');
+            $(this).addClass('reqinactive');
+        })
+
+        // Make all now hidden fields inactive so values are lost when submitted.
+        $("." + allDependants).find(":input").not(':submit').each(function () {
+            var fieldName = $(this).attr('name');
+            var tempFieldName = fieldName + '~inactive';
+            //    alert("hide as " + tempFieldName);
+            $(this).attr('name', tempFieldName);
+            //   $(this).attr('id', $(this).attr('id') + '~inactive');
+        });
+    //}
+}
+
+function hideWantedDependants(thisId) {
+    // Show wanted Dependants
+    $("#" + thisId + '-dependant').addClass('hidden');
+
+    // Find all inactive required fields and make required again for JS Validation
+    $("#" + thisId + '-dependant').find('.reqinactive').each(function () {
+        $(this).removeClass('required');
+        $(this).addClass('reqinactive');
+    });
+}
+
+function showWantedDependants(thisId) {
+    // Show wanted Dependants
+    $("#" + thisId + '-dependant').removeClass('hidden');
+
+    // Find all inactive required fields and make required again for JS Validation
+    $("#" + thisId + '-dependant').find('.reqinactive').each(function () {
+        $(this).removeClass('reqinactive');
+        $(this).addClass('required');
+    });
+
+    // Find all inactive inputs, and re-activate,
+    $("#" + thisId + '-dependant').find(":input").not(':submit').each(function () {
+        var fieldName = $(this).attr('name');
+        var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('name', tempFieldName);
+
+        var fieldId = $(this).attr('id');
+        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('id', tempFieldId);
+        //  alert("enable " + tempFieldName);
+        //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
+    });
+
+    $("#" + thisId + '-dependant').prepareXform();
+    $("#" + thisId + '-dependant').trigger('bespokeXform');
+}
+
+function showHideDependant(thisId, allDependants, donothide) {
+
+    if ($('#' + thisId).is(":checked")) { //getting checked
+        showWantedDependants(thisId);
+    }
+    else { //getting unchecked
+        hideWantedDependants(thisId);
+    }
+}
+
 
 /*  USED IN ALL EW:xFORMS - To re-enable radio button functionality when renaming a radio button */
 function psuedoRadioButtonControl(sBindName, sBindToName, sBindToValue) {

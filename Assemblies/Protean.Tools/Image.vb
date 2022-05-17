@@ -99,15 +99,17 @@ Public Class Image
     Public Sub SetMaxSize(ByVal nWidth As Integer, ByVal nHeight As Integer)
         'decides wether it needs to be sized
         Try
-            If (nWidth > 0 And Not (nWidth = oImg.Width)) Or (nHeight > 0 And Not (nHeight = oImg.Height)) Then
-                If bKeepRelational Then
-                    ResizeMax(nWidth, nHeight)
+            If Not oImg Is Nothing Then
+                If (nWidth > 0 And Not (nWidth = oImg.Width)) Or (nHeight > 0 And Not (nHeight = oImg.Height)) Then
+                    If bKeepRelational Then
+                        ResizeMax(nWidth, nHeight)
+                    Else
+                        Resize(nWidth, nHeight)
+                    End If
                 Else
-                    Resize(nWidth, nHeight)
-                End If
-            Else
-                If ((nWidth = oImg.Width) And (nHeight = oImg.Height)) Then
-                    oImg = ImageResize(oImg, nHeight, nWidth)
+                    If ((nWidth = oImg.Width) And (nHeight = oImg.Height)) Then
+                        oImg = ImageResize(oImg, nHeight, nWidth)
+                    End If
                 End If
             End If
 
@@ -483,7 +485,10 @@ Public Class Image
                 Dim cEncoder As String = "image/jpeg"
                 Dim ici As ImageCodecInfo = GetEncoderInfo(cEncoder)
                 Try
-                    theImg.Save(szFileName, ici, eps)
+                    If Not theImg Is Nothing Then
+                        theImg.Save(szFileName, ici, eps)
+                    End If
+
                 Catch ex As Exception
 
                     System.IO.File.Delete(szFileName)
@@ -510,7 +515,9 @@ Public Class Image
             RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveJPGWithCompressionSetting", ex, cProcessInfo))
             Return False
         Finally
-            theImg.Dispose()
+            If Not theImg Is Nothing Then
+                theImg.Dispose()
+            End If
             Close()
         End Try
     End Function

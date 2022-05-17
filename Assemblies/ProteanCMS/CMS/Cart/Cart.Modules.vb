@@ -103,7 +103,10 @@ Partial Public Class Cms
                                         copyContentNode.AppendChild(oNotes.CloneNode(True))
                                     End If
 
-                                    Dim newcode As String = myWeb.moDbHelper.IssueCode(CodeGroup, myWeb.mnUserId, False, copyContentNode)
+                                    Dim newcode As String = ""
+                                    If myWeb.mnUserId <> 0 Then
+                                        newcode = myWeb.moDbHelper.IssueCode(CodeGroup, myWeb.mnUserId, False, copyContentNode)
+                                    End If
                                     'Save Issued Code back to user
                                     Dim codeElmt As XmlElement = myWeb.moPageXml.CreateElement("IssuedCode")
                                     codeElmt.InnerText = newcode
@@ -164,6 +167,75 @@ Partial Public Class Cms
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ListQuotes", ex, ""))
                 End Try
             End Sub
+
+            Public Sub RedeemTickets(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
+                Try
+
+                    ' Dim redeemticketsGroupId = myWeb.moConfig("TicketOfficeGroupId")
+                    Dim userId As Long = myWeb.mnUserId
+                    Dim mbIsTicketOffice As Boolean = myWeb.moDbHelper.checkUserRole("Ticket Office", "Role", userId)
+
+                    oContentNode.RemoveAttribute("ticketValid")
+                    oContentNode.SetAttribute("enteredTicketCode", myWeb.moRequest("code"))
+
+                    Dim tktCode As String = myWeb.moRequest("code")
+                    Dim tktKey As String = String.Empty
+
+                    'get the key of the ticketcode - join against cartitem and cartorder
+                    Dim cdchkStr As String = "select tblCodes.nCodeKey, tblCodes.dUseDate, tblCartOrder.nCartOrderKey, tblCartItem.nCartItemKey from tblCodes inner join tblCartItem on tblCodes.nUseId = tblCartItem.nCartItemKey "
+                    cdchkStr = cdchkStr & "inner join tblCartOrder on tblCartItem.nCartOrderId = tblCartOrder.nCartOrderKey "
+                    cdchkStr = cdchkStr & "where nCartStatus in (6, 9 ,17) and tblCodes.cCode = '" & tktCode & "'"
+                    Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(cdchkStr)
+
+                    oContentNode.SetAttribute("ticketValid", "invalid")
+
+                    While oDr.Read()
+                        If IsDBNull(oDr("dUseDate")) Then 'tkt has not been validated yet
+                            'get event name, datetime and purchaser name
+                            Dim tktDet As String = "select (CAST(cCartXml AS XML)).value('/Order[1]/Contact[1]/GivenName[1]', 'VARCHAR(255)') AS 'PurchaserName',"
+                            tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/Name[1]', 'VARCHAR(255)') AS 'EventName', (CAST(xItemXml AS XML)).value('/Content[1]/Description[1]', 'VARCHAR(1000)') AS 'Venue',"
+                            tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') + ' ' + (CAST(xItemXml AS XML)).value('/Content[1]/Times[1]/@start', 'VARCHAR(255)') AS 'Time',"
+                            tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') AS 'EventDate'"
+                            tktDet += " From tblCartItem inner Join tblCartOrder On tblCartOrder.nCartOrderKey = tblCartItem.nCartOrderId"
+                            tktDet += " Where tblCartOrder.nCartOrderKey = " & oDr("nCartOrderKey") & " and tblCartItem.nCartItemKey = " & oDr("nCartItemKey")
+                            Dim oDr1 As SqlDataReader = myWeb.moDbHelper.getDataReader(tktDet)
+                            While oDr1.Read()
+                                oContentNode.SetAttribute("PurchaserName", oDr1("PurchaserName"))
+                                oContentNode.SetAttribute("EventName", oDr1("EventName"))
+                                oContentNode.SetAttribute("Venue", oDr1("Venue"))
+                                oContentNode.SetAttribute("Time", oDr1("Time"))
+
+                                Dim eDay As Date = CDate(oDr1("EventDate"))
+                                If eDay <> DateTime.Today Then
+                                    oContentNode.SetAttribute("ticketValid", "notToday")
+                                    Return
+                                End If
+                            End While
+
+                            If mbIsTicketOffice Then
+                                If myWeb.moDbHelper.RedeemCode(myWeb.moRequest("code")) Then 'if ticket got validated successfully
+                                    oContentNode.SetAttribute("ticketValid", "validated")
+                                End If
+                            Else
+                                oContentNode.SetAttribute("ticketValid", "valid")
+                            End If
+                        Else
+                            Dim useStr As String = "select top 1 dUseDate from tblCodes where cCode = '" & tktCode & "'"
+                            Dim oDr2 As SqlDataReader = myWeb.moDbHelper.getDataReader(useStr)
+                            While oDr2.Read()
+                                oContentNode.SetAttribute("lastUsedTime", oDr2("dUseDate"))
+                            End While
+                            oContentNode.SetAttribute("ticketValid", "used")
+                        End If
+                    End While
+
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ListQuotes", ex, ""))
+                End Try
+            End Sub
+
 
         End Class
 #End Region

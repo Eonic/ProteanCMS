@@ -2930,10 +2930,12 @@
       <xsl:apply-templates select="Content[@type='Location']" mode="displayBrief"/>
     </xsl:if>
   </xsl:template>
+	
+  <xsl:template match="Page" mode="googleMapJS">		
+  </xsl:template>
 
-  <xsl:template match="Page" mode="googleMapJS">
+  <xsl:template match="Content[@type='Module' and @moduleType='GoogleMapv3']" mode="contentJS">
     <!-- Initialise any Google Maps -->
-    <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
       <xsl:variable name="apiKey">
         <xsl:choose>
           <xsl:when test="$GoogleAPIKey!=''">
@@ -2947,13 +2949,32 @@
       <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
       <script type="text/javascript">
         <xsl:text>function initialiseGMaps(){</xsl:text>
-        <xsl:apply-templates select="//Content[@moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation'] " mode="initialiseGoogleMap"/>
+        <xsl:apply-templates select="." mode="initialiseGoogleMap"/>
         <xsl:text>};</xsl:text>
       </script>
-    </xsl:if>
   </xsl:template>
 
-  <!-- Each Map has it's set of values - unique by content id -->
+	<xsl:template match="Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]" mode="contentDetailJS">
+		<!-- Initialise any Google Maps -->
+			<xsl:variable name="apiKey">
+				<xsl:choose>
+					<xsl:when test="$GoogleAPIKey!=''">
+						<xsl:value-of select="$GoogleAPIKey"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
+			<script type="text/javascript">
+				<xsl:text>function initialiseGMaps(){</xsl:text>
+				<xsl:apply-templates select="." mode="initialiseGoogleMap"/>
+				<xsl:text>};</xsl:text>
+			</script>
+	</xsl:template>
+
+	<!-- Each Map has it's set of values - unique by content id -->
   <xsl:template match="Content" mode="initialiseGoogleMap">
     <xsl:variable name="gMapId" select="concat('gmap',@id)"/>
     <xsl:variable name="mOptionsName" select="concat('mOptions',@id)"/>
@@ -5042,43 +5063,43 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div itemscope="" itemtype="{Organization/@itemtype}">
+    <div>
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <div itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+      <div>
         <xsl:if test="Organization/location/PostalAddress/name!='' or Organization/location/PostalAddress/streetAddress!='' or Organization/location/PostalAddress/addressLocality!='' or Organization/location/PostalAddress/addressRegion!='' or Organization/location/PostalAddress/postalCode!=''"> </xsl:if>
         <a href="{$parentURL}">
-          <span itemprop="name">
+          <span>
             <xsl:value-of select="name"/>
           </span>
           <xsl:text>, </xsl:text>
           <xsl:if test="Organization/location/PostalAddress/name!='' and Organization/location/PostalAddress/name!=name">
-            <span itemprop="name">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/name"/>
             </span>
             <xsl:text>, </xsl:text>
           </xsl:if>
           <xsl:if test="Organization/location/PostalAddress/streetAddress!=''">
-            <span itemprop="streetAddress">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/streetAddress"/>
             </span>
             <xsl:text>, </xsl:text>
           </xsl:if>
           <xsl:if test="Organization/location/PostalAddress/addressLocality!=''">
-            <span itemprop="addressLocality">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/addressLocality"/>
             </span>
             <xsl:text>, </xsl:text>
           </xsl:if>
           <xsl:if test="Organization/location/PostalAddress/addressRegion!=''">
-            <span itemprop="addressRegion">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/addressRegion"/>
             </span>
             <xsl:text>. </xsl:text>
           </xsl:if>
           <xsl:if test="Organization/location/PostalAddress/postalCode!=''">
-            <span itemprop="postalCode">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/postalCode"/>
             </span>
             <xsl:text>. </xsl:text>
@@ -6022,6 +6043,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+	  <xsl:variable name="cropSetting">
+		  <xsl:choose>
+			  <xsl:when test="@crop='true'">
+				  <xsl:text>true</xsl:text>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:text>false</xsl:text>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -6106,6 +6137,7 @@
           <xsl:otherwise>
             <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
               <xsl:with-param name="sortBy" select="@sortBy"/>
+				<xsl:with-param name="crop" select="$cropSetting"/>
             </xsl:apply-templates>
           </xsl:otherwise>
         </xsl:choose>
@@ -6149,11 +6181,21 @@
   <!-- Event Brief -->
   <xsl:template match="Content[@type='Event']" mode="displayBrief">
     <xsl:param name="sortBy"/>
+	  <xsl:param name="crop"/>
     <!-- articleBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    
+	  <xsl:variable name="cropSetting">
+		  <xsl:choose>
+			  <xsl:when test="$crop='true'">
+				  <xsl:value-of select="true()"/>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="false()"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
     <div class="listItem list-group-item vevent">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem list-group-item vevent'"/>
@@ -6186,7 +6228,9 @@
       </xsl:if>    
         <xsl:if test="Images/img/@src!=''">
           <a href="{$parentURL}" title="Read More - {Headline/node()}">
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
+			  <xsl:apply-templates select="." mode="displayThumbnail">
+				  <xsl:with-param name="crop" select="$cropSetting" />
+			  </xsl:apply-templates>
           </a>
         </xsl:if>
         <div class="media-body">
@@ -6674,6 +6718,7 @@
     <xsl:apply-templates select="." mode="organiser"/>
     } ]
   </xsl:template>
+	
   <xsl:template match="Content[@type='Event' and ancestor::ContentDetail]" mode="organiser">
     <!-- Copy this to set the value site wide for the organiastion events.
       ,
@@ -6684,11 +6729,14 @@
       }
       -->
   </xsl:template>
+	
   <xsl:template match="Content[@type='Organisation' and @rtype='venue']" mode="JSONLD">
     "location": {
     "@type": "Place",
     "name": "<xsl:value-of select="name/node()"/>",
-    "sameAs": "http://www.example.com",
+	<xsl:if test="url/node()!=''">
+		"sameAs": "<xsl:value-of select="url/node()"/>",
+	</xsl:if>
     "address": {
     "@type": "PostalAddress",
     "streetAddress": "<xsl:value-of select="Organization/location/PostalAddress/streetAddress/node()"/>",
@@ -8464,7 +8512,7 @@
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
     <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
     <xsl:variable name="link" select="@link"/>
-    <xsl:variable name="parentPage" select="//MenuItem[@id=$link]"/>
+    <xsl:variable name="parentPage" select="//MenuItem[@id=$link][1]"/>
     <xsl:variable name="contentList">
       <xsl:apply-templates select="." mode="getContent">
         <xsl:with-param name="contentType" select="$contentType" />
@@ -8549,6 +8597,7 @@
           <xsl:apply-templates select="ms:node-set($contentList)/*[not(DisplayName/@exclude='true')]" mode="displayMenuBrief">
             <xsl:with-param name="sortBy" select="@sortBy"/>
           </xsl:apply-templates>
+		
           <xsl:text> </xsl:text>
         </ul>
         <div class="terminus">&#160;</div>

@@ -233,7 +233,6 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.AssemblyReference.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\tidy.x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\tidy.x86.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll.config
@@ -250,9 +249,9 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Newtonsoft.Json
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Owin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.IO.Compression.ZipFile.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.IO.Packaging.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\TidyHTML5Managed.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Tinify.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\MySql.Data.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\JsonWebTokens.dll

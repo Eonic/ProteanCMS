@@ -289,12 +289,17 @@ $(document).ready(function() {
         hide: true
     });
 
-    $('.pick-page #MenuTree').ajaxtreeview({
-        loadPath: treeviewPath,
-        ajaxCmd: '',
-        openLevel: 2,
-        hide: true
+    $(".modal.pick-page").on('shown.bs.modal', function (e) {
+        
+        $(e.currentTarget).find('#MenuTree').ajaxtreeview({
+            loadPath: treeviewPath,
+            ajaxCmd: '',
+            openLevel: 2,
+            hide: true
+        });
     });
+
+
 
 
     $('div.module div.moduleDrag').closest('.module').draggable({
@@ -560,7 +565,7 @@ function setMasonaryModuleWidth(pageId, contentId, newPos) {
 };
 
 function acceptModule($drag, $drop) {
-    var pageId = $('body').attr('id').replace('pg_', '')
+    var pageId = $('body').attr('id').replace('pg_', '').replace('page', '')
     var contentId = $drag.attr('id').replace('mod_', '')
     var ajaxurl = '?ewCmd=UpdatePosition' + decodeURIComponent("%26") + 'pgid=' + pageId + decodeURIComponent("%26") + 'id=' + contentId + decodeURIComponent("%26") + 'position=' + $drop.parents('.moduleContainer').attr('id')
     //alert(ajaxurl);  
@@ -786,6 +791,12 @@ function xfrmClearCalendar(formRef, fieldRef) {
     document.getElementById('dateDisplay-' + fieldRef).innerHTML = '';
 }
 
+function xfrmClearPickPage(formRef, fieldRef) {
+    alert(fieldRef);
+    document.forms[formRef].elements[fieldRef].value = '';
+    document.getElementById(fieldRef + '-name').innerHTML = '';
+}
+
 function passFilePathToForm(targetField, filepath) {
     opener.document.forms['EditContent'].elements[targetField].value = filepath;
     window.close();
@@ -947,7 +958,7 @@ Original preload function has been kept but is unused.
                 $(this).removeClass('collapsable-hitarea').addClass('expandable-hitarea');
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-right');
 
-                alert('empty');
+                
 
                 // Remove the child tree
 
@@ -1257,7 +1268,7 @@ Original preload function has been kept but is unused.
 
         moveTop: function (moveId) {
             var moveIdNode = "node" + moveId;
-            alert(moveId);
+          
             if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
                 $('#MenuTree li#' + moveIdNode).addClass("locked");
                 $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
@@ -2351,7 +2362,8 @@ if (editPageElement) {
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
                     $('.btnRedirectSave').removeAttr("disabled");
                     $("#redirectModal").modal("show");
-                    $("#OldUrl").val(localStorage.originalStructName);
+                    var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                    $("#OldUrl").val(oldURLFromXsl);
                     $("#NewUrl").val(newStructName);
                     this.structName = newStructName;
                     $(".hiddenPageId").val(localStorage.pageId);
@@ -2439,20 +2451,20 @@ if (editProductElement > 0) {
                     localStorage.removeItem('originalPathName');
                 }
                 localStorage.pageId = productId;
-                alert(this.urlPathInput);
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
-
+                
                 if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
                     var redirectType = $(".hiddenRedirectType").val();
                     $('.btnRedirectSave').removeAttr("disabled");
                     $("#redirectModal").modal("show");
-                    $("#OldUrl").val(localStorage.originalPathName);
+                    var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                    $("#OldUrl").val(oldURLFromXsl);
                     $("#NewUrl").val(newContentPath);
                     this.cContentPath = newContentPath;
                     $(".hiddenPageId").val(localStorage.pageId);
-                    $(".hiddenProductOldUrl").val(localStorage.originalPathName);
+                    $(".hiddenProductOldUrl").val(oldURLFromXsl); 
                     $(".hiddenProductNewUrl").val(newContentPath);
                     $(".hiddenRedirectType").val(redirectType);
                     event.preventDefault();
