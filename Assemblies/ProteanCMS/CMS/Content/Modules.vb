@@ -316,7 +316,64 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Dim oFilterElmt As XmlElement
                 Dim sProcessInfo As String
                 Dim filters As New Protean.Providers.Filter.DefaultProvider.Filters()
-                Dim formName As String = "ProductFilter"
+                Dim formName As String = "PriceFilter"
+                Dim oFrmGroup As XmlElement
+
+                Try
+
+
+                    'Dim filterForm As xForm = New xForm(myWeb)
+                    'Dim oFrmInstance As XmlElement
+                    ''Dim pageFilter As New Protean.Providers.Filter.PageFilter()
+                    'Dim priceFilter As New Protean.Providers.Filter.PriceFilter()
+                    'filterForm.NewFrm(formName)
+
+                    'filterForm.submission(formName, "", "POST", "return form_check(this);")
+
+                    'oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "PriceFilterGroup", "PriceFilterGroup", "")
+                    'filterForm.addBind("PriceFilter", "PriceFilter")
+                    'priceFilter.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                    'oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "submit", "contentSubmit", "")
+                    'oContentNode.AppendChild(filterForm.moXformElmt)
+
+                    'If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
+                    '    If (myWeb.moRequest.Form("Submit").ToLower() <> "search") Then
+                    '        priceFilter.RemovePageFromFilter(myWeb, myWeb.moRequest.Form("Submit"))
+                    '    End If
+                    'End If
+                    'oFrmInstance = filterForm.Instance
+                    'If (myWeb.moSession("PageIds") IsNot Nothing) Then
+                    '    Protean.Tools.Xml.addElement(oFrmInstance, "PriceFilter", Convert.ToString(myWeb.moSession("PageIds")))
+                    'Else
+                    '    Protean.Tools.Xml.addElement(oFrmInstance, "PriceFilter")
+                    'End If
+
+                    'filterForm.Instance = oFrmInstance
+
+                    'filterForm.addSubmit(oFrmGroup, "Search", "Search")
+                    'filterForm.addValues()
+                    'If (filterForm.isSubmitted) Then
+                    '    'If (filterForm.valid) Then
+                    '    filterForm.updateInstanceFromRequest()
+                    '    priceFilter.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                    '    'End If
+
+                    'End If
+
+                    '' Next
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
+                End Try
+            End Sub
+
+            Public Sub PriceFilter(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
+
+                Dim oFilterElmt As XmlElement
+                Dim sProcessInfo As String
+                Dim filters As New Protean.Providers.Filter.DefaultProvider.Filters()
+                Dim formName As String = "PriceFilter"
                 Dim oFrmGroup As XmlElement
 
                 Try
@@ -330,9 +387,9 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     filterForm.submission(formName, "", "POST", "return form_check(this);")
 
-                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "ProductFilterGroup", "ProductFilterGroup", "")
-                    filterForm.addBind("PageFilter", "PageFilter")
-                    pageFilter.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "PriceFilterGroup", "PriceFilterGroup", "")
+                    filterForm.addBind("PriceFilter", "PriceFilter")
+                    pageFilter.AddControlForPrice(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "submit", "contentSubmit", "")
                     oContentNode.AppendChild(filterForm.moXformElmt)
 
@@ -343,9 +400,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                     End If
                     oFrmInstance = filterForm.Instance
                     If (myWeb.moSession("PageIds") IsNot Nothing) Then
-                        Protean.Tools.Xml.addElement(oFrmInstance, "PageFilter", Convert.ToString(myWeb.moSession("PageIds")))
+                        Protean.Tools.Xml.addElement(oFrmInstance, "PriceFilter", Convert.ToString(myWeb.moSession("PageIds")))
                     Else
-                        Protean.Tools.Xml.addElement(oFrmInstance, "PageFilter")
+                        Protean.Tools.Xml.addElement(oFrmInstance, "PriceFilter")
                     End If
 
                     filterForm.Instance = oFrmInstance
@@ -367,8 +424,6 @@ where cl.nStructId = " & myWeb.mnPageId)
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
                 End Try
             End Sub
-
-
 
             Public Sub Conditional(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Try
