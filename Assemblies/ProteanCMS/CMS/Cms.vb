@@ -3642,7 +3642,7 @@ Public Class Cms
             sSql &= "FROM tblContent AS c INNER JOIN "
             sSql &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
             sSql &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
-            sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
+            'sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
 
             ' GCF - sql replaced by the above - 24/06/2011
             ' replaced JOIN to tblContentLocation with  LEFT OUTER JOIN
@@ -4555,12 +4555,7 @@ Public Class Cms
             If mnUserId <> 0 Then
                 oUserXml = moPageXml.SelectSingleNode("/Page/User")
                 If oUserXml Is Nothing Then
-                    Dim userXml As XmlElement = Me.GetUserXML(mnUserId)
-                    If moPageXml IsNot userXml.OwnerDocument Then
-                        moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(userXml.CloneNode(True), True))
-                    Else
-                        moPageXml.DocumentElement.AppendChild(userXml)
-                    End If
+                    moPageXml.DocumentElement.AppendChild(Me.GetUserXML(mnUserId))
                 Else
                     moPageXml.DocumentElement.ReplaceChild(Me.GetUserXML(mnUserId), oUserXml)
                 End If
@@ -5424,12 +5419,7 @@ Public Class Cms
                                 Else
                                     cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                                 End If
-                                'read paths to exclude from url
-                                Dim excludePaths As String = CStr(moConfig("ExcludeFoldersFromPaths") & "")
-                                Dim exclFoldPaths As String() = excludePaths.Split(",")
-                                If Array.Find(exclFoldPaths, Function(s) s = cPageName) = Nothing Then 'add folder to url only if it's not on the list
-                                    sUrl = sUrl & "/" & cPageName
-                                End If
+                                sUrl = sUrl & "/" & cPageName
                             End If
                         Next
                     End If
@@ -5475,32 +5465,34 @@ Public Class Cms
                         If moRequest.QueryString.Count > 0 Then
                             If Not moRequest("path") Is Nothing Then
                                 'If this matches the path requested then change the pageId
-                                Dim PathToMatch As String = CStr(Replace(sUrl, DomainURL, "") + "").ToLower()
-                                Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
-                                Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
-                                If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
-                                    If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
-                                        'case for if newsletter has same page name as menu item
-                                        If Features.ContainsKey("PageVersions") Then
-                                            'catch for page version
-                                            If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                If (sUrl <> String.Empty) Then
+                                    Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
+                                    Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
+                                    Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
+                                    If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
+                                        If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
+                                            'case for if newsletter has same page name as menu item
+                                            If Features.ContainsKey("PageVersions") Then
+                                                'catch for page version
+                                                If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                                    mnPageId = oMenuItem.GetAttribute("id")
+                                                End If
+                                            Else
                                                 mnPageId = oMenuItem.GetAttribute("id")
                                             End If
-                                        Else
-                                            mnPageId = oMenuItem.GetAttribute("id")
+
+                                            If mnUserId <> 0 Or mbAdminMode <> True Then
+                                                'case for personalisation and admin TS 14/02/2021
+                                                mnPageId = oMenuItem.GetAttribute("id")
+                                            End If
+                                            ' If oMenuItem.GetAttribute("verType") = "3" Then
+                                            mnClonePageVersionId = mnPageId
+                                            'this is used in clone mode to determine the page content in GetPageContent.
+                                            '  End If
+                                            oMenuItem.SetAttribute("requestedPage", "1")
                                         End If
 
-                                        If mnUserId <> 0 Or mbAdminMode <> True Then
-                                            'case for personalisation and admin TS 14/02/2021
-                                            mnPageId = oMenuItem.GetAttribute("id")
-                                        End If
-                                        ' If oMenuItem.GetAttribute("verType") = "3" Then
-                                        mnClonePageVersionId = mnPageId
-                                        'this is used in clone mode to determine the page content in GetPageContent.
-                                        '  End If
-                                        oMenuItem.SetAttribute("requestedPage", "1")
                                     End If
-
                                 End If
                             End If
                         End If
@@ -5808,7 +5800,7 @@ Public Class Cms
             " FROM tblContent INNER JOIN" &
             " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" &
             " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" &
-            " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <=" & Protean.Tools.Database.SqlDate(mdDate) & " or tblAudit.dPublishDate is null) AND " &
+            " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " or tblAudit.dPublishDate is null) AND " &
             " (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(mdDate) & " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" & cContentTypes & ")) "
 
 
@@ -6088,7 +6080,7 @@ Public Class Cms
             " tblCartCatProductRelations On tblCartProductCategories.nCatKey = tblCartCatProductRelations.nCatId"
             If Not Me.mbAdminMode Then
                 cSQL &= " WHERE tblAudit.nStatus = 1 " &
-                " And (tblAudit.dPublishDate Is null Or tblAudit.dPublishDate = 0 Or tblAudit.dPublishDate <=" & Protean.Tools.Database.SqlDate(Now) & " )" &
+                " And (tblAudit.dPublishDate Is null Or tblAudit.dPublishDate = 0 Or tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & " )" &
                 " And (tblAudit.dExpireDate Is null Or tblAudit.dExpireDate = 0 Or tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & " )" &
                 " And " + InStatement
             Else
@@ -6648,7 +6640,7 @@ Public Class Cms
             Dim ochkStr As String = ""
             If IsNumeric(cTop) Then nMax = CInt(cTop)
             For Each oDR In oDS.Tables("Content1").Rows
-                If oDS.Tables("Content").Rows.Count <nMax Or nMax= 0 Then
+                If oDS.Tables("Content").Rows.Count < nMax Or nMax = 0 Then
                     If IsNumeric(oDR("parId")) And Not oDR("parId").Contains(",") Then
                         ochkStr = moDbHelper.checkPagePermission(oDR("parId"))
                         If IsNumeric(ochkStr) Then
