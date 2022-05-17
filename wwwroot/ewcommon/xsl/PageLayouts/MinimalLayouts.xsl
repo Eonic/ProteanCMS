@@ -5063,43 +5063,43 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div itemscope="" itemtype="{Organization/@itemtype}">
+    <div>
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <div itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+      <div>
         <xsl:if test="Organization/location/PostalAddress/name!='' or Organization/location/PostalAddress/streetAddress!='' or Organization/location/PostalAddress/addressLocality!='' or Organization/location/PostalAddress/addressRegion!='' or Organization/location/PostalAddress/postalCode!=''"> </xsl:if>
         <a href="{$parentURL}">
-          <span itemprop="name">
+          <span>
             <xsl:value-of select="name"/>
           </span>
           <xsl:text>, </xsl:text>
           <xsl:if test="Organization/location/PostalAddress/name!='' and Organization/location/PostalAddress/name!=name">
-            <span itemprop="name">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/name"/>
             </span>
             <xsl:text>, </xsl:text>
           </xsl:if>
           <xsl:if test="Organization/location/PostalAddress/streetAddress!=''">
-            <span itemprop="streetAddress">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/streetAddress"/>
             </span>
             <xsl:text>, </xsl:text>
           </xsl:if>
           <xsl:if test="Organization/location/PostalAddress/addressLocality!=''">
-            <span itemprop="addressLocality">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/addressLocality"/>
             </span>
             <xsl:text>, </xsl:text>
           </xsl:if>
           <xsl:if test="Organization/location/PostalAddress/addressRegion!=''">
-            <span itemprop="addressRegion">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/addressRegion"/>
             </span>
             <xsl:text>. </xsl:text>
           </xsl:if>
           <xsl:if test="Organization/location/PostalAddress/postalCode!=''">
-            <span itemprop="postalCode">
+            <span>
               <xsl:value-of select="Organization/location/PostalAddress/postalCode"/>
             </span>
             <xsl:text>. </xsl:text>

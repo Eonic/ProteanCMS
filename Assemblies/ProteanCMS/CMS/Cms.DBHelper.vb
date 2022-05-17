@@ -3333,8 +3333,6 @@ restart:
             End Try
 
         End Function
-
-
         Public Function setObjectFRef(ByVal objectType As objectTypes, ByVal id As Long, ByVal cForeignRef As String) As Long
             Dim cProcName As String = "setObjectFRef (ObjectTypes,Int,[String])"
             PerfMon.Log("DBHelper", cProcName)
@@ -3363,7 +3361,6 @@ restart:
             End Try
 
         End Function
-
         Public Function getAuditId(Optional ByVal nStatus As Integer = 1, Optional ByVal nDirId As Long = 0, Optional ByVal cDescription As String = "", Optional ByVal dPublishDate As Object = Nothing, Optional ByVal dExpireDate As Object = Nothing, Optional ByVal dInsertDate As Object = Nothing, Optional ByVal dUpdateDate As Object = Nothing) As Integer
             PerfMon.Log("DBHelper", "getAuditId")
             Dim sSql As String
@@ -5575,7 +5572,7 @@ restart:
 
 
                 End If
-                If Not (root Is Nothing) Then
+                If Not root Is Nothing Then
                     If root.SelectSingleNode("cContactTelCountryCode") Is Nothing Then
                         root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"))
                     End If

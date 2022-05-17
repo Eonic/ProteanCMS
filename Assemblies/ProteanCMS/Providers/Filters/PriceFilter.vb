@@ -16,11 +16,11 @@ Namespace Providers
                     Dim pageFilterRange As XmlElement
                     Dim oDr As SqlDataReader
 
-                    Dim sSql As String = "spGetPagesByParentPageId"
+                    Dim sSql As String = "spGetResultForPriceFilter"
                     oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     'Adding controls to the form like dropdown, radiobuttons
-                    oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 10, 30, 1)
-
+                    pageFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 10, 300, 10)
+                    oXform.addOptionsFromSqlDataReader(pageFilterRange, oDr, "nContentId", "cContentName")
                 Catch ex As Exception
 
                 End Try
@@ -35,8 +35,8 @@ Namespace Providers
                     Dim cPageIds As String = String.Empty
                     Dim cnt As Integer
 
-                    If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
+                    If (oXform.Instance.SelectNodes("PriceFilter") IsNot Nothing) Then
+                        cPageIds = oXform.Instance.SelectNodes("PriceFilter")(0).InnerText
                         If (aWeb.moSession("PageIds") Is Nothing) Then
                             aWeb.moSession("PageIds") = cPageIds
                         Else

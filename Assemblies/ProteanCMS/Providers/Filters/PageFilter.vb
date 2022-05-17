@@ -27,7 +27,22 @@ Namespace Providers
                 End Try
             End Sub
 
+            Public Sub AddControlForPrice(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+                Try
+                    Dim pageFilterSelect As XmlElement
+                    Dim oDr As SqlDataReader
 
+
+                    Dim sSql As String = "spGetPagesByParentPageId"
+                    oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
+                    'Adding controls to the form like dropdown, radiobuttons
+                    oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 10, 30, 1)
+                    pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Select By Page", "Price Range", ApperanceTypes.Full)
+                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
+                Catch ex As Exception
+
+                End Try
+            End Sub
             Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
 

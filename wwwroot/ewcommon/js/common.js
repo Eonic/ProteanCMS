@@ -806,14 +806,10 @@ function showDependant(dependant, allDependants) {
     $("#" + dependant).trigger('bespokeXform');
 }
 
-function showHideDependant(thisId, allDependants) {
-
-    var isChecked = $('#' + thisId).is(":checked");
-
-    alert('#' + thisId + ' ' + isChecked);
-
+function hideAllDependants(thisId, allDependants) {
+    
     // Hide unwanted Dependants
-    if (donothide != true) {
+    //if (donothide != true) {
         $("." + allDependants).addClass('hidden');
 
         // Make required inactive to avoid JS validation
@@ -830,7 +826,21 @@ function showHideDependant(thisId, allDependants) {
             $(this).attr('name', tempFieldName);
             //   $(this).attr('id', $(this).attr('id') + '~inactive');
         });
-    }
+    //}
+}
+
+function hideWantedDependants(thisId) {
+    // Show wanted Dependants
+    $("#" + thisId + '-dependant').addClass('hidden');
+
+    // Find all inactive required fields and make required again for JS Validation
+    $("#" + thisId + '-dependant').find('.reqinactive').each(function () {
+        $(this).removeClass('required');
+        $(this).addClass('reqinactive');
+    });
+}
+
+function showWantedDependants(thisId) {
     // Show wanted Dependants
     $("#" + thisId + '-dependant').removeClass('hidden');
 
@@ -855,6 +865,16 @@ function showHideDependant(thisId, allDependants) {
 
     $("#" + thisId + '-dependant').prepareXform();
     $("#" + thisId + '-dependant').trigger('bespokeXform');
+}
+
+function showHideDependant(thisId, allDependants, donothide) {
+
+    if ($('#' + thisId).is(":checked")) { //getting checked
+        showWantedDependants(thisId);
+    }
+    else { //getting unchecked
+        hideWantedDependants(thisId);
+    }
 }
 
 
