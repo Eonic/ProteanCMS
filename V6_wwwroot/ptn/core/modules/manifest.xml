@@ -20,6 +20,7 @@
       <ContentType type="PlainText" formPath="generic/plaintext" name="Plain Text">Plain unformatted text</ContentType>
       <ContentType type="Image" formPath="generic/image" name="Image">Add an image</ContentType>
 	  <ContentType type="Link" formPath="generic/link" name="Link">Add an link</ContentType>
+	  <ContentType type="MetaData" formPath="generic/metadata" name="Module">&#160;</ContentType>
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>

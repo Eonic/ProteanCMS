@@ -1350,9 +1350,9 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </xsl:if>
 
-    <!--<xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">-->
+    <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
       <xsl:apply-templates select="." mode="getMetaDescription"/>
-    <!--</xsl:if>-->
+    </xsl:if>
     <!--New OG Tags for Facebook-->
     <xsl:apply-templates select="." mode="opengraphdata"/>
     <meta property="og:url" content="{$href}"/>
@@ -1666,31 +1666,29 @@
 
   <xsl:template match="Page" mode="getMetaDescription">
     <!-- when detail get body -->
-	  <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
-		  <xsl:choose>
-			  <xsl:when test="/Page/ContentDetail">
-				  <xsl:choose>
-					  <xsl:when test="/Page/ContentDetail/Content/@metaDescription!=''">
-						  <meta name="description" content="{/Page/ContentDetail/Content/@metaDescription}"/>
-					  </xsl:when>
-					  <xsl:otherwise>
-						  <xsl:variable name="contentMetaDescription">
-							  <xsl:call-template name="truncate-string">
-								  <xsl:with-param name="text">
-									  <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getContentMetaDescription"/>
-								  </xsl:with-param>
-								  <xsl:with-param name="length" select="160"/>
-							  </xsl:call-template>
-						  </xsl:variable>
-						  <meta name="description" content="{$contentMetaDescription}"/>
-					  </xsl:otherwise>
-				  </xsl:choose>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <meta name="description" content="{Contents/Content[@name='MetaDescription' or @name='metaDescription']}{Content[@name='MetaDescription-Specific']}"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:if>
+    <xsl:choose>
+      <xsl:when test="/Page/ContentDetail">
+        <xsl:choose>
+          <xsl:when test="/Page/ContentDetail/Content/@metaDescription!=''">
+            <meta name="description" content="{/Page/ContentDetail/Content/@metaDescription}"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:variable name="contentMetaDescription">
+              <xsl:call-template name="truncate-string">
+                <xsl:with-param name="text">
+                  <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getContentMetaDescription"/>
+                </xsl:with-param>
+                <xsl:with-param name="length" select="160"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <meta name="description" content="{$contentMetaDescription}"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <meta name="description" content="{Contents/Content[@name='MetaDescription' or @name='metaDescription']}{Content[@name='MetaDescription-Specific']}"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
@@ -2648,7 +2646,13 @@
   <xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
           gtag("event", "add_to_cart", 
 		  <xsl:apply-templates select="." mode="google-ga4-transaction"/>
-		  );
+		  );		  
+  </xsl:template>
+	
+	  <xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
+          gtag("event", "add_to_cart", 
+		  <xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		  );		  
   </xsl:template>
 	
   <xsl:template match="Page" mode="google-ga4-transaction">
@@ -2673,9 +2677,9 @@
               price: <xsl:value-of select="@price"/>,
               quantity: <xsl:value-of select="@quantity"/>
           }  
-		  <xsl:if test="following-sibling()::Item">
+		  <!--<xsl:if test="following-sibling()::Item">
 			  <xsl:text>,</xsl:text>
-	    </xsl:if>
+	    </xsl:if>-->
   </xsl:template>			
 
   <xsl:template match="Page" mode="BingTrackingCode">   
