@@ -5460,7 +5460,7 @@ Public Class Cms
                     ' If oMenuItem.GetAttribute("id") = "609" Then
                     ' mbIgnorePath = mbIgnorePath
                     ' If
-                    Dim PathToMatch As String = ""
+
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then
                             If Not moRequest("path") Is Nothing Then
