@@ -829,44 +829,6 @@ function hideAllDependants(thisId, allDependants) {
     //}
 }
 
-function hideWantedDependants(thisId) {
-    // Show wanted Dependants
-    $("#" + thisId + '-dependant').addClass('hidden');
-
-    // Find all inactive required fields and make required again for JS Validation
-    $("#" + thisId + '-dependant').find('.reqinactive').each(function () {
-        $(this).removeClass('required');
-        $(this).addClass('reqinactive');
-    });
-}
-
-function showWantedDependants(thisId) {
-    // Show wanted Dependants
-    $("#" + thisId + '-dependant').removeClass('hidden');
-
-    // Find all inactive required fields and make required again for JS Validation
-    $("#" + thisId + '-dependant').find('.reqinactive').each(function () {
-        $(this).removeClass('reqinactive');
-        $(this).addClass('required');
-    });
-
-    // Find all inactive inputs, and re-activate,
-    $("#" + thisId + '-dependant').find(":input").not(':submit').each(function () {
-        var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-        $(this).attr('name', tempFieldName);
-
-        var fieldId = $(this).attr('id');
-        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-        $(this).attr('id', tempFieldId);
-        //  alert("enable " + tempFieldName);
-        //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
-    });
-
-    $("#" + thisId + '-dependant').prepareXform();
-    $("#" + thisId + '-dependant').trigger('bespokeXform');
-}
-
 function hideCase(thisId) {
     // Show wanted Dependants
     $("#" + thisId).addClass('hidden');
@@ -905,63 +867,48 @@ function showCase(thisId) {
     $("#" + thisId).trigger('bespokeXform');
 }
 
-function showHideDependant(thisId,bindVar) {//, allDependants, donothide) {
-    var idArray = [];
-    $('.' + bindVar + '-dependant').each(function () {
-        idArray.push(this.id);
-    });
-    //alert(idArray);
+function showHideDependant(bindVar) {
 
-    var str_array = [];
-    str_array = $(thisId).data('showhide').split(',');
-    var newArr = str_array.map(el => el + "-dependant");
-    //alert(newArr);
-
-
-    var matches = [];
-    var diff = [];
-
-    $.grep(idArray, function (el) {
-
-        if ($.inArray(el, newArr) != -1) {
-            matches.push(el);
-        }
-        else {
-            diff.push(el);
-        }
-
+    //get this list of service chkbxs under bindVar
+    var servicesObjs = $("[name='" + bindVar + "']");
+    var serviceIds = [];
+    $.each(servicesObjs, function (key, value) { //get Ids of the services
+        serviceIds.push(value.id);
     });
 
-    //alert(" they have the same " + matches);
-    //alert(" they have the diff " + diff);
-    if ($('#' + thisId.id).is(":checked")) {
-        $.each(matches, function (key, value) {
-            showCase(value);
-        });
-    }
-    else {
-        $.each(diff, function (key, value) {
-            hideCase(value);
-        });
-    }
-
-    //alert($(thisId).attr("data-showhide"));
-    //alert($("#ServiceChoice_1").attr("data-showhide"));
+    //get Ids of the services checked
+    var servcsSelected = [];
+    $.each(serviceIds, function (key, value) { 
+        if ($('#' + value).is(":checked")) {
+            servcsSelected.push(value);
+        }
+    });
     
-    //alert(str_array[1]);
-    //for (var i = 0; i < str_array.length; i++) {
-    //    // Trim the excess whitespace.
-    //    str_array[i] = str_array[i].replace(/^\s*/, "").replace(/\s*$/, "");
-    //    // Add additional code here, such as:
-    //    alert(str_array[i]);
-    //}
+    //get cases/Qs for all services checked
+    var QsForServcChckd = [];
+    var QsForServcChckdDpdnt = [];
+    $.each(servcsSelected, function (key, value) {
+        QsForServcChckd = ($('#' + value).data('showhide').split(','));
+        for (var i = 0; i < QsForServcChckd.length; i++) {
+            if (jQuery.inArray(QsForServcChckd[i] + '-dependant', QsForServcChckdDpdnt) == -1) { //check for duplicate
+                QsForServcChckdDpdnt.push(QsForServcChckd[i] + '-dependant');
+            }
+        }
+    });
+    
+    //hide all cases/Qs
+    var QArray = [];
+    $('.' + bindVar + '-dependant').each(function () {
+        QArray.push(this.id);
+    });
+    $.each(QArray, function (key, value) {
+        hideCase(value);
+    });
 
-    //if ($('#' + thisId).is(":checked")) { //getting checked
-    //    showWantedDependants(thisId);
-    //}
-    //else { //getting unchecked
-    //    hideWantedDependants(thisId);
-    //}
+    //show all cases/Qs for services selected
+    $.each(QsForServcChckdDpdnt, function (key, value) {
+        showCase(value);
+    });
 }
 
 
