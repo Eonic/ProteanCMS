@@ -2,12 +2,12 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="Information">
-      <ContentType type="Contact" formPath="contacts/contact" name="Contact">A contact for visitors</ContentType>
+      <ContentType type="Contact" formPath="contact" name="Contact">A contact for visitors</ContentType>
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="ContactList" formPath="contacts/contact-list" icon="fas fa-users" name="Contact List"></Module>
+      <Module type="ContactList" formPath="contact-list" icon="fas fa-users" name="Contact List"></Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
