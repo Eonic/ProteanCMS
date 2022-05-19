@@ -2,12 +2,12 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="Information">
-      <ContentType type="Organisation" formPath="organisations/organisation" name="Organisation">Organisation Details</ContentType>
+      <ContentType type="Organisation" formPath="organisation" name="Organisation">Organisation Details</ContentType>
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
-      <Module type="OrganisationList" formPath="organisations/organisation-list" icon="far fa-building" name="Organisation List"></Module>
+      <Module type="OrganisationList" formPath="organisation-list" icon="far fa-building" name="Organisation List"></Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
