@@ -2251,9 +2251,13 @@ Public Class Cms
 
                 'NB put the parId code here?
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Contents/Content")
-
-                    If CLng("0" & oElmt.GetAttribute("parId")) > 0 Then
-                        processInfo = "Cleaning parId for: " & oElmt.OuterXml
+                    processInfo = "Cleaning parId for: " & oElmt.OuterXml
+                    Dim parId = oElmt.GetAttribute("parId")
+                    If parId.contains(",") Then
+                        parId = oElmt.GetAttribute("parId").Split(",")(1)
+                    End If
+                    If CLng("0" & parId) > 0 Then
+                        ' processInfo = "Cleaning parId for: " & oElmt.OuterXml
                         Dim primaryParId As Long = 0
 
                         If InStr(oElmt.GetAttribute("parId"), ",") > 0 Then
@@ -4472,7 +4476,7 @@ Public Class Cms
                 root = moPageXml.CreateElement("Settings")
 
                 'Please never add any setting here you do not want to be publicly accessible.
-                Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
+                Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
                 s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
