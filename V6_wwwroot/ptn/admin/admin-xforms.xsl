@@ -1140,8 +1140,8 @@
       var editor = CodeMirror.fromTextArea('<xsl:value-of select="$ref"/>', {
       height: "<xsl:value-of select="number(@rows) * 25"/>px",
       parserfile: "parsexml.js",
-      stylesheet: "/ewcommon/js/codemirror/css/xmlcolors.css",
-      path: "/ewcommon/js/codemirror/",
+      stylesheet: "/ptn/libs/codemirror/css/xmlcolors.css",
+      path: "/ptn/libs/codemirror/",
       continuousScanning: 500,
       lineNumbers: true,
       reindentOnLoad: true,
@@ -1170,29 +1170,53 @@
       <xsl:copy-of select="value/node()"/>
       <xsl:text> </xsl:text>
     </textarea>
-    <style type="text/css" media="screen">
-      .aceEditor, .ace_editor {
-      width: 100%;
-      height:600px;
-      }
-    </style>
-    <script src="/ewcommon/js/ace/ace.js" type="text/javascript" charset="utf-8">&#160;</script>
-    <script src="/ewcommon/js/xmlbeautify/xmlbeautify.js" type="text/javascript" charset="utf-8">&#160;</script>
-    <script>
-      alert($('#<xsl:value-of select="$ref"/>').text());
-      var xsl2edit = unescapeHTML($('#<xsl:value-of select="$ref"/>').text())
-      xsl2edit = new XmlBeautify().beautify(xsl2edit,{indent: "  ",useSelfClosingElement: true})
-      xsl2edit = xsl2edit.replace(/xsl-/g,"xsl:");
-      $('#<xsl:value-of select="$ref"/>').text(xsl2edit);
-      var editor = ace.edit('<xsl:value-of select="$ref"/>');
-      editor.setTheme("ace/theme/xcode");
-      editor.session.setMode("ace/mode/xml");
-      editor.session.setUseWrapMode(true);
 
-    </script>
+   
   </xsl:template>
 
-  <!-- CodeMirror Control -->
+	<xsl:template match="textarea[contains(@class,'xml')]" mode="xform_control_script">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<script src="/ptn/libs/ace-editor-builds/src-min/ace.js" type="text/javascript" charset="utf-8">&#160;</script>
+		<script src="/ptn/libs/xml-beautify/dist/xmlbeautify.min.js" type="text/javascript" charset="utf-8">&#160;</script>
+		<script>
+		//	alert(<xsl:value-of select="$ref"/>);
+		//	var xsl2edit = unescapeHTML($('#<xsl:value-of select="$ref"/>').text())
+		//	xsl2edit = new XmlBeautify().beautify(xsl2edit,{indent: "  ",useSelfClosingElement: true})
+		//	xsl2edit = xsl2edit.replace(/xsl-/g,"xsl:");
+		//	$('#<xsl:value-of select="$ref"/>').text(xsl2edit);
+
+			var editor = ace.edit('<xsl:value-of select="$ref"/>');
+			editor.setTheme("ace/theme/xcode");
+			editor.session.setMode("ace/mode/html");
+			editor.session.setUseWrapMode(true);
+
+			var session = editor.getSession();
+			session.on("changeAnnotation", function () {
+			var annotations = session.getAnnotations() || [], i = len = annotations.length;
+			while (i--) {
+			if (/doctype first\. Expected/.test(annotations[i].text)) {
+			annotations.splice(i, 1);
+			}
+			else if (/Unexpected End of file\. Expected/.test(annotations[i].text)) {
+			annotations.splice(i, 1);
+			}
+			}
+			if (len > annotations.length) {
+			session.setAnnotations(annotations);
+			}
+			});
+
+		</script>
+		<style type="text/css" media="screen">
+			.aceEditor, .ace_editor{
+			    height:600px;
+			}
+		</style>
+	</xsl:template>
+
+	<!-- CodeMirror Control -->
   <xsl:template match="textarea[contains(@class,'xFormEditor')]" mode="xform_control">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>

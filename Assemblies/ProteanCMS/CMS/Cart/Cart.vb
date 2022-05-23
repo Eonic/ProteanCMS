@@ -3190,7 +3190,7 @@ processFlow:
 
                 If mnTaxRate > 0 Then
                     'we calculate vat at the end after we have applied discounts etc
-                    For Each oElmt In oCartElmt.SelectNodes("/Order/Item")
+                    For Each oElmt In oCartElmt.SelectNodes("descendant-or-self::Item")
                         Dim nOpPrices As Long = 0
 
                         'get the prices of options to calculate vat
