@@ -1,5 +1,4 @@
 ﻿
-
 Imports System.Data.SqlClient
 Imports System.Xml
 Imports Protean.Cms
@@ -8,7 +7,7 @@ Imports Protean.xForm
 Namespace Providers
     Namespace Filter
 
-        Public Class PageFilter
+        Public Class OccasionFilter
 
 
             Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
@@ -16,11 +15,11 @@ Namespace Providers
                     Dim pageFilterSelect As XmlElement
                     Dim oDr As SqlDataReader
 
-                    Dim sSql As String = "spGetPagesByParentPageId"
+                    Dim sSql As String = "spGetOccasionForFilter"
                     oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     'Adding controls to the form like dropdown, radiobuttons
-                    pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
-                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
+                    pageFilterSelect = oXform.addSelect(oFromGroup, "OccasionFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
+                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cCatName", "nCatKey")
 
                 Catch ex As Exception
 
@@ -35,8 +34,8 @@ Namespace Providers
                     Dim cPageIds As String = String.Empty
                     Dim cnt As Integer
 
-                    If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
+                    If (oXform.Instance.SelectNodes("OccasionFilter") IsNot Nothing) Then
+                        cPageIds = oXform.Instance.SelectNodes("OccasionFilter")(0).InnerText
                         If (aWeb.moSession("PageIds") Is Nothing) Then
                             aWeb.moSession("PageIds") = cPageIds
                         Else
