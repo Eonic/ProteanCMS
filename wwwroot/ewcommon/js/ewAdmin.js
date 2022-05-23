@@ -2410,12 +2410,17 @@ $(document).ready(function () {
     }
 });
 
+$(document).on("change", "#cContentPath", function (event) {
+    
+    $(".hidUrlChangeFlag").val("1");
+
+});
 
 //End Page Edit
 
 
 function ValidateProductForm(event) {
-
+    
     if (form_check(event)) {
         var productId = this.getQueryStringParam('id');
         if (productId != null) {
@@ -2455,19 +2460,21 @@ if (editProductElement > 0) {
             },
             UrlPathOnChange: function (newContentPath) {
                 
-                if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
-                    var redirectType = $(".hiddenRedirectType").val();
-                    $('.btnRedirectSave').removeAttr("disabled");
-                    $("#redirectModal").modal("show");
-                    var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
-                    $("#OldUrl").val(oldURLFromXsl);
-                    $("#NewUrl").val(newContentPath);
-                    this.cContentPath = newContentPath;
-                    $(".hiddenPageId").val(localStorage.pageId);
-                    $(".hiddenProductOldUrl").val(oldURLFromXsl); 
-                    $(".hiddenProductNewUrl").val(newContentPath);
-                    $(".hiddenRedirectType").val(redirectType);
-                    event.preventDefault();
+               if ($(".hidUrlChangeFlag").val() == "1") {
+                    if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
+                        var redirectType = $(".hiddenRedirectType").val();
+                        $('.btnRedirectSave').removeAttr("disabled");
+                        $("#redirectModal").modal("show");
+                        var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                        $("#OldUrl").val(oldURLFromXsl);
+                        $("#NewUrl").val(newContentPath);
+                        this.cContentPath = newContentPath;
+                        $(".hiddenPageId").val(localStorage.pageId);
+                        $(".hiddenProductOldUrl").val(oldURLFromXsl);
+                        $(".hiddenProductNewUrl").val(newContentPath);
+                        $(".hiddenRedirectType").val(redirectType);
+                        event.preventDefault();
+                    }
 
                 }
                 else {
