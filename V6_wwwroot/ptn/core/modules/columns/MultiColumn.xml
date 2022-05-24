@@ -292,45 +292,14 @@
           </group>
         </group>
       </group>
-      <group>
-        <label>
-          <i class="fas fa-link"> </i>
-          <span class="space"> </span>
-          <span>Footer Links</span>
-        </label>
-        <group>
-          <group class="form-section-wrapper">
-            <select1 bind="cLinkType" appearance="full" class="required">
-              <label>Type of link</label>
-              <item>
-                <label>Internal (Going to a page on this site)</label>
-                <value>internal</value>
-                <toggle case="cLinkType_1" event="DOMActivate"/>
-              </item>
-              <item>
-                <label>External (Going to another site)</label>
-                <value>external</value>
-                <toggle case="cLinkType_2" event="DOMActivate"/>
-              </item>
-            </select1>
-            <switch class="disable">
-              <case id="cLinkType_1">
-                <select1 bind="cModuleLink" class="siteTree">
-                  <label>Link to page</label>
-                </select1>
-              </case>
-              <case id="cLinkType_2">
-                <input bind="cModuleLink" class="short">
-                  <label>Link to URL</label>
-                </input>
-              </case>
-            </switch>
-          </group>
-          <input bind="cModuleLinkText" class="long">
-            <label>Module footer link text</label>
-          </input>
-        </group>
-      </group>
+		<group>
+			<label>
+				<i class="fas fa-link"> </i>
+				<span class="space"> </span>
+				<span>Footer Links</span>
+			</label>
+			<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+		</group>
       <group>
         <label>
           <i class="fas fa-brush"> </i>

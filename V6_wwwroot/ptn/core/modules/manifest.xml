@@ -29,6 +29,7 @@
       <Module type="Image" formPath="image/image" icon="fas fa-image" name="Image"></Module>
       <Module type="Video" formPath="video/video" icon="fab fa-youtube" name="Video"></Module>
       <Module type="EmailForm" formPath="emailform/email-form" icon="fab fa-wpforms"  name="Email Form"></Module>
+		<Module type="EmbeddedHtml" formPath="embeddedhtml/embeddedhtml" icon="fa-solid fa-code"  name="EmbeddedHtml"></Module>
 		<!-- Module type="SocialBookmarks" formPath="socialbookmarks/socialbookmarks" icon="fab fa-facebook-square"  name="Social Bookmarks">Social Bookmarks</Module -->
     </ModuleGroup>
     <ModuleGroup name="Layout" icon="fas fa-columns">

@@ -63,6 +63,7 @@
         <add key="Scheduler" value="off" />
         <add key="ExpireAtEndOfDay" value="off" />
         <add key="GoogleAnalyticsUniversalID" value="" />
+		<add key="GoogleGA4MeasurementID" value="" />
         <add key="GoogleTagManagerID" value="" />
         <add key="GoogleOptimizeID" value="" />
         <add key="GoogleAPIKey" value="" />
@@ -139,6 +140,7 @@
     <bind id="ewStatsUser" nodeset="web/add[@key='StatsUser']/@value" required="false()" type="string" />
     <bind id="ewStatsPassword" nodeset="web/add[@key='StatsPassword']/@value" required="false()" type="string" />
     <bind id="ewGoogleAnalyticsUniversalID" nodeset="web/add[@key='GoogleAnalyticsUniversalID']/@value" required="false()" type="string" />
+	  <bind id="ewGoogleGA4MeasurementID" nodeset="web/add[@key='GoogleGA4MeasurementID']/@value" required="false()" type="string" />
     <bind id="ewGoogleTagManagerID" nodeset="web/add[@key='GoogleTagManagerID']/@value" required="false()" type="string" />
     <bind id="ewGoogleOptimizeID" nodeset="web/add[@key='GoogleOptimizeID']/@value" required="false()" type="string" />
     <bind id="ewGoogleAPIKey" nodeset="web/add[@key='GoogleAPIKey']/@value" required="false()" type="string" />
@@ -320,7 +322,11 @@
       <input bind="ewGoogleAnalyticsUniversalID">
         <label>Google Site ID</label>
       </input>
-      <input bind="ewGoogleTagManagerID">
+		<input bind="ewGoogleGA4MeasurementID">
+			<label>Google GA4 MeasurementID</label>
+		</input>
+		
+		<input bind="ewGoogleTagManagerID">
         <label>Google Tag Manager ID</label>
       </input>
       <input bind="ewGoogleOptimizeID">

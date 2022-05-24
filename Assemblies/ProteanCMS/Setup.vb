@@ -706,11 +706,16 @@ Recheck:
 
             Dim commonfolders As New ArrayList
             Dim oFS As New fsHelper
+            Dim upgradePath As String = "/sqlupdate/DatabaseUpgrade.xml"
+            If goConfig("cssFramework") = "bs5" Then
+                upgradePath = "/update/sql/databaseupgrade.xml"
+            End If
+
 
             myWeb.InitializeVariables()
 
             For Each AltFolder In myWeb.maCommonFolders
-                filePath = AltFolder.TrimEnd("/\".ToCharArray) & "/sqlupdate/DatabaseUpgrade.xml"
+                filePath = AltFolder.TrimEnd("/\".ToCharArray) & upgradePath
                 If Not String.IsNullOrEmpty(AltFolder) Then
                     AddResponse("Running: " & filePath)
                     If oFS.VirtualFileExists(filePath) Then
@@ -722,8 +727,8 @@ Recheck:
                     AddResponse("Not Running: " & filePath)
                 End If
             Next
-            If oFS.VirtualFileExists("/sqlupdate/DatabaseUpgrade.xml") Then
-                UpdateDatabase("/sqlupdate/DatabaseUpgrade.xml")
+            If oFS.VirtualFileExists(upgradePath) Then
+                UpdateDatabase(upgradePath)
             Else
                 AddResponse("No Bespoke Upgrades Found")
             End If
@@ -751,11 +756,13 @@ Recheck:
 
                 oUpgrdXML.Load(goServer.MapPath(filePath))
 
+                Dim rootPath As String = Path.GetDirectoryName(goServer.MapPath(filePath))
+
                 Dim cLatestVersion As String = oUpgrdXML.DocumentElement.GetAttribute("LatestVersion")
                 If cLatestVersion = cCurrentVersion Then Return True
 
                 'Remove all foreign keys
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
+                myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & "/toV4/DropAllForeignKeys.sql")
                 myWeb.msException = ""
                 'If Not msException = "" Then
                 '    AddResponse(msException)
@@ -795,7 +802,7 @@ Recheck:
                                                                 Dim nCount As Long
                                                                 AddResponse("Run File '" & oActionElmt.GetAttribute("ObjectName") & "'")
                                                                 errormsg = ""
-                                                                nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(oActionElmt.GetAttribute("ObjectName")), errormsg)
+                                                                nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & oActionElmt.GetAttribute("ObjectName"), errormsg)
                                                                 If errormsg <> "" Then
                                                                     AddResponse("<strong style=""color:#ff0000"">WARNING: File execution generated an error</strong>")
                                                                     AddResponse("<p style=""color:#ff0000"">" & errormsg & "</p>")
