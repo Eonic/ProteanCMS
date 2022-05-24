@@ -1151,69 +1151,63 @@
     </script>
   </xsl:template>
 
-  <!-- ACE Control -->
-  <xsl:template match="textarea[contains(@class,'xsl')]" mode="xform_control">
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBind"/>
-    </xsl:variable>
-    <textarea name="{$ref}" id="{$ref}" class="aceEditor">
-      <xsl:if test="@cols!=''">
-        <xsl:attribute name="cols">
-          <xsl:value-of select="@cols"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="@rows!=''">
-        <xsl:attribute name="rows">
-          <xsl:value-of select="@rows"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:copy-of select="value/node()"/>
-      <xsl:text> </xsl:text>
-    </textarea>
-
-   
-  </xsl:template>
-
-	<xsl:template match="textarea[contains(@class,'xml')]" mode="xform_control_script">
+	<!-- CodeMirror Control -->
+	<xsl:template match="textarea[contains(@class,'code-mirror')]" mode="xform_control">
 		<xsl:variable name="ref">
 			<xsl:apply-templates select="." mode="getRefOrBind"/>
 		</xsl:variable>
-		<script src="/ptn/libs/ace-editor-builds/src-min/ace.js" type="text/javascript" charset="utf-8">&#160;</script>
-		<script src="/ptn/libs/xml-beautify/dist/xmlbeautify.min.js" type="text/javascript" charset="utf-8">&#160;</script>
-		<script>
-		//	alert(<xsl:value-of select="$ref"/>);
-		//	var xsl2edit = unescapeHTML($('#<xsl:value-of select="$ref"/>').text())
-		//	xsl2edit = new XmlBeautify().beautify(xsl2edit,{indent: "  ",useSelfClosingElement: true})
-		//	xsl2edit = xsl2edit.replace(/xsl-/g,"xsl:");
-		//	$('#<xsl:value-of select="$ref"/>').text(xsl2edit);
+		<textarea name="{$ref}" id="{$ref}">
+			<xsl:if test="@cols!=''">
+				<xsl:attribute name="cols">
+					<xsl:value-of select="@cols"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@rows!=''">
+				<xsl:attribute name="rows">
+					<xsl:value-of select="@rows"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@class!=''">
+				<xsl:attribute name="class">
+					<xsl:value-of select="@class"/>
+				</xsl:attribute>
+			</xsl:if>
+			<!--xsl:apply-templates select="value/TemplateContent/node()" mode="cleanXhtml"/-->
+			<xsl:copy-of select="value/node()"/>
+			<xsl:text> </xsl:text>
+		</textarea>
+	</xsl:template>
 
-			var editor = ace.edit('<xsl:value-of select="$ref"/>');
-			editor.setTheme("ace/theme/xcode");
-			editor.session.setMode("ace/mode/html");
-			editor.session.setUseWrapMode(true);
+	<xsl:template match="textarea[contains(@class,'code-mirror')]" mode="xform_control_script">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<script src="/ptn/libs/codemirror/lib/codemirror.js">&#160;</script>
+		<link rel="stylesheet" href="/ptn/libs/codemirror/lib/codemirror.css"/>
 
-			var session = editor.getSession();
-			session.on("changeAnnotation", function () {
-			var annotations = session.getAnnotations() || [], i = len = annotations.length;
-			while (i--) {
-			if (/doctype first\. Expected/.test(annotations[i].text)) {
-			annotations.splice(i, 1);
-			}
-			else if (/Unexpected End of file\. Expected/.test(annotations[i].text)) {
-			annotations.splice(i, 1);
-			}
-			}
-			if (len > annotations.length) {
-			session.setAnnotations(annotations);
-			}
+		<script src="/ptn/libs/codemirror/addon/edit/closetag.js">&#160;</script>
+
+		<script src="/ptn/libs/codemirror/addon/fold/xml-fold.js">&#160;</script>
+
+		<script src="/ptn/libs/codemirror/mode/xml/xml.js">&#160;</script>
+		<script src="/ptn/libs/codemirror/addon/mode/multiplex.js">&#160;</script>
+		<script src="/ptn/libs/codemirror/mode/htmlembedded/htmlembedded.js">&#160;</script>
+		
+		<script type="text/javascript">
+			var editor = CodeMirror.fromTextArea(document.getElementById("<xsl:value-of select="$ref"/>"), {
+			mode: 'text/html',
+			autoCloseTags: true,
+			height: "<xsl:value-of select="number(@rows) * 25"/>px",
+			parserfile: "parsexml.js",
+			stylesheet: "/ptn/libs/codemirror/theme/shadowfox.css",
+			path: "/ptn/libs/codemirror/",
+			continuousScanning: 500,
+			lineNumbers: true,
+			reindentOnLoad: true,
+			textWrapping: true,
+			matchClosing: true
 			});
-
 		</script>
-		<style type="text/css" media="screen">
-			.aceEditor, .ace_editor{
-			    height:600px;
-			}
-		</style>
 	</xsl:template>
 
 	<!-- CodeMirror Control -->
