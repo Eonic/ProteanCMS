@@ -3,7 +3,7 @@
   
   <ModuleTypes>
 	  <ModuleGroup name="Social Networking" icon="fab fa-twitter">
-		  <Module type="SocialLinks" formPath="sociallinks/sociallinks" name="Social Links"></Module>
+		  <Module type="SocialLinks" formPath="sociallinks" name="Social Links"></Module>
 	
 	  </ModuleGroup>
   </ModuleTypes>
