@@ -393,6 +393,8 @@
                       gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
 					  <xsl:apply-templates select="." mode="google-ga4-event"/>
                 </script>
+           <h1><xsl:value-of select="/Page/Cart/Order/@cmd"/></h1>
+           <p><xsl:value-of select="/Page/Cart/Order/@InvoiceRef"/></p>
 				<!-- End GA4 Tag Manager -->		 
 		 </xsl:if>
         <xsl:if test="$GoogleTagManagerID!=''">
