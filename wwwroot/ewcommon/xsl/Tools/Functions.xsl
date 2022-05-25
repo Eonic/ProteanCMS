@@ -2640,59 +2640,16 @@
 
     </xsl:if>
   </xsl:template>
-	
-	
-  <!-- GA4 Ecommerce Events -->
-  <xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
-          gtag("event", "add_to_cart", 
-		  <xsl:apply-templates select="." mode="google-ga4-transaction"/>
-		  );		  
-  </xsl:template>
-	
-	  <xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
-          gtag("event", "add_to_cart", 
-		  <xsl:apply-templates select="." mode="google-ga4-transaction"/>
-		  );		  
-  </xsl:template>
-	
-  <xsl:template match="Page" mode="google-ga4-transaction">
-        {
-          currency: "<xsl:value-of select="Cart/@currency"/>,
-          value: <xsl:value-of select="Cart/@total"/>,
-          items: [
-            <xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
-          ]
-        }	
-  </xsl:template>
-	
-  <xsl:template match="Item" mode="google-ga4-transaction-item">
-	    {
-              item_id: "<xsl:value-of select="productDetail/StockCode/node()"/>",
-              item_name: "<xsl:value-of select="Name/node()"/>",
-              affiliation: "",
-              currency: "ancestor::Cart/@currency",
-              discount: 0,
-              index: 0,
-              item_brand: "<xsl:value-of select="productDetail/Manufacturer/node()"/>",
-              price: <xsl:value-of select="@price"/>,
-              quantity: <xsl:value-of select="@quantity"/>
-          }  
-		  <!--<xsl:if test="following-sibling()::Item">
-			  <xsl:text>,</xsl:text>
-	    </xsl:if>-->
-  </xsl:template>			
 
   <xsl:template match="Page" mode="BingTrackingCode">   
       <xsl:if test="$BingTrackingID!=''">
 		 <script cookie-consent="tracking">
           (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
-        </script>
-         <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-        <script>
-          window.uetq = window.uetq || [];  
-		  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' });
-        </script>
-      </xsl:if>
+          <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+			  window.uetq = window.uetq || [];
+			  window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
+          </xsl:if>
+		 </script>
     </xsl:if>
   </xsl:template>
 

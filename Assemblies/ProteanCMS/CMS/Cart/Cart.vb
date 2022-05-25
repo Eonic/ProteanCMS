@@ -3190,7 +3190,7 @@ processFlow:
 
                 If mnTaxRate > 0 Then
                     'we calculate vat at the end after we have applied discounts etc
-                    For Each oElmt In oCartElmt.SelectNodes("/Order/Item")
+                    For Each oElmt In oCartElmt.SelectNodes("descendant-or-self::Item")
                         Dim nOpPrices As Long = 0
 
                         'get the prices of options to calculate vat
@@ -3204,6 +3204,11 @@ processFlow:
                         If mbVatOnLine Then
                             nLineTaxRate = oElmt.GetAttribute("taxRate")
                         End If
+                        If Not oElmt.SelectSingleNode("productDetail[@overideTaxRate!='']") Is Nothing Then
+                            Dim detailElmt As XmlElement = oElmt.SelectSingleNode("productDetail")
+                            nLineTaxRate = detailElmt.GetAttribute("overideTaxRate")
+                        End If
+
 
                         'NB 14th Jan 2010 This doesn't work
                         ' It generates a figure that matches oElement.GetAttribute("price") so vat is always 0
@@ -3610,32 +3615,37 @@ processFlow:
                 ' Load product xml
                 oProd.InnerXml = cProdXml
 
-                ' Locate the Stock Node
-                oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']")
-                If oStock Is Nothing Then
-                    oStock = oProd.SelectSingleNode("//Stock")
-                    If IsNumeric(oStock.InnerText) Then
-                        StockLevel = CLng(oStock.InnerText)
-                    End If
+                If Not oProd.SelectSingleNode("/Content[@ignoreStock='true']") Is Nothing Then
+                    mbStockControl = False
                 Else
-                    'step through locations to get total quantity
-                    For Each oStock In oProd.SelectNodes("//Stock/Location")
+                    ' Locate the Stock Node
+                    oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']")
+                    If oStock Is Nothing Then
+                        oStock = oProd.SelectSingleNode("//Stock")
                         If IsNumeric(oStock.InnerText) Then
-                            If StockLevel = Nothing Then StockLevel = 0
-                            StockLevel = StockLevel + CLng(oStock.InnerText)
+                            StockLevel = CLng(oStock.InnerText)
                         End If
-                    Next
+                    Else
+                        'step through locations to get total quantity
+                        For Each oStock In oProd.SelectNodes("//Stock/Location")
+                            If IsNumeric(oStock.InnerText) Then
+                                If StockLevel = Nothing Then StockLevel = 0
+                                StockLevel = StockLevel + CLng(oStock.InnerText)
+                            End If
+                        Next
+                    End If
+
+                    If StockLevel <> Nothing Then
+                        ' If the requested quantity is greater than the stock level, add a warning to the cart - only check tihs on an active cart.
+                        If CLng(cItemQuantity) > CLng(StockLevel) And mnProcessId < 6 Then
+                            If oCartElmt.SelectSingleNode("error") Is Nothing Then oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"))
+                            oError = oCartElmt.SelectSingleNode("error")
+                            oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & oProd.SelectSingleNode("//Name").InnerText & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
+                            oMsg.SetAttribute("type", "stock")
+                        End If
+                    End If
                 End If
 
-                If StockLevel <> Nothing Then
-                    ' If the requested quantity is greater than the stock level, add a warning to the cart - only check tihs on an active cart.
-                    If CLng(cItemQuantity) > CLng(StockLevel) And mnProcessId < 6 Then
-                        If oCartElmt.SelectSingleNode("error") Is Nothing Then oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"))
-                        oError = oCartElmt.SelectSingleNode("error")
-                        oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & oProd.SelectSingleNode("//Name").InnerText & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
-                        oMsg.SetAttribute("type", "stock")
-                    End If
-                End If
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CheckStock", ex, "", cProcessInfo, gbDebug)
@@ -6460,6 +6470,10 @@ processFlow:
 
                                 If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
                                     mbOveridePrice = True
+                                End If
+
+                                If Not oProdXml.SelectSingleNode("/Content[@ignoreStock='true']") Is Nothing Then
+                                    mbStockControl = False
                                 End If
 
                                 'lets add the discount to the cart if supplied

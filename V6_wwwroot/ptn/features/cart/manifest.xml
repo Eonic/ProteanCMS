@@ -2,14 +2,14 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
    <ContentTypes>
     <ContentTypeGroup name="Purchaseables">
-      <ContentType type="Voucher"  formPath="/features/cart/voucher"  name="Voucher">A voucher that users can buy</ContentType>
+      <ContentType type="Voucher"  formPath="voucher"  name="Voucher">A voucher that users can buy</ContentType>
     </ContentTypeGroup>
    </ContentTypes>
   <ModuleTypes>
 	  <ModuleGroup name="Ecommerce controls" icon="fas fa-shopping-cart">
-		  <Module type="EcommerceListOrders" formPath="/features/cart/listorders" name="List Orders">List Orders [requires membership]</Module>
-          <Module type="VoucherList" formPath="/features/cart/voucherlist" name="List Vouchers">List Vouchers to purchase</Module>
-          <Module type="MyVouchers" formPath="/features/cart/voucherlist" name="My Vouchers">My Vouchers</Module>
+		  <Module type="EcommerceListOrders" formPath="listorders" name="List Orders">List Orders [requires membership]</Module>
+          <Module type="VoucherList" formPath="voucherlist" name="List Vouchers">List Vouchers to purchase</Module>
+          <Module type="MyVouchers" formPath="voucherlist" name="My Vouchers">My Vouchers</Module>
 	  </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

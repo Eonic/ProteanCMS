@@ -479,7 +479,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\EcmaScript.NET.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Facebook.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Google.Protobuf.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Imazen.WebP.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.V8.dll
@@ -531,8 +530,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.V8.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Facebook.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Fonet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Google.Protobuf.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.V8.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JSPool.xml
