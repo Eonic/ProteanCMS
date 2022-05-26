@@ -589,6 +589,7 @@
     <xsl:text>~/ptn/libs/jquery/dist/jquery.min.js,</xsl:text>
     <xsl:text>~/ptn/libs/bs5/js/bootstrap.bundle.min.js,</xsl:text>
 	<xsl:text>~/ptn/libs/swiper/swiper-bundle.min.js,</xsl:text>
+	<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
     <xsl:text>~/ptn/core/core.js,</xsl:text>
   </xsl:template>
 
@@ -6888,7 +6889,7 @@
                       <xsl:text>picture hidden</xsl:text>
                     </xsl:attribute>
                   </xsl:if>
-                  <a href="{$detailSrc}" class="responsive-lightbox">
+                  <a data-src="{$detailSrc}" data-fancybox="">
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>

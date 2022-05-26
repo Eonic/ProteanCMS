@@ -564,11 +564,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-Any
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Management.Sdk.Sfc.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Smo.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SmoExtended.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Owin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csharp.dll
@@ -578,8 +573,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\TidyHTML5Managed.
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\MySql.Data.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\JsonWebTokens.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ServiceBrokerEnum.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.RegSvrEnum.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\BouncyCastle.Crypto.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.dll
@@ -604,3 +597,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbp
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.pdb
