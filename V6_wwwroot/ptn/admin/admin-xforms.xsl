@@ -527,7 +527,7 @@
     <!--do nothing-->
   </xsl:template>
 
-  <xsl:template match="input[contains(@class,'pickImage')]" mode="xform_modal">
+  <xsl:template match="input[contains(@class,'pickImage') or contains(@class,'pickMedia')]" mode="xform_modal">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
     </xsl:variable>
@@ -732,15 +732,6 @@
         </div>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
-
-  <xsl:template match="input[contains(@class,'pickMedia')]" mode="xform_modal">
-    <xsl:variable name="ref">
-      <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
-    </xsl:variable>
-    <div id="modal-{$ref}" class="modal fade pickImageModal">
-      <xsl:text> </xsl:text>
-    </div>
   </xsl:template>
 
 
