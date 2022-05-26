@@ -698,33 +698,14 @@
 				  <img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
 					  <strong>Protean</strong>CMS
 				  </span>
-				  <a href="?ewCmd=Content" class="btn btn-sm btn-primary">
-					  <i class="fas fa-pen"></i> Edit Content
+			  <xsl:for-each select="$page/AdminMenu/MenuItem/MenuItem">
+				  <a href="?ewCmd={@cmd}" class="btn btn-sm btn-primary">
+					  <i class="{@icon}">&#160;</i>&#160;
+					  <xsl:value-of select="@name"/>
 				  </a>
-				  <a href="?ewCmd=ListUsers" class="btn btn-sm btn-primary">
-					  <i class="fas fa-users"></i> Membership
-				  </a>
-				  <a href="?ewCmd=Orders" class="btn btn-sm btn-primary">
-					  <i class="fas fa-shopping-basket"></i> Ecommerce
-				  </a>
-			  <a href="/?ewCmd=UpcomingRenewals" title="" class="btn  btn-sm btn-primary">
-				  <i class="fa far fa-calendar-alt"> </i> Subscriptions
-			  </a>
-				  <a href="/?ewCmd=MailingList" title="" class="btn  btn-sm btn-primary">
-					  <i class="fa fa-envelope"> </i> Email Marketing
-				  </a>
-
-				  <a href="/?ewCmd=Orders" title="" class="btn  btn-sm btn-primary">
-					  <i class="fa fa-shopping-basket"> </i> Ecommerce
-				  </a>
-				  <a href="/?ewCmd=Reports" title="" class="btn  btn-sm btn-primary">
-					  <i class="fa fas fa-chart-bar"> </i> Reports
-				  </a>
-				  <a href="/?ewCmd=SettingsDash" title="" class="btn  btn-sm btn-primary">
-					  <i class="fa fa-cogs"> </i> Settings
-				  </a>
+			  </xsl:for-each>
 				  <a id="myaccount" href="/?ewCmd=EditDirItem&amp;DirType=User&amp;id=1" class="btn  btn-sm btn-primary">
-					  <i class="fa fa-user"> </i> Admin
+					  <i class="fa fa-user">&#160;</i>&#160;Admin
 				  </a>
 			  <a id="logoff" href="/?ewCmd=LogOff" title="Click here to log off from your active session" class="btn btn-sm btn-danger">
 				  <i class="fa fa-power-off"> </i>
