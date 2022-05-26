@@ -3846,8 +3846,31 @@
 				<xsl:value-of select="@url"/>
 			</xsl:when>
           <xsl:when test="format-number(@url,'0')!='NaN'">
-            <xsl:value-of select="$siteURL"/>
-            <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+
+              <!--change(s):
+              1. check if the edit-content-menu-item has redirect page under pagesettings
+              2. on clicking the item on admin mode, open the actual page on customize mode
+              3. on clicking the item on non-admin mode, open the redirected page-->
+              
+              <!--old code - start-->
+              <!--<xsl:value-of select="$siteURL"/>
+              <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>-->
+              <!--old code - end-->
+              
+              <!--new code - start-->
+              <xsl:choose>
+              <xsl:when test="$adminMode='true'">
+                <xsl:value-of select="@name"/>
+                <xsl:text>?pgid=</xsl:text>
+                <xsl:value-of select="@id"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$siteURL"/>
+                <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+              </xsl:otherwise>
+              </xsl:choose>
+              <!--new code - end-->
+            
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
             <xsl:value-of select="@url"/>
