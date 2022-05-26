@@ -4,7 +4,10 @@
 
 /.vs/ProteanCMS/v16
 /.vs/ProteanCMS/v17
+/.vs/ProteanCMS-V6/v16
 /.vs/ProteanCMS-V6/v17
+/.vs/ProteanCMSInstaller/v16
+/.vs/ProteanCMSInstaller/v17
 /wwwroot/images
 /Assemblies/Protean.Tools/bin
 /Assemblies/Protean.Tools/obj
@@ -15,12 +18,10 @@
 /Assemblies/Protean.Tools.UnitTests/obj
 /Assemblies/ProteanCMS/bin
 /Assemblies/ProteanCMS/obj
-/.vs/ProteanCMS/v16/Server/sqlite3
-/.vs/ProteanCMS/v16/.suo
-/.vs/ProteanCMSInstaller/v16
 /wwwroot/bin/ProteanCMS.xml
 /packages/QRCoder.1.4.1
 /wwwroot/ewcommon/bin
+/wwwroot/bin
 /V6_wwwroot/bin
 /V6_wwwroot/images/~lg-750x750
 /V6_wwwroot/images/~th-50x50
