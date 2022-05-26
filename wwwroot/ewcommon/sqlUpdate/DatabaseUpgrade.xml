@@ -413,8 +413,9 @@
         <Sub2 Number="44">
         <Sub3 Number="0">
           <Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.44.0/UpdateCompatibilityLevel.sql"/>
-          <Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.44.0/spCheckDiscounts.sql"/>
-		  <Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.44.0/AuditId_Check_And_Unique_Constraints.sql"/>
+			<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spCheckDiscounts"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.44.0/spCheckDiscounts.sql"/>
+		  <Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.44.0/AuditId_Check_And_Unique_Constraints.sql"/>
         </Sub3>
       </Sub2>
       <Sub2 Number="45">
@@ -461,13 +462,15 @@
           <Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spCartActivityTopLevel.sql"/>
 		  <Action Order="5" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spPurchasersLast2Years.sql"/>
 		  <Action Order="6" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/getAllPageVersions.sql"/>
-          <Action Order="7" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/vw_GetEventsTicketWithCartContact.sql"/>
-          <Action Order="8" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/vw_GetEventsTicketWithCartContactRefund.sql"/>
-          <Action Order="9" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spGetEventsTicketsCartsPrice.sql"/>
-          <Action Order="10" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spGetEventsTicketsCartsRefund.sql"/>
-          <Action Order="11" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spTicketsSoldSummary.sql"/>
-          <Action Order="12" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spTicketsRefundSummary.sql"/>
-          
+		  <Action Order="7" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/vw_GetDistinctEvents.sql"/>
+		  <Action Order="9" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/vw_GetDistinctTickets.sql"/>
+		  <Action Order="8" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/vw_GetDistinctEventsTickets.sql"/>
+          <Action Order="10" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/vw_GetEventsTicketWithCartContact.sql"/>
+          <Action Order="11" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/vw_GetEventsTicketWithCartContactRefund.sql"/>
+          <Action Order="12" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spGetEventsTicketsCartsPrice.sql"/>
+          <Action Order="13" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spGetEventsTicketsCartsRefund.sql"/>
+          <Action Order="14" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spTicketsSoldSummary.sql"/>
+          <Action Order="15" Type="File" ObjectType="" ObjectName="/v5/6.0.52.0/spTicketsRefundSummary.sql"/>          
 		</Sub3>
       </Sub2>
 		<Sub2 Number="53">

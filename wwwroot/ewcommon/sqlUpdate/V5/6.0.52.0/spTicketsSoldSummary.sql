@@ -1,4 +1,4 @@
-ALTER PROCEDURE [dbo].[spTicketsSoldSummary]         
+CREATE PROCEDURE [spTicketsSoldSummary]         
 AS      
       
 BEGIN        

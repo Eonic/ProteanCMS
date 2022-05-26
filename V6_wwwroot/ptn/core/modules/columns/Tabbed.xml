@@ -53,63 +53,63 @@
       <bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
-      <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
-  </model>
-  <group ref="EditContent" class="2col">
-    <label>Tabbed Layout Module</label>
-    <group>
-      <group>
-        <!-- These hidden fields and bindings are required for the component-->
-        <input bind="nContentKey" class="hidden">
-          <label>ContentId</label>
-        </input>
-        <input bind="cModuleType" class="hidden">
-          <label>ModuleType</label>
-        </input>
-        <!-- end of hidden fields -->
-          <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
-      </group>
-    </group>
-    <group>
-      <group>
-        <label>Content</label>
-        <input bind="cModuleTitle" class="long">
-          <label>Title or name</label>
-        </input>
-      </group>
-      <group>
-        <label>Module Links</label>
-        <select1 bind="cLinkType" appearance="full" class="required">
-          <label>Type of link</label>
-          <item>
-            <label>Internal (Going to a page on this site)</label>
-            <value>internal</value>
-            <toggle case="cLinkType_1" event="DOMActivate"/>
-          </item>
-          <item>
-            <label>External (Going to another site)</label>
-            <value>external</value>
-            <toggle case="cLinkType_2" event="DOMActivate"/>
-          </item>
-        </select1>
-        <switch class="disable">
-          <case id="cLinkType_1">
-            <select1 bind="cModuleLink" class="siteTree">
-              <label>Link to page</label>
-            </select1>
-          </case>
-          <case id="cLinkType_2">
-            <input bind="cModuleLink" class="short">
-              <label>Link to URL</label>
-            </input>
-          </case>
-        </switch>
-        <input bind="cModuleLinkText" class="long">
-          <label>Module footer link text</label>
-        </input>
-      </group>
-    </group>
-  </group>
+	<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	</model>
+	<group ref="EditContent">
+		<label>Tabbed Layout Module</label>
+
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<input bind="cModuleTitle" class="long">
+						<label>Title or name</label>
+					</input>
+					<div>You may wish to add columns to each tab before other modules, so you can better organise your content.</div>
+				</group>
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Footer Links</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-tachometer-alt"> </i>
+					<span class="space"> </span>
+					<span>Animate</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				<!-- These hidden fields and bindings are required for the component-->
+				<input bind="nContentKey" class="hidden">
+					<label>ContentId</label>
+				</input>
+				<input bind="cModuleType" class="hidden">
+					<label>ModuleType</label>
+				</input>
+
+				<!-- end of hidden fields -->
+			</group>
+		</group>
+	</group>
+	
+	
   <group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">
       <label>Save Tabbed Layout</label>
