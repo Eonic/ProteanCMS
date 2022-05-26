@@ -2,8 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/EonicWeb5CMS/v15
-/.vs/ProteanCMS/v15
+/.vs/ProteanCMS/v16
+/.vs/ProteanCMS/v17
+/.vs/ProteanCMS-V6/v17
 /wwwroot/images
 /Assemblies/Protean.Tools/bin
 /Assemblies/Protean.Tools/obj
@@ -19,6 +20,8 @@
 /.vs/ProteanCMSInstaller/v16
 /wwwroot/bin/ProteanCMS.xml
 /packages/QRCoder.1.4.1
+/wwwroot/ewcommon/bin
+/V6_wwwroot/bin
 /V6_wwwroot/images/~lg-750x750
 /V6_wwwroot/images/~th-50x50
 /V6_wwwroot/images/~th-750x550

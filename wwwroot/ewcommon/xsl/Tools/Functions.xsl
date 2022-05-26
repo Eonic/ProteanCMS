@@ -1469,7 +1469,7 @@
     </xsl:if>
 
     <!--LinkedIn-->
-    <!--
+   
     <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
       <script type="text/javascript">
         <xsl:text>_linkedin_partner_id = "</xsl:text>
@@ -1481,9 +1481,20 @@
       </script>
       <noscript>
         <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
-      </noscript>       
+      </noscript>
+
+		<xsl:if test="Contents/Content[@name='LinkedInCampaignId']">
+			<xsl:for-each select="/Page/Contents/descendant-or-self::instance[@valid='true']/*[name()='emailer']">
+			<script type="text/javascript">
+				<xsl:text>window.lintrk('track', { conversion_id: </xsl:text>
+				<xsl:value-of select="$page/Contents/Content[@name='LinkedInCampaignId']/node()"/>
+				<xsl:text> });</xsl:text>
+			</script>
+			</xsl:for-each>
+		</xsl:if>
+		
     </xsl:if>
-	-->
+
     <!-- End Linked In Insight Tag Code -->
     
     <!--END-->

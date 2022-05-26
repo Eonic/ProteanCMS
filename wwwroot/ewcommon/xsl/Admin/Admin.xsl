@@ -4706,6 +4706,11 @@
             <xsl:with-param name="name">LinkedInInsightTag</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">LinkedIn Campaign Id</xsl:with-param>
+				<xsl:with-param name="name">LinkedInCampaignId</xsl:with-param>
+				<xsl:with-param name="type">MetaData</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <!-- END -->
