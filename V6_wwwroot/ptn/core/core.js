@@ -74,12 +74,23 @@ function contentSwiper() {
 
         var swiperId = $(this).data("id");
         var slidestoShow = $(this).data("slidestoshow");
+        var defaultSlides = 1;
         var xsSlides = $(this).data("xscol");
+        if (xsSlides === '') { xsSlides = defaultSlides } else { defaultSlides = xsSlides };
         var smSlides = $(this).data("smcol");
+        if (smSlides === '') { smSlides = defaultSlides } else { defaultSlides = smSlides };
         var mdSlides = $(this).data("mdcol");
+        if (mdSlides === '') { mdSlides = defaultSlides } else { defaultSlides = mdSlides };
         var lgSlides = $(this).data("lgcol");
+        if (lgSlides === '') { lgSlides = defaultSlides } else { defaultSlides = lgSlides };
         var xlSlides = $(this).data("xlcol");
+        if (xlSlides === '') { xlSlides = defaultSlides } else { defaultSlides = xlSlides };
         var xxlSlides = $(this).data("xxlcol");
+        if (xxlSlides === '') { xxlSlides = defaultSlides };
+
+       // alert(swiperId + "default" + defaultSlides + "," + xxlSlides + "," + lgSlides + "," + mdSlides + "," + mdSlides + "," + smSlides + "," + xsSlides);
+  
+
         var lgHeight = $(this).data("lgHeight");
         var spaceBetween = parseInt(padding) * 2;
         var spaceBetweenLg = parseInt(padding) * 2;
@@ -130,8 +141,7 @@ function contentSwiper() {
                     slidesPerView: smSlides,
                 },
                 768: {
-                    slidesPerView: mdSlides,
-                    
+                    slidesPerView: mdSlides,                    
                 },
                 992: {
                     slidesPerView: lgSlides,
