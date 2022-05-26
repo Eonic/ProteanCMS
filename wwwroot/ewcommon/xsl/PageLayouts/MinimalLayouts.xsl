@@ -8028,6 +8028,34 @@
     <div class="terminus">&#160;</div>
   </xsl:template>
 
+  <xsl:template match="Page[ContentDetail/Content[@type='Product']]" mode="google-ga4-event">
+    gtag("event", "view_item",
+    <xsl:apply-templates select="ContentDetail/Content[@type='Product']" mode="google-ga4-view-item"/>
+  </xsl:template>
+  
+  <xsl:template match="Content[@type='Product']" mode="google-ga4-view-item">
+    {
+    currency: "<xsl:value-of select="$page/Cart/@currency"/>",
+    value: "<xsl:value-of select="Content/Prices/Price[2]"/>",
+    items: [
+    {
+    item_id: "<xsl:value-of select="Content/@id"/>",
+    item_name: "<xsl:value-of select="Content/Name"/>"
+    }
+    ]
+    });
+  </xsl:template>
+  <!--<xsl:template match="Content[@type='Product']" mode="google-ga4-view-item">
+    currency: "<xsl:value-of select="$page/Cart/@currency"/>",
+    value: "<xsl:value-of select="Prices/descendant::Price[1]"/>",
+    items: [
+    {
+    item_id: "<xsl:value-of select="@id"/>",
+    item_name: "<xsl:value-of select="Name"/>"
+    }
+    ]
+  </xsl:template>-->
+
   <xsl:template match="Content" mode="scollerImage">
     <xsl:param name="showImage"/>
     <xsl:variable name="imgId">
