@@ -1845,7 +1845,12 @@ DoOptions:
             Dim bIsXml As Boolean = False
 
             Try
-                oXml.Load(goServer.MapPath("/ewcommon/sqlupdate/import_data/ex_shiplocs_master2.xml"))
+                Dim ShippingLocationsPath As String = "/ewcommon/sqlupdate/import_data/ex_shiplocs_master2.xml"
+                If goConfig("cssFramework") = "bs5" Then
+                    ShippingLocationsPath = "/ptn/setup/data/ex_shiplocs.xml"
+                End If
+
+                oXml.Load(goServer.MapPath(ShippingLocationsPath))
                 bIsXml = True
             Catch ex As Exception
                 ' If Load fails then there's something invalid about what we just imported.

@@ -1728,6 +1728,11 @@ processFlow:
 
                     Dim CustomerEmailTemplatePath As String = IIf(moCartConfig("CustomerEmailTemplatePath") <> "", moCartConfig("CustomerEmailTemplatePath"), "/xsl/Cart/mailOrderCustomer.xsl")
                     Dim MerchantEmailTemplatePath As String = IIf(moCartConfig("MerchantEmailTemplatePath") <> "", moCartConfig("MerchantEmailTemplatePath"), "/xsl/Cart/mailOrderMerchant.xsl")
+                    If bs5 Then
+                        CustomerEmailTemplatePath = "/ptn/features/cart/email/order-customer.xsl"
+                        MerchantEmailTemplatePath = "/ptn/features/cart/email/order-merchant.xsl"
+                    End If
+
 
                     'send to customer
                     sMessageResponse = emailCart(oCartElmt, CustomerEmailTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), cSubject,, moCartConfig("CustomerAttachmentTemplatePath"))
