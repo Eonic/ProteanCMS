@@ -499,7 +499,7 @@
             </i> Remove
           </a>
 
-          <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
+          <!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">  href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;ewCmd2=editImage&amp;imgHtml=' + imgtag + '&amp;targetField={$ref}"-->
           <a class="btn btn-sm btn-primary editImage" data-bs-toggle="modal" data-bs-target="#modal-{$ref}">
             <xsl:if test="not(value/img/@src!='')">
               <xsl:attribute name="style">display:none</xsl:attribute>

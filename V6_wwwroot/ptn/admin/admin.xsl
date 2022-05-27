@@ -4396,7 +4396,7 @@
                     <a data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top">
                       <xsl:choose>
                         <xsl:when test="@width&gt;125 and @height&gt;125">
-                          <img class="lazy" src="/ewcommon/images/loadingImage.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
+                          <img class="lazy" src="/ptn/core/images/loader.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
                         </xsl:when>
                         <xsl:otherwise>
                           <div class="img-overflow">
