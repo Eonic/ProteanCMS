@@ -49,159 +49,92 @@
     <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
-  <group ref="EditContent" class="2col">
-    <label>Site Map Module</label>
-    <group>
-      <group>
-        <!-- These hidden fields and bindings are required for the component-->
-        <input bind="nContentKey" class="hidden">
-          <label>ContentId</label>
-        </input>
-        <input bind="cModuleType" class="hidden">
-          <label>ModuleType</label>
-        </input>
-        <!-- end of hidden fields -->
-        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
-        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
-      </group>
-    </group>
-    <group>
-      <group>
-        <label>Content</label>
-        <input bind="cModuleTitle" class="long">
-          <label>Title or Name</label>
-        </input>
-        <!--<select1 bind="cDisplay" appearance="full" class="required">
-        <label>Show Items</label>
-        <item>
-          <label>All items on the current page</label>
-          <value>all</value>
-          <toggle case="cDisplay_1" event="DOMActivate"/>
-        </item>
-        <item>
-          <label>Related items specified below</label>
-          <value>related</value>
-          <toggle case="cDisplay_2" event="DOMActivate"/>
-        </item>
-      </select1>-->
-        <!--<switch class="disable">
-          <case id="cDisplay_1"/>
-          <case id="cDisplay_2">
-            <relatedContent search="find add" type="NewsArticle" relationType="" direction="1way">
-              <label>News Articles</label>
-            </relatedContent>
-          </case>
-        </switch>-->
-      </group>
-      <group  class="inline">
-        <label>Display Settings</label>
-        <select1 bind="cDisplayDescription" appearance="full" class="vshort">
-          <label>Display each page description</label>
-          <item>
-            <label>Yes</label>
-            <value>true</value>
-          </item>
-          <item>
-            <label>No</label>
-            <value>false</value>
-          </item>
-        </select1>
-        <select1 bind="showHiddenPages" appearance="full" class="vshort">
-          <label>Show pages hidden from navigation</label>
-          <item>
-            <label>Yes</label>
-            <value>true</value>
-          </item>
-          <item>
-            <label>No</label>
-            <value>false</value>
-          </item>
-        </select1>
-        <!--<select1 bind="cSortBy" appearance="full" class="vshort">
-        <label>Sort By</label>
-        <item>
-          <label>Publish Date</label>
-           This can be @attribute or Node() name() to sort by 
-          <value>publish</value>
-          <toggle case="cSortBy_1" event="DOMActivate"/>
-        </item>
-        <item>
-          <label>Alphabetical</label>
-           This can be @attribute or Node() name() to sort by 
-          <value>Headline</value>
-          <toggle case="cSortBy_2" event="DOMActivate"/>
-        </item>
-        <item>
-          <label>Page Position</label>
-          <value>Position</value>
-          <toggle case="cSortBy_3" event="DOMActivate"/>
-        </item>
-      </select1>
-      <switch class="disable">
-        <case id="cSortBy_1">
-          <select1 bind="cPageOrder" appearance="minimal" class="vshort">
-            <label>Order</label>
-            <item>
-              <label>Newest to Oldest</label>
-              <value>descending</value>
-            </item>
-            <item>
-              <label>Oldest to Newest</label>
-              <value>ascending</value>
-            </item>
-          </select1>
-        </case>
-        <case id="cSortBy_2">
-          <select1 bind="cPageOrder" appearance="minimal" class="vshort">
-            <label>Order</label>
-            <item>
-              <label>A to Z</label>
-              <value>ascending</value>
-            </item>
-            <item>
-              <label>Z to A</label>
-              <value>descending</value>
-            </item>
-          </select1>
-        </case>
-        <case id="cSortBy_3" />
-      </switch>
-		  <select1 bind="nStepCount" appearance="full" class="required vshort">
-			  <label>Articles per page</label>
-			  <item>
-				  <label>all</label>
-				  <value>0</value>
-			  </item>
-			  <item>
-				  <label>3</label>
-				  <value>3</value>
-			  </item>
-			  <item>
-				  <label>5</label>
-				  <value>5</value>
-			  </item>
-			  <item>
-				  <label>10</label>
-				  <value>10</value>
-			  </item>
-			  <item>
-				  <label>25</label>
-				  <value>25</value>
-			  </item>
-		  </select1>-->
-      </group>
-      <group>
-        <label>Module Links</label>
-        <select1 bind="cModuleLink" class="siteTree">
-          <label>Page for the module title and module footer link</label>
-        </select1>
-        <input bind="cModuleLinkText" class="long">
-          <label>Module footer link text</label>
-        </input>
-      </group>
-    </group>
-  </group>
-  <group ref="submit" class="contentSubmit">
+	<group ref="EditContent">
+		<label>SiteMap Module</label>
+
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<input bind="cModuleTitle" class="long">
+						<label>Title or name</label>
+					</input>
+					<select1 bind="cDisplayDescription" appearance="full" class="vshort">
+						<label>Display each page description</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>
+					<select1 bind="showHiddenPages" appearance="full" class="vshort">
+						<label>Show pages hidden from navigation</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>
+				</group>
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Footer Links</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-tachometer-alt"> </i>
+					<span class="space"> </span>
+					<span>Animate</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				<!-- These hidden fields and bindings are required for the component-->
+				<input bind="nContentKey" class="hidden">
+					<label>ContentId</label>
+				</input>
+				<input bind="cModuleType" class="hidden">
+					<label>ModuleType</label>
+				</input>
+
+				<!-- end of hidden fields -->
+			</group>
+		</group>
+	</group>
+
+	<group ref="submit" class="contentSubmit">
     <submit submission="" ref="ewSubmit" class="principle">
       <label>Save Site Map</label>
     </submit>
