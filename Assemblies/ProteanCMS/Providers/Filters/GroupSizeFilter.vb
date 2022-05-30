@@ -1,5 +1,4 @@
 ﻿
-
 Imports System.Data.SqlClient
 Imports System.Xml
 Imports Protean.Cms
@@ -8,24 +7,24 @@ Imports Protean.xForm
 Namespace Providers
     Namespace Filter
 
-        Public Class PageFilter
+        Public Class GroupSizeFilter
 
 
             Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
-                    Dim pageFilterSelect As XmlElement
+                    Dim pageFilterRange As XmlElement
                     Dim oDr As SqlDataReader
 
-                    Dim sSql As String = "spGetPagesByParentPageId"
+                    Dim sSql As String = "spGetResultForPriceFilter"
                     oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     'Adding controls to the form like dropdown, radiobuttons
-                    pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
-                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
-
+                    pageFilterRange = oXform.addRange(oFromGroup, "GroupSizeFilter", True, "Group Size", 100, 300, 50)
+                    oXform.addOptionsFromSqlDataReader(pageFilterRange, oDr, "nContentId", "cContentName")
                 Catch ex As Exception
 
                 End Try
             End Sub
+
 
             Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
@@ -35,8 +34,8 @@ Namespace Providers
                     Dim cPageIds As String = String.Empty
                     Dim cnt As Integer
 
-                    If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
+                    If (oXform.Instance.SelectNodes("GroupSizeFilter") IsNot Nothing) Then
+                        cPageIds = oXform.Instance.SelectNodes("GroupSizeFilter")(0).InnerText
                         If (aWeb.moSession("PageIds") Is Nothing) Then
                             aWeb.moSession("PageIds") = cPageIds
                         Else
@@ -114,5 +113,6 @@ Namespace Providers
         ' End Class
     End Namespace
 End Namespace
+
 
 
