@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="EmailForm" box="" title="Enquiry form" process="xform" position="">
+					<Content moduleType="Email-Form" box="" title="Enquiry form" process="xform" position="">
 						<model class="ewXform">
 							<instance>
 								<emailer xmlns="http://www.eonic.co.uk/ewcommon/Services">
@@ -222,7 +222,7 @@
 					</select1>
 				</group>
 			</group>
-			<group>
+			<!--<group>
 				<label>
 					<i class="fas fa-info"> </i>
 					<span class="space"> </span>
@@ -253,7 +253,7 @@
 					</div>
 				</group>
 
-			</group>
+			</group>-->
 			<group>
 				<label>
 					<i class="fas fa-cog"> </i>

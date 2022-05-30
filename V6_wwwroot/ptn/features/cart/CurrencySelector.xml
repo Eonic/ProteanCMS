@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="Currency">
+	<model>
+		<instance>
+      <Currency>
+        <cartCmd>Currency</cartCmd>
+        <ref/>
+      </Currency>
+    </instance>
+    <submission id="SelectCurrency" action="" method="post" event="return form_check(this)"/>
+    <bind nodeset="Currency">
+      <bind id="cRef" nodeset="ref" required="true()" type="string"/>
+      <bind id="cartCmd" nodeset="cartCmd" required="true()" type="string"/>
+		</bind>
+	</model>
+	<group ref="EditContent" class="1col">
+		<label>Select Payment Option</label>
+		<group ref="Content" class="xFormContainer">
+			<group class="Content">
+        <input bind="cartCmd" class="hidden"/>
+        <select1 bind="cRef" appearance="full" class="required short">
+          <!--Generated Items will go here-->
+        </select1>
+      </group>
+    </group>
+    <!-- End of Column 1-->
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Select</label>
+    </submit>
+  </group>
+</Content>

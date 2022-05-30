@@ -1,4 +1,4 @@
-ALTER PROCEDURE [dbo].[spGetEventsTicketsCartsRefund]         
+CREATE PROCEDURE [spGetEventsTicketsCartsRefund]         
 AS      
       
 BEGIN        

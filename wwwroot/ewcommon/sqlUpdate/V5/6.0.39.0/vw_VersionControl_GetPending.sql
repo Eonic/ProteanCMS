@@ -1,12 +1,4 @@
 
-
-/****** Object:  View [dbo].[vw_VersionControl_GetPendingContent]    Script Date: 16/05/2020 11:04:18 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 ALTER VIEW [dbo].[vw_VersionControl_GetPendingContent]
 AS
 SELECT        a.nStatus AS status, c.nContentKey AS id, list.nContentVersionKey AS versionid, list.cContentName AS VersionName, c.cContentSchemaName AS Type, a.dUpdateDate AS Last_Updated, d.nDirKey AS userid, 
@@ -29,5 +21,5 @@ FROM            (SELECT        c.nContentKey, c.nVersion, c.cContentName, c.nAud
                          dbo.tblDirectory AS d ON a.nUpdateDirId = d.nDirKey INNER JOIN
                          dbo.tblContentLocation ON list.nContentKey = dbo.tblContentLocation.nContentId AND dbo.tblContentLocation.bPrimary = 1 INNER JOIN
                          dbo.tblContentStructure ON dbo.tblContentLocation.nStructId = dbo.tblContentStructure.nStructKey
-GO
+
 
