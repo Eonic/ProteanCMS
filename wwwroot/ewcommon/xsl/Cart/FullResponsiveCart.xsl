@@ -1239,6 +1239,11 @@
     <xsl:value-of select="Name"/>
   </xsl:template>
 
+	<xsl:template match="Item[productDetail/ParentProduct]" mode="CartProductName">
+		<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> - 
+		<xsl:value-of select="Name"/>
+	</xsl:template>
+
   <xsl:template match="Item[contentType='Ticket']" mode="CartProductName">
     <xsl:if test="productDetail/ParentProduct">
       <xsl:value-of select="substring(productDetail/ParentProduct/Content/@name,1,25)"/> -
@@ -2774,6 +2779,86 @@
 		</div>
 	</xsl:template>
 
+
+
+	<!-- GA4 Ecommerce Events -->
+	<!--<xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
+		gtag("event", "add_to_cart",
+		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		);
+	</xsl:template>
+
+	<xsl:template match="Page[Cart/Order/@cmd='CartAdd']" mode="google-ga4-event">
+		gtag("event", "add_to_cart",
+		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		);
+	</xsl:template>
+  
+  	<xsl:template match="Page[Cart/Order/@cmd='Cart']" mode="google-ga4-event">
+		gtag("event", "view_cart",
+		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		);
+	</xsl:template>
+  
+  <xsl:template match="Page" mode="google-ga4-transaction">
+		{
+		currency: "<xsl:value-of select="Cart/@currency"/>",
+		value: <xsl:value-of select="Cart/Order/@total"/>,
+		items: [
+		<xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
+		]
+		}
+	</xsl:template>
+  -->
+  
+  <!--<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="google-ga4-event">
+		gtag("event", "purchase",
+		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		);
+	</xsl:template>
+
+	<xsl:template match="Page" mode="google-ga4-transaction">
+		{
+		currency: "<xsl:value-of select="Cart/@currency"/>",
+    transaction_id: "<xsl:value-of select="Cart/Order/@InvoiceRef"/>",
+		value: <xsl:value-of select="Cart/Order/@total"/>,
+		items: [
+		<xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
+		]
+		}
+	</xsl:template>-->
+  
+  <xsl:template match="Page[Cart/Order/@cmd='Billing']" mode="google-ga4-event">
+		gtag("event", "add_shipping_info",
+		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		);
+	</xsl:template>
+
+	<xsl:template match="Page" mode="google-ga4-transaction">
+		{
+		currency: "<xsl:value-of select="Cart/@currency"/>",
+		value: <xsl:value-of select="Cart/Order/@total"/>,
+    shipping_tier: "<xsl:value-of select="Cart/Order/Shipping/Carrier"/>",
+		items: [
+		<xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
+		]
+		}
+	</xsl:template>
+
+	<xsl:template match="Item" mode="google-ga4-transaction-item">
+		{
+		item_id: "<xsl:value-of select="productDetail/StockCode/node()"/>",
+		item_name: "<xsl:value-of select="Name/node()"/>",
+		currency: "<xsl:value-of select="ancestor::Cart/@currency"/>",
+		index: <xsl:value-of select="position()"/>,
+		item_brand: "<xsl:value-of select="productDetail/Manufacturer/node()"/>",
+		price: <xsl:value-of select="@price"/>,
+		quantity: <xsl:value-of select="@quantity"/>
+		}
+		<!--<xsl:if test="following-sibling()::Item">
+			  <xsl:text>,</xsl:text>
+	    </xsl:if>-->
+	</xsl:template>
 
 </xsl:stylesheet>
 

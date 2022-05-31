@@ -829,29 +829,29 @@ function hideAllDependants(thisId, allDependants) {
     //}
 }
 
-function hideWantedDependants(thisId) {
+function hideCase(thisId) {
     // Show wanted Dependants
-    $("#" + thisId + '-dependant').addClass('hidden');
+    $("#" + thisId).addClass('hidden');
 
     // Find all inactive required fields and make required again for JS Validation
-    $("#" + thisId + '-dependant').find('.reqinactive').each(function () {
+    $("#" + thisId).find('.reqinactive').each(function () {
         $(this).removeClass('required');
         $(this).addClass('reqinactive');
     });
 }
 
-function showWantedDependants(thisId) {
+function showCase(thisId) {
     // Show wanted Dependants
-    $("#" + thisId + '-dependant').removeClass('hidden');
+    $("#" + thisId).removeClass('hidden');
 
     // Find all inactive required fields and make required again for JS Validation
-    $("#" + thisId + '-dependant').find('.reqinactive').each(function () {
+    $("#" + thisId).find('.reqinactive').each(function () {
         $(this).removeClass('reqinactive');
         $(this).addClass('required');
     });
 
     // Find all inactive inputs, and re-activate,
-    $("#" + thisId + '-dependant').find(":input").not(':submit').each(function () {
+    $("#" + thisId).find(":input").not(':submit').each(function () {
         var fieldName = $(this).attr('name');
         var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
         $(this).attr('name', tempFieldName);
@@ -863,18 +863,52 @@ function showWantedDependants(thisId) {
         //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
     });
 
-    $("#" + thisId + '-dependant').prepareXform();
-    $("#" + thisId + '-dependant').trigger('bespokeXform');
+    $("#" + thisId).prepareXform();
+    $("#" + thisId).trigger('bespokeXform');
 }
 
-function showHideDependant(thisId, allDependants, donothide) {
+function showHideDependant(bindVar) {
 
-    if ($('#' + thisId).is(":checked")) { //getting checked
-        showWantedDependants(thisId);
-    }
-    else { //getting unchecked
-        hideWantedDependants(thisId);
-    }
+    //get this list of service chkbxs under bindVar
+    var servicesObjs = $("[name='" + bindVar + "']");
+    var serviceIds = [];
+    $.each(servicesObjs, function (key, value) { //get Ids of the services
+        serviceIds.push(value.id);
+    });
+
+    //get Ids of the services checked
+    var servcsSelected = [];
+    $.each(serviceIds, function (key, value) { 
+        if ($('#' + value).is(":checked")) {
+            servcsSelected.push(value);
+        }
+    });
+    
+    //get cases/Qs for all services checked
+    var QsForServcChckd = [];
+    var QsForServcChckdDpdnt = [];
+    $.each(servcsSelected, function (key, value) {
+        QsForServcChckd = ($('#' + value).data('showhide').split(','));
+        for (var i = 0; i < QsForServcChckd.length; i++) {
+            if (jQuery.inArray(QsForServcChckd[i] + '-dependant', QsForServcChckdDpdnt) == -1) { //check for duplicate
+                QsForServcChckdDpdnt.push(QsForServcChckd[i] + '-dependant');
+            }
+        }
+    });
+    
+    //hide all cases/Qs
+    var QArray = [];
+    $('.' + bindVar + '-dependant').each(function () {
+        QArray.push(this.id);
+    });
+    $.each(QArray, function (key, value) {
+        hideCase(value);
+    });
+
+    //show all cases/Qs for services selected
+    $.each(QsForServcChckdDpdnt, function (key, value) {
+        showCase(value);
+    });
 }
 
 

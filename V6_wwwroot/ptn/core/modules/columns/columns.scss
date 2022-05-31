@@ -1,1 +1,22 @@
 ﻿
+.bg-video-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+
+    .bg-video {
+        z-index: -1;
+        width: 100%;
+        height: auto;
+    }
+
+    .container, .fullwidthContainer {
+        position: absolute;
+        top: $grid-gutter-width;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        z-index: 2;
+    }
+}

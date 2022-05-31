@@ -1469,7 +1469,7 @@
     </xsl:if>
 
     <!--LinkedIn-->
-    <!--
+   
     <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
       <script type="text/javascript">
         <xsl:text>_linkedin_partner_id = "</xsl:text>
@@ -1481,9 +1481,20 @@
       </script>
       <noscript>
         <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
-      </noscript>       
+      </noscript>
+
+		<xsl:if test="Contents/Content[@name='LinkedInCampaignId']">
+			<xsl:for-each select="/Page/Contents/descendant-or-self::instance[@valid='true']/*[name()='emailer']">
+			<script type="text/javascript">
+				<xsl:text>window.lintrk('track', { conversion_id: </xsl:text>
+				<xsl:value-of select="$page/Contents/Content[@name='LinkedInCampaignId']/node()"/>
+				<xsl:text> });</xsl:text>
+			</script>
+			</xsl:for-each>
+		</xsl:if>
+		
     </xsl:if>
-	-->
+
     <!-- End Linked In Insight Tag Code -->
     
     <!--END-->
@@ -2640,59 +2651,16 @@
 
     </xsl:if>
   </xsl:template>
-	
-	
-  <!-- GA4 Ecommerce Events -->
-  <xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
-          gtag("event", "add_to_cart", 
-		  <xsl:apply-templates select="." mode="google-ga4-transaction"/>
-		  );		  
-  </xsl:template>
-	
-	  <xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
-          gtag("event", "add_to_cart", 
-		  <xsl:apply-templates select="." mode="google-ga4-transaction"/>
-		  );		  
-  </xsl:template>
-	
-  <xsl:template match="Page" mode="google-ga4-transaction">
-        {
-          currency: "<xsl:value-of select="Cart/@currency"/>,
-          value: <xsl:value-of select="Cart/@total"/>,
-          items: [
-            <xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
-          ]
-        }	
-  </xsl:template>
-	
-  <xsl:template match="Item" mode="google-ga4-transaction-item">
-	    {
-              item_id: "<xsl:value-of select="productDetail/StockCode/node()"/>",
-              item_name: "<xsl:value-of select="Name/node()"/>",
-              affiliation: "",
-              currency: "ancestor::Cart/@currency",
-              discount: 0,
-              index: 0,
-              item_brand: "<xsl:value-of select="productDetail/Manufacturer/node()"/>",
-              price: <xsl:value-of select="@price"/>,
-              quantity: <xsl:value-of select="@quantity"/>
-          }  
-		  <!--<xsl:if test="following-sibling()::Item">
-			  <xsl:text>,</xsl:text>
-	    </xsl:if>-->
-  </xsl:template>			
 
   <xsl:template match="Page" mode="BingTrackingCode">   
       <xsl:if test="$BingTrackingID!=''">
 		 <script cookie-consent="tracking">
           (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
-        </script>
-         <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-        <script>
-          window.uetq = window.uetq || [];  
-		  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' });
-        </script>
-      </xsl:if>
+          <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+			  window.uetq = window.uetq || [];
+			  window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
+          </xsl:if>
+		 </script>
     </xsl:if>
   </xsl:template>
 
@@ -3878,8 +3846,31 @@
 				<xsl:value-of select="@url"/>
 			</xsl:when>
           <xsl:when test="format-number(@url,'0')!='NaN'">
-            <xsl:value-of select="$siteURL"/>
-            <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+
+              <!--change(s):
+              1. check if the edit-content-menu-item has redirect page under pagesettings
+              2. on clicking the item on admin mode, open the actual page on customize mode
+              3. on clicking the item on non-admin mode, open the redirected page-->
+              
+              <!--old code - start-->
+              <!--<xsl:value-of select="$siteURL"/>
+              <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>-->
+              <!--old code - end-->
+              
+              <!--new code - start-->
+              <xsl:choose>
+              <xsl:when test="$adminMode='true'">
+                <xsl:value-of select="@name"/>
+                <xsl:text>?pgid=</xsl:text>
+                <xsl:value-of select="@id"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$siteURL"/>
+                <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+              </xsl:otherwise>
+              </xsl:choose>
+              <!--new code - end-->
+            
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
             <xsl:value-of select="@url"/>

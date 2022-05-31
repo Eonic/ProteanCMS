@@ -3,10 +3,10 @@
 ' $Library:     eonic.adminXforms
 ' $Revision:    3.1  
 ' $Date:        2006-03-02
-' $Author:      Trevor Spink (trevor@eonic.co.uk)
-' &Website:     www.eonic.co.uk
+' $Author:      Trevor Spink (trevor@eonic.com)
+' &Website:     eonic.com
 ' &Licence:     All Rights Reserved.
-' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+' $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 '***********************************************************************
 
 Option Strict Off
@@ -1981,38 +1981,39 @@ Partial Public Class Cms
 
                     oSelElmt = MyBase.addSelect1(oFrmElmt, "cStructLayout", True, "", "PickByImage", xForm.ApperanceTypes.Full)
                     MyBase.addBind("cStructLayout", "tblContentStructure/cStructLayout", "true()")
+                    If goConfig("cssFramework") <> "bs5" Then
+                        Try
+                            'if this file exists then add the bespoke templates
+                            oXformDoc.Load(goServer.MapPath(myWeb.moConfig("ProjectPath") & "/xsl") & "/LayoutManifest.xml")
+                            sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
 
-                    Try
-                        'if this file exists then add the bespoke templates
-                        oXformDoc.Load(goServer.MapPath(myWeb.moConfig("ProjectPath") & "/xsl") & "/LayoutManifest.xml")
-                        sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
-
-                        For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
-                            Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelElmt, oChoices.GetAttribute("name"))
-                            For Each oItem In oChoices.SelectNodes("Layout")
-                                oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"))
-                                'lets add an image tag
-                                oDescElmt = moPageXML.CreateElement("img")
-                                oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
-                                oOptElmt.AppendChild(oDescElmt)
-
-                                'lets insert a description html tag
-                                If oItem.InnerXml <> "" Then
-                                    oDescElmt = moPageXML.CreateElement("div")
-                                    oDescElmt.SetAttribute("class", "description")
-                                    oDescElmt.InnerXml = oItem.InnerXml
+                            For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
+                                Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelElmt, oChoices.GetAttribute("name"))
+                                For Each oItem In oChoices.SelectNodes("Layout")
+                                    oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"))
+                                    'lets add an image tag
+                                    oDescElmt = moPageXML.CreateElement("img")
+                                    oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
                                     oOptElmt.AppendChild(oDescElmt)
-                                End If
+
+                                    'lets insert a description html tag
+                                    If oItem.InnerXml <> "" Then
+                                        oDescElmt = moPageXML.CreateElement("div")
+                                        oDescElmt.SetAttribute("class", "description")
+                                        oDescElmt.InnerXml = oItem.InnerXml
+                                        oOptElmt.AppendChild(oDescElmt)
+                                    End If
+                                Next
                             Next
-                        Next
-                    Catch
-                        'do nothing
-                    End Try
+                        Catch
+                            'do nothing
+                        End Try
+                    End If
 
                     'Lets load in the available common templates from XML file
                     Try
                         If goConfig("cssFramework") = "bs5" Then
-                            oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ptn/core") & "/layouts.xml")
+                            oXformDoc = GetSiteManifest()
                         Else
                             oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
                         End If

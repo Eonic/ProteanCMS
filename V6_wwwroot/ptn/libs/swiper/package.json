@@ -1,6 +1,6 @@
 {
   "name": "swiper",
-  "version": "7.4.1",
+  "version": "8.1.6",
   "description": "Most modern mobile touch slider and framework with hardware accelerated transitions",
   "typings": "swiper.d.ts",
   "type": "module",
@@ -87,7 +87,7 @@
     "./scss/thumbs": "./modules/thumbs/thumbs.scss",
     "./scss/virtual": "./modules/virtual/virtual.scss",
     "./scss/zoom": "./modules/zoom/zoom.scss",
-    "./angular": "./angular/fesm2015/swiper_angular.js",
+    "./angular": "./angular/fesm2015/swiper_angular.mjs",
     "./react": "./react/swiper-react.js",
     "./vue": "./vue/swiper-vue.js",
     "./svelte": "./svelte/swiper-svelte.js",
@@ -158,7 +158,7 @@
     "node": ">= 4.7.0"
   },
   "dependencies": {
-    "dom7": "^4.0.2",
+    "dom7": "^4.0.4",
     "ssr-window": "^4.0.2"
   }
 }

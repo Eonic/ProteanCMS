@@ -1714,15 +1714,12 @@
    
      
       <xsl:for-each select="ms:node-set($filterButtons)/*/*">
-		  <xsl:variable name="buttonType" >
-			  <xsl:value-of select="@type"/>
-		  </xsl:variable>
-		  <xsl:value-of select="Content/Content/@filtertype"/>
+		 
+		  
 
 		  <xsl:variable name="buttonName" select="node()"/>
-
-
-		  
+		  <xsl:variable name="filterType" select="@filterType"/>
+			
         <xsl:choose>
           <xsl:when test="ancestor::Content/Content[@filtertype=$buttonName]">
            <button type="button" name="Edit {$buttonName}" class="btn btn-primary">
@@ -1730,8 +1727,8 @@
             </button>
           </xsl:when>
           <xsl:otherwise>
-			  <xsl:variable name="IDCreation1" select="concat('RelateAdd_',$buttonName)" />
-				  <xsl:variable name="FilterType" select="concat($IDCreation1,'_1Way_~inactive')" />
+			  <xsl:variable name="relatedContent" select="concat('RelateAdd_',$filterType)" />
+				  <xsl:variable name="FilterType" select="concat($relatedContent,'_1Way_~inactive')" />
 				  
 			 
             <button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-primary">
@@ -3007,6 +3004,7 @@
             <input name="pageId" type="hidden"  class="hiddenPageId" />
             <input name="type" type="hidden"  class="hiddenType" />
              <input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
+			  <input name="UrlChangeFlag" type="hidden"  class="hidUrlChangeFlag" />
           </div>
         </div>
       </div>
