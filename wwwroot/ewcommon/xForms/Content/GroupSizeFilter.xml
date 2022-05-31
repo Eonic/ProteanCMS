@@ -7,10 +7,10 @@
 				<nContentPrimaryId/>
 				<nVersion/>
 				<cContentForiegnRef/>
-				<cContentName>PriceFilter</cContentName>
+				<cContentName>GroupSizeFilter</cContentName>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content filterType="PriceFilter"  FromPrice="" ToPrice="" Step=""/>
+					<Content filterType="GroupSizeFilter"  FromGroupSize="" ToGroupSize="" Step=""/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -28,15 +28,15 @@
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
-		
+
 		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
 		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
 		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
 		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
 		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
-		
-		<bind id="nFromPrice" nodeset="tblContent/cContentXmlBrief/Content/@FromPrice" required="false()" type="string"/>
-		<bind id="nToPrice" nodeset="tblContent/cContentXmlBrief/Content/@ToPrice" required="false()" type="string"/>
+
+		<bind id="nFromGroupSize" nodeset="tblContent/cContentXmlBrief/Content/@FromGroupSize" required="false()" type="string"/>
+		<bind id="nToGroupSize" nodeset="tblContent/cContentXmlBrief/Content/@ToGroupSize" required="false()" type="string"/>
 		<bind id="nStep" nodeset="tblContent/cContentXmlBrief/Content/@Step" required="false()" type="string"/>
 	</model>
 	<group ref="EditContent" class="2col">
@@ -71,13 +71,13 @@
 		</group>
 		<group>
 			<group>
-				<input bind="nFromPrice" type="text" >
-				
-				<label>From Price</label>
-				</input>
-				<input bind="nToPrice" type="text" >
+				<input bind="nFromGroupSize" type="text" >
 
-					<label>To Price</label>
+					<label>From Group Size</label>
+				</input>
+				<input bind="nToGroupSize" type="text" >
+
+					<label>To Group Size</label>
 				</input>
 				<input bind="nStep" type="text" >
 					<label>Step</label>
@@ -87,7 +87,7 @@
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Price Filter</label>
+			<label>Save Group Size Filter</label>
 		</submit>
 	</group>
 </Content>
