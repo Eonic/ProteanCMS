@@ -5466,13 +5466,13 @@ Public Class Cms
                     ' If oMenuItem.GetAttribute("id") = "609" Then
                     ' mbIgnorePath = mbIgnorePath
                     ' If
-                    Dim PathToMatch As String = ""
+
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then
                             If Not moRequest("path") Is Nothing Then
                                 'If this matches the path requested then change the pageId
                                 If (sUrl <> String.Empty) Then
-                                    PathToMatch = Replace(sUrl, DomainURL, "").ToLower()
+                                    Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
                                     Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
                                     Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
                                     If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then

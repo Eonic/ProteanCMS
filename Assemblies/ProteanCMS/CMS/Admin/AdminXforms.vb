@@ -3,10 +3,10 @@
 ' $Library:     eonic.adminXforms
 ' $Revision:    3.1  
 ' $Date:        2006-03-02
-' $Author:      Trevor Spink (trevor@eonic.co.uk)
-' &Website:     www.eonic.co.uk
+' $Author:      Trevor Spink (trevor@eonic.com)
+' &Website:     eonic.com
 ' &Licence:     All Rights Reserved.
-' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+' $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 '***********************************************************************
 
 Option Strict Off
