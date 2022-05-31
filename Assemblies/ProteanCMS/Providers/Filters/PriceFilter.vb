@@ -19,8 +19,8 @@ Namespace Providers
                     Dim sSql As String = "spGetResultForPriceFilter"
                     oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     'Adding controls to the form like dropdown, radiobuttons
-                    pageFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 10, 300, 10)
-                    oXform.addOptionsFromSqlDataReader(pageFilterRange, oDr, "nContentId", "cContentName")
+                    pageFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 100, 300, 50)
+                    oXform.addOptionsFromSqlDataReader(pageFilterRange, oDr, "cContentName", "nContentId")
                 Catch ex As Exception
 
                 End Try
