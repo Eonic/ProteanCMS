@@ -2,12 +2,12 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
 	<ContentTypes>
 		<ContentTypeGroup name="Image">
-			<ContentType type="LibraryImage" formPath="galleryimagelist/LibraryImage" name="Library Image">An image from the library</ContentType>
+			<ContentType type="LibraryImage" formPath="LibraryImage" name="Library Image">An image from the library</ContentType>
 		</ContentTypeGroup>
 	</ContentTypes>
 	<ModuleTypes>
 		<ModuleGroup name="Image Galleries" icon="fas fa-th">
-			<Module type="GalleryImageList" formPath="galleryimagelist/GalleryImageList" icon="fas fa-th" name="Gallery Image List" targetCssFramework="bs5"></Module>
+			<Module type="GalleryImageList" formPath="GalleryImageList" icon="fas fa-th" name="Gallery Image List" targetCssFramework="bs5"></Module>
 		</ModuleGroup>
 	</ModuleTypes>
 </PageLayouts>

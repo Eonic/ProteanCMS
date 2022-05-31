@@ -22,7 +22,6 @@ Public Class IssueTickets : Implements IHttpHandler, IRequiresSessionState
         oCart.mnCartId = OrderId
         'Dim oCartListElmt As XmlElement = myCms.moPageXml.CreateElement("Order")
         oCart.moCartXml = myCms.moPageXml.CreateElement("Order")
-        oCart.mnTaxRate = 8
 
         oCart.GetCart(oCart.moCartXml, OrderId)
         Dim itemElmt As XmlElement

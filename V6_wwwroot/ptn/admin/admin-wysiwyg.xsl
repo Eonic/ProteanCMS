@@ -182,6 +182,7 @@
 					</xsl:attribute>
 					<xsl:value-of select="$supportWebsite"/>
 				</a>
+				<xsl:text> | </xsl:text>
 				<span class="pull-right">
 					<xsl:value-of select="substring-before(//ServerVariables/Item[@name='GENERATOR']/node(),', Culture')"/>
 				</span>

@@ -7,5 +7,6 @@
   <xsl:import href="formattedtext/formattedtext.xsl"/>
   <xsl:import href="image/image.xsl"/>
   <xsl:import href="socialbookmarks/socialbookmarks.xsl"/>
+  <xsl:import href="embeddedhtml/embeddedhtml.xsl"/>
   
 </xsl:stylesheet>

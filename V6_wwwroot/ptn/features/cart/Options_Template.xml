@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="optionsForm">
+	<model>
+		<instance>
+			<nShipOptKey />
+			<cPaymentMethod>ProTx</cPaymentMethod>
+			<terms>
+				<Content>These are the T's and C's</Content>
+			</terms>
+			<confirmterms>No</confirmterms>
+			<tblCartOrder>
+				<cShippingDesc />
+			</tblCartOrder>
+		</instance>
+		<submission id="optionsForm" action="" method="POST" event="return form_check(this);" />
+	</model>
+	<group ref="options">
+		<label>Terms and Conditions</label>
+		<input ref="cPaymentMethod" class="hidden">
+			<label>ProTx</label>
+			<value>ProTx</value>
+		</input>
+		<textarea ref="terms" class="readonly">
+			<value>
+				<Content>These are the T's and C's</Content>
+			</value>
+		</textarea>
+		<select ref="confirmterms" appearance="full">
+			<label> </label>
+			<choices />
+			<item>
+				<label>I agree to the Terms and Conditions</label>
+				<value>Agree</value>
+			</item>
+			<value>No</value>
+		</select>
+		<submit submission="optionsForm" ref="submit" class="principle">
+			<label>Make Secure Payment</label>
+		</submit>
+	</group>
+</Content>

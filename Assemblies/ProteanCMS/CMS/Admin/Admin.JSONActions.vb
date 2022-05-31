@@ -53,6 +53,30 @@ Partial Public Class Cms
                 End Try
             End Sub
 
+
+
+            Public Function DeleteObject(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    If ValidateAPICall(myWeb, "Administrator") Then
+                        Dim ObjType As String = ""
+                        If inputJson("objType") IsNot Nothing Then
+                            ObjType = inputJson("ObjType").ToObject(Of String)()
+                        End If
+                        Dim ObjId As String = ""
+                        If inputJson("objId") IsNot Nothing Then
+                            ObjId = inputJson("objId").ToObject(Of String)()
+                        End If
+                        Dim result As Long = myWeb.moDbHelper.DeleteObject(ObjType, ObjId, False)
+                        Return "[{""Key"":""" & ObjId & """,""Value"":""" & result & """}]"
+                    End If
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
             Public Function QueryValue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
 
