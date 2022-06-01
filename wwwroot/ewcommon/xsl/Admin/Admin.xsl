@@ -3081,7 +3081,7 @@
 				<xsl:value-of select="$thislevel"/>
 				<xsl:if test="MenuItem"> expandable</xsl:if>
 			</xsl:attribute>
-
+               
       <div class="pageCell">
         <xsl:variable name="pageLink">
           <xsl:apply-templates select="." mode="getHref" />
@@ -3112,11 +3112,12 @@
               </span>
             </xsl:otherwise>
           </xsl:choose>
-
-
-
         </a>
+        
+        
+                
       </div>
+      
       <div class="optionButtons">
 
         <!-- Clone page note: don't offer menu page options to items that are cloned page child pages-->
@@ -3220,10 +3221,29 @@
         </xsl:choose>
 
       </div>
+      
+      <!--code change to display redirect page name below the original page name-->
+        
+        <!--new code - start-->
+      <div xmlns="http://www.w3.org/1999/xhtml">
+          <xsl:if test="format-number(@url,'0')!='NaN'">
+              <div class="fa fa-external-link">
+                <xsl:variable name="urlThis" select="@url"/>
+                <xsl:variable name="urlRef" >
+                  <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$urlThis]/@url"/>
+                  <xsl:text>&amp;ewCmd=Normal</xsl:text>
+                </xsl:variable>
+                <a href="{$urlRef}" >
+                  <span class="pageName">
+                    <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$urlThis]/DisplayName"/>
+                  </span>
+                </a>
+              </div>
+          </xsl:if>
+      </div>
+        <!--new code - end-->
+        
     </li>
-
-
-
 
 
     <!--Expand to Level XSL variant-->
