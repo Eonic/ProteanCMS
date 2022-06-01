@@ -1728,6 +1728,11 @@ processFlow:
 
                     Dim CustomerEmailTemplatePath As String = IIf(moCartConfig("CustomerEmailTemplatePath") <> "", moCartConfig("CustomerEmailTemplatePath"), "/xsl/Cart/mailOrderCustomer.xsl")
                     Dim MerchantEmailTemplatePath As String = IIf(moCartConfig("MerchantEmailTemplatePath") <> "", moCartConfig("MerchantEmailTemplatePath"), "/xsl/Cart/mailOrderMerchant.xsl")
+                    If bs5 Then
+                        CustomerEmailTemplatePath = "/ptn/features/cart/email/order-customer.xsl"
+                        MerchantEmailTemplatePath = "/ptn/features/cart/email/order-merchant.xsl"
+                    End If
+
 
                     'send to customer
                     sMessageResponse = emailCart(oCartElmt, CustomerEmailTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), cSubject,, moCartConfig("CustomerAttachmentTemplatePath"))
@@ -4401,12 +4406,12 @@ processFlow:
                                     moDBHelper.ExeProcessSql(cSqlUpdate)
                                     bSavedDelivery = True
                                 Else
-                                    'If it exists and we are here means we may have changed the Delivery address
-                                    'country
+                                    'If it exists and we are here means we may have changed the Delivery address country
 
-                                    'TS commented out for ITB as deliery option has been set earlier we don't want to remove unless invalid for target address.
-
-                                    ' RemoveDeliveryOption(mnCartId)
+                                    If LCase(moCartConfig("BlockRemoveDelivery")) <> "on" Then
+                                        RemoveDeliveryOption(mnCartId)
+                                    End If
+                                    ' 
                                 End If
 
                                 If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then

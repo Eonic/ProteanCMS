@@ -1,4 +1,4 @@
-ALTER PROCEDURE [dbo].[spTicketsRefundSummary]         
+CREATE PROCEDURE [dbo].[spTicketsRefundSummary]         
 AS      
       
 BEGIN        

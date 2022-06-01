@@ -10,7 +10,7 @@
 				<cContentName>PriceFilter</cContentName>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content filterType="PriceFilter"  parentPageId=""/>
+					<Content filterType="PriceFilter"  FromPrice="" ToPrice="" Step=""/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -34,6 +34,10 @@
 		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
 		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
 		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
+		
+		<bind id="nFromPrice" nodeset="tblContent/cContentXmlBrief/Content/@FromPrice" required="false()" type="string"/>
+		<bind id="nToPrice" nodeset="tblContent/cContentXmlBrief/Content/@ToPrice" required="false()" type="string"/>
+		<bind id="nStep" nodeset="tblContent/cContentXmlBrief/Content/@Step" required="false()" type="string"/>
 	</model>
 	<group ref="EditContent" class="2col">
 		<label>Edit Page Filter</label>
@@ -67,20 +71,16 @@
 		</group>
 		<group>
 			<group>
-				<label>Maximum price</label>
-				<input type="text" >
-					
-					<value />
+				<input bind="nFromPrice" type="text" >
+				
+				<label>From Price</label>
 				</input>
-				<label>Minimum price</label>
-				<input type="text" >
+				<input bind="nToPrice" type="text" >
 
-					<value />
+					<label>To Price</label>
 				</input>
-				<label>Steper Count</label>
-				<input type="text" >
-
-					<value />
+				<input bind="nStep" type="text" >
+					<label>Step</label>
 				</input>
 			</group>
 		</group>

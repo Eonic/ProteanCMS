@@ -589,6 +589,7 @@
     <xsl:text>~/ptn/libs/jquery/dist/jquery.min.js,</xsl:text>
     <xsl:text>~/ptn/libs/bs5/js/bootstrap.bundle.min.js,</xsl:text>
 	<xsl:text>~/ptn/libs/swiper/swiper-bundle.min.js,</xsl:text>
+	<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
     <xsl:text>~/ptn/core/core.js,</xsl:text>
   </xsl:template>
 
@@ -6888,7 +6889,7 @@
                       <xsl:text>picture hidden</xsl:text>
                     </xsl:attribute>
                   </xsl:if>
-                  <a href="{$detailSrc}" class="responsive-lightbox">
+                  <a data-src="{$detailSrc}" data-fancybox="">
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
@@ -9283,6 +9284,20 @@
                 background: url('<xsl:value-of select="$backgroundResized"/>');
               </xsl:attribute>
             </xsl:if>
+
+			<xsl:if test="@backgroundVideo-mp4!='' and @backgroundVideo-webm!=''">
+				<video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" poster="{@backgroundImage}" id="bgvid-{@id}" class="bgvid">
+					<xsl:if test="@backgroundVideo-mp4!=''">
+						<source src="{@backgroundVideo-mp4}" type="video/mp4"/>
+					</xsl:if>
+					<xsl:if test="@backgroundVideo-webm!=''">
+						<source src="{@backgroundVideo-webm}" type="video/webm"/>
+					</xsl:if>					
+                </video>
+			</xsl:if>  
+			  
+			  
+			  
             <xsl:choose>
               <xsl:when test="@fullWidth='true'">
                 <div class="fullwidthContainer">
