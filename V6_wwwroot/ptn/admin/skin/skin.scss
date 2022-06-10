@@ -48,7 +48,7 @@ $admin-header-bg-light:			darken($admin-header-bg, 10%);
 $admin-header-color:			#000;
 $admin-header-logo:				url(/ewcommon/images/admin/skin/eonic-admin-purple.png) 10px 13px no-repeat;*/
 // END VARIABLES
-.btn {
+.ptn-edit .btn {
     border-radius: 0
 }
 
@@ -1227,6 +1227,30 @@ body.ptn-edit.layout-AdmHome {
         height: 145px;
         overflow: hidden;
 
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            /* background-color: #151515; */ /* for dark overlay on top of the image */
+            background: transparent;
+            opacity: 0;
+            transition: opacity 0.35s, -webkit-transform 0.35s;
+            transition: opacity 0.35s, transform 0.35s;
+        }
+
+        :hover .overlay {
+            opacity: 0.8;
+        }
+
+        .img-block {
+            vertical-align: top;
+            position: relative;
+            display: inline-block;
+        }
+
         img {
             max-width: 100%;
         }
@@ -1240,6 +1264,33 @@ body.ptn-edit.layout-AdmHome {
             img {
                 vertical-align: middle;
             }
+        }
+
+        .magnifying-glass-icon {
+            color: #fff;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            padding: 20px;
+            border: 1px solid #fff;
+            line-height: 1;
+            opacity: 0;
+        }
+
+        .magnifying-glass-icon:hover {
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+        }
+
+        :hover .magnifying-glass-icon {
+            opacity: 1;
         }
     }
 

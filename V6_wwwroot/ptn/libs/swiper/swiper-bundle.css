@@ -1,13 +1,13 @@
 /**
- * Swiper 7.4.1
+ * Swiper 8.1.6
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * https://swiperjs.com
  *
- * Copyright 2014-2021 Vladimir Kharlampidi
+ * Copyright 2014-2022 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: December 24, 2021
+ * Released on: May 25, 2022
  */
 
 @font-face {
@@ -69,6 +69,11 @@
 .swiper-autoheight .swiper-wrapper {
   align-items: flex-start;
   transition-property: transform, height;
+}
+.swiper-backface-hidden .swiper-slide {
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
 }
 /* 3D Effects */
 .swiper-3d,
@@ -157,6 +162,10 @@
 .swiper-centered > .swiper-wrapper > .swiper-slide {
   scroll-snap-align: center center;
 }
+.swiper-virtual .swiper-slide {
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
 .swiper-virtual.swiper-css-mode .swiper-wrapper::after {
   content: '';
   position: absolute;
@@ -198,13 +207,18 @@
   cursor: auto;
   pointer-events: none;
 }
+.swiper-button-prev.swiper-button-hidden,
+.swiper-button-next.swiper-button-hidden {
+  opacity: 0;
+  cursor: auto;
+  pointer-events: none;
+}
 .swiper-button-prev:after,
 .swiper-button-next:after {
   font-family: swiper-icons;
   font-size: var(--swiper-navigation-size);
   text-transform: none !important;
   letter-spacing: 0;
-  text-transform: none;
   font-variant: initial;
   line-height: 1;
 }
@@ -464,11 +478,14 @@ button.swiper-pagination-bullet {
   margin-top: -21px;
   z-index: 10;
   transform-origin: 50%;
-  animation: swiper-preloader-spin 1s infinite linear;
   box-sizing: border-box;
   border: 4px solid var(--swiper-preloader-color, var(--swiper-theme-color));
   border-radius: 50%;
   border-top-color: transparent;
+}
+.swiper:not(.swiper-watch-progress) .swiper-lazy-preloader,
+.swiper-watch-progress .swiper-slide-visible .swiper-lazy-preloader {
+  animation: swiper-preloader-spin 1s infinite linear;
 }
 .swiper-lazy-preloader-white {
   --swiper-preloader-color: #fff;
@@ -477,6 +494,9 @@ button.swiper-pagination-bullet {
   --swiper-preloader-color: #000;
 }
 @keyframes swiper-preloader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
   100% {
     transform: rotate(360deg);
   }

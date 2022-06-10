@@ -50,6 +50,7 @@ Installer_Logo.jpg
 ..\Assemblies\Protean.Tools.Csharp\bin\Release\Protean.Tools.Csharp.dll
 ..\Assemblies\NonNuget\QRcoder.dll
 ..\Assemblies\NonNuget\System.Text.Encoding.CodePages.dll
+..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll
 ..\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll
 ..\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FTPClient.dll
 ..\Assemblies\NonNuget\tidy.x64.dll

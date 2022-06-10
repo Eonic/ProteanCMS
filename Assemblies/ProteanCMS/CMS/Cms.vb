@@ -2251,9 +2251,13 @@ Public Class Cms
 
                 'NB put the parId code here?
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Contents/Content")
-
-                    If CLng("0" & oElmt.GetAttribute("parId")) > 0 Then
-                        processInfo = "Cleaning parId for: " & oElmt.OuterXml
+                    processInfo = "Cleaning parId for: " & oElmt.OuterXml
+                    Dim parId = oElmt.GetAttribute("parId")
+                    If parId.contains(",") Then
+                        parId = oElmt.GetAttribute("parId").Split(",")(1)
+                    End If
+                    If CLng("0" & parId) > 0 Then
+                        ' processInfo = "Cleaning parId for: " & oElmt.OuterXml
                         Dim primaryParId As Long = 0
 
                         If InStr(oElmt.GetAttribute("parId"), ",") > 0 Then
@@ -3642,7 +3646,7 @@ Public Class Cms
             sSql &= "FROM tblContent AS c INNER JOIN "
             sSql &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
             sSql &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
-            sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
+            'sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
 
             ' GCF - sql replaced by the above - 24/06/2011
             ' replaced JOIN to tblContentLocation with  LEFT OUTER JOIN
@@ -4472,7 +4476,7 @@ Public Class Cms
                 root = moPageXml.CreateElement("Settings")
 
                 'Please never add any setting here you do not want to be publicly accessible.
-                Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
+                Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
                 s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
@@ -4555,9 +4559,11 @@ Public Class Cms
             If mnUserId <> 0 Then
                 oUserXml = moPageXml.SelectSingleNode("/Page/User")
                 If oUserXml Is Nothing Then
-                    moPageXml.DocumentElement.AppendChild(Me.GetUserXML(mnUserId))
+
+                    moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(GetUserXML(mnUserId), True))
+                    'moPageXml.DocumentElement.AppendChild(GetUserXML(mnUserId))
                 Else
-                    moPageXml.DocumentElement.ReplaceChild(Me.GetUserXML(mnUserId), oUserXml)
+                    moPageXml.DocumentElement.ReplaceChild(GetUserXML(mnUserId), oUserXml)
                 End If
             End If
         Catch ex As Exception
@@ -5457,40 +5463,42 @@ Public Class Cms
 
                     oMenuItem.SetAttribute("url", sUrl)
 
-                    If oMenuItem.GetAttribute("id") = "609" Then
-                        mbIgnorePath = mbIgnorePath
-                    End If
+                    ' If oMenuItem.GetAttribute("id") = "609" Then
+                    ' mbIgnorePath = mbIgnorePath
+                    ' If
 
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then
                             If Not moRequest("path") Is Nothing Then
                                 'If this matches the path requested then change the pageId
-                                Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
-                                Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
-                                Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
-                                If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
-                                    If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
-                                        'case for if newsletter has same page name as menu item
-                                        If Features.ContainsKey("PageVersions") Then
-                                            'catch for page version
-                                            If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                If (sUrl <> String.Empty) Then
+                                    Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
+                                    Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
+                                    Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
+                                    If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
+                                        If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
+                                            'case for if newsletter has same page name as menu item
+                                            If Features.ContainsKey("PageVersions") Then
+                                                'catch for page version
+                                                If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                                    mnPageId = oMenuItem.GetAttribute("id")
+                                                End If
+                                            Else
                                                 mnPageId = oMenuItem.GetAttribute("id")
                                             End If
-                                        Else
-                                            mnPageId = oMenuItem.GetAttribute("id")
+
+                                            If mnUserId <> 0 Or mbAdminMode <> True Then
+                                                'case for personalisation and admin TS 14/02/2021
+                                                mnPageId = oMenuItem.GetAttribute("id")
+                                            End If
+                                            ' If oMenuItem.GetAttribute("verType") = "3" Then
+                                            mnClonePageVersionId = mnPageId
+                                            'this is used in clone mode to determine the page content in GetPageContent.
+                                            '  End If
+                                            oMenuItem.SetAttribute("requestedPage", "1")
                                         End If
 
-                                        If mnUserId <> 0 Or mbAdminMode <> True Then
-                                            'case for personalisation and admin TS 14/02/2021
-                                            mnPageId = oMenuItem.GetAttribute("id")
-                                        End If
-                                        ' If oMenuItem.GetAttribute("verType") = "3" Then
-                                        mnClonePageVersionId = mnPageId
-                                        'this is used in clone mode to determine the page content in GetPageContent.
-                                        '  End If
-                                        oMenuItem.SetAttribute("requestedPage", "1")
                                     End If
-
                                 End If
                             End If
                         End If

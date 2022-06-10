@@ -14,7 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("ProteanCMS")>
 <Assembly: AssemblyCompany("Eonic Digital LLP")>
 <Assembly: AssemblyProduct("ProteanCMS")>
-<Assembly: AssemblyCopyright("Copyright � Eonic Digital LLP.  2022")>
+<Assembly: AssemblyCopyright("Copyright | Eonic Digital LLP.  2022")>
 <Assembly: AssemblyTrademark("ProteanCMS")>
 <Assembly: CLSCompliant(True)> 
 
@@ -34,11 +34,11 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 
 
-<Assembly: AssemblyVersion("6.0.54.0")>
+<Assembly: AssemblyVersion("6.0.55.1")>
 
 <Assembly: AssemblyDelaySign(False)>
 <Assembly: AssemblyKeyFile("../../../eonic.snk")>
 <Assembly: AssemblyKeyName("")>
 
-<Assembly: AssemblyFileVersion("6.0.54.0")>
+<Assembly: AssemblyFileVersion("6.0.55.1")>
 <Assembly: NeutralResourcesLanguageAttribute("en")>

@@ -4,7 +4,7 @@
 		<instance>
 			<provider name="PayOnAccount" validGroups="all" validCurrencies="GBP">
 				<description value="Place order, you will be contacted to arrange payment and delivery." />
-				<AccountXform value="/ewcommon/xforms/cart/payonaccount.xml"/>
+				<AccountXform value="/ptn/features/cart/paymentprovider/payonaccount.xml"/>
 			</provider>
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>

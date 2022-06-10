@@ -247,6 +247,15 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
+	
+  <xsl:variable name="GoogleGA4MeasurementID">
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'GoogleGA4MeasurementID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
 
   <xsl:variable name="GoogleOptimizeID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -372,17 +381,33 @@
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
-
+   
+	   
+         <xsl:if test="$GoogleGA4MeasurementID!=''">
+			    <!-- GA4 Tag Manager -->
+				<script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+                    <script cookie-consent="tracking">
+                      window.dataLayer = window.dataLayer || [];
+                      function gtag(){dataLayer.push(arguments);}
+                      gtag('js', new Date());
+                      gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
+					  <xsl:apply-templates select="." mode="google-ga4-event"/>
+                </script>
+				<!-- End GA4 Tag Manager -->		 
+		 </xsl:if>
         <xsl:if test="$GoogleTagManagerID!=''">
-          <!-- Google Tag Manager -->
-			<script cookie-consent="tracking">
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
-          </script>
-          <!-- End Google Tag Manager -->
+
+	
+			    <!-- Google Tag Manager -->
+			        <script cookie-consent="tracking">
+                    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                    })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
+                  </script>
+                <!-- End Google Tag Manager -->
+
         </xsl:if>
         <xsl:if test="$PayPalTagManagerID!=''">
           <!-- PayPal BEGIN -->
@@ -464,6 +489,11 @@
     </html>
   </xsl:template>
 
+  <xsl:template match="Page" mode="google-ga4-event">
+      <!-- for overloading on specific actions -->
+  </xsl:template>
+	
+		
   <xsl:template match="Page" mode="criticalPathCSS">
     <style>
       <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
@@ -1320,9 +1350,9 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </xsl:if>
 
-    <!--<xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">-->
+    <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
       <xsl:apply-templates select="." mode="getMetaDescription"/>
-    <!--</xsl:if>-->
+    </xsl:if>
     <!--New OG Tags for Facebook-->
     <xsl:apply-templates select="." mode="opengraphdata"/>
     <meta property="og:url" content="{$href}"/>
@@ -1439,7 +1469,7 @@
     </xsl:if>
 
     <!--LinkedIn-->
-    <!--
+   
     <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
       <script type="text/javascript">
         <xsl:text>_linkedin_partner_id = "</xsl:text>
@@ -1451,9 +1481,20 @@
       </script>
       <noscript>
         <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
-      </noscript>       
+      </noscript>
+
+		<xsl:if test="Contents/Content[@name='LinkedInCampaignId']">
+			<xsl:for-each select="/Page/Contents/descendant-or-self::instance[@valid='true']/*[name()='emailer']">
+			<script type="text/javascript">
+				<xsl:text>window.lintrk('track', { conversion_id: </xsl:text>
+				<xsl:value-of select="$page/Contents/Content[@name='LinkedInCampaignId']/node()"/>
+				<xsl:text> });</xsl:text>
+			</script>
+			</xsl:for-each>
+		</xsl:if>
+		
     </xsl:if>
-	-->
+
     <!-- End Linked In Insight Tag Code -->
     
     <!--END-->
@@ -1636,31 +1677,29 @@
 
   <xsl:template match="Page" mode="getMetaDescription">
     <!-- when detail get body -->
-	  <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
-		  <xsl:choose>
-			  <xsl:when test="/Page/ContentDetail">
-				  <xsl:choose>
-					  <xsl:when test="/Page/ContentDetail/Content/@metaDescription!=''">
-						  <meta name="description" content="{/Page/ContentDetail/Content/@metaDescription}"/>
-					  </xsl:when>
-					  <xsl:otherwise>
-						  <xsl:variable name="contentMetaDescription">
-							  <xsl:call-template name="truncate-string">
-								  <xsl:with-param name="text">
-									  <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getContentMetaDescription"/>
-								  </xsl:with-param>
-								  <xsl:with-param name="length" select="160"/>
-							  </xsl:call-template>
-						  </xsl:variable>
-						  <meta name="description" content="{$contentMetaDescription}"/>
-					  </xsl:otherwise>
-				  </xsl:choose>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <meta name="description" content="{Contents/Content[@name='MetaDescription' or @name='metaDescription']}{Content[@name='MetaDescription-Specific']}"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:if>
+    <xsl:choose>
+      <xsl:when test="/Page/ContentDetail">
+        <xsl:choose>
+          <xsl:when test="/Page/ContentDetail/Content/@metaDescription!=''">
+            <meta name="description" content="{/Page/ContentDetail/Content/@metaDescription}"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:variable name="contentMetaDescription">
+              <xsl:call-template name="truncate-string">
+                <xsl:with-param name="text">
+                  <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getContentMetaDescription"/>
+                </xsl:with-param>
+                <xsl:with-param name="length" select="160"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <meta name="description" content="{$contentMetaDescription}"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>
+        <meta name="description" content="{Contents/Content[@name='MetaDescription' or @name='metaDescription']}{Content[@name='MetaDescription-Specific']}"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
@@ -2617,13 +2656,11 @@
       <xsl:if test="$BingTrackingID!=''">
 		 <script cookie-consent="tracking">
           (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
-        </script>
-         <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-        <script>
-          window.uetq = window.uetq || [];  
-		  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' });
-        </script>
-      </xsl:if>
+          <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+			  window.uetq = window.uetq || [];
+			  window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
+          </xsl:if>
+		 </script>
     </xsl:if>
   </xsl:template>
 
@@ -3809,8 +3846,31 @@
 				<xsl:value-of select="@url"/>
 			</xsl:when>
           <xsl:when test="format-number(@url,'0')!='NaN'">
-            <xsl:value-of select="$siteURL"/>
-            <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+
+              <!--change(s):
+              1. check if the edit-content-menu-item has redirect page under pagesettings
+              2. on clicking the item on admin mode, open the actual page on customize mode
+              3. on clicking the item on non-admin mode, open the redirected page-->
+              
+              <!--old code - start-->
+              <!--<xsl:value-of select="$siteURL"/>
+              <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>-->
+              <!--old code - end-->
+              
+              <!--new code - start-->
+              <xsl:choose>
+              <xsl:when test="$adminMode='true'">
+                <xsl:value-of select="@name"/>
+                <xsl:text>?pgid=</xsl:text>
+                <xsl:value-of select="@id"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$siteURL"/>
+                <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+              </xsl:otherwise>
+              </xsl:choose>
+              <!--new code - end-->
+            
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
             <xsl:value-of select="@url"/>
@@ -8914,7 +8974,7 @@
       </xsl:choose>
     </xsl:param>
     <xsl:param name="stepCount" select="@stepCount" />
-    <xsl:param name="parentPage" select="//MenuItem[@id=$link and ancestor::MenuItem[@id=$pageId]]"/>
+    <xsl:param name="parentPage" select="//MenuItem[@id=$link]"/>
     <xsl:param name="endPos">
       <xsl:choose>
         <xsl:when test="@stepCount = '0'">
@@ -10630,5 +10690,8 @@
     <xsl:value-of select="$defaultWidth"/>
     <xsl:text> </xsl:text>
   </xsl:template>
+
+
+
 
 </xsl:stylesheet>

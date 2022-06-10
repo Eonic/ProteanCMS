@@ -460,8 +460,7 @@ function resetAjaxModal(ref) {
 }
 
 function setEditImage() {
-    $('a.editImage').click(function (e) {
-        e.preventDefault();
+    $('a.editImage').each(function (index, value){
         var targetForm = $(this).parents('form').attr('id');
         var targetField = $(this).parents('.form-margin').children('textarea').attr('id');
         var imgtag = $(this).parents('.form-margin').children('textarea').val();
@@ -750,6 +749,7 @@ function passImgToForm(targetForm, targetField) {
         $(editDiv).find('.btn-group-spaced .pickImage').hide();
         //add preview Image
         previewDiv.html(cImgHtml)
+        setEditImage();
       //  $('<div class="previewImage" id="previewImage_' + targetField + '"><span>' + cImgHtml + '</span></div>').insertAfter(editDiv);
       //  previewDiv.remove();
     }
@@ -757,7 +757,7 @@ function passImgToForm(targetForm, targetField) {
     thisModal.hide();
     $("#modal-" + targetField).removeData('bs.modal');
     resetAjaxModal(targetField);
-    setEditImage();
+  
 }
 
 function passDocToForm(targetForm, targetField, cUrl) {

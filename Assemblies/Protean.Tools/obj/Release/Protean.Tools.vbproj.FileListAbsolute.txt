@@ -249,7 +249,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Newtonsoft.Json
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Owin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.IO.Compression.ZipFile.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.IO.Packaging.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\TidyHTML5Managed.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\MySql.Data.dll

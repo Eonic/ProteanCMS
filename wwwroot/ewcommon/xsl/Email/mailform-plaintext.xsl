@@ -122,7 +122,7 @@
 
 
 	<xsl:template match="*" mode="bodyLayout">
-		Email Enquiry
+		Enquiry
 
 		<xsl:for-each select="*">
 

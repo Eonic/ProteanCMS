@@ -89,7 +89,7 @@
 
 		<!--end responsive columns variables-->
 		<!-- Output Module -->
-		<div class="swiper-container NewsList content-carousel">
+		<div class="swiper-container NewsList content-carousel Grid">
 			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$spacebetween}" data-spacebetweenlg="{$spacebetweenLg}">
 				<div class="swiper-wrapper">
 					<xsl:choose>
@@ -237,9 +237,9 @@
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
-		<div class="listItem newsarticle {$class}">
+		<div class="grid-item newsarticle {$class}">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="concat('listItem newsarticle ',$class)"/>
+				<xsl:with-param name="class" select="concat('grid-item newsarticle ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
@@ -307,9 +307,9 @@
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
-		<div class="listItem newsarticle">
+		<div class="grid-item newsarticle">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="'listItem newsarticle'"/>
+				<xsl:with-param name="class" select="'grid-item newsarticle'"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 
 			</xsl:apply-templates>

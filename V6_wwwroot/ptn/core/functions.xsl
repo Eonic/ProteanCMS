@@ -589,6 +589,7 @@
     <xsl:text>~/ptn/libs/jquery/dist/jquery.min.js,</xsl:text>
     <xsl:text>~/ptn/libs/bs5/js/bootstrap.bundle.min.js,</xsl:text>
 	<xsl:text>~/ptn/libs/swiper/swiper-bundle.min.js,</xsl:text>
+	<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
     <xsl:text>~/ptn/core/core.js,</xsl:text>
   </xsl:template>
 
@@ -4141,7 +4142,7 @@
     <xsl:param name="linkType"/>
     <div class="morelink">
       <span>
-        <a href="{$link}" title="{$altText}" class="btn btn-primary" itemprop="mainEntityOfPage">
+        <a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
           <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
             <xsl:attribute name="rel">external</xsl:attribute>
             <xsl:attribute name="class">extLink</xsl:attribute>
@@ -4179,12 +4180,12 @@
 				<span>
 					<xsl:choose>
 						<xsl:when test="$linkObject='modal'">
-							<button type="button" data-bs-toggle="modal" data-bs-target="{$link}" class="btn btn-primary {$class}">
+							<button type="button" data-bs-toggle="modal" data-bs-target="{$link}" class="btn btn-custom {$class}">
 								<xsl:value-of select="@linkText"/>
 							</button>
 						</xsl:when>
 						<xsl:otherwise>
-							<a title="{@linkText}" class="btn btn-primary {$class}">
+							<a title="{@linkText}" class="btn btn-custom {$class}">
 								<xsl:choose>
 									<xsl:when test="$numbertest = 'number'">
 										<xsl:variable name="pageId" select="@link"/>
@@ -4196,7 +4197,7 @@
 										<xsl:choose>
 											<xsl:when test="contains($link,'#')">
 												<xsl:attribute name="class">
-													<xsl:text>btn btn-primary scroll-to-anchor </xsl:text>
+													<xsl:text>btn btn-custom scroll-to-anchor </xsl:text>
 													<xsl:value-of select="class"/>
 												</xsl:attribute>
 												<xsl:attribute name="href">
@@ -6888,7 +6889,7 @@
                       <xsl:text>picture hidden</xsl:text>
                     </xsl:attribute>
                   </xsl:if>
-                  <a href="{$detailSrc}" class="responsive-lightbox">
+                  <a data-src="{$detailSrc}" data-fancybox="">
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
@@ -9283,6 +9284,20 @@
                 background: url('<xsl:value-of select="$backgroundResized"/>');
               </xsl:attribute>
             </xsl:if>
+
+			<xsl:if test="@backgroundVideo-mp4!='' and @backgroundVideo-webm!=''">
+				<video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" poster="{@backgroundImage}" id="bgvid-{@id}" class="bgvid">
+					<xsl:if test="@backgroundVideo-mp4!=''">
+						<source src="{@backgroundVideo-mp4}" type="video/mp4"/>
+					</xsl:if>
+					<xsl:if test="@backgroundVideo-webm!=''">
+						<source src="{@backgroundVideo-webm}" type="video/webm"/>
+					</xsl:if>					
+                </video>
+			</xsl:if>  
+			  
+			  
+			  
             <xsl:choose>
               <xsl:when test="@fullWidth='true'">
                 <div class="fullwidthContainer">

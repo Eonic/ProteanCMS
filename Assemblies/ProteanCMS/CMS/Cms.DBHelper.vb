@@ -3333,7 +3333,34 @@ restart:
             End Try
 
         End Function
+        Public Function setObjectFRef(ByVal objectType As objectTypes, ByVal id As Long, ByVal cForeignRef As String) As Long
+            Dim cProcName As String = "setObjectFRef (ObjectTypes,Int,[String])"
+            PerfMon.Log("DBHelper", cProcName)
+            Dim sSql As String = ""
+            Dim nRowAff As Long = 0
+            Dim cProcessInfo As String = ""
 
+            Try
+
+                Dim cTableName As String = getTable(objectType)
+                Dim cTableKey As String = getKey(objectType)
+                Dim cTableFRef As String = getFRef(objectType)
+
+                'SQL to save the fref value
+                Select Case objectType
+                    Case objectTypes.Content
+                        sSql = "update " & cTableName & " set " & cTableFRef & " = '" & cForeignRef & "' where " & cTableKey & " = " & id
+                End Select
+
+                nRowAff = ExeProcessSql(sSql)
+                Return nRowAff
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, cProcName, ex, cProcessInfo))
+
+            End Try
+
+        End Function
         Public Function getAuditId(Optional ByVal nStatus As Integer = 1, Optional ByVal nDirId As Long = 0, Optional ByVal cDescription As String = "", Optional ByVal dPublishDate As Object = Nothing, Optional ByVal dExpireDate As Object = Nothing, Optional ByVal dInsertDate As Object = Nothing, Optional ByVal dUpdateDate As Object = Nothing) As Integer
             PerfMon.Log("DBHelper", "getAuditId")
             Dim sSql As String
@@ -5545,7 +5572,7 @@ restart:
 
 
                 End If
-                If Not (root Is Nothing) Then
+                If Not root Is Nothing Then
                     If root.SelectSingleNode("cContactTelCountryCode") Is Nothing Then
                         root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"))
                     End If

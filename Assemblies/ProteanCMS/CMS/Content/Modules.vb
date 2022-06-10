@@ -313,39 +313,53 @@ where cl.nStructId = " & myWeb.mnPageId)
 
             Public Sub ProductFilter(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
 
-                Dim oFilterElmt As XmlElement
-                Dim sProcessInfo As String
-                Dim filters As New Protean.Providers.Filter.DefaultProvider.Filters()
-                Dim formName As String = "ProductFilter"
+                Dim formName As String = "PriceFilter" '"PriceFilter" '"ProductFilter" '"GroupSizeFilter" '"OccasionFilter"
                 Dim oFrmGroup As XmlElement
-
+                Dim filters As Object
                 Try
 
 
                     Dim filterForm As xForm = New xForm(myWeb)
                     Dim oFrmInstance As XmlElement
-                    Dim pageFilter As New Protean.Providers.Filter.PageFilter()
+
+
+                    If formName = "PriceFilter" Then
+                        filters = New Protean.Providers.Filter.PriceFilter()
+                    ElseIf formName = "GroupSizeFilter" Then
+                        filters = New Protean.Providers.Filter.GroupSizeFilter()
+                    ElseIf formName = "ProductFilter" Then
+                        filters = New Protean.Providers.Filter.PageFilter()
+                    ElseIf formName = "OccasionFilter" Then
+                        filters = New Protean.Providers.Filter.OccasionFilter()
+                    End If
 
                     filterForm.NewFrm(formName)
 
                     filterForm.submission(formName, "", "POST", "return form_check(this);")
 
-                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "ProductFilterGroup", "ProductFilterGroup", "")
-                    filterForm.addBind("PageFilter", "PageFilter")
-                    pageFilter.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, formName + "Group", formName + "Group", "")
+                    If formName = "PriceFilter" Then
+                        filterForm.addBind("PriceFilter", "PriceFilter")
+                    ElseIf formName = "GroupSizeFilter" Then
+                        filterForm.addBind("GroupSizeFilter", "GroupSizeFilter")
+                    ElseIf formName = "ProductFilter" Then
+                        filterForm.addBind("PageFilter", "PageFilter")
+                    ElseIf formName = "OccasionFilter" Then
+                        filterForm.addBind("PageFilter", "PageFilter")
+                    End If
+                    filters.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "submit", "contentSubmit", "")
                     oContentNode.AppendChild(filterForm.moXformElmt)
-
                     If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
                         If (myWeb.moRequest.Form("Submit").ToLower() <> "search") Then
-                            pageFilter.RemovePageFromFilter(myWeb, myWeb.moRequest.Form("Submit"))
+                            filters.RemovePageFromFilter(myWeb, myWeb.moRequest.Form("Submit"))
                         End If
                     End If
                     oFrmInstance = filterForm.Instance
                     If (myWeb.moSession("PageIds") IsNot Nothing) Then
-                        Protean.Tools.Xml.addElement(oFrmInstance, "PageFilter", Convert.ToString(myWeb.moSession("PageIds")))
+                        Protean.Tools.Xml.addElement(oFrmInstance, formName, Convert.ToString(myWeb.moSession("PageIds")))
                     Else
-                        Protean.Tools.Xml.addElement(oFrmInstance, "PageFilter")
+                        Protean.Tools.Xml.addElement(oFrmInstance, formName)
                     End If
 
                     filterForm.Instance = oFrmInstance
@@ -355,7 +369,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     If (filterForm.isSubmitted) Then
                         'If (filterForm.valid) Then
                         filterForm.updateInstanceFromRequest()
-                        pageFilter.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                        filters.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
                         'End If
 
                     End If
