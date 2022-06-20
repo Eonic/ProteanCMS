@@ -15,9 +15,7 @@
   <xsl:template match="Page">
     <div class="modal-dialog" id="popup1">
       <div class="modal-content">
-        <div class="modal-body">
           <xsl:apply-templates select="." mode="Admin"/>
-        </div>
       </div>
       <xsl:apply-templates select="." mode="LayoutAdminJs"/>
     </div>
@@ -28,7 +26,190 @@
     <xsl:text>?contentType=popup&amp;</xsl:text>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
+
+	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="Admin">
+		<xsl:variable name="MaxUploadWidth">
+			<xsl:apply-templates select="." mode="MaxUploadWidth"/>
+		</xsl:variable>
+		<xsl:variable name="MaxUploadHeight">
+			<xsl:apply-templates select="." mode="MaxUploadHeight"/>
+		</xsl:variable>
+		<xsl:variable name="rootPath">
+			<xsl:choose>
+				<xsl:when test="@layout='ImageLib'">
+					<xsl:call-template name="getSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ImageRootPath'"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="@layout='DocsLib'">
+					<xsl:call-template name="getSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'DocRootPath'"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:when test="@layout='MediaLib'">
+					<xsl:call-template name="getSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'MediaRootPath'"/>
+					</xsl:call-template>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="partPath"  select="translate(descendant::folder[@active='true']/@path,'\','/')"/>
+
+		<xsl:variable name="targetPath">
+			<xsl:text>/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="starts-with($rootPath,'/')">
+					<xsl:value-of select="substring-after($rootPath,'/')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$rootPath"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="starts-with($partPath,'/')">
+					<xsl:value-of select="substring-after($partPath,'/')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$partPath"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="submitPath">
+			<xsl:apply-templates select="." mode="SubmitPath"/>
+		</xsl:variable>
+
+		<xsl:variable name="pathonly">
+			<xsl:if test="$page/Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly']">
+				<xsl:text>&amp;pathonly=true</xsl:text>
+			</xsl:if>
+			<xsl:if test="$page/Request/QueryString/Item[@name='pathonly' and node()='true']">
+				<xsl:text>&amp;pathonly=true</xsl:text>
+			</xsl:if>
+		</xsl:variable>
+
+		<div id="template_FileSystem" class="modal-body">
+
+			<div class="row">
+
+				<div id="MenuTree" class="list-group col-md-3 col-sm-4 mb-3">
+					<xsl:if test="contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')">
+						<xsl:attribute name="class">list-group col-md-4 col-lg-3 col-xxl-2 mb-3</xsl:attribute>
+					</xsl:if>
+					<xsl:apply-templates select="ContentDetail/folder" mode="FolderTree">
+						<xsl:with-param name="level">1</xsl:with-param>
+					</xsl:apply-templates>
+				</div>
+
+				<div class="col-md-9 col-sm-8">
+					<xsl:if test="contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')">
+						<xsl:attribute name="class">col-md-8 col-lg-9 col-xxl-10</xsl:attribute>
+					</xsl:if>
+					<xsl:for-each select="descendant-or-self::folder[@active='true']">
+						<div class="btn-group-spaced mb-1">
+							<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
+
+								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-sm btn-outline-primary">
+									<xsl:if test="$submitPath!='/?'">
+										<xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
+										<xsl:attribute name="data-target">
+											<xsl:text>#modal-</xsl:text>
+											<xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
+										</xsl:attribute>
+									</xsl:if>
+									<i class="fa fa-arrow-up fa-white">
+										<xsl:text> </xsl:text>
+									</i>
+									Up Folder
+								</a>
+
+							</xsl:if>
+							<xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
+
+								<a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
+									<xsl:if test="$submitPath!='/?'">
+										<xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
+										<xsl:attribute name="data-target">
+											<xsl:text>#modal-</xsl:text>
+											<xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
+										</xsl:attribute>
+									</xsl:if>
+									<i class="fas fa-folder-open fa-white">
+										<xsl:text> </xsl:text>
+									</i>&#160;New Folder
+								</a>
+
+								<!-- The fileinput-button span is used to style the file input field as button -->
+								<span class="btn btn-sm btn-outline-primary fileinput-button">
+									<i class="fa fa-upload fa-white">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>
+									<span>Upload Files</span>
+									<!-- The file input field used as target for the file upload widget -->
+									<input id="fileupload" type="file" name="files[]" multiple="" class="fileUploadCheck"/>
+								</span>
+
+								<!--not for popup window or for root..!-->
+								<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
+									<xsl:if test="parent::folder">
+
+										<a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-sm btn-outline-danger">
+											<i class="fas fa-trash fa-white">
+												<xsl:text> </xsl:text>
+											</i>
+											Delete Folder
+										</a>
+									</xsl:if>
+
+								</xsl:if>
+							</xsl:if>
+							<div id="progress">
+								<div class="bar" style="width: 0%;"></div>
+							</div>
+						</div>
+					</xsl:for-each>
+					<div id="uploadFiles">
+						<xsl:choose>
+							<xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
+								<div id="progress" class="progress">
+									<div class="overlay">
+										<i class="fas fa-mouse-pointer">&#160;</i> and drop files here to upload
+									</div>
+									<div class="overlay loading-counter">
+										&#160;loading
+										<span class="count">0</span>%
+									</div>
+									<div class="progress-bar progress-bar-striped bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+
+									</div>
+								</div>
+							</xsl:when>
+							<xsl:when test="contains($browserVersion,'MSIE') or contains($browserVersion,'')">
+								<div class="hint">
+									Note: You can upload multiple files without refreshing the page.<br/> You are using Internet Explorer<br/> Try Chrome or Firefox to upload multiple files using drag and drop
+								</div>
+							</xsl:when>
+						</xsl:choose>
+						<xsl:for-each select="descendant-or-self::folder[@active='true']">
+							<div id="fileupload">
+								<xsl:apply-templates select="." mode="ImageFolder">
+									<xsl:with-param name="rootPath" select="$rootPath"/>
+								</xsl:apply-templates>
+							</div>
+						</xsl:for-each>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
+
+	<xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     <xsl:variable name="fld">
       <xsl:call-template name="url-encode">
         <xsl:with-param name="str">
@@ -358,10 +539,9 @@
                 </div>
                 <a rel="popover" data-toggle="popover" data-trigger="hover" data-container=".pickImageModal" data-contentwrapper="#imgpopover{position()}" data-placement="top">
                   <xsl:choose>
-                    <xsl:when test="@width&gt;160 and @height&gt;160">
-
-                      <img src="/ewcommon/tools/adminthumb.ashx?path=/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}" class="{@class} img-responsive"/>
-                    </xsl:when>
+					  <xsl:when test="@width&gt;125 and @height&gt;125">
+						  <img class="lazy" src="/ptn/core/images/loader.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
+					  </xsl:when>
                     <xsl:otherwise>
                       <div class="img-overflow">
                         <img src="/{@root}{translate($fld,'\', '/')}/{@name}" alt="" />
@@ -443,5 +623,108 @@
     </div>
 
   </xsl:template>
+
+	<xsl:template match="Content" mode="xform">
+		<form method="{model/submission/@method}" action="">
+			<xsl:attribute name="class">
+				<xsl:text>xform </xsl:text>
+				<xsl:if test="model/submission/@class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="model/submission/@class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+				<xsl:attribute name="action">
+					<xsl:value-of select="model/submission/@action"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@id!=''">
+				<xsl:attribute name="id">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+				<xsl:attribute name="name">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@event!=''">
+				<xsl:attribute name="onsubmit">
+					<xsl:value-of select="model/submission/@event"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="descendant::upload">
+				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*[name()!='submit']) = 0">
+					<xsl:for-each select="group[1]">
+						<div>
+							<xsl:apply-templates select="." mode="xform"/>
+						</div>
+					</xsl:for-each>
+					<xsl:for-each select="group[2]">
+						<xsl:if test="count(submit) &gt; 0">			
+						    <div class="modal-footer">
+							    <xsl:apply-templates select="submit" mode="xform"/>
+									<div class="footer-status">
+										<span>
+											<i class="fas fa-eye"> </i> Live
+										</span>
+										<span class="text-muted hidden">
+											<i class="fas fa-eye-slash"> </i> Hidden
+										</span>
+									</div>
+							</div>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="label[position()=1]">
+
+					</xsl:if>
+			
+		
+						<xsl:apply-templates select="group | repeat " mode="xform"/>
+						<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
+		
+					<xsl:if test="count(submit) &gt; 0">
+						<div class="modal-footer">
+							<xsl:apply-templates select="submit" mode="xform"/>
+						</div>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</form>
+		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
+	</xsl:template>
+
+	<xsl:template match="group[parent::Content]" mode="xform">
+		<xsl:param name="class"/>
+		<div class="modal-body">
+			<xsl:if test=" @id!='' ">
+				<xsl:attribute name="id">
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
+
+			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+	    </div>
+		<xsl:if test="count(submit) &gt; 0">
+				<xsl:if test="not(submit[contains(@class,'hideRequired')])">
+					<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+						<label class="required required-message">
+							<span class="req">*</span>
+							<xsl:text> </xsl:text>
+							<xsl:call-template name="msg_required"/>
+						</label>
+					</xsl:if>
+				</xsl:if>
+				<div class="modal-footer">
+				<xsl:apply-templates select="submit" mode="xform"/>
+				</div>
+			</xsl:if>
+		
+	</xsl:template>
 
 </xsl:stylesheet>

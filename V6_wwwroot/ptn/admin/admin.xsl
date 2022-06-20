@@ -105,6 +105,7 @@
         <xsl:text>~/ptn/libs/tinymce/jquery.tinymce.min.js,</xsl:text>
         <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text>
         <xsl:text>~/ptn/libs/jqueryui/jquery-ui.js,</xsl:text>
+		<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
 		<xsl:text>~/ptn/admin/admin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
@@ -695,33 +696,14 @@
 				  <img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
 					  <strong>Protean</strong>CMS
 				  </span>
-				  <a href="?ewCmd=Content" class="btn btn-sm btn-primary">
-					  <i class="fas fa-pen"></i> Edit Content
+			  <xsl:for-each select="$page/AdminMenu/MenuItem/MenuItem">
+				  <a href="?ewCmd={@cmd}" class="btn btn-sm btn-primary">
+					  <i class="{@icon}">&#160;</i>&#160;
+					  <xsl:value-of select="@name"/>
 				  </a>
-				  <a href="?ewCmd=ListUsers" class="btn btn-sm btn-primary">
-					  <i class="fas fa-users"></i> Membership
-				  </a>
-				  <a href="?ewCmd=Orders" class="btn btn-sm btn-primary">
-					  <i class="fas fa-shopping-basket"></i> Ecommerce
-				  </a>
-			  <a href="/?ewCmd=UpcomingRenewals" title="" class="btn  btn-sm btn-primary">
-				  <i class="fa far fa-calendar-alt"> </i> Subscriptions
-			  </a>
-				  <a href="/?ewCmd=MailingList" title="" class="btn  btn-sm btn-primary">
-					  <i class="fa fa-envelope"> </i> Email Marketing
-				  </a>
-
-				  <a href="/?ewCmd=Orders" title="" class="btn  btn-sm btn-primary">
-					  <i class="fa fa-shopping-basket"> </i> Ecommerce
-				  </a>
-				  <a href="/?ewCmd=Reports" title="" class="btn  btn-sm btn-primary">
-					  <i class="fa fas fa-chart-bar"> </i> Reports
-				  </a>
-				  <a href="/?ewCmd=SettingsDash" title="" class="btn  btn-sm btn-primary">
-					  <i class="fa fa-cogs"> </i> Settings
-				  </a>
+			  </xsl:for-each>
 				  <a id="myaccount" href="/?ewCmd=EditDirItem&amp;DirType=User&amp;id=1" class="btn  btn-sm btn-primary">
-					  <i class="fa fa-user"> </i> Admin
+					  <i class="fa fa-user">&#160;</i>&#160;Admin
 				  </a>
 			  <a id="logoff" href="/?ewCmd=LogOff" title="Click here to log off from your active session" class="btn btn-sm btn-danger">
 				  <i class="fa fa-power-off"> </i>
@@ -4379,30 +4361,42 @@
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-    var newItem = '<div class="item item-image col-md-3 col-sm-4">';
-      newItem = newItem + '<div class="panel">';
+    var newItem = '<div class="item item-image col-6 col-lg-2 col-md-3 col-sm-4">';
+      newItem = newItem + '<div>';
         newItem = newItem + '<div class="image-thumbnail">';
-          newItem = newItem + '<div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">';
-            newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
-            newItem = newItem + '<div class="popover-description">';
-              newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
-              newItem = newItem + '<br/>';
-              newItem = newItem + '</div>';
-            newItem = newItem + '</div>';
-          newItem = newItem + '<a data-bs-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top">';
-            newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
-            newItem = newItem + '</a>';
-          newItem = newItem + '</div>';
-        newItem = newItem + '<div class="description">';
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger">';
+           newItem = newItem + '<a class="img-block" data-fancybox="gallery" data-src="' + targetPath + '/' + file.name + '">';
+			   newItem = newItem + '<div class="img-overflow">';
+				   newItem = newItem + '<img src="' + targetPath + '/' + file.name + '" class="img-responsive" />';
+				   newItem = newItem + '</div>';
+			newItem = newItem + '<div class="overlay">';
+				newItem = newItem + '<span class="magnifying-glass-icon">';
+					newItem = newItem + '<i class="fa fa-search"></i>';
+					newItem = newItem + '</span>';
+				newItem = newItem + '</div>';
+			   newItem = newItem + '</a>';
+			newItem = newItem + '</div>';
+		  newItem = newItem + '<div class="img-description">';
+			  newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
+			  newItem = newItem + '<br/>';
+			  newItem = newItem + ' </div>';
+		  newItem = newItem + '<div class="thumb-button">';
+			  newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=moveFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-sm btn-primary">';
+				  newItem = newItem + '<i class="fas fa-arrow-up fa-white">					  ';
+					  newItem = newItem + ' <xsl:text> </xsl:text>';
+					  newItem = newItem + ' </i>';
+				  newItem = newItem + ' </a>';
+			  newItem = newItem + '<a href="' + targetPath + '/' + file.name + '" class="btn btn-sm btn-primary">';
+				  newItem = newItem + '<i class="fas fa-download fa-white">		  ';
+				  newItem = newItem + ' <xsl:text> </xsl:text>';
+					  newItem = newItem + '  </i>';
+				  newItem = newItem + '  </a>';
+			  newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-sm btn-danger">';
             newItem = newItem + '<i class="fa fa-trash-alt fa-white">';
               newItem = newItem + ' <xsl:text> </xsl:text>';
-              newItem = newItem + ' </i>Delete';
+              newItem = newItem + ' </i>';
             newItem = newItem + '</a>';
-          newItem = newItem + '</div><div class="img-description">';
-          newItem = newItem + '<span class="image-description-name">' + file.name + '</span>';
-          newItem = newItem + '<br/>';
-          newItem = newItem + '</div>';
+			  newItem = newItem + '</div>';
+
         newItem = newItem + '</div>';
       newItem = newItem + '</div>';
   </xsl:template>
@@ -4436,34 +4430,29 @@
               <xsl:choose>
                 <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp' or $Extension='.tif' or $Extension='.webp'">
                   <xsl:if test="@root">
-
-                    <a data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container="body" data-bs-placement="top">
+					<a class="img-block" data-fancybox="gallery" data-src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" data-caption="{@name}">
                       <xsl:choose>
                         <xsl:when test="@width&gt;125 and @height&gt;125">
-                          <img class="lazy" src="/ewcommon/images/loadingImage.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
+
+							<img class="lazy" src="/ptn/core/images/loader.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
+								<div class="overlay">
+									<span class="magnifying-glass-icon">
+										<i class="fa fa-search"></i>
+									</span>
+								</div>
                         </xsl:when>
                         <xsl:otherwise>
                           <div class="img-overflow">
                             <img src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}" class=""  alt=""/>
                           </div>
+							<div class="overlay">
+								<span class="magnifying-glass-icon">
+									<i class="fa fa-search"></i>
+								</span>
+							</div>
                         </xsl:otherwise>
                       </xsl:choose>
                     </a>
-
-                    <div class="popover-content" id="imgpopover{position()}" role="tooltip">
-                      <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive pick-image-responsive-popover"/>
-                      <div class="popup-description">
-                        <span class="image-description-name">
-                          <xsl:value-of select="@name"/>
-                        </span>
-                        <br/>
-                        <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or $Extension='.tif' or $Extension='.webp'">
-                          <xsl:value-of select="@width"/>
-                          <xsl:text> x </xsl:text>
-                          <xsl:value-of select="@height"/>
-                        </xsl:if>
-                      </div>
-                    </div>
                   </xsl:if>
                 </xsl:when>
                 <xsl:when test="$Extension='.svg'">
