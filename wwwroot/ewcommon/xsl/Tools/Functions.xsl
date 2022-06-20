@@ -3848,6 +3848,7 @@
 					</xsl:when>
 					<xsl:when test="format-number(@url,'0')!='NaN'">
 
+              <!--code change(s):
 						<!--change(s):
               1. check if the edit-content-menu-item has redirect page under pagesettings
               2. on clicking the item on admin mode, open the actual page on customize mode
