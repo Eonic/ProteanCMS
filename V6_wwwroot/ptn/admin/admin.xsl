@@ -740,10 +740,7 @@
 						  <!--<div class="card-body">
 							  <p>
 								  <xsl:value-of select="$siteURL"/>
-					
 							  </p>
-
-
 							  <p>Your last login was 
 							  --><!--<xsl:value-of select="MemberActivityReport_ColsValues/dSessionStart"/>
 
@@ -755,11 +752,11 @@
 										  </xsl:with-param>
 										  <xsl:with-param name="showTime">true</xsl:with-param>
 									  </xsl:call-template>
-								  </xsl:if>--><!--
-
+								  </xsl:if>-->
+						  <!--
 							  </p>
-						  </div>
-					  </div>-->
+						  </div>-->
+					  </div>
 				  </div>
 
 							  <div class="matchHeight dashboard-first-column">
