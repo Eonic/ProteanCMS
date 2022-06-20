@@ -1442,10 +1442,8 @@ NoDiscount:
 
                 Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
                 Try
-                    If myCart.mnProcessId > 4 Then
-                        Return ""
-                    Else
-                        If myCart.mnCartId > 0 Then
+
+                    If myCart.mnCartId > 0 Then
                             sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
                             oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                             sXmlContent = oDs.Tables(0).Rows(0)("cCartXml") & ""
@@ -1573,7 +1571,7 @@ NoDiscount:
 
                             Return ""
                         End If
-                    End If
+
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
@@ -1931,11 +1929,9 @@ NoDiscount:
                 Dim oRow As DataRow
                 Dim sPromoCode As String = ""
                 Try
-                    If myCart.mnProcessId > 4 Then
-                        Return ""
-                    Else
-                        'myCart.moCartXml
-                        If myCart.mnCartId > 0 Then
+
+                    'myCart.moCartXml
+                    If myCart.mnCartId > 0 Then
                         sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
                         oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                         Dim xmlNotes As XmlElement = Nothing
@@ -1957,7 +1953,7 @@ NoDiscount:
                         UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
                     End If
                         Return ""
-                    End If
+
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try

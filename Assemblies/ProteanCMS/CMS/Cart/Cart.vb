@@ -2815,6 +2815,17 @@ processFlow:
                     oCartElmt.SetAttribute("weight", weight)
                     oCartElmt.SetAttribute("orderType", mmcOrderType & "")
 
+                    If nStatusId > 4 And (myWeb.mcOriginalURL.Contains("/?cartCmd=Logon&refSessionId=") = False) Then
+                        myWeb.moSession.Clear()
+                        myWeb.moSession.Abandon()
+                        myWeb.moResponse.Cookies.Remove("ASP.NET_SessionId")
+                        Dim oCookie As System.Web.HttpCookie = New System.Web.HttpCookie("ASP.NET_SessionId")
+                        oCookie.Value = ""
+                        myWeb.moResponse.Cookies.Add(oCookie)
+                    End If
+
+
+
                     If nStatusId = 6 Then
                         oCartElmt.SetAttribute("complete", "True")
                     Else
