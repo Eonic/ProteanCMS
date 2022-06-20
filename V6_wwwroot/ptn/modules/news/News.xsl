@@ -108,12 +108,13 @@
 					<xsl:text> </xsl:text>
 				</div>
 
-				<xsl:if test="@carouselBullets='true'">
-					<div class="swiper-pagination" id="swiper-pagination-{@id}">
-						<xsl:text> </xsl:text>
-					</div>
-				</xsl:if>
+				
 			</div>
+			<xsl:if test="@carouselBullets='true'">
+				<div class="swiper-pagination" id="swiper-pagination-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
+			</xsl:if>
 			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
 				<xsl:text> </xsl:text>
 			</div>
@@ -533,6 +534,37 @@
 			"<xsl:value-of select="@instagramURL"/>"
 		</xsl:if>]
 		}
+	</xsl:template>
+
+	<xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
+		{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		"mainEntity": [
+		<xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+		<xsl:apply-templates select="$page/Contents/Content[@type='FAQ']" mode="JSONLD-list"/>
+		]
+		}
+	</xsl:template>
+
+	<xsl:template match="Content[@type='FAQ']" mode="JSONLD-list">
+		{
+		"@type": "Question",
+		"name": "<xsl:call-template name="escape-json">
+			<xsl:with-param name="string">
+				<xsl:apply-templates select="DisplayName" mode="flattenXhtml"/>
+			</xsl:with-param>
+		</xsl:call-template>",
+		"acceptedAnswer": {
+		"@type": "Answer",
+		"text": "<xsl:call-template name="escape-json">
+			<xsl:with-param name="string">
+				<xsl:apply-templates select="Body" mode="flattenXhtml"/>
+			</xsl:with-param>
+		</xsl:call-template>"
+		}
+		}
+		<xsl:if test="position()!=last()">,</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="Content" mode="ContentDetailCommenting">

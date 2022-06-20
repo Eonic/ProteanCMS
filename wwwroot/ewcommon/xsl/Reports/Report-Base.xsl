@@ -104,7 +104,7 @@
 					<xsl:variable name="dateFormat">
 						<xsl:text>dd MMM yyyy</xsl:text>
 						<xsl:if test="not(contains(name(),'NoTime'))">
-							<xsl:text> hh:mm</xsl:text>
+							<xsl:text> HH:mm</xsl:text>
 						</xsl:if>
 					</xsl:variable>
 					<xsl:call-template name="formatdate">
