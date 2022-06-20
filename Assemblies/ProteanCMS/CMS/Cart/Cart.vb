@@ -4417,12 +4417,12 @@ processFlow:
                                     moDBHelper.ExeProcessSql(cSqlUpdate)
                                     bSavedDelivery = True
                                 Else
-                                    'If it exists and we are here means we may have changed the Delivery address
-                                    'country
+                                    'If it exists and we are here means we may have changed the Delivery address country
 
-                                    'TS commented out for ITB as deliery option has been set earlier we don't want to remove unless invalid for target address.
-
-                                    ' RemoveDeliveryOption(mnCartId)
+                                    If LCase(moCartConfig("BlockRemoveDelivery")) <> "on" Then
+                                        RemoveDeliveryOption(mnCartId)
+                                    End If
+                                    ' 
                                 End If
 
                                 If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then

@@ -71,6 +71,9 @@ img {
         color: $link-color;
     }
 }
+.btn-custom{
+    @extend .btn-primary;
+}
 //end utilities
 .bannerless-page {
     padding-top: $top-padding;
