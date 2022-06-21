@@ -17,7 +17,8 @@ Public Class sitemapsOrg_sitemap : Implements IHttpHandler, IRequiresSessionStat
 
         oEw.mcEwSiteXsl = "/ewcommon/xsl/feeds/sitemaps/sitemap.xsl"
 
-        context.Response.ContentType = "text/xml"
+        context.Response.ContentType = "application/xml"
+        oEw.mcContentType = "application/xml"
 
         'TODO: Showing Content on sitemapsOrgSitemap
         If Not oEw.moConfig("GoogleContentTypes") = "" Then

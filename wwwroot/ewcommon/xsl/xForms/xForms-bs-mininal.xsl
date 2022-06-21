@@ -747,9 +747,8 @@
         </xsl:otherwise>
       </xsl:choose>
       <xsl:if test="alert">
-        <div class="invalid-feedback text-warning small">
+        <div class="invalid-feedback text-warning">
           <xsl:value-of select="alert/node()"/>
-          <xsl:value-of select="label/node()"/>
         </div>
       </xsl:if>
     </div>
@@ -1040,7 +1039,17 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <button type="submit" name="delete:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-danger btn-delete" onclick="disableButton(this);">
+		  <xsl:variable name="value">
+			  <xsl:choose>
+				  <xsl:when test="./parent::trigger/value/node()!=''">
+					  <xsl:value-of select="./parent::trigger/value/node()"/>
+				  </xsl:when>
+				  <xsl:otherwise>
+					  <xsl:value-of select="./parent::trigger/label/node()"/>
+				  </xsl:otherwise>
+			  </xsl:choose>
+		  </xsl:variable>
+        <button type="submit" name="delete:{@bind}" value="{$value}" class="btn btn-danger btn-delete" onclick="disableButton(this);">
           <i class="fa {$icon} fa-white">
             <xsl:text> </xsl:text>
           </i>
