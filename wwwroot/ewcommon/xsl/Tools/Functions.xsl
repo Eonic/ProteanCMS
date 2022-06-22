@@ -6686,7 +6686,7 @@
         <xsl:with-param name="max-width-xxs" select="$max-width-xxs"/>
         <xsl:with-param name="max-height-xxs" select="$max-height-xxs"/>
         <xsl:with-param name="max-width-xs" select="$max-width-xs"/>
-        <xsl:with-param name="max-height-xs" select="$max-width-xs"/>
+        <xsl:with-param name="max-height-xs" select="$max-height-xs"/>
         <xsl:with-param name="max-width-sm" select="$max-width-sm"/>
         <xsl:with-param name="max-height-sm" select="$max-height-sm"/>
         <xsl:with-param name="max-width-md" select="$max-width-md"/>
@@ -7122,7 +7122,7 @@
 								<!--JPG/PNG/GIF Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 575px)'"/>
+									<xsl:with-param name="media" select="'(max-width: 574px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
 									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
 									<xsl:with-param name="class" select="$class"/>
@@ -7447,7 +7447,7 @@
                 <!--JPG/PNG/GIF Images-->
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
-                  <xsl:with-param name="media" select="'(max-width: 575px)'"/>
+                  <xsl:with-param name="media" select="'(max-width: 574px)'"/>
                   <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
