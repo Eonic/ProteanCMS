@@ -1033,8 +1033,11 @@
     <xsl:text>Adding New Page below : </xsl:text>
   </xsl:template>
 
+	<xsl:template match="Page[@ewCmd='MailingList.CMSession']" mode="adminBreadcrumb">
+	
+	</xsl:template>
 
-  <xsl:template match="MenuItem" mode="adminBreadcrumb">
+	<xsl:template match="MenuItem" mode="adminBreadcrumb">
 
     <ol class="breadcrumb admin-breadcrumb">
       <xsl:if test="@cmd!='AdmHome'">
@@ -3834,7 +3837,9 @@
                   <xsl:for-each select="ContentDetail/RelatedResults/Content">
                     <xsl:sort select="@name" />
 
-                    <xsl:apply-templates select="." mode="LocateContentNode"/>
+					  <xsl:apply-templates select="." mode="LocateContentNode">
+						  <xsl:with-param name="indent">&#160;</xsl:with-param>
+					  </xsl:apply-templates>
 
                   </xsl:for-each>
                 </tr>
@@ -3888,7 +3893,9 @@
     <span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
       <tr>
         <td>
-			<xsl:apply-templates select="." mode="ContentListName"/>
+			<xsl:apply-templates select="." mode="ContentListName">
+				<xsl:with-param name="indent" select="$indent"/>
+			</xsl:apply-templates>
          
         </td>
         <td>
@@ -3928,12 +3935,14 @@
         </td>
       </tr>
     </span>
+	  <!--
     <xsl:apply-templates select="Content" mode="LocateContentNode">
       <xsl:with-param name="indent">
         <xsl:value-of select="$indent"/>
         &#160;&#160;&#160;
       </xsl:with-param>
     </xsl:apply-templates>
+	-->
 
   </xsl:template>
   <!-- -->
@@ -4075,6 +4084,7 @@
   </xsl:template>
 
 	<xsl:template match="Content" mode="ContentListName">
+		<xsl:param name="indent"/>
 		<xsl:value-of select="$indent"/>
 		<xsl:choose>
 			<xsl:when test="@name!=''">
@@ -4696,6 +4706,11 @@
             <xsl:with-param name="name">LinkedInInsightTag</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">LinkedIn Campaign Id</xsl:with-param>
+				<xsl:with-param name="name">LinkedInCampaignId</xsl:with-param>
+				<xsl:with-param name="type">MetaData</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <!-- END -->
@@ -4707,6 +4722,12 @@
             <xsl:with-param name="name">CookiePolicy</xsl:with-param>
             <xsl:with-param name="type">CookiePolicy</xsl:with-param>
           </xsl:call-template>
+
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Free Cookie Consent from https://www.freeprivacypolicy.com/</xsl:with-param>
+				<xsl:with-param name="name">FreeCookieConsent</xsl:with-param>
+				<xsl:with-param name="type">FreeCookieConsent</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <div class="tab-pane panel" id="settings">
@@ -5199,14 +5220,14 @@
       $('.modal-dialog').addClass('loading')
 			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
-      // load the url and show modal on success
-      var currentModal = $('.pickImageModal')
-      currentModal.load(target, function () {
-      $('.modal-dialog').removeClass('loading')
-      currentModal.modal("show");
-      });
-      });
-      };
+			// load the url and show modal on success
+			var currentModal = $('.pickImageModal')
+			currentModal.load(target, function () {
+			$('.modal-dialog').removeClass('loading')
+			currentModal.modal("show");
+			});
+			});
+			};
 
 
       });
@@ -8116,7 +8137,11 @@
       </td>
       <td class="cell description">
         <a href="{$siteURL}{@url}" title="">
-          <xsl:value-of select="node()"/>
+          
+			<xsl:if test="productDetail/ParentProduct/Content/Name">
+				<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> -
+			</xsl:if>
+			<xsl:value-of select="Name"/>
         </a>
         <xsl:apply-templates select="." mode="product-description"/>
         <!-- ################################# Line Options Info ################################# -->
@@ -8127,7 +8152,7 @@
                 <xsl:apply-templates select="option" mode="optionDetail"/>
               </xsl:when>
               <xsl:otherwise>
-                <br/>
+<br/>
                 <xsl:value-of select="Name"/>
               </xsl:otherwise>
             </xsl:choose>
@@ -8991,6 +9016,7 @@
   <xsl:template match="Page[@layout='Reports' and ContentDetail/Content[@type='xform']]" mode="Admin">
     <!--<div class="report" id="template_AdminXForm">-->
     <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+	  
     <xsl:apply-templates select="ContentDetail/Report" mode="defaultReport"/>
     <!--</div>-->
   </xsl:template>
@@ -9009,14 +9035,40 @@
       <xsl:for-each select="Item">
         <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
           <tr>
-            <xsl:for-each select="descendant-or-self::*">
-              <xsl:apply-templates select="." mode="Report_ColsValues"/>
-            </xsl:for-each>
+
+              <xsl:apply-templates select="descendant-or-self::*" mode="Report_ColsValues"/>
+
           </tr>
         </span>
       </xsl:for-each>
     </table>
   </xsl:template>
+
+	<xsl:template match="Report[@name='MailFormSubmissions']" mode="defaultReport">
+		<table class="table">
+			<tr>
+				<th>
+					Date/Time
+				</th>
+				<xsl:for-each select="Item[1]/cActivityXml/*/*">
+					<xsl:if test="count(*)=0">
+						<th>
+							<xsl:value-of select="local-name()"/>
+						</th>
+					</xsl:if>
+				</xsl:for-each>
+			</tr>
+			<xsl:for-each select="Item">
+				<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
+					<tr>
+                        <xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
+						<xsl:apply-templates select="cActivityXml/*/*" mode="Report_ColsValues"/>
+					</tr>
+				</span>
+			</xsl:for-each>
+		</table>
+	</xsl:template>
+	
 
   <xsl:template match="*" mode ="Report_ColsValues">
     <xsl:if test="count(*)=0">
@@ -9026,6 +9078,26 @@
     </xsl:if>
   </xsl:template>
 
+	<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
+<!--
+			<td>
+				<xsl:value-of select="@ids"/>
+			</td>
+			-->
+
+	</xsl:template>
+
+
+	<xsl:template match="Attachements" mode ="Report_ColsValues">
+
+		<td>
+			<xsl:for-each select="Attachement ">
+			<xsl:value-of select="Content/@name"/>
+		</xsl:for-each>
+			
+		</td>
+
+	</xsl:template>
 
   <!-- -->
   <!--   ##################  Generic Display Form  ##############################   -->
@@ -12964,6 +13036,8 @@
       </iframe>
       <xsl:apply-templates select="." mode="adminFooter"/>
       <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
+
+	   <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
 
@@ -13169,6 +13243,7 @@
       <xsl:value-of select="Group/Name/node()"/>
     </td>
   </xsl:template>
+
 
   <xsl:template name="StatusLegend">
     <xsl:param name="status"/>

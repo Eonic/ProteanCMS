@@ -152,6 +152,8 @@ Partial Public Class Cms
                                 myWeb.moSession("loadCount") = props.ChildNodes.Count
 
                             End If
+                            'Add Value To Session first time When load 50 records. changed by nita on 29march22
+                            myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
                         Else
                             If (pageloadCount = 0) Then
 

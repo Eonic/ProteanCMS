@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>FAQ</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<DisplayName/>
+						<Strapline/>
+						<Images>
+							<img class="thumbnail"/>
+						</Images>
+						<Body/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentSourceName" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentSourceName" nodeset="DisplayName" required="true()" type="string"/>
+				<bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
+				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>FAQ</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group ref="Content" class="Content">
+					<label>FAQ Name *</label>
+					<input bind="cContentSourceName" class="required long">
+					</input>
+				</group>
+				<group ref="Content" class="Content">
+					<label>FAQ Topics</label>
+					<textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">
+					</textarea>
+				</group>
+
+				<group ref="Content" class="Content">
+					<label>FAQ Article</label>
+					<textarea bind="cContentBody" class="TextArea xhtml" rows="15" cols="70">
+					</textarea>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-image"> </i>
+					<span class="space"> </span>
+					<span>Images</span>
+				</label>
+
+				<group>
+					<group class="Content">
+						<label>Images</label>
+						<input bind="cContentThumbnail" class="short pickImage">
+							<label>Thumbnail</label>
+						</input>
+					</group>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-tachometer-alt"> </i>
+					<span class="space"> </span>
+					<span>Animate</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				<group>
+					<input bind="cDescription" class="short">
+						<label>Change Notes</label>
+					</input>
+
+				</group>
+			</group>
+		</group>
+
+	</group>
+
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save FAQ</label>
+		</submit>
+	</group>
+</Content>

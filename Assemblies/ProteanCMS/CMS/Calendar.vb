@@ -11,7 +11,7 @@ Partial Public Class Cms
     Public Class Calendar
 
 #Region "   Error Handling"
-        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+        Public Shadows Event OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs)
 
         'Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles MyBase.OnError
         '    RaiseEvent OnError(sender, e)
@@ -443,7 +443,7 @@ Partial Public Class Cms
 
         Public Class Modules
 
-            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Public Event OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs)
             Private Const mcModuleName As String = "Protean.Cms.Calendar.Modules"
 
             Public Sub Add(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)

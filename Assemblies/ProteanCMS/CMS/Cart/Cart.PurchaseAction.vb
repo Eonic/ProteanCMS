@@ -51,7 +51,8 @@ Partial Public Class Cms
                     Dim CartItemId As Int16 = CInt(cartItem.GetAttribute("id"))
                     If CodeSetId > 0 Then
                         For thisQty = Quantity To 1 Step -1
-                            Dim Code As String = myWeb.moDbHelper.IssueCode(CodeSetId, CartItemId, True, Nothing)
+                            'fix to set xIssueDate - earlier it was put to xUseDate
+                            Dim Code As String = myWeb.moDbHelper.IssueCode(CodeSetId, CartItemId, False, Nothing)
                             Dim TicketElement As XmlElement = oCartItemProductDetailXml.OwnerDocument.CreateElement("Ticket")
                             TicketElement.SetAttribute("code", Code)
                             oCartItemProductDetailXml.AppendChild(TicketElement)

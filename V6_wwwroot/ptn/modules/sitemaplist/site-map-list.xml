@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content moduleType="SiteMapList" contentType="MenuItem" box="" title="" link="" linkType="internal" linkText="More" sortBy="Position" order="ascending" cols="1" stepCount="0" display="all" displayDescription="false" position="" />
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+      <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+      <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+      <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+      <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      <bind id="cDisplayDescription" nodeset="@displayDescription" required="false()" type="string"/>
+      <bind id="showHiddenPages" nodeset="@showHiddenPages" required="false()" type="string"/>
+      
+    </bind>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+	<group ref="EditContent">
+		<label>SiteMap Module</label>
+
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<input bind="cModuleTitle" class="long">
+						<label>Title or name</label>
+					</input>
+					<select1 bind="cDisplayDescription" appearance="full" class="vshort">
+						<label>Display each page description</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>
+					<select1 bind="showHiddenPages" appearance="full" class="vshort">
+						<label>Show pages hidden from navigation</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>
+				</group>
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Footer Links</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-tachometer-alt"> </i>
+					<span class="space"> </span>
+					<span>Animate</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				<!-- These hidden fields and bindings are required for the component-->
+				<input bind="nContentKey" class="hidden">
+					<label>ContentId</label>
+				</input>
+				<input bind="cModuleType" class="hidden">
+					<label>ModuleType</label>
+				</input>
+
+				<!-- end of hidden fields -->
+			</group>
+		</group>
+	</group>
+
+	<group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Site Map</label>
+    </submit>
+  </group>
+</Content>

@@ -316,7 +316,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Dim oFilterElmt As XmlElement
                 Dim sProcessInfo As String
                 Dim filters As New Protean.Providers.Filter.DefaultProvider.Filters()
-                Dim formName As String = "ProductFilter"
+                Dim formName As String = "PriceFilter"
                 Dim oFrmGroup As XmlElement
 
                 Try
@@ -325,13 +325,13 @@ where cl.nStructId = " & myWeb.mnPageId)
                     Dim filterForm As xForm = New xForm(myWeb)
                     Dim oFrmInstance As XmlElement
                     Dim pageFilter As New Protean.Providers.Filter.PageFilter()
-
+                    'Dim priceFilter As New Protean.Providers.Filter.PriceFilter()
                     filterForm.NewFrm(formName)
 
                     filterForm.submission(formName, "", "POST", "return form_check(this);")
 
-                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "ProductFilterGroup", "ProductFilterGroup", "")
-                    filterForm.addBind("PageFilter", "PageFilter")
+                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "PriceFilterGroup", "PriceFilterGroup", "")
+                    filterForm.addBind("PriceFilter", "PriceFilter")
                     pageFilter.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "submit", "contentSubmit", "")
                     oContentNode.AppendChild(filterForm.moXformElmt)
@@ -343,9 +343,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                     End If
                     oFrmInstance = filterForm.Instance
                     If (myWeb.moSession("PageIds") IsNot Nothing) Then
-                        Protean.Tools.Xml.addElement(oFrmInstance, "PageFilter", Convert.ToString(myWeb.moSession("PageIds")))
+                        Protean.Tools.Xml.addElement(oFrmInstance, "PriceFilter", Convert.ToString(myWeb.moSession("PageIds")))
                     Else
-                        Protean.Tools.Xml.addElement(oFrmInstance, "PageFilter")
+                        Protean.Tools.Xml.addElement(oFrmInstance, "PriceFilter")
                     End If
 
                     filterForm.Instance = oFrmInstance

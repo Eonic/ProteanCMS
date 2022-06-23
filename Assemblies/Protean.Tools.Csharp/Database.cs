@@ -7,6 +7,8 @@ using System.Data.SqlClient;
 using System.Collections;
 using System.Collections.Generic;
 
+
+
 namespace Protean.Tools
 {
     
@@ -225,7 +227,7 @@ namespace Protean.Tools
                     oConn.Close();
                     return true;
                 }
-                catch (Exception ex)
+                catch
                 {
                     return false;
                 }
@@ -244,7 +246,7 @@ namespace Protean.Tools
                     oConn.Close();
                     return true;
                 }
-                catch (Exception ex)
+                catch
                 {
                     return false;
                 }
@@ -385,7 +387,6 @@ namespace Protean.Tools
         public bool BackupDatabase(string databasename, string filepath)
         {
             string cProcessInfo = "createDB";
-            bool bReturn = false;
             string backupName = null;
             string zipName = null;
             try
@@ -511,7 +512,6 @@ namespace Protean.Tools
             {
                 CloseConnection();
             }
-            return bReturn;
         }
 
 
@@ -785,7 +785,7 @@ namespace Protean.Tools
                 oCmd = null/* TODO Change to default(_) if this is not a reference type */;
             }
 
-            catch (Exception ex)
+            catch
             {
                 // Dont Handle errors!
                 nUpdateCount = -1;
@@ -904,7 +904,7 @@ namespace Protean.Tools
                 if (!(parameters == null))
                 {
                     foreach (DictionaryEntry oEntry in parameters)
-                        oDataAdpt.SelectCommand.Parameters.Add(oEntry.Key.ToString(), oEntry.Value);
+                        oDataAdpt.SelectCommand.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
                 }
                 if (pageSize > 0)
                     oDataAdpt.Fill(oDs, nStartIndex, pageSize, tablename);
@@ -1271,7 +1271,7 @@ namespace Protean.Tools
                 else
                     return "null";
         }
-            catch (Exception ex)
+            catch 
             {
                 return "date error";
             }
@@ -1304,7 +1304,7 @@ namespace Protean.Tools
                 text = "'" + text + "'";
                 return text;
             }
-            catch (Exception ex)
+            catch
             {
                 return text;
             }
@@ -1369,7 +1369,7 @@ namespace Protean.Tools
                 }
                 return bReturn;
             }
-            catch (Exception ex)
+            catch 
             {
                 return false;
             }
@@ -1392,7 +1392,7 @@ namespace Protean.Tools
 
                 return objectExists;
             }
-            catch (Exception ex)
+            catch 
             {
                 return false;
             }
@@ -1420,8 +1420,7 @@ namespace Protean.Tools
 
                 return columnExists;
             }
-            catch (Exception ex)
-            {
+            catch { 
                 return false;
             }
         }
@@ -1452,7 +1451,7 @@ namespace Protean.Tools
                         oConn.Close();
                 }
             }
-            catch (Exception ex)
+            catch
             {
             }
         }

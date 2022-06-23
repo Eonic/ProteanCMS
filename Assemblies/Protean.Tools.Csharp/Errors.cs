@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 
+
 namespace Protean.Tools.Errors
 {
+
+    [CLSCompliant(true)]
     public class ErrorEventArgs : System.EventArgs
     {
         private string cModuleName;

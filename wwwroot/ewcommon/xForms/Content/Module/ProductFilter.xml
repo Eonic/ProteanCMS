@@ -11,26 +11,7 @@
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
           <Content moduleType="ProductFilter" contentType="ProductFilter" box="" title="" link="" linkType="filter" order="Position" cols="1" stepBy="" stepCount="0" display="all" position="" action="Protean.Cms+Content+Modules.ProductFilter">
-           <!--<Filter providerName="default" type="PageFilter" parentPageId="" active="true" order=""/>
-            <Filter providerName="default" type="PriceRangeFilter" lower="" upper="" step="" style="slider/dropdown" active="true" order="">
-              <IndexDef name="Price" content="SKU" xquery=""/>
-              <IndexDef name="Price" content="Product" xquery=""/>
-            </Filter>-->
-            <!--
-            <Filter provider="default" type="BrandFilter" parentPageId="" active="true" order="">
-              <IndexDef name="Brand" content="Product" lookup="Manufacturer" xquery="/Content/Manufacturer"/>
-            </Filter>
-            <Filter provider="default" type="InStockFilter" parentPageId="" active="true" order="">
-              <IndexDef name="InStock" content="Product" xquery=""/>
-              <IndexDef name="InStock" content="SKU" xquery=""/>
-            </Filter>
-            -->
-            <!--Filter provider="itb.web" type="StarRatingFilter" active=""/>
-            <Filter type="AgeRangeFilter" active=""/>
-            <Filter type="GroupSizeFilter" active=""/>
-            <Filter type="OfferFilter" active=""/>
-            <Filter type="OccasionFilter" active=""/-->
-          </Content>
+            </Content>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

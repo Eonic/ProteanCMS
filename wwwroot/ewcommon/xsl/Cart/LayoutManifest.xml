@@ -8,8 +8,9 @@
   <ModuleTypes>
 	  <ModuleGroup name="Ecommerce controls">
 		  <Module type="EcommerceListOrders" name="List Orders">List Orders [requires membership]</Module>
-      <Module type="VoucherList" name="List Vouchers">List Vouchers to purchase</Module>
-      <Module type="MyVouchers" name="My Vouchers">My Vouchers</Module>
+          <Module type="VoucherList" name="List Vouchers">List Vouchers to purchase</Module>
+          <Module type="MyVouchers" name="My Vouchers">My Vouchers</Module>
+		  <Module type="RedeemTickets" name="RedeemTickets">RedeemTickets</Module>
 		  <!--<Module type="ListContacts" name="List Contacts">List Contacts</Module>-->
 	  </ModuleGroup>
   </ModuleTypes>

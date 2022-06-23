@@ -1423,15 +1423,39 @@
 	  <div class="pick-page">
 		<input type="hidden" class="form-control" placeholder="select page" name="{$ref}" id="{$ref}" value="{$selectedValue}"/>
 	    <div class="input-group">
+			<span class="input-group-btn">
+                <!--<a onclick="xfrmClearPickPage('{ancestor::Content/model/submission/@id}','{$ref}')" title="remove page" class="btn btn-default">-->
+                <a href="javascript:$('#{$ref}').val('');$('#{$ref}-name').val('');" title="remove page" class="btn btn-default">
+                  <i class="fa fa-times fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </a>
+            </span>
 		    <input type="text" class="form-control" placeholder="select page" readonly="readonly" name="{$ref}-name"  value="{$selectedName}" id="{$ref}-name"/>
-		    <span class="input-group-btn">
-			
+		    <span class="input-group-btn">			
 			    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{$ref2}-modal"><i class="fa fa-file-text-o fa-white">
 				    <xsl:text> </xsl:text>
 			    </i><xsl:text> </xsl:text>Pick Page</button>
 		    </span>
         </div>
-		  <div class="modal fade" id="{$ref2}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+	  </div>
+	  </xsl:template>
+
+       <xsl:template match="select1[@class='siteTree']" mode="xform_control_script">
+		   <xsl:variable name="ref">
+			   <xsl:apply-templates select="." mode="getRefOrBind"/>
+		   </xsl:variable>
+		   <xsl:variable name="ref2">
+			   <xsl:apply-templates select="." mode="getRefOrBindForScript"/>
+		   </xsl:variable>
+		   <xsl:variable name="selectedValue">
+			   <xsl:value-of select="value/node()"/>
+		   </xsl:variable>
+		   <xsl:variable name="selectedName">
+			   <xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$selectedValue]/@name"/>
+		   </xsl:variable>
+		  <div class="modal fade pick-page" id="{$ref2}-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			  <div class="modal-dialog" role="document">
 				  <div class="modal-content">
 					  <div class="modal-body">
@@ -1451,7 +1475,6 @@
 				  </div>
 			  </div>
 		  </div>
-  </div>
   </xsl:template>
 
 	<xsl:template match="MenuItem" mode="siteTreePage">
@@ -1690,10 +1713,13 @@
     <div>
    
      
-      <xsl:for-each select="ms:node-set($filterButtons)/*">
-        <xsl:variable name="buttonName" select="node()"/>
-		    <xsl:value-of select="Content/Content/@filtertype"/>
+      <xsl:for-each select="ms:node-set($filterButtons)/*/*">
+		 
 		  
+
+		  <xsl:variable name="buttonName" select="node()"/>
+		  <xsl:variable name="filterType" select="@filterType"/>
+			
         <xsl:choose>
           <xsl:when test="ancestor::Content/Content[@filtertype=$buttonName]">
            <button type="button" name="Edit {$buttonName}" class="btn btn-primary">
@@ -1701,7 +1727,11 @@
             </button>
           </xsl:when>
           <xsl:otherwise>
-            <button type="submit" name="RelateAdd_PageFilter_1Way_~inactive" filtertype="{$buttonName}" class="btn btn-primary">
+			  <xsl:variable name="relatedContent" select="concat('RelateAdd_',$filterType)" />
+				  <xsl:variable name="FilterType" select="concat($relatedContent,'_1Way_~inactive')" />
+				  
+			 
+            <button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-primary">
               Add <xsl:value-of select="$buttonName"/>
             </button>
           </xsl:otherwise>
@@ -2964,12 +2994,17 @@
               <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
               <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
             </xsl:if>
+			   <xsl:variable name="objOldUrlFromXsl" select="/Page/ContentDetail/Content/model/instance/tblContent/cContentName" />
+              <input name="pageOldUrl" type="hidden" value="{$objOldUrlFromXsl}" class="hiddenProductOldUrlFromXsl" />
+			  
+			  
             <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
             <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
             <input name="type" type="hidden"  class="hiddenType" />
              <input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
+			  <input name="UrlChangeFlag" type="hidden"  class="hidUrlChangeFlag" />
           </div>
         </div>
       </div>

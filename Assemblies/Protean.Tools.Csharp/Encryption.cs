@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.IO;
 using System.Security;
-using System.Text;
-using Microsoft.VisualBasic;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 
-namespace Protean.Tools.Csharp
+namespace Protean.Tools
 {
     public static class Encryption
     {
@@ -2076,7 +2076,7 @@ namespace Protean.Tools.Csharp
                 maxIndex = Strings.Len(hex);
 
                 for (index = 1; index <= maxIndex; index += 2)
-                    sb.Append(Strings.Chr(System.Convert.ToInt32("&h" + Strings.Mid(hex, System.Convert.ToInt32(index), 2))));
+                    sb.Append(Strings.Chr(System.Convert.ToInt32( Strings.Mid(hex, System.Convert.ToInt32(index), 2),16)));
 
                 returnString = sb.ToString();
                 sb.Length = 0;

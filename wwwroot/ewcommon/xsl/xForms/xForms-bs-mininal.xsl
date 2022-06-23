@@ -31,6 +31,7 @@
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
+	<xsl:apply-templates select="descendant-or-self::select1[@class='siteTree']" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
   </xsl:template>
@@ -746,9 +747,8 @@
         </xsl:otherwise>
       </xsl:choose>
       <xsl:if test="alert">
-        <div class="invalid-feedback text-warning small">
+        <div class="invalid-feedback text-warning">
           <xsl:value-of select="alert/node()"/>
-          <xsl:value-of select="label/node()"/>
         </div>
       </xsl:if>
     </div>
@@ -1039,7 +1039,17 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
-        <button type="submit" name="delete:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-danger btn-delete" onclick="disableButton(this);">
+		  <xsl:variable name="value">
+			  <xsl:choose>
+				  <xsl:when test="./parent::trigger/value/node()!=''">
+					  <xsl:value-of select="./parent::trigger/value/node()"/>
+				  </xsl:when>
+				  <xsl:otherwise>
+					  <xsl:value-of select="./parent::trigger/label/node()"/>
+				  </xsl:otherwise>
+			  </xsl:choose>
+		  </xsl:variable>
+        <button type="submit" name="delete:{@bind}" value="{$value}" class="btn btn-danger btn-delete" onclick="disableButton(this);">
           <i class="fa {$icon} fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -2560,6 +2570,137 @@
     </div>
   </xsl:template>
 
+
+
+	<xsl:template match="select[@appearance='full' and item[toggle]][ancestor::Page[@cssFramework='bs3' or @adminMode='true']]" mode="control-outer">
+
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+
+		<xsl:variable name="value">
+			<xsl:value-of select="value/node()"/>
+		</xsl:variable>
+
+		<xsl:variable name="selectedCase">
+			<xsl:choose>
+
+				<!-- If @bindTo check this isn't selected -->
+				<xsl:when test="item[@bindTo]">
+					<xsl:variable name="bindToItem" select="item[@bindTo]"/>
+					<xsl:choose>
+						<xsl:when test="item[@bindTo]/input[@bind=$bindToItem/@bindTo]/value = $bindToItem/value">
+							<xsl:value-of select="$bindToItem/toggle/@case"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="item[value/node()=$value]/toggle/@case"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<!-- Default get selected case -->
+					<xsl:value-of select="item[value/node()=$value]/toggle/@case"/>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</xsl:variable>
+		<xsl:variable name="dependantClass">
+			<xsl:value-of select="translate($ref,'[]#=/','')"/>
+			<xsl:text>-dependant form-group</xsl:text>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="name()='group'">
+				<xsl:apply-templates select="." mode="xform"/>
+			</xsl:when>
+			<xsl:when test="contains(@class,'hidden')">
+				<div class="form-group hidden">
+					<xsl:apply-templates select="." mode="xform"/>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:attribute name="class">
+						<xsl:choose>
+							<xsl:when test="name()='div'">
+								<xsl:text>form-text</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+
+								<xsl:text>form-group </xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+						<xsl:if test="not(contains(@class,'row'))">
+							<xsl:value-of select="./@class"/>
+						</xsl:if>
+					</xsl:attribute>
+					<xsl:apply-templates select="." mode="xform"/>
+				</div>
+				<!-- Output Cases - that not empty -->
+				<xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
+					<xsl:with-param name="selectedCase" select="$selectedCase" />
+					<xsl:with-param name="dependantClass" select="$dependantClass" />
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="select[@appearance='full' and item[toggle]][ancestor::Page[@cssFramework='bs3' or @adminMode='true']]" mode="xform_control">
+
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+
+		<xsl:variable name="value">
+			<xsl:value-of select="value/node()"/>
+		</xsl:variable>
+
+		<xsl:variable name="selectedCase">
+			<xsl:choose>
+
+				<!-- If @bindTo check this isn't selected -->
+				<xsl:when test="item[@bindTo]">
+					<xsl:variable name="bindToItem" select="item[@bindTo]"/>
+					<xsl:choose>
+						<xsl:when test="item[@bindTo]/input[@bind=$bindToItem/@bindTo]/value = $bindToItem/value">
+							<xsl:value-of select="$bindToItem/toggle/@case"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="item[value/node()=$value]/toggle/@case"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<!-- Default get selected case -->
+					<xsl:value-of select="item[value/node()=$value]/toggle/@case"/>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</xsl:variable>
+
+		<xsl:variable name="dependantClass">
+			<xsl:value-of select="translate($ref,'[]#=/','')"/>
+			<xsl:text>-dependant</xsl:text>
+		</xsl:variable>
+		<div class="form-inline">
+			<xsl:apply-templates select="item | choices" mode="xform_radiocheck">
+				<xsl:with-param name="type">checkbox</xsl:with-param>
+				<xsl:with-param name="ref" select="$ref"/>
+				<xsl:with-param name="dependantClass">
+					<xsl:value-of select="translate($ref,'[]#=/','')"/>
+					<xsl:text>-dependant</xsl:text>
+				</xsl:with-param>
+			</xsl:apply-templates>
+		</div>
+		<xsl:apply-templates select="." mode="xform_legend"/>
+		<xsl:if test="item[@bindTo]">
+			<script>
+				psuedoRadioButtonControl('<xsl:value-of select="$ref"/>','<xsl:value-of select="item[@bindTo]/@bindTo"/>','<xsl:value-of select="item[@bindTo]/value"/>');
+			</script>
+		</xsl:if>
+
+	</xsl:template>
+	
+	
   <!-- -->
   <xsl:template match="itemset" mode="xform_select">
     <xsl:param name="selectedValue"/>
@@ -2721,6 +2862,17 @@
 
     <xsl:variable name="value" select="value"/>
     <xsl:variable name="class" select="../@class"/>
+	<xsl:variable name="donothide">
+		<xsl:choose>
+			<xsl:when test="ancestor::select">
+				<xsl:text>, true</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>, false</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	  
     <span>
       <xsl:attribute name="class">
         <xsl:text>radiocheckbox checkbox</xsl:text>
@@ -2768,7 +2920,9 @@
             <xsl:value-of select="translate(toggle/@case,'[]#=/','')"/>
             <xsl:text>-dependant','</xsl:text>
             <xsl:value-of select="$dependantClass"/>
-            <xsl:text>');</xsl:text>
+            <xsl:text>','</xsl:text>
+			  <xsl:value-of select="$donothide"/>
+			  <xsl:text>');</xsl:text>
           </xsl:attribute>
           <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
             <xsl:attribute name="data-fv-notempty">

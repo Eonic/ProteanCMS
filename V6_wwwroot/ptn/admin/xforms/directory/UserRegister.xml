@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="UserMyAccount">
+	<model>
+		<instance>
+			<tblDirectory>
+				<nDirKey/>
+				<cDirName/>
+				<cDirPassword/>
+				<cDirForiegnRef/>
+				<cDirSchema>User</cDirSchema>
+				<cDirXml>
+					<User>
+						<FirstName label="First name"/>
+						<MiddleName label="Middle name"/>
+						<LastName label="Surname"/>
+						<Position/>
+						<Email/>
+						<Notes/>
+					</User>
+				</cDirXml>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>-1</nStatus>
+				<cDescription/>
+			</tblDirectory>
+		</instance>
+		<submission id="UserRegister" action="" method="post" event="return form_check(this)"/>
+		<bind id="cDirName" nodeset="tblDirectory/cDirName" required="true()" type="string"/>
+		<bind id="cDirPassword" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
+		<bind id="cDirPassword2" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
+		<bind nodeset="tblDirectory/cDirXml/User">
+			<bind id="cFirstName" nodeset="FirstName" required="true()" type="string"/>
+			<bind id="cMiddleName" nodeset="MiddleName" required="false()" type="string"/>
+			<bind id="cLastName" nodeset="LastName" required="true()" type="string"/>
+			<bind id="cPosition" nodeset="Position" required="false()" type="string"/>
+			<bind id="cEmail" nodeset="Email" required="true()" type="email"/>
+			<bind id="cNotes" nodeset="Notes" required="false()" type="string"/>
+		</bind>
+	</model>
+	<group ref="UserRegister" class="1Col">
+		<!--<label>Register on this site</label>-->
+		<input bind="nDirKey" class="hidden">
+			<label>DirId</label>
+		</input>
+		<input bind="cDirName" class="required">
+			<label>User Name</label>
+		</input>
+		<secret bind="cDirPassword" class="required">
+			<label>Password</label>
+		</secret>
+		<secret bind="cDirPassword2" class="required">
+			<label>Password Again</label>
+		</secret>
+		<input bind="cFirstName" class="required">
+			<label>First Name</label>
+		</input>
+		<input bind="cMiddleName">
+			<label>Middle Name</label>
+		</input>
+		<input bind="cLastName" class="required">
+			<label>Last Name</label>
+		</input>
+		<input bind="cPosition">
+			<label>Position</label>
+		</input>
+		<input bind="cEmail" class="required">
+			<label>Email Address</label>
+		</input>
+		<!--textarea bind="cNotes" class="TextAreaBrief xhtml" rows="10" cols="70">
+			<label>Notes</label>
+		</textarea-->
+		<submit submission="UserRegister" ref="ewRegisterSubmit" class="principle">
+			<label>Create Your Account</label>
+		</submit>
+	</group>
+</Content>

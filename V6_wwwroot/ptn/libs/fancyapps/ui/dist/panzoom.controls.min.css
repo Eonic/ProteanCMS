@@ -1,0 +1,7 @@
+/**
+ * Skipped minification because the original files appears to be already minified.
+ * Original file: /npm/@fancyapps/ui@4.0.27/dist/panzoom.controls.css
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+.panzoom__controls{position:absolute;top:16px;left:16px;display:flex;flex-direction:column;transform-origin:top left;transform:scale(0.75)}.panzoom__button{cursor:pointer;margin:0;padding:10px;border:0;border-radius:0;color:#222;background:#eee}@media(hover: hover){.panzoom__button:hover{background:#ccc}}.panzoom__button svg{vertical-align:top;pointer-events:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}

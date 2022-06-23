@@ -265,19 +265,23 @@ Public Class Setup
                 goResponse.Write("<?xml version=""1.0"" encoding=""UTF-8""?>" & moPageXml.OuterXml)
             Else
                 goResponse.Buffer = False
-
-                oTransform.XSLFile = CType(goServer.MapPath("/ewcommon/xsl/admin/setup.xsl"), String)
-                oTransform.Compiled = False
-                oTransform.ProcessTimed(moPageXml, goResponse)
-                oTransform = Nothing
-
-                If Not cPostFlushActions = "" Then
-                    goResponse.Flush()
-                    PostFlushActions()
+                If goConfig("cssFramework") = "bs5" Then
+                    oTransform.XSLFile = CType(goServer.MapPath("/ptn/setup/setup.xsl"), String)
+                Else
+                    oTransform.XSLFile = CType(goServer.MapPath("/ewcommon/xsl/admin/setup.xsl"), String)
                 End If
 
-            End If
-            close()
+                oTransform.Compiled = False
+                    oTransform.ProcessTimed(moPageXml, goResponse)
+                    oTransform = Nothing
+
+                    If Not cPostFlushActions = "" Then
+                        goResponse.Flush()
+                        PostFlushActions()
+                    End If
+
+                End If
+                close()
 
         Catch ex As Exception
 
@@ -463,10 +467,6 @@ Recheck:
                     Dim oAdXfm As Object = oMembershipProv.AdminXforms
                     oAdXfm.open(moPageXml)
                     oPageDetail.AppendChild(oAdXfm.xFrmUserLogon("AdminLogon"))
-
-                    If oAdXfm.isSubmitted Then
-                        oAdXfm.validate()
-                    End If
                     mnUserId = myWeb.mnUserId
                     If oAdXfm.valid Then
 
@@ -635,10 +635,10 @@ Recheck:
         Try
             oElmt = moPageXml.CreateElement("AdminMenu")
 
-            oElmt1 = appendMenuItem(oElmt, "Setup Home", "AdmHome", , , "fa-gears")
+            oElmt1 = appendMenuItem(oElmt, "Setup Home", "AdmHome", , , "fa-cogs")
             If mbSchemaExists Then
-                oElmt2 = appendMenuItem(oElmt1, "Setup and Import", "Setup", , , "fa-gear")
-                oElmt3 = appendMenuItem(oElmt2, "Delete Database", "ClearDB", , , "fa-warning")
+                oElmt2 = appendMenuItem(oElmt1, "Setup and Import", "Setup", , , "fa-cogs")
+                oElmt3 = appendMenuItem(oElmt2, "Delete Database", "ClearDB", , , "fa-exclamation-circle")
                 oElmt4 = appendMenuItem(oElmt2, "New Database", "NewV4", , , "fa-briefcase")
                 oElmt6 = appendMenuItem(oElmt2, "Add Shipping Locations", "ShipLoc", , , "fa-globe")
                 oElmt5 = appendMenuItem(oElmt2, "Import V3 Data", "ImportV3", , , "fa-level-up")
@@ -706,11 +706,16 @@ Recheck:
 
             Dim commonfolders As New ArrayList
             Dim oFS As New fsHelper
+            Dim upgradePath As String = "/sqlupdate/DatabaseUpgrade.xml"
+            If goConfig("cssFramework") = "bs5" Then
+                upgradePath = "/update/sql/databaseupgrade.xml"
+            End If
+
 
             myWeb.InitializeVariables()
 
             For Each AltFolder In myWeb.maCommonFolders
-                filePath = AltFolder.TrimEnd("/\".ToCharArray) & "/sqlupdate/DatabaseUpgrade.xml"
+                filePath = AltFolder.TrimEnd("/\".ToCharArray) & upgradePath
                 If Not String.IsNullOrEmpty(AltFolder) Then
                     AddResponse("Running: " & filePath)
                     If oFS.VirtualFileExists(filePath) Then
@@ -722,8 +727,8 @@ Recheck:
                     AddResponse("Not Running: " & filePath)
                 End If
             Next
-            If oFS.VirtualFileExists("/sqlupdate/DatabaseUpgrade.xml") Then
-                UpdateDatabase("/sqlupdate/DatabaseUpgrade.xml")
+            If oFS.VirtualFileExists(upgradePath) Then
+                UpdateDatabase(upgradePath)
             Else
                 AddResponse("No Bespoke Upgrades Found")
             End If
@@ -751,11 +756,13 @@ Recheck:
 
                 oUpgrdXML.Load(goServer.MapPath(filePath))
 
+                Dim rootPath As String = Path.GetDirectoryName(goServer.MapPath(filePath))
+
                 Dim cLatestVersion As String = oUpgrdXML.DocumentElement.GetAttribute("LatestVersion")
                 If cLatestVersion = cCurrentVersion Then Return True
 
                 'Remove all foreign keys
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
+                myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & "/toV4/DropAllForeignKeys.sql")
                 myWeb.msException = ""
                 'If Not msException = "" Then
                 '    AddResponse(msException)
@@ -795,7 +802,7 @@ Recheck:
                                                                 Dim nCount As Long
                                                                 AddResponse("Run File '" & oActionElmt.GetAttribute("ObjectName") & "'")
                                                                 errormsg = ""
-                                                                nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(oActionElmt.GetAttribute("ObjectName")), errormsg)
+                                                                nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & oActionElmt.GetAttribute("ObjectName"), errormsg)
                                                                 If errormsg <> "" Then
                                                                     AddResponse("<strong style=""color:#ff0000"">WARNING: File execution generated an error</strong>")
                                                                     AddResponse("<p style=""color:#ff0000"">" & errormsg & "</p>")
@@ -1838,7 +1845,12 @@ DoOptions:
             Dim bIsXml As Boolean = False
 
             Try
-                oXml.Load(goServer.MapPath("/ewcommon/sqlupdate/import_data/ex_shiplocs_master2.xml"))
+                Dim ShippingLocationsPath As String = "/ewcommon/sqlupdate/import_data/ex_shiplocs_master2.xml"
+                If goConfig("cssFramework") = "bs5" Then
+                    ShippingLocationsPath = "/ptn/setup/data/ex_shiplocs.xml"
+                End If
+
+                oXml.Load(goServer.MapPath(ShippingLocationsPath))
                 bIsXml = True
             Catch ex As Exception
                 ' If Load fails then there's something invalid about what we just imported.

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+	  <ContentTypeGroup name="FAQ">
+		  <ContentType type="FAQ" formPath="faq" name="FAQ">An FAQ</ContentType>
+	  </ContentTypeGroup>
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fa-th-list">
+      <Module type="FAQList" formPath="faq-list" icon="fas fa-question" name="FAQ List"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

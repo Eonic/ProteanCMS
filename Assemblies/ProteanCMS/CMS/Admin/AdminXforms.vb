@@ -3,10 +3,10 @@
 ' $Library:     eonic.adminXforms
 ' $Revision:    3.1  
 ' $Date:        2006-03-02
-' $Author:      Trevor Spink (trevor@eonic.co.uk)
-' &Website:     www.eonic.co.uk
+' $Author:      Trevor Spink (trevor@eonic.com)
+' &Website:     eonic.com
 ' &Licence:     All Rights Reserved.
-' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+' $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 '***********************************************************************
 
 Option Strict Off
@@ -44,10 +44,10 @@ Partial Public Class Cms
             Public moRequest As System.Web.HttpRequest
 
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
-            Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Shadows Event OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs)
 
-            Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
-                returnException(myWeb.msException, mcModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
+            Private Sub _OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
+                returnException(myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug)
             End Sub
 
             'Public myWeb As Protean.Cms
@@ -696,6 +696,10 @@ Partial Public Class Cms
                 Dim oFsh As fsHelper
                 Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
                 Try
+                    If myWeb.mcEWCommonFolder = "/ptn" Then
+                        xFormPath = "/admin/xforms/config/" & ConfigType & ".xml"
+                    End If
+
                     oFsh = New fsHelper
                     oFsh.open(moPageXML)
 
@@ -1353,7 +1357,9 @@ Partial Public Class Cms
                 Try
 
                     cXmlFilePath = "/xforms/page/" & cFormName & ".xml"
-
+                    If goConfig("cssFramework") = "bs5" Then
+                        cXmlFilePath = "/admin" & cXmlFilePath
+                    End If
                     If Not MyBase.load(cXmlFilePath, myWeb.maCommonFolders) Then
                         'If not a custom page is loaded, pull in the standard elements
                         MyBase.NewFrm("EditPage")
@@ -1494,21 +1500,21 @@ Partial Public Class Cms
                     End If
 
 
-                    ' Account for the clone node 
-                    If gbClone Then
+                    ' Account for the clone node ' TS removed because added in to page xform on a per site basis if required see wanner.
+                    'If gbClone Then
 
-                        ' Check for the instance of Clone
-                        If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
-                        End If
+                    '    ' Check for the instance of Clone
+                    '    If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
+                    '    End If
 
-                        ' Check for the binding of clone
-                        If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
-                            MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
-                            MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
-                        End If
-                    End If
+                    '    ' Check for the binding of clone
+                    '    If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
+                    '        MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
+                    '        MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
+                    '    End If
+                    'End If
 
                     cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                     If MyBase.isSubmitted Then
@@ -1664,6 +1670,7 @@ Partial Public Class Cms
                     MyBase.addOption(oSelElmt, "Same content with multiple locations", 2)
                     MyBase.addOption(oSelElmt, "Same content with multiple primary locations", 3)
                     MyBase.addOption(oSelElmt, "Create copies of the content", 1)
+                    MyBase.addOption(oSelElmt, "Force copies of the content", 4)
                     MyBase.addBind("nCopyContent", "tblContentStructure/@nCopyContent", "true()")
 
                     MyBase.addInput(oFrmElmt, "cStructName", True, "Page Name")
@@ -1974,37 +1981,42 @@ Partial Public Class Cms
 
                     oSelElmt = MyBase.addSelect1(oFrmElmt, "cStructLayout", True, "", "PickByImage", xForm.ApperanceTypes.Full)
                     MyBase.addBind("cStructLayout", "tblContentStructure/cStructLayout", "true()")
+                    If goConfig("cssFramework") <> "bs5" Then
+                        Try
+                            'if this file exists then add the bespoke templates
+                            oXformDoc.Load(goServer.MapPath(myWeb.moConfig("ProjectPath") & "/xsl") & "/LayoutManifest.xml")
+                            sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
 
-                    Try
-                        'if this file exists then add the bespoke templates
-                        oXformDoc.Load(goServer.MapPath(myWeb.moConfig("ProjectPath") & "/xsl") & "/LayoutManifest.xml")
-                        sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
-
-                        For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
-                            Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelElmt, oChoices.GetAttribute("name"))
-                            For Each oItem In oChoices.SelectNodes("Layout")
-                                oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"))
-                                'lets add an image tag
-                                oDescElmt = moPageXML.CreateElement("img")
-                                oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
-                                oOptElmt.AppendChild(oDescElmt)
-
-                                'lets insert a description html tag
-                                If oItem.InnerXml <> "" Then
-                                    oDescElmt = moPageXML.CreateElement("div")
-                                    oDescElmt.SetAttribute("class", "description")
-                                    oDescElmt.InnerXml = oItem.InnerXml
+                            For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
+                                Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelElmt, oChoices.GetAttribute("name"))
+                                For Each oItem In oChoices.SelectNodes("Layout")
+                                    oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"))
+                                    'lets add an image tag
+                                    oDescElmt = moPageXML.CreateElement("img")
+                                    oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
                                     oOptElmt.AppendChild(oDescElmt)
-                                End If
+
+                                    'lets insert a description html tag
+                                    If oItem.InnerXml <> "" Then
+                                        oDescElmt = moPageXML.CreateElement("div")
+                                        oDescElmt.SetAttribute("class", "description")
+                                        oDescElmt.InnerXml = oItem.InnerXml
+                                        oOptElmt.AppendChild(oDescElmt)
+                                    End If
+                                Next
                             Next
-                        Next
-                    Catch
-                        'do nothing
-                    End Try
+                        Catch
+                            'do nothing
+                        End Try
+                    End If
 
                     'Lets load in the available common templates from XML file
                     Try
-                        oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
+                        If goConfig("cssFramework") = "bs5" Then
+                            oXformDoc = GetSiteManifest()
+                        Else
+                            oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
+                        End If
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                     Catch ex As Exception
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/" & gcProjectPath & "ewcommon/xsl/pageLayouts/LayoutManifest.xml could not be found. - " & ex.Message)
@@ -2032,7 +2044,7 @@ Partial Public Class Cms
                     Next
 
                     Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-                    If oConfig("cart") = "on" Then
+                    If oConfig("cart") = "on" And goConfig("cssFramework") <> "bs5" Then
                         Try
                             oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/cart") & "/LayoutManifest.xml")
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
@@ -2061,7 +2073,7 @@ Partial Public Class Cms
                         Next
                     End If
 
-                    If oConfig("membership") = "on" Then
+                    If oConfig("membership") = "on" And goConfig("cssFramework") <> "bs5" Then
                         Try
                             oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/membership") & "/LayoutManifest.xml")
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
@@ -2236,8 +2248,14 @@ Partial Public Class Cms
                 Try
 
                     If moRequest("cModuleBox") <> "" Then
+                        ' case for when the content form is being submitted
+                        If goConfig("cssFramework") = "bs5" Then
+                            Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
+                            xFrmEditContent(0, ModulePath, pgid, moRequest("cPosition"))
+                        Else
+                            xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
+                        End If
 
-                        xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
 
                         Return MyBase.moXformElmt
                     Else
@@ -2250,35 +2268,9 @@ Partial Public Class Cms
                         MyBase.addInput(oFrmElmt, "cPosition", True, "Position", "hidden")
                         MyBase.addBind("cPosition", "Module/@position", "true()")
 
-
-                        '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
-
                         oSelElmt = MyBase.addSelect1(oFrmElmt, "cModuleType", True, "", "PickByImage", xForm.ApperanceTypes.Full)
 
-                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
-                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
-                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
-                        If myWeb.moConfig("Search") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Search", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("Membership") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Membership", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("Cart") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Cart", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("Quote") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Quote", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("MailingList") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("Subscriptions") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-
+                        GetModuleOptions(oSelElmt)
 
                         If MyBase.isSubmitted Or goRequest.Form("ewsubmit.x") <> "" Or goRequest.Form("cModuleType") <> "" Then
                             MyBase.updateInstanceFromRequest()
@@ -2286,7 +2278,14 @@ Partial Public Class Cms
                             If MyBase.valid Then
                                 'Do nothing
                                 'or redirect to content form
-                                xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
+                                '
+                                If goConfig("cssFramework") = "bs5" Then
+                                    Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
+                                    xFrmEditContent(0, ModulePath, pgid, moRequest("cPosition"))
+
+                                Else
+                                    xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
+                                End If
                             End If
                         End If
 
@@ -2300,7 +2299,354 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Protected Sub EnumberateManifestOptions(ByRef oSelectElmt As XmlElement, ByVal filepath As String, ByVal groupName As String, ByVal optionName As String, ByVal bIgnoreIfNotFound As Boolean)
+            Protected Function GetContentFormPath(ByVal SchemaName As String) As String
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim oManifest As XmlDocument = GetSiteManifest()
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::ContentType[@type='" & SchemaName & "']")
+                    If thisModule Is Nothing Then
+                        Return SchemaName
+                    Else
+                        Return thisModule.GetAttribute("formPath")
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            Protected Function GetModuleFormPath(ByVal SchemaName As String) As String
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim oManifest As XmlDocument = GetSiteManifest()
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Module[@type='" & SchemaName & "']")
+                    If thisModule Is Nothing Then
+                        Return SchemaName
+                    Else
+                        Return thisModule.GetAttribute("formPath")
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
+            Public Function GetSiteManifest() As XmlDocument
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim PathPrefix = "ptn\"
+                    Dim ManifestDoc As XmlDocument = Nothing
+
+                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "core\modules", "manifest.xml")
+                    Dim rootFolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                    Dim fld As DirectoryInfo
+                    For Each fld In rootFolder.GetDirectories
+                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
+
+                    Next
+                    If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                        EnumberateManifest(ManifestDoc, myWeb.moConfig("ClientCommonFolder") & "\xsl", "manifest.xml")
+                    End If
+
+                    'new local modules
+                    rootFolder = New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & "/modules"))
+                    If rootFolder.Exists Then
+                        For Each fld In rootFolder.GetDirectories
+                            EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "\modules\" & fld.Name, "manifest.xml")
+                        Next
+                    End If
+
+                    EnumberateManifest(ManifestDoc, "/xsl", "manifest.xml")
+
+                    If myWeb.moConfig("Search") = "on" Then
+                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\search", "manifest.xml")
+                    End If
+                    If myWeb.moConfig("Membership") = "on" Then
+                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\membership", "manifest.xml")
+                    End If
+                    If myWeb.moConfig("Cart") = "on" Then
+                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\cart", "manifest.xml")
+                    End If
+                    If myWeb.moConfig("Quote") = "on" Then
+                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\quote", "manifest.xml")
+                    End If
+                    If myWeb.moConfig("MailingList") = "on" Then
+                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\mailer", "manifest.xml")
+                    End If
+                    If myWeb.moConfig("Subscriptions") = "on" Then
+                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "manifest.xml")
+                    End If
+
+                    Return ManifestDoc
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Function
+
+
+            Sub EnumberateManifest(ByRef ManifestDoc As XmlDocument, ByVal filepath As String, Optional ByVal manifestFilename As String = "LayoutManifest.xml")
+
+                Dim cProcessInfo As String = ""
+                Dim sImgPath As String = ""
+                Dim oContentType As XmlElement
+                Dim oModuleType As XmlElement
+                Dim oItem As XmlElement
+                Dim oOptElmt As XmlElement
+                Dim oDescElmt As XmlElement
+
+                Try
+                    If filepath = "" Then filepath = "/"
+                    filepath = filepath.Replace("\", "/")
+
+
+                    If IO.File.Exists(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename) Then
+                        'if this file exists then add the bespoke templates
+
+                        If ManifestDoc Is Nothing Then
+                            ManifestDoc = New XmlDocument
+                            ManifestDoc.Load(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename)
+                            For Each oContentType In ManifestDoc.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType")
+                                Dim formPath = oContentType.GetAttribute("formPath")
+                                ' If formPath.contains("/") Then
+                                '  formPath = formPath.Split("/")(1)
+                                'End If
+                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+                            Next
+                            For Each oModuleType In ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module")
+                                Dim formPath = oModuleType.GetAttribute("formPath")
+                                '  If formPath.contains("/") Then
+                                '  formPath = formPath.Split("/")(1)
+                                'End If
+                                oModuleType.SetAttribute("formPath", filepath.Replace("\", "/") & "/" & formPath)
+                            Next
+
+                        Else
+                            Dim ManifestTemp As New XmlDocument
+                            ManifestTemp.Load(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename)
+
+                            'step through contentTypes to add to ManifestDoc
+
+                            For Each oContentType In ManifestTemp.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType")
+                                'build the xformPath
+                                Dim formPath = oContentType.GetAttribute("formPath")
+                                '  If formPath.contains("/") Then
+                                '  formPath = formPath.Split("/")(1)
+                                'End If
+                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+
+                                Dim contentTypeGroupName As String = oContentType.SelectSingleNode("parent::ContentTypeGroup/@name").InnerText()
+                                Dim contentTypeGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" & contentTypeGroupName & "']")
+                                If contentTypeGroup Is Nothing Then
+                                    Dim oContentTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes")
+                                    oContentTypes.AppendChild(oContentTypes.OwnerDocument.ImportNode(oContentType.SelectSingleNode("parent::ContentTypeGroup"), True))
+                                Else
+                                    Dim ContentTypeName = oContentType.GetAttribute("name")
+                                    If contentTypeGroup.SelectSingleNode("ContentType[@name='" & ContentTypeName & "']") Is Nothing Then
+                                        contentTypeGroup.AppendChild(contentTypeGroup.OwnerDocument.ImportNode(oContentType, True))
+                                    Else
+                                        contentTypeGroup.ReplaceChild(contentTypeGroup.OwnerDocument.ImportNode(oContentType, True), contentTypeGroup.SelectSingleNode("ContentType[@name='" & ContentTypeName & "']"))
+                                    End If
+                                End If
+                            Next
+
+                            'step through moduleTypes to add to ManifestDoc
+                            For Each oModuleType In ManifestTemp.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module")
+                                Dim formPath = oModuleType.GetAttribute("formPath")
+                                '  If formPath.contains("/") Then
+                                ' formPath = formPath.Split("/")(1)
+                                ' End If
+                                oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
+                                Dim moduleGroupName As String = oModuleType.SelectSingleNode("parent::ModuleGroup/@name").InnerText()
+                                Dim moduleGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ModuleTypes/ModuleGroup[@name='" & moduleGroupName & "']")
+                                If moduleGroup Is Nothing Then
+                                    Dim oModuleTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ModuleTypes")
+                                    oModuleTypes.AppendChild(oModuleTypes.OwnerDocument.ImportNode(oModuleType.SelectSingleNode("parent::ModuleGroup"), True))
+                                Else
+                                    Dim ModuleTypeName = oModuleType.GetAttribute("name")
+                                    If moduleGroup.SelectSingleNode("Module[@name='" & ModuleTypeName & "']") Is Nothing Then
+                                        moduleGroup.AppendChild(moduleGroup.OwnerDocument.ImportNode(oModuleType.CloneNode(True), True))
+                                    Else
+                                        moduleGroup.ReplaceChild(moduleGroup.OwnerDocument.ImportNode(oModuleType, True), moduleGroup.SelectSingleNode("Module[@name='" & ModuleTypeName & "']"))
+
+                                    End If
+                                End If
+                            Next
+
+                        End If
+                    Else
+                        'do nothing
+                    End If
+
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug)
+                End Try
+
+            End Sub
+            Protected Sub GetContentOptions(ByRef oSelElmt As XmlElement)
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim PathPrefix = "ewcommon/xsl/"
+                    If goConfig("cssFramework") = "bs5" Then
+                        PathPrefix = "ptn\"
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "core\modules", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                        Dim fld As DirectoryInfo
+                        For Each fld In rootFolder.GetDirectories
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+
+                        Next
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+
+                        'new local modules
+                        rootFolder = New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & "/modules"))
+                        If rootFolder.Exists Then
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", True, "manifest.xml")
+                            Next
+                        End If
+
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ContentTypes/ContentTypeGroup", "ContentType", False)
+
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                    Else
+                        ' EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
+
+                        ' EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        '  If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                        '  EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '  EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
+                        '  If myWeb.moConfig("Search") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Search", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Membership") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Membership", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Cart") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Cart", "ModuleTypes/ModuleGroup", "Module", False)
+                        ' End If
+                        '   If myWeb.moConfig("Quote") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Quote", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '    If myWeb.moConfig("MailingList") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Mailer", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Subscriptions") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Sub
+
+            Protected Sub GetModuleOptions(ByRef oSelElmt As XmlElement)
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim PathPrefix = "ewcommon/xsl/"
+                    If goConfig("cssFramework") = "bs5" Then
+                        PathPrefix = "ptn\"
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "core\modules", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                        Dim fld As DirectoryInfo
+                        For Each fld In rootFolder.GetDirectories
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+                        Next
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+
+                        'new local modules
+                        rootFolder = New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & "/modules"))
+                        If rootFolder.Exists Then
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+                            Next
+                        End If
+
+                        'legacy local modules
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
+
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                    Else
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Search", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Membership", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Cart", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Quote", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Mailer", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Sub
+
+
+            Protected Sub EnumberateManifestOptions(ByRef oSelectElmt As XmlElement, ByVal filepath As String, ByVal groupName As String, ByVal optionName As String, ByVal bIgnoreIfNotFound As Boolean, Optional ByVal manifestFilename As String = "LayoutManifest.xml")
 
                 Dim oXformDoc As XmlDocument = New XmlDocument
                 Dim cProcessInfo As String = ""
@@ -2313,23 +2659,42 @@ Partial Public Class Cms
                 Try
                     If filepath = "" Then filepath = "/"
 
-                    Try
+
+
+                    If IO.File.Exists(goServer.MapPath(filepath) & "/" & manifestFilename) Then
                         'if this file exists then add the bespoke templates
-                        oXformDoc.Load(goServer.MapPath(filepath) & "/LayoutManifest.xml")
+                        oXformDoc.Load(goServer.MapPath(filepath) & "/" & manifestFilename)
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                         For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/" & groupName)
                             If oChoices.GetAttribute("targetCssFramework") = "" Or (Not (myWeb.moConfig("cssFramework") Is Nothing) And oChoices.GetAttribute("targetCssFramework").Contains("" & myWeb.moConfig("cssFramework"))) Then
-                                Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelectElmt, oChoices.GetAttribute("name"))
+                                'do we have a choices element?
+                                Dim oChoicesElmt As XmlElement = oSelectElmt.SelectSingleNode("choices[label/node()='" & oChoices.GetAttribute("name") & "']")
+                                If oChoicesElmt Is Nothing Then
+                                    oChoicesElmt = MyBase.addChoices(oSelectElmt, oChoices.GetAttribute("name"))
+                                End If
+
                                 If oChoices.GetAttribute("icon") <> "" Then
                                     Dim labelElmt As XmlElement = oChoicesElmt.SelectSingleNode("label")
                                     labelElmt.SetAttribute("icon", oChoices.GetAttribute("icon"))
                                 End If
                                 For Each oItem In oChoices.SelectNodes(optionName)
                                     If oItem.GetAttribute("targetCssFramework") = "" Or (Not (myWeb.moConfig("cssFramework") Is Nothing) And oItem.GetAttribute("targetCssFramework").Contains("" & myWeb.moConfig("cssFramework"))) Then
-                                        oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("type"))
+                                        Dim FormPath As String = oItem.GetAttribute("type")
+                                        oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), FormPath)
                                         'lets add an image tag
+                                        ' If oItem.GetAttribute("type") = "LibraryImage" Then
+                                        '  oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
+                                        'End If
+
+                                        oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
+                                        If oItem.GetAttribute("formPath") <> "" Then
+                                            oOptElmt.SetAttribute("formPath", oItem.GetAttribute("formPath"))
+                                        End If
                                         oDescElmt = moPageXML.CreateElement("img")
                                         oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
+                                        If oItem.GetAttribute("icon") <> "" Then
+                                            oDescElmt.SetAttribute("icon", oItem.GetAttribute("icon"))
+                                        End If
                                         oOptElmt.AppendChild(oDescElmt)
                                         'lets insert a description html tag
                                         If oItem.InnerXml <> "" Then
@@ -2343,11 +2708,13 @@ Partial Public Class Cms
                             End If
 
                         Next
-                    Catch ex As Exception
+                    Else
                         If Not bIgnoreIfNotFound Then
-                            MyBase.addNote(oSelectElmt.ParentNode, xForm.noteTypes.Alert, filepath & " could not be found. - " & ex.Message)
+                            MyBase.addNote(oSelectElmt.ParentNode, xForm.noteTypes.Alert, filepath & " could not be found.")
                         End If
-                    End Try
+                    End If
+
+
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug)
                 End Try
@@ -2452,55 +2819,41 @@ Partial Public Class Cms
 
                     ''''''' if contentSchemeaName starts with "filter|" then modify the path...
 
-                    Dim cXformName As String = cContentSchemaName
-                    If AlternateFormName <> "" Then cXformName = AlternateFormName
-                    If cModuleType <> "" Then cXformName = cXformName & "/" & cModuleType
-                    If cFilterType <> "" Then cXformName = cXformName & "/" & cFilterType
+                    Dim cXformPath As String = cContentSchemaName
 
-                    If Not MyBase.load("/xforms/content/" & cXformName & ".xml", myWeb.maCommonFolders) Then
+                    If AlternateFormName <> "" Then cXformPath = AlternateFormName
+
+                    If cModuleType <> "" Then
+                        cXformPath = cXformPath & "/" & cModuleType
+                        If goConfig("cssFramework") = "bs5" Then
+                            cXformPath = GetModuleFormPath(cModuleType)
+                        End If
+                    Else
+                        If goConfig("cssFramework") = "bs5" Then
+                            cXformPath = GetContentFormPath(cContentSchemaName)
+                        End If
+                    End If
+
+                    If goConfig("cssFramework") = "bs5" Then
+                        If cXformPath.StartsWith("/") Then
+                            cXformPath = cXformPath
+                        Else
+                            cXformPath = "/modules/" & cXformPath
+                        End If
+                    Else
+                        cXformPath = "/xforms/content/" & cXformPath
+                    End If
+
+                    If Not MyBase.load(cXformPath & ".xml", myWeb.maCommonFolders) Then
                         ' load a default content xform if no alternative.
-                        cProcessInfo = "/xforms/content/" & cXformName & ".xml - Not Found"
+                        cProcessInfo = cXformPath & ".xml - Not Found"
 
                         MyBase.NewFrm("EditContent")
-
                         MyBase.submission("EditContent", "", "post", "form_check(this)")
 
                         oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "EditContent", "2Col", "Edit Content")
-                        MyBase.addNote("EditContent", xForm.noteTypes.Alert, "We do not have an XForm for this type of content - this is the default form")
+                        MyBase.addNote("EditContent", xForm.noteTypes.Alert, "We do not have an XForm for this type of content: " & cXformPath)
 
-                        MyBase.addInput(oFrmElmt, "nContentKey", True, "ContentId", "hidden")
-                        MyBase.addBind("nStructParId", "tblContent/nContentKey", "true()")
-
-                        MyBase.addInput(oFrmElmt, "cContentSchemaName", True, "cContentSchemaName", "hidden")
-                        MyBase.addBind("cContentSchemaName", "tblContent/cContentSchemaName", "true()")
-
-                        oGrp1Elmt = MyBase.addGroup(oFrmElmt, "Settings", "", "Content Settings")
-                        oGrp2Elmt = MyBase.addGroup(oFrmElmt, "Content", "", "Full XML")
-
-                        MyBase.addInput(oGrp1Elmt, "cContentName", True, "Page Name")
-                        MyBase.addBind("cContentName", "tblContent/cContentName", "true()")
-
-                        MyBase.addTextArea(oGrp2Elmt, "cContentXmlBrief", True, "Content Brief", "TextAreaBrief")
-                        MyBase.addBind("cContentXmlBrief", "tblContent/cContentXmlBrief", "false()")
-
-                        MyBase.addTextArea(oGrp2Elmt, "cContentXmlDetail", True, "Content Detail", "TextAreaDetail")
-                        MyBase.addBind("cContentXmlDetail", "tblContent/cContentXmlDetail", "false()")
-
-                        MyBase.addInput(oGrp1Elmt, "dPublishDate", True, "Publish Date", "calendar short")
-                        MyBase.addBind("dPublishDate", "tblContentStructure/dPublishDate", "false()")
-
-                        MyBase.addInput(oGrp1Elmt, "dExpireDate", True, "Expire Date", "calendar short")
-                        MyBase.addBind("dExpireDate", "tblContentStructure/dExpireDate", "false()")
-
-                        oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nStatus", True, "Status", "", ApperanceTypes.Minimal)
-                        MyBase.addOption(oSelElmt, "Live", 1)
-                        MyBase.addOption(oSelElmt, "Hidden", 0)
-                        MyBase.addBind("nStatus", "tblContentStructure/nStatus", "true()")
-
-                        MyBase.addInput(oGrp1Elmt, "cDescription", True, "Change Notes")
-                        MyBase.addBind("cDescription", "tblContentStructure/cDescription", "false()")
-
-                        MyBase.addSubmit(oFrmElmt, "", "Save Content")
                     End If
 
                     If id > 0 Then
@@ -2577,7 +2930,7 @@ Partial Public Class Cms
                             MyBase.Instance = goSession("oContentInstance")
                         End If
 
-                        If cContentName <> "" Then
+                        If cContentName <> "" And Not MyBase.Instance.FirstChild Is Nothing Then
                             MyBase.Instance.SelectSingleNode("tblContent/cContentName").InnerText() = cContentName
                             MyBase.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText() = Protean.Tools.Xml.XmlDate(Now())
                         End If
@@ -2590,7 +2943,9 @@ Partial Public Class Cms
                                 oElmt.ParentNode.RemoveChild(oElmt)
                             Next
                         Else
-                            addNewTextNode("bCascade", MyBase.Instance.SelectSingleNode("tblContent"), "", True, False)
+                            If Not MyBase.Instance.FirstChild Is Nothing Then
+                                addNewTextNode("bCascade", MyBase.Instance.SelectSingleNode("tblContent"), "", True, False)
+                            End If
                         End If
 
                     End If
@@ -2620,10 +2975,6 @@ Partial Public Class Cms
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
-
-
-
-
 
                         If MyBase.valid Then
 
@@ -2678,14 +3029,6 @@ Partial Public Class Cms
                                 If moRequest("productOldUrl") IsNot Nothing Then
                                     strOldurl = moRequest("productOldUrl").ToString()
                                 End If
-
-
-
-
-
-
-
-
 
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
@@ -2785,8 +3128,6 @@ Partial Public Class Cms
                                 End If
 
                             End If
-
-
 
                             goSession("mnContentRelationParent") = Nothing
                             goSession("mcRelRedirectString") = Nothing
@@ -3179,7 +3520,7 @@ Partial Public Class Cms
                         bulkContentSchemaName = Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
                     bulkContentSchemaName = bulkContentSchemaName.Trim(" ").Trim(",").Trim(" ")
-                    MyBase.addSubmit(oFrmElmt, "", "Delete Products", , "principle btn-danger", "fa-trash-o")
+                    MyBase.addSubmit(oFrmElmt, "", "Delete", , "principle btn-danger", "fa-trash-o")
 
                     MyBase.Instance.InnerXml = "<delete/>"
 
@@ -3217,7 +3558,7 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim sValidResponse As String
                 Dim cProcessInfo As String = ""
-
+                Dim oinputElmt As XmlElement
                 Try
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
@@ -3227,7 +3568,8 @@ Partial Public Class Cms
 
                     MyBase.submission("DeleteFolder", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Delete Content")
-
+                    oinputElmt = MyBase.addInput(oFrmElmt, "cFolderName", False, "FolderName", "hidden")
+                    xmlTools.addNewTextNode("value", oinputElmt, cPath)
                     If cPath = "" Or cPath = "\" Or cPath = "/" Then
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "You cannot delete the root folder", , "alert-danger")
                     Else
@@ -3247,7 +3589,7 @@ Partial Public Class Cms
 
                             Dim oFs As fsHelper = New fsHelper
                             oFs.initialiseVariables(nType)
-                            sValidResponse = oFs.DeleteFolder(goRequest("cFolderName"), cPath)
+                            sValidResponse = oFs.DeleteFolder("", cPath)
 
                             ' fsh.DeleteFolder()
                             ' cPath = Left(cPath, InStrRev(cPath, "\") - 1)
@@ -3497,7 +3839,7 @@ Partial Public Class Cms
 
                     MyBase.submission("AddFolder", "/?ewcmd=" & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField"), "post", "")
 
-                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "", "Please enter the folder name")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "ptn-admin-form", "Please enter the folder name")
                     MyBase.addInput(oFrmElmt, "fld", True, "Path", "readonly")
                     MyBase.addBind("fld", "folder/@path", "false() ")
 
@@ -3513,13 +3855,16 @@ Partial Public Class Cms
                         MyBase.validate()
                         If MyBase.valid Then
 
+                            Dim FolderName As String = goRequest("cFolderName")
+
                             Dim oFs As fsHelper = New fsHelper
                             oFs.initialiseVariables(nType)
-                            sValidResponse = oFs.CreateFolder(HtmlDecode(goRequest("cFolderName")), cPath)
+                            sValidResponse = oFs.CreateFolder(HtmlDecode(FolderName), cPath)
 
                             If IsNumeric(sValidResponse) Then
                                 valid = True
-                                cPath &= "\" & goRequest("cFolderName")
+                                cPath &= "\" & FolderName.Replace(" ", "-")
+                                cPath = cPath.Replace("\\", "\")
                             Else
                                 valid = False
                                 MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, sValidResponse)
@@ -4718,10 +5063,10 @@ Partial Public Class Cms
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditPermissions", "PermissionButtons", "Set Selected Group Permissions")
                     'MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "AllowSelected", "Allow Selected", "", "PermissionButton icon-right", "fa-arrow-right")
-                    MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButton icon-right", "fa-arrow-right")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-primary", "fa-arrow-left")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "Remove All - Open Access", "", "PermissionButton btn-danger", "fa-times")
+                    MyBase.addSubmit(oFrmGrp2, "AllowSelected", "Allow Selected", "", "PermissionButton btn-allow", "fa-arrow-right")
+                    MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButton btn-deny", "fa-arrow-right")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove", "fa-arrow-left")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "Clear All Permissions - Open", "", "PermissionButton btn-clear-all", "fa-times")
 
                     MyBase.addNote(oFrmGrp2, xForm.noteTypes.Hint, "Allowing one group impicitly denies all others, only use deny permissions to further filter members of allowed groups")
 
@@ -4856,10 +5201,10 @@ Partial Public Class Cms
                     MyBase.addOption(oElmt2, "Full", "9")
 
                     ' Add All does nothing, probably is not good for this screen either.
-                    'MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "< Remove All", "", "PermissionButtons")
+                    'MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All", "", "PermissionButtons btn-all")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "Clear All", "", "PermissionButtons btn-clear-all")
 
 
                     ' Save the permissions on submission
@@ -4963,9 +5308,9 @@ Partial Public Class Cms
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditPermissions", "PermissionButtons", "Buttons")
 
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "Finish", "Finish Editing", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons btn-add")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons btn-remove")
+                    MyBase.addSubmit(oFrmGrp2, "Finish", "Finish Editing", "", "PermissionButtons btmn-finish")
 
                     Select Case MyBase.getSubmitted
 
@@ -5080,9 +5425,9 @@ Partial Public Class Cms
 
 
                     ' Add submit buttons (group specified by issue 1362)
-                    MyBase.addSubmit(oFrmButtons, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmButtons, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmButtons, "Finish", "Finish Editing", "", "principle PermissionButtons")
+                    MyBase.addSubmit(oFrmButtons, "AddSelected", "Add Selected", "", "PermissionButtons btn-add")
+                    MyBase.addSubmit(oFrmButtons, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
+                    MyBase.addSubmit(oFrmButtons, "Finish", "Finish Editing", "", "principle PermissionButtons btn-finish")
 
                     'lets add / remove before we populate
                     Select Case MyBase.getSubmitted
@@ -5455,8 +5800,9 @@ Partial Public Class Cms
 
                     'Replace Spaces with hypens
                     cProviderType = Replace(cProviderType, " ", "-")
-
-                    If Not MyBase.load("/xforms/PaymentProvider/" & cProviderType & ".xml", myWeb.maCommonFolders) Then
+                    Dim formPath = "/xforms/PaymentProvider/"
+                    If bs5 Then formPath = "/features/cart/PaymentProvider/"
+                    If Not MyBase.load(formPath & cProviderType & ".xml", myWeb.maCommonFolders) Then
                         'show xform load error message
 
                     Else
@@ -5631,9 +5977,11 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 7 ' Refunded
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, "Refunded", 7)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 8 ' Failed
                             MyBase.addOption(oSelElmt, "Abandoned", 11)
                             MyBase.addOption(oSelElmt, "Delete", 12)
@@ -5645,6 +5993,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Deposit Paid", 10)
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 13 'Awaiting Payment
                             MyBase.addOption(oSelElmt, "Awaiting Payment", 13)
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
@@ -5656,6 +6005,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
+                            MyBase.addOption(oSelElmt, "Delete", 12)
 
                     End Select
                     MyBase.addBind("nStatus", "tblCartOrder/nCartStatus", "true()")
@@ -6212,8 +6562,8 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditRelations", "RelationButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
@@ -6285,11 +6635,11 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add")
                     If bDeny Then
-                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected >", "", "PermissionButtons")
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButtons btn-deny")
                     End If
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
@@ -6381,11 +6731,11 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Allow Selected >", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Allow Selected", "", "PermissionButtons btn-allow")
                     If bDeny Then
-                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected >", "", "PermissionButtons")
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButtons btn-deny")
                     End If
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
@@ -7174,8 +7524,8 @@ Partial Public Class Cms
                             End If
 
                             Return MyBase.moXformElmt
-                            End If
                         End If
+                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
@@ -8094,7 +8444,9 @@ Partial Public Class Cms
 
                     ' Build the form
                     MyBase.NewFrm("MemberCodes")
-                    MyBase.load("/xforms/directory/" & cFormName & ".xml", myWeb.maCommonFolders)
+                    Dim formPath = "/xforms/directory/"
+                    If bs5 Then formPath = "/admin/xforms/directory/"
+                    MyBase.load(formPath & cFormName & ".xml", myWeb.maCommonFolders)
 
                     MyBase.Instance.SelectSingleNode("tblCodes/nCodeType").InnerText = Cms.dbHelper.CodeType.Membership
 
@@ -8425,8 +8777,10 @@ Partial Public Class Cms
 
                     'Replace Spaces with hypens
                     cReportName = Replace(cReportName, " ", "-")
+                    Dim reportsFolder As String = "/xforms/Reports/"
+                    If bs5 Then reportsFolder = "/admin/xforms/reports/"
 
-                    If Not MyBase.load("/xforms/Reports/" & cReportName & ".xml", myWeb.maCommonFolders) Then
+                    If Not MyBase.load(reportsFolder & cReportName & ".xml", myWeb.maCommonFolders) Then
                         'show xform load error message
                     End If
 
@@ -8454,12 +8808,31 @@ Partial Public Class Cms
                 Dim oGrp1Elmt As XmlElement
                 Dim cProcessInfo As String = ""
 
+
                 Try
 
                     Dim parentOptions As String = "" & myWeb.moConfig("LookupParentOptions")
 
                     Dim oDict As New Dictionary(Of String, String)
                     Dim s As String
+
+                    ' Append data for particular lookup id when edit, change by nita on 18Apr22
+                    Dim cLkpKey As String = ""
+                    Dim cLkpValue As String = ""
+                    Dim sSqlcheck As String = ""
+                    Dim lookupsSingleDataset As DataSet
+
+                    If nLookupId > 0 Then
+                        sSqlcheck = "select nLkpId as id, * from tblLookup " _
+                                            & "WHERE nLkpId = " & nLookupId
+                        lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "Lookup", "Lookups")
+                        If lookupsSingleDataset.Tables.Count > 0 Then
+
+                            cLkpKey = lookupsSingleDataset.Tables(0).Rows(0)("cLkpKey").ToString
+                            cLkpValue = lookupsSingleDataset.Tables(0).Rows(0)("cLkpValue").ToString
+
+                        End If
+                    End If
 
                     If parentOptions <> "" Then
                         For Each s In Split(parentOptions, ";")
@@ -8469,7 +8842,12 @@ Partial Public Class Cms
                     End If
 
                     MyBase.NewFrm("EditProductGroup")
-                    MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey/><cLkpValue/><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    If nLookupId > 0 Then
+                        MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey>" & cLkpKey & "</cLkpKey><cLkpValue>" & cLkpValue & "</cLkpValue><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    Else
+                        MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey/><cLkpValue/><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    End If
+
                     If nLookupId > 0 Then
                         'MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Lookup, nLookupId)
                         Category = MyBase.Instance.SelectSingleNode("tblLookup/cLkpCategory").InnerText
@@ -8770,15 +9148,18 @@ Partial Public Class Cms
                                                 ' Add the checkbox
                                                 _form.addOption(oChoices, menuName, menuId)
                                             Else
+                                                ' If oParentNode IsNot Nothing Then
                                                 If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
-                                                    Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
-                                                        menuName = oParentNode.GetAttribute("name") & " / " & menuName
-                                                        oParentNode = oParentNode.ParentNode
-                                                    Loop
-                                                End If
+                                                        Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
+                                                            menuName = oParentNode.GetAttribute("name") & " / " & menuName
+                                                            oParentNode = oParentNode.ParentNode
+                                                            If oParentNode Is Nothing Then Exit Do
+                                                        Loop
+                                                    End If
+                                                ' End If
                                             End If
-                                            ' Add the checkbox
-                                            _form.addOption(_selectItem, menuName, menuId)
+                                                ' Add the checkbox
+                                                _form.addOption(_selectItem, menuName, menuId)
                                         Else
 
                                             If menuItem.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
@@ -8803,7 +9184,7 @@ Partial Public Class Cms
                     End Try
                 End Sub
 
-                '                            oContentLocations.ProcessRequest(nReturnId)
+
                 Public Sub ProcessRequest(ByVal ContentId As Long)
                     PerfMon.Log(mcModuleName, "ProcessRequest")
 
@@ -8820,25 +9201,18 @@ Partial Public Class Cms
 
                                 ' The inner text will be a comma separated list, we need to add this to the inclusion list.
                                 If Not (String.IsNullOrEmpty(location.InnerText)) Then
-
                                     If Not (String.IsNullOrEmpty(InclusionList)) Then
                                         InclusionList &= ","
                                     End If
-
                                     InclusionList &= location.InnerText
-
                                 End If
-
                             Next
 
-
                             ' Convert the Scope to a CSV
-                            ScopeList = hashtableToCSV(Me._locationsScope, Dimension.Key)
-
+                            ScopeList = Dictionary.hashtableToCSV(Me._locationsScope, Dictionary.Dimension.Key)
 
                             ' manage the locations
                             _form.moDbHelper.updateLocationsWithScope(ContentId, InclusionList, ScopeList)
-
 
                         End If
 
@@ -9017,10 +9391,10 @@ Partial Public Class Cms
                             Next
 
                             regradeUser.AppendChild(MyBase.Instance.SelectSingleNode("RegradeUser/emailer"))
-                                MyBase.LoadInstance(existingInstance)
-                                myWeb.moSession(InstanceSessionName) = MyBase.Instance
-                                Else
-                                MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession(InstanceSessionName) = MyBase.Instance
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
                         End If
                     End If
 

@@ -35,7 +35,26 @@
   <xsl:variable name="mediaWidth" select="'640'"/>
   
   <xsl:variable name="responsiveImageSizes">off</xsl:variable>
+	
+    <xsl:variable name="debugMode">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName">web</xsl:with-param>
+        <xsl:with-param name="valueName">debug</xsl:with-param>
+      </xsl:call-template>
+    </xsl:variable>
 
+  <xsl:variable name="scriptType">
+	  <xsl:choose>
+		  <xsl:when test="/Page/Contents/Content[@type='FreeCookieConsent'] and $debugMode!='on' and not($adminMode)">
+			  <xsl:text>text/plain</xsl:text>
+		  </xsl:when>
+		  <xsl:otherwise>
+			  <xsl:text>text/javascript</xsl:text>
+		  </xsl:otherwise>
+	  </xsl:choose>
+  </xsl:variable>
+	
+	
   <xsl:variable name="sitename">
     <xsl:choose>
       <xsl:when test="$siteURL=''">
@@ -228,6 +247,15 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
+	
+  <xsl:variable name="GoogleGA4MeasurementID">
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'GoogleGA4MeasurementID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
 
   <xsl:variable name="GoogleOptimizeID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -338,7 +366,6 @@
     <html lang="{$pageLang}" xml:lang="{$pageLang}">
       <xsl:apply-templates select="." mode="htmlattr"/>
       <head>
-        <xsl:apply-templates select="." mode="metacharset"/>
         <xsl:choose>
           <xsl:when test="ContentDetail">
             <xsl:attribute name="prefix">
@@ -350,24 +377,42 @@
           </xsl:otherwise>
         </xsl:choose>
 
+		  <xsl:apply-templates select="." mode="metacharset"/>
+		  
         <xsl:if test="$GoogleOptimizeID!=''">
-          <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
+          <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
-
+   
+	   
+         <xsl:if test="$GoogleGA4MeasurementID!=''">
+			    <!-- GA4 Tag Manager -->
+				<script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+                    <script cookie-consent="tracking">
+                      window.dataLayer = window.dataLayer || [];
+                      function gtag(){dataLayer.push(arguments);}
+                      gtag('js', new Date());
+                      gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
+					  <xsl:apply-templates select="." mode="google-ga4-event"/>
+                </script>
+				<!-- End GA4 Tag Manager -->		 
+		 </xsl:if>
         <xsl:if test="$GoogleTagManagerID!=''">
-          <!-- Google Tag Manager -->
-          <script>
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
-          </script>
-          <!-- End Google Tag Manager -->
+
+	
+			    <!-- Google Tag Manager -->
+			        <script cookie-consent="tracking">
+                    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                    })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
+                  </script>
+                <!-- End Google Tag Manager -->
+
         </xsl:if>
         <xsl:if test="$PayPalTagManagerID!=''">
           <!-- PayPal BEGIN -->
-          <script>
+			<script cookie-consent="tracking">
             (function (a, t, o, m, s) {
             a[m] = a[m] || []; a[m].push({ t: new Date().getTime(), event: 'snippetRun' });
             var f = t.getElementsByTagName(o)[0], e = t.createElement(o), d = m !== 'paypalDDL' ? '&amp;m=' + m : ''; e.async = !0;
@@ -445,6 +490,11 @@
     </html>
   </xsl:template>
 
+  <xsl:template match="Page" mode="google-ga4-event">
+      <!-- for overloading on specific actions -->
+  </xsl:template>
+	
+		
   <xsl:template match="Page" mode="criticalPathCSS">
     <style>
       <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
@@ -594,13 +644,12 @@
         </style>
       </xsl:if>
 
-      <xsl:if test="@previewMode!='true'">
-        <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
+      
+        <xsl:if test="//Content[@type='CookiePolicy'] and not($adminMode)">
           <link rel="stylesheet" href="/ewcommon/js/jquery/cookiecuttr/cookiecuttr.css"/>
         </xsl:if>
-      </xsl:if>
 
-      <xsl:if test="//Content[@moduleType='SlideCarousel'] and not(/Page/@adminMode)">
+      <xsl:if test="//Content[@moduleType='SlideCarousel'] and not($adminMode)">
         <link rel="stylesheet" href="/ewcommon/js/jquery/SlideCarousel/SlideCarousel.css"/>
       </xsl:if>
       <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
@@ -622,8 +671,8 @@
     <xsl:apply-templates select="." mode="resellerStyle"/>
     <xsl:if test="@cssFramework='bs3'">
       <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 8') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 7') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0')">
-        <script src="/ewcommon/js/respond.min.js">/* */</script>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js">/* */</script>
+        <script src="/ewcommon/js/respond.min.js" cookie-consent="strictly-necessary">/* */</script>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" cookie-consent="strictly-necessary">/* */</script>
       </xsl:if>
     </xsl:if>
   </xsl:template>
@@ -655,7 +704,7 @@
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
     <!-- IF IE6 apply PNG Fix as standard -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
-      <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
+      <script type="{$scriptType}" src="/ewcommon/js/pngfix.js" defer="" cookie-consent="strictly-necessary">/* */</script>
     </xsl:if>
 
   </xsl:template>
@@ -749,11 +798,11 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js" cookie-consent="strictly-necessary">/* */</script>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="@layout='Modules_Masonary'">
-          <script type="text/javascript" src="/ewcommon/js/jquery/isotope/jquery.isotope.min.js" >/* */</script>
+          <script type="{$scriptType}" src="/ewcommon/js/jquery/isotope/jquery.isotope.min.js" cookie-consent="strictly-necessary">/* */</script>
         </xsl:if>
         <xsl:if test="//Content[@moduleType='SlideCarousel'] and not(/Page/@adminMode)">
           <script src="/ewcommon/js/jquery/SlideCarousel/jquery.mousewheel.min.js">/* */</script>
@@ -782,23 +831,21 @@
       <script type="text/javascript">
         <xsl:apply-templates select="." mode="initialiseJplayer"/>
       </script>
-    </xsl:if>
-    <xsl:if test="@previewMode!='true'">
-      <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
-        <!-- MOVED to commonJsFiles
-        <script src="/ewcommon/js/jquery/jquery.cookie.js">/* */</script>
-        <script src="/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js">/* */</script>
-        -->
-        <script type="text/javascript">
-          <xsl:text>$(document).ready(function () {</xsl:text>
-          <xsl:text>$.cookieCuttr(</xsl:text>
-          <xsl:apply-templates select="//Content[@type='CookiePolicy']" mode="cookiePolicy"/>
-          <xsl:text>);</xsl:text>
-          <xsl:text>});</xsl:text>
-        </script>
-      </xsl:if>
-    </xsl:if>
+    </xsl:if>    
   </xsl:template>
+
+
+	<xsl:template match="Content[@type='CookiePolicy']" mode="contentJS">
+		<xsl:if test="not($adminMode)">
+				<script type="text/javascript">
+					<xsl:text>$(document).ready(function () {</xsl:text>
+					<xsl:text>$.cookieCuttr(</xsl:text>
+					<xsl:apply-templates select="." mode="cookiePolicy"/>
+					<xsl:text>);</xsl:text>
+					<xsl:text>});</xsl:text>
+				</script>
+		</xsl:if>
+	</xsl:template>
 
   <xsl:template match="Content[@type='CookiePolicy']" mode="cookiePolicy">
     <xsl:text>{</xsl:text>
@@ -837,7 +884,7 @@
         <xsl:text>cookiePolicyLink :"</xsl:text>
         <xsl:call-template name="escape-js">
           <xsl:with-param name="string">
-            <xsl:value-of select="cookieDomain/node()"/>
+            <xsl:value-of select="cookiePolicyLink/node()"/>
           </xsl:with-param>
         </xsl:call-template>
         <xsl:text>",</xsl:text>
@@ -1022,8 +1069,23 @@
 
   </xsl:template>
 
+	
 
-
+	<xsl:template match="Content[@type='FreeCookieConsent']" mode="contentJS">
+		<xsl:if test="not($adminMode)">
+			<!-- Cookie Consent by https://www.FreePrivacyPolicy.com -->
+			<script type="text/javascript" src="//www.freeprivacypolicy.com/public/cookie-consent/4.0.0/cookie-consent.js" charset="UTF-8">
+				<xsl:text> </xsl:text>
+			</script>
+			<script type="text/javascript" charset="UTF-8">
+				document.addEventListener('DOMContentLoaded', function () {
+				cookieconsent.run({"notice_banner_type":"<xsl:value-of select="BannerType/node()"/>","consent_type":"<xsl:value-of select="ConsentType/node()"/>","palette":"<xsl:value-of select="ColourPalette/node()"/>","language":"<xsl:value-of select="DefaultLanguage/node()"/>","page_load_consent_levels":["<xsl:value-of select="PageLoadConsentLevels/node()"/>"],"notice_banner_reject_button_hide":false,"preferences_center_close_button_hide":false,"page_refresh_confirmation_buttons":false,"website_privacy_policy_url":"<xsl:value-of select="PrivacyPolicyUrl/node()"/>"});
+				});
+			</script>
+		</xsl:if>
+	</xsl:template>
+	
+	
   <!-- Javascripts that can be brought in in the footer of the HTML document, e.g. asynchronous scripts -->
   <xsl:template match="Page" mode="footerJs">
     <!-- common javascript -->
@@ -1039,6 +1101,7 @@
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
+		<xsl:apply-templates select="/Page/Contents/Content[@type='FreeCookieConsent']" mode="contentJS"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="/Page/Contents/Content" mode="contentJS"/>
@@ -1061,7 +1124,7 @@
           <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @position = 'ExitModal']" mode="modalBox"/>
         </div>
       </div>
-      <script type="text/javascript" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js" async="async">/* */</script>
+      <script type="{$scriptType}" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js" async="async" cookie-consent="strictly-necessary">/* */</script>
     </xsl:if>
 
     <xsl:if test="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleRemarketingConversionId']">
@@ -1074,7 +1137,7 @@
         var google_custom_params = window.google_tag_params;
         var google_remarketing_only = true;
       </script>
-      <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">/* */</script>
+      <script type="{$scriptType}" src="//www.googleadservices.com/pagead/conversion.js"  cookie-consent="tracking">/* */</script>
       <noscript>
         <div style="display:inline;">
           <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/955616701/?value=0&amp;guid=ON&amp;script=0"/>
@@ -1086,13 +1149,100 @@
 
     <xsl:if test="Contents/Content[@name='fb-pixel_id']">
       <!-- Facebook Pixel Code -->
-      <script>
+      <script type="{$scriptType}" cookie-consent="tracking">
         <xsl:text>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '</xsl:text>
         <xsl:value-of select="Contents/Content[@name='fb-pixel_id']"/>
         <xsl:text>');fbq('track', 'PageView');</xsl:text>
         <xsl:for-each select="descendant-or-self::instance[@valid='true']/emailer">
           <xsl:text>fbq('track', 'Lead');</xsl:text>
         </xsl:for-each>
+          <xsl:choose>
+			 
+            <xsl:when test="Cart/Order/@cmd='Logon'"> 
+				<xsl:text>fbq('track', 'AddToCart', {currency: "</xsl:text>
+				<xsl:value-of select="Cart/Order/@currency"/>  
+				<xsl:text>", value:</xsl:text>
+				<xsl:value-of select="Cart/Order/@total"/>  
+				<xsl:text>,content_type: 'product', contents: [</xsl:text>
+				<xsl:for-each select="Cart/Order/Item">
+				    <xsl:text>{id: '</xsl:text>
+					<xsl:value-of select="@id"/>
+                    <xsl:text>', quantity:</xsl:text>
+					<xsl:value-of select="@quantity"/>
+					<xsl:text>}</xsl:text>
+	                <xsl:if test="position()!=last()">
+						<xsl:text>,</xsl:text>					
+					</xsl:if>				
+				</xsl:for-each>
+                <xsl:text>]});</xsl:text>
+            </xsl:when>
+			<!--
+            <xsl:when test="/Page/Cart/Order/@cmd='Logon'">
+              <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
+              ga('ec:setAction','checkout', {'step': 2});
+            </xsl:when>
+            <xsl:when test="/Page/Cart/Order/@cmd='Billing'">
+              <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
+              ga('ec:setAction','checkout', {'step': 3});
+            </xsl:when>
+            <xsl:when test="/Page/Cart/Order/@cmd='Delivery'">
+              <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
+              ga('ec:setAction','checkout', {'step': 3});
+            </xsl:when>
+            <xsl:when test="/Page/Cart/Order/@cmd='ChoosePaymentShippingOption'">
+              <xsl:apply-templates select="/Page/Cart/Order/Item" mode="ga-universal-addProduct" />
+              ga('ec:setAction','checkout', {'step': 4});
+            </xsl:when>
+			  -->
+            <xsl:when test="Cart/Order/@cmd='EnterPaymentDetails'">
+					<xsl:text>fbq('track', 'AddPaymentInfo', {currency: "</xsl:text>
+				<xsl:value-of select="Cart/Order/@currency"/>  
+				<xsl:text>", value:</xsl:text>
+				<xsl:value-of select="Cart/Order/@total"/>  
+				<xsl:text>,content_type: 'product', contents: [</xsl:text>
+				<xsl:for-each select="Cart/Order/Item">
+				    <xsl:text>{id: '</xsl:text>
+					<xsl:value-of select="@id"/>
+                    <xsl:text>', quantity:</xsl:text>
+					<xsl:value-of select="@quantity"/>
+					<xsl:text>}</xsl:text>
+	                <xsl:if test="position()!=last()">
+						<xsl:text>,</xsl:text>					
+					</xsl:if>				
+				</xsl:for-each>
+                <xsl:text>]});</xsl:text>
+            </xsl:when>
+			  
+            <xsl:when test="Cart/Order/@cmd='ShowInvoice'">
+					<xsl:text>fbq('track', 'Purchase', {currency: "</xsl:text>
+				<xsl:value-of select="Cart/Order/@currency"/>  
+				<xsl:text>", value:</xsl:text>
+				<xsl:value-of select="Cart/Order/@total"/>  
+				<xsl:text>,content_type: 'product', contents: [</xsl:text>
+				<xsl:for-each select="Cart/Order/Item">
+				    <xsl:text>{id: '</xsl:text>
+					<xsl:value-of select="@id"/>
+                    <xsl:text>', quantity:</xsl:text>
+					<xsl:value-of select="@quantity"/>
+					<xsl:text>}</xsl:text>
+	                <xsl:if test="position()!=last()">
+						<xsl:text>,</xsl:text>					
+					</xsl:if>				
+				</xsl:for-each>
+                <xsl:text>]});</xsl:text>
+            </xsl:when>
+			  <!--
+            <xsl:when test="/Page/ContentDetail/Content[@type='Product']">
+              <xsl:apply-templates select="/Page/ContentDetail/Content[@type='Product']" mode="ga-universal-addProduct" />
+              ga('ec:setAction', 'detail');
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="/Page/Contents/Content[@type='Product']" mode="ga-universal-impression" />
+            </xsl:otherwise>
+			-->
+          </xsl:choose>
+      
+	  
       </script>
       <noscript>
         <img height="1" width="1" src="https://www.facebook.com/tr?id={Contents/Content[@name='fb-pixel_id']}&amp;ev=PageView&amp;noscript=1"/>
@@ -1223,17 +1373,17 @@
 
     <xsl:if test="$currentPage/DisplayName/@noindex='true' or (ContentDetail/Content and not(ContentDetail/Content[@parId=/Page/@id]))">
       <!--This content is to be found elsewhere on the site and should not be indexed again-->
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+      <meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
     <!-- STOP SEARCH ENGINES INDEXING DS01 SITES IF SOME PLUM HAS PUBLISHED IT ON THE INTERWEBS -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'eonichost.co.uk') or contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'yeomanshosting.co.uk')">
       <xsl:comment>STOP SEARCH ENGINES INDEXING PREVIEW SITES IF SOME PLUM HAS SHARED A LINK ON THE INTERWEBS</xsl:comment>
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+		<meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
     <xsl:if test="Cart[@type='order']/Order/@cmd!=''">
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+		<meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
 
@@ -1320,7 +1470,7 @@
     </xsl:if>
 
     <!--LinkedIn-->
-    
+   
     <xsl:if test="Contents/Content[@name='LinkedInInsightTag']">
       <script type="text/javascript">
         <xsl:text>_linkedin_partner_id = "</xsl:text>
@@ -1332,8 +1482,20 @@
       </script>
       <noscript>
         <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=2741649&amp;fmt=gif" />
-      </noscript>       
+      </noscript>
+
+		<xsl:if test="Contents/Content[@name='LinkedInCampaignId']">
+			<xsl:for-each select="/Page/Contents/descendant-or-self::instance[@valid='true']/*[name()='emailer']">
+			<script type="text/javascript">
+				<xsl:text>window.lintrk('track', { conversion_id: </xsl:text>
+				<xsl:value-of select="$page/Contents/Content[@name='LinkedInCampaignId']/node()"/>
+				<xsl:text> });</xsl:text>
+			</script>
+			</xsl:for-each>
+		</xsl:if>
+		
     </xsl:if>
+
     <!-- End Linked In Insight Tag Code -->
     
     <!--END-->
@@ -1839,11 +2001,11 @@
     <!-- OLD CODE - SEE TEMPLATE BELOW - FOR ASYNCRONOUS CODE -->
     <xsl:if test="not(/Page/@adminMode)">
       <xsl:if test="node()!=''">
-        <script type="text/javascript">
+        <script type="{$scriptType}" cookie-consent="tracking">
           <xsl:text>var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");</xsl:text>
           <xsl:text>document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</xsl:text>
         </script>
-        <script type="text/javascript">
+        <script type="{$scriptType}" cookie-consent="tracking">
           <xsl:text>var pageTracker = _gat._getTracker("</xsl:text>
           <xsl:value-of select="node()"/>
           <xsl:text>");</xsl:text>
@@ -1877,7 +2039,7 @@
   <xsl:template match="Content" mode="googleAnalyticsCode">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
       <xsl:if test="node()!=''">
-        <script type="text/javascript">
+        <script type="{$scriptType}" cookie-consent="tracking">
           <xsl:choose>
             <xsl:when test="//Content[@type='CookiePolicy' and @defaultBehaviour='decline']">
               <xsl:text>if (jQuery.cookie('cc_cookie_accept') == "cc_cookie_accept") {</xsl:text>
@@ -2138,7 +2300,7 @@
 
   <xsl:template match="Page" mode="googleUniversalAnalyticsCode">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-      <script id="GoogleAnalyticsUniversal" data-GoogleAnalyticsUniversalID="{$GoogleAnalyticsUniversalID}">
+      <script id="GoogleAnalyticsUniversal" data-GoogleAnalyticsUniversalID="{$GoogleAnalyticsUniversalID}" cookie-consent="tracking">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -2194,7 +2356,6 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:if>
-               
         ga('send', 'pageview');
 
         <!--Submission of Mailforms-->
@@ -2255,6 +2416,13 @@
     <xsl:value-of select="Cart/Order/@shippingCost"/>
     <xsl:text>'</xsl:text>
     <xsl:text>});</xsl:text>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+      ga('set', 'campaignSource', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>');
+    </xsl:if>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+      ga('set', 'campaignMedium', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>');
+
+    </xsl:if>
   </xsl:template>
 
   <!-- Log Order Items-->
@@ -2485,17 +2653,15 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="Page" mode="BingTrackingCode">
-   
+  <xsl:template match="Page" mode="BingTrackingCode">   
       <xsl:if test="$BingTrackingID!=''">
-        <script>
+		 <script cookie-consent="tracking">
           (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
-        </script>
-         <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-        <script>
-          window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' });
-        </script>
-      </xsl:if>
+          <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+			  window.uetq = window.uetq || [];
+			  window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
+          </xsl:if>
+		 </script>
     </xsl:if>
   </xsl:template>
 
@@ -2506,7 +2672,7 @@
             select="sum(Cart/Order/Item/@itemTotal)">
         </xsl:variable>
 
-        <script>
+        <script cookie-consent="tracking">
           (function ()
           var _fbq = window._fbq || (window._fbq = []);
           if (!_fbq.loaded) {
@@ -2527,13 +2693,13 @@
   <xsl:template match="Page" mode="FeedOptimiseCode">
     <xsl:if test="$FeedOptimiseID!=''">
       <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-        <script type="text/javascript">
+        <script type="{$scriptType}" cookie-consent="tracking">
           var _fo = _fo || [];");
           _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@total"/>" ]);
           _fo.push(["orderId", "<xsl:value-of select="Cart/Order/@InvoiceRef"/>"]);
         </script>
       </xsl:if>
-      <script async="async" type="text/javascript" src="//cdn.feedoptimise.com/fo.js#{$FeedOptimiseID}">&#160;</script>
+      <script async="async" type="{$scriptType}" src="//cdn.feedoptimise.com/fo.js#{$FeedOptimiseID}" cookie-consent="tracking">&#160;</script>
     </xsl:if>
   </xsl:template>
 
@@ -2551,7 +2717,7 @@
     </xsl:variable>
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
       <xsl:if test="node()!=''">
-        <script type="text/javascript">
+        <script type="{$scriptType}" cookie-consent="tracking">
           <xsl:if test="//Content[@type='CookiePolicy']">
             <xsl:text>if (jQuery.cookie('cc_cookie_accept') == "cc_cookie_accept") {</xsl:text>
           </xsl:if>
@@ -2584,7 +2750,7 @@
     </xsl:variable>
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
       <xsl:if test="node()!=''">
-        <script type="text/javascript">
+        <script type="{$scriptType}" cookie-consent="tracking">
           <xsl:if test="//Content[@type='CookiePolicy']">
             <xsl:text>if (jQuery.cookie('cc_cookie_accept') == "cc_cookie_accept") {</xsl:text>
           </xsl:if>
@@ -2626,7 +2792,7 @@
 
   <xsl:template match="Content" mode="MetaWhoIsVisitingCode">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-      <script type="text/javascript">
+      <script type="{$scriptType}" cookie-consent="tracking">
         (function (n) { var t = n.createElement("script"), i; var u = window.location.href; var p = u.split('/')[0]; t.type = "text/javascript"; t.src = p + "//dashboard.whoisvisiting.com/who.js"; i = n.getElementsByTagName("script")[0]; i.parentNode.insertBefore(t, i) })(document); var whoparam = whoparam || []; whoparam.push(["AcNo", "<xsl:value-of select="node()"/>"]); whoparam.push(["SendHit", ""] );
       </script>
     </xsl:if>
@@ -2706,7 +2872,7 @@
       <xsl:value-of select="node()"/>
     </xsl:variable>
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-      <script type="text/javascript" src="https://secure.leadforensics.com/js/{$lfid}.js" async="async" >/* */</script>
+      <script type="{$scriptType}" src="https://secure.leadforensics.com/js/{$lfid}.js" async="async" cookie-consent="tracking">/* */</script>
       <noscript>
         <img src="https://secure.leadforensics.com/{$lfid}.png" style="display:none;" />
       </noscript>
@@ -3677,9 +3843,35 @@
     <xsl:choose>
       <xsl:when test="@url!=''">
         <xsl:choose>
+			<xsl:when test="DisplayName/@linkType='replicate'">
+				<xsl:value-of select="@url"/>
+			</xsl:when>
           <xsl:when test="format-number(@url,'0')!='NaN'">
-            <xsl:value-of select="$siteURL"/>
-            <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+
+              <!--change(s):
+              1. check if the edit-content-menu-item has redirect page under pagesettings
+              2. on clicking the item on admin mode, open the actual page on customize mode
+              3. on clicking the item on non-admin mode, open the redirected page-->
+              
+              <!--old code - start-->
+              <!--<xsl:value-of select="$siteURL"/>
+              <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>-->
+              <!--old code - end-->
+              
+              <!--new code - start-->
+              <xsl:choose>
+              <xsl:when test="$adminMode='true'">
+                <xsl:value-of select="@name"/>
+                <xsl:text>?pgid=</xsl:text>
+                <xsl:value-of select="@id"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$siteURL"/>
+                <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+              </xsl:otherwise>
+              </xsl:choose>
+              <!--new code - end-->
+            
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
             <xsl:value-of select="@url"/>
@@ -5826,6 +6018,14 @@
       <xsl:text> </xsl:text>
     </iframe>
   </xsl:template>
+
+	<xsl:template match="iframe[contains(@src,'youtube.com')]" mode="cleanXhtml">
+		<div class="responsive-video">
+			 <iframe title="YouTube video player" width="{@width}" height="{@height}" src="{@src}" frameborder="0" allowfullscreen="{@allowfullscreen}" style="{@style}">
+                <xsl:text> </xsl:text>
+            </iframe>
+		</div>
+	</xsl:template>
 
 
   <xsl:template match="a" mode="cleanXhtml">
@@ -8587,9 +8787,11 @@
     <xsl:if test="$parentClass!=''">
       <Parent class="{$parentClass}"/>
     </xsl:if>
+
     <xsl:choose>
       <!-- When Page Order -->
       <xsl:when test="$sort='Position' or $sort='' or $order=''">
+
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
             <xsl:copy-of select="."/>
@@ -8597,7 +8799,7 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-		 <xsl:value-of select="$contentType"/>
+        <xsl:value-of select="$contentType"/>
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
           <xsl:sort select="@update" order="{$order}" data-type="text"/>
@@ -10149,7 +10351,7 @@
     <xsl:variable name="first" select="substring-before($newlist, $seperator)" />
     <xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
     <xsl:if test="$first!=''">
-      <script type="text/javascript" src="{$first}{$bundleVersion}">
+      <script type="{$scriptType}" src="{$first}{$bundleVersion}" cookie-consent="strictly-necessary">
         <xsl:if test="$async!=''">
           <xsl:attribute name="async">async</xsl:attribute>
         </xsl:if>
@@ -10489,5 +10691,8 @@
     <xsl:value-of select="$defaultWidth"/>
     <xsl:text> </xsl:text>
   </xsl:template>
+
+
+
 
 </xsl:stylesheet>

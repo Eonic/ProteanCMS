@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <ContentTypeGroup name="Media">
+      <ContentType type="FLVMovie" name="FLV Movie">Display an FLV movie</ContentType>
+      <ContentType type="FlashMovie" name="Flash Movie">Displays a flash movie</ContentType>
+    </ContentTypeGroup>   
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Content Lists" icon="fas fa-th-list">
+      <Module type="VideoList" formPath="video-list" icon="far fa-file-video" name="Video List"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

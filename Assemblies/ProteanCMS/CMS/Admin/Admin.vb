@@ -32,7 +32,7 @@ Partial Public Class Cms
 
         Public moPageXML As XmlDocument = New XmlDocument
 
-        Public Shadows mcModuleName As String = "Protea.Admin"
+        Public Shared Shadows mcModuleName As String = "Protean.Admin"
         Public mcEwCmd As String
         Public mcEwCmd2 As String
         Public mcEwCmd3 As String
@@ -658,6 +658,12 @@ ProcessFlow:
                                     myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=Normal&pgid=" & myWeb.mnPageId 'myWeb.mcOriginalURL
                                 End If
                             End If
+
+                            If myWeb.moRequest("pgid") = "" And myWeb.mcPagePath = "" Then
+                                'this gets called only in WYSIWYG mode and I don't know why?
+                                'This Is a fudge to stop always redirect to the homepage.
+                                myWeb.mbSuppressLastPageOverrides = True
+                            End If
                             'we want to return here after editing
                             If Not myWeb.mbSuppressLastPageOverrides Then
                                 myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=Normal&pgid=" & myWeb.mnPageId '
@@ -669,34 +675,40 @@ ProcessFlow:
                         sAdminLayout = "Advanced"
                         EditContext = "Advanced"
 
-                        Dim oCommonContentTypes As New XmlDocument
-                        If IO.File.Exists(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml")) Then oCommonContentTypes.Load(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"))
-                        If IO.File.Exists(myWeb.goServer.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml")) Then
-                            Dim oLocalContentTypes As New XmlDocument
-                            oLocalContentTypes.Load(myWeb.goServer.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml"))
-                            Dim oLocals As XmlElement = oLocalContentTypes.SelectSingleNode("/PageLayouts/ContentTypes")
-                            If Not oLocals Is Nothing Then
-                                Dim oGrp As XmlElement
-                                For Each oGrp In oLocals.SelectNodes("ContentTypeGroup")
-                                    Dim oComGrp As XmlElement = oCommonContentTypes.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" & oGrp.GetAttribute("name") & "']")
-                                    If Not oComGrp Is Nothing Then
-                                        Dim oTypeElmt As XmlElement
-                                        For Each oTypeElmt In oGrp.SelectNodes("ContentType")
-                                            If Not oComGrp.SelectSingleNode("ContentType[@type='" & oTypeElmt.GetAttribute("type") & "']") Is Nothing Then
-                                                oComGrp.SelectSingleNode("ContentType[@type='" & oTypeElmt.GetAttribute("type") & "']").InnerText = oTypeElmt.InnerText
-                                            Else
-                                                oComGrp.InnerXml &= oTypeElmt.OuterXml
-                                            End If
-                                        Next
-                                    Else
-                                        oCommonContentTypes.DocumentElement.SelectSingleNode("ContentTypes").InnerXml &= oGrp.OuterXml
-                                    End If
-                                Next
+                        Dim oSiteManifest As New XmlDocument
+                        If myWeb.moConfig("cssFramework") = "bs5" Then
+                            oSiteManifest = moAdXfm.GetSiteManifest()
+                        Else
+                            If IO.File.Exists(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml")) Then
+                                oSiteManifest.Load(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"))
+                            End If
+                            If IO.File.Exists(myWeb.goServer.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml")) Then
+                                Dim oLocalContentTypes As New XmlDocument
+                                oLocalContentTypes.Load(myWeb.goServer.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml"))
+                                Dim oLocals As XmlElement = oLocalContentTypes.SelectSingleNode("/PageLayouts/ContentTypes")
+                                If Not oLocals Is Nothing Then
+                                    Dim oGrp As XmlElement
+                                    For Each oGrp In oLocals.SelectNodes("ContentTypeGroup")
+                                        Dim oComGrp As XmlElement = oSiteManifest.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" & oGrp.GetAttribute("name") & "']")
+                                        If Not oComGrp Is Nothing Then
+                                            Dim oTypeElmt As XmlElement
+                                            For Each oTypeElmt In oGrp.SelectNodes("ContentType")
+                                                If Not oComGrp.SelectSingleNode("ContentType[@type='" & oTypeElmt.GetAttribute("type") & "']") Is Nothing Then
+                                                    oComGrp.SelectSingleNode("ContentType[@type='" & oTypeElmt.GetAttribute("type") & "']").InnerText = oTypeElmt.InnerText
+                                                Else
+                                                    oComGrp.InnerXml &= oTypeElmt.OuterXml
+                                                End If
+                                            Next
+                                        Else
+                                            oSiteManifest.DocumentElement.SelectSingleNode("ContentTypes").InnerXml &= oGrp.OuterXml
+                                        End If
+                                    Next
+                                End If
                             End If
                         End If
-                        'now to add it to the pagexml
-                        oPageDetail.AppendChild(moPageXML.ImportNode(oCommonContentTypes.SelectSingleNode("/PageLayouts/ContentTypes"), True))
 
+                        'now to add it to the pagexml
+                        oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oSiteManifest.SelectSingleNode("/PageLayouts/ContentTypes"), True))
 
                         If myWeb.moRequest("pgid") <> "" Then
                             'lets save the page we are editing to the session
@@ -3326,10 +3338,12 @@ AfterProcessFlow:
                             bShowTree = True
                         End If
                     Case "deleteFolder"
+                        Dim parentFolder
                         oPageDetail.AppendChild(moAdXfm.xFrmDeleteFolder(sFolder, LibType))
                         If moAdXfm.valid = False Then
                             sAdminLayout = "AdminXForm"
                         Else
+                            myWeb.msRedirectOnEnd = "?ewCmd=" & LibType.ToString() & "Lib&fld=\"
                             bShowTree = True
                         End If
                     Case "deleteFile"
@@ -3370,8 +3384,8 @@ AfterProcessFlow:
                         End If
                     Case "FolderSettings"
 
-                    Case "FileUpload"
 
+                    Case "FileUpload"
                         Dim oFS As New fsHelper(myWeb.moCtx)
                         oFS.UploadRequest(myWeb.moCtx)
                         oFS = Nothing
@@ -4791,7 +4805,12 @@ SP:
             End Try
         End Sub
 
+
+
+
+
     End Class
+
 
 
 End Class

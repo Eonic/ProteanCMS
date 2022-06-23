@@ -63,6 +63,7 @@
         <add key="Scheduler" value="off" />
         <add key="ExpireAtEndOfDay" value="off" />
         <add key="GoogleAnalyticsUniversalID" value="" />
+		<add key="GoogleGA4MeasurementID" value="" />
         <add key="GoogleTagManagerID" value="" />
         <add key="GoogleOptimizeID" value="" />
         <add key="GoogleAPIKey" value="" />
@@ -86,9 +87,8 @@
         <add key="ServerSenderEmail" value="" />
         <add key="ServerSenderEmailName" value="" />
         <add key="DisableServerSenderEmail" value="" />
-        
-        
-      </web>
+ 	    <add key="ExcludeFoldersFromPaths" value="header,footer" />
+	  </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
     <bind id="ewSiteName" nodeset="web/add[@key='SiteName']/@value" required="false()" type="string" />
@@ -140,6 +140,7 @@
     <bind id="ewStatsUser" nodeset="web/add[@key='StatsUser']/@value" required="false()" type="string" />
     <bind id="ewStatsPassword" nodeset="web/add[@key='StatsPassword']/@value" required="false()" type="string" />
     <bind id="ewGoogleAnalyticsUniversalID" nodeset="web/add[@key='GoogleAnalyticsUniversalID']/@value" required="false()" type="string" />
+	  <bind id="ewGoogleGA4MeasurementID" nodeset="web/add[@key='GoogleGA4MeasurementID']/@value" required="false()" type="string" />
     <bind id="ewGoogleTagManagerID" nodeset="web/add[@key='GoogleTagManagerID']/@value" required="false()" type="string" />
     <bind id="ewGoogleOptimizeID" nodeset="web/add[@key='GoogleOptimizeID']/@value" required="false()" type="string" />
     <bind id="ewGoogleAPIKey" nodeset="web/add[@key='GoogleAPIKey']/@value" required="false()" type="string" />
@@ -170,6 +171,7 @@
     <bind id="ServerSenderEmail" nodeset="web/add[@key='ServerSenderEmail']/@value" required="false()" type="email" />
     <bind id="ServerSenderEmailName" nodeset="web/add[@key='ServerSenderEmailName']/@value" required="false()" type="email" />
     <bind id="DisableServerSenderEmail" nodeset="web/add[@key='DisableServerSenderEmail']/@value" required="false()" type="string" />
+	<bind id="ExcludeFoldersFromPaths" nodeset="web/add[@key='ExcludeFoldersFromPaths']/@value" required="false()" type="string" />
   </model>
   <group ref="WebSettings">
     <label>Web Settings</label>
@@ -320,7 +322,11 @@
       <input bind="ewGoogleAnalyticsUniversalID">
         <label>Google Site ID</label>
       </input>
-      <input bind="ewGoogleTagManagerID">
+		<input bind="ewGoogleGA4MeasurementID">
+			<label>Google GA4 MeasurementID</label>
+		</input>
+		
+		<input bind="ewGoogleTagManagerID">
         <label>Google Tag Manager ID</label>
       </input>
       <input bind="ewGoogleOptimizeID">
@@ -691,6 +697,11 @@
         </item>
         <value />
       </select1>
+		<input bind="ExcludeFoldersFromPaths">
+			<label>Foldernames to be excluded from page paths</label>
+			<hint>Comma separated list of foldernames that you do not want to appear in paths</hint>
+			<value />
+		</input>
     </group>
     <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>

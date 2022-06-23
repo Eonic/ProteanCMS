@@ -27,7 +27,6 @@ Namespace Providers
                 End Try
             End Sub
 
-
             Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
 
