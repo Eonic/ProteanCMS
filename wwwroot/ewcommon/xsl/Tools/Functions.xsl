@@ -366,7 +366,6 @@
     <html lang="{$pageLang}" xml:lang="{$pageLang}">
       <xsl:apply-templates select="." mode="htmlattr"/>
       <head>
-        <xsl:apply-templates select="." mode="metacharset"/>
         <xsl:choose>
           <xsl:when test="ContentDetail">
             <xsl:attribute name="prefix">
@@ -378,6 +377,8 @@
           </xsl:otherwise>
         </xsl:choose>
 
+		  <xsl:apply-templates select="." mode="metacharset"/>
+		  
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
@@ -1372,17 +1373,17 @@
 
     <xsl:if test="$currentPage/DisplayName/@noindex='true' or (ContentDetail/Content and not(ContentDetail/Content[@parId=/Page/@id]))">
       <!--This content is to be found elsewhere on the site and should not be indexed again-->
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+      <meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
     <!-- STOP SEARCH ENGINES INDEXING DS01 SITES IF SOME PLUM HAS PUBLISHED IT ON THE INTERWEBS -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'eonichost.co.uk') or contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'yeomanshosting.co.uk')">
       <xsl:comment>STOP SEARCH ENGINES INDEXING PREVIEW SITES IF SOME PLUM HAS SHARED A LINK ON THE INTERWEBS</xsl:comment>
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+		<meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
     <xsl:if test="Cart[@type='order']/Order/@cmd!=''">
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+		<meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
 

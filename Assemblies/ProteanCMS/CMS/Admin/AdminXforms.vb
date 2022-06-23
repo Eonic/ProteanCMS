@@ -7533,6 +7533,61 @@ Partial Public Class Cms
                 End Try
             End Function
 
+
+            Public Function xFrmResendSubscription(ByVal nOrderId As String) As XmlElement
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim nSubscriptionId As String = moDbHelper.ExeProcessSqlScalar("select nSubId from tblSubscriptionRenewal where nOrderId = " & nOrderId)
+
+                    Dim oSub As New Cart.Subscriptions(myWeb)
+
+                    MyBase.NewFrm("RenewSubscription")
+                    MyBase.submission("RenewSubscription", "", "post")
+                    Dim oFrmElmt As XmlElement
+
+                    oSub.GetSubscriptionDetail(MyBase.Instance, nSubscriptionId)
+                    Dim SubXml = MyBase.Instance.FirstChild
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "RenewSubscription")
+
+                    MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
+                    MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
+                    Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
+                    MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
+
+
+                    MyBase.addNote(oFrmElmt, noteTypes.Hint, "Resend Subscription", True, "resend-sub")
+
+                    MyBase.addSubmit(oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left")
+                    MyBase.addSubmit(oFrmElmt, "Confirm", "Confirm Refresh and Resend", "Confirm", "btn-success principle", "fa-repeat")
+
+                    If Me.isSubmitted Then
+                        If MyBase.getSubmitted = "Back" Then
+                            Return MyBase.moXformElmt
+                            myWeb.msRedirectOnEnd = "/?ewCmd=ResendSubscription"
+                        ElseIf MyBase.getSubmitted = "Confirm" Then
+                            Dim bEmailClient As Boolean = False
+                            If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
+                            Dim RenewResponse As String
+                            RenewResponse = oSub.RefreshSubscriptionOrder(MyBase.Instance.FirstChild, bEmailClient, nOrderId)
+                            If RenewResponse = "Success" Then
+                                MyBase.valid = True
+                            Else
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Resend Failed")
+                                MyBase.valid = False
+                            End If
+
+                            Return MyBase.moXformElmt
+                        End If
+                    End If
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Public Function xFrmConfirmCancelSubscription(ByVal nUserId As String, ByVal nSubscriptionId As String, ByVal nCurrentUser As Integer, ByVal bAdminMode As Boolean) As XmlElement
 
                 Try
