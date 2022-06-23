@@ -2694,8 +2694,8 @@
     <xsl:if test="$FeedOptimiseID!=''">
       <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
         <script type="{$scriptType}" cookie-consent="tracking">
-          var _fo = _fo || [];");
-          _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@total"/>" ]);
+          var _fo = _fo || [];
+          _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@total"/>"]);
           _fo.push(["orderId", "<xsl:value-of select="Cart/Order/@InvoiceRef"/>"]);
         </script>
       </xsl:if>
