@@ -2325,7 +2325,7 @@ Public Class xForm
                 oOptElmt.AppendChild(oToggleElmt)
             End If
 
-            'oSelectNode.AppendChild(oOptElmt)
+            oSelectNode.AppendChild(oOptElmt)
 
             Return oOptElmt
 

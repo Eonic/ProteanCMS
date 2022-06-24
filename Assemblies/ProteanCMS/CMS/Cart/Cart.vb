@@ -2819,9 +2819,19 @@ processFlow:
                         myWeb.moSession.Clear()
                         myWeb.moSession.Abandon()
                         myWeb.moResponse.Cookies.Remove("ASP.NET_SessionId")
+                        myWeb.moResponse.Cookies.Remove("NewSession")
+                        myWeb.moResponse.Cookies.Remove("Flag")
                         Dim oCookie As System.Web.HttpCookie = New System.Web.HttpCookie("ASP.NET_SessionId")
                         oCookie.Value = ""
                         myWeb.moResponse.Cookies.Add(oCookie)
+
+                        Dim newCookie As System.Web.HttpCookie = New System.Web.HttpCookie("NewSession")
+                        newCookie.Value = ""
+                        myWeb.moResponse.Cookies.Add(newCookie)
+
+                        Dim flagCookie As System.Web.HttpCookie = New System.Web.HttpCookie("Flag")
+                        flagCookie.Value = ""
+                        myWeb.moResponse.Cookies.Add(flagCookie)
                     End If
 
 
@@ -3188,6 +3198,43 @@ processFlow:
                         End If
                     Next
                     If Not oRelatedElmt.InnerXml = "" Then oCartElmt.AppendChild(oRelatedElmt)
+                End If
+
+                'sonalis code for session set
+                If System.Web.HttpContext.Current.Request.Cookies("Flag") Is Nothing Then
+
+                    Dim flagCookie As New System.Web.HttpCookie("Flag")
+                    flagCookie.Value = "1"
+                    System.Web.HttpContext.Current.Response.Cookies.Add(flagCookie)
+
+                End If
+
+
+                If System.Web.HttpContext.Current.Request.Cookies("NewSession") Is Nothing Then
+
+                    Dim aCookie As New System.Web.HttpCookie("NewSession")
+
+                    aCookie.Value = myWeb.SessionID
+
+
+
+
+
+                    aCookie.Expires = DateTime.Now.AddDays(30)
+
+
+                    System.Web.HttpContext.Current.Response.Cookies.Add(aCookie)
+
+                    Else
+
+                        Dim cookie As System.Web.HttpCookie = System.Web.HttpContext.Current.Request.Cookies("NewSession")
+
+                    cookie.Value = myWeb.SessionID
+
+                    cookie.Expires = DateTime.Now.AddDays(30)
+
+                    System.Web.HttpContext.Current.Response.Cookies.Add(cookie)
+
                 End If
 
             Catch ex As Exception
