@@ -2215,7 +2215,7 @@ ProcessFlow:
                         oWeb.mbAdminMode = False
                         If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
 
-                    Case "Subscriptions", "EditUserSubscription", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "ResendCancellation", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "CancelledSubscriptions", "RenewalAlerts"
+                    Case "Subscriptions", "EditUserSubscription", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "ResendCancellation", "EditSubscription", "MoveSubscription", "RenewSubscription", "ResendSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "CancelledSubscriptions", "RenewalAlerts"
                         SubscriptionProcess(mcEwCmd, sAdminLayout, oPageDetail)
                         bLoadStructure = True
 
@@ -4518,6 +4518,17 @@ SP:
                     Else
                         sAdminLayout = "AdminXForm"
                     End If
+
+                Case "ResendSubscription"
+                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmResendSubscription(myWeb.moRequest("id")), True))
+                    If oADX.valid Then
+                        'cCmd = "AdminXForm"
+                        myWeb.msRedirectOnEnd = "/?ewCmd=OrdersHistory"
+                        ' GoTo SP
+                    Else
+                        sAdminLayout = "AdminXForm"
+                    End If
+
                 Case "ManageUserSubscription"
 
                     oSub.GetSubscriptionDetail(oPageDetail, myWeb.moRequest("id"))
