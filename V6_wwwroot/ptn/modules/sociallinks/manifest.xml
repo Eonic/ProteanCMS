@@ -2,8 +2,8 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   
   <ModuleTypes>
-	  <ModuleGroup name="Social Networking" icon="fab fa-twitter">
-		  <Module type="SocialLinks" formPath="sociallinks" name="Social Links"></Module>
+	  <ModuleGroup name="Navigation and Links" icon="fa-link">
+		  <Module type="SocialLinks" formPath="sociallinks" icon="fab fa-twitter" name="Social Links"></Module>
 	
 	  </ModuleGroup>
   </ModuleTypes>
