@@ -591,6 +591,15 @@ Partial Public Class Cms
                     Else
                         bFullCartOption = False
                     End If
+                    If (myWeb.moRequest.Form("cartId") IsNot Nothing) Then
+                        If (myWeb.moSession("CartId") <> 0) Then
+                            Dim CurrentCartId As String = myWeb.moRequest.Form("cartId")
+                            If (CurrentCartId <> myWeb.moSession("CartId").ToString()) Then
+                                myWeb.moSession("CartId") = Int32.Parse(CurrentCartId)
+                                mcReEstablishSession = "true"
+                            End If
+                        End If
+                    End If
 
                     If myWeb.moSession("CartId") Is Nothing Then
                         mnCartId = 0
@@ -638,7 +647,7 @@ Partial Public Class Cms
                             writeSessionCookie() 'write the cookie to persist the cart
                         End If
                         If mcReEstablishSession <> "" Then
-                            sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " & mnCartId
+                            sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " & mnCartId & "And cCartSessionId Like '%" & mcSessionId & "'"
                         Else
                             sSql = "select * from tblCartOrder where ((nCartStatus < 7 and not(cCartSessionId like 'OLD_%')) or nCartStatus IN (10,13,14)) and nCartOrderKey = " & mnCartId
                         End If
@@ -647,7 +656,13 @@ Partial Public Class Cms
                             While oDr.Read
                                 mnGiftListId = oDr("nGiftListId")
                                 mnTaxRate = CDbl("0" & oDr("nTaxRate"))
-                                mnProcessId = CLng("0" & oDr("nCartStatus"))
+                                If mcReEstablishSession <> "" Then
+                                    mnProcessId = 5
+                                Else
+                                    mnProcessId = CLng("0" & oDr("nCartStatus"))
+                                End If
+
+
                                 cartXmlFromDatabase = oDr("cCartXml").ToString
                                 ' Check for deposit and earlier stages
                                 If mcDeposit = "on" Then
@@ -1104,7 +1119,7 @@ Partial Public Class Cms
                     Select Case mcCartCmd
                         Case "Cart"
                             mcCartCmd = "CartEmpty"
-                        Case "Logon", "Remove", "Notes", "Billing", "Delivery", "ChoosePaymentShippingOption", "Confirm", "EnterPaymentDetails", "SubmitPaymentDetails", "SubmitPaymentDetails", "ShowInvoice", "ShowCallBackInvoice"
+                        Case "Logon", "Remove", "Notes", "Billing", "Delivery", "ChoosePaymentShippingOption", "Confirm", "EnterPaymentDetails", "SubmitPaymentDetails", "ShowInvoice", "ShowCallBackInvoice"
                             mcCartCmd = "CookiesDisabled"
                         Case "Error"
                             mcCartCmd = "Error"
@@ -2815,24 +2830,24 @@ processFlow:
                     oCartElmt.SetAttribute("weight", weight)
                     oCartElmt.SetAttribute("orderType", mmcOrderType & "")
 
-                    If nStatusId > 4 And (myWeb.mcOriginalURL.Contains("/?cartCmd=Logon&refSessionId=") = False) Then
-                        myWeb.moSession.Clear()
-                        myWeb.moSession.Abandon()
-                        myWeb.moResponse.Cookies.Remove("ASP.NET_SessionId")
-                        myWeb.moResponse.Cookies.Remove("NewSession")
-                        myWeb.moResponse.Cookies.Remove("Flag")
-                        Dim oCookie As System.Web.HttpCookie = New System.Web.HttpCookie("ASP.NET_SessionId")
-                        oCookie.Value = ""
-                        myWeb.moResponse.Cookies.Add(oCookie)
+                    'If nStatusId > 4 And (myWeb.mcOriginalURL.Contains("/?cartCmd=Logon&refSessionId=") = False) Then
+                    '    myWeb.moSession.Clear()
+                    '    myWeb.moSession.Abandon()
+                    '    myWeb.moResponse.Cookies.Remove("ASP.NET_SessionId")
+                    '    myWeb.moResponse.Cookies.Remove("NewSession")
+                    '    myWeb.moResponse.Cookies.Remove("Flag")
+                    '    Dim oCookie As System.Web.HttpCookie = New System.Web.HttpCookie("ASP.NET_SessionId")
+                    '    oCookie.Value = ""
+                    '    myWeb.moResponse.Cookies.Add(oCookie)
 
-                        Dim newCookie As System.Web.HttpCookie = New System.Web.HttpCookie("NewSession")
-                        newCookie.Value = ""
-                        myWeb.moResponse.Cookies.Add(newCookie)
+                    '    Dim newCookie As System.Web.HttpCookie = New System.Web.HttpCookie("NewSession")
+                    '    newCookie.Value = ""
+                    '    myWeb.moResponse.Cookies.Add(newCookie)
 
-                        Dim flagCookie As System.Web.HttpCookie = New System.Web.HttpCookie("Flag")
-                        flagCookie.Value = ""
-                        myWeb.moResponse.Cookies.Add(flagCookie)
-                    End If
+                    '    Dim flagCookie As System.Web.HttpCookie = New System.Web.HttpCookie("Flag")
+                    '    flagCookie.Value = ""
+                    '    myWeb.moResponse.Cookies.Add(flagCookie)
+                    'End If
 
 
 
@@ -3206,34 +3221,6 @@ processFlow:
                     Dim flagCookie As New System.Web.HttpCookie("Flag")
                     flagCookie.Value = "1"
                     System.Web.HttpContext.Current.Response.Cookies.Add(flagCookie)
-
-                End If
-
-
-                If System.Web.HttpContext.Current.Request.Cookies("NewSession") Is Nothing Then
-
-                    Dim aCookie As New System.Web.HttpCookie("NewSession")
-
-                    aCookie.Value = myWeb.SessionID
-
-
-
-
-
-                    aCookie.Expires = DateTime.Now.AddDays(30)
-
-
-                    System.Web.HttpContext.Current.Response.Cookies.Add(aCookie)
-
-                    Else
-
-                        Dim cookie As System.Web.HttpCookie = System.Web.HttpContext.Current.Request.Cookies("NewSession")
-
-                    cookie.Value = myWeb.SessionID
-
-                    cookie.Expires = DateTime.Now.AddDays(30)
-
-                    System.Web.HttpContext.Current.Response.Cookies.Add(cookie)
 
                 End If
 
