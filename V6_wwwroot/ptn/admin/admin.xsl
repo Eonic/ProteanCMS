@@ -667,7 +667,6 @@
 
   <xsl:template match="Page" mode="Admin">
     <div class="container-fluid" id="template_1_Column">
-
       <div class="">
         <div class="card card-default">
           <div class="card-header">
@@ -682,15 +681,13 @@
       </div>
     </div>
   </xsl:template>
-
   <xsl:template match="Page[@layout='AdmHome']" mode="Admin">
     <xsl:variable name="supportEmail">
       <xsl:call-template name="eonicwebSupportEmail"/>
     </xsl:variable>
     <xsl:variable name="supportWebsite">
       <xsl:call-template name="eonicwebWebsite"/>
-    </xsl:variable>
-
+    </xsl:variable>  
     <section>
       <div class="container-fluid">
         <div class="row">
@@ -716,7 +713,35 @@
           <div class="col-md-9">
             <div class="row">
               <div class="col-lg-4">
-                <div class="matchHeight dashboard-first-column">
+				  <div class="dashboard-first-column">
+					  <div class="card card-default">
+						  <div class="card-header">
+							  <h4>Welcome, <xsl:value-of select="User/FirstName"/>!</h4>
+							 
+						  </div>
+						  <!--<div class="card-body">
+							  <p>
+								  <xsl:value-of select="$siteURL"/>
+							  </p>
+							  <p>Your last login was 
+							  --><!--<xsl:value-of select="MemberActivityReport_ColsValues/dSessionStart"/>
+
+
+								  <xsl:if test="$origName='dSessionStart' or $origName='dDateTime'">
+									  <xsl:call-template name="DD_Mon_YYYY">
+										  <xsl:with-param name="date">
+											  <xsl:value-of select="node()"/>
+										  </xsl:with-param>
+										  <xsl:with-param name="showTime">true</xsl:with-param>
+									  </xsl:call-template>
+								  </xsl:if>-->
+						  <!--
+							  </p>
+						  </div>-->
+					  </div>
+				  </div>
+
+							  <div class="matchHeight dashboard-first-column">
                   <div class="card card-default">
                     <div class="card-header">
                       <h4 >What's New</h4>
@@ -731,7 +756,7 @@
                             <strong>ProteanCMS</strong>
                           </h3>
                           <p>ProteanCMS is fully opensource.</p>
-                          <a href="https://www.proteancms.com">For more information click here.</a>
+                          <a href="https://www.proteancms.com" target="_blank">For more information click here.</a>
                         </xsl:otherwise>
                       </xsl:choose>
                     </div>

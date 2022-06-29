@@ -55,13 +55,6 @@
       <label>Type</label>
       <value>Delivery Address</value>
     </input>
-	  <label>Delivery address (if different)</label>
-	  <select bind="cIsDelivery" appearance="full">
-		  <item>
-			  <label>Deliver to different address</label>
-			  <value>true</value>
-		  </item>
-	  </select>
     <input bind="cContactName" class="textbox required">
       <label>Name</label>
       <value />

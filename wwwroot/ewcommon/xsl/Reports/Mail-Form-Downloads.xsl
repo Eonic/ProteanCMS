@@ -23,24 +23,7 @@
 
 	 <!--ROW CELL CHOOSER--> 
 	<xsl:template match="Item" mode="reportRowCellFilter">
-		<xsl:apply-templates select="DateTime" mode="reportCell"/>
-		<xsl:apply-templates select="cActivityXml/*/*" mode="reportCell"/>
+		<xsl:apply-templates select="descendant::*[local-name()!='cActivityXml' and local-name()!='Items']" mode="reportCell"/>
 	</xsl:template>
 	
-	<xsl:template match="AttachmentIds" mode ="reportCell">
-
-	</xsl:template>
-		
-	<xsl:template match="Attachements" mode ="reportCell">
-	<xsl:text>"</xsl:text>
-
-			<xsl:for-each select="Attachement ">
-				<xsl:value-of select="Content/@name"/>
-			</xsl:for-each>
-		<xsl:text>"</xsl:text>
-		<xsl:text>,</xsl:text>
-	</xsl:template>
-
-
-
 </xsl:stylesheet>

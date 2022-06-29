@@ -10,9 +10,9 @@
 				<cDirSchema>User</cDirSchema>
 				<cDirXml>
 					<User>
-            <FirstName label="First name"/>
-            <MiddleName label="Middle name"/>
-            <LastName label="Surname"/>
+						<FirstName label="First name"/>
+						<MiddleName label="Middle name"/>
+						<LastName label="Surname"/>
 						<Position/>
 						<Email/>
 						<Notes/>
@@ -47,72 +47,96 @@
 		<bind id="cDescription" nodeset="tblDirectory/cDescription" required="false()" type="string"/>
 		<!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
 	</model>
-	<group ref="EditContent" class="2Col">
+	<group ref="EditContent">
 		<label>Edit User</label>
-				<group>
+		<group class="tabs">
 			<group>
-				<label>Settings</label>
-		<select1 bind="nStatus" appearance="full" class="required">
-			<label>Status</label>
-			<item>
-				<label>Active</label>
-				<value>1</value>
-			</item>
-			<item>
-				<label>In-Active</label>
-				<value>0</value>
-			</item>
-		</select1>
-		<input bind="dPublishDate" class="calendar">
-			<label>Enable Date</label>
-		</input>
-		<input bind="dExpireDate" class="calendar">
-			<label>Expire Date</label>
-		</input>
-		<input bind="cDescription">
-			<label>Change Notes</label>
-		</input>
-	</group>
-	</group>
-		<group>
-			<group class="inline">
-				<label>Account Details</label>
-				<input bind="nDirKey" class="hidden">
-					<label>DirId</label>
-				</input>
-				<input bind="cDirName" class="required">
-					<label>UserName</label>
-				</input>
-				<input bind="cDirPassword" class="required">
-					<label>Password</label>
-				</input>
-				<input bind="cEmail" class="required">
-					<label>Email Address</label>
-				</input>
-				<input bind="cFirstName" class="required">
-					<label>First Name</label>
-				</input>
-				<input bind="cMiddleName">
-					<label>Middle Name</label>
-				</input>
-				<input bind="cLastName" class="required">
-					<label>Last Name</label>
-				</input>
-				<input bind="cPosition">
-					<label>Position</label>
-				</input>
-        <input bind="xml">
-          <label>xml</label>
-        </input>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<input bind="nDirKey" class="hidden">
+						<label>DirId</label>
+					</input>
+					<group class="row">
+						<group class="col-lg-6">
+							<input bind="cDirName" class="required">
+								<label>Username</label>
+							</input>
+
+							<input bind="cEmail" class="required">
+								<label>Email Address</label>
+							</input>
+							<input bind="cDirPassword" class="required">
+								<label>Password</label>
+							</input>
+							<input bind="cPosition">
+								<label>Position</label>
+							</input>
+						</group>
+						<group class="col-lg-6">
+							<input bind="cFirstName" class="required">
+								<label>First Name</label>
+							</input>
+							<input bind="cMiddleName">
+								<label>Middle Name</label>
+							</input>
+							<input bind="cLastName" class="required">
+								<label>Last Name</label>
+							</input>
+							<input bind="xml">
+								<label>XML (Advanced)</label>
+							</input>
+
+						</group>
+					</group>
+
+
+					<group>
+						<textarea bind="cNotes" class="TextAreaBrief xhtml" rows="5" cols="75">
+							<label>Profile</label>
+						</textarea>
+					</group>
+				</group>
 			</group>
 			<group>
-				<label>Profile</label>
-				<textarea bind="cNotes" class="TextAreaBrief xhtml" rows="5" cols="75">
-					<label>Profile</label>
-				</textarea>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
+					<group>
+						<select1 bind="nStatus" appearance="full" class="required">
+							<label>Status</label>
+							<item>
+								<label>Active</label>
+								<value>1</value>
+							</item>
+							<item>
+								<label>In-Active</label>
+								<value>0</value>
+							</item>
+						</select1>
+						<input bind="dPublishDate" class="calendar">
+							<label>Enable Date</label>
+						</input>
+						<input bind="dExpireDate" class="calendar">
+							<label>Expire Date</label>
+						</input>
+						<input bind="cDescription">
+							<label>Change Notes</label>
+						</input>
+					</group>
+
+				</group>
+
 			</group>
 		</group>
 	</group>
+
 	<group>
 		<submit submission="" ref="ewSubmit" class="principle">
 			<label>Save User</label>

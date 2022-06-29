@@ -7533,6 +7533,61 @@ Partial Public Class Cms
                 End Try
             End Function
 
+
+            Public Function xFrmResendSubscription(ByVal nOrderId As String) As XmlElement
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim nSubscriptionId As String = moDbHelper.ExeProcessSqlScalar("select nSubId from tblSubscriptionRenewal where nOrderId = " & nOrderId)
+
+                    Dim oSub As New Cart.Subscriptions(myWeb)
+
+                    MyBase.NewFrm("RenewSubscription")
+                    MyBase.submission("RenewSubscription", "", "post")
+                    Dim oFrmElmt As XmlElement
+
+                    oSub.GetSubscriptionDetail(MyBase.Instance, nSubscriptionId)
+                    Dim SubXml = MyBase.Instance.FirstChild
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "RenewSubscription")
+
+                    MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
+                    MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
+                    Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
+                    MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
+
+
+                    MyBase.addNote(oFrmElmt, noteTypes.Hint, "Resend Subscription", True, "resend-sub")
+
+                    MyBase.addSubmit(oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left")
+                    MyBase.addSubmit(oFrmElmt, "Confirm", "Confirm Refresh and Resend", "Confirm", "btn-success principle", "fa-repeat")
+
+                    If Me.isSubmitted Then
+                        If MyBase.getSubmitted = "Back" Then
+                            Return MyBase.moXformElmt
+                            myWeb.msRedirectOnEnd = "/?ewCmd=ResendSubscription"
+                        ElseIf MyBase.getSubmitted = "Confirm" Then
+                            Dim bEmailClient As Boolean = False
+                            If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
+                            Dim RenewResponse As String
+                            RenewResponse = oSub.RefreshSubscriptionOrder(MyBase.Instance.FirstChild, bEmailClient, nOrderId)
+                            If RenewResponse = "Success" Then
+                                MyBase.valid = True
+                            Else
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Resend Failed")
+                                MyBase.valid = False
+                            End If
+
+                            Return MyBase.moXformElmt
+                        End If
+                    End If
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Public Function xFrmConfirmCancelSubscription(ByVal nUserId As String, ByVal nSubscriptionId As String, ByVal nCurrentUser As Integer, ByVal bAdminMode As Boolean) As XmlElement
 
                 Try
@@ -8905,6 +8960,119 @@ Partial Public Class Cms
                 End Try
             End Function
 
+
+            'method for indexes to create add new indexes UI
+            Public Function xFrmIndexes(ByVal indexId As Integer, Optional ByVal SchemaName As String = "", Optional ByVal ParentId As String = "") As XmlElement
+                Dim oFrmElmt As XmlElement
+                Dim oGrp1Elmt As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim oSelElmt As XmlElement
+
+                Try
+
+
+                    Dim oDict As New Dictionary(Of String, String)
+                    Dim oDr As SqlDataReader
+
+                    ' Append data for particular lookup id when edit, change by nita on 18Apr22
+                    Dim nContentIndexDataType As String = ""
+                    Dim cContentSchemaName As String = ""
+                    Dim cDefinitionName As String = ""
+                    Dim cContentValueXpath As String = ""
+                    Dim bBriefNotDetail As String = ""
+
+                    Dim sSqlcheck As String = ""
+                    Dim lookupsSingleDataset As DataSet
+
+                    If indexId > 0 Then
+                        sSqlcheck = "select nContentIndexDefKey as id, * from tblContentIndexDef " _
+                                            & "WHERE nContentIndexDefKey = " & indexId
+                        lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "indexkey", "indexkeys")
+                        If lookupsSingleDataset.Tables.Count > 0 Then
+
+                            nContentIndexDataType = lookupsSingleDataset.Tables(0).Rows(0)("nContentIndexDataType").ToString
+                            cContentSchemaName = lookupsSingleDataset.Tables(0).Rows(0)("cContentSchemaName").ToString
+                            cDefinitionName = lookupsSingleDataset.Tables(0).Rows(0)("cDefinitionName").ToString
+                            cContentValueXpath = lookupsSingleDataset.Tables(0).Rows(0)("cContentValueXpath").ToString
+                            bBriefNotDetail = lookupsSingleDataset.Tables(0).Rows(0)("bBriefNotDetail").ToString
+
+                        End If
+                    End If
+
+
+                    MyBase.NewFrm("EditProductGroup")
+                    If indexId > 0 Then
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName & "</cContentSchemaName><cDefinitionName>" & cDefinitionName & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath & "</cContentValueXpath><bBriefNotDetail>" & bBriefNotDetail & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                    Else
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail/><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                    End If
+
+                    If indexId > 0 Then
+                        'MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Lookup, nLookupId)
+                        SchemaName = MyBase.Instance.SelectSingleNode("tblContentIndexDef/cContentSchemaName").InnerText
+                    End If
+                    MyBase.submission("EditIndexes", "", "post", "form_check(this)")
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "indexkey")
+                    MyBase.addNote("pgheader", noteTypes.Help, IIf(indexId > 0, "Edit ", "Add ") & "indexkey")
+                    oGrp1Elmt = MyBase.addGroup(oFrmElmt, "indexkey", "1col", "Details")
+
+                    'Definitions
+                    MyBase.addInput(oGrp1Elmt, "nContentIndexDefKey", True, "nContentIndexDefKey", "hidden")
+                    MyBase.addBind("nContentIndexDefKey", "tblContentIndexDef/nContentIndexDefKey")
+
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nContentIndexDataType", True, "Brief Not Detail", ApperanceTypes.Minimal)
+                    MyBase.addOption(oSelElmt, "Int", "1")
+                    MyBase.addOption(oSelElmt, "String", "2")
+                    MyBase.addOption(oSelElmt, "Date", "3")
+                    MyBase.addBind("nContentIndexDataType", "tblContentIndexDef/nContentIndexDataType", "true()")
+
+                    Dim sSql As String = "select distinct cContentSchemaName from tblContent"
+                    oDr = moDbHelper.getDataReader(sSql)
+                    'Adding controls to the form like dropdown, radiobuttons
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "cContentSchemaName", True, "Select Schema Name", ApperanceTypes.Minimal)
+                    MyBase.addOptionsFromSqlDataReader(oSelElmt, oDr, "cContentSchemaName", "cContentSchemaName")
+                    MyBase.addBind("cContentSchemaName", "tblContentIndexDef/cContentSchemaName", "true()")
+
+                    MyBase.addInput(oGrp1Elmt, "cDefinitionName", True, "Defination")
+                    MyBase.addBind("cDefinitionName", "tblContentIndexDef/cDefinitionName", "true()")
+
+                    MyBase.addInput(oGrp1Elmt, "cContentValueXpath", True, "Path")
+                    MyBase.addBind("cContentValueXpath", "tblContentIndexDef/cContentValueXpath", "true()")
+
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "", ApperanceTypes.Minimal)
+                    MyBase.addOption(oSelElmt, "Yes", "1")
+                    MyBase.addOption(oSelElmt, "No", "0")
+                    MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "true()")
+
+                    MyBase.addInput(oGrp1Elmt, "nKeywordGroupName", True, "nKeywordGroupName", "hidden")
+                    MyBase.addBind("nKeywordGroupName", "tblContentIndexDef/nKeywordGroupName")
+
+                    MyBase.addInput(oGrp1Elmt, "nAuditId", True, "nAuditId", "hidden")
+                    MyBase.addBind("nAuditId", "tblContentIndexDef/nAuditId")
+
+                    'search button
+
+                    MyBase.addSubmit(oFrmElmt, "EditIndexes", "Save Indexes", "SaveIndexes")
+
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.addValues()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.indexkey, MyBase.Instance, IIf(indexId > 0, indexId, -1))
+                        End If
+                    End If
+                    MyBase.addValues()
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmIndexes", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
             Public Function xFrmEditTemplate() As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim xslFilename As String = ""
@@ -9150,16 +9318,16 @@ Partial Public Class Cms
                                             Else
                                                 ' If oParentNode IsNot Nothing Then
                                                 If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
-                                                        Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
-                                                            menuName = oParentNode.GetAttribute("name") & " / " & menuName
-                                                            oParentNode = oParentNode.ParentNode
-                                                            If oParentNode Is Nothing Then Exit Do
-                                                        Loop
-                                                    End If
+                                                    Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
+                                                        menuName = oParentNode.GetAttribute("name") & " / " & menuName
+                                                        oParentNode = oParentNode.ParentNode
+                                                        If oParentNode Is Nothing Then Exit Do
+                                                    Loop
+                                                End If
                                                 ' End If
                                             End If
-                                                ' Add the checkbox
-                                                _form.addOption(_selectItem, menuName, menuId)
+                                            ' Add the checkbox
+                                            _form.addOption(_selectItem, menuName, menuId)
                                         Else
 
                                             If menuItem.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then

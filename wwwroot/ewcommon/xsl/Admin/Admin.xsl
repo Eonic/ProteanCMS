@@ -3081,7 +3081,7 @@
 				<xsl:value-of select="$thislevel"/>
 				<xsl:if test="MenuItem"> expandable</xsl:if>
 			</xsl:attribute>
-               
+
       <div class="pageCell">
         <xsl:variable name="pageLink">
           <xsl:apply-templates select="." mode="getHref" />
@@ -3112,12 +3112,11 @@
               </span>
             </xsl:otherwise>
           </xsl:choose>
+
+
+
         </a>
-        
-        
-                
       </div>
-      
       <div class="optionButtons">
 
         <!-- Clone page note: don't offer menu page options to items that are cloned page child pages-->
@@ -3221,29 +3220,10 @@
         </xsl:choose>
 
       </div>
-      
-      <!--code change to display redirect page name below the original page name-->
-        
-        <!--new code - start-->
-      <div xmlns="http://www.w3.org/1999/xhtml">
-          <xsl:if test="format-number(@url,'0')!='NaN'">
-              <div class="fa fa-external-link">
-                <xsl:variable name="urlThis" select="@url"/>
-                <xsl:variable name="urlRef" >
-                  <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$urlThis]/@url"/>
-                  <xsl:text>&amp;ewCmd=Normal</xsl:text>
-                </xsl:variable>
-                <a href="{$urlRef}" >
-                  <span class="pageName">
-                    <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$urlThis]/DisplayName"/>
-                  </span>
-                </a>
-              </div>
-          </xsl:if>
-      </div>
-        <!--new code - end-->
-        
     </li>
+
+
+
 
 
     <!--Expand to Level XSL variant-->
@@ -8157,11 +8137,7 @@
       </td>
       <td class="cell description">
         <a href="{$siteURL}{@url}" title="">
-          
-			<xsl:if test="productDetail/ParentProduct/Content/Name">
-				<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> -
-			</xsl:if>
-			<xsl:value-of select="Name"/>
+          <xsl:value-of select="node()"/>
         </a>
         <xsl:apply-templates select="." mode="product-description"/>
         <!-- ################################# Line Options Info ################################# -->
@@ -8172,7 +8148,7 @@
                 <xsl:apply-templates select="option" mode="optionDetail"/>
               </xsl:when>
               <xsl:otherwise>
-<br/>
+                <br/>
                 <xsl:value-of select="Name"/>
               </xsl:otherwise>
             </xsl:choose>
@@ -9036,7 +9012,6 @@
   <xsl:template match="Page[@layout='Reports' and ContentDetail/Content[@type='xform']]" mode="Admin">
     <!--<div class="report" id="template_AdminXForm">-->
     <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-	  
     <xsl:apply-templates select="ContentDetail/Report" mode="defaultReport"/>
     <!--</div>-->
   </xsl:template>
@@ -9055,40 +9030,14 @@
       <xsl:for-each select="Item">
         <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
           <tr>
-
-              <xsl:apply-templates select="descendant-or-self::*" mode="Report_ColsValues"/>
-
+            <xsl:for-each select="descendant-or-self::*">
+              <xsl:apply-templates select="." mode="Report_ColsValues"/>
+            </xsl:for-each>
           </tr>
         </span>
       </xsl:for-each>
     </table>
   </xsl:template>
-
-	<xsl:template match="Report[@name='MailFormSubmissions']" mode="defaultReport">
-		<table class="table">
-			<tr>
-				<th>
-					Date/Time
-				</th>
-				<xsl:for-each select="Item[1]/cActivityXml/*/*">
-					<xsl:if test="count(*)=0">
-						<th>
-							<xsl:value-of select="local-name()"/>
-						</th>
-					</xsl:if>
-				</xsl:for-each>
-			</tr>
-			<xsl:for-each select="Item">
-				<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
-					<tr>
-                        <xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
-						<xsl:apply-templates select="cActivityXml/*/*" mode="Report_ColsValues"/>
-					</tr>
-				</span>
-			</xsl:for-each>
-		</table>
-	</xsl:template>
-	
 
   <xsl:template match="*" mode ="Report_ColsValues">
     <xsl:if test="count(*)=0">
@@ -9098,26 +9047,6 @@
     </xsl:if>
   </xsl:template>
 
-	<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
-<!--
-			<td>
-				<xsl:value-of select="@ids"/>
-			</td>
-			-->
-
-	</xsl:template>
-
-
-	<xsl:template match="Attachements" mode ="Report_ColsValues">
-
-		<td>
-			<xsl:for-each select="Attachement ">
-			<xsl:value-of select="Content/@name"/>
-		</xsl:for-each>
-			
-		</td>
-
-	</xsl:template>
 
   <!-- -->
   <!--   ##################  Generic Display Form  ##############################   -->
@@ -13263,7 +13192,6 @@
       <xsl:value-of select="Group/Name/node()"/>
     </td>
   </xsl:template>
-
 
   <xsl:template name="StatusLegend">
     <xsl:param name="status"/>

@@ -2199,7 +2199,7 @@
     <div id="cartInvoice">
       <p class="optionButtons">
         <a href="{$secureURL}?pgid={/Page/@id}&amp;cartCmd=Quit" class="btn btn-primary button principle" target="_parent" title="Click here to close this invoice and return to the site.">
-          <i class="fa fa-times">
+          <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
           </i>
           <xsl:text> </xsl:text>
@@ -2262,14 +2262,18 @@
         </p>
       </xsl:if>
     </div>
-    <div class="confirmation-addresses">
+    <div class="card">
+      <div class="card-body">
         <xsl:apply-templates select="." mode="orderAddresses"/>
         <xsl:apply-templates select="." mode="displayNotes"/>
+      </div>
     </div>
-    <div class="confirmation-cart ">
+    <div class="card ">
+      <div class="card-body">
         <form method="post" id="cart">
           <xsl:apply-templates select="." mode="orderItems"/>
         </form>
+      </div>
     </div>
   </xsl:template>
 

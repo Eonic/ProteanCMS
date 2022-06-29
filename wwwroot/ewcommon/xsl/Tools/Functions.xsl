@@ -366,7 +366,6 @@
     <html lang="{$pageLang}" xml:lang="{$pageLang}">
       <xsl:apply-templates select="." mode="htmlattr"/>
       <head>
-        <xsl:apply-templates select="." mode="metacharset"/>
         <xsl:choose>
           <xsl:when test="ContentDetail">
             <xsl:attribute name="prefix">
@@ -378,6 +377,8 @@
           </xsl:otherwise>
         </xsl:choose>
 
+		  <xsl:apply-templates select="." mode="metacharset"/>
+		  
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
@@ -1372,17 +1373,17 @@
 
     <xsl:if test="$currentPage/DisplayName/@noindex='true' or (ContentDetail/Content and not(ContentDetail/Content[@parId=/Page/@id]))">
       <!--This content is to be found elsewhere on the site and should not be indexed again-->
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+      <meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
     <!-- STOP SEARCH ENGINES INDEXING DS01 SITES IF SOME PLUM HAS PUBLISHED IT ON THE INTERWEBS -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'eonichost.co.uk') or contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'yeomanshosting.co.uk')">
       <xsl:comment>STOP SEARCH ENGINES INDEXING PREVIEW SITES IF SOME PLUM HAS SHARED A LINK ON THE INTERWEBS</xsl:comment>
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+		<meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
     <xsl:if test="Cart[@type='order']/Order/@cmd!=''">
-      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+		<meta name="robots" content="noindex, nofollow"/>
     </xsl:if>
 
 
@@ -6686,7 +6687,7 @@
         <xsl:with-param name="max-width-xxs" select="$max-width-xxs"/>
         <xsl:with-param name="max-height-xxs" select="$max-height-xxs"/>
         <xsl:with-param name="max-width-xs" select="$max-width-xs"/>
-        <xsl:with-param name="max-height-xs" select="$max-width-xs"/>
+        <xsl:with-param name="max-height-xs" select="$max-height-xs"/>
         <xsl:with-param name="max-width-sm" select="$max-width-sm"/>
         <xsl:with-param name="max-height-sm" select="$max-height-sm"/>
         <xsl:with-param name="max-width-md" select="$max-width-md"/>
@@ -7122,7 +7123,7 @@
 								<!--JPG/PNG/GIF Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 575px)'"/>
+									<xsl:with-param name="media" select="'(max-width: 574px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
 									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
 									<xsl:with-param name="class" select="$class"/>
@@ -7447,7 +7448,7 @@
                 <!--JPG/PNG/GIF Images-->
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
-                  <xsl:with-param name="media" select="'(max-width: 575px)'"/>
+                  <xsl:with-param name="media" select="'(max-width: 574px)'"/>
                   <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
