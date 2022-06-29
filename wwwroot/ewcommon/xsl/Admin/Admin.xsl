@@ -13399,4 +13399,115 @@
 
   </xsl:template>
 
+	<!-- code for filter indexes -->
+
+	<xsl:template match="Page[@layout='FilterIndex']" mode="Admin">
+		<div class="row" id="template_AdvancedMode">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						Filter Indexes
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<p class="btn-group headerButtons">
+							<xsl:if test="ContentDetail/Content[@type='xform']">
+								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+								</a>
+							</xsl:if>
+						</p>
+					</div>
+					<div class="panel-body">
+						<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					</div>
+					<xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListIndexes"/>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Report']" mode="ListIndexes">
+		<div class="panel-body">
+			<form method="get" role="form" class="form-inline">
+				<input type="hidden" name="ewCmd" value="FilterIndex"/>
+				<input type="hidden" name="indexkey" value="0"/>
+				
+
+			</form>
+		</div>
+		<div class="table-responsive">
+			<table class="table manage-lookups table-hover ">
+				<tr>
+					<th colspan="2">
+						Data Type
+					</th>
+					<th colspan="2">
+						Schema Name
+					</th>
+					<th colspan="2">
+						Defination
+					</th>
+					<th colspan="2">
+						Xpath
+					</th>
+					<th colspan="2">
+						Brief
+					</th>
+					<th class="clearfix buttonCell">
+						<a href="{$appPath}?ewCmd=FilterIndex&amp;indexId=0&amp;SchemaName={indexkeys/SchemaName/@Name}" class="btn btn-success pull-right">
+							<i class="fa fa-plus fa-white">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Add New Item
+						</a>
+					</th>
+				</tr>
+				<xsl:apply-templates select="indexkeys" mode="LookupList"/>
+			</table>
+		</div>
+	</xsl:template>
+
+	<!--<xsl:template match="SchemaName" mode="LookupList">
+	
+		<xsl:apply-templates select="indexkey" mode="LookupList"/>
+	</xsl:template>-->
+
+	<xsl:template match="indexkey" mode="LookupList">
+		<tr>
+			<td colspan="2">
+				<xsl:value-of select="nContentIndexDataType/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cContentSchemaName/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cDefinitionName/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cContentValueXpath/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="bBriefNotDetail/node()"/>
+			</td>
+			<td class="clearfix">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=delete&amp;indexId={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-danger btn-xs pull-right">
+					<i class="fa fa-trash-o fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Del
+				</a>
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;indexId={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+					<i class="fa fa-edit fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Edit
+				</a>
+
+			</td>
+		</tr>
+	</xsl:template>
+
+
 </xsl:stylesheet>

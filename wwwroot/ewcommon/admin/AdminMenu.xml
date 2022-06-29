@@ -177,6 +177,7 @@
         <MenuItem name="Change Site Theme" cmd="SelectTheme" display="true" icon="icon-brush"/>
         <MenuItem name="Install New Theme" cmd="InstallTheme" display="true" icon="fa-arrow-down"/>
       </MenuItem>
+		<MenuItem name="Filter Indexes" cmd="FilterIndex" display="true" feature="FilterIndex" icon="fa-sign-in"/>
     </MenuItem>
   </MenuItem>
 </AdminMenu>
