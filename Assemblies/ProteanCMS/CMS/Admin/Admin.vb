@@ -3897,7 +3897,11 @@ AfterProcessFlow:
                 Select Case myWeb.moRequest("ewCmd2")
                     Case "delete"
                         myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Lookup, lookupId)
-
+                        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                            oPageDetail.InnerXml = ""
+                            lookupId = Nothing
+                            GoTo listItems
+                        End If
                         GoTo listItems
                     Case "hide"
                         sSql = "UPDATE dbo.tblLookup " _
@@ -3961,11 +3965,7 @@ listItems:
                                 lookupId = Nothing
                                 GoTo listItems
                             End If
-                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
-                                oPageDetail.InnerXml = ""
-                                lookupId = Nothing
-                                GoTo listItems
-                            End If
+
                         End If
 
                 End Select
@@ -3997,10 +3997,13 @@ listItems:
 
                 Select Case myWeb.moRequest("ewCmd2")
                     Case "delete"
-                        ' mcEwCmd = "DeleteContent"
-                        'sAdminLayout = "DeleteContent"
 
                         myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.indexkey, indexId)
+                        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                            oPageDetail.InnerXml = ""
+                            indexId = Nothing
+                            GoTo listItems
+                        End If
                         GoTo listItems
                     Case Else
 listItems:
@@ -4053,11 +4056,7 @@ from tblContentIndexDef"
                                 indexId = Nothing
                                 GoTo listItems
                             End If
-                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
-                                oPageDetail.InnerXml = ""
-                                indexId = Nothing
-                                GoTo listItems
-                            End If
+
                         End If
 
                 End Select

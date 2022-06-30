@@ -68,6 +68,7 @@ Partial Public Class Cms
 
         Private gbVersionControl As Boolean = False
 
+
 #End Region
 #Region "Initialisation"
 
@@ -2178,16 +2179,17 @@ Partial Public Class Cms
 
 
                         'New case add for tblcontentindexdef table delete by nita
-                    Case objectTypes.indexkey
-                        sSql = "SELECT nContentIndexDefKey FROM tblContentIndexDef WHERE nContentIndexDefKey = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.indexkey, oDr.GetValue(0))
-                        End While
-                        ExeProcessSql("DELETE FROM tblContentIndexDef WHERE nContentIndexDefKey = " & nId)
+                        'Case objectTypes.indexkey
+                        '    sSql = "SELECT nContentIndexDefKey FROM tblContentIndexDef WHERE nContentIndexDefKey = " & nId
+                        '    oDr = getDataReader(sSql)
+                        '    While oDr.Read
+                        '        DeleteObject(objectTypes.indexkey, oDr.GetValue(0))
+                        '    End While
+                        '    ExeProcessSql("DELETE FROM tblContentIndexDef WHERE nContentIndexDefKey = " & nId)
+                        '    nId = Nothing
 
-                        oDr.Close()
-                        oDr = Nothing
+                        '    oDr.Close()
+                        '    oDr = Nothing
                 End Select
                 If bReporting Then
                     goResponse.Write("<p>Deleted from " & getTable(objectType) & " - " & nId & "</p>")

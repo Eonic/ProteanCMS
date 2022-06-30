@@ -13432,14 +13432,14 @@
 	</xsl:template>
 
 	<xsl:template match="Content[@type='Report']" mode="ListIndexes">
-		<div class="panel-body">
+		<!--<div class="panel-body">
 			<form method="get" role="form" class="form-inline">
 				<input type="hidden" name="ewCmd" value="FilterIndex"/>
 				<input type="hidden" name="indexkey" value="0"/>
 				
 
 			</form>
-		</div>
+		</div>-->
 		<div class="table-responsive">
 			<table class="table manage-lookups table-hover ">
 				<tr>
