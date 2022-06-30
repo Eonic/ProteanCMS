@@ -2218,6 +2218,7 @@ Partial Public Class Cms
                     sSql = "delete from " & getTable(objectType) & " where " & getKey(objectType) & " = " & nId
                     ExeProcessSql(sSql)
 
+
                 End If
 
                 Return nId

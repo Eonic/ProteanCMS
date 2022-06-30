@@ -11600,7 +11600,7 @@
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit
         </a>
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveTop&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveTop&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by top">
           <i class="fa fa-arrow-up fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -11615,7 +11615,7 @@
             <xsl:text> </xsl:text>
           </i>
         </a>
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveBottom&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveBottom&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by bottom">
           <i class="fa fa-arrow-down fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -13459,7 +13459,7 @@
 						Brief
 					</th>
 					<th class="clearfix buttonCell">
-						<a href="{$appPath}?ewCmd=FilterIndex&amp;indexId=0&amp;SchemaName={indexkeys/SchemaName/@Name}" class="btn btn-success pull-right">
+						<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id=0&amp;SchemaName={indexkeys/SchemaName/@Name}" class="btn btn-success pull-right">
 							<i class="fa fa-plus fa-white">
 								<xsl:text> </xsl:text>
 							</i><xsl:text> </xsl:text>Add New Item
@@ -13494,12 +13494,12 @@
 				<xsl:value-of select="bBriefNotDetail/node()"/>
 			</td>
 			<td class="clearfix">
-				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=delete&amp;indexId={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-danger btn-xs pull-right">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=delete&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-danger btn-xs pull-right">
 					<i class="fa fa-trash-o fa-white">
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Del
 				</a>
-				<a href="{$appPath}?ewCmd=FilterIndex&amp;indexId={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
 					<i class="fa fa-edit fa-white">
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Edit

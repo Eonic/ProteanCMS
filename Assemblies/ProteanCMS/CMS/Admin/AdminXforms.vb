@@ -8985,7 +8985,7 @@ Partial Public Class Cms
                     Dim lookupsSingleDataset As DataSet
 
                     If indexId > 0 Then
-                        sSqlcheck = "select nContentIndexDefKey as id, * from tblContentIndexDef " _
+                        sSqlcheck = "select nContentIndexDefKey as id,nContentIndexDataType,TRIM(cContentSchemaName) AS cContentSchemaName, * from tblContentIndexDef " _
                                             & "WHERE nContentIndexDefKey = " & indexId
                         lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "indexkey", "indexkeys")
                         If lookupsSingleDataset.Tables.Count > 0 Then
@@ -9002,7 +9002,7 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditProductGroup")
                     If indexId > 0 Then
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName & "</cContentSchemaName><cDefinitionName>" & cDefinitionName & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath & "</cContentValueXpath><bBriefNotDetail>" & bBriefNotDetail & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & bBriefNotDetail & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
                     Else
                         MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail/><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
                     End If

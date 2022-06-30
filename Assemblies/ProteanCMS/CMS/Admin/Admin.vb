@@ -3990,30 +3990,17 @@ listItems:
 
             Try
 
-                If Not myWeb.moRequest("indexId") = Nothing Then
-                    indexId = myWeb.moRequest("indexId")
+                If Not myWeb.moRequest("id") = Nothing Then
+                    indexId = myWeb.moRequest("id")
                 End If
+
 
                 Select Case myWeb.moRequest("ewCmd2")
                     Case "delete"
+                        ' mcEwCmd = "DeleteContent"
+                        'sAdminLayout = "DeleteContent"
+
                         myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.indexkey, indexId)
-
-                        GoTo listItems
-                    Case "hide"
-                        sSql = "UPDATE dbo.tblContentIndex " _
-                                            & "SET nActivityType=" & dbHelper.ActivityType.VoteExcluded & " " _
-                                            & "WHERE nActivityKey = " & indexId
-                        myWeb.moDbHelper.ExeProcessSql(sSql)
-
-                    Case "show"
-                        sSql = "UPDATE dbo.tblContentIndex " _
-                                            & "SET nActivityType=" & dbHelper.ActivityType.SubmitVote & " " _
-                                            & "WHERE nActivityKey = " & indexId
-                        myWeb.moDbHelper.ExeProcessSql(sSql)
-                    Case "MoveUp", "MoveDown", "MoveTop", "MoveBottom"
-
-                        myWeb.moDbHelper.ReorderNode(dbHelper.objectTypes.Lookup, indexId, myWeb.moRequest("ewCmd2"), "cContentSchemaName")
-                        indexId = Nothing
                         GoTo listItems
                     Case Else
 listItems:
