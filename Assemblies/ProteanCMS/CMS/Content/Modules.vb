@@ -7,6 +7,7 @@ Imports System.Web.Configuration
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Reflection
+Imports System.Collections.Generic
 
 Partial Public Class Cms
     Public Class Content
@@ -313,73 +314,78 @@ where cl.nStructId = " & myWeb.mnPageId)
 
             Public Sub ProductFilter(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
 
-                Dim formName As String = "PriceFilter" '"PriceFilter" '"ProductFilter" '"GroupSizeFilter" '"OccasionFilter"
+                'Dim inputs() As String = {"PriceFilter", "ProductFilter", "GroupSizeFilter", "OccasionFilter"}
+                'Dim lstOfFilters As List(Of String) = New List(Of String)(inputs)
+
+                'Dim Filter As String
+                ' For Each Filter In lstOfFilters
+
+
+                Dim formName As String = "PriceFilter" 'oContentNode.GetAttribute("name")
                 Dim oFrmGroup As XmlElement
-                Dim filters As Object
-                Try
+                    Dim filters As Object
+                    Try
 
 
-                    Dim filterForm As xForm = New xForm(myWeb)
-                    Dim oFrmInstance As XmlElement
+                        Dim filterForm As xForm = New xForm(myWeb)
+                        Dim oFrmInstance As XmlElement
 
 
-                    If formName = "PriceFilter" Then
-                        filters = New Protean.Providers.Filter.PriceFilter()
-                    ElseIf formName = "GroupSizeFilter" Then
-                        filters = New Protean.Providers.Filter.GroupSizeFilter()
-                    ElseIf formName = "ProductFilter" Then
-                        filters = New Protean.Providers.Filter.PageFilter()
-                    ElseIf formName = "OccasionFilter" Then
-                        filters = New Protean.Providers.Filter.OccasionFilter()
-                    End If
-
-                    filterForm.NewFrm(formName)
-
-                    filterForm.submission(formName, "", "POST", "return form_check(this);")
-
-                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, formName + "Group", formName + "Group", "")
-                    If formName = "PriceFilter" Then
-                        filterForm.addBind("PriceFilter", "PriceFilter")
-                    ElseIf formName = "GroupSizeFilter" Then
-                        filterForm.addBind("GroupSizeFilter", "GroupSizeFilter")
-                    ElseIf formName = "ProductFilter" Then
-                        filterForm.addBind("PageFilter", "PageFilter")
-                    ElseIf formName = "OccasionFilter" Then
-                        filterForm.addBind("PageFilter", "PageFilter")
-                    End If
-                    filters.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
-                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "submit", "contentSubmit", "")
-                    oContentNode.AppendChild(filterForm.moXformElmt)
-                    If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
-                        If (myWeb.moRequest.Form("Submit").ToLower() <> "search") Then
-                            filters.RemovePageFromFilter(myWeb, myWeb.moRequest.Form("Submit"))
+                        If formName = "PriceFilter" Then
+                            filters = New Protean.Providers.Filter.PriceFilter()
+                        ElseIf formName = "GroupSizeFilter" Then
+                            filters = New Protean.Providers.Filter.GroupSizeFilter()
+                        ElseIf formName = "ProductFilter" Then
+                            filters = New Protean.Providers.Filter.PageFilter()
+                        ElseIf formName = "OccasionFilter" Then
+                            filters = New Protean.Providers.Filter.OccasionFilter()
                         End If
-                    End If
-                    oFrmInstance = filterForm.Instance
-                    If (myWeb.moSession("PageIds") IsNot Nothing) Then
-                        Protean.Tools.Xml.addElement(oFrmInstance, formName, Convert.ToString(myWeb.moSession("PageIds")))
-                    Else
-                        Protean.Tools.Xml.addElement(oFrmInstance, formName)
-                    End If
 
-                    filterForm.Instance = oFrmInstance
+                        filterForm.NewFrm(formName)
 
-                    filterForm.addSubmit(oFrmGroup, "Search", "Search")
-                    filterForm.addValues()
-                    If (filterForm.isSubmitted) Then
-                        'If (filterForm.valid) Then
-                        filterForm.updateInstanceFromRequest()
-                        filters.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
-                        'End If
+                        filterForm.submission(formName, "", "POST", "return form_check(this);")
 
-                    End If
+                        oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, formName + "Group", formName + "Group", "")
+                        If formName = "PriceFilter" Then
+                            filterForm.addBind("PriceFilter", "PriceFilter")
+                        ElseIf formName = "GroupSizeFilter" Then
+                            filterForm.addBind("GroupSizeFilter", "GroupSizeFilter")
+                        ElseIf formName = "ProductFilter" Then
+                            filterForm.addBind("PageFilter", "PageFilter")
+                        ElseIf formName = "OccasionFilter" Then
+                            filterForm.addBind("PageFilter", "PageFilter")
+                        End If
+                        filters.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                        oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "submit", "contentSubmit", "")
+                        oContentNode.AppendChild(filterForm.moXformElmt)
+                        If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
+                            If (myWeb.moRequest.Form("Submit").ToLower() <> "search") Then
+                                filters.RemovePageFromFilter(myWeb, myWeb.moRequest.Form("Submit"))
+                            End If
+                        End If
+                        oFrmInstance = filterForm.Instance
+                        If (myWeb.moSession("PageIds") IsNot Nothing) Then
+                            Protean.Tools.Xml.addElement(oFrmInstance, formName, Convert.ToString(myWeb.moSession("PageIds")))
+                        Else
+                            Protean.Tools.Xml.addElement(oFrmInstance, formName)
+                        End If
 
-                    ' Next
+                        filterForm.Instance = oFrmInstance
 
+                        filterForm.addSubmit(oFrmGroup, "Search", "Search")
+                        filterForm.addValues()
+                        If (filterForm.isSubmitted) Then
+                            'If (filterForm.valid) Then
+                            filterForm.updateInstanceFromRequest()
+                            filters.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                            'End If
 
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
-                End Try
+                        End If
+
+                    Catch ex As Exception
+                        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
+                    End Try
+                ' Next
             End Sub
 
 
@@ -402,7 +408,7 @@ where cl.nStructId = " & myWeb.mnPageId)
 
 #End Region
 
-    Protected Overrides Sub Finalize()
+        Protected Overrides Sub Finalize()
             MyBase.Finalize()
         End Sub
     End Class
