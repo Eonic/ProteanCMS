@@ -8985,7 +8985,7 @@ Partial Public Class Cms
                     Dim lookupsSingleDataset As DataSet
 
                     If indexId > 0 Then
-                        sSqlcheck = "select nContentIndexDefKey as id,nContentIndexDataType,TRIM(cContentSchemaName) AS cContentSchemaName, * from tblContentIndexDef " _
+                        sSqlcheck = "select nContentIndexDefKey as id,nContentIndexDataType,RTRIM(LTRIM(cContentSchemaName)) AS cContentSchemaName, * from tblContentIndexDef " _
                                             & "WHERE nContentIndexDefKey = " & indexId
                         lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "indexkey", "indexkeys")
                         If lookupsSingleDataset.Tables.Count > 0 Then
