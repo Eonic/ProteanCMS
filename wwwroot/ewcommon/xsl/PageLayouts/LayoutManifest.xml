@@ -102,6 +102,7 @@
       <Module type="FAQList" name="FAQ List">List of Frequently Asked Questions</Module>
       <Module type="RecipeList" name="Recipe List">List of Recipes</Module>
       <Module type="RecipeGrid" name="Recipe Grid">Grid of Recipes</Module>
+		<Module type="ReviewList" name="Review List">List of reviews</Module>
       <Module type="TicketList" name="Ticket List">List of Tickets</Module>
     </ModuleGroup>
     <ModuleGroup name="Image Galleries" icon="fa-picture-o">
