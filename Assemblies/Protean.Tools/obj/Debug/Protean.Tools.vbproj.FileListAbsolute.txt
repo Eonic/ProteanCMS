@@ -538,6 +538,14 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbp
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\TidyManaged.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Management.Sdk.Sfc.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Smo.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SmoExtended.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ServiceBrokerEnum.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.RegSvrEnum.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\tidy.x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\tidy.x86.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.dll.config
@@ -583,11 +591,3 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbp
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\TidyManaged.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Management.Sdk.Sfc.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Smo.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SmoExtended.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ServiceBrokerEnum.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.RegSvrEnum.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.AssemblyReference.cache

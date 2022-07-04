@@ -756,6 +756,8 @@ Public Class Cms
 
             If Not moDbHelper Is Nothing Then
                 'moDbHelper.Close()
+                'TS added in to ensure connections are closed
+                moDbHelper.CloseConnection(True)
                 moDbHelper = Nothing
             End If
 

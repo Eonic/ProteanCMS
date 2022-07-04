@@ -465,7 +465,6 @@ Partial Public Class Cms
             '   sets the global variables and initialises the current cart
 
             Dim sSql As String = ""
-            Dim oDr As SqlDataReader
             Dim cartXmlFromDatabase As String = ""
             mcOrderType = "Order"
             cOrderReference = ""
@@ -642,31 +641,33 @@ Partial Public Class Cms
                         Else
                             sSql = "select * from tblCartOrder where ((nCartStatus < 7 and not(cCartSessionId like 'OLD_%')) or nCartStatus IN (10,13,14)) and nCartOrderKey = " & mnCartId
                         End If
-                        oDr = moDBHelper.getDataReader(sSql)
-                        If oDr.HasRows Then
-                            While oDr.Read
-                                mnGiftListId = oDr("nGiftListId")
-                                mnTaxRate = CDbl("0" & oDr("nTaxRate"))
-                                mnProcessId = CLng("0" & oDr("nCartStatus"))
-                                cartXmlFromDatabase = oDr("cCartXml").ToString
-                                ' Check for deposit and earlier stages
-                                If mcDeposit = "on" Then
-                                    If Not (IsDBNull((oDr("nAmountReceived")))) Then
-                                        If oDr("nAmountReceived") > 0 And mnProcessId < cartProcess.Confirmed Then
-                                            mnProcessId = cartProcess.SettlementInitiated
-                                            moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+
+                        Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)
+                            If oDr.HasRows Then
+                                While oDr.Read
+                                    mnGiftListId = oDr("nGiftListId")
+                                    mnTaxRate = CDbl("0" & oDr("nTaxRate"))
+                                    mnProcessId = CLng("0" & oDr("nCartStatus"))
+                                    cartXmlFromDatabase = oDr("cCartXml").ToString
+                                    ' Check for deposit and earlier stages
+                                    If mcDeposit = "on" Then
+                                        If Not (IsDBNull((oDr("nAmountReceived")))) Then
+                                            If oDr("nAmountReceived") > 0 And mnProcessId < cartProcess.Confirmed Then
+                                                mnProcessId = cartProcess.SettlementInitiated
+                                                moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+                                            End If
                                         End If
                                     End If
-                                End If
 
-                            End While
-                        Else
-                            ' Cart no longer exists - a quit command has probably been issued.  Clear the session
-                            mnCartId = 0
-                            mnProcessId = 0
-                            mcCartCmd = ""
-                        End If
-                        oDr.Close()
+                                End While
+
+                            Else
+                                ' Cart no longer exists - a quit command has probably been issued.  Clear the session
+                                mnCartId = 0
+                                mnProcessId = 0
+                                mcCartCmd = ""
+                            End If
+                        End Using
                         If mnCartId = 0 Then
                             EndSession()
                         End If
@@ -737,43 +738,44 @@ Partial Public Class Cms
                             End If
 
                             PerfMon.Log("Cart", "InitializeVariables - check for cart start")
-                            oDr = moDBHelper.getDataReader(sSql)
-                            PerfMon.Log("Cart", "InitializeVariables - check for cart end")
+                            Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)
+                                PerfMon.Log("Cart", "InitializeVariables - check for cart end")
 
-                            If oDr.HasRows Then
-                                While oDr.Read
-                                    mnGiftListId = oDr("nGiftListId")
-                                    mnCartId = oDr("nCartOrderKey") ' get cart id
-                                    mnProcessId = oDr("nCartStatus") ' get cart status
-                                    mnTaxRate = oDr("nTaxRate")
-                                    If Not (myWeb.moRequest("settlementRef") Is Nothing) Or Not (myWeb.moRequest("settlementRef") Is Nothing) Then
+                                If oDr.HasRows Then
+                                    While oDr.Read
+                                        mnGiftListId = oDr("nGiftListId")
+                                        mnCartId = oDr("nCartOrderKey") ' get cart id
+                                        mnProcessId = oDr("nCartStatus") ' get cart status
+                                        mnTaxRate = oDr("nTaxRate")
+                                        If Not (myWeb.moRequest("settlementRef") Is Nothing) Or Not (myWeb.moRequest("settlementRef") Is Nothing) Then
 
-                                        ' Set to a holding state that indicates that the settlement has been initiated
-                                        mnProcessId = cartProcess.SettlementInitiated
+                                            ' Set to a holding state that indicates that the settlement has been initiated
+                                            mnProcessId = cartProcess.SettlementInitiated
 
-                                        ' If a cart has been found, we need to update the session ID in it.
-                                        If oDr("cCartSessionId") <> mcSessionId Then
-                                            moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
-                                            ' if mnCartId is not null then pull both otherwise pull session id
+                                            ' If a cart has been found, we need to update the session ID in it.
+                                            If oDr("cCartSessionId") <> mcSessionId Then
+                                                moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
+                                                ' if mnCartId is not null then pull both otherwise pull session id
+                                            End If
+
+                                            ' Reactivate the order in the database
+                                            moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+
                                         End If
+                                        If mnProcessId > 5 And mnProcessId <> cartProcess.SettlementInitiated Then
+                                            ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
+                                            EndSession()
+                                            mnCartId = 0
+                                            mnTaxRate = Nothing
+                                            mnProcessId = 0
+                                            mcCartCmd = ""
+                                        End If
+                                        mcCurrencyRef = oDr("cCurrency")
+                                        cartXmlFromDatabase = oDr("cCartXml").ToString
+                                    End While
+                                End If
+                            End Using
 
-                                        ' Reactivate the order in the database
-                                        moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
-
-                                    End If
-                                    If mnProcessId > 5 And mnProcessId <> cartProcess.SettlementInitiated Then
-                                        ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
-                                        EndSession()
-                                        mnCartId = 0
-                                        mnTaxRate = Nothing
-                                        mnProcessId = 0
-                                        mcCartCmd = ""
-                                    End If
-                                    mcCurrencyRef = oDr("cCurrency")
-                                    cartXmlFromDatabase = oDr("cCartXml").ToString
-                                End While
-                                oDr.Close()
-                            End If
                         End If
 
                     End If
@@ -857,9 +859,6 @@ Partial Public Class Cms
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug)
-                'close()
-            Finally
-                oDr = Nothing
             End Try
         End Sub
 
@@ -6152,10 +6151,7 @@ processFlow:
 
         Public Function getParentCountries(ByRef sTarget As String, ByRef nIndex As Integer) As String
             PerfMon.Log("Cart", "getParentCountries")
-            Dim oDr As SqlDataReader
             Dim sSql As String
-
-
             Dim oLocations As Hashtable
 
             Dim nTargetId As Integer
@@ -6167,51 +6163,51 @@ processFlow:
                 ' First let's go and get a list of all the countries and their parent id's
                 sSql = "SELECT * FROM tblCartShippingLocations ORDER BY nLocationParId"
 
-                oDr = moDBHelper.getDataReader(sSql)
-                sCountryList = ""
-                nTargetId = -1
+                Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)
+                    sCountryList = ""
+                    nTargetId = -1
 
-                If oDr.HasRows Then
-                    oLocations = New Hashtable
-                    While oDr.Read
-                        Dim arrLoc(3) As String
+                    If oDr.HasRows Then
+                        oLocations = New Hashtable
+                        While oDr.Read
+                            Dim arrLoc(3) As String
 
-                        arrLoc(0) = oDr("nLocationParId") & ""
+                            arrLoc(0) = oDr("nLocationParId") & ""
 
-                        If IsDBNull(oDr("nLocationTaxRate")) Or Not (IsNumeric(oDr("nLocationTaxRate"))) Then
-                            arrLoc(2) = 0
-                        Else
-                            arrLoc(2) = oDr("nLocationTaxRate")
+                            If IsDBNull(oDr("nLocationTaxRate")) Or Not (IsNumeric(oDr("nLocationTaxRate"))) Then
+                                arrLoc(2) = 0
+                            Else
+                                arrLoc(2) = oDr("nLocationTaxRate")
+                            End If
+
+                            If IsDBNull(oDr("cLocationNameShort")) Or IsNothing(oDr("cLocationNameShort")) Then
+                                arrLoc(1) = oDr("cLocationNameFull")
+                            Else
+                                arrLoc(1) = oDr("cLocationNameShort")
+                            End If
+                            nLocKey = CInt(oDr("nLocationKey"))
+                            oLocations(nLocKey) = arrLoc
+
+                            arrLoc = Nothing
+
+                            If IIf(IsDBNull(LCase(oDr("cLocationNameShort"))), "", LCase(oDr("cLocationNameShort"))) = LCase(Trim(sTarget)) _
+                            Or IIf(IsDBNull(LCase(oDr("cLocationNameFull"))), "", LCase(oDr("cLocationNameFull"))) = LCase(Trim(sTarget)) Then
+                                nTargetId = oDr("nLocationKey")
+                            End If
+                        End While
+
+                        ' Iterate through the country list
+                        If nTargetId <> -1 Then
+                            ' Get country names
+                            sCountryList = iterateCountryList(oLocations, nTargetId, nIndex)
+                            sCountryList = "(" & Right(sCountryList, Len(sCountryList) - 1) & ")"
                         End If
 
-                        If IsDBNull(oDr("cLocationNameShort")) Or IsNothing(oDr("cLocationNameShort")) Then
-                            arrLoc(1) = oDr("cLocationNameFull")
-                        Else
-                            arrLoc(1) = oDr("cLocationNameShort")
-                        End If
-                        nLocKey = CInt(oDr("nLocationKey"))
-                        oLocations(nLocKey) = arrLoc
-
-                        arrLoc = Nothing
-
-                        If IIf(IsDBNull(LCase(oDr("cLocationNameShort"))), "", LCase(oDr("cLocationNameShort"))) = LCase(Trim(sTarget)) _
-                        Or IIf(IsDBNull(LCase(oDr("cLocationNameFull"))), "", LCase(oDr("cLocationNameFull"))) = LCase(Trim(sTarget)) Then
-                            nTargetId = oDr("nLocationKey")
-                        End If
-                    End While
-
-                    ' Iterate through the country list
-                    If nTargetId <> -1 Then
-                        ' Get country names
-                        sCountryList = iterateCountryList(oLocations, nTargetId, nIndex)
-                        sCountryList = "(" & Right(sCountryList, Len(sCountryList) - 1) & ")"
+                        oLocations = Nothing
                     End If
 
-                    oLocations = Nothing
-                End If
+                End Using
 
-                oDr.Close()
-                oDr = Nothing
                 ' If sCountryList = "" Then
                 '  Err.Raise(1004, "getParentCountries", sTarget & " cannot be found as a delivery location, please add via the admin system.")
                 ' End If

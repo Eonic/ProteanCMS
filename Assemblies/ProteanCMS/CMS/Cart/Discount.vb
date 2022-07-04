@@ -471,8 +471,14 @@ Partial Public Class Cms
                         Return 0
                     End If
 
+                    oDsDiscounts.Dispose()
+                    oDsDiscounts = Nothing
+                    myWeb.moDbHelper.CloseConnection()
+
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug)
+                Finally
+
                 End Try
             End Function
 
@@ -1637,7 +1643,7 @@ NoDiscount:
                     Dim cItemIds As String
 
                     Dim nMode As Integer = 1
-                    Dim oDS As DataSet
+
                     Dim oDiscountElmt As XmlElement
                     Dim oContentElmt As XmlElement
 
@@ -1722,24 +1728,27 @@ NoDiscount:
                         PerfMon.Log("Discount", "getAvailableDiscounts-startGetDataset")
 
                         Dim sSql As String = strSQL.ToString
-
-                        oDS = myWeb.moDbHelper.GetDataSet(sSql, "Discount", "Discounts")
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
-                        If oDS Is Nothing Then
-                            Exit Sub
-                        End If
-
-                        If oDS.Tables.Count = 0 Then Exit Sub
-                        Dim oDC As DataColumn
-
-                        For Each oDC In oDS.Tables("Discount").Columns
-                            If Not oDC.ColumnName = "cAdditionalXML" Then oDC.ColumnMapping = MappingType.Attribute
-                        Next
-                        oDS.Tables("Discount").Columns("cAdditionalXML").ColumnMapping = MappingType.SimpleContent
-
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startGetDatasetXml")
                         Dim oXML As XmlElement = oRootElmt.OwnerDocument.CreateElement("DiscountsRoot")
-                        oXML.InnerXml = Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<")
+
+                        Using oDS As DataSet = myWeb.moDbHelper.GetDataSet(sSql, "Discount", "Discounts")
+                            PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
+                            If oDS Is Nothing Then
+                                Exit Sub
+                            End If
+
+                            If oDS.Tables.Count = 0 Then Exit Sub
+                            Dim oDC As DataColumn
+
+                            For Each oDC In oDS.Tables("Discount").Columns
+                                If Not oDC.ColumnName = "cAdditionalXML" Then oDC.ColumnMapping = MappingType.Attribute
+                            Next
+                            oDS.Tables("Discount").Columns("cAdditionalXML").ColumnMapping = MappingType.SimpleContent
+
+                            PerfMon.Log("Discount", "getAvailableDiscounts-startGetDatasetXml")
+
+                            oXML.InnerXml = Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<")
+                        End Using
+
                         PerfMon.Log("Discount", "getAvailableDiscounts-endGetDatasetXml")
 
 
@@ -1817,6 +1826,8 @@ NoDiscount:
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "getAvailableDiscounts", ex, "", "", gbDebug)
+                Finally
+                    myWeb.moDbHelper.CloseConnection(True)
                 End Try
             End Sub
 
