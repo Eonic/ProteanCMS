@@ -11347,13 +11347,13 @@
     <xsl:if test="position()!=last()">,</xsl:if>
   </xsl:template>
 
-	<xsl:template match="Content[@moduleType='ReviewList']" mode="JSONLD">
+	<xsl:template match="Content[@moduleType='ReviewList' or @moduleType='ReviewsList']" mode="JSONLD">
 		{
 		"@context": "https://schema.org",
 		"@type": "Organization",
 		"review": [
 		<xsl:apply-templates select="Content[@type='Review']" mode="JSONLD-list"/>
-		<!--<xsl:apply-templates select="$page/Contents/Content[@type='FAQ']" mode="JSONLD-list"/>-->
+		<xsl:apply-templates select="$page/Contents/Content[@type='Review']" mode="JSONLD-list"/>
 		]
 		}
 	</xsl:template>
@@ -11363,13 +11363,13 @@
 		"@type": "Review",
 		"author": "<xsl:call-template name="escape-json">
 			<xsl:with-param name="string">
-				<xsl:apply-templates select="DisplayName" mode="flattenXhtml"/>
+				<xsl:apply-templates select="Reviewer" mode="flattenXhtml"/>
 			</xsl:with-param>
 		</xsl:call-template>",
 
 		"reviewBody": "<xsl:call-template name="escape-json">
 			<xsl:with-param name="string">
-				<xsl:apply-templates select="Body" mode="flattenXhtml"/>
+				<xsl:apply-templates select="Summary" mode="flattenXhtml"/>
 			</xsl:with-param>
 		</xsl:call-template>"
 		"reviewRating": {
