@@ -881,6 +881,51 @@ function showDependant(dependant, allDependants) {
 
 }
 
+function showHideDependant(bindVar) {
+
+    //get this list of service chkbxs under bindVar
+    var servicesObjs = $("[name='" + bindVar + "']");
+    var serviceIds = [];
+    $.each(servicesObjs, function (key, value) { //get Ids of the services
+        serviceIds.push(value.id);
+    });
+
+    //get Ids of the services checked
+    var servcsSelected = [];
+    $.each(serviceIds, function (key, value) {
+        if ($('#' + value).is(":checked")) {
+            servcsSelected.push(value);
+        }
+    });
+
+    //get cases/Qs for all services checked
+    var QsForServcChckd = [];
+    var QsForServcChckdDpdnt = [];
+    $.each(servcsSelected, function (key, value) {
+        QsForServcChckd = ($('#' + value).data('showhide').split(','));
+        for (var i = 0; i < QsForServcChckd.length; i++) {
+            if (jQuery.inArray(QsForServcChckd[i] + '-dependant', QsForServcChckdDpdnt) == -1) { //check for duplicate
+                QsForServcChckdDpdnt.push(QsForServcChckd[i] + '-dependant');
+            }
+        }
+    });
+
+    //hide all cases/Qs
+    var QArray = [];
+    $('.' + bindVar + '-dependant').each(function () {
+        QArray.push(this.id);
+    });
+    $.each(QArray, function (key, value) {
+        hideCase(value);
+    });
+
+    //show all cases/Qs for services selected
+    $.each(QsForServcChckdDpdnt, function (key, value) {
+        showCase(value);
+    });
+}
+
+
 /*  USED IN ALL EW:xFORMS - To re-enable radio button functionality when renaming a radio button */
 function psuedoRadioButtonControl(sBindName, sBindToName, sBindToValue) {
 
