@@ -71,7 +71,8 @@ img {
         color: $link-color;
     }
 }
-.btn-custom{
+
+.btn-custom {
     @extend .btn-primary;
 }
 //end utilities
@@ -87,13 +88,31 @@ img {
     text-align: center;
 }
 
+@mixin faux-card {
+    display: flex;
+    flex-direction: column;
+
+    .FormattedText {
+        flex: 1 1 auto;
+    }
+}
+
 .layoutModule .align-items-stretch .col {
     margin-bottom: $spacer;
+
+    .module-FormattedText {
+        @extend faux-card;
+    }
+
 
     > div {
         height: 100%;
         margin-bottom: 0;
     }
+}
+
+.matchHeight.nobox.module-FormattedText {
+    @extend faux-card;
 }
 // BACKGROUNDS
 .section-spacing {
