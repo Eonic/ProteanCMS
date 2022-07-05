@@ -879,7 +879,6 @@ namespace Protean.Tools
             SqlConnection oLConn = new SqlConnection(DatabaseConnectionString);
             try
             {
-            
                     oLConn.StateChange += _ConnectionState;
                     using (SqlCommand oCmd = new SqlCommand(sql, oLConn)) { 
                         // Set the command type
@@ -894,11 +893,8 @@ namespace Protean.Tools
                         // Open the connection
                         if (oLConn.State == ConnectionState.Closed)
                             oLConn.Open();
-
                             return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
-
                     }
-            
             }
             catch (Exception ex)
             {
