@@ -1561,6 +1561,7 @@ Public Class Cms
             moResponse.Write(msException)
             Me.Finalize()
         Finally
+            ''  moDbHelper.CloseConnection(True)
             If msRedirectOnEnd <> "" Then
                 If Not msRedirectOnEnd.StartsWith("http") Then
                     msRedirectOnEnd = msRedirectOnEnd.Replace("//", "/")

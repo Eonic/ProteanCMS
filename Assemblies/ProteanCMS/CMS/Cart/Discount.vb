@@ -1827,7 +1827,7 @@ NoDiscount:
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "getAvailableDiscounts", ex, "", "", gbDebug)
                 Finally
-                    myWeb.moDbHelper.CloseConnection(True)
+                    myWeb.moDbHelper.CloseConnection()
                 End Try
             End Sub
 
