@@ -9070,7 +9070,7 @@
 				<th>
 					Date/Time
 				</th>
-				<xsl:for-each select="Item[1]/cActivityXml/*/*">
+				<xsl:for-each select="Item[1]/cActivityXml/descendant-or-self::*">
 					<xsl:if test="count(*)=0">
 						<th>
 							<xsl:value-of select="local-name()"/>
@@ -9082,7 +9082,7 @@
 				<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
 					<tr>
                         <xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
-						<xsl:apply-templates select="cActivityXml/*/*" mode="Report_ColsValues"/>
+						<xsl:apply-templates select="cActivityXml/descendant-or-self::*" mode="Report_ColsValues"/>
 					</tr>
 				</span>
 			</xsl:for-each>
