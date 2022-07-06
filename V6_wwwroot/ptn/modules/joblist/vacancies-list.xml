@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="VacanciesList" contentType="Job" box="" title="" link="" linkType="internal" linkText="More vacancies" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="all" rss="false" position="" listGroup="true" Salary="High to Low" autoplay="true" autoPlaySpeed="2000"/>
+					<Content moduleType="VacanciesList" contentType="Job" box="" title="" link="" linkType="internal" linkText="More vacancies" sortBy="publish" order="descending" cols="" stepBy="" stepCount="0" display="all" rss="false" position="" listGroup="true" Salary="High to Low" autoplay="true" autoPlaySpeed="2000"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>

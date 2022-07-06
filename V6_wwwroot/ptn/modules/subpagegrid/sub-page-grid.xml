@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="SubPageGrid" contentType="MenuItem" box="" title="" pagelink="" link="" linkType="internal" linkText="Go to this section" sortBy="Position" order="ascending" cols="1" stepCount="0" display="all" position="" listGroup="true" crop=""/>
+          <Content moduleType="SubPageGrid" contentType="MenuItem" box="" title="" pagelink="" link="" linkType="internal" linkText="Go to this section" sortBy="Position" order="ascending" cols="" stepCount="0" display="all" position="" listGroup="true" crop=""/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

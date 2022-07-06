@@ -344,6 +344,7 @@
 					<input bind="backgroundVideo-webm" class="pickMedia">
 						<label>Background Video (WebM)</label>
 					</input>
+					
 					<group>
 						<!--<input bind="minHeightxs" class="bs-only" suffix="px">
               <label>Minimum Height Mobile</label>
@@ -383,6 +384,7 @@
 								</group>-->
 							</case>
 						</switch>
+						
 					</group>
 				</group>
 			</group>

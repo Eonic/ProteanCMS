@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="SiteMapList" contentType="MenuItem" box="" title="" link="" linkType="internal" linkText="More" sortBy="Position" order="ascending" cols="1" stepCount="0" display="all" displayDescription="false" position="" />
+          <Content moduleType="SiteMapList" contentType="MenuItem" box="" title="" link="" linkType="internal" linkText="More" sortBy="Position" order="ascending" cols="" stepCount="0" display="all" displayDescription="false" position="" />
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

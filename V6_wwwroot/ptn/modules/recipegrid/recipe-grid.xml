@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="RecipeGrid" contentType="Recipe" box="" title="" link="" linkType="internal" linkText="More products" height="" sortBy="Position" order="" cols="1" stepBy="" stepCount="0" display="all" rss="false" position="" listGroup="true"/>
+          <Content moduleType="RecipeGrid" contentType="Recipe" box="" title="" link="" linkType="internal" linkText="More products" height="" sortBy="Position" order="" cols="" stepBy="" stepCount="0" display="all" rss="false" position="" listGroup="true"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
