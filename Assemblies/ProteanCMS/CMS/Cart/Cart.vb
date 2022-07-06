@@ -3784,8 +3784,8 @@ processFlow:
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug)
             Finally
-                oDr2 = Nothing
-                oDs = Nothing
+                'oDr2 = Nothing
+                'oDs = Nothing
             End Try
         End Sub
 
@@ -6986,7 +6986,7 @@ processFlow:
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
             Finally
-                oDr = Nothing
+                'oDr = Nothing
             End Try
 
         End Sub
