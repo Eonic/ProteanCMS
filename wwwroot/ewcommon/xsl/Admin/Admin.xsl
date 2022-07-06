@@ -13504,7 +13504,11 @@
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Edit
 				</a>
-
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+					<i class="fa fa-edit fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Update
+				</a>
 			</td>
 		</tr>
 	</xsl:template>
