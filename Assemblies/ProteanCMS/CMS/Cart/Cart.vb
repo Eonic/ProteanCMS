@@ -1784,9 +1784,9 @@ processFlow:
                         Do While cUniqueLink = ""
                             Dim testLink = System.Guid.NewGuid.ToString()
                             Dim sSql As String = "select * from tblCartOrder where cSettlementID = '" & testLink & "'"
-                            Dim odr As SqlDataReader = moDBHelper.getDataReader(sSql)
-                            If Not odr.HasRows Then cUniqueLink = testLink
-                            odr.Close()
+                            Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                If Not oDr.HasRows Then cUniqueLink = testLink
+                            End Using
                         Loop
 
                         oCartElmt.SetAttribute("settlementID", cUniqueLink)
@@ -3752,7 +3752,7 @@ processFlow:
             Dim sSql As String
             Dim oDs As DataSet
             Dim oRow As DataRow
-            Dim oDr2 As SqlDataReader
+            'Dim oDr2 As SqlDataReader
             Dim nNewQty As Decimal
 
             Dim cProcessInfo As String = ""
@@ -3768,14 +3768,14 @@ processFlow:
                         nNewQty = oRow.Item("nQuantity")
 
                         sSql = "select * from tblCartItem where nCartOrderId=" & mnGiftListId & " and nItemId =" & oRow("nItemId").ToString() & " and cItemOption1='" & SqlFmt(oRow("cItemOption1").ToString()) & "' and cItemOption2='" & SqlFmt(oRow("cItemOption2").ToString()) & "'"
-                        oDr2 = moDBHelper.getDataReader(sSql)
-                        While (oDr2.Read())
-                            nNewQty = oDr2.Item("nQuantity") - oRow.Item("nQuantity")
-                        End While
+                        Using oDr2 As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            While (oDr2.Read())
+                                nNewQty = oDr2.Item("nQuantity") - oRow.Item("nQuantity")
+                            End While
 
-                        sSql = "Update tblCartItem set nQuantity = " & nNewQty.ToString() & " where nCartOrderId=" & mnGiftListId & " and nItemId =" & oRow("nItemId").ToString() & " and cItemOption1='" & SqlFmt(oRow("cItemOption1").ToString()) & "' and cItemOption2='" & SqlFmt(oRow("cItemOption2").ToString()) & "'"
-                        moDBHelper.ExeProcessSql(sSql)
-                        oDr2.Close()
+                            sSql = "Update tblCartItem set nQuantity = " & nNewQty.ToString() & " where nCartOrderId=" & mnGiftListId & " and nItemId =" & oRow("nItemId").ToString() & " and cItemOption1='" & SqlFmt(oRow("cItemOption1").ToString()) & "' and cItemOption2='" & SqlFmt(oRow("cItemOption2").ToString()) & "'"
+                            moDBHelper.ExeProcessSql(sSql)
+                        End Using
 
 
                     Next
@@ -4202,21 +4202,22 @@ processFlow:
 
                         Dim bCollection As Boolean = False
                         'Get the collection delivery options
-                        Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                        Do While oDrCollectionOptions.Read()
-                            Dim OptLabel As String = "<span class=""opt-name"">" & oDrCollectionOptions.Item("cShipOptName").ToString() & "</span>"
-                            OptLabel = OptLabel & "<span class=""opt-carrier"">" & oDrCollectionOptions.Item("cShipOptCarrier").ToString() & "</span>"
-                            oXform.addOption(newElmt, OptLabel, oDrCollectionOptions.Item("nShipOptKey").ToString(), True)
-                            bCollection = True
-                        Loop
-                        'Only change this if collection shipping options exist.
-                        If bCollection Then
-                            oIsDeliverySelect.ParentNode.ReplaceChild(newElmt, oIsDeliverySelect)
-                        Else
-                            'this was all for nuffin
-                            newElmt = Nothing
-                        End If
-
+                        'Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
+                        Using oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1")  'Done by nita on 6/7/22
+                            Do While oDrCollectionOptions.Read()
+                                Dim OptLabel As String = "<span class=""opt-name"">" & oDrCollectionOptions.Item("cShipOptName").ToString() & "</span>"
+                                OptLabel = OptLabel & "<span class=""opt-carrier"">" & oDrCollectionOptions.Item("cShipOptCarrier").ToString() & "</span>"
+                                oXform.addOption(newElmt, OptLabel, oDrCollectionOptions.Item("nShipOptKey").ToString(), True)
+                                bCollection = True
+                            Loop
+                            'Only change this if collection shipping options exist.
+                            If bCollection Then
+                                oIsDeliverySelect.ParentNode.ReplaceChild(newElmt, oIsDeliverySelect)
+                            Else
+                                'this was all for nuffin
+                                newElmt = Nothing
+                            End If
+                        End Using
                     End If
                 End If
 
@@ -4393,17 +4394,19 @@ processFlow:
                                 If IsNumeric(myWeb.moRequest("cIsDelivery")) Then
                                     'Save the delivery method allready
                                     Dim cSqlUpdate As String = ""
-                                    Dim oDrCollectionOptions2 As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where nShipOptKey = " & myWeb.moRequest("cIsDelivery"))
-                                    Do While oDrCollectionOptions2.Read()
-                                        Dim cShippingDesc As String = oDrCollectionOptions2.Item("cShipOptName").ToString() & "-" &
-                                         oDrCollectionOptions2.Item("cShipOptCarrier").ToString() & "</span>"
-                                        Dim nShippingCost As Double = CDbl("0" & oDrCollectionOptions2.Item("nShipOptCost"))
+                                    'Dim oDrCollectionOptions2 As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where nShipOptKey = " & myWeb.moRequest("cIsDelivery"))
+                                    Using oDrCollectionOptions2 As SqlDataReader = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where nShipOptKey = " & myWeb.moRequest("cIsDelivery"))  'Done by nita on 6/7/22
+                                        Do While oDrCollectionOptions2.Read()
+                                            Dim cShippingDesc As String = oDrCollectionOptions2.Item("cShipOptName").ToString() & "-" &
+                                             oDrCollectionOptions2.Item("cShipOptCarrier").ToString() & "</span>"
+                                            Dim nShippingCost As Double = CDbl("0" & oDrCollectionOptions2.Item("nShipOptCost"))
 
-                                        cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & myWeb.moRequest("cIsDelivery") & " WHERE nCartOrderKey=" & mnCartId
-                                    Loop
+                                            cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & myWeb.moRequest("cIsDelivery") & " WHERE nCartOrderKey=" & mnCartId
+                                        Loop
 
-                                    moDBHelper.ExeProcessSql(cSqlUpdate)
-                                    bSavedDelivery = True
+                                        moDBHelper.ExeProcessSql(cSqlUpdate)
+                                        bSavedDelivery = True
+                                    End Using
                                 Else
                                     'If it exists and we are here means we may have changed the Delivery address country
 
@@ -4615,18 +4618,20 @@ processFlow:
                     If moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
                         'Add Collection options
                         'Get the collection delivery options
-                        Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                        If oDrCollectionOptions.HasRows Then
-                            Dim oCollectionGrp As XmlElement
-                            oCollectionGrp = oXform.addGroup(oGrpElmt, "CollectionOptions", "collection-options", "")
+                        'Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
+                        Using oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1")  'Done by nita on 6/7/22
+                            If oDrCollectionOptions.HasRows Then
+                                Dim oCollectionGrp As XmlElement
+                                oCollectionGrp = oXform.addGroup(oGrpElmt, "CollectionOptions", "collection-options", "")
 
-                            Do While oDrCollectionOptions.Read()
+                                Do While oDrCollectionOptions.Read()
 
-                                Dim OptLabel As String = oDrCollectionOptions.Item("cShipOptName").ToString() & " - " & oDrCollectionOptions.Item("cShipOptCarrier").ToString()
+                                    Dim OptLabel As String = oDrCollectionOptions.Item("cShipOptName").ToString() & " - " & oDrCollectionOptions.Item("cShipOptCarrier").ToString()
 
-                                oXform.addSubmit(oCollectionGrp, "collect", OptLabel, "CollectionID_" & oDrCollectionOptions.Item("nShipOptKey").ToString(), "collect btn-success principle", "fa-truck")
-                            Loop
-                        End If
+                                    oXform.addSubmit(oCollectionGrp, "collect", OptLabel, "CollectionID_" & oDrCollectionOptions.Item("nShipOptKey").ToString(), "collect btn-success principle", "fa-truck")
+                                Loop
+                            End If
+                        End Using
                     End If
 
                     For Each oDr In oDs.Tables("tblCartContact").Rows
@@ -4677,48 +4682,48 @@ processFlow:
                         Dim forCollection As Boolean = False
                         If moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
                             Dim bCollectionSelected = False
-                            Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
+                            ' Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
+                            Using oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1")  'Done by nita on 6/7/22
+                                If oDrCollectionOptions.HasRows Then
+                                    Do While oDrCollectionOptions.Read()
+                                        If myWeb.moRequest("CollectionID_" & oDrCollectionOptions.Item("nShipOptKey")) <> "" Then
+                                            bCollectionSelected = True
+                                            'Set the shipping option
+                                            Dim cShippingDesc As String = oDrCollectionOptions.Item("cShipOptName").ToString() & "-" &
+                                             oDrCollectionOptions.Item("cShipOptCarrier").ToString()
+                                            Dim nShippingCost As Double = CDbl("0" & oDrCollectionOptions.Item("nShipOptCost"))
+                                            Dim cSqlUpdate As String
+                                            cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & oDrCollectionOptions.Item("nShipOptKey") & " WHERE nCartOrderKey=" & mnCartId
+                                            moDBHelper.ExeProcessSql(cSqlUpdate)
+                                            forCollection = True
+                                            oXform.valid = True
+                                            oContactXform.valid = True
+                                            mbNoDeliveryAddress = True
 
-                            If oDrCollectionOptions.HasRows Then
-                                Do While oDrCollectionOptions.Read()
-                                    If myWeb.moRequest("CollectionID_" & oDrCollectionOptions.Item("nShipOptKey")) <> "" Then
-                                        bCollectionSelected = True
-                                        'Set the shipping option
-                                        Dim cShippingDesc As String = oDrCollectionOptions.Item("cShipOptName").ToString() & "-" &
-                                         oDrCollectionOptions.Item("cShipOptCarrier").ToString()
-                                        Dim nShippingCost As Double = CDbl("0" & oDrCollectionOptions.Item("nShipOptCost"))
-                                        Dim cSqlUpdate As String
-                                        cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & oDrCollectionOptions.Item("nShipOptKey") & " WHERE nCartOrderKey=" & mnCartId
-                                        moDBHelper.ExeProcessSql(cSqlUpdate)
-                                        forCollection = True
-                                        oXform.valid = True
-                                        oContactXform.valid = True
-                                        mbNoDeliveryAddress = True
+                                            Dim NewInstance As XmlElement = moPageXml.CreateElement("instance")
+                                            Dim delXform As xForm = contactXform("Delivery Address")
 
-                                        Dim NewInstance As XmlElement = moPageXml.CreateElement("instance")
-                                        Dim delXform As xForm = contactXform("Delivery Address")
-
-                                        NewInstance.InnerXml = delXform.Instance.SelectSingleNode("tblCartContact").OuterXml
-                                        'dissassciate from user so not shown again
-                                        NewInstance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = ""
-                                        NewInstance.SelectSingleNode("tblCartContact/cContactName").InnerText = oDrCollectionOptions.Item("cShipOptName").ToString()
-                                        NewInstance.SelectSingleNode("tblCartContact/cContactCompany").InnerText = oDrCollectionOptions.Item("cShipOptCarrier").ToString()
-                                        NewInstance.SelectSingleNode("tblCartContact/cContactCountry").InnerText = moCartConfig("DefaultDeliveryCountry")
+                                            NewInstance.InnerXml = delXform.Instance.SelectSingleNode("tblCartContact").OuterXml
+                                            'dissassciate from user so not shown again
+                                            NewInstance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = ""
+                                            NewInstance.SelectSingleNode("tblCartContact/cContactName").InnerText = oDrCollectionOptions.Item("cShipOptName").ToString()
+                                            NewInstance.SelectSingleNode("tblCartContact/cContactCompany").InnerText = oDrCollectionOptions.Item("cShipOptCarrier").ToString()
+                                            NewInstance.SelectSingleNode("tblCartContact/cContactCountry").InnerText = moCartConfig("DefaultDeliveryCountry")
 
 
-                                        Dim collectionContactID As String
+                                            Dim collectionContactID As String
 
-                                        collectionContactID = moDBHelper.setObjectInstance(dbHelper.objectTypes.CartContact, NewInstance)
+                                            collectionContactID = moDBHelper.setObjectInstance(dbHelper.objectTypes.CartContact, NewInstance)
 
-                                        useSavedAddressesOnCart(billingAddId, CInt(collectionContactID))
-                                        Return oReturnForm
+                                            useSavedAddressesOnCart(billingAddId, CInt(collectionContactID))
+                                            Return oReturnForm
+                                        End If
+                                    Loop
+                                    If bCollectionSelected = False Then
+                                        RemoveDeliveryOption(mnCartId)
                                     End If
-                                Loop
-                                If bCollectionSelected = False Then
-                                    RemoveDeliveryOption(mnCartId)
                                 End If
-                            End If
-
+                            End Using
                         End If
 
                         For Each oDr In oDs.Tables("tblCartContact").Rows
@@ -6765,8 +6770,6 @@ processFlow:
 
                 PerfMon.Log("Cart", "RemoveItem")
                 '   deletes record from item table in db
-
-                Dim oDr As SqlDataReader
                 Dim sSql As String
                 Dim oDs As DataSet
                 Dim oRow As DataRow
@@ -6793,17 +6796,19 @@ processFlow:
 
                     ' REturn the cart order item count
                     sSql = "select count(*) As ItemCount from tblCartItem where nCartOrderId = " & mnCartId
-                    oDr = moDBHelper.getDataReader(sSql)
-                    If oDr.HasRows Then
-                        While oDr.Read
-                            itemCount = CInt(oDr("ItemCount"))
-                        End While
-                    End If
+                    'oDr = moDBHelper.getDataReader(sSql)
+                    Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)
+                        If oDr.HasRows Then
+                            While oDr.Read
+                                itemCount = CInt(oDr("ItemCount"))
+                            End While
+                        End If
 
-                    oDr.Close()
-                    oDr = Nothing
-                    Return itemCount
+                        'oDr.Close()
+                        'oDr = Nothing
 
+                        Return itemCount
+                    End Using
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
                 End Try
@@ -6814,7 +6819,7 @@ processFlow:
             PerfMon.Log("Cart", "RemoveItem")
             '   deletes record from item table in db
 
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sSql As String
             Dim oDs As DataSet
             Dim oRow As DataRow
@@ -6862,15 +6867,14 @@ processFlow:
 
                 ' REturn the cart order item count
                 sSql = "select count(*) As ItemCount from tblCartItem where nCartOrderId = " & mnCartId
-                oDr = moDBHelper.getDataReader(sSql)
-                If oDr.HasRows Then
-                    While oDr.Read
-                        itemCount = CInt(oDr("ItemCount"))
-                    End While
-                End If
+                Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            itemCount = CInt(oDr("ItemCount"))
+                        End While
+                    End If
 
-                oDr.Close()
-                oDr = Nothing
+                End Using
                 Return itemCount
 
             Catch ex As Exception
@@ -6928,21 +6932,20 @@ processFlow:
         Public Sub EmptyCart()
             PerfMon.Log("Cart", "EmptyCart")
 
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sSql As String
             Dim cProcessInfo As String = ""
             Try
                 ' Return the cart order item count
                 sSql = "select nCartItemKey from tblCartItem where nCartOrderId = " & mnCartId
-                oDr = moDBHelper.getDataReader(sSql)
-                If oDr.HasRows Then
-                    While oDr.Read
-                        moDBHelper.DeleteObject(dbHelper.objectTypes.CartItem, oDr("nCartItemKey"))
-                    End While
-                End If
+                Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            moDBHelper.DeleteObject(dbHelper.objectTypes.CartItem, oDr("nCartItemKey"))
+                        End While
+                    End If
 
-                oDr.Close()
-                oDr = Nothing
+                End Using
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "EmptyCart", ex, "", cProcessInfo, gbDebug)
@@ -6952,7 +6955,7 @@ processFlow:
 
         Public Sub UpdateCartDeposit(ByRef oRoot As XmlElement, ByVal nPaymentAmount As Double, ByVal cPaymentType As String)
             PerfMon.Log("Cart", "UpdateCartDeposit")
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sSql As String
             Dim nAmountReceived As Double = 0.0#
             Dim cUniqueLink As String = ""
@@ -6966,16 +6969,14 @@ processFlow:
                 Else
                     ' Get the amount received so far
                     sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
-                    oDr = moDBHelper.getDataReader(sSql)
-                    If oDr.HasRows Then
-                        While oDr.Read
-                            nAmountReceived = CDbl(oDr("nAmountReceived"))
-                            cUniqueLink = ", cSettlementID='OLD_" & oDr("cSettlementID") & "' "
-                        End While
-                    End If
-                    oDr.Close()
-
-
+                    Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        If oDr.HasRows Then
+                            While oDr.Read
+                                nAmountReceived = CDbl(oDr("nAmountReceived"))
+                                cUniqueLink = ", cSettlementID='OLD_" & oDr("cSettlementID") & "' "
+                            End While
+                        End If
+                    End Using
                 End If
 
                 nAmountReceived = nAmountReceived + nPaymentAmount
@@ -7481,7 +7482,7 @@ processFlow:
         Public Sub populateCountriesDropDown(ByRef oXform As xForm, ByRef oCountriesDropDown As XmlElement, Optional ByVal cAddressType As String = "", Optional IDValues As Boolean = False)
             PerfMon.Log("Cart", "populateCountriesDropDown")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim oLoctree As XmlElement
             Dim oLocation As XmlElement
             Dim arrPreLocs() As String = Split(mcPriorityCountries, ",")
@@ -7512,21 +7513,20 @@ processFlow:
 
                         ' Now let's go and get a list of all the COUNTRIES sorted ALPHABETICALLY
                         sSql = "SELECT DISTINCT cLocationNameShort FROM tblCartShippingLocations WHERE nLocationType = 2 ORDER BY cLocationNameShort"
-                        oDr = moDBHelper.getDataReader(sSql)
+                        Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                        While oDr.Read()
-                            'Let's find the country node
-                            ' XPath says "Get the context node for the location I'm looking at.  Does it or its ancestors have an OptCount > 0?
+                            While oDr.Read()
+                                'Let's find the country node
+                                ' XPath says "Get the context node for the location I'm looking at.  Does it or its ancestors have an OptCount > 0?
 
-                            If Not (oLoctree.SelectSingleNode("//TreeItem[@nameShort=""" & oDr("cLocationNameShort") & """]/ancestor-or-self::*[@nOptCount!='0']") Is Nothing) Then
-                                oXform.addOption((oCountriesDropDown), oDr("cLocationNameShort"), oDr("cLocationNameShort"))
-                            End If
-                        End While
+                                If Not (oLoctree.SelectSingleNode("//TreeItem[@nameShort=""" & oDr("cLocationNameShort") & """]/ancestor-or-self::*[@nOptCount!='0']") Is Nothing) Then
+                                    oXform.addOption((oCountriesDropDown), oDr("cLocationNameShort"), oDr("cLocationNameShort"))
+                                End If
+                            End While
 
-                        oLoctree = Nothing
-                        oLocation = Nothing
-                        oDr.Close()
-                        oDr = Nothing
+                            oLoctree = Nothing
+                            oLocation = Nothing
+                        End Using
                     Case Else
                         ' Not restricted by delivery address - add all countries.
                         For arrIdx = 0 To UBound(arrPreLocs)
@@ -7543,9 +7543,10 @@ processFlow:
                             sSql = "SELECT DISTINCT cLocationNameShort as name, cLocationNameShort as value FROM tblCartShippingLocations WHERE nLocationType = 2 ORDER BY cLocationNameShort"
 
                         End If
-                        oDr = moDBHelper.getDataReader(sSql)
-                        oXform.addOptionsFromSqlDataReader(oCountriesDropDown, oDr)
-                        'this closes the oDr too
+                        Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            oXform.addOptionsFromSqlDataReader(oCountriesDropDown, oDr)
+                            'this closes the oDr too
+                        End Using
                 End Select
 
             Catch ex As Exception
@@ -7875,11 +7876,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                 oContent.SetAttribute("cartForiegnRef", oDR("cCartForiegnRef"))
                                 'Get Date
                                 cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
-                                Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)
-                                Do While oDRe.Read
-                                    oContent.SetAttribute("created", Protean.Tools.Xml.XmlDate(oDRe.GetValue(0), True))
-                                Loop
-                                oDRe.Close()
+                                Using oDRe As SqlDataReader = moDBHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                    Do While oDRe.Read
+                                        oContent.SetAttribute("created", Protean.Tools.Xml.XmlDate(oDRe.GetValue(0), True))
+                                    Loop
+                                End Using
 
                                 'Get stored CartXML
                                 If (Not oDR("cCartXML") = "") And bForceRefresh = False Then
@@ -8114,21 +8115,22 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 clearSessionCookie()
 
                 Dim cSQL As String = "Select nCartStatus, nCartUserDirId from tblCartOrder WHERE nCartOrderKey=" & nOrderID
-                Dim oDR As SqlDataReader = moDBHelper.getDataReader(cSQL)
-                Dim nStat As Integer
-                Dim nOwner As Integer
-                Do While oDR.Read
-                    nStat = oDR.GetValue(0)
-                    nOwner = oDR.GetValue(1)
-                Loop
-                oDR.Close()
-                'If (nOwner = myWeb.mnUserId And (nStat = 7 Or nStat < 4)) Then moDBHelper.DeleteObject(dbHelper.objectTypes.CartOrder, nOrderID)
-                If nOwner = myWeb.mnUserId Then
-                    moDBHelper.DeleteObject(dbHelper.objectTypes.CartOrder, nOrderID)
-                    Return True
-                Else
-                    Return False
-                End If
+                Using oDR As SqlDataReader = moDBHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                    Dim nStat As Integer
+                    Dim nOwner As Integer
+                    Do While oDR.Read
+                        nStat = oDR.GetValue(0)
+                        nOwner = oDR.GetValue(1)
+                    Loop
+
+                    'If (nOwner = myWeb.mnUserId And (nStat = 7 Or nStat < 4)) Then moDBHelper.DeleteObject(dbHelper.objectTypes.CartOrder, nOrderID)
+                    If nOwner = myWeb.mnUserId Then
+                        moDBHelper.DeleteObject(dbHelper.objectTypes.CartOrder, nOrderID)
+                        Return True
+                    Else
+                        Return False
+                    End If
+                End Using
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "Delete Cart", ex, "", "", gbDebug)
             End Try
