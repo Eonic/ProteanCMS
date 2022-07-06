@@ -2275,8 +2275,12 @@ Partial Public Class Cms
                     If bReporting Then
                         goResponse.Write("Deleting: - " & getTable(objectType))
                     End If
+                    Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                        If bReporting Then
+                            goResponse.Write("Deleting: - " & getTable(objectType))
+                        End If
 
-                    While oDr.Read
+                        While oDr.Read
                             DeleteObject(objectType, oDr(0), bReporting)
                         End While
                         While oDr.Read
@@ -5215,10 +5219,12 @@ restart:
                                     bHasChanged = True
                                 End While
                             End If
-
+                            oDr.Close()
+                            oDr = Nothing
                         Else
                             'if not create it
-
+                            oDr.Close()
+                            oDr = Nothing
                             If Not bRemove Then
                                 'Dim nAuditId As String = ""
                                 If IsDate(dExpireDate) Then
