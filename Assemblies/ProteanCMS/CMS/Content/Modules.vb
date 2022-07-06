@@ -321,7 +321,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                 ' For Each Filter In lstOfFilters
 
 
-                Dim formName As String = "PriceFilter" 'oContentNode.GetAttribute("name")
+                Dim formName As String = "ProductFilter" 'oContentNode.GetAttribute("name")
                 Dim oFrmGroup As XmlElement
                     Dim filters As Object
                     Try
@@ -351,8 +351,8 @@ where cl.nStructId = " & myWeb.mnPageId)
                         ElseIf formName = "GroupSizeFilter" Then
                             filterForm.addBind("GroupSizeFilter", "GroupSizeFilter")
                         ElseIf formName = "ProductFilter" Then
-                            filterForm.addBind("PageFilter", "PageFilter")
-                        ElseIf formName = "OccasionFilter" Then
+                        filterForm.addBind("PageFilter", "PageFilter", "true()")
+                    ElseIf formName = "OccasionFilter" Then
                             filterForm.addBind("PageFilter", "PageFilter")
                         End If
                         filters.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
@@ -363,8 +363,8 @@ where cl.nStructId = " & myWeb.mnPageId)
                                 filters.RemovePageFromFilter(myWeb, myWeb.moRequest.Form("Submit"))
                             End If
                         End If
-                        oFrmInstance = filterForm.Instance
-                        If (myWeb.moSession("PageIds") IsNot Nothing) Then
+                    oFrmInstance = filterForm.Instance
+                    If (myWeb.moSession("PageIds") IsNot Nothing) Then
                             Protean.Tools.Xml.addElement(oFrmInstance, formName, Convert.ToString(myWeb.moSession("PageIds")))
                         Else
                             Protean.Tools.Xml.addElement(oFrmInstance, formName)
