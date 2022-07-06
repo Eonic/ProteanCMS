@@ -1908,7 +1908,7 @@ RedoCheck:
                     myWeb.moCart.mnCartId = nCartId
                     myWeb.moCart.mnEwUserId = UserId
                     myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                    myWeb.moCart.GetCart(myWeb.moCart.moCartXml)
+                    myWeb.moCart.GetCart(myWeb.moCart.moCartXml.FirstChild)
 
                     If Not SubXml.SelectSingleNode("Content/Notes") Is Nothing Then
                         myWeb.moCart.SetClientNotes(SubXml.SelectSingleNode("Content/Notes").InnerXml)

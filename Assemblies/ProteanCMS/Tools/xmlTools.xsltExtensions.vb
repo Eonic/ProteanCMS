@@ -1106,6 +1106,11 @@ Partial Public Module xmlTools
             Dim newFilepath As String = ""
             Dim cProcessInfo As String = "Resizing - " & cVirtualPath
             Try
+                Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
+                If moConfig("JpegQuality") <> "" Then
+                    nCompression = CInt(moConfig("JpegQuality"))
+                End If
+
                 ' PerfMon.Log("xmlTools", "ResizeImage - Start")
                 If myWeb.moRequest Is Nothing Then
 
@@ -1182,7 +1187,9 @@ Partial Public Module xmlTools
 
                                     oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath)
 
-
+                                    Dim imgFile As New FileInfo(goServer.MapPath(newFilepath))
+                                    Dim ptnImg As New Protean.Tools.Image("")
+                                    ptnImg.CompressImage(imgFile, False)
 
                                     oImage.Close()
                                     oImage = Nothing
@@ -1229,6 +1236,11 @@ Partial Public Module xmlTools
                 If cVirtualPath = "" Then
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif"
                 Else
+                    Dim WebPQuality As Int16 = 60
+
+                    If myWeb.moConfig("WebPQuality") <> "" Then
+                        WebPQuality = CInt(myWeb.moConfig("WebPQuality"))
+                    End If
 
                     cVirtualPath = cVirtualPath.Replace("%20", " ")
 
@@ -1245,7 +1257,8 @@ Partial Public Module xmlTools
                             Using bitMap As New Bitmap(goServer.MapPath(cVirtualPath))
                                 Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
                                     Dim encoder As New Imazen.WebP.SimpleEncoder
-                                    encoder.Encode(bitMap, saveImageStream, 100)
+
+                                    encoder.Encode(bitMap, saveImageStream, WebPQuality)
                                 End Using
                             End Using
                         End If

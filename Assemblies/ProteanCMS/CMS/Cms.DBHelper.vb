@@ -1,26 +1,26 @@
-    '***********************************************************************
-    ' $Library:     eonic.dbhelper
-    ' $Revision:    3.1  
-    ' $Date:        2006-03-02
-    ' $Author:      Trevor Spink (trevor@eonic.co.uk)
-    ' &Website:     www.eonic.co.uk
-    ' &Licence:     All Rights Reserved.
-    ' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
-    '***********************************************************************
+'***********************************************************************
+' $Library:     eonic.dbhelper
+' $Revision:    3.1  
+' $Date:        2006-03-02
+' $Author:      Trevor Spink (trevor@eonic.co.uk)
+' &Website:     www.eonic.co.uk
+' &Licence:     All Rights Reserved.
+' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+'***********************************************************************
 
-    Option Strict Off
-    Option Explicit On 
-    Imports System.Data
-    Imports System.Data.sqlClient
-    Imports System.xml
-    Imports System.IO
-    Imports System.web.Configuration
-    Imports System.Collections
-    Imports System.Collections.Generic
-    Imports VB = Microsoft.VisualBasic
-    Imports System.Web.Mail
-    Imports System.Text.RegularExpressions
-    Imports System.Net.Mail
+Option Strict Off
+Option Explicit On
+Imports System.Data
+Imports System.Data.sqlClient
+Imports System.xml
+Imports System.IO
+Imports System.web.Configuration
+Imports System.Collections
+Imports System.Collections.Generic
+Imports VB = Microsoft.VisualBasic
+Imports System.Web.Mail
+Imports System.Text.RegularExpressions
+Imports System.Net.Mail
 Imports Protean.Tools.Dictionary
 Imports Protean.Tools.Xml
 Imports System
@@ -926,6 +926,7 @@ Partial Public Class Cms
                                 sResult = oDr(0)
                             End While
                         End If
+                        oDr.Close()
 
                 End Select
 
@@ -1170,6 +1171,8 @@ Partial Public Class Cms
                                 contentType = oDr(0)
                                 contentName = oDr(1)
                             Loop
+                            oDr.Close()
+                            oDr = Nothing
 
                             For i = 0 To prefixs.Length - 1
                                 thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
@@ -1820,7 +1823,7 @@ Partial Public Class Cms
             PerfMon.Log("DBHelper", "DeleteObject")
             Dim sSql As String
             Dim nAuditId As Long
-            Dim oDr As SqlDataReader
+
             Dim bHaltDelete As Boolean = False
 
 
@@ -1832,12 +1835,11 @@ Partial Public Class Cms
                 Select Case objectType
                     Case objectTypes.CartShippingLocation
                         Dim cSQL As String = "SELECT nLocationKey FROM tblCartShippingLocations WHERE nLocationParId = " & nId
-                        Dim oDataReader As SqlDataReader = getDataReader(cSQL)
-                        Do While oDataReader.Read
-                            DeleteObject(objectTypes.CartShippingLocation, oDataReader(0))
-                        Loop
-                        oDataReader.Close()
-                        oDataReader = Nothing
+                        Using oDataReader As SqlDataReader = getDataReaderDisposable(cSQL)
+                            Do While oDataReader.Read
+                                DeleteObject(objectTypes.CartShippingLocation, oDataReader(0))
+                            Loop
+                        End Using
                         cSQL = "SELECT nAuditId FROM tblCartShippingLocations WHERE nLocationKey = " & nId
                         DeleteObject(objectTypes.Audit, ExeProcessSqlScalar(cSQL))
                     Case objectTypes.CartDiscountDirRelations
@@ -1852,57 +1854,56 @@ Partial Public Class Cms
                         sSql = "Select  nAuditId From tblCartDiscountRules Where nDiscountKey = " & nId
                         DeleteObject(objectTypes.Audit, ExeProcessSqlScalar(sSql))
                         sSql = "Select nDiscountDirRelationKey FROM tblCartDiscountDirRelations WHERE nDiscountId = " & nId
-                        oDr = getDataReader(sSql)
-                        Do While oDr.Read
-                            DeleteObject(objectTypes.CartDiscountDirRelations, oDr(0))
-                        Loop
-                        oDr.Close()
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            Do While oDr.Read
+                                DeleteObject(objectTypes.CartDiscountDirRelations, oDr(0))
+                            Loop
+                        End Using
+
                         sSql = "Select nDiscountProdCatRelationKey FROM tblCartDiscountProdCatRelations WHERE nDiscountId = " & nId
-                        oDr = getDataReader(sSql)
-                        Do While oDr.Read
-                            DeleteObject(objectTypes.CartDiscountProdCatRelations, oDr(0))
-                        Loop
-                        oDr.Close()
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            Do While oDr.Read
+                                DeleteObject(objectTypes.CartDiscountProdCatRelations, oDr(0))
+                            Loop
+                        End Using
                     Case objectTypes.CartProductCategories
                         sSql = "Select nCatProductRelKey, nAuditId From tblCartCatProductRelations Where nCatId = " & nId
-                        oDr = getDataReader(sSql)
-                        Do While oDr.Read
-                            DeleteObject(objectTypes.CartCatProductRelations, oDr.GetValue(0))
-                            DeleteObject(objectTypes.Audit, oDr.GetValue(1))
-                        Loop
-                        oDr.Close()
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            Do While oDr.Read
+                                DeleteObject(objectTypes.CartCatProductRelations, oDr.GetValue(0))
+                                DeleteObject(objectTypes.Audit, oDr.GetValue(1))
+                            Loop
+                        End Using
                         sSql = "Select nDiscountProdCatRelationKey FROM tblCartDiscountProdCatRelations WHERE nProductCatId = " & nId
-                        oDr = getDataReader(sSql)
-                        Do While oDr.Read
-                            DeleteObject(objectTypes.CartDiscountProdCatRelations, oDr(0))
-                        Loop
-                        oDr.Close()
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            Do While oDr.Read
+                                DeleteObject(objectTypes.CartDiscountProdCatRelations, oDr(0))
+                            Loop
+                        End Using
                     Case objectTypes.CartCatProductRelations
                         sSql = "Select nAuditId From tblCartCatProductRelations Where nCatProductRelKey = " & nId
-                        oDr = getDataReader(sSql)
-                        Do While oDr.Read
-                            DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                        Loop
-                        oDr.Close()
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            Do While oDr.Read
+                                DeleteObject(objectTypes.Audit, oDr.GetValue(0))
+                            Loop
+                        End Using
                     Case objectTypes.Content
 
                         'Delete ActivityLogs for content
                         sSql = "select nActivityKey from tblActivityLog where nArtId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.ActivityLog, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.ActivityLog, oDr(0))
+                            End While
+                        End Using
 
                         'get any locations and delete
                         sSql = "select nContentLocationKey, bPrimary from tblContentLocation where nContentId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.ContentLocation, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.ContentLocation, oDr(0))
+                            End While
+                        End Using
 
                         'get any child results and delete
                         'sSql = "select nQResultsKey from tblQuestionaireResult where nContentId = " & nId
@@ -1915,99 +1916,91 @@ Partial Public Class Cms
 
                         'delete any content relations
                         sSql = "select nContentRelationKey from tblContentRelation where nContentParentId = " & nId & " or nContentChildId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.ContentRelation, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.ContentRelation, oDr(0))
+                            End While
+                        End Using
 
                     Case objectTypes.ContentRelation
                         sSql = "Select nAuditId, nContentParentID, nContentChildId From tblContentRelation Where nContentRelationKey = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            sSql = "Select nContentRelationKey From tblContentRelation WHERE nContentParentId = " & oDr(2) & " AND nContentChildId = " & oDr(1)
-                            DeleteObject(objectTypes.Audit, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                sSql = "Select nContentRelationKey From tblContentRelation WHERE nContentParentId = " & oDr(2) & " AND nContentChildId = " & oDr(1)
+                                DeleteObject(objectTypes.Audit, oDr(0))
+                            End While
+                        End Using
                         ExeProcessSql("Delete From tblContentRelation where nContentRelationKey = " & nId)
-                        oDr = getDataReader(sSql)
-                        Dim nOther As Integer
-                        Do While oDr.Read
-                            nOther = oDr(0)
-                            Exit Do
-                        Loop
-                        oDr.Close()
-                        If nOther > 0 Then DeleteObject(objectTypes.ContentRelation, nOther)
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            Dim nOther As Integer
+                            Do While oDr.Read
+                                nOther = oDr(0)
+                                Exit Do
+                            Loop
+                            If nOther > 0 Then DeleteObject(objectTypes.ContentRelation, nOther)
+                        End Using
                     Case objectTypes.ContentStructure
 
                         'Delete ActivityLogs for page
                         sSql = "select nActivityKey from tblActivityLog where nStructId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.ActivityLog, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.ActivityLog, oDr(0))
+                            End While
+                        End Using
 
                         'delete any child pages
 
                         sSql = "select nStructKey from tblContentStructure where nStructParId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.ContentStructure, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.ContentStructure, oDr(0))
+                            End While
+                        End Using
 
                         'do we want to delete any content that is not also located elsewhere???? 
                         'Add Later....
 
                         'get any locations and delete
                         sSql = "select nContentLocationKey, bPrimary from tblContentLocation where nStructId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            'If oDr("bPrimary") = True Then
-                            DeleteObject(objectTypes.ContentLocation, oDr(0))
-                            'Else
-                            '     bHaltDelete = True ' there is more than one location for this content don't delete it.
-                            'End If
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                'If oDr("bPrimary") = True Then
+                                DeleteObject(objectTypes.ContentLocation, oDr(0))
+                                'Else
+                                '     bHaltDelete = True ' there is more than one location for this content don't delete it.
+                                'End If
+                            End While
+                        End Using
 
                         clearStructureCacheAll()
 
 
                     Case objectTypes.QuestionaireResult
                         sSql = "select nQDetailKey from tblQuestionaireResultDetail where nQResultId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.QuestionaireResultDetail, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.QuestionaireResultDetail, oDr(0))
+                            End While
+                        End Using
 
                     Case objectTypes.Directory
 
                         'Delete ActivityLogs
                         sSql = "select nActivityKey from tblActivityLog where nUserDirId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.ActivityLog, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.ActivityLog, oDr(0))
+                            End While
+                        End Using
 
                         'Delete Permissions
                         sSql = "select nPermKey from tblDirectoryPermission where nDirId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.Permission, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.Permission, oDr(0))
+                            End While
+                        End Using
 
                         'Delete ExamResults for users
                         'sSql = "select nQResultsKey from tblQuestionaireResult where nDirId=" & nId
@@ -2020,21 +2013,19 @@ Partial Public Class Cms
 
                         'Delete Child Directory Objects
                         sSql = "select nDirChildId from tblDirectoryRelation where nDirParentId=" & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(dbHelper.objectTypes.Directory, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(dbHelper.objectTypes.Directory, oDr(0))
+                            End While
+                        End Using
 
                         'Delete Relationships
                         sSql = "select nRelKey from tblDirectoryRelation where nDirParentId = " & nId & " or nDirChildId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.DirectoryRelation, oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.DirectoryRelation, oDr(0))
+                            End While
+                        End Using
 
                     Case objectTypes.DirectoryRelation
 
@@ -2045,14 +2036,13 @@ Partial Public Class Cms
                         Dim nParentId As Long
                         Dim nChildId As Long
                         Dim cDirSchema As String = ""
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            nParentId = oDr("nDirKey")
-                            nChildId = oDr("nDirChildId")
-                            cDirSchema = oDr("cDirSchema")
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                nParentId = oDr("nDirKey")
+                                nChildId = oDr("nDirChildId")
+                                cDirSchema = oDr("cDirSchema")
+                            End While
+                        End Using
                         If cDirSchema = "Company" Then
                             'select all of the children of nParentId that have relations with our child
                             sSql = "select cr.nRelKey from tblDirectoryRelation dr " &
@@ -2061,80 +2051,82 @@ Partial Public Class Cms
                             "inner join tblDirectoryRelation cr on cd.nDirKey = cr.nDirParentId  " &
                             "where dr.nDirParentId = " & nParentId & " " &
                             "and cr.nDirChildId = " & nChildId
-                            oDr = getDataReader(sSql)
-                            'delete links between the target object and the children of the parent object.
-                            While oDr.Read
-                                DeleteObject(objectTypes.DirectoryRelation, oDr(0))
-                            End While
-                            oDr.Close()
-                            oDr = Nothing
+                            Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                                'delete links between the target object and the children of the parent object.
+                                While oDr.Read
+                                    DeleteObject(objectTypes.DirectoryRelation, oDr(0))
+                                End While
+                            End Using
+
                         End If
                     Case objectTypes.CartItem
                         sSql = "Select  nAuditID from tblCartItem WHERE nCartItemKey = " & nId
-                        oDr = getDataReader(sSql)
-                        Dim nCrtItmAdtId As Integer
-                        While oDr.Read
-                            nCrtItmAdtId = oDr.GetValue(0)
-                            'DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                        End While
-                        oDr = Nothing
+
+                        Using oDr = getDataReaderDisposable(sSql)
+                            Dim nCrtItmAdtId As Integer
+                            While oDr.Read
+                                nCrtItmAdtId = oDr.GetValue(0)
+                                'DeleteObject(objectTypes.Audit, oDr.GetValue(0))
+                            End While
+                            DeleteObject(objectTypes.Audit, nCrtItmAdtId)
+                        End Using
                         'options
                         sSql = "Select nCartItemKey from tblCartItem WHERE nParentID = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.CartItem, oDr.GetValue(0))
-                        End While
-                        oDr = Nothing
-
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.CartItem, oDr.GetValue(0))
+                            End While
+                        End Using
                         ExeProcessSql("Delete from tblCartItem where nCartItemKey = " & nId)
-                        DeleteObject(objectTypes.Audit, nCrtItmAdtId)
+
+
                     Case objectTypes.CartOrder
                         'cart items
                         sSql = "Select nCartItemKey from tblCartItem WHERE nCartOrderID = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.CartItem, oDr.GetValue(0))
-                        End While
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.CartItem, oDr.GetValue(0))
+                            End While
+                        End Using
                         'contacts
                         sSql = "Select nContactKey from tblCartContact WHERE nContactCartID = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.CartContact, oDr.GetValue(0))
-                        End While
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.CartContact, oDr.GetValue(0))
+                            End While
 
-                        oDr = Nothing
+                        End Using
                         sSql = "Select nAuditId from tblCartOrder WHERE nCartOrderKey = " & nId
-                        oDr = getDataReader(sSql)
-                        Dim nCrtOrdAdtId As Integer
-                        While oDr.Read
-                            nCrtOrdAdtId = oDr.GetValue(0)
-                            'DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                        End While
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            Dim nCrtOrdAdtId As Integer
+                            While oDr.Read
+                                nCrtOrdAdtId = oDr.GetValue(0)
+                                'DeleteObject(objectTypes.Audit, oDr.GetValue(0))
+                            End While
+                            ExeProcessSql("Delete from tblCartOrder where nCartOrderKey = " & nId)
+                            DeleteObject(objectTypes.Audit, nCrtOrdAdtId)
+                        End Using
 
-                        ExeProcessSql("Delete from tblCartOrder where nCartOrderKey = " & nId)
-                        DeleteObject(objectTypes.Audit, nCrtOrdAdtId)
-                        oDr = Nothing
                     Case objectTypes.CartContact
                         sSql = "Select nAuditId from tblCartContact WHERE nContactKey = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            If Not IsDBNull(oDr.GetValue(0)) Then
-                                DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                            End If
-                        End While
-                        ExeProcessSql("Delete from tblCartContact where nContactKey = " & nId)
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                If Not IsDBNull(oDr.GetValue(0)) Then
+                                    DeleteObject(objectTypes.Audit, oDr.GetValue(0))
+                                End If
+                            End While
+                            ExeProcessSql("Delete from tblCartContact where nContactKey = " & nId)
+                        End Using
                     Case objectTypes.Subscription
                         Dim oXML As New XmlDocument
                         sSql = "SELECT cSubscriptionXML, nUserId FROM tblSubscription WHERE nSubKey = " & nId
                         Dim nSubUserId As Integer
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            oXML.InnerXml = Replace(Replace(oDr(0), "&gt;", ">"), "&lt;", "<")
-                            nSubUserId = oDr(1)
-                        End While
-
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                oXML.InnerXml = Replace(Replace(oDr(0), "&gt;", ">"), "&lt;", "<")
+                                nSubUserId = oDr(1)
+                            End While
+                        End Using
                         Dim oElmt As XmlElement = oXML.DocumentElement.SelectSingleNode("descendant-or-self::UserGroups")
                         Dim oGrpElmt As XmlElement
 
@@ -2152,44 +2144,30 @@ Partial Public Class Cms
                             Next
                             If bDelete Then
                                 sSql = "SELECT nRelKey FROM tblDirectoryRelation WHERE (nDirChildId = " & nSubUserId & ") AND (nDirParentId = " & oGrpElmt.GetAttribute("id") & ")"
-                                oDr = getDataReader(sSql)
-                                While oDr.Read
-                                    DeleteObject(objectTypes.DirectoryRelation, oDr.GetValue(0))
-                                End While
+                                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                                    While oDr.Read
+                                        DeleteObject(objectTypes.DirectoryRelation, oDr.GetValue(0))
+                                    End While
+                                End Using
+
                             End If
                         Next
 
                         sSql = "Select nAuditId From tblSubscription where nSubKey = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                        End While
-                        ExeProcessSql("Delete from tblSubscription where nSubKey = " & nId)
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.Audit, oDr.GetValue(0))
+                            End While
+                            ExeProcessSql("Delete from tblSubscription where nSubKey = " & nId)
+                        End Using
                     Case objectTypes.CartShippingMethod
                         sSql = "SELECT nShpRelKey FROM tblCartShippingRelations WHERE nShpOptId = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            DeleteObject(objectTypes.CartShippingRelations, oDr.GetValue(0))
-                        End While
-                        ExeProcessSql("DELETE FROM tblCartShippingMethods WHERE nShipOptKey = " & nId)
-                        oDr.Close()
-                        oDr = Nothing
-
-
-                        'New case add for tblcontentindexdef table delete by nita
-                        'Case objectTypes.indexkey
-                        '    sSql = "SELECT nContentIndexDefKey FROM tblContentIndexDef WHERE nContentIndexDefKey = " & nId
-                        '    oDr = getDataReader(sSql)
-                        '    While oDr.Read
-                        '        DeleteObject(objectTypes.indexkey, oDr.GetValue(0))
-                        '    End While
-                        '    ExeProcessSql("DELETE FROM tblContentIndexDef WHERE nContentIndexDefKey = " & nId)
-                        '    nId = Nothing
-
-                        '    oDr.Close()
-                        '    oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                DeleteObject(objectTypes.CartShippingRelations, oDr.GetValue(0))
+                            End While
+                            ExeProcessSql("DELETE FROM tblCartShippingMethods WHERE nShipOptKey = " & nId)
+                        End Using
                 End Select
                 If bReporting Then
                     goResponse.Write("<p>Deleted from " & getTable(objectType) & " - " & nId & "</p>")
@@ -2200,15 +2178,14 @@ Partial Public Class Cms
                     If Not (objectType = objectTypes.QuestionaireResultDetail) And Not (objectType = objectTypes.ActivityLog) And Not (objectType = objectTypes.Audit) Then
                         'delete the audit ref
                         sSql = "select nAuditId from " & getTable(objectType) & " where " & getKey(objectType) & " = " & nId
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            If IsNumeric(oDr(0)) Then
-                                nAuditId = oDr(0)
-                            End If
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                            While oDr.Read
+                                If IsNumeric(oDr(0)) Then
+                                    nAuditId = oDr(0)
+                                End If
 
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                            End While
+                        End Using
                         If nAuditId > 0 Then
                             sSql = "delete from tblAudit where nAuditKey = " & nAuditId
                             ExeProcessSql(sSql)
@@ -2299,7 +2276,6 @@ Partial Public Class Cms
         Public Sub DeleteAllObjects(ByVal objectType As objectTypes, Optional ByVal bReporting As Boolean = False)
             PerfMon.Log("DBHelper", "DeleteAllObjects")
             Dim sSql As String
-            Dim oDr As SqlDataReader
 
             Dim cProcessInfo As String = ""
             Try
@@ -2313,17 +2289,16 @@ Partial Public Class Cms
 
                 sSql = "select " & getKey(objectType) & " from " & getTable(objectType)
 
-                oDr = getDataReader(sSql)
-                If bReporting Then
-                    goResponse.Write("Deleting: - " & getTable(objectType))
-                End If
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                    If bReporting Then
+                        goResponse.Write("Deleting: - " & getTable(objectType))
+                    End If
 
-                While oDr.Read
-                    DeleteObject(objectType, oDr(0), bReporting)
-                End While
+                    While oDr.Read
+                        DeleteObject(objectType, oDr(0), bReporting)
+                    End While
+                End Using
 
-                oDr.Close()
-                oDr = Nothing
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteAllObjects", ex, cProcessInfo))
@@ -4306,11 +4281,11 @@ restart:
                             copyCount = copyCount + 1
                             ReDim Preserve positionReMap(1, copyCount)
                         ElseIf mode = CopyContentType.Locate Then
-                                'just get the id
-                                nContentId = oDr("nContentId") 'just need to do a locations
-                            Else
-                                'locate with  new primaries
-                                nContentId = oDr("nContentId")
+                            'just get the id
+                            nContentId = oDr("nContentId") 'just need to do a locations
+                        Else
+                            'locate with  new primaries
+                            nContentId = oDr("nContentId")
                             If oDr("bPrimary") = True Then bNewItem = True
                         End If
                         'now set a location
@@ -10159,10 +10134,10 @@ restart:
                     MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseId & ", nIssuedDirId = " & myWeb.mnUserId & ", dIssuedDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
 
                     If Not CodeXml Is Nothing Then
-                            MyBase.ExeProcessSql("UPDATE tblCodes SET xUsageData = '" & SqlFmt(CodeXml.OuterXml) & "' WHERE nCodeKey = " & nKey)
-                        End If
+                        MyBase.ExeProcessSql("UPDATE tblCodes SET xUsageData = '" & SqlFmt(CodeXml.OuterXml) & "' WHERE nCodeKey = " & nKey)
+                    End If
 
-                        Return returnCode
+                    Return returnCode
                     'Else
                     'Return ""
                     'If

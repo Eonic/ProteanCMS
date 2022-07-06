@@ -3,7 +3,8 @@
 
   <!--responsive column settings-->
   <xsl:template match="*" mode="responsiveAutoColumns">
-    <xsl:choose>
+	  <xsl:text>auto-col </xsl:text>
+	  <xsl:choose>
       <xsl:when test="(@xsCol!='' and @xsCol) or (@smCol!='' and @smCol) or (@mdCol!='' and @mdCol) or (@lgCol!='' and @lgCol) or (@xlCol!='' and @xlCol) or (@xxlCol!='' and @xxlCol)">
         <xsl:if test="@xsCol!='' and @xsCol">
           <xsl:text> row-cols-</xsl:text>

@@ -7500,7 +7500,7 @@ Partial Public Class Cms
                     MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
                     Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
                     MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
-
+                    MyBase.addValue(oSelElmt, "yes")
 
                     MyBase.addNote(oFrmElmt, noteTypes.Hint, "Renew Subscription", True, "renew-sub")
 
@@ -7555,7 +7555,7 @@ Partial Public Class Cms
                     MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
                     Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
                     MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
-
+                    MyBase.addValue(oSelElmt, "yes")
 
                     MyBase.addNote(oFrmElmt, noteTypes.Hint, "Resend Subscription", True, "resend-sub")
 

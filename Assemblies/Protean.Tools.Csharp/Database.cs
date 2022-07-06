@@ -833,6 +833,8 @@ namespace Protean.Tools
             }
         }
 
+
+        [Obsolete("getDataReader is deprecated, please use getDataReaderDisposable instead.")]
         public SqlDataReader getDataReader(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */)
         {
             string cProcessInfo = "Running Sql: " + sql;
@@ -864,6 +866,39 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataReader", ex, cProcessInfo));
+                ErrorMsg = ex.Message;
+                return null/* TODO Change to default(_) if this is not a reference type */;
+            }
+        }
+
+
+        public SqlDataReader getDataReaderDisposable(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */)
+        {
+            string cProcessInfo = "Running Sql: " + sql;
+            SqlConnection oLConn = new SqlConnection(DatabaseConnectionString);
+            try
+            {
+                    oLConn.StateChange += _ConnectionState;
+                    using (SqlCommand oCmd = new SqlCommand(sql, oLConn)) { 
+                        // Set the command type
+                        oCmd.CommandType = commandtype;
+                        // Set the Paremeters if any
+                        if (!(parameters == null))
+                        {
+                            foreach (DictionaryEntry oEntry in parameters)
+                                oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                        }
+
+                        // Open the connection
+                        if (oLConn.State == ConnectionState.Closed)
+                            oLConn.Open();
+                            return oCmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    }
+            }
+            catch (Exception ex)
+            {
+                oLConn.Close();
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataReader", ex, cProcessInfo));
                 ErrorMsg = ex.Message;
                 return null/* TODO Change to default(_) if this is not a reference type */;
@@ -1441,7 +1476,7 @@ namespace Protean.Tools
 
 
 
-        public void CloseConnection()
+        public void CloseConnection(bool bDispose = false)
         {
             try
             {
@@ -1449,6 +1484,9 @@ namespace Protean.Tools
                 {
                     if (oConn.State != ConnectionState.Closed)
                         oConn.Close();
+                    //  oConn.Dispose();
+                    if (bDispose)
+                        oConn.Dispose();
                 }
             }
             catch

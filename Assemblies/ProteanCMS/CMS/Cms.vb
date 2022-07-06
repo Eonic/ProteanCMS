@@ -756,6 +756,8 @@ Public Class Cms
 
             If Not moDbHelper Is Nothing Then
                 'moDbHelper.Close()
+                'TS added in to ensure connections are closed
+                moDbHelper.CloseConnection(True)
                 moDbHelper = Nothing
             End If
 
@@ -1559,6 +1561,7 @@ Public Class Cms
             moResponse.Write(msException)
             Me.Finalize()
         Finally
+            ''  moDbHelper.CloseConnection(True)
             If msRedirectOnEnd <> "" Then
                 If Not msRedirectOnEnd.StartsWith("http") Then
                     msRedirectOnEnd = msRedirectOnEnd.Replace("//", "/")
