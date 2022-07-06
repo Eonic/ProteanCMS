@@ -1914,6 +1914,31 @@
       </div>
     </div>
   </xsl:template>
+
+	<xsl:template match="Page[@layout='ResetWebConfig']" mode="Admin">
+		<div class="row">
+			<div class="col-md-3 panel">
+				<div class="panel-body">
+					<ul class="nav nav-stacked">
+						<xsl:for-each select="AdminMenu/descendant-or-self::MenuItem[@cmd='ResetWebConfig']/MenuItem">
+							<xsl:apply-templates select="." mode="button">
+								<xsl:with-param name="level">1</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:for-each>
+						<li>
+						
+							<a href="{$appPath}?ewCmd=ResetWebConfig&amp;pgid={/Page/@id}" title="" class="btn btn-lg btn-primary">
+								<i class="fa fa-gift fa-large">
+									<xsl:text> </xsl:text>
+								</i><xsl:text> </xsl:text>
+								Reset WebConfig
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
   <!-- -->
   <xsl:template match="Page[@layout='Advanced' or @layout='AdvancedMail']" mode="Admin">
     <div class="row" id="tpltAdvancedMode">
@@ -13509,5 +13534,36 @@
 		</tr>
 	</xsl:template>
 
+	<!-- code for filter indexes -->
+
+	<xsl:template match="Page[@layout='FilterIndex']" mode="Admin">
+		<div class="row" id="template_AdvancedMode">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						Filter Indexes
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<p class="btn-group headerButtons">
+							<xsl:if test="ContentDetail/Content[@type='xform']">
+								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+								</a>
+							</xsl:if>
+						</p>
+					</div>
+					<div class="panel-body">
+						<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					</div>
+					<xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListIndexes"/>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
 
 </xsl:stylesheet>

@@ -2229,6 +2229,8 @@ ProcessFlow:
                     Case "FilterIndex"
                         FilterIndex(oPageDetail, sAdminLayout)
 
+                    Case "ResetWebConfig"
+                        ResetWebConfig(oPageDetail, sAdminLayout)
                 End Select
 
                 SupplimentalProcess(sAdminLayout, oPageDetail)
@@ -4912,7 +4914,28 @@ SP:
         End Sub
 
 
+        Private Sub ResetWebConfig(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
 
+            Try
+                Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
+                'Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
+                Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
+                If flag = "True" Then
+                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
+                Else
+                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
+                End If
+                myConfiguration.Save()
+                oPageDetail.InnerXml = ""
+                GoTo listItem
+listItem:
+                sAdminLayout = "SettingsDash"
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
 
 
     End Class

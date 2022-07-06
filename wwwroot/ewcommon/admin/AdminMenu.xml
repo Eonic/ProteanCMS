@@ -178,6 +178,7 @@
         <MenuItem name="Install New Theme" cmd="InstallTheme" display="true" icon="fa-arrow-down"/>
       </MenuItem>
 		<MenuItem name="Filter Indexes" cmd="FilterIndex" display="true" feature="FilterIndex" icon="fa-sign-in"/>
+		<MenuItem name="Reset WebConfig" cmd="ResetWebConfig" display="true" feature="ResetWebConfig" icon="fa-sign-in"/>
     </MenuItem>
   </MenuItem>
 </AdminMenu>
