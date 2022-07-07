@@ -101,7 +101,7 @@ img {
     margin-bottom: $spacer;
 
     .module-FormattedText {
-        @extend faux-card;
+        @include faux-card;
     }
 
 
@@ -112,7 +112,7 @@ img {
 }
 
 .matchHeight.nobox.module-FormattedText {
-    @extend faux-card;
+    @include faux-card;
 }
 // BACKGROUNDS
 .section-spacing {
