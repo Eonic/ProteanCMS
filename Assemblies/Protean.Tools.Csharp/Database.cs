@@ -1093,7 +1093,7 @@ namespace Protean.Tools
             try
             {
                 SqlDataReader oDr;
-                oDr = getDataReader(sql, commandtype, parameters);
+                oDr = getDataReaderDisposable(sql, commandtype, parameters);
 
                 while (oDr.Read())
                     oXmlValue = oDr.GetSqlXml(0);

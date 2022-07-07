@@ -488,24 +488,23 @@ Namespace Providers
 
                 Public Function getCountryISONum(ByRef sCountry As String) As String
                     PerfMon.Log(mcModuleName, "getCountryISONum")
-                    Dim oDr As SqlDataReader
+                    'Dim oDr As SqlDataReader
                     Dim sSql As String
                     Dim strReturn As String = ""
                     Dim cProcessInfo As String = "getCountryISONum"
                     Try
 
                         sSql = "select cLocationISOnum from tblCartShippingLocations where cLocationNameFull Like '" & sCountry & "' or cLocationNameShort Like '" & sCountry & "'"
-                        oDr = myWeb.moDbHelper.getDataReader(sSql)
-                        If oDr.HasRows Then
-                            While oDr.Read
-                                strReturn = oDr("cLocationISOnum")
-                            End While
-                        Else
-                            strReturn = ""
-                        End If
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            If oDr.HasRows Then
+                                While oDr.Read
+                                    strReturn = oDr("cLocationISOnum")
+                                End While
+                            Else
+                                strReturn = ""
+                            End If
 
-                        oDr.Close()
-                        oDr = Nothing
+                        End Using
                         Return strReturn
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "getCountryISOnum", ex, "", cProcessInfo, gbDebug)

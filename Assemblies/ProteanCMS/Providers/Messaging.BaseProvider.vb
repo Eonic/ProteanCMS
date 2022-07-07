@@ -260,11 +260,12 @@ Namespace Providers
 
 
                         Dim cSQL As String = "SELECT nDirKey, cDirName  FROM tblDirectory WHERE (cDirSchema = 'Group') ORDER BY cDirName"
-                        Dim oDre As SqlDataReader = moDbHelper.getDataReader(cSQL)
-                        Dim oSelElmt As XmlElement = MyBase.addSelect(oCol2, "cGroups", True, "Select Groups to send to", "required multiline", ApperanceTypes.Full)
-                        Do While oDre.Read
-                            MyBase.addOption(oSelElmt, oDre(1), oDre(0))
-                        Loop
+                        Using oDre As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                            Dim oSelElmt As XmlElement = MyBase.addSelect(oCol2, "cGroups", True, "Select Groups to send to", "required multiline", ApperanceTypes.Full)
+                            Do While oDre.Read
+                                MyBase.addOption(oSelElmt, oDre(1), oDre(0))
+                            Loop
+                        End Using
                         MyBase.addBind("cGroups", "cGroups", "true()")
 
                         oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Send", "", "")

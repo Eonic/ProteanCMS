@@ -842,7 +842,7 @@ Partial Public Class Cms
                             sSql = sSql & " (SELECT nLocationKey FROM tblCartShippingLocations WHERE nLocationType = 2 And (cLocationNameShort Like '" & strCountry & "')) ORDER BY cLocationNameShort"
 
                             Dim countySelectList As New List(Of LocationList)
-                            Using sdr As SqlDataReader = myWeb.moDbHelper.getDataReader(sSql, CommandType.Text)
+                            Using sdr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.Text)
                                 While sdr.Read()
                                     countySelectList.Add(New LocationList With {
                                           .Text = sdr("Text").ToString(),
