@@ -2264,7 +2264,6 @@ Partial Public Class Cms
         Public Sub DeleteAllObjects(ByVal objectType As objectTypes, Optional ByVal bReporting As Boolean = False)
             PerfMon.Log("DBHelper", "DeleteAllObjects")
             Dim sSql As String
-            Dim oDr As SqlDataReader
 
             Dim cProcessInfo As String = ""
             Try
@@ -2278,17 +2277,16 @@ Partial Public Class Cms
 
                 sSql = "select " & getKey(objectType) & " from " & getTable(objectType)
 
-                oDr = getDataReader(sSql)
-                If bReporting Then
-                    goResponse.Write("Deleting: - " & getTable(objectType))
-                End If
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                    If bReporting Then
+                        goResponse.Write("Deleting: - " & getTable(objectType))
+                    End If
 
-                While oDr.Read
-                    DeleteObject(objectType, oDr(0), bReporting)
-                End While
+                    While oDr.Read
+                        DeleteObject(objectType, oDr(0), bReporting)
+                    End While
+                End Using
 
-                oDr.Close()
-                oDr = Nothing
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteAllObjects", ex, cProcessInfo))
