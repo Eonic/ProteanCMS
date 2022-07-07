@@ -1,6 +1,7 @@
 Imports System.Xml
 Imports System.Web.Configuration
 Imports System
+Imports System.Data.SqlClient
 
 Public Class ExternalSynchronisation
     Inherits Protean.Tools.SoapClient
@@ -1115,12 +1116,13 @@ EndIt:
                 If cValidStructNames = "" Then Return 0
                 Dim cSQL As String = "SELECT tblContentLocation.nContentLocationKey FROM tblContentLocation INNER JOIN tblContentStructure ON tblContentLocation.nStructId = tblContentStructure.nStructKey"
                 cSQL &= " WHERE (NOT (tblContentStructure.cStructForiegnRef IN (" & cValidStructNames & "))) AND nContentId = " & nContentId
-                Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                Do While oDR.Read
-                    myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentLocation, oDR(0))
-                    i += 1
-                Loop
-                oDR.Close()
+                Using oDR As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                    Do While oDR.Read
+                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentLocation, oDR(0))
+                        i += 1
+                    Loop
+                    oDR.Close()
+                End Using
                 Return i
             Catch ex As Exception
                 Return i
@@ -1135,12 +1137,13 @@ EndIt:
                 If cRemoveRefs = "" Then Return 0
                 Dim cSQL As String = "SELECT tblContentLocation.nContentLocationKey FROM tblContentLocation INNER JOIN tblContentStructure ON tblContentLocation.nStructId = tblContentStructure.nStructKey"
                 cSQL &= " WHERE (tblContentStructure.cStructForiegnRef IN (" & cRemoveRefs & ")) AND nContentId = " & nContentId
-                Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                Do While oDR.Read
-                    myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentLocation, oDR(0))
-                    i += 1
-                Loop
-                oDR.Close()
+                Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                    Do While oDr.Read
+                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentLocation, oDr(0))
+                        i += 1
+                    Loop
+                    oDr.Close()
+                End Using
                 Return i
             Catch ex As Exception
                 Return i
@@ -1171,12 +1174,13 @@ EndIt:
                 " ((Rel.nContentChildId  = " & nContentId & ") AND (NOT (Childs.cContentForiegnRef IN (" & cValidContentNames & "))))) AND " &
                 " (Childs.cContentSchemaName = '" & cContentTypeToRemove & "' AND  Parents.cContentSchemaName = '" & cContentTypeToRemove & "')"
 
-                Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                Do While oDR.Read
-                    myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentRelation, oDR(0))
-                    i += 1
-                Loop
-                oDR.Close()
+                Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                    Do While oDr.Read
+                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentRelation, oDr(0))
+                        i += 1
+                    Loop
+                    oDr.Close()
+                End Using
                 Return i
             Catch ex As Exception
                 Return i
@@ -1220,39 +1224,40 @@ EndIt:
                 End If
 
                 'Step through oRs and delete those not in the Ref Array.
-                Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                Do While oDR.Read
-                    DelFlag = True
-                    For i = 0 To UBound(oRef)
-                        If oRef(i).Trim <> "" Then
-                            If oRef(i) = oDR("cContentForiegnRef") Then
+                Using oDR As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    Do While oDR.Read
+                        DelFlag = True
+                        For i = 0 To UBound(oRef)
+                            If oRef(i).Trim <> "" Then
+                                If oRef(i) = oDR("cContentForiegnRef") Then
+                                    DelFlag = False
+                                End If
+                            Else
                                 DelFlag = False
                             End If
-                        Else
-                            DelFlag = False
+                        Next
+                        If DelFlag Then
+                            myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentRelation, oDR(0))
+                        End If
+                    Loop
+
+                    'Step through ref array and add those not found in the oRs
+                    For i = 0 To UBound(oRef)
+                        If oRef(i).Trim <> "" Then
+                            AddFlag = True
+                            Do While oDR.Read
+                                If oRef(i).Trim = oDR("cContentForiegnRef") Then
+                                    AddFlag = False
+                                End If
+                            Loop
+                            If AddFlag Then
+                                AddContentRelationByRef(ContentId, oRef(i).Trim, TwoWayRelations, RelationType)
+                            End If
                         End If
                     Next
-                    If DelFlag Then
-                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentRelation, oDR(0))
-                    End If
-                Loop
 
-                'Step through ref array and add those not found in the oRs
-                For i = 0 To UBound(oRef)
-                    If oRef(i).Trim <> "" Then
-                        AddFlag = True
-                        Do While oDR.Read
-                            If oRef(i).Trim = oDR("cContentForiegnRef") Then
-                                AddFlag = False
-                            End If
-                        Loop
-                        If AddFlag Then
-                            AddContentRelationByRef(ContentId, oRef(i).Trim, TwoWayRelations, RelationType)
-                        End If
-                    End If
-                Next
-
-                oDR.Close()
+                    oDR.Close()
+                End Using
                 Return i
             Catch ex As Exception
                 Return i

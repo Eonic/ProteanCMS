@@ -6,6 +6,7 @@ Imports System.Reflection
 Imports Protean.Cms.dbHelper
 Imports System
 Imports Protean.Tools.Number
+Imports System.Data.SqlClient
 
 Namespace Integration.Directory
 
@@ -123,16 +124,16 @@ Namespace Integration.Directory
 
         Function ValidateExternalAuth(ByVal ExternalId As String) As Long
             Try
-                Dim oDr As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader("select TOP 1 nDirectoryId from tblDirectoryExternalAuth where cProviderName = '" & _providerName & "' and cProviderId='" & ExternalId & "'")
-
-                If oDr.HasRows Then
-                    While oDr.Read
-                        Return oDr("nDirectoryId")
-                    End While
-                Else
-                    Return 0
-                End If
-
+                'Dim oDr As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader("select TOP 1 nDirectoryId from tblDirectoryExternalAuth where cProviderName = '" & _providerName & "' and cProviderId='" & ExternalId & "'")
+                Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable("select TOP 1 nDirectoryId from tblDirectoryExternalAuth where cProviderName = '" & _providerName & "' and cProviderId='" & ExternalId & "'")  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            Return oDr("nDirectoryId")
+                        End While
+                    Else
+                        Return 0
+                    End If
+                End Using
             Catch ex As Exception
                 Return 0
             End Try

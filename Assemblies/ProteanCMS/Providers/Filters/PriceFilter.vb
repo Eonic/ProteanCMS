@@ -14,15 +14,16 @@ Namespace Providers
             Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim pageFilterRange As XmlElement
-                    Dim oDr As SqlDataReader
+                    'Dim oDr As SqlDataReader
 
                     Dim sSql As String = "spGetResultForPriceFilter"
-                    oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
-                    'Adding controls to the form like dropdown, radiobuttons
-                    pageFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 100, 300, 50)
-                    oXform.addOptionsFromSqlDataReader(pageFilterRange, oDr, "cContentName", "nContentId")
+                    'oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
+                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
+                        'Adding controls to the form like dropdown, radiobuttons
+                        pageFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 100, 300, 50)
+                        oXform.addOptionsFromSqlDataReader(pageFilterRange, oDr, "cContentName", "nContentId")
+                    End Using
                 Catch ex As Exception
-
                 End Try
             End Sub
 
