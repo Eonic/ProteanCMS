@@ -4942,10 +4942,9 @@ SP:
                     myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
                 End If
                 myConfiguration.Save()
-                oPageDetail.InnerXml = ""
-                GoTo listItem
-listItem:
-                sAdminLayout = "SettingsDash"
+
+                myWeb.moResponse.Redirect(myWeb.mcRequestDomain)
+
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug)
