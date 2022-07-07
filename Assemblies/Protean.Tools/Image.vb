@@ -586,6 +586,7 @@ Public Class Image
 
                             Try
                                 optimizer.Compress(imgfileInfo)
+
                             Catch ex As Exception
                                 optimizer = Nothing
                                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))

@@ -11,7 +11,7 @@ Public Class ewTidyTest : Implements IHttpHandler, IRequiresSessionState
         context.Response.ContentType = "text/html"
 
         Dim oFS As New Protean.fsHelper(context)
-Dim filepath as string = "/ewCache/FSTEST"
+        Dim filepath as string = "/ewCache/FSTEST"
         Dim sError As String = oFS.CreatePath(filepath)
 
         context.Response.Write(sError)

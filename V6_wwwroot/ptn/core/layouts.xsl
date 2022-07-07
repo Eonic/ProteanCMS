@@ -129,7 +129,8 @@
 					<xsl:text> parallax-wrapper </xsl:text>
 				</xsl:if>
 				<xsl:if test="@backgroundVideo-mp4!='' and @backgroundVideo-webm!=''">
-					<xsl:text> bg-video-wrapper </xsl:text>
+					<xsl:text> bg-video-wrapper bg-video-wrapper-</xsl:text>
+					<xsl:value-of select="@id"/>
 				</xsl:if>
             </xsl:attribute>
             <xsl:if test="@data-stellar-background-ratio!='10'">
@@ -210,13 +211,31 @@
               </xsl:choose>
             </xsl:if>
 			  <xsl:if test="@backgroundVideo-mp4!='' and @backgroundVideo-webm!=''">
-				  <xsl:attribute name="style">
+				  <style>
+				  <xsl:text>.bg-video-wrapper-</xsl:text>
+					  <xsl:value-of select="@id"/>{
+					  <xsl:if test="@minHeightxs!=''">
+						  <xsl:text>height:</xsl:text>
+						  <xsl:value-of select="@minHeightxs"/>
+						  <xsl:text>px;</xsl:text>
+					  </xsl:if>}
+					  @media(min-width:768px){
+					  <xsl:text>.bg-video-wrapper-</xsl:text>
+					  
+					  <xsl:value-of select="@id"/>{
+					  <xsl:if test="@minHeight!=''">
+						  <xsl:text>height:</xsl:text>
+						  <xsl:value-of select="@minHeight"/>
+						  <xsl:text>px;</xsl:text>
+					  </xsl:if>}}
+				  </style>
+				  <!--<xsl:attribute name="style">
 					  <xsl:if test="@minHeight!=''">
 						  <xsl:text>height:</xsl:text>
 						  <xsl:value-of select="@minHeight"/>
 						  <xsl:text>px;</xsl:text>
 					  </xsl:if>
-				  </xsl:attribute>
+				  </xsl:attribute>-->
 				  <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" poster="{@backgroundImage}" id="bgvid-{@id}" class="bg-video">
 					  <xsl:if test="@backgroundVideo-mp4!=''">
 						  <source src="{@backgroundVideo-mp4}" type="video/mp4"/>

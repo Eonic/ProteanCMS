@@ -377,7 +377,7 @@
           </xsl:otherwise>
         </xsl:choose>
 
-		  <xsl:apply-templates select="." mode="metacharset"/>
+		<xsl:apply-templates select="." mode="metacharset"/>
 		  
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>

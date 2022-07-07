@@ -759,7 +759,7 @@ ProcessFlow:
                                         End If
                                     End If
                                     oXfrm.addValue(locSelect, FilterValue)
-                                    oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReader(sSql))
+                                    oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReaderDisposable(sSql))
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
                                     myWeb.ClearPageCache()
 
@@ -793,7 +793,7 @@ ProcessFlow:
                                         End If
                                     End If
                                     oXfrm.addValue(locSelect, FilterValue)
-                                    oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReader(sSql))
+                                    oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReaderDisposable(sSql))
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
                                     myWeb.ClearPageCache()
 
@@ -1624,12 +1624,12 @@ ProcessFlow:
                         oCart.moPageXml = moPageXML
                         Dim orderid As String = myWeb.moRequest("orderId")
                         Dim sql As String = "select cpayMthdProviderName, cPayMthdProviderRef from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" & myWeb.moRequest("id")
-                        Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        While oDr.Read()
-                            providerName = oDr.GetString(0)
-                            providerPaymentReference = oDr.GetString(1)
-                        End While
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            While oDr.Read()
+                                providerName = oDr.GetString(0)
+                                providerPaymentReference = oDr.GetString(1)
+                            End While
+                        End Using
                         oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder(CInt("0" & myWeb.moRequest("id")), providerName, providerPaymentReference))
                         If moAdXfm.valid Then
                             Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")

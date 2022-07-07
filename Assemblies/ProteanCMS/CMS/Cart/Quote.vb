@@ -55,7 +55,7 @@ Partial Public Class Cms
             '   sets the global variables and initialises the current cart
             moCartConfig = WebConfigurationManager.GetWebApplicationSection("protean/quote")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             mcOrderType = "Quote"
             cOrderReference = ""
             mcModuleName = "Eonic.Quote"
@@ -150,20 +150,20 @@ Partial Public Class Cms
                     '   cart exists
                     sSql = "select * from tblCartOrder where (nCartStatus < 7 or nCartStatus = 10) and nCartOrderKey = " & mnCartId & " and not(cCartSessionId like 'OLD_%')"
 
-                    oDr = moDBHelper.getDataReader(sSql)
-                    If oDr.HasRows Then
-                        While oDr.Read
-                            mnGiftListId = oDr("nGiftListId")
-                            mnTaxRate = CDbl("0" & oDr("nTaxRate"))
-                            mnProcessId = CLng("0" & oDr("nCartStatus"))
-                        End While
-                    Else
-                        ' Cart no longer exists - a quit command has probably been issued.  Clear the session
-                        mnCartId = 0
-                        mnProcessId = 0
-                        mcCartCmd = ""
-                    End If
-                    oDr.Close()
+                    Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        If oDr.HasRows Then
+                            While oDr.Read
+                                mnGiftListId = oDr("nGiftListId")
+                                mnTaxRate = CDbl("0" & oDr("nTaxRate"))
+                                mnProcessId = CLng("0" & oDr("nCartStatus"))
+                            End While
+                        Else
+                            ' Cart no longer exists - a quit command has probably been issued.  Clear the session
+                            mnCartId = 0
+                            mnProcessId = 0
+                            mcCartCmd = ""
+                        End If
+                    End Using
                     If mnCartId = 0 Then
                         EndSession()
                     End If
@@ -180,38 +180,39 @@ Partial Public Class Cms
                         Else
                             sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='cart' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "' and DATEDIFF(hh,a.dInsertDate,GETDATE())<24"
                         End If
-                        oDr = moDBHelper.getDataReader(sSql)
-                        If oDr.HasRows Then
-                            While oDr.Read
-                                mnGiftListId = oDr("nGiftListId")
-                                mnCartId = oDr("nCartOrderKey") ' get cart id
-                                mnProcessId = oDr("nCartStatus") ' get cart status
-                                mnTaxRate = oDr("nTaxRate")
-                                If Not (myWeb.moRequest("settlementRef") Is Nothing) Then
+                        Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            If oDr.HasRows Then
+                                While oDr.Read
+                                    mnGiftListId = oDr("nGiftListId")
+                                    mnCartId = oDr("nCartOrderKey") ' get cart id
+                                    mnProcessId = oDr("nCartStatus") ' get cart status
+                                    mnTaxRate = oDr("nTaxRate")
+                                    If Not (myWeb.moRequest("settlementRef") Is Nothing) Then
 
-                                    ' Set eh commands for a settlement
-                                    mcSubmitText = "Go To Checkout"
-                                    mnProcessId = 5
+                                        ' Set eh commands for a settlement
+                                        mcSubmitText = "Go To Checkout"
+                                        mnProcessId = 5
 
-                                    ' If a cart has been found, we need to update the session ID in it.
-                                    If oDr("cCartSessionId") <> mcSessionId Then
-                                        moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
+                                        ' If a cart has been found, we need to update the session ID in it.
+                                        If oDr("cCartSessionId") <> mcSessionId Then
+                                            moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
+                                        End If
+
+                                        ' Reactivate the order in the database
+                                        moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+
                                     End If
-
-                                    ' Reactivate the order in the database
-                                    moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
-
-                                End If
-                                If mnProcessId > 5 Then
-                                    ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
-                                    EndSession()
-                                    mnCartId = 0
-                                    mnProcessId = 0
-                                    mcCartCmd = ""
-                                End If
-                            End While
-                            oDr.Close()
-                        End If
+                                    If mnProcessId > 5 Then
+                                        ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
+                                        EndSession()
+                                        mnCartId = 0
+                                        mnProcessId = 0
+                                        mcCartCmd = ""
+                                    End If
+                                End While
+                                oDr.Close()
+                            End If
+                        End Using
                     End If
 
                 End If
@@ -220,7 +221,7 @@ Partial Public Class Cms
                 returnException(myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug)
                 'close()
             Finally
-                oDr = Nothing
+                'oDr = Nothing
             End Try
         End Sub
 
@@ -969,12 +970,14 @@ processFlow:
             Try
 
                 If myWeb.mnUserId = 0 Then Exit Sub
-                Dim oDre As SqlDataReader = moDBHelper.getDataReader("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " & nOrderID)
-                Do While oDre.Read
-                    nCheckUser = oDre.GetValue(0)
-                    If Not oDre.IsDBNull(1) Then cNotes = oDre.GetValue(1)
-                Loop
-                oDre.Close()
+                'Dim oDre As SqlDataReader = moDBHelper.getDataReader("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " & nOrderID)
+                Using oDre As SqlDataReader = moDBHelper.getDataReaderDisposable("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " & nOrderID)  'Done by nita on 6/7/22
+                    Do While oDre.Read
+                        nCheckUser = oDre.GetValue(0)
+                        If Not oDre.IsDBNull(1) Then cNotes = oDre.GetValue(1)
+                    Loop
+                    oDre.Close()
+                End Using
                 If Not nCheckUser = mnEwUserId Then
                     Exit Sub 'else we carry on
                 End If

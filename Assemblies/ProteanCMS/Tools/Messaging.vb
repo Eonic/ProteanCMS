@@ -962,24 +962,24 @@ Public Class Messaging
                         iCounter = iCounter + 1
                         cProcessInfo = "Processing ID to Email for " + cRecipientId.ToString
 
-                        Dim oDr As SqlClient.SqlDataReader
+                        'Dim oDr As SqlClient.SqlDataReader
                         Dim cSQL As String = ""
 
                         cSQL = "SELECT * FROM tblDirectory INNER JOIN tblContentStructure ON tblDirectory.cDirName = tblContentStructure.cStructForiegnRef WHERE tblContentStructure.cStructName = 'Student_" & cRecipientId & "'"
 
-                        oDr = odbHelper.getDataReader(cSQL)
+                        Using oDr As SqlDataReader = odbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
 
-                        While oDr.Read()
-                            Dim oResultsDoc As XmlDocument = New XmlDocument
-                            Dim oResults As XmlElement = oResultsDoc.CreateElement("Results")
-                            oResults.InnerXml = oDr("cDirXml")
+                            While oDr.Read()
+                                Dim oResultsDoc As XmlDocument = New XmlDocument
+                                Dim oResults As XmlElement = oResultsDoc.CreateElement("Results")
+                                oResults.InnerXml = oDr("cDirXml")
 
-                            If oResults IsNot Nothing Then
-                                cRecipientName = oResults.SelectSingleNode("User/FirstName").InnerText.ToString & " " & oResults.SelectSingleNode("User/LastName").InnerText.ToString
-                                cRecipientEmail = oResults.SelectSingleNode("User/Email").InnerText.ToString
-                            End If
-                        End While
-
+                                If oResults IsNot Nothing Then
+                                    cRecipientName = oResults.SelectSingleNode("User/FirstName").InnerText.ToString & " " & oResults.SelectSingleNode("User/LastName").InnerText.ToString
+                                    cRecipientEmail = oResults.SelectSingleNode("User/Email").InnerText.ToString
+                                End If
+                            End While
+                        End Using
 
                         Dim cEmailResult As String = ""
 
