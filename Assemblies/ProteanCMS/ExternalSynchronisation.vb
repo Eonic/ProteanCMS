@@ -1224,7 +1224,7 @@ EndIt:
                 End If
 
                 'Step through oRs and delete those not in the Ref Array.
-                Using oDR As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                Using oDR As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
                     Do While oDR.Read
                         DelFlag = True
                         For i = 0 To UBound(oRef)
