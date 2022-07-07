@@ -52,56 +52,56 @@ Partial Public Class Cms
                     'Gets a list of all the alerts and checks which need to run
                     Dim cSQL As String = "SELECT DISTINCT tblAlerts.nAlertKey, tblAlerts.nDirId, tblAlerts.nFrequency, ((SELECT TOP 1 dDateTime FROM tblActivityLog WHERE nOtherId = tblAlerts.nAlertKey ORDER BY dDateTime DESC)) AS dDateTime, tblDirectory.cDirSchema FROM tblAlerts LEFT OUTER JOIN tblDirectory ON tblAlerts.nDirId = tblDirectory.nDirKey LEFT OUTER JOIN tblAudit ON tblAlerts.nAuditId = tblAudit.nAuditKey WHERE (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(dTimeNow, True) & " OR tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(dTimeNow, True) & " OR tblAudit.dExpireDate IS NULL) AND  (tblAlerts.nAlertParent IS NULL)"
                     cInfo = "Get oDR"
-                    Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                    Do While oDR.Read
-                        cInfo = "Due Next"
-                        Dim dNextDue As Date = Nothing
-                        'work out the date next due
-                        cInfo = "Check Date"
-                        If Not IsDBNull(oDR(3)) Then dNextDue = CDate(oDR(3)).AddMinutes(oDR(2))
-                        'if its due or not been run then run it
-                        'add the alerts/users/groups to the lists
-                        cInfo = "Check Due"
-                        If dNextDue = Nothing Or dNextDue <= dTimeNow Then
-                            'Add a new alert Item
-                            cInfo = "New Alert"
-                            'oNewAlert = New AlertItem(myWeb, oDR(0), oDR(1))
-                            oNewAlert = CreateAlertItem(oDR(0), oDR(1))
+                    Using oDR As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                        Do While oDR.Read
+                            cInfo = "Due Next"
+                            Dim dNextDue As Date = Nothing
+                            'work out the date next due
+                            cInfo = "Check Date"
+                            If Not IsDBNull(oDR(3)) Then dNextDue = CDate(oDR(3)).AddMinutes(oDR(2))
+                            'if its due or not been run then run it
+                            'add the alerts/users/groups to the lists
+                            cInfo = "Check Due"
+                            If dNextDue = Nothing Or dNextDue <= dTimeNow Then
+                                'Add a new alert Item
+                                cInfo = "New Alert"
+                                'oNewAlert = New AlertItem(myWeb, oDR(0), oDR(1))
+                                oNewAlert = CreateAlertItem(oDR(0), oDR(1))
 
-                            ' Log the alert
-                            oNewAlert.Log("Started")
+                                ' Log the alert
+                                oNewAlert.Log("Started")
 
-                            cInfo = "Pop Alert"
-                            oNewAlert.Populate()
-                            cInfo = "Add To AlertItems"
-                            oAlertItems.Add("A" & oDR(0), oNewAlert)
+                                cInfo = "Pop Alert"
+                                oNewAlert.Populate()
+                                cInfo = "Add To AlertItems"
+                                oAlertItems.Add("A" & oDR(0), oNewAlert)
 
-                            'Go through the dir item to get the user id
-                            'if its a group we iterate down through the groups
-                            'to get all the users underneath
-                            Dim oDSUsers As New DataSet
-                            cInfo = "CheckGroup"
-                            If LCase(oDR(4)) = "group" Then
-                                cInfo = "Is Group"
-                                myWeb.moDbHelper.addTableToDataSet(oDSUsers, "EXEC sp_AllDirUsers " & oDR(1) & ", " & Protean.Tools.Database.SqlDate(dTimeNow, True), "Users")
-                            Else
-                                cInfo = "Is User"
-                                cSQL = "SELECT tblDirectory.nDirKey, tblDirectory.cDirSchema, tblDirectory.cDirForiegnRef, tblDirectory.cDirName, tblDirectory.cDirXml "
-                                cSQL &= " FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey"
-                                cSQL &= " WHERE (tblDirectory.nDirKey = " & oDR(1) & ") AND (tblAudit.dPublishDate >= " & Protean.Tools.Database.SqlDate(dTimeNow, True) & " OR"
-                                cSQL &= " tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate <= " & Protean.Tools.Database.SqlDate(dTimeNow, True) & " OR"
-                                cSQL &= " tblAudit.dExpireDate IS NULL)"
-                                myWeb.moDbHelper.addTableToDataSet(oDSUsers, cSQL, "Users")
+                                'Go through the dir item to get the user id
+                                'if its a group we iterate down through the groups
+                                'to get all the users underneath
+                                Dim oDSUsers As New DataSet
+                                cInfo = "CheckGroup"
+                                If LCase(oDR(4)) = "group" Then
+                                    cInfo = "Is Group"
+                                    myWeb.moDbHelper.addTableToDataSet(oDSUsers, "EXEC sp_AllDirUsers " & oDR(1) & ", " & Protean.Tools.Database.SqlDate(dTimeNow, True), "Users")
+                                Else
+                                    cInfo = "Is User"
+                                    cSQL = "SELECT tblDirectory.nDirKey, tblDirectory.cDirSchema, tblDirectory.cDirForiegnRef, tblDirectory.cDirName, tblDirectory.cDirXml "
+                                    cSQL &= " FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey"
+                                    cSQL &= " WHERE (tblDirectory.nDirKey = " & oDR(1) & ") AND (tblAudit.dPublishDate >= " & Protean.Tools.Database.SqlDate(dTimeNow, True) & " OR"
+                                    cSQL &= " tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate <= " & Protean.Tools.Database.SqlDate(dTimeNow, True) & " OR"
+                                    cSQL &= " tblAudit.dExpireDate IS NULL)"
+                                    myWeb.moDbHelper.addTableToDataSet(oDSUsers, cSQL, "Users")
+                                End If
+                                For Each oUserRow As DataRow In oDSUsers.Tables("Users").Rows
+                                    'add this to the user list
+                                    cInfo = "AddMember"
+                                    AddMember(oUserRow("nDirKey"), oUserRow("cDirXml"), oDR(0))
+                                Next
                             End If
-                            For Each oUserRow As DataRow In oDSUsers.Tables("Users").Rows
-                                'add this to the user list
-                                cInfo = "AddMember"
-                                AddMember(oUserRow("nDirKey"), oUserRow("cDirXml"), oDR(0))
-                            Next
-                        End If
-                    Loop
+                        Loop
 
-
+                    End Using
 
 
                     'Loop through all the users

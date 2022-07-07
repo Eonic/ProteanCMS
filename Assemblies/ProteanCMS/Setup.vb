@@ -272,16 +272,16 @@ Public Class Setup
                 End If
 
                 oTransform.Compiled = False
-                    oTransform.ProcessTimed(moPageXml, goResponse)
-                    oTransform = Nothing
+                oTransform.ProcessTimed(moPageXml, goResponse)
+                oTransform = Nothing
 
-                    If Not cPostFlushActions = "" Then
-                        goResponse.Flush()
-                        PostFlushActions()
-                    End If
-
+                If Not cPostFlushActions = "" Then
+                    goResponse.Flush()
+                    PostFlushActions()
                 End If
-                close()
+
+            End If
+            close()
 
         Catch ex As Exception
 
@@ -2822,11 +2822,13 @@ Public Class ContentMigration
             oContentDetail.AppendChild(oElmt)
             If Not (String.IsNullOrEmpty(Me.cUpdateSchemaColumnName)) Then
                 Dim cOptions As String = ""
-                Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT " & Me.cUpdateSchemaColumnName & " FROM " & Me.cUpdateTableName & " GROUP BY " & Me.cUpdateSchemaColumnName & " ORDER BY " & Me.cUpdateSchemaColumnName)
-                Do While oDR.Read
-                    cOptions &= "<option>" & oDR.GetValue(0) & "</option>"
-                Loop
-                oDR.Close()
+                'Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT " & Me.cUpdateSchemaColumnName & " FROM " & Me.cUpdateTableName & " GROUP BY " & Me.cUpdateSchemaColumnName & " ORDER BY " & Me.cUpdateSchemaColumnName)
+                Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable("SELECT " & Me.cUpdateSchemaColumnName & " FROM " & Me.cUpdateTableName & " GROUP BY " & Me.cUpdateSchemaColumnName & " ORDER BY " & Me.cUpdateSchemaColumnName)  'Done by nita on 6/7/22
+                    Do While oDr.Read
+                        cOptions &= "<option>" & oDr.GetValue(0) & "</option>"
+                    Loop
+                    oDr.Close()
+                End Using
                 oElmt.InnerXml &= Replace(Replace(cOptions, "&gt;", ">"), "&lt;", "<")
             End If
 
@@ -2886,24 +2888,27 @@ Public Class ContentImport
             Dim oElmt As XmlElement = oSetup.moPageXml.CreateElement("Content")
             oContentDetail.AppendChild(oElmt)
 
-            Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT cContentSchemaName FROM tblContent GROUP BY cContentSchemaName ORDER BY cContentSchemaName")
-            Do While oDR.Read
-                oOpt = oSetup.moPageXml.CreateElement("option")
-                oOpt.SetAttribute("class", "schema")
-                oOpt.InnerText = oDR.GetValue(0)
-                oElmt.AppendChild(oOpt)
-            Loop
-            oDR.Close()
-            oDR = myWeb.moDbHelper.getDataReader("SELECT nStructKey, cStructName FROM tblContentStructure ORDER BY cStructName")
-            Do While oDR.Read
-                oOpt = oSetup.moPageXml.CreateElement("option")
-                oOpt.SetAttribute("class", "page")
-                oOpt.SetAttribute("value", oDR.GetValue(0))
-                oOpt.InnerText = oDR.GetValue(1)
-                oElmt.AppendChild(oOpt)
-            Loop
-            oDR.Close()
-
+            'Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT cContentSchemaName FROM tblContent GROUP BY cContentSchemaName ORDER BY cContentSchemaName")
+            Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable("SELECT cContentSchemaName FROM tblContent GROUP BY cContentSchemaName ORDER BY cContentSchemaName")  'Done by nita on 6/7/22
+                Do While oDr.Read
+                    oOpt = oSetup.moPageXml.CreateElement("option")
+                    oOpt.SetAttribute("class", "schema")
+                    oOpt.InnerText = oDr.GetValue(0)
+                    oElmt.AppendChild(oOpt)
+                Loop
+                oDr.Close()
+            End Using
+            'oDr = myWeb.moDbHelper.getDataReader("SELECT nStructKey, cStructName FROM tblContentStructure ORDER BY cStructName")
+            Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable("SELECT nStructKey, cStructName FROM tblContentStructure ORDER BY cStructName")  'Done by nita on 6/7/22
+                Do While oDr.Read
+                    oOpt = oSetup.moPageXml.CreateElement("option")
+                    oOpt.SetAttribute("class", "page")
+                    oOpt.SetAttribute("value", oDr.GetValue(0))
+                    oOpt.InnerText = oDr.GetValue(1)
+                    oElmt.AppendChild(oOpt)
+                Loop
+                oDr.Close()
+            End Using
 
             Return True
 

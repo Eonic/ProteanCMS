@@ -347,21 +347,22 @@ Public Class Cms
             'oElmt.InnerText = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
             'oResponseElmt.AppendChild(oElmt)
             ''End URI
-            Dim oDr As System.Data.SqlClient.SqlDataReader
+            'Dim oDr As System.Data.SqlClient.SqlDataReader
             oElmt = oRXML.CreateElement("DBVersion")
             Try
 
                 Dim sResult As String = ""
                 sSql = "select * from tblSchemaVersion"
-                oDr = moDbHelper.getDataReader(sSql)
-                If oDr.HasRows Then
-                    While oDr.Read
-                        sResult = oDr(1) & "." & oDr(2) & "." & oDr(3) & "." & oDr(4)
-                    End While
-                Else
-                    sResult = "nodata"
-                End If
-                oElmt.InnerText = sResult
+                Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            sResult = oDr(1) & "." & oDr(2) & "." & oDr(3) & "." & oDr(4)
+                        End While
+                    Else
+                        sResult = "nodata"
+                    End If
+                    oElmt.InnerText = sResult
+                End Using
             Catch ex As Exception
                 If moConfig("VersionNumber") = "" Then
                     oElmt.InnerText = "Pre V4 or no ProteanCMS"
@@ -375,39 +376,39 @@ Public Class Cms
             'Get Page Count
 
             sSql = "select count(cs.nStructKey) from tblContentStructure cs inner join tblAudit a on a.nAuditKey = cs.nAuditId where nStatus = 1 and (cUrl = null or cUrl = '')"
-            oDr = moDbHelper.getDataReader(sSql)
-            If oDr.HasRows Then
-                While oDr.Read
-                    oResponseElmt.SetAttribute("activePageCount", oDr(0))
-                End While
-            End If
-
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                If oDr.HasRows Then
+                    While oDr.Read
+                        oResponseElmt.SetAttribute("activePageCount", oDr(0))
+                    End While
+                End If
+            End Using
             sSql = "select count(nStructKey) from tblContentStructure where cUrl = null or cUrl = ''"
-            oDr = moDbHelper.getDataReader(sSql)
-            If oDr.HasRows Then
-                While oDr.Read
-                    oResponseElmt.SetAttribute("totalPageCount", oDr(0))
-                End While
-            End If
-
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                If oDr.HasRows Then
+                    While oDr.Read
+                        oResponseElmt.SetAttribute("totalPageCount", oDr(0))
+                    End While
+                End If
+            End Using
             sSql = "select count(nStructKey) from tblContentStructure"
-            oDr = moDbHelper.getDataReader(sSql)
-            If oDr.HasRows Then
-                While oDr.Read
-                    oResponseElmt.SetAttribute("totalPageRedirects", oDr(0) - CInt("0" & oResponseElmt.GetAttribute("totalPageCount")))
-                End While
-            End If
-
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                If oDr.HasRows Then
+                    While oDr.Read
+                        oResponseElmt.SetAttribute("totalPageRedirects", oDr(0) - CInt("0" & oResponseElmt.GetAttribute("totalPageCount")))
+                    End While
+                End If
+            End Using
 
             'Get Content Count
             sSql = "select count(nContentKey) from tblContent"
-            oDr = moDbHelper.getDataReader(sSql)
-            If oDr.HasRows Then
-                While oDr.Read
-                    oResponseElmt.SetAttribute("contentCount", oDr(0))
-                End While
-            End If
-            oDr = Nothing
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                If oDr.HasRows Then
+                    While oDr.Read
+                        oResponseElmt.SetAttribute("contentCount", oDr(0))
+                    End While
+                End If
+            End Using
 
             'Start DotNetversion
             oElmt = oRXML.CreateElement("DotNetVersion")
@@ -2884,7 +2885,7 @@ Public Class Cms
         Dim sEmail As String = ""
         Dim cValidationError As String = ""
 
-        Dim oDr As SqlDataReader
+        'Dim oDr As SqlDataReader
 
         Dim bUseUserId As Boolean = False
         Dim bUseCookies As Boolean = False
@@ -3139,16 +3140,16 @@ Public Class Cms
                     Dim oCResNode As XmlElement = moPageXml.CreateElement("Results")
                     'Do we need to check the table exists?
                     sSql = "SELECT DISTINCT " & sPollItemField & " AS PollOption, Count(" & sPollItemField & ") AS ResultsCount FROM " & sTable & " WHERE nActivityType=" & dbHelper.ActivityType.SubmitVote & " AND " & sPollField & " = '" & sPollId & "' GROUP BY " & sPollItemField
-                    oDr = moDbHelper.getDataReader(sSql)
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                    While oDr.Read
-                        Dim oResNode As XmlElement = moPageXml.CreateElement("PollResult")
-                        oResNode.SetAttribute("entryId", oDr(0))
-                        oResNode.SetAttribute("votes", oDr(1))
-                        oCResNode.AppendChild(oResNode)
-                    End While
-                    oDr.Close()
-                    oDr = Nothing
+                        While oDr.Read
+                            Dim oResNode As XmlElement = moPageXml.CreateElement("PollResult")
+                            oResNode.SetAttribute("entryId", oDr(0))
+                            oResNode.SetAttribute("votes", oDr(1))
+                            oCResNode.AppendChild(oResNode)
+                        End While
+                        oDr.Close()
+                    End Using
 
                     ocNode.AppendChild(oCResNode)
                 End If
@@ -5665,18 +5666,18 @@ Public Class Cms
                 " group by nStructId"
 
 
-            Dim oDR As Data.SqlClient.SqlDataReader = moDbHelper.getDataReader(cSQL)
-            Do While oDR.Read
-                oElmt = oMenu.SelectSingleNode("descendant::MenuItem[@id='" & oDR("nStructId") & "']")
-                If Not oElmt Is Nothing Then
-                    Dim newElmt As XmlElement = moPageXml.CreateElement("ContentCount")
-                    newElmt.SetAttribute("type", Trim(SchemaType))
-                    newElmt.SetAttribute("count", oDR("count"))
-                    oElmt.AppendChild(newElmt)
-                End If
+            Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                Do While oDR.Read
+                    oElmt = oMenu.SelectSingleNode("descendant::MenuItem[@id='" & oDR("nStructId") & "']")
+                    If Not oElmt Is Nothing Then
+                        Dim newElmt As XmlElement = moPageXml.CreateElement("ContentCount")
+                        newElmt.SetAttribute("type", Trim(SchemaType))
+                        newElmt.SetAttribute("count", oDR("count"))
+                        oElmt.AppendChild(newElmt)
+                    End If
 
-            Loop
-
+                Loop
+            End Using
         Catch ex As Exception
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddContentCount", ex, ""))
         End Try
@@ -5813,59 +5814,59 @@ Public Class Cms
             " (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(mdDate) & " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" & cContentTypes & ")) "
 
 
-            Dim oDR As Data.SqlClient.SqlDataReader = moDbHelper.getDataReader(cSQL)
+            Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
 
-            Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+                Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
 
-            Do While oDR.Read
-                Dim cURL As String = ""
-                Dim oContElmt As XmlElement = moPageXml.CreateElement("MenuItem")
+                Do While oDR.Read
+                    Dim cURL As String = ""
+                    Dim oContElmt As XmlElement = moPageXml.CreateElement("MenuItem")
 
-                Select Case moConfig("DetailPathType")
-                    Case "ContentType/ContentName"
-                        Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
-                        Dim thisPrefix As String = ""
-                        Dim thisContentType As String = ""
-                        Dim i As Integer
-                        For i = 0 To prefixs.Length - 1
-                            thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
-                            thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-                            If thisContentType = oDR(5).ToString() Then
-                                cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
-                                If moConfig("DetailPathTrailingSlash") = "on" Then
-                                    cURL = cURL + "/"
+                    Select Case moConfig("DetailPathType")
+                        Case "ContentType/ContentName"
+                            Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
+                            Dim thisPrefix As String = ""
+                            Dim thisContentType As String = ""
+                            Dim i As Integer
+                            For i = 0 To prefixs.Length - 1
+                                thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                If thisContentType = oDR(5).ToString() Then
+                                    cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                                    If moConfig("DetailPathTrailingSlash") = "on" Then
+                                        cURL = cURL + "/"
+                                    End If
+                                    If moConfig("LowerCaseUrl") = "on" Then
+                                        cURL = cURL.ToLower()
+                                    End If
                                 End If
-                                If moConfig("LowerCaseUrl") = "on" Then
-                                    cURL = cURL.ToLower()
-                                End If
+                            Next
+                        Case Else
+                            If pageDict.ContainsKey(oDR(2)) Then
+                                cURL = pageDict.Item(oDR(2))
+                                'If moConfig("LegacyRedirect") = "on" Then
+                                cURL &= "/" & oDR(0).ToString & "-/" & Tools.Text.CleanName(oDR(1).ToString, False, True)
+                                ' Else
+                                '     cURL &= "/Item" & oDR(0).ToString
+                                ' End If
+                            Else
+                                cProcessInfo = "orphan Content"
                             End If
-                        Next
-                    Case Else
-                        If pageDict.ContainsKey(oDR(2)) Then
-                            cURL = pageDict.Item(oDR(2))
-                            'If moConfig("LegacyRedirect") = "on" Then
-                            cURL &= "/" & oDR(0).ToString & "-/" & Tools.Text.CleanName(oDR(1).ToString, False, True)
-                            ' Else
-                            '     cURL &= "/Item" & oDR(0).ToString
-                            ' End If
-                        Else
-                            cProcessInfo = "orphan Content"
-                        End If
-                End Select
-                If moConfig("LowerCaseUrl") = "on" Then
-                    cURL = cURL.ToLower()
-                End If
-                If cURL <> "" Then
-                    oContElmt.SetAttribute("url", cURL)
-                    oContElmt.SetAttribute("name", oDR(1).ToString)
-                    oContElmt.SetAttribute("publish", Protean.Tools.Xml.XmlDate(oDR(3).ToString, False))
-                    oContElmt.SetAttribute("update", Protean.Tools.Xml.XmlDate(oDR(4).ToString, False))
-                    oMenuElmt.AppendChild(oContElmt)
-                End If
+                    End Select
+                    If moConfig("LowerCaseUrl") = "on" Then
+                        cURL = cURL.ToLower()
+                    End If
+                    If cURL <> "" Then
+                        oContElmt.SetAttribute("url", cURL)
+                        oContElmt.SetAttribute("name", oDR(1).ToString)
+                        oContElmt.SetAttribute("publish", Protean.Tools.Xml.XmlDate(oDR(3).ToString, False))
+                        oContElmt.SetAttribute("update", Protean.Tools.Xml.XmlDate(oDR(4).ToString, False))
+                        oMenuElmt.AppendChild(oContElmt)
+                    End If
 
-            Loop
-            oDR.Close()
-            oDR = Nothing
+                Loop
+                oDR.Close()
+            End Using
 
         Catch ex As Exception
             'returnException(msException, mcModuleName, "addPageDetailLinksToStructure", ex, gcEwSiteXsl, "", gbDebug)
@@ -8611,7 +8612,7 @@ Public Class Cms
     ''' <returns></returns>
     Public Function CheckProductStatus(ByVal nArtId As String) As String
         Try
-            Dim oDr As System.Data.SqlClient.SqlDataReader
+            'Dim oDr As System.Data.SqlClient.SqlDataReader
             Dim sSQL As String = "DECLARE @List VARCHAR(8000)
 
 SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
@@ -8625,18 +8626,18 @@ from tblcontent C
             If moDbHelper Is Nothing Then
                 moDbHelper = GetDbHelper()
             End If
-            oDr = moDbHelper.getDataReader(sSQL)
-            If Not oDr Is Nothing Then
-                If oDr.HasRows Then
-                    While oDr.Read
-                        Return oDr(0).ToString()
-                    End While
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                If Not oDr Is Nothing Then
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            Return oDr(0).ToString()
+                        End While
 
+                    End If
+                Else
+                    Return ""
                 End If
-            Else
-                Return ""
-            End If
-
+            End Using
         Catch ex As Exception
             Return ""
         End Try
