@@ -116,11 +116,12 @@ Partial Public Class Cms
                     Dim cTmp As String = String.Empty
                     If bIncRelated = True Then
                         Dim sSQL As String = "Select " & cSelectField & " From " & cTableName & " WHERE " & cFilterField & " = " & nParId
-                        Dim oDre As SqlDataReader = myWeb.moDbHelper.getDataReader(sSQL)
-                        Do While oDre.Read
-                            cTmp &= oDre(0) & ","
-                        Loop
-                        oDre.Close()
+                        Using oDre As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                            Do While oDre.Read
+                                cTmp &= oDre(0) & ","
+                            Loop
+                            oDre.Close()
+                        End Using
                         If Not cTmp = "" Then cTmp = Left(cTmp, Len(cTmp) - 1)
                     End If
 

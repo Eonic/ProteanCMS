@@ -11,10 +11,10 @@
 Option Strict Off
 Option Explicit On
 Imports System.Data
-Imports System.Data.sqlClient
-Imports System.xml
+Imports System.Data.SqlClient
+Imports System.Xml
 Imports System.IO
-Imports System.web.Configuration
+Imports System.Web.Configuration
 Imports System.Collections
 Imports System.Collections.Generic
 Imports VB = Microsoft.VisualBasic
@@ -767,7 +767,7 @@ Partial Public Class Cms
         Public Function getNameByKey(ByVal objectType As objectTypes, ByVal nKey As Long) As String
             PerfMon.Log("DBHelper", "getNameByKey")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sResult As String = ""
             Dim cProcessInfo As String = ""
             Try
@@ -775,14 +775,13 @@ Partial Public Class Cms
                 Select Case objectType
 
                     Case 0, 3, 4
-
                         sSql = "select " & getNameFname(objectType) & " from " & getTable(objectType) & " where " & getKey(objectType) & " = " & nKey
-                        oDr = getDataReader(sSql)
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                        While oDr.Read
-                            sResult = oDr(0)
-                        End While
-
+                            While oDr.Read
+                                sResult = oDr(0)
+                            End While
+                        End Using
                 End Select
 
                 Return sResult
@@ -910,7 +909,7 @@ Partial Public Class Cms
         Public Function getKeyByNameAndSchema(ByVal objectType As objectTypes, ByVal cSchemaName As String, ByVal cName As String) As String
             PerfMon.Log("DBHelper", "getKeyByNameAndSchema")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sResult As String = ""
             Dim cProcessInfo As String = ""
             Try
@@ -920,13 +919,13 @@ Partial Public Class Cms
                     Case 0, 4, 3
 
                         sSql = "select " & getKey(objectType) & " from " & getTable(objectType) & " where " & getNameFname(objectType) & " LIKE '" & cName & "'"
-                        oDr = getDataReader(sSql)
-                        If oDr.HasRows Then
-                            While oDr.Read
-                                sResult = oDr(0)
-                            End While
-                        End If
-                        oDr.Close()
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            If oDr.HasRows Then
+                                While oDr.Read
+                                    sResult = oDr(0)
+                                End While
+                            End If
+                        End Using
 
                 End Select
 
@@ -943,19 +942,18 @@ Partial Public Class Cms
             PerfMon.Log("DBHelper", "getObjectStatus")
             Dim sSql As String
             Dim nAuditId As Long
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sResult As String = ""
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select nAuditId from " & getTable(objecttype) & " where " & getKey(objecttype) & " = " & nId
-                oDr = getDataReader(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                While oDr.Read
-                    nAuditId = oDr(0)
-                End While
+                    While oDr.Read
+                        nAuditId = oDr(0)
+                    End While
 
-                oDr.Close()
-                oDr = Nothing
+                End Using
                 ' we could test the current status to see if the change is a valid one. I.E. live can only be hidden not moved back to approval or InProgress, but the workflow should ensure this doesn't happen.
                 sSql = "select nStatus from tblAudit WHERE nAuditKey =" & nAuditId
                 sResult = ExeProcessSqlScalar(sSql)
@@ -973,21 +971,20 @@ Partial Public Class Cms
             PerfMon.Log("DBHelper", "setObjectStatus")
             Dim sSql As String
             Dim nAuditId As Long
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sResult As String = ""
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select nAuditId from " & getTable(objecttype) & " where " & getKey(objecttype) & " = " & nId
                 'we want to touch the parent table just incase we have any triggers asscoiated with it
                 'change get DateReader to getdataset and update.
-                oDr = getDataReader(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                While oDr.Read
-                    nAuditId = oDr(0)
-                End While
+                    While oDr.Read
+                        nAuditId = oDr(0)
+                    End While
 
-                oDr.Close()
-                oDr = Nothing
+                End Using
                 ' we could test the current status to see if the change is a valid one. I.E. live can only be hidden not moved back to approval or InProgress, but the workflow should ensure this doesn't happen.
                 sSql = "UPDATE tblAudit SET nStatus = " & status & " WHERE nAuditKey =" & nAuditId
                 sResult = ExeProcessSql(sSql)
@@ -1014,19 +1011,18 @@ Partial Public Class Cms
             PerfMon.Log("DBHelper", "setObjectStatus")
             Dim sSql As String
             Dim nAuditId As Long
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sResult As Integer
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select nAuditId from " & getTable(objecttype) & " where " & getKey(objecttype) & " = " & nId
-                oDr = getDataReader(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                While oDr.Read
-                    nAuditId = oDr(0)
-                End While
+                    While oDr.Read
+                        nAuditId = oDr(0)
+                    End While
 
-                oDr.Close()
-                oDr = Nothing
+                End Using
                 sSql = "select nStatus from tblAudit WHERE nAuditKey =" & nAuditId
                 sResult = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
 
@@ -1135,7 +1131,7 @@ Partial Public Class Cms
                         Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
                         Dim thisPrefix As String = ""
                         Dim thisContentType As String = ""
-                        Dim oDr As SqlDataReader
+                        'Dim oDr As SqlDataReader
 
                         Dim i As Integer
 
@@ -1165,14 +1161,13 @@ Partial Public Class Cms
                             Dim contentName As String = ""
                             Dim redirectUrl As String = ""
 
-                            oDr = getDataReader(sSql)
+                            Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                            Do While oDr.Read
-                                contentType = oDr(0)
-                                contentName = oDr(1)
-                            Loop
-                            oDr.Close()
-                            oDr = Nothing
+                                Do While oDr.Read
+                                    contentType = oDr(0)
+                                    contentName = oDr(1)
+                                Loop
+                            End Using
 
                             For i = 0 To prefixs.Length - 1
                                 thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
@@ -1615,7 +1610,7 @@ Partial Public Class Cms
         ''' <remarks></remarks>
         Private Function recurseUpPathArray(ByVal nParentid As Integer, ByRef aPath() As String, ByRef nStep As Integer) As Boolean
             PerfMon.Log("Base", "recurseUpPathArray")
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sSql As String
             Dim sProcessInfo As String = ""
 
@@ -1625,17 +1620,16 @@ Partial Public Class Cms
                 If nStep > -1 Then
 
                     sSql = "select nStructKey, nStructParId from tblContentStructure where nStructKey =" & nParentid & " and (cStructName like '" & SqlFmt(aPath(nStep)) & "' or cStructName like '" & SqlFmt(Replace(aPath(nStep), " ", "")) & "')"
-                    oDr = getDataReader(sSql)
+                    Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                    If Not oDr.HasRows Then
-                        recurseUpPathArray = False
-                    Else
-                        oDr.Read()
-                        Dim nParId As Long = oDr("nStructParId")
-                        recurseUpPathArray = recurseUpPathArray(nParId, aPath, nStep - 1)
-                    End If
-                    oDr.Close()
-                    oDr = Nothing
+                        If Not oDr.HasRows Then
+                            recurseUpPathArray = False
+                        Else
+                            oDr.Read()
+                            Dim nParId As Long = oDr("nStructParId")
+                            recurseUpPathArray = recurseUpPathArray(nParId, aPath, nStep - 1)
+                        End If
+                    End Using
 
                 ElseIf nStep = -1 And nParentid = myWeb.RootPageId Then
                     recurseUpPathArray = True
@@ -2289,11 +2283,14 @@ Partial Public Class Cms
 
                 sSql = "select " & getKey(objectType) & " from " & getTable(objectType)
 
-                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
                     If bReporting Then
                         goResponse.Write("Deleting: - " & getTable(objectType))
                     End If
 
+                    While oDr.Read
+                        DeleteObject(objectType, oDr(0), bReporting)
+                    End While
                     While oDr.Read
                         DeleteObject(objectType, oDr(0), bReporting)
                     End While
@@ -3248,7 +3245,7 @@ restart:
             PerfMon.Log("DBHelper", cProcName)
             Dim sSql As String = ""
             Dim nId As String = 0
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
 
 
             ' Some failsafes
@@ -3280,15 +3277,14 @@ restart:
                     End Select
                 End If
 
-                oDr = getDataReader(sSql)
-                If oDr Is Nothing Then Return 0
-                While oDr.Read
-                    nId = oDr(0)
-                End While
-                oDr.Close()
-                oDr = Nothing
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr Is Nothing Then Return 0
+                    While oDr.Read
+                        nId = oDr(0)
+                    End While
 
-                Return nId
+                    Return nId
+                End Using
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, cProcName, ex, cProcessInfo))
@@ -3301,7 +3297,7 @@ restart:
             PerfMon.Log("DBHelper", "getObjectByRef")
             Dim sSql As String = ""
             Dim nIds As String = ""
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
 
 
             Dim cProcessInfo As String = ""
@@ -3317,17 +3313,15 @@ restart:
                     End Select
                 End If
 
-                oDr = getDataReader(sSql)
-                If oDr Is Nothing Then Return Nothing
-                While oDr.Read
-                    If Not nIds = "" Then nIds &= ","
-                    nIds &= oDr(0)
-                End While
-                oDr.Close()
-                oDr = Nothing
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr Is Nothing Then Return Nothing
+                    While oDr.Read
+                        If Not nIds = "" Then nIds &= ","
+                        nIds &= oDr(0)
+                    End While
 
-                Return Split(nIds, ",")
-
+                    Return Split(nIds, ",")
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getObjectByRef", ex, cProcessInfo))
                 Return Nothing
@@ -3647,10 +3641,11 @@ restart:
                     cSQL = "SELECT nContentLocationKey FROM tblContentLocation WHERE (NOT nStructId = " & nLocation & ") AND (nContentId = " & nContentId & ") AND  (bPrimary = 1)"
                     cProcessInfo = cSQL
                     Dim bResult As Boolean = False
-                    Dim oDRE As SqlDataReader = getDataReader(cSQL)
-                    If oDRE.HasRows Then bResult = True
-                    oDRE.Close()
-                    If Not bResult Then Return False
+                    Using oDRE As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                        If oDRE.HasRows Then bResult = True
+                        oDRE.Close()
+                        If Not bResult Then Return False
+                    End Using
                 End If
                 cSQL = "UPDATE tblContentLocation SET bPrimary = " & IIf(bPrimary, 1, 0) & " WHERE (nStructId = " & nLocation & ") AND (nContentId = " & nContentId & ")"
                 cProcessInfo = cSQL
@@ -3746,33 +3741,33 @@ restart:
 
         Public Function getUserQuizInstance(ByVal nQuizId As Long) As XmlNode
             PerfMon.Log("DBHelper", "getUserQuizInstance")
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim oQuizXml As XmlNode = Nothing
             Dim oElmt As XmlElement
             Dim dDateTaken As Object
             Dim nTimeTaken As Long
             Dim cProcessInfo As String = ""
             Try
-                oDr = getDataReader("SELECT nContentId, cQResultsXml,nQResultsTimeTaken FROM tblQuestionaireResult r WHERE nQResultsKey=" & CStr(nQuizId))
-                If oDr.Read Then
-                    oQuizXml = moPageXml.CreateElement("container")
-                    oQuizXml.InnerXml = oDr.Item("cQResultsXml")
-                    oQuizXml = oQuizXml.SelectSingleNode("instance")
-                    'lets add the contentId of the xFormQuiz to the results set.
-                    oElmt = oQuizXml.SelectSingleNode("descendant-or-self::results")
-                    oElmt.SetAttribute("contentId", oDr.Item("nContentId"))
-                    ' Add the time taken
-                    oElmt = oQuizXml.SelectSingleNode("//status/timeTaken")
-                    If IsDBNull(oDr.Item("nQResultsTimeTaken")) Then nTimeTaken = 0 Else nTimeTaken = oDr.Item("nQResultsTimeTaken")
-                    If oElmt Is Nothing Then
-                        addNewTextNode("timeTaken", oQuizXml.SelectSingleNode("//status"), nTimeTaken)
-                    Else
-                        oElmt.InnerText = nTimeTaken
+                'oDr = getDataReader("SELECT nContentId, cQResultsXml,nQResultsTimeTaken FROM tblQuestionaireResult r WHERE nQResultsKey=" & CStr(nQuizId))
+                Using oDr As SqlDataReader = getDataReaderDisposable("SELECT nContentId, cQResultsXml,nQResultsTimeTaken FROM tblQuestionaireResult r WHERE nQResultsKey=" & CStr(nQuizId))  'Done by nita on 6/7/22
+                    If oDr.Read Then
+                        oQuizXml = moPageXml.CreateElement("container")
+                        oQuizXml.InnerXml = oDr.Item("cQResultsXml")
+                        oQuizXml = oQuizXml.SelectSingleNode("instance")
+                        'lets add the contentId of the xFormQuiz to the results set.
+                        oElmt = oQuizXml.SelectSingleNode("descendant-or-self::results")
+                        oElmt.SetAttribute("contentId", oDr.Item("nContentId"))
+                        ' Add the time taken
+                        oElmt = oQuizXml.SelectSingleNode("//status/timeTaken")
+                        If IsDBNull(oDr.Item("nQResultsTimeTaken")) Then nTimeTaken = 0 Else nTimeTaken = oDr.Item("nQResultsTimeTaken")
+                        If oElmt Is Nothing Then
+                            addNewTextNode("timeTaken", oQuizXml.SelectSingleNode("//status"), nTimeTaken)
+                        Else
+                            oElmt.InnerText = nTimeTaken
+                        End If
                     End If
-                End If
 
-                oDr.Close()
-                oDr = Nothing
+                End Using
 
                 ' let's add the date taken
                 dDateTaken = GetDataValue("SELECT a.dInsertDate FROM tblAudit a INNER JOIN tblQuestionaireResult q ON a.nAuditKey = q.nAuditId AND nQResultsKey=" & CStr(nQuizId))
@@ -3927,14 +3922,15 @@ restart:
                     Dim cascade As Boolean = False
                     Dim position As String = "column1"
 
-                    Dim currentLocation As SqlDataReader = getDataReader("SELECT TOP 1 CASE WHEN bPrimary IS NULL THEN 0 ELSE bPrimary END as PrimaryLocation, CASE WHEN bCascade IS NULL THEN 0 ELSE bCascade END AS cascadeLocation, CASE WHEN cPosition IS NULL THEN '' ELSE cPosition END AS position from tblContentLocation where nStructId = " & nStructKey & " and nContentId = " & nContentKey)
-                    If currentLocation.Read Then
-                        primary = currentLocation(0)
-                        cascade = currentLocation(1)
-                        'position = currentLocation(2)
-                        'TS By DEFAULT we move to column1 because it is always on every page.
-                    End If
-                    currentLocation.Close()
+                    'Dim currentLocation As SqlDataReader = getDataReader("SELECT TOP 1 CASE WHEN bPrimary IS NULL THEN 0 ELSE bPrimary END as PrimaryLocation, CASE WHEN bCascade IS NULL THEN 0 ELSE bCascade END AS cascadeLocation, CASE WHEN cPosition IS NULL THEN '' ELSE cPosition END AS position from tblContentLocation where nStructId = " & nStructKey & " and nContentId = " & nContentKey)
+                    Using currentLocation As SqlDataReader = getDataReaderDisposable("SELECT TOP 1 CASE WHEN bPrimary IS NULL THEN 0 ELSE bPrimary END as PrimaryLocation, CASE WHEN bCascade IS NULL THEN 0 ELSE bCascade END AS cascadeLocation, CASE WHEN cPosition IS NULL THEN '' ELSE cPosition END AS position from tblContentLocation where nStructId = " & nStructKey & " and nContentId = " & nContentKey)  'Done by nita on 6/7/22
+                        If currentLocation.Read Then
+                            primary = currentLocation(0)
+                            cascade = currentLocation(1)
+                            'position = currentLocation(2)
+                            'TS By DEFAULT we move to column1 because it is always on every page.
+                        End If
+                    End Using
 
                     ' Work out if the destination is primary
                     Dim destinationPrimary As Integer = GetDataValue("SELECT TOP 1 bPrimary from tblContentLocation where nStructId = " & nNewStructParId & " and nContentId = " & nContentKey & " AND bPrimary=1", , , 0)
@@ -3974,7 +3970,7 @@ restart:
             PerfMon.Log("DBHelper", "ReorderNode")
             Dim sSql As String
             Dim oDs As DataSet
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim oRow As DataRow
 
             Dim nParentid As Long
@@ -3997,12 +3993,11 @@ restart:
                     Else
                         'Load Principle
                         sSql = "Select * from " & getTable(objectType) & " where " & getKey(objectType) & "=" & CStr(nKey)
-                        oDr = getDataReader(sSql)
-                        While oDr.Read
-                            nParentid = oDr.Item(getParIdFname(objectType))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                nParentid = oDr.Item(getParIdFname(objectType))
+                            End While
+                        End Using
 
                         'Get Siblings
                         sSql = "Select * from " & getTable(objectType) & " where " & getParIdFname(objectType) & "=" & CStr(nParentid) & " order by " & getOrderFname(objectType)
@@ -4082,7 +4077,7 @@ restart:
             PerfMon.Log("DBHelper", "ReorderContent")
             Dim sSql As String
             Dim oDs As DataSet
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim oRow As DataRow
 
             Dim cSchemaName As String = ""
@@ -4115,12 +4110,11 @@ restart:
                 'Lets go and get the content type
 
                 sSql = "Select cContentSchemaName from tblContent where nContentKey = " & nContentId
-                oDr = getDataReader(sSql)
-                While oDr.Read
-                    cSchemaName = oDr.Item("cContentSchemaName")
-                End While
-                oDr.Close()
-                oDr = Nothing
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    While oDr.Read
+                        cSchemaName = oDr.Item("cContentSchemaName")
+                    End While
+                End Using
 
                 'Get all locations of similar objects on the same page.
 
@@ -4611,23 +4605,22 @@ restart:
             PerfMon.Log("DBHelper", "getLocationByRef")
             Dim sSql As String
             Dim nId As String = 0
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
 
 
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select nStructKey from tblContentStructure where cStructForiegnRef = '" & SqlFmt(cForiegnRef) & "'"
 
-                oDr = getDataReader(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                While oDr.Read
-                    nId = oDr(0)
-                End While
-                oDr.Close()
-                oDr = Nothing
+                    While oDr.Read
+                        nId = oDr(0)
+                    End While
 
-                Return nId
 
+                    Return nId
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getLocationByRef", ex, cProcessInfo))
 
@@ -4659,23 +4652,21 @@ restart:
             PerfMon.Log("DBHelper", "getPrimaryLocationByArtId")
             Dim sSql As String
             Dim nId As String = 0
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
 
 
             Dim cProcessInfo As String = ""
             Try
                 sSql = "SELECT nStructId FROM tblContentLocation WHERE nContentId = " & nArtId & " and (bPrimary = -1 or bPrimary = 1)"
 
-                oDr = getDataReader(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                While oDr.Read
-                    nId = oDr(0)
-                End While
-                oDr.Close()
-                oDr = Nothing
+                    While oDr.Read
+                        nId = oDr(0)
+                    End While
 
-                Return nId
-
+                    Return nId
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getLocationByRef", ex, cProcessInfo))
 
@@ -4869,23 +4860,18 @@ restart:
             PerfMon.Log("DBHelper", "getContentByRef")
             Dim sSql As String
             Dim nId As String = 0
-            Dim oDr As SqlDataReader
-
+            'Dim oDr As SqlDataReader
 
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select nContentKey from tblContent where cContentForiegnRef = '" & SqlFmt(cForiegnRef) & "'"
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    While oDr.Read
+                        nId = oDr(0)
+                    End While
 
-                oDr = getDataReader(sSql)
-
-                While oDr.Read
-                    nId = oDr(0)
-                End While
-                oDr.Close()
-                oDr = Nothing
-
-                Return nId
-
+                    Return nId
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getContentByRef", ex, cProcessInfo))
 
@@ -4896,23 +4882,21 @@ restart:
         Public Function getContentBrief(ByVal nId As Integer) As String
             PerfMon.Log("DBHelper", "getContentBrief")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim cContent As String = ""
 
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select cContentXmlBrief from tblContent where nContentKey = " & nId
 
-                oDr = getDataReader(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                While oDr.Read
-                    cContent = oDr(0)
-                End While
-                oDr.Close()
-                oDr = Nothing
+                    While oDr.Read
+                        cContent = oDr(0)
+                    End While
 
-                Return cContent
-
+                    Return cContent
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getContentByRef", ex, cProcessInfo))
 
@@ -4965,23 +4949,21 @@ restart:
 
             Dim sSql As String
             Dim sContentSchemaName As String = ""
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
 
 
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select cContentSchemaName from tblContent where nContentKey = " & nId
 
-                oDr = getDataReader(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                While oDr.Read
-                    sContentSchemaName = oDr(0)
-                End While
-                oDr.Close()
-                oDr = Nothing
+                    While oDr.Read
+                        sContentSchemaName = oDr(0)
+                    End While
 
-                Return sContentSchemaName
-
+                    Return sContentSchemaName
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getContentType", ex, cProcessInfo))
 
@@ -5209,7 +5191,7 @@ restart:
 
         Public Sub maintainDirectoryRelation(ByVal nParId As Long, ByVal nChildId As Long, Optional ByVal bRemove As Boolean = False, Optional ByVal dExpireDate As Object = Nothing, Optional ByVal bIfExistsDontUpdate As Boolean = False, Optional ByVal cEmail As String = Nothing, Optional ByVal cGroup As String = Nothing, Optional ByVal isLast As Boolean = True)
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim cProcessInfo As String = ""
             Dim nDelRelationId As Long = 0
             Dim oXml As XmlDocument
@@ -5219,73 +5201,72 @@ restart:
                 If Not (nParId = 0 Or nChildId = 0) Then
                     'Does relationship exist?
                     sSql = "select * from tblDirectoryRelation where nDirParentId = " & nParId & " and nDirChildId  = " & nChildId
-                    oDr = getDataReader(sSql)
-                    If oDr.HasRows Then
-                        'if so check bRemove and remove it if nessesary
-                        If Not bRemove Then
-                            ' If the permission exists, then we can update it - or we can opt to ignore the option of updating it
-                            ' This is a db performance savign for some bulk routines.
-                            If Not (bIfExistsDontUpdate) Then
+                    Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        If oDr.HasRows Then
+                            'if so check bRemove and remove it if nessesary
+                            If Not bRemove Then
+                                ' If the permission exists, then we can update it - or we can opt to ignore the option of updating it
+                                ' This is a db performance savign for some bulk routines.
+                                If Not (bIfExistsDontUpdate) Then
+                                    While oDr.Read
+                                        'update audit
+                                        oXml = New XmlDocument
+                                        If IsDate(dExpireDate) Then
+                                            oXml.LoadXml("<instance><tblAudit><dExpireDate>" & Protean.Tools.Xml.XmlDate(dExpireDate) & "</dExpireDate></tblAudit></instance>")
+                                        Else
+                                            'this should update the update date and user
+                                            oXml.LoadXml("<instance><tblAudit/></instance>")
+                                        End If
+                                        setObjectInstance(objectTypes.Audit, oXml.DocumentElement, oDr("nAuditId"))
+                                        oXml = Nothing
+                                    End While
+                                End If
+                            Else
                                 While oDr.Read
-                                    'update audit
-                                    oXml = New XmlDocument
-                                    If IsDate(dExpireDate) Then
-                                        oXml.LoadXml("<instance><tblAudit><dExpireDate>" & Protean.Tools.Xml.XmlDate(dExpireDate) & "</dExpireDate></tblAudit></instance>")
-                                    Else
-                                        'this should update the update date and user
-                                        oXml.LoadXml("<instance><tblAudit/></instance>")
-                                    End If
-                                    setObjectInstance(objectTypes.Audit, oXml.DocumentElement, oDr("nAuditId"))
-                                    oXml = Nothing
+                                    DeleteObject(objectTypes.DirectoryRelation, oDr("nRelKey"))
+                                    bHasChanged = True
                                 End While
                             End If
+
                         Else
-                            While oDr.Read
-                                DeleteObject(objectTypes.DirectoryRelation, oDr("nRelKey"))
+                            'if not create it
+
+                            If Not bRemove Then
+                                'Dim nAuditId As String = ""
+                                If IsDate(dExpireDate) Then
+                                    sSql = "insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( " & nParId & ", " & nChildId & ", " & Me.getAuditId(, , , , dExpireDate) & ")"
+                                Else
+                                    sSql = "insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( " & nParId & ", " & nChildId & ", " & Me.getAuditId() & ")"
+                                End If
+                                ExeProcessSql(sSql)
                                 bHasChanged = True
-                            End While
-                        End If
-                        oDr.Close()
-                        oDr = Nothing
-                    Else
-                        'if not create it
-                        oDr.Close()
-                        oDr = Nothing
-                        If Not bRemove Then
-                            'Dim nAuditId As String = ""
-                            If IsDate(dExpireDate) Then
-                                sSql = "insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( " & nParId & ", " & nChildId & ", " & Me.getAuditId(, , , , dExpireDate) & ")"
-                            Else
-                                sSql = "insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( " & nParId & ", " & nChildId & ", " & Me.getAuditId() & ")"
                             End If
-                            ExeProcessSql(sSql)
-                            bHasChanged = True
                         End If
-                    End If
 
-                    If bHasChanged Then
-                        'Keep Mailing List In Sync.
-                        ' If Not cEmail Is Nothing Then
-                        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
-                        Dim sMessagingProvider As String = ""
-                        If Not moMailConfig Is Nothing Then
-                            sMessagingProvider = moMailConfig("MessagingProvider")
+                        If bHasChanged Then
+                            'Keep Mailing List In Sync.
+                            ' If Not cEmail Is Nothing Then
+                            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+                            Dim sMessagingProvider As String = ""
+                            If Not moMailConfig Is Nothing Then
+                                sMessagingProvider = moMailConfig("MessagingProvider")
+                            End If
+                            If moMessaging Is Nothing And myWeb IsNot Nothing Then
+                                'myWeb IsNot Nothing prevents being called from bulk imports.
+                                moMessaging = New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+                            End If
+                            If moMessaging IsNot Nothing AndAlso moMessaging.AdminProcess IsNot Nothing Then
+                                Try
+                                    moMessaging.AdminProcess.maintainUserInGroup(nChildId, nParId, bRemove, cEmail, cGroup, isLast)
+                                Catch ex As Exception
+                                    cProcessInfo = ex.StackTrace
+                                End Try
+                            End If
+                            ' End If
                         End If
-                        If moMessaging Is Nothing And myWeb IsNot Nothing Then
-                            'myWeb IsNot Nothing prevents being called from bulk imports.
-                            moMessaging = New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
-                        End If
-                        If moMessaging IsNot Nothing AndAlso moMessaging.AdminProcess IsNot Nothing Then
-                            Try
-                                moMessaging.AdminProcess.maintainUserInGroup(nChildId, nParId, bRemove, cEmail, cGroup, isLast)
-                            Catch ex As Exception
-                                cProcessInfo = ex.StackTrace
-                            End Try
-                        End If
-                        ' End If
-                    End If
-
+                    End Using
                 End If
+
                 CloseConnection()
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "maintainDirectoryRelation", ex, cProcessInfo))
@@ -5296,40 +5277,37 @@ restart:
         Public Sub maintainPermission(ByVal nPageId As Long, ByVal nDirId As Long, Optional ByVal nLevel As String = "1")
             PerfMon.Log("DBHelper", "maintainPermission")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim cProcessInfo As String = ""
 
             Try
 
                 'Does relationship exist?
                 sSql = "select * from tblDirectoryPermission where nDirId = " & nDirId & " and nStructId  = " & nPageId
-                oDr = getDataReader(sSql)
-                If oDr.HasRows Then
-                    'if so check bRemove and remove it if nessesary
-                    While oDr.Read
-                        'update audit
-                        ' the permission level has changed... update it
-                        If nLevel <> oDr("nAccessLevel") Then
-                            sSql = "update tblDirectoryPermission set nAccessLevel = " & nLevel & " where nPermKey=" & oDr("nPermKey")
-                            ExeProcessSql(sSql)
-                        End If
-                    End While
-                    oDr.Close()
-                    oDr = Nothing
-                Else
-                    'if not create it
-                    oDr.Close()
-                    oDr = Nothing
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        'if so check bRemove and remove it if nessesary
+                        While oDr.Read
+                            'update audit
+                            ' the permission level has changed... update it
+                            If nLevel <> oDr("nAccessLevel") Then
+                                sSql = "update tblDirectoryPermission set nAccessLevel = " & nLevel & " where nPermKey=" & oDr("nPermKey")
+                                ExeProcessSql(sSql)
+                            End If
+                        End While
 
-                    sSql = "insert into tblDirectoryPermission(nDirId, nStructId,nAccessLevel, nAuditId) values( " & nDirId & ", " & nPageId & "," & nLevel & " ," & Me.getAuditId & ")"
-                    ExeProcessSql(sSql)
-                End If
+                    Else
+                        'if not create it
 
-                'If nLevel = 0 Then
-                '    sSql = "delete tblDirectoryPermission where nDirId = " & nDirId & " and nStructId  = " & nPageId
-                '    exeProcessSQL(sSql)
-                'End If
+                        sSql = "insert into tblDirectoryPermission(nDirId, nStructId,nAccessLevel, nAuditId) values( " & nDirId & ", " & nPageId & "," & nLevel & " ," & Me.getAuditId & ")"
+                        ExeProcessSql(sSql)
+                    End If
 
+                    'If nLevel = 0 Then
+                    '    sSql = "delete tblDirectoryPermission where nDirId = " & nDirId & " and nStructId  = " & nPageId
+                    '    exeProcessSQL(sSql)
+                    'End If
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "maintainDirectoryRelation", ex, cProcessInfo))
 
@@ -5340,7 +5318,7 @@ restart:
             PerfMon.Log("DBHelper", "listDirectory")
             Dim sSql As String
             Dim oDs As DataSet
-            Dim oDr As SqlDataReader
+            ' Dim oDr As SqlDataReader
             Dim oElmt As XmlElement
             Dim oElmt2 As XmlElement
             Dim oXml As XmlDataDocument
@@ -5423,14 +5401,13 @@ restart:
                 'let get the details of the parent object
                 If nParId <> 0 Then
                     sSql = "select * from tblDirectory where nDirKey = " & nParId
-                    oDr = getDataReader(sSql)
-                    While oDr.Read
-                        oElmt.SetAttribute("parId", nParId)
-                        oElmt.SetAttribute("parType", oDr("cDirSchema"))
-                        oElmt.SetAttribute("parName", oDr("cDirName"))
-                    End While
-                    oDr.Close()
-                    oDr = Nothing
+                    Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        While oDr.Read
+                            oElmt.SetAttribute("parId", nParId)
+                            oElmt.SetAttribute("parType", oDr("cDirSchema"))
+                            oElmt.SetAttribute("parName", oDr("cDirName"))
+                        End While
+                    End Using
                 Else
                     oElmt.SetAttribute("parType", cSchemaName)
                     oElmt.SetAttribute("parName", "All")
@@ -5463,7 +5440,7 @@ restart:
         Public Function GetUserXML(ByVal nUserId As Long, Optional ByVal bIncludeContacts As Boolean = True) As XmlElement
             PerfMon.Log("DBHelper", "GetUserXML")
 
-            Dim odr As SqlDataReader
+            'Dim odr As SqlDataReader
             Dim root As XmlElement = Nothing
             Dim oElmt As XmlElement
             Dim sSql As String = ""
@@ -5479,29 +5456,29 @@ restart:
                     'If nPermLevel > 2 Then
                     '    myWeb.moPageXml.DocumentElement.SetAttribute("adminMode", getPermissionLevel(nPermLevel))
                     'End If
-                    odr = getDataReader("SELECT * FROM tblDirectory where nDirKey = " & nUserId)
-                    While odr.Read
-                        root = moPageXml.CreateElement(odr("cDirSchema"))
-                        root.SetAttribute("id", nUserId)
-                        root.SetAttribute("name", odr("cDirName"))
-                        root.SetAttribute("fRef", odr("cDirForiegnRef"))
-                        'root.SetAttribute("permission", getPermissionLevel(nPermLevel))
-                        If odr("cDirXml") <> "" Then
-                            root.InnerXml = odr("cDirXml")
-                            Dim attr As XmlAttribute
-                            For Each attr In root.FirstChild.Attributes
-                                root.SetAttribute(attr.Name, attr.Value)
-                            Next
-                            root.InnerXml = root.SelectSingleNode("*").InnerXml
-                        End If
-                        ' Ignore if myWeb is nothing
-                        If Not (myWeb Is Nothing) Then
-                            PermLevel = getPagePermissionLevel(myWeb.mnPageId)
-                            root.SetAttribute("pagePermission", PermLevel.ToString)
-                        End If
-                    End While
-                    odr.Close()
-                    odr = Nothing
+                    'odr = getDataReader("SELECT * FROM tblDirectory where nDirKey = " & nUserId)
+                    Using oDr As SqlDataReader = getDataReaderDisposable("SELECT * FROM tblDirectory where nDirKey = " & nUserId)  'Done by nita on 6/7/22
+                        While oDr.Read
+                            root = moPageXml.CreateElement(oDr("cDirSchema"))
+                            root.SetAttribute("id", nUserId)
+                            root.SetAttribute("name", oDr("cDirName"))
+                            root.SetAttribute("fRef", oDr("cDirForiegnRef"))
+                            'root.SetAttribute("permission", getPermissionLevel(nPermLevel))
+                            If oDr("cDirXml") <> "" Then
+                                root.InnerXml = oDr("cDirXml")
+                                Dim attr As XmlAttribute
+                                For Each attr In root.FirstChild.Attributes
+                                    root.SetAttribute(attr.Name, attr.Value)
+                                Next
+                                root.InnerXml = root.SelectSingleNode("*").InnerXml
+                            End If
+                            ' Ignore if myWeb is nothing
+                            If Not (myWeb Is Nothing) Then
+                                PermLevel = getPagePermissionLevel(myWeb.mnPageId)
+                                root.SetAttribute("pagePermission", PermLevel.ToString)
+                            End If
+                        End While
+                    End Using
 
                     'get group memberships
 
@@ -5521,36 +5498,35 @@ restart:
                             " WHERE   d.cDirSchema <> 'User'" &
                             " ORDER BY d.cDirName"
 
-                    odr = getDataReader(sSql)
-                    While odr.Read
-                        oElmt = moPageXml.CreateElement(odr("cDirSchema"))
-                        oElmt.SetAttribute("id", odr("nDirKey"))
-                        oElmt.SetAttribute("name", odr("cDirName"))
-                        oElmt.SetAttribute("fRef", odr("cDirForiegnRef"))
-                        If Not IsDBNull(odr("Member")) Then
-                            oElmt.SetAttribute("isMember", "yes")
-                        End If
-                        oElmt.InnerXml = odr("cDirXml")
-                        Dim attr As XmlAttribute
-                        For Each attr In oElmt.FirstChild.Attributes
-                            oElmt.SetAttribute(attr.Name, attr.Value)
-                        Next
-                        oElmt.InnerXml = oElmt.FirstChild.InnerXml
-                        If Not cOverrideUserGroups = "on" Then
-                            If Not IsDBNull(odr("Member")) Then
-                                If (Not oElmt Is Nothing) And (Not root Is Nothing) Then
-                                    root.AppendChild(oElmt)
-                                End If
+                    Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        While oDr.Read
+                            oElmt = moPageXml.CreateElement(oDr("cDirSchema"))
+                            oElmt.SetAttribute("id", oDr("nDirKey"))
+                            oElmt.SetAttribute("name", oDr("cDirName"))
+                            oElmt.SetAttribute("fRef", oDr("cDirForiegnRef"))
+                            If Not IsDBNull(oDr("Member")) Then
+                                oElmt.SetAttribute("isMember", "yes")
                             End If
-                        Else
-                            root.AppendChild(oElmt)
-                        End If
-                        'Sync User with Mail Provider
+                            oElmt.InnerXml = oDr("cDirXml")
+                            Dim attr As XmlAttribute
+                            For Each attr In oElmt.FirstChild.Attributes
+                                oElmt.SetAttribute(attr.Name, attr.Value)
+                            Next
+                            oElmt.InnerXml = oElmt.FirstChild.InnerXml
+                            If Not cOverrideUserGroups = "on" Then
+                                If Not IsDBNull(oDr("Member")) Then
+                                    If (Not oElmt Is Nothing) And (Not root Is Nothing) Then
+                                        root.AppendChild(oElmt)
+                                    End If
+                                End If
+                            Else
+                                root.AppendChild(oElmt)
+                            End If
+                            'Sync User with Mail Provider
 
 
-                    End While
-                    odr.Close()
-                    odr = Nothing
+                        End While
+                    End Using
                     If root Is Nothing Then
                         root = moPageXml.CreateElement("User")
                         root.SetAttribute("id", nUserId)
@@ -5647,7 +5623,7 @@ restart:
             PerfMon.Log("DBHelper", "listDirRelations")
             Dim sSql As String
             Dim oDs As DataSet
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim oElmt As XmlElement
             Dim oElmt2 As XmlElement
             Dim cChildSchema As String = ""
@@ -5667,17 +5643,16 @@ restart:
                 'let get the details of the child object
                 If nChildId <> 0 Then
                     sSql = "select * from tblDirectory where nDirKey = " & nChildId
-                    oDr = getDataReader(sSql)
-                    If oDr.HasRows Then
-                        While oDr.Read
-                            oElmt.SetAttribute("childId", nChildId)
-                            oElmt.SetAttribute("childType", oDr("cDirSchema"))
-                            cChildSchema = oDr("cDirSchema")
-                            oElmt.SetAttribute("childName", oDr("cDirName"))
-                        End While
-                    End If
-                    oDr.Close()
-                    oDr = Nothing
+                    Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        If oDr.HasRows Then
+                            While oDr.Read
+                                oElmt.SetAttribute("childId", nChildId)
+                                oElmt.SetAttribute("childType", oDr("cDirSchema"))
+                                cChildSchema = oDr("cDirSchema")
+                                oElmt.SetAttribute("childName", oDr("cDirName"))
+                            End While
+                        End If
+                    End Using
                 Else
                     oElmt.SetAttribute("parType", cSchemaName)
                     oElmt.SetAttribute("parName", "All")
@@ -5864,21 +5839,20 @@ restart:
         Sub moveDirectoryRelations(ByVal nSourceDirId As Long, ByVal nTargetDirId As Long, Optional ByVal bDeleteSource As Boolean = False)
 
             Dim sSql As String = ""
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim cProcessInfo As String = ""
             Try
 
                 'Transfer all the relations to another department
                 sSql = "select nRelKey, nDirChildId from tblDirectoryRelation where nDirParentId = " & nSourceDirId
-                oDr = getDataReader(sSql)
-                While oDr.Read
-                    'first we remove
-                    DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr("nRelKey"))
-                    'then we insert new
-                    saveDirectoryRelations(oDr("nDirChildId"), nTargetDirId, False, , True)
-                End While
-                oDr.Close()
-                oDr = Nothing
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    While oDr.Read
+                        'first we remove
+                        DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr("nRelKey"))
+                        'then we insert new
+                        saveDirectoryRelations(oDr("nDirChildId"), nTargetDirId, False, , True)
+                    End While
+                End Using
 
                 'Delete Department Directory Relations, Department Permissions and Department
 
@@ -5895,19 +5869,17 @@ restart:
         Sub deleteChildDirectoryRelations(ByVal nDirId As Long)
 
             Dim sSql As String = ""
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim cProcessInfo As String = ""
             Try
 
                 'remove all child relations so child objects don't get deleted
                 sSql = "select nRelKey from tblDirectoryRelation where nDirParentId = " & nDirId
-                oDr = getDataReader(sSql)
-                While oDr.Read
-                    DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
-                End While
-                oDr.Close()
-                oDr = Nothing
-
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    While oDr.Read
+                        DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
+                    End While
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "moveDirectoryRelations", ex, cProcessInfo))
             End Try
@@ -5955,7 +5927,7 @@ restart:
             Dim nDirId As Long
             Dim i As Long
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
 
             Dim cProcessInfo As String = ""
             Try
@@ -5971,12 +5943,11 @@ restart:
                                 Me.maintainPermission(nPageId, nDirId, nLevel)
                             Else
                                 sSql = "select * from tblDirectoryPermission where nStructId = " & nPageId & " and nDirId=" & nDirId
-                                oDr = getDataReader(sSql)
-                                While oDr.Read
-                                    DeleteObject(objectTypes.Permission, oDr("nPermKey"))
-                                End While
-                                oDr.Close()
-                                oDr = Nothing
+                                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                    While oDr.Read
+                                        DeleteObject(objectTypes.Permission, oDr("nPermKey"))
+                                    End While
+                                End Using
                             End If
 
                         End If
@@ -5986,12 +5957,11 @@ restart:
                     Select Case nLevel
                         Case PermissionLevel.Open
                             sSql = "select * from tblDirectoryPermission where nStructId = " & nPageId
-                            oDr = getDataReader(sSql)
-                            While oDr.Read
-                                DeleteObject(objectTypes.Permission, oDr("nPermKey"))
-                            End While
-                            oDr.Close()
-                            oDr = Nothing
+                            Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                While oDr.Read
+                                    DeleteObject(objectTypes.Permission, oDr("nPermKey"))
+                                End While
+                            End Using
 
                         Case Else
                             'do nothing why would you want to reset all permissions to the same level?
@@ -6508,7 +6478,7 @@ restart:
 
             PerfMon.Log("DBHelper", "passwordReminder")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sReturn As String = ""
             Dim cProcessInfo As String = ""
             Dim bValid As Boolean
@@ -6521,67 +6491,60 @@ restart:
             Try
                 sSql = "select * from tblDirectory where cDirSchema = 'User' and cDirXml like '%<Email>" & LCase(cEmail) & "</Email>%'"
 
-                oDr = getDataReader(sSql)
-                If oDr.HasRows Then
-                    While oDr.Read
-                        Dim oXmlDetails As XmlDataDocument = New XmlDataDocument
-                        oXmlDetails.LoadXml(Me.GetUserXML(oDr("nDirKey"), False).OuterXml)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            Dim oXmlDetails As XmlDataDocument = New XmlDataDocument
+                            oXmlDetails.LoadXml(Me.GetUserXML(oDr("nDirKey"), False).OuterXml)
 
-                        'lets add the saved password to the xml
-                        Dim oElmtPwd As XmlElement = oXmlDetails.CreateElement("Password")
-                        oElmtPwd.InnerText = oDr("cDirPassword")
-                        oXmlDetails.SelectSingleNode("User").AppendChild(oElmtPwd)
-
-
+                            'lets add the saved password to the xml
+                            Dim oElmtPwd As XmlElement = oXmlDetails.CreateElement("Password")
+                            oElmtPwd.InnerText = oDr("cDirPassword")
+                            oXmlDetails.SelectSingleNode("User").AppendChild(oElmtPwd)
 
 
 
 
-                        'now lets send the email
-                        Dim oMsg As Messaging = New Messaging(myWeb.msException)
+
+
+                            'now lets send the email
+                            Dim oMsg As Messaging = New Messaging(myWeb.msException)
 
 
 
-                        ' Set the language
-                        If moPageXml IsNot Nothing _
-                            AndAlso moPageXml.DocumentElement IsNot Nothing _
-                            AndAlso moPageXml.DocumentElement.HasAttribute("translang") Then
-                            oMsg.Language = moPageXml.DocumentElement.GetAttribute("translang")
-                        End If
-
-
-
-
-                        Try
-                            Dim fsHelper As New Protean.fsHelper
-                            Dim filePath As String = fsHelper.checkCommonFilePath("/xsl/email/passwordReminder.xsl")
-
-                            sReturn = oMsg.emailer(oXmlDetails.DocumentElement, goConfig("ProjectPath") & filePath _
-                                                , sSenderName _
-                                                , sSenderEmail _
-                                                , cEmail _
-                                                , "Password Reminder" _
-                                                , "Your password has been emailed to you")
-                            bValid = True
-                        Catch ex As Exception
-                            sReturn = "Your email failed to send from password reminder"
-                            bValid = False
-                        End Try
-                        oXmlDetails = Nothing
-
-                    End While
-                Else
-                    sReturn = "This user was not found"
-                End If
-
-                oDr.Close()
-                oDr = Nothing
+                            ' Set the language
+                            If moPageXml IsNot Nothing _
+                                AndAlso moPageXml.DocumentElement IsNot Nothing _
+                                AndAlso moPageXml.DocumentElement.HasAttribute("translang") Then
+                                oMsg.Language = moPageXml.DocumentElement.GetAttribute("translang")
+                            End If
 
 
 
 
-                Return sReturn
+                            Try
+                                Dim fsHelper As New Protean.fsHelper
+                                Dim filePath As String = fsHelper.checkCommonFilePath("/xsl/email/passwordReminder.xsl")
 
+                                sReturn = oMsg.emailer(oXmlDetails.DocumentElement, goConfig("ProjectPath") & filePath _
+                                                    , sSenderName _
+                                                    , sSenderEmail _
+                                                    , cEmail _
+                                                    , "Password Reminder" _
+                                                    , "Your password has been emailed to you")
+                                bValid = True
+                            Catch ex As Exception
+                                sReturn = "Your email failed to send from password reminder"
+                                bValid = False
+                            End Try
+                            oXmlDetails = Nothing
+
+                        End While
+                    Else
+                        sReturn = "This user was not found"
+                    End If
+                    Return sReturn
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "passwordReminder", ex, cProcessInfo))
 
@@ -6592,7 +6555,7 @@ restart:
         Public Function checkUserUnique(ByVal cUsername As String, Optional ByVal nCurrId As Long = 0) As Boolean
             PerfMon.Log("DBHelper", "checkUserUnique")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim cProcessInfo As String = ""
 
             Try
@@ -6602,17 +6565,17 @@ restart:
                     sSql = "select * from tblDirectory where cDirSchema = 'User' and cDirName = '" & SqlFmt(cUsername) & "'"
                 End If
 
-                oDr = getDataReader(sSql)
-                If oDr.HasRows Then
-                    oDr.Close()
-                    oDr = Nothing
-                    Return False
-                Else
-                    oDr.Close()
-                    oDr = Nothing
-                    Return True
-                End If
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        oDr.Close()
 
+                        Return False
+                    Else
+                        oDr.Close()
+
+                        Return True
+                    End If
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "checkUserExists", ex, cProcessInfo))
 
@@ -6622,7 +6585,7 @@ restart:
         Public Function checkEmailUnique(ByVal cEmail As String, Optional ByVal nCurrId As Long = 0) As Boolean
             PerfMon.Log("DBHelper", "checkEmailUnique")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim cProcessInfo As String = ""
 
             Try
@@ -6641,21 +6604,22 @@ restart:
                     End If
                 End If
 
-                oDr = getDataReader(sSql)
-                If oDr.HasRows Then
-                    oDr.Close()
-                    oDr = Nothing
-                    If nCurrId > 0 Then
-                        'fix for duplicate emails allready on the system
-                        Return True
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        oDr.Close()
+
+                        If nCurrId > 0 Then
+                            'fix for duplicate emails allready on the system
+                            Return True
+                        Else
+                            Return False
+                        End If
                     Else
-                        Return False
+                        oDr.Close()
+
+                        Return True
                     End If
-                Else
-                    oDr.Close()
-                    oDr = Nothing
-                    Return True
-                End If
+                End Using
                 PerfMon.Log("DBHelper", "checkEmailUnique", sSql)
 
             Catch ex As Exception
@@ -6667,7 +6631,7 @@ restart:
         Public Function checkUserRole(ByVal cRoleName As String, Optional ByVal cSchemaName As String = "Role", Optional userId As Long = 0) As Boolean
             PerfMon.Log("DBHelper", "checkUserRole")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim cProcessInfo As String = ""
             Dim bValid As Boolean
             If userId = 0 Then userId = mnUserId
@@ -6679,21 +6643,19 @@ restart:
                 "inner join tblDirectoryRelation r on r.nDirParentId = d.nDirKey " &
                 "where r.nDirChildId = " & userId & " and d.cDirSchema='" & cSchemaName & "'"
 
-                oDr = getDataReader(sSql)
-                If Not oDr Is Nothing Then
-                    While oDr.Read
-                        If oDr("cDirName") = cRoleName Then
-                            bValid = True
-                        End If
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If Not oDr Is Nothing Then
+                        While oDr.Read
+                            If oDr("cDirName") = cRoleName Then
+                                bValid = True
+                            End If
 
-                    End While
-                    oDr.Close()
-                End If
+                        End While
+                        oDr.Close()
+                    End If
 
-                oDr = Nothing
-
-                Return bValid
-
+                    Return bValid
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "checkUserRole", ex, cProcessInfo))
 
@@ -6703,7 +6665,7 @@ restart:
         Public Function getUserXMLById(ByRef nUserId As Integer) As XmlElement
             PerfMon.Log("DBHelper", "getUserXMLById")
             'Dim oDs As Data.DataSet
-            Dim odr As SqlDataReader
+            'Dim odr As SqlDataReader
             Dim root As XmlElement
             Dim oElmt As XmlElement
             Dim sSql As String
@@ -6717,17 +6679,16 @@ restart:
                 root = moPageXml.CreateElement("User")
                 root.SetAttribute("id", nUserId)
                 If nUserId <> 0 Then
-                    odr = getDataReader("SELECT * FROM tblDirectory where nDirKey = " & nUserId)
-                    While odr.Read
-                        root.SetAttribute("name", odr("cDirName"))
-                        If odr("cDirXml") <> "" Then
-                            root.InnerXml = odr("cDirXml")
-                            root.InnerXml = root.SelectSingleNode("*").InnerXml
-                        End If
-                    End While
-                    odr.Close()
-                    odr = Nothing
-
+                    'odr = getDataReader("SELECT * FROM tblDirectory where nDirKey = " & nUserId)
+                    Using oDr As SqlDataReader = getDataReaderDisposable("SELECT * FROM tblDirectory where nDirKey = " & nUserId)  'Done by nita on 6/7/22
+                        While oDr.Read
+                            root.SetAttribute("name", oDr("cDirName"))
+                            If oDr("cDirXml") <> "" Then
+                                root.InnerXml = oDr("cDirXml")
+                                root.InnerXml = root.SelectSingleNode("*").InnerXml
+                            End If
+                        End While
+                    End Using
                     'get parent directory item memberships
                     If cOverrideUserGroups = "on" Then
                         cJoinType = "LEFT"
@@ -6744,25 +6705,24 @@ restart:
                             " WHERE   d.cDirSchema <> 'User'" &
                             " ORDER BY d.cDirName"
 
-                    odr = getDataReader(sSql)
-                    While odr.Read
-                        oElmt = moPageXml.CreateElement(odr("cDirSchema"))
-                        oElmt.SetAttribute("id", odr("nDirKey"))
-                        oElmt.SetAttribute("name", odr("cDirName"))
-                        If Not IsDBNull(odr("Member")) Then
-                            oElmt.SetAttribute("isMember", "yes")
-                        End If
+                    Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        While oDr.Read
+                            oElmt = moPageXml.CreateElement(oDr("cDirSchema"))
+                            oElmt.SetAttribute("id", oDr("nDirKey"))
+                            oElmt.SetAttribute("name", oDr("cDirName"))
+                            If Not IsDBNull(oDr("Member")) Then
+                                oElmt.SetAttribute("isMember", "yes")
+                            End If
 
-                        If Not cOverrideUserGroups = "on" Then
-                            If Not IsDBNull(odr("Member")) Then
+                            If Not cOverrideUserGroups = "on" Then
+                                If Not IsDBNull(oDr("Member")) Then
+                                    root.AppendChild(oElmt)
+                                End If
+                            Else
                                 root.AppendChild(oElmt)
                             End If
-                        Else
-                            root.AppendChild(oElmt)
-                        End If
-                    End While
-                    odr.Close()
-                    odr = Nothing
+                        End While
+                    End Using
                 End If
 
                 Return root
@@ -7579,11 +7539,12 @@ restart:
                                     End If
                                     cSQL += ")"
 
-                                    Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-
-                                    Do While oDR.Read
-                                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, oDR(0))
-                                    Loop
+                                    'Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
+                                    Using oDR As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                        Do While oDR.Read
+                                            myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, oDR(0))
+                                        Loop
+                                    End Using
                                 Case "Directory"
                                     'Delete Directory Items
                                     cSQL = "Select nDirKey FROM tblDirectory " _
@@ -7597,14 +7558,15 @@ restart:
                                     End If
                                     cSQL += ")"
 
-                                    Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
+                                    Using oDr As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
 
-                                    Do While oDR.Read
-                                        If oDR(0) <> 1 Then
-                                            'dont delete admin logon
-                                            myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Directory, oDR(0))
-                                        End If
-                                    Loop
+                                        Do While oDr.Read
+                                            If oDr(0) <> 1 Then
+                                                'dont delete admin logon
+                                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Directory, oDr(0))
+                                            End If
+                                        Loop
+                                    End Using
                             End Select
 
 
@@ -7851,27 +7813,29 @@ restart:
 
             PerfMon.Log("DBHelper", "setContentLocationByRef", "ref=" & cStructFRef & " nContentId=" & nContentId)
             Dim cProcessInfo As String = ""
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Try
                 Dim nID As String = "" 'myWeb.moDbHelper.getKeyByNameAndSchema(Cms.dbHelper.objectTypes.ContentStructure, "", cStructName)
 
-                oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
-                Dim lastloc As Integer = 0
+                'oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
+                Using oDr As SqlDataReader = getDataReaderDisposable("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")  'Done by nita on 6/7/22
+                    Dim lastloc As Integer = 0
 
-                While oDr.Read()
-                    nID = oDr("nStructKey")
-                    If nID = "" Then nID = 0
-                    lastloc = setContentLocation(nID, nContentId, IIf(bPrimary = 1, True, False), bCascade, False)
-                End While
-                Return lastloc
+                    While oDr.Read()
+                        nID = oDr("nStructKey")
+                        If nID = "" Then nID = 0
+                        lastloc = setContentLocation(nID, nContentId, IIf(bPrimary = 1, True, False), bCascade, False)
+                    End While
+                    Return lastloc
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "setContentLocationByRef", ex, cProcessInfo))
                 Return 0
             Finally
-                If Not oDr Is Nothing Then
-                    oDr.Close()
-                    oDr = Nothing
-                End If
+                'If Not oDr Is Nothing Then
+                '    oDr.Close()
+                '    oDr = Nothing
+                'End If
             End Try
         End Function
 
@@ -7880,29 +7844,30 @@ restart:
 
             PerfMon.Log("DBHelper", "setContentLocationByRef", "ref=" & cStructFRef & " nContentId=" & nContentId)
             Dim cProcessInfo As String = ""
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Try
                 Dim nID As String = "" 'myWeb.moDbHelper.getKeyByNameAndSchema(Cms.dbHelper.objectTypes.ContentStructure, "", cStructName)
                 ' nID = getObjectByRef(Cms.dbHelper.objectTypes.ContentStructure, cStructFRef)
                 'A site may have multiple pasges with the same Fref
-                oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
-                Dim lastloc As Integer = 0
+                'oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
+                Using oDr As SqlDataReader = getDataReaderDisposable("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")  'Done by nita on 6/7/22
+                    Dim lastloc As Integer = 0
 
-                While oDr.Read()
-                    nID = oDr("nStructKey")
-                    If nID = "" Then nID = 0
-                    lastloc = setContentLocation(nID, nContentId, IIf(bPrimary = 1, True, False), bCascade, False, cPosition, False, nDisplayOrder)
-                End While
-                Return lastloc
-
+                    While oDr.Read()
+                        nID = oDr("nStructKey")
+                        If nID = "" Then nID = 0
+                        lastloc = setContentLocation(nID, nContentId, IIf(bPrimary = 1, True, False), bCascade, False, cPosition, False, nDisplayOrder)
+                    End While
+                    Return lastloc
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "setContentLocationByRef", ex, cProcessInfo))
                 Return 0
             Finally
-                If Not oDr Is Nothing Then
-                    oDr.Close()
-                    oDr = Nothing
-                End If
+                'If Not oDr Is Nothing Then
+                '    oDr.Close()
+                '    oDr = Nothing
+                'End If
             End Try
         End Function
 
@@ -8978,11 +8943,11 @@ restart:
                     cSQL = "Select nContentRelationKey from tblContentRelation where nContentParentId = " & nRelatedParentId & " AND cRelationType = '" & cRelationType & "'"
                 End If
 
-                Dim oRead As SqlDataReader = getDataReader(cSQL)
-                While oRead.Read()
-                    DeleteObject(dbHelper.objectTypes.ContentRelation, oRead.GetInt32(0))
-                End While
-
+                Using oRead As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                    While oRead.Read()
+                        DeleteObject(dbHelper.objectTypes.ContentRelation, oRead.GetInt32(0))
+                    End While
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RemoveContentRelation", ex, ""))
 
@@ -9195,20 +9160,21 @@ restart:
 
                                     cSQL = "SELECT cRelationType FROM tblContentRelation WHERE nContentParentId = '" + nParentId.ToString + "' AND nContentChildId = '" + oRelated(nI) + "'"
 
-                                    Dim oDre As SqlDataReader = getDataReader(cSQL)
-                                    Dim cSqlResults As String = ""
+                                    Using oDre As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                        Dim cSqlResults As String = ""
 
-                                    Do While oDre.Read
-                                        cSqlResults &= oDre(0) & ","
-                                    Loop
-                                    oDre.Close()
-                                    If Not cSqlResults = "" Then cSqlResults = Left(cSqlResults, Len(cSqlResults) - 1)
+                                        Do While oDre.Read
+                                            cSqlResults &= oDre(0) & ","
+                                        Loop
+                                        oDre.Close()
+                                        If Not cSqlResults = "" Then cSqlResults = Left(cSqlResults, Len(cSqlResults) - 1)
 
-                                    If Not cSqlResults = "" Then
-                                        oTmp.SetAttribute("sType", cSqlResults)
-                                    Else
-                                        oTmp.SetAttribute("sType", "Not Specified")
-                                    End If
+                                        If Not cSqlResults = "" Then
+                                            oTmp.SetAttribute("sType", cSqlResults)
+                                        Else
+                                            oTmp.SetAttribute("sType", "Not Specified")
+                                        End If
+                                    End Using
                                 Else
                                     oTmp.SetAttribute("sType", "Not Specified")
                                 End If
@@ -9331,26 +9297,25 @@ restart:
 
                     'delete any new ones
                     Dim delSql As String = "Select nCatProductRelKey from tblCartCatProductRelations where nContentId = " & nProductId & " and nCatProductRelKey not in (" & s & ")"
-                    Dim oDr As SqlDataReader = getDataReader(delSql)
-                    If Not oDr Is Nothing Then
-                        Do While oDr.Read
-                            Me.DeleteObject(objectTypes.CartCatProductRelations, oDr(0))
-                        Loop
-                    Else
-                        cProcessInfo = nProductId & " Not Found in " & s
-                    End If
-                    oDr.Close()
-                    oDr = Nothing
-                    Return s
+                    Using oDr As SqlDataReader = getDataReaderDisposable(delSql)  'Done by nita on 6/7/22
+                        If Not oDr Is Nothing Then
+                            Do While oDr.Read
+                                Me.DeleteObject(objectTypes.CartCatProductRelations, oDr(0))
+                            Loop
+                        Else
+                            cProcessInfo = nProductId & " Not Found in " & s
+                        End If
+
+                        Return s
+                    End Using
                 Else
                     'if GroupIds is empty then delete all
                     Dim delSql As String = "Select nCatProductRelKey from tblCartCatProductRelations where nContentId = " & nProductId
-                    Dim oDr As SqlDataReader = getDataReader(delSql)
-                    Do While oDr.Read
-                        Me.DeleteObject(objectTypes.CartCatProductRelations, oDr(0))
-                    Loop
-                    oDr.Close()
-                    oDr = Nothing
+                    Using oDr As SqlDataReader = getDataReaderDisposable(delSql)  'Done by nita on 6/7/22
+                        Do While oDr.Read
+                            Me.DeleteObject(objectTypes.CartCatProductRelations, oDr(0))
+                        Loop
+                    End Using
                     Return ""
                 End If
 
@@ -9404,11 +9369,11 @@ restart:
                         Else
                             'remove any specific record
                             cSQL = "Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = " & nDiscountId & " And nDirId > 0 And nPermLevel = " & nPermLevel
-                            Dim oDre As SqlDataReader = getDataReader(cSQL)
-                            Do While oDre.Read
-                                Me.DeleteObject(objectTypes.CartDiscountDirRelations, oDre(0))
-                            Loop
-                            oDre.Close()
+                            Using oDre As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                Do While oDre.Read
+                                    Me.DeleteObject(objectTypes.CartDiscountDirRelations, oDre(0))
+                                Loop
+                            End Using
                         End If
                         If bDeny Then
                             cSQL = "INSERT INTO tblCartDiscountDirRelations (nDiscountId, nDirId, nAuditId, nPermLevel) Values(" &
@@ -9473,11 +9438,11 @@ restart:
                         Else
                             'remove any specific record
                             cSQL = "Select nCartShippingPermissionKey From tblCartShippingPermission Where nShippingMethodId = " & nShippingMethodId & " And nDirId > 0"
-                            Dim oDre As SqlDataReader = getDataReader(cSQL)
-                            Do While oDre.Read
-                                Me.DeleteObject(objectTypes.CartShippingPermission, oDre(0))
-                            Loop
-                            oDre.Close()
+                            Using oDre As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                Do While oDre.Read
+                                    Me.DeleteObject(objectTypes.CartShippingPermission, oDre(0))
+                                Loop
+                            End Using
                         End If
                         If bDeny Then
                             cSQL = "INSERT INTO tblCartShippingPermission (nShippingMethodId, nDirId, nPermLevel, nAuditId) Values(" &
@@ -9529,11 +9494,11 @@ restart:
                         Else
                             'remove any specific record
                             cSQL = "Select nDiscountProdCatRelationKey From tblCartDiscountProdCatRelations Where nDiscountId = " & nDiscountId & " And nProductCatId > 0"
-                            Dim oDre As SqlDataReader = getDataReader(cSQL)
-                            Do While oDre.Read
-                                Me.DeleteObject(objectTypes.CartDiscountProdCatRelations, oDre(0))
-                            Loop
-                            oDre.Close()
+                            Using oDre As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                Do While oDre.Read
+                                    Me.DeleteObject(objectTypes.CartDiscountProdCatRelations, oDre(0))
+                                Loop
+                            End Using
                         End If
 
                         cSQL = "INSERT INTO tblCartDiscountProdCatRelations (nDiscountId, nProductCatId, nAuditId) Values(" &
@@ -9556,47 +9521,47 @@ restart:
             PerfMon.Log("DBHelper", "PageIsLive")
             Try
                 Dim sSQL As String = "Select tblAudit.dPublishDate, tblAudit.dExpireDate, tblAudit.nStatus, tblContentStructure.nStructKey FROM tblAudit INNER JOIN tblContentStructure On tblAudit.nAuditKey = tblContentStructure.nAuditId WHERE tblContentStructure.nStructKey = " & nPageId
-                Dim oDRe As SqlDataReader = getDataReader(sSQL)
-                Dim bPublish As Boolean = False
-                Dim bExpire As Boolean = False
-                Dim bStatus As Boolean = False
+                Using oDRe As SqlDataReader = getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                    Dim bPublish As Boolean = False
+                    Dim bExpire As Boolean = False
+                    Dim bStatus As Boolean = False
 
-                Do While oDRe.Read
-                    'Publish
-                    If Not oDRe.IsDBNull(0) Then
-                        If IsNumeric(oDRe(0)) Then
-                            If oDRe(0) = 0 Then bPublish = True
+                    Do While oDRe.Read
+                        'Publish
+                        If Not oDRe.IsDBNull(0) Then
+                            If IsNumeric(oDRe(0)) Then
+                                If oDRe(0) = 0 Then bPublish = True
+                            Else
+                                If CDate(oDRe(0)) <= Now Then bPublish = True
+                            End If
                         Else
-                            If CDate(oDRe(0)) <= Now Then bPublish = True
+                            bPublish = True
                         End If
-                    Else
-                        bPublish = True
-                    End If
-                    'Expire
-                    If Not oDRe.IsDBNull(1) Then
-                        If IsNumeric(oDRe(1)) Then
-                            If oDRe(1) = 0 Then bExpire = True
+                        'Expire
+                        If Not oDRe.IsDBNull(1) Then
+                            If IsNumeric(oDRe(1)) Then
+                                If oDRe(1) = 0 Then bExpire = True
+                            Else
+                                If CDate(oDRe(1)) <= Now Then bExpire = True
+                            End If
                         Else
-                            If CDate(oDRe(1)) <= Now Then bExpire = True
+                            bExpire = True
                         End If
-                    Else
-                        bExpire = True
-                    End If
-                    'Status
-                    If Not oDRe.IsDBNull(2) Then
-                        If Not oDRe(2) = 0 Then bStatus = True
-                    Else
-                        bStatus = True
-                    End If
-                Loop
-                oDRe.Close()
+                        'Status
+                        If Not oDRe.IsDBNull(2) Then
+                            If Not oDRe(2) = 0 Then bStatus = True
+                        Else
+                            bStatus = True
+                        End If
+                    Loop
 
-                If bPublish And bExpire And bStatus Then
-                    Return True
-                Else
-                    Return False
-                End If
 
+                    If bPublish And bExpire And bStatus Then
+                        Return True
+                    Else
+                        Return False
+                    End If
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "PageIsLive", ex, ""))
             End Try
@@ -9712,10 +9677,11 @@ restart:
                 If Not nCheckAddress = "" Then
                     Dim bReturn As Boolean
                     cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE EmailAddress = '" & nCheckAddress & "'"
-                    Dim oDRE As SqlDataReader = getDataReader(cSQL)
-                    bReturn = oDRE.HasRows
-                    oDRE.Close()
-                    Return bReturn
+                    Using oDRe As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                        bReturn = oDRe.HasRows
+                        oDRe.Close()
+                        Return bReturn
+                    End Using
                 Else
                     Return False
                 End If
@@ -9983,11 +9949,12 @@ restart:
                 sSQL &= " WHERE (((SELECT COUNT(nRelKey) AS [COUNT]"
                 sSQL &= " FROM tblDirectoryRelation Rel"
                 sSQL &= " WHERE (nDirChildId = tblDirectoryRelation.nDirChildId) AND (nDirParentId = tblDirectoryRelation.ndirparentId) AND (nRelKey < tblDirectoryRelation.nrelkey))) > 0)"
-                Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(sSQL)
-                Do While oDr.Read
-                    DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
-                Loop
-                oDr.Close()
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                    Do While oDr.Read
+                        DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
+                    Loop
+                    oDr.Close()
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RemoveDuplicateDirRelations", ex, ""))
             End Try
@@ -10731,18 +10698,18 @@ ReturnMe:
                                                     & "HAVING SUM(nOtherId) > 0 " _
                                                     & "ORDER BY COUNT(*) DESC, SUM(nOtherId) DESC "
 
-                Dim query As SqlDataReader = getDataReader(popularSearchesQuery)
+                Using query As SqlDataReader = getDataReaderDisposable(popularSearchesQuery)  'Done by nita on 6/7/22
 
-                While query.Read
-                    result = myWeb.moPageXml.CreateElement("search")
-                    result.InnerText = query(0).ToString
-                    popularSearches.AppendChild(result)
-                End While
+                    While query.Read
+                        result = myWeb.moPageXml.CreateElement("search")
+                        result.InnerText = query(0).ToString
+                        popularSearches.AppendChild(result)
+                    End While
 
-                query.Close()
+                    query.Close()
 
-                Return popularSearches
-
+                    Return popularSearches
+                End Using
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "GetMostPopularSearches", ex, "", "", gbDebug)
                 Return Nothing
@@ -11259,15 +11226,16 @@ ReturnMe:
             PerfMon.Log("dbTools", "CheckDuplicateOrder")
             Dim sSql As String
             Dim bIsDuplicate As Boolean = False
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Try
                 sSql = "select Count(nPayMthdKey) from tblCartPaymentMethod where cPayMthdProviderRef= '" & cPayMthdProviderRef & "'"
-                oDr = getDataReader(sSql, CommandType.Text)
-                If oDr.Read() Then
-                    bIsDuplicate = (Convert.ToInt32(oDr(0)) > 0)
-                End If
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.Read() Then
+                        bIsDuplicate = (Convert.ToInt32(oDr(0)) > 0)
+                    End If
 
-                Return bIsDuplicate
+                    Return bIsDuplicate
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckDuplicateOrder", ex, ""))
                 Return Nothing
@@ -11364,25 +11332,24 @@ ReturnMe:
         End Function
 
         Public Function GetCountryISOCode(ByVal sCountry As String) As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim sSql As String
             Dim strReturn As String = ""
 
             Try
                 sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" & sCountry & "' or cLocationNameShort Like '" & sCountry & "'"
-                oDr = myWeb.moDbHelper.getDataReader(sSql)
+                Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                If oDr.HasRows Then
+                    If oDr.HasRows Then
 
-                    While oDr.Read()
-                        strReturn = oDr("cLocationISOa2").ToString()
-                    End While
-                Else
-                    strReturn = ""
-                End If
+                        While oDr.Read()
+                            strReturn = oDr("cLocationISOa2").ToString()
+                        End While
+                    Else
+                        strReturn = ""
+                    End If
 
-                oDr.Close()
-                oDr = Nothing
+                End Using
                 Return strReturn
             Catch ex As Exception
                 Return Nothing

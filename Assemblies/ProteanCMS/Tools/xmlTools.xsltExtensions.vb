@@ -22,7 +22,7 @@ Imports System.Collections.Generic
 
 Imports Imazen.WebP
 Imports System.Drawing
-
+Imports System.Data.SqlClient
 
 Partial Public Module xmlTools
 
@@ -746,7 +746,7 @@ Partial Public Module xmlTools
 
 
                     Dim cSql As String
-                    Dim oDr As SqlClient.SqlDataReader
+                    'Dim oDr As SqlClient.SqlDataReader
 
                     cSql = "SELECT  l.nStructId As LocationID " _
                             & "FROM	dbo.tblContentStructure s INNER JOIN dbo.tblAudit a ON s.nauditid = a.nauditKey INNER JOIN dbo.tblContentLocation l ON s.nStructKey = l.nStructId " _
@@ -759,13 +759,13 @@ Partial Public Module xmlTools
 
                     cSql += " ORDER BY s.cStructName "
 
-                    oDr = myWeb.moDbHelper.getDataReader(cSql)
+                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
 
-                    Do While oDr.Read
-                        cLocations += "," & oDr.Item(0).ToString()
-                    Loop
-                    oDr.Close()
-                    oDr = Nothing
+                        Do While oDr.Read
+                            cLocations += "," & oDr.Item(0).ToString()
+                        Loop
+                        oDr.Close()
+                    End Using
 
                     cLocations = cLocations.TrimStart(",")
 
@@ -1581,27 +1581,27 @@ Partial Public Module xmlTools
                         'Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                         sql = "select nDirKey as value, cDirName as name from tblDirectory where cDirSchema='" & Query2 & "'"
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
 
                     Case "DirectoryName"
                         'Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                         sql = "select cDirName as value, cDirName as name from tblDirectory where cDirSchema='" & Query2 & "'"
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        oXfrms.addOption(SelectElmt, "All", "all")
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            oXfrms.addOption(SelectElmt, "All", "all")
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
 
                     Case "ShippingMethods"
                         'Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                         sql = "select nShipOptKey as value, cShipOptName as name from tblCartShippingMethods"
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        oXfrms.addOption(SelectElmt, "All", "all")
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            oXfrms.addOption(SelectElmt, "All", "all")
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
                     Case "Users"
 
                         ' This is different from Directory in that it tries to format the users nicely
@@ -1627,15 +1627,17 @@ Partial Public Module xmlTools
                         queryBuilder.Append(String.Format("FROM ({0}) u", subqueryBuilder.ToString())).Append(" ")
                         queryBuilder.Append("ORDER BY Lastname, FirstName")
 
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(queryBuilder.ToString())
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
+                        'Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(queryBuilder.ToString())
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(queryBuilder.ToString())  'Done by nita on 6/7/22
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
 
                     Case "Content"
 
                         sql = "select nContentKey as value, cContentName as name from tblContent where cContentSchemaName='" & Query2 & "' order by cContentName ASC"
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
 
                     Case "CartStatus"
                         For Each process As Protean.Cms.Cart.cartProcess In [Enum].GetValues(GetType(Protean.Cms.Cart.cartProcess))
@@ -1738,9 +1740,9 @@ Partial Public Module xmlTools
                         'Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                         sql = "select nCodeKey as value, cCodeName as name from tblCodes where nCodeParentId is NULL"
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
                     Case "Lookup"
                         'Returns all of a specified type in the directory to specify the type use attribute "query2"
                         If (Query3 <> String.Empty) Then
@@ -1753,9 +1755,9 @@ Partial Public Module xmlTools
                             sql = "select cLkpValue as value, cLkpKey as name from tblLookup where cLkpCategory like '" & Query2 & "' order by nDisplayOrder, nLkpID"
                         End If
 
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
                     Case "availableIcons"
                         Dim iconPath = "/ewcommon/icons/icons.xml"
                         If myWeb.bs5 Then iconPath = "/ptn/core/icons/icons.xml"
@@ -1795,22 +1797,21 @@ Partial Public Module xmlTools
                             sql = sql & " where cCatSchemaName='" & Query2 & "'"
                         End If
                         sql = sql & " order by cCatName"
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
                     Case "Subscriptions"
 
                         Dim sSql As String = "SELECT nContentKey as value, cContentName as name  FROM tblContent LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId WHERE (tblContent.cContentSchemaName = 'Subscription') Order By tblCartCatProductRelations.nDisplayOrder"
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sSql)
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
 
                     Case Else
                         sql = Query1
-                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
-                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
-
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sql)  'Done by nita on 6/7/22
+                            oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                        End Using
                 End Select
 
                 'Return cPosition
