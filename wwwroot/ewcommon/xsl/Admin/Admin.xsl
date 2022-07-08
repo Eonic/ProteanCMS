@@ -9055,14 +9055,40 @@
       <xsl:for-each select="Item">
         <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
           <tr>
-            <xsl:for-each select="descendant-or-self::*">
-              <xsl:apply-templates select="." mode="Report_ColsValues"/>
-            </xsl:for-each>
+
+              <xsl:apply-templates select="descendant-or-self::*" mode="Report_ColsValues"/>
+
           </tr>
         </span>
       </xsl:for-each>
     </table>
   </xsl:template>
+
+	<xsl:template match="Report[@name='MailFormSubmissions']" mode="defaultReport">
+		<table class="table">
+			<tr>
+				<th>
+					Date/Time
+				</th>
+				<xsl:for-each select="Item[1]/cActivityXml/descendant-or-self::*">
+					<xsl:if test="count(*)=0">
+						<th>
+							<xsl:value-of select="local-name()"/>
+						</th>
+					</xsl:if>
+				</xsl:for-each>
+			</tr>
+			<xsl:for-each select="Item">
+				<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
+					<tr>
+                        <xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
+						<xsl:apply-templates select="cActivityXml/descendant-or-self::*" mode="Report_ColsValues"/>
+					</tr>
+				</span>
+			</xsl:for-each>
+		</table>
+	</xsl:template>
+	
 
   <xsl:template match="*" mode ="Report_ColsValues">
     <xsl:if test="count(*)=0">
