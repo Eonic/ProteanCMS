@@ -13971,6 +13971,14 @@
               </i>
             </a>
           </xsl:if>
+			<xsl:if test="@WebsiteURL!=''">
+				<a href="{@WebsiteURL}" title="{$myName} Website" id="social-id-ig">
+					<i class="fa fa-3x fa-link">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
+			
         </xsl:when>
         <xsl:when test="$iconSet='icons-circle'">
           <xsl:if test="@facebookURL!=''">
@@ -15320,10 +15328,14 @@
       <xsl:with-param name="contentType" select="@contentType"/>
     </xsl:apply-templates>
   </xsl:template>
-	<xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery')]" mode="contentJS">
+	
+   <xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery')]" mode="contentJS">
 		<!--xsl:template match="Content[(@type='Module' and @moduleType='SliderGallery') or Content[@type='LibraryImageWithLink']]" mode="contentJS"-->
     <!--Moved so we can use within Event / Product templates too-->
+	   <!--
+	   Not sure this is being used I think we are purely bootstrap.
     <xsl:apply-templates select="."  mode="displaySlideGalleryJS"/>
+	-->
   </xsl:template>
 
   <!--   ################   Slide Gallery   ###############   -->
@@ -15383,6 +15395,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="displaySlideGalleryJS">
+	  <!--TS I believe this to be deprectated we no longer use TN3 but use bootstrap for slide galleries-->
     <script type="text/javascript">
       <xsl:text>$(document).ready(function() {
         var tn1 = $('#slider-gallery-</xsl:text>

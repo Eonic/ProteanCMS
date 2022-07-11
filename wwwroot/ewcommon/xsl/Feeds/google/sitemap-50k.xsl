@@ -17,7 +17,20 @@
   </xsl:variable>
 
   <xsl:variable name="siteURL" select="concat($httpPrefix,/Page/Request/ServerVariables/Item[@name='SERVER_NAME'])"/>
-  
+
+	<xsl:variable name="pageCount" select="50000"/>
+	<xsl:variable name="pageStart">
+		<xsl:choose>
+			<xsl:when test="/Page/Request/QueryString/Item[@name='pageStart']!=''">
+				<xsl:value-of select="/Page/Request/QueryString/Item[@name='pageStart']/node()"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>0</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
+	<xsl:variable name="pageEnd" select="$pageStart + $pageCount"/>
 	<xsl:variable name="baseURL">
 		<xsl:text>http://</xsl:text>
 		<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
@@ -29,9 +42,11 @@
 		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
   xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-        <xsl:apply-templates select="Menu/MenuItem" mode="listPages">
+			
+            <xsl:apply-templates select="descendant-or-self::MenuItem[position()&gt;=$pageStart and position()&lt;=$pageEnd]" mode="listPages">
 				<xsl:with-param name="level" select="10"/>
 			</xsl:apply-templates>
+		
 		</urlset>
 		
 	</xsl:template>
@@ -69,21 +84,6 @@
 			</url>
       
 		</xsl:if>
-		<xsl:if test="count(child::MenuItem)&gt;0">
-			<xsl:apply-templates select="MenuItem[not(contains(@url, 'http'))]" mode="listPages">
-				<xsl:with-param name="level">
-            <xsl:choose>
-            <!-- if no index, don't reduce priority for children -->
-            <xsl:when test="$level=1 or DisplayName/@noindex='true'">
-              <xsl:value-of select="$level"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$level - 1"/>
-            </xsl:otherwise>
-          </xsl:choose>
-				</xsl:with-param>
-			</xsl:apply-templates>
-		</xsl:if> 
 	</xsl:template>
 
   <!-- Match on Menu Item - Build URL for that MenuItem -->
