@@ -963,7 +963,6 @@ Partial Public Class Cms
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
-                'close()
             End Try
         End Sub
 

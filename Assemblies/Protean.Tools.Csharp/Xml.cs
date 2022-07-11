@@ -1388,13 +1388,16 @@ namespace Protean.Tools
                     myDict.Add(Prefix + ".-" + Attribute.Name, Attribute.Value);
                 if (oThisElmt.SelectNodes("*").Count == 0)
                 {
-                    if (oThisElmt.InnerText != "" & !(myDict.ContainsKey(Prefix + "." + oThisElmt.Name)))
+                    if (oThisElmt.InnerText != "" & !(myDict.ContainsKey(Prefix)))
                         myDict.Add(Prefix, oThisElmt.InnerText);
                 }
                 else
-                    foreach (XmlElement oElmt in oThisElmt.SelectNodes("*"))
-                        XmltoDictionaryNode(oElmt, ref myDict, Prefix + "." + oElmt.Name);
-            }
+                {
+                        foreach (XmlElement oElmt in oThisElmt.SelectNodes("*")) { 
+                            XmltoDictionaryNode(oElmt, ref myDict, Prefix + "." + oElmt.Name);
+                    }
+                }
+                }
             catch (Exception ex)
             {
                 OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionaryNode", ex, ""));

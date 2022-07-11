@@ -755,12 +755,6 @@ Public Class Cms
                 oMembershipProv.Activities.SetUserId(Me)
             End If
 
-            If Not moDbHelper Is Nothing Then
-                'moDbHelper.Close()
-                'TS added in to ensure connections are closed
-                moDbHelper.CloseConnection(True)
-                moDbHelper = Nothing
-            End If
 
             goApp = Nothing
             moRequest = Nothing
@@ -777,6 +771,13 @@ Public Class Cms
             If gbCart And Not moCart Is Nothing Then
                 moCart.close()
                 moCart = Nothing
+            End If
+            'moCart.close() requires db connection
+            If Not moDbHelper Is Nothing Then
+                'moDbHelper.Close()
+                'TS added in to ensure connections are closed
+                moDbHelper.CloseConnection(True)
+                moDbHelper = Nothing
             End If
 
             'Dim nMemDif As Integer = Process.GetCurrentProcess.PrivateMemorySize64
