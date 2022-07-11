@@ -83,19 +83,21 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="spacebetween">10</xsl:variable>
-		<xsl:variable name="spacebetweenLg">10</xsl:variable>
 		<!--responsive columns variables-->
 
 		<!--end responsive columns variables-->
 		<!-- Output Module -->
-		<div class="swiper-container NewsList content-carousel Grid">
-			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$spacebetween}" data-spacebetweenlg="{$spacebetweenLg}">
+		<div class="swiper-container NewsList content-carousel ">
+			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
 				<div class="swiper-wrapper">
+					<xsl:apply-templates select="." mode="contentColumns">
+						<xsl:with-param name="carousel" select="@carousel"/>
+					</xsl:apply-templates>
 					<xsl:choose>
 						<xsl:when test="@linkArticle='true'">
 							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
 								<xsl:with-param name="sortBy" select="@sortBy"/>
+								<xsl:with-param name="class" select="'swiper-slide'"/>
 							</xsl:apply-templates>
 						</xsl:when>
 						<xsl:otherwise>
@@ -238,9 +240,9 @@
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
-		<div class="grid-item newsarticle {$class}">
+		<div class="listItem newsarticle {$class}">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="concat('grid-item newsarticle ',$class)"/>
+				<xsl:with-param name="class" select="concat('listItem newsarticle ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
