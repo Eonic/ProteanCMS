@@ -13,14 +13,14 @@ Namespace Providers
             Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim pageFilterSelect As XmlElement
-                    Dim oDr As SqlDataReader
+                    'Dim oDr As SqlDataReader
 
                     Dim sSql As String = "spGetOccasionForFilter"
-                    oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
-                    'Adding controls to the form like dropdown, radiobuttons
-                    pageFilterSelect = oXform.addSelect(oFromGroup, "OccasionFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
-                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cCatName", "nCatKey")
-
+                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
+                        'Adding controls to the form like dropdown, radiobuttons
+                        pageFilterSelect = oXform.addSelect(oFromGroup, "OccasionFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
+                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cCatName", "nCatKey")
+                    End Using
                 Catch ex As Exception
 
                 End Try

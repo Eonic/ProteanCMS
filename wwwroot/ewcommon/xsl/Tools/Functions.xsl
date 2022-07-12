@@ -377,7 +377,7 @@
           </xsl:otherwise>
         </xsl:choose>
 
-		<xsl:apply-templates select="." mode="metacharset"/>
+		  <xsl:apply-templates select="." mode="metacharset"/>
 		  
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
@@ -2694,8 +2694,8 @@
     <xsl:if test="$FeedOptimiseID!=''">
       <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
         <script type="{$scriptType}" cookie-consent="tracking">
-          var _fo = _fo || [];");
-          _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@total"/>" ]);
+          var _fo = _fo || [];
+          _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@total"/>"]);
           _fo.push(["orderId", "<xsl:value-of select="Cart/Order/@InvoiceRef"/>"]);
         </script>
       </xsl:if>
@@ -3848,7 +3848,7 @@
 			</xsl:when>
           <xsl:when test="format-number(@url,'0')!='NaN'">
 
-              <!--code change(s):
+              <!--change(s):
               1. check if the edit-content-menu-item has redirect page under pagesettings
               2. on clicking the item on admin mode, open the actual page on customize mode
               3. on clicking the item on non-admin mode, open the redirected page-->
@@ -6687,7 +6687,7 @@
         <xsl:with-param name="max-width-xxs" select="$max-width-xxs"/>
         <xsl:with-param name="max-height-xxs" select="$max-height-xxs"/>
         <xsl:with-param name="max-width-xs" select="$max-width-xs"/>
-        <xsl:with-param name="max-height-xs" select="$max-height-xs"/>
+        <xsl:with-param name="max-height-xs" select="$max-width-xs"/>
         <xsl:with-param name="max-width-sm" select="$max-width-sm"/>
         <xsl:with-param name="max-height-sm" select="$max-height-sm"/>
         <xsl:with-param name="max-width-md" select="$max-width-md"/>
@@ -7123,7 +7123,7 @@
 								<!--JPG/PNG/GIF Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 574px)'"/>
+									<xsl:with-param name="media" select="'(max-width: 575px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
 									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
 									<xsl:with-param name="class" select="$class"/>
@@ -7448,7 +7448,7 @@
                 <!--JPG/PNG/GIF Images-->
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
-                  <xsl:with-param name="media" select="'(max-width: 574px)'"/>
+                  <xsl:with-param name="media" select="'(max-width: 575px)'"/>
                   <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>

@@ -4155,24 +4155,23 @@ Partial Public Class Cms
 
             Public Function getCountryISO2Code(ByRef sCountry As String) As String
                 PerfMon.Log("PaymentProviders", "getCountryISO2Code")
-                Dim oDr As SqlDataReader
+                'Dim oDr As SqlDataReader
                 Dim sSql As String
                 Dim strReturn As String = ""
                 Dim cProcessInfo As String = "getCountryISO2Code"
                 Try
 
                     sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" & sCountry & "' or cLocationNameShort Like '" & sCountry & "'"
-                    oDr = modbHelper.getDataReader(sSql)
-                    If oDr.HasRows Then
-                        While oDr.Read
-                            strReturn = oDr("cLocationISOa2")
-                        End While
-                    Else
-                        strReturn = ""
-                    End If
+                    Using oDr As SqlDataReader = modbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        If oDr.HasRows Then
+                            While oDr.Read
+                                strReturn = oDr("cLocationISOa2")
+                            End While
+                        Else
+                            strReturn = ""
+                        End If
 
-                    oDr.Close()
-                    oDr = Nothing
+                    End Using
                     Return strReturn
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "getCountryISO2Code", ex, "", cProcessInfo, gbDebug)
@@ -4182,24 +4181,23 @@ Partial Public Class Cms
 
             Public Function getCountryISO3Code(ByRef sCountry As String) As String
                 PerfMon.Log("PaymentProviders", "getCountryISO2Code")
-                Dim oDr As SqlDataReader
+                'Dim oDr As SqlDataReader
                 Dim sSql As String
                 Dim strReturn As String = ""
                 Dim cProcessInfo As String = "getCountryISO2Code"
                 Try
 
                     sSql = "select cLocationISOa3 from tblCartShippingLocations where cLocationNameFull Like '" & sCountry & "' or cLocationNameShort Like '" & sCountry & "'"
-                    oDr = modbHelper.getDataReader(sSql)
-                    If oDr.HasRows Then
-                        While oDr.Read
-                            strReturn = oDr("cLocationISOa3")
-                        End While
-                    Else
-                        strReturn = ""
-                    End If
+                    Using oDr As SqlDataReader = modbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        If oDr.HasRows Then
+                            While oDr.Read
+                                strReturn = oDr("cLocationISOa3")
+                            End While
+                        Else
+                            strReturn = ""
+                        End If
 
-                    oDr.Close()
-                    oDr = Nothing
+                    End Using
                     Return strReturn
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "getCountryISO3Code", ex, "", cProcessInfo, gbDebug)
