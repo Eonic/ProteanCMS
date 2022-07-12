@@ -2276,7 +2276,7 @@ Partial Public Module xmlTools
                     End If
                 End If
 
-                Return sReturnString
+                Return sReturnString.Replace("~", "")
                 sReturnString = Nothing
 
             Catch ioex As IOException    'New changes on 9/12/21'
@@ -2290,10 +2290,15 @@ Partial Public Module xmlTools
 
                 My.Application.Log.WriteException(ex)
 
+                Dim EventLogCategoryType As Short = 1
+
+                '  EventLog.WriteEntry("ProteanCMS", ex.Message & " - " & sReturnString & " - " & ex.StackTrace.ToString, EventLogEntryType.Error, 1, EventLogCategoryType)
+
                 'regardless we should return the filename.
                 sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
                 myWeb.bPageCache = False 'This is not working 100% - can we understand why?????
-                Return sReturnString
+                Return sReturnString.Replace("~", "") & "?error=" & ex.Message & ex.StackTrace.Replace(",", "")
+
             End Try
 
         End Function
