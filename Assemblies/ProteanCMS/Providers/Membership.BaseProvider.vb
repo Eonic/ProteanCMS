@@ -780,8 +780,8 @@ Check:
                             If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
                                 ' load a default content xform if no alternative.
                             End If
-                            Else
-                                MyBase.NewFrm(cXformName)
+                        Else
+                            MyBase.NewFrm(cXformName)
                             MyBase.loadtext(FormXML)
 
                         End If
@@ -1009,17 +1009,17 @@ Check:
                 Public Sub maintainMembershipsFromXForm(ByVal nUserId As Integer, Optional ByVal cGroupNodeListXPath As String = "groups/group", Optional ByVal Email As String = Nothing, Optional addOnly As Boolean = False)
                     PerfMon.Log(mcModuleName, "maintainMembershipsFromXForm", "start")
                     Dim sSql As String = ""
-                    Dim oDr As SqlDataReader
+                    'Dim oDr As SqlDataReader
                     Dim userMembershipIds As New List(Of Integer)
 
                     Try
                         'get the users current memberships
                         sSql = "select * from tblDirectoryRelation where nDirChildId  = " & nUserId
-                        oDr = moDbHelper.getDataReader(sSql)
-                        While oDr.Read
-                            userMembershipIds.Add(oDr("nDirParentId"))
-                        End While
-
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                userMembershipIds.Add(oDr("nDirParentId"))
+                            End While
+                        End Using
                         For Each oElmt As XmlElement In MyBase.Instance.SelectNodes(cGroupNodeListXPath)
                             'TS isLast forces an update everytime this loops not possible to tell if this will be the last time
                             Dim bIsLast As Boolean = True
@@ -2112,7 +2112,7 @@ Check:
 
                                     End If
 
-                                    ElseIf IsNumeric(cDecrypted) AndAlso CInt(cDecrypted) > 0 Then
+                                ElseIf IsNumeric(cDecrypted) AndAlso CInt(cDecrypted) > 0 Then
 
                                     ' Authentication is by way of user ID
                                     cProcessInfo = "User ID Authentication: " & cDecrypted
