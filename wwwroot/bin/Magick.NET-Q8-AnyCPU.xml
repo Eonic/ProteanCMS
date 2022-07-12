@@ -5125,32 +5125,12 @@
             <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImageFactory.Create(System.Byte[],System.Int32,System.Int32,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="data">The byte array to read the image data from.</param>
-            <param name="offset">The offset at which to begin reading data.</param>
-            <param name="count">The maximum number of bytes to read.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="M:ImageMagick.MagickImageFactory.Create(System.Byte[],ImageMagick.IMagickReadSettings{System.Byte})">
             <summary>
             Initializes a new instance of the <see cref="T:ImageMagick.IMagickImage`1"/> class.
             </summary>
             <param name="data">The byte array to read the image data from.</param>
             <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.Create(System.Byte[],ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="data">The byte array to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
@@ -5168,15 +5148,6 @@
             </summary>
             <param name="file">The file to read the image from.</param>
             <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.Create(System.IO.FileInfo,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="file">The file to read the image from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
@@ -5206,15 +5177,6 @@
             <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImageFactory.Create(System.IO.Stream,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="M:ImageMagick.MagickImageFactory.Create(System.String)">
             <summary>
             Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
@@ -5239,15 +5201,6 @@
             </summary>
             <param name="fileName">The fully qualified name of the image file, or the relative image file name.</param>
             <param name="readSettings">The settings to use when reading the image.</param>
-            <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImageFactory.Create(System.String,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance that implements <see cref="T:ImageMagick.IMagickImage`1"/>.
-            </summary>
-            <param name="fileName">The fully qualified name of the image file, or the relative image file name.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
             <returns>A new <see cref="T:ImageMagick.IMagickImage`1"/> instance.</returns>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
@@ -6417,6 +6370,11 @@
             Gets or sets a value indicating whether the exif profile should be ignored (tiff:exif-properties).
             </summary>
         </member>
+        <member name="P:ImageMagick.Formats.TiffReadDefines.IgnoreLayers">
+            <summary>
+            Gets or sets a value indicating whether the layers should be ignored (tiff:ignore-layers).
+            </summary>
+        </member>
         <member name="P:ImageMagick.Formats.TiffReadDefines.IgnoreTags">
             <summary>
             Gets or sets the tiff tags that should be ignored (tiff:ignore-tags).
@@ -6974,16 +6932,6 @@
             <param name="readSettings">The settings to use when reading the image.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImage.#ctor(System.Byte[],System.Int32,System.Int32,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance of the <see cref="T:ImageMagick.MagickImage"/> class.
-            </summary>
-            <param name="data">The byte array to read the image data from.</param>
-            <param name="offset">The offset at which to begin reading data.</param>
-            <param name="count">The maximum number of bytes to read.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="M:ImageMagick.MagickImage.#ctor(System.Byte[],ImageMagick.MagickFormat)">
             <summary>
             Initializes a new instance of the <see cref="T:ImageMagick.MagickImage"/> class.
@@ -6998,14 +6946,6 @@
             </summary>
             <param name="data">The byte array to read the image data from.</param>
             <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.#ctor(System.Byte[],ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance of the <see cref="T:ImageMagick.MagickImage"/> class.
-            </summary>
-            <param name="data">The byte array to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.#ctor(System.IO.FileInfo)">
@@ -7029,14 +6969,6 @@
             </summary>
             <param name="file">The file to read the image from.</param>
             <param name="readSettings">The settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.#ctor(System.IO.FileInfo,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance of the <see cref="T:ImageMagick.MagickImage"/> class.
-            </summary>
-            <param name="file">The file to read the image from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.#ctor(ImageMagick.IMagickColor{System.Byte},System.Int32,System.Int32)">
@@ -7076,14 +7008,6 @@
             <param name="readSettings">The settings to use when reading the image.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
-        <member name="M:ImageMagick.MagickImage.#ctor(System.IO.Stream,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance of the <see cref="T:ImageMagick.MagickImage"/> class.
-            </summary>
-            <param name="stream">The stream to read the image data from.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
         <member name="M:ImageMagick.MagickImage.#ctor(System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:ImageMagick.MagickImage"/> class.
@@ -7114,14 +7038,6 @@
             </summary>
             <param name="fileName">The fully qualified name of the image file, or the relative image file name.</param>
             <param name="format">The format to use.</param>
-            <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
-        </member>
-        <member name="M:ImageMagick.MagickImage.#ctor(System.String,ImageMagick.IPixelReadSettings{System.Byte})">
-            <summary>
-            Initializes a new instance of the <see cref="T:ImageMagick.MagickImage"/> class.
-            </summary>
-            <param name="fileName">The fully qualified name of the image file, or the relative image file name.</param>
-            <param name="settings">The pixel settings to use when reading the image.</param>
             <exception cref="T:ImageMagick.MagickException">Thrown when an error is raised by ImageMagick.</exception>
         </member>
         <member name="M:ImageMagick.MagickImage.Finalize">
@@ -13108,6 +13024,11 @@
         <member name="P:ImageMagick.MagickNET.Version">
             <summary>
             Gets the version of Magick.NET.
+            </summary>
+        </member>
+        <member name="P:ImageMagick.MagickNET.ImageMagickVersion">
+            <summary>
+            Gets the version of ImageMagick.
             </summary>
         </member>
         <member name="M:ImageMagick.MagickNET.GetFormatInformation(System.IO.FileInfo)">

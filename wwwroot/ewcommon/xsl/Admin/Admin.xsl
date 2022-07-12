@@ -10115,7 +10115,7 @@
               <xsl:with-param name="pageTitle" select="'Access Denied'"/>
             </xsl:call-template>
             <xsl:call-template name="SystemPageAdminRow">
-              <xsl:with-param name="pageTitle" select="'Eonic Error'"/>
+              <xsl:with-param name="pageTitle" select="'Protean Error'"/>
             </xsl:call-template>
           </table>
 

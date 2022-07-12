@@ -29,7 +29,7 @@
 		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
   xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-      <xsl:apply-templates select="Menu/MenuItem" mode="listPages">
+        <xsl:apply-templates select="Menu/MenuItem" mode="listPages">
 				<xsl:with-param name="level" select="10"/>
 			</xsl:apply-templates>
 		</urlset>
@@ -72,7 +72,7 @@
 		<xsl:if test="count(child::MenuItem)&gt;0">
 			<xsl:apply-templates select="MenuItem[not(contains(@url, 'http'))]" mode="listPages">
 				<xsl:with-param name="level">
-          <xsl:choose>
+            <xsl:choose>
             <!-- if no index, don't reduce priority for children -->
             <xsl:when test="$level=1 or DisplayName/@noindex='true'">
               <xsl:value-of select="$level"/>
