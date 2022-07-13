@@ -170,7 +170,18 @@ section.bg-primary {
 .swiper-slide {
     align-items: start;
 }
-
+.swiper-wrapper{
+    //padding-right:35px;
+}
+.swiper-wrapper > .swiper-slide {
+    // padding-right: 10px;
+    // padding-left: 10px;
+    padding-right: 2rem;
+    
+}
+.swiper-loaded .swiper-wrapper > .swiper-slide {
+    padding-right: 0;
+}
 .date,
 .dtstamp {
     font-size: 0.75rem;

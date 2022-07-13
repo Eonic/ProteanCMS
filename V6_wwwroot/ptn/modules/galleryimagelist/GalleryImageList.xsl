@@ -93,16 +93,18 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="spacebetween">10</xsl:variable>
-		<xsl:variable name="spacebetweenLg">10</xsl:variable>
 		<!-- Output Module -->
 		<div class="swiper-container content-carousel GalleryImageList Grid">
-			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$spacebetween}" data-spacebetweenlg="{$spacebetweenLg}" >
+			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
 
+				
 				<!--responsive columns-->
 				<!--<xsl:apply-templates select="." mode="contentColumns"/>-->
 
 				<div class="swiper-wrapper">
+					<xsl:apply-templates select="." mode="contentColumns">
+						<xsl:with-param name="carousel" select="@carousel"/>
+					</xsl:apply-templates>
 
 					<!-- If Stepper, display Stepper -->
 					<!--<xsl:if test="@stepCount != '0'">
