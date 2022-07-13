@@ -1123,11 +1123,7 @@ namespace Protean.Tools
             return oXmlValue;
         }
 
-        private void Using(SqlDataReader sqlDataReader, object p)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public XmlDocument GetXml(DataSet src)
         {
             // TS This function was added when we move to C# as GetXML does not return null fields in the XML. Need to convert to string and return empty string.
