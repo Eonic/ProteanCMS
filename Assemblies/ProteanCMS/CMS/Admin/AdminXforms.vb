@@ -4298,8 +4298,9 @@ Partial Public Class Cms
                     'Lets get all other groups
                     oElmt3 = MyBase.addSelect1(oFrmElmt, sType & "CopyTo", False, "Copy " & sType & " Members To", "scroll_10", xForm.ApperanceTypes.Minimal)
                     sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d where d.cDirSchema='" & sType & "' and d.nDirKey<>" & dirId & " order by cDirName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
-
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value")
+                    End Using
                     MyBase.addSubmit(oFrmElmt, "", "Copy " & sType)
 
                     If MyBase.isSubmitted Then
@@ -4624,8 +4625,9 @@ Partial Public Class Cms
                             "left outer join tblDirectoryRelation dr on d.nDirKey = dr.nDirParentId and dr.nDirChildId = " & dirId &
                             "WHERE d.cDirSchema = 'Department' AND company.cDirSchema = 'Company' AND dept.cDirSchema = 'Department' " &
                             "AND dept.nDirKey = " & dirId & " and d.nDirKey<>" & dirId & " order by d.cDirName"
-
-                            MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value")
+                            End Using
 
                         Case "Company"
 
@@ -4639,8 +4641,10 @@ Partial Public Class Cms
                             'Lets get all other companies
                             oElmt3 = MyBase.addSelect1(oFrmElmt, "TransCompanyId", False, "Select Departments", "scroll_10", xForm.ApperanceTypes.Minimal)
                             sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d where d.cDirSchema='Company' and d.nDirKey<>" & dirId & " order by cDirName"
-                            MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value")
+                            End Using
                         Case Else '"Group", "Role"
 
                             oElmt2 = MyBase.addSelect1(oFrmElmt, "Options", False, "What do you want to do with this " & sType & "s members?", "", xForm.ApperanceTypes.Full)
@@ -4650,8 +4654,9 @@ Partial Public Class Cms
                             'Lets get all other groups
                             oElmt3 = MyBase.addSelect1(oFrmElmt, sType & "s", False, "Select Alternative " & sType, "scroll_10", xForm.ApperanceTypes.Minimal)
                             sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d where d.cDirSchema='" & sType & "' and d.nDirKey<>" & dirId & " order by cDirName"
-                            MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
-
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value")
+                            End Using
                             'Case "Role"
 
                             '    oElmt2 = MyBase.addSelect1(oFrmElmt, "Options", False, "What do you want to do with this " & sType & "s users?", "", xForm.ApperanceTypes.Full)
@@ -5089,7 +5094,9 @@ Partial Public Class Cms
                         sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " &
                         "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " & id & " " &
                         "where d.cDirSchema='" & SqlFmt(cSchema) & "' and p.nPermKey is null order by d.cDirName"
-                        MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                        End Using
                     Next
 
 
@@ -5104,8 +5111,10 @@ Partial Public Class Cms
                     "inner join tblDirectory d on d.nDirKey = p.nDirId " &
                     "where p.nStructId=" & id & " and p.nAccessLevel = 2" &
                     " order by d.cDirSchema"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
                     oElmt4 = MyBase.addSelect(oFrmGrp3, "Items", False, "Denied", "scroll_10", xForm.ApperanceTypes.Minimal)
                     sSql = "SELECT p.nDirId as value, '['+ d.cDirSchema + '] ' + d.cDirName as name from tblDirectoryPermission p " &
@@ -5114,8 +5123,10 @@ Partial Public Class Cms
                     " order by d.cDirSchema"
 
                     MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
                     MyBase.Instance.InnerXml = "<permissions/>"
 
@@ -5224,7 +5235,9 @@ Partial Public Class Cms
                             sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " &
                             "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " & id & " " &
                             "where d.cDirSchema='" & SqlFmt(cSchema) & "' and p.nPermKey is null order by d.cDirName"
-                            MyBase.addOptionsFromSqlDataReader(oElmt, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt, oDr, "name", "value")
+                            End Using
                         End If
                     Next
 
@@ -5243,7 +5256,10 @@ Partial Public Class Cms
                             "inner join tblDirectory d on d.nDirKey = p.nDirId " &
                             "where p.nStructId=" & id & " and d.cDirSchema = '" & SqlFmt(cSchema) & "' " &
                             "order by d.cDirSchema"
-                            MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                            End Using
+
 
                         End If
                     Next
@@ -5321,15 +5337,19 @@ Partial Public Class Cms
 
                     sSql = "execute getUsersCompanyDepartments @userId=" & UserId & ", @adminUserId=" & myWeb.mnUserId
 
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt1, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt1, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
                     oElmt2 = MyBase.addSelect(oFrmGrp1, "Groups", False, "Groups", "scroll_10", xForm.ApperanceTypes.Minimal)
 
                     sSql = "execute getUsersCompanyGroups @userId=" & UserId & ", @adminUserId=" & myWeb.mnUserId
 
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "PermittedObjects", "", "User is Member of...")
                     MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
@@ -5339,8 +5359,10 @@ Partial Public Class Cms
                     sSql = "SELECT d.nDirKey as value, '['+ d.cDirSchema + '] ' + d.cDirName as name from tblDirectory d " &
                      "inner join tblDirectoryRelation dr on dr.nDirParentId = d.nDirKey and dr.nDirChildId = " & UserId & " " &
                      "where d.cDirSchema='Group' or d.cDirSchema='Department'  order by d.cDirName"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
                     MyBase.Instance.InnerXml = "<memberships/>"
 
@@ -5465,11 +5487,13 @@ Partial Public Class Cms
                             End If
                         End If
                         If Not String.IsNullOrEmpty(sSql) Then
-                            If aChildTypes(i) = "User" Then
-                                addUserOptionsFromSqlDataReader(oElmt1, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
-                            Else
-                                addOptionsFromSqlDataReader(oElmt1, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
-                            End If
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                If aChildTypes(i) = "User" Then
+                                    addUserOptionsFromSqlDataReader(oElmt1, oDr, "name", "value")
+                                Else
+                                    addOptionsFromSqlDataReader(oElmt1, oDr, "name", "value")
+                                End If
+                            End Using
                         End If
 
                     Next
@@ -5488,8 +5512,11 @@ Partial Public Class Cms
                         End If
                     Next
                     sSql = sSql & "and (a.nStatus =1 or a.nStatus = -1) order by d.cDirName"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        addUserOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    addUserOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
+
 
                     If MyBase.getSubmitted = "Finish" Then MyBase.valid = True
 
@@ -6571,7 +6598,10 @@ Partial Public Class Cms
                     " FROM tblCartDiscountProdCatRelations" &
                     " WHERE (nProductCatId = tblCartProductCategories.nCatKey) AND (nDiscountId = " & id & "))) IS NULL)" &
                     " ORDER BY cCatName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
+
 
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All items with permissions to access page")
@@ -6582,8 +6612,9 @@ Partial Public Class Cms
                     sSql = "SELECT tblCartDiscountProdCatRelations.nDiscountProdCatRelationKey as value, tblCartProductCategories.cCatName as name" &
                     " FROM tblCartDiscountProdCatRelations INNER JOIN tblCartProductCategories ON tblCartDiscountProdCatRelations.nProductCatId = tblCartProductCategories.nCatKey" &
                     " WHERE (tblCartDiscountProdCatRelations.nDiscountId = " & id & ") ORDER BY tblCartProductCategories.cCatName"
-
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
                     MyBase.Instance.InnerXml = "<relations/>"
 
@@ -6653,7 +6684,10 @@ Partial Public Class Cms
                     " FROM tblCartDiscountDirRelations" &
                     " WHERE (nDiscountId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
                     "ORDER BY cDirName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
+
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All items with permissions to access page")
                     MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
@@ -6665,8 +6699,10 @@ Partial Public Class Cms
                     " FROM tblCartDiscountDirRelations LEFT OUTER JOIN" &
                     "  tblDirectory ON tblCartDiscountDirRelations.nDirId = tblDirectory.nDirKey" &
                     " WHERE (tblCartDiscountDirRelations.ndiscountid = " & id & ")" & cDenyFilter & " ORDER BY cDirName"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
                     If bDeny Then
 
@@ -6677,8 +6713,10 @@ Partial Public Class Cms
                     " FROM tblCartDiscountDirRelations LEFT OUTER JOIN" &
                     "  tblDirectory ON tblCartDiscountDirRelations.nDirId = tblDirectory.nDirKey" &
                     " WHERE (tblCartDiscountDirRelations.ndiscountid = " & id & ") and nPermLevel = 0 ORDER BY cDirName"
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value")
+                        End Using
 
-                        MyBase.addOptionsFromSqlDataReader(oElmt5, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
                     End If
 
                     MyBase.Instance.InnerXml = "<Dirs/>"
@@ -6759,8 +6797,10 @@ Partial Public Class Cms
                     " FROM tblCartShippingPermission" &
                     " WHERE (nShippingMethodId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
                     "ORDER BY cDirName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
                     oElmt2 = MyBase.addSelect(oFrmGrp1, "Roles", False, "User Roles", "scroll_10", xForm.ApperanceTypes.Minimal)
 
                     sSql = "SELECT nDirKey as value, cDirName as name FROM tblDirectory WHERE (cDirSchema = N'Role') AND" &
@@ -6768,8 +6808,10 @@ Partial Public Class Cms
                     " FROM tblCartShippingPermission" &
                     " WHERE (nShippingMethodId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
                     "ORDER BY cDirName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
 
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
 
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All Groups with permissions for Shipping Method")
@@ -6784,8 +6826,9 @@ Partial Public Class Cms
                     " tblDirectory ON tblCartShippingPermission.nDirId = tblDirectory.nDirKey" &
                     " WHERE (tblCartShippingPermission.nShippingMethodId = " & id & ")" & cDenyFilter & " ORDER BY cDirName"
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
-
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
                     If bDeny Then
 
                         oElmt5 = MyBase.addSelect(oFrmGrp3, "Items", False, "Denied", "scroll_10", xForm.ApperanceTypes.Minimal)
@@ -6795,8 +6838,10 @@ Partial Public Class Cms
                         " FROM tblCartShippingPermission LEFT OUTER JOIN" &
                         "  tblDirectory ON tblCartShippingPermission.nDirId = tblDirectory.nDirKey" &
                         " WHERE (tblCartShippingPermission.nShippingMethodId = " & id & ") and nPermLevel = 0 ORDER BY cDirName"
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value")
+                        End Using
 
-                        MyBase.addOptionsFromSqlDataReader(oElmt5, moDbHelper.getDataReaderDisposable(sSql), "name", "value")
                     End If
 
                     MyBase.Instance.InnerXml = "<Dirs/>"

@@ -3335,12 +3335,15 @@ Public Class Cms
             If cContentIdsForRelatedCount <> "" Then
                 cContentIdsForRelatedCount = cContentIdsForRelatedCount.Remove(cContentIdsForRelatedCount.Length - 1)
                 Dim sSql As String = "select Distinct COUNT(nContentParentid) as count, nContentChildid from tblContentRelation where nContentChildId in (" & cContentIdsForRelatedCount & ")  group by nContentChildid"
-                Dim oDr As SqlDataReader = moDbHelper.getDataReader(sSql)
-                Do While oDr.Read
-                    For Each ocNode In moPageXml.SelectNodes("/Page/Contents/descendant-or-self::Content[@id='" & oDr("nContentChildId") & "']")
-                        ocNode.SetAttribute("relatedCount", oDr("count"))
-                    Next
-                Loop
+                'Dim oDr As SqlDataReader = moDbHelper.getDataReader(sSql)
+                Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) ' Done by sonali on 13/7/2022
+
+                    Do While oDr.Read
+                        For Each ocNode In moPageXml.SelectNodes("/Page/Contents/descendant-or-self::Content[@id='" & oDr("nContentChildId") & "']")
+                            ocNode.SetAttribute("relatedCount", oDr("count"))
+                        Next
+                    Loop
+                End Using
             End If
 
 
