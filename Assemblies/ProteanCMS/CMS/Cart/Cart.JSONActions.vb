@@ -507,8 +507,10 @@ Partial Public Class Cms
 
             Public Function RemoveDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
-                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    If myCart.mnProcessId > 4 Then
+                        Return ""
+                    Else
+                        Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
 
                         myCart.moDiscount.RemoveDiscountCode()
                         myCart.GetCart(CartXml.FirstChild)
@@ -520,7 +522,7 @@ Partial Public Class Cms
                         jsonString = jsonString.Replace("""@", """_")
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                         Return jsonString
-
+                    End If
                 Catch ex As Exception
 
                 End Try
