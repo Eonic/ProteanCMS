@@ -112,9 +112,12 @@ Partial Public Class Cms
                             End If
                             myCart.mnProcessId = 1
                         End If
+                    If myCart.mnProcessId > 4 Then
+                        Return ""
 
+                    Else
 
-                    Dim item As Newtonsoft.Json.Linq.JObject
+                        Dim item As Newtonsoft.Json.Linq.JObject
                         If (jObj("Item") IsNot Nothing) Then
                             For Each item In jObj("Item")
                                 Dim bUnique As Boolean = False
@@ -150,7 +153,7 @@ Partial Public Class Cms
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue")
 
                         Return jsonString
-
+                    End If
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
                     Return ex.Message
@@ -160,8 +163,10 @@ Partial Public Class Cms
 
             Public Function RemoveItems(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
-                    Dim cProcessInfo As String = ""
+                    If myCart.mnProcessId > 4 Then
+                        Return ""
+                    Else
+                        Dim cProcessInfo As String = ""
                         Dim ItemCount As Long = 1
 
                         Dim item As Newtonsoft.Json.Linq.JObject
@@ -191,7 +196,7 @@ Partial Public Class Cms
                         jsonString = jsonString.Replace("""@", """_")
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                         Return jsonString
-
+                    End If
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
                     Return ex.Message
@@ -340,8 +345,10 @@ Partial Public Class Cms
             End Function
 
             Public Function UpdateDeliveryOptionByCountry(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-
-                Dim country As String = jObj("country")
+                If myCart.mnProcessId > 4 Then
+                    Return ""
+                Else
+                    Dim country As String = jObj("country")
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     'check config setting here so that it will take order option which is optional.
@@ -356,7 +363,7 @@ Partial Public Class Cms
                     End If
 
                     Return cOrderofDeliveryOption
-
+                End If
             End Function
 
             Public Function GetContacts(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
@@ -467,8 +474,10 @@ Partial Public Class Cms
 
             Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
-                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    If myCart.mnProcessId > 4 Then
+                        Return ""
+                    Else
+                        Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                         Dim strMessage As String = String.Empty
                         Dim jsonString As String = String.Empty
                         If Not (jObj("Code") Is Nothing) Then
@@ -490,7 +499,7 @@ Partial Public Class Cms
 
                         End If
                         Return strMessage
-
+                    End If
                 Catch ex As Exception
 
                 End Try

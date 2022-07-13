@@ -1448,8 +1448,10 @@ NoDiscount:
 
                 Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
                 Try
-
-                    If myCart.mnCartId > 0 Then
+                    If myCart.mnProcessId > 4 Then
+                        Return ""
+                    Else
+                        If myCart.mnCartId > 0 Then
                             sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
                             oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                             sXmlContent = oDs.Tables(0).Rows(0)("cCartXml") & ""
@@ -1577,7 +1579,7 @@ NoDiscount:
 
                             Return ""
                         End If
-
+                    End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
@@ -1940,31 +1942,33 @@ NoDiscount:
                 Dim oRow As DataRow
                 Dim sPromoCode As String = ""
                 Try
-
-                    'myCart.moCartXml
-                    If myCart.mnCartId > 0 Then
-                        sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
-                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
-                        Dim xmlNotes As XmlElement = Nothing
-                        Dim xmlDoc As New XmlDocument
-
-                        For Each oRow In oDs.Tables("Order").Rows
-                            xmlDoc.LoadXml(oRow("cClientNotes"))
-                            xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
-
-                            oRow("cClientNotes") = Nothing
-                        Next
-                        myWeb.moDbHelper.updateDataset(oDs, "Order", True)
-                        oDs.Clear()
-                        oDs = Nothing
-                        If (xmlNotes IsNot Nothing) Then
-                            sPromoCode = xmlNotes.InnerText
-                        End If
-
-                        UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
-                    End If
+                    If myCart.mnProcessId > 4 Then
                         Return ""
+                    Else
+                        'myCart.moCartXml
+                        If myCart.mnCartId > 0 Then
+                            sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
+                            oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                            Dim xmlNotes As XmlElement = Nothing
+                            Dim xmlDoc As New XmlDocument
 
+                            For Each oRow In oDs.Tables("Order").Rows
+                                xmlDoc.LoadXml(oRow("cClientNotes"))
+                                xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
+
+                                oRow("cClientNotes") = Nothing
+                            Next
+                            myWeb.moDbHelper.updateDataset(oDs, "Order", True)
+                            oDs.Clear()
+                            oDs = Nothing
+                            If (xmlNotes IsNot Nothing) Then
+                                sPromoCode = xmlNotes.InnerText
+                            End If
+
+                            UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
+                        End If
+                        Return ""
+                    End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
