@@ -6819,6 +6819,7 @@ Partial Public Class Cms
 
                     If id > 0 Then
                         MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartContact, id)
+
                     End If
 
                     ' Add the countries list to the form

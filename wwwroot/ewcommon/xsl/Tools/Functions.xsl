@@ -613,7 +613,7 @@
             <xsl:text>/ewcommon/css/base-bs.less</xsl:text>
           </xsl:with-param>
           <xsl:with-param name="bundle-path">
-            <xsl:text>~/Bundles/baseStyle</xsl:text>
+            <xsl:text>/Bundles/baseStyle</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
       </xsl:when>
@@ -623,7 +623,7 @@
             <xsl:text>/ewcommon/css/base.less</xsl:text>
           </xsl:with-param>
           <xsl:with-param name="bundle-path">
-            <xsl:text>~/Bundles/baseStyle</xsl:text>
+            <xsl:text>/Bundles/baseStyle</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
       </xsl:otherwise>
