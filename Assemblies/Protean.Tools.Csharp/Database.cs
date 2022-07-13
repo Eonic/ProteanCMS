@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 
 
+
 namespace Protean.Tools
 {
     
@@ -1092,17 +1093,20 @@ namespace Protean.Tools
             System.Data.SqlTypes.SqlXml oXmlValue = null;
             try
             {
-                SqlDataReader oDr;
-                oDr = getDataReaderDisposable(sql, commandtype, parameters);
+               
+                using(SqlDataReader oDr = getDataReaderDisposable(sql, commandtype, parameters)) //done by sonali on 12/07/2022
+                    {
 
-                while (oDr.Read())
-                    oXmlValue = oDr.GetSqlXml(0);
+                    while (oDr.Read())
+                        oXmlValue = oDr.GetSqlXml(0);
 
-                // oXmlValue = GetDataValue(sql, commandtype, parameters)
+                    // oXmlValue = GetDataValue(sql, commandtype, parameters)
 
-                // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
-                if ((!(nullreturnvalue == null)) & (oXmlValue == null | oXmlValue == null))
-                    oXmlValue = null;
+                    // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
+                    if ((!(nullreturnvalue == null)) & (oXmlValue == null | oXmlValue == null))
+                        oXmlValue = null;
+                }
+
             }
             catch (Exception ex)
             {
@@ -1116,6 +1120,10 @@ namespace Protean.Tools
             return oXmlValue;
         }
 
+        private void Using(SqlDataReader sqlDataReader, object p)
+        {
+            throw new NotImplementedException();
+        }
 
         public XmlDocument GetXml(DataSet src)
         {

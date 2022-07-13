@@ -759,7 +759,9 @@ ProcessFlow:
                                         End If
                                     End If
                                     oXfrm.addValue(locSelect, FilterValue)
-                                    oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by sonali on 12/7/22
+                                        oXfrm.addUserOptionsFromSqlDataReader(locSelect, oDr)
+                                    End Using
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
                                     myWeb.ClearPageCache()
 
@@ -793,7 +795,9 @@ ProcessFlow:
                                         End If
                                     End If
                                     oXfrm.addValue(locSelect, FilterValue)
-                                    oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by sonali on 12/7/22
+                                        oXfrm.addUserOptionsFromSqlDataReader(locSelect, oDr)
+                                    End Using
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
                                     myWeb.ClearPageCache()
 
