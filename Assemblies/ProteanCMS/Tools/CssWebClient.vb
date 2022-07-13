@@ -82,6 +82,8 @@ Public Class CssWebClient
                     End If
                 End If
 
+                cProcessInfo = Serviceurl
+
                 httpHandlerRequest = WebRequest.Create(Serviceurl)
                 Dim serviceRequest As HttpWebRequest = httpHandlerRequest
                 Dim response As HttpWebResponse = CType(serviceRequest.GetResponse(), HttpWebResponse)
