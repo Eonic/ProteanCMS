@@ -8,7 +8,7 @@
         <nVersion/>
         <cContentForiegnRef/>
         <cContentName/>
-        <cContentSchemaName>Review</cContentSchemaName>
+        <cContentSchemaName>Reviews</cContentSchemaName>
         <cContentXmlBrief>
           <Content showRelated="Tag">
             <Reviewer/>

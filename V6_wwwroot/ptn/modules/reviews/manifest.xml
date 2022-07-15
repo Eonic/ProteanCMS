@@ -3,12 +3,12 @@
 
 	<ContentTypes>
 		<ContentTypeGroup name="Reviews">
-			<ContentType type="Reviews" formPath="Reviews" name="Review">Reviews</ContentType>
+			<ContentType type="Reviews" formPath="Reviews" name="Reviews">Reviews</ContentType>
 		</ContentTypeGroup>
 	</ContentTypes>
 	<ModuleTypes>
 		<ModuleGroup name="Content Lists" icon="fas fa-th-list">
-			<Module type="ReviewsList" formPath="ReviewsList" icon="fas fa-star" name="Review List"></Module>
+			<Module type="ReviewsList" formPath="ReviewsList" icon="fas fa-star" name="Reviews List"></Module>
 		</ModuleGroup>
 	</ModuleTypes>
 </PageLayouts>
