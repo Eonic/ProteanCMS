@@ -2199,7 +2199,7 @@
     <div id="cartInvoice">
       <p class="optionButtons">
         <a href="{$secureURL}?pgid={/Page/@id}&amp;cartCmd=Quit" class="btn btn-primary button principle" target="_parent" title="Click here to close this invoice and return to the site.">
-          <i class="fa fa-chevron-left">
+          <i class="fa fa-times">
             <xsl:text> </xsl:text>
           </i>
           <xsl:text> </xsl:text>
