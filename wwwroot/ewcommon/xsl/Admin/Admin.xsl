@@ -8162,7 +8162,10 @@
       </td>
       <td class="cell description">
         <a href="{$siteURL}{@url}" title="">
-          <xsl:value-of select="node()"/>
+			<xsl:if test="productDetail/ParentProduct/Content/Name">
+				<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> -
+			</xsl:if>
+			<xsl:value-of select="Name"/>
         </a>
         <xsl:apply-templates select="." mode="product-description"/>
         <!-- ################################# Line Options Info ################################# -->
@@ -9097,6 +9100,27 @@
       </td>
     </xsl:if>
   </xsl:template>
+
+<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
+	<!--
+		<td>
+			<xsl:value-of select="@ids"/>
+		</td>
+		-->
+
+</xsl:template>
+
+
+<xsl:template match="Attachements" mode ="Report_ColsValues">
+
+	<td>
+		<xsl:for-each select="Attachement ">
+			<xsl:value-of select="Content/@name"/>
+		</xsl:for-each>
+
+	</td>
+
+</xsl:template>
 
 
   <!-- -->
