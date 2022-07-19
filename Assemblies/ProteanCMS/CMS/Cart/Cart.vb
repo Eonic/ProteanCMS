@@ -6641,10 +6641,14 @@ processFlow:
                             For Each oDR1 In oDS.Tables("CartItems").Rows
                                 If oDR1.Item("nCartItemKey") = nItemID Then
                                     oDR1.BeginEdit()
-                                    oDR1("nQuantity") += nQuantity
+                                    If LCase(moCartConfig("OverwriteItemQuantity")) = "on" Then
+                                        oDR1("nQuantity") = nQuantity
+                                    Else
+                                        oDR1("nQuantity") += nQuantity
+                                    End If
                                     oDR1.EndEdit()
-                                    Exit For
-                                End If
+                                        Exit For
+                                    End If
                             Next
                         End If
                         moDBHelper.updateDataset(oDS, "CartItems")
