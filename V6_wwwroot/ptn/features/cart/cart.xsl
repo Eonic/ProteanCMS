@@ -2262,19 +2262,16 @@
         </p>
       </xsl:if>
     </div>
-    <div class="card">
-      <div class="card-body">
+    <div class="confirmation-addresses">
         <xsl:apply-templates select="." mode="orderAddresses"/>
         <xsl:apply-templates select="." mode="displayNotes"/>
-      </div>
     </div>
-    <div class="card ">
-      <div class="card-body">
+     <div class="confirmation-cart ">
         <form method="post" id="cart">
           <xsl:apply-templates select="." mode="orderItems"/>
         </form>
-      </div>
     </div>
+       
   </xsl:template>
 
   <xsl:template match="Order" mode="orderItems">
