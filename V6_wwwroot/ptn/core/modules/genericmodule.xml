@@ -32,6 +32,9 @@
 			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
 			<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
 			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cModAnim" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cModAnimDelay" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
 			<bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
 			<bind id="bMatchHeight" nodeset="@matchHeight" required="false()" type="string"/>
 			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
