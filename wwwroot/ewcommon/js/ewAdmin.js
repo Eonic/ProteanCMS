@@ -2169,6 +2169,7 @@ $(document).on('click', '.PrevPage', function () {
 });
 
 function ValidateContentForm(event) {
+    
     if (form_check(event)) {
         var pageId = this.getQueryStringParam('pgid');
         $(".hiddenType").val("Page");
@@ -2177,17 +2178,25 @@ function ValidateContentForm(event) {
        editPage.structNameOnChange(newStructName);
        
     }
+    else { return true; }
+
 }
 
 function RedirectClick(redirectType) {
-    
+  
     //var redirectType = $("redirectType").val();
     $(".hiddenRedirectType").val(redirectType);
     if (redirectType == "404Redirect") {
           
-            $(".hiddenParentCheck").val("false");
-            $("#redirectModal").modal("hide");
+         $(".hiddenParentCheck").val("false");
+        $("#redirectModal").modal("hide");
+        var isPage = $(".hiddenType").val();
+        if (isPage == "Page") {
+            document.createElement('form').submit.call(document.EditPage);
+        }
+        else {
             document.createElement('form').submit.call(document.EditContent);
+        }
         }
     else {
         
@@ -2358,16 +2367,23 @@ if (editPageElement) {
 
 
             structNameOnChange: function (newStructName) {
+                if ($(".hidPageChangeFlag").val() == "1") {
+                    if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
+                        var redirectType = $(".hiddenRedirectType").val();
+                        $('.btnRedirectSave').removeAttr("disabled");
+                        $("#redirectModal").modal("show");
+                        var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                        $("#OldUrl").val(oldURLFromXsl);
+                        $("#NewUrl").val(newStructName);
+                        this.structName = newStructName;
+                        $(".hiddenPageId").val(localStorage.pageId);
+                        $(".hiddenProductOldUrl").val(oldURLFromXsl);
+                        $(".hiddenPageNewUrl").val(newStructName);
+                        $(".hiddenRedirectType").val(redirectType);
+                        event.preventDefault();
 
-                if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
-                    $('.btnRedirectSave').removeAttr("disabled");
-                    $("#redirectModal").modal("show");
-                    var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
-                    $("#OldUrl").val(oldURLFromXsl);
-                    $("#NewUrl").val(newStructName);
-                    this.structName = newStructName;
-                    $(".hiddenPageId").val(localStorage.pageId);
-                    event.preventDefault();
+
+                    }
 
                 }
                 else {
@@ -2416,6 +2432,12 @@ $(document).on("change", "#cContentPath", function (event) {
 
 });
 
+$(document).on("change", "#cStructName", function (event) {
+
+    $(".hidPageChangeFlag").val("1");
+
+});
+
 //End Page Edit
 
 
@@ -2461,7 +2483,8 @@ if (editProductElement > 0) {
             UrlPathOnChange: function (newContentPath) {
                 
                if ($(".hidUrlChangeFlag").val() == "1") {
-                    if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
+                   if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
+                       debugger;
                         var redirectType = $(".hiddenRedirectType").val();
                         $('.btnRedirectSave').removeAttr("disabled");
                         $("#redirectModal").modal("show");

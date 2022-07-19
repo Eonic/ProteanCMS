@@ -1947,26 +1947,26 @@ NoDiscount:
                     Else
                         'myCart.moCartXml
                         If myCart.mnCartId > 0 Then
-                        sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
-                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
-                        Dim xmlNotes As XmlElement = Nothing
-                        Dim xmlDoc As New XmlDocument
+                            sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
+                            oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                            Dim xmlNotes As XmlElement = Nothing
+                            Dim xmlDoc As New XmlDocument
 
-                        For Each oRow In oDs.Tables("Order").Rows
-                            xmlDoc.LoadXml(oRow("cClientNotes"))
-                            xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
+                            For Each oRow In oDs.Tables("Order").Rows
+                                xmlDoc.LoadXml(oRow("cClientNotes"))
+                                xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
 
-                            oRow("cClientNotes") = Nothing
-                        Next
-                        myWeb.moDbHelper.updateDataset(oDs, "Order", True)
-                        oDs.Clear()
-                        oDs = Nothing
-                        If (xmlNotes IsNot Nothing) Then
-                            sPromoCode = xmlNotes.InnerText
+                                oRow("cClientNotes") = Nothing
+                            Next
+                            myWeb.moDbHelper.updateDataset(oDs, "Order", True)
+                            oDs.Clear()
+                            oDs = Nothing
+                            If (xmlNotes IsNot Nothing) Then
+                                sPromoCode = xmlNotes.InnerText
+                            End If
+
+                            UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
                         End If
-
-                        UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
-                    End If
                         Return ""
                     End If
                 Catch ex As Exception
