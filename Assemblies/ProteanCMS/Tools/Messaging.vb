@@ -179,8 +179,8 @@ Public Class Messaging
                 sSql = "select * from tblContent where nContentKey in (" & ids & ")"
                 oDs = moDbhelper.GetDataSet(sSql, "Item")
                 For Each dsRow In oDs.Tables("Item").Rows
-                    RootElmt.AppendChild(moDbhelper.GetContentDetailXml(dsRow("nContentKey")))
                     strFilePath = moDbhelper.getContentFilePath(dsRow, xPath)
+
                     Dim AttachmentElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachement")
                     AttachmentsElmt.AppendChild(AttachmentElmt)
                     AttachmentElmt.AppendChild(moDbhelper.GetContentDetailXml(dsRow("nContentKey")))
