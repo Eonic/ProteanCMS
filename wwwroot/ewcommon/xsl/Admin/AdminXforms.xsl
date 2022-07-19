@@ -3019,6 +3019,8 @@
 						<input name="type" type="hidden"  class="hiddenType" />
 						<input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
 						<input name="UrlChangeFlag" type="hidden"  class="hidUrlChangeFlag" />
+					<input name="PageChangeFlag" type="hidden"  class="hidPageChangeFlag" />
+					<input name="pageNewUrl" type="hidden" class="hiddenPageNewUrl" />
 					</div>
 				</div>
 			</div>
@@ -3046,6 +3048,7 @@
 				<input name="IsParent" type="hidden" class="hiddenParentCheck" />
 				<input name="pageId" type="hidden"  class="hiddenPageId" />
 				<input name="redirectOption" type="hidden" class="hiddenRedirectType" />
+				
 			</div>
 		</div>
 

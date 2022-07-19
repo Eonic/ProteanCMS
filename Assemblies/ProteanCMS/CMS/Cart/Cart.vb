@@ -590,6 +590,15 @@ Partial Public Class Cms
                     Else
                         bFullCartOption = False
                     End If
+                    If (myWeb.moRequest.Form("cartId") IsNot Nothing) Then
+                        If (myWeb.moSession("CartId") <> 0) Then
+                            Dim CurrentCartId As String = myWeb.moRequest.Form("cartId")
+                            If (CurrentCartId <> myWeb.moSession("CartId").ToString()) Then
+                                myWeb.moSession("CartId") = Int32.Parse(CurrentCartId)
+                                mcReEstablishSession = "true"
+                            End If
+                        End If
+                    End If
 
                     If myWeb.moSession("CartId") Is Nothing Then
                         mnCartId = 0
@@ -637,7 +646,7 @@ Partial Public Class Cms
                             writeSessionCookie() 'write the cookie to persist the cart
                         End If
                         If mcReEstablishSession <> "" Then
-                            sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " & mnCartId
+                            sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " & mnCartId & "And cCartSessionId Like '%" & mcSessionId & "'"
                         Else
                             sSql = "select * from tblCartOrder where ((nCartStatus < 7 and not(cCartSessionId like 'OLD_%')) or nCartStatus IN (10,13,14)) and nCartOrderKey = " & mnCartId
                         End If
@@ -1102,7 +1111,7 @@ Partial Public Class Cms
                     Select Case mcCartCmd
                         Case "Cart"
                             mcCartCmd = "CartEmpty"
-                        Case "Logon", "Remove", "Notes", "Billing", "Delivery", "ChoosePaymentShippingOption", "Confirm", "EnterPaymentDetails", "SubmitPaymentDetails", "SubmitPaymentDetails", "ShowInvoice", "ShowCallBackInvoice"
+                        Case "Logon", "Remove", "Notes", "Billing", "Delivery", "ChoosePaymentShippingOption", "Confirm", "EnterPaymentDetails", "SubmitPaymentDetails", "ShowInvoice", "ShowCallBackInvoice"
                             mcCartCmd = "CookiesDisabled"
                         Case "Error"
                             mcCartCmd = "Error"
@@ -3177,6 +3186,15 @@ processFlow:
                     If Not oRelatedElmt.InnerXml = "" Then oCartElmt.AppendChild(oRelatedElmt)
                 End If
 
+                'sonalis code for session set
+                If System.Web.HttpContext.Current.Request.Cookies("Flag") Is Nothing Then
+
+                    Dim flagCookie As New System.Web.HttpCookie("Flag")
+                    flagCookie.Value = "1"
+                    System.Web.HttpContext.Current.Response.Cookies.Add(flagCookie)
+
+                End If
+
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug)
             End Try
@@ -4389,6 +4407,8 @@ processFlow:
                                 'Step through for multiple addresses
                                 Dim bSavedDelivery As Boolean = False
 
+
+
                                 'check for collection options
                                 If IsNumeric(myWeb.moRequest("cIsDelivery")) Then
                                     'Save the delivery method allready
@@ -4412,7 +4432,7 @@ processFlow:
                                     If LCase(moCartConfig("BlockRemoveDelivery")) <> "on" Then
                                         RemoveDeliveryOption(mnCartId)
                                     End If
-                                    ' 
+
                                 End If
 
                                 If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then

@@ -174,7 +174,7 @@
 		</div>
 	</xsl:template>
   <!-- Review Brief -->
-  <xsl:template match="Content[@type='Review']" mode="displayBrief">
+  <xsl:template match="Content[@type='Reviews']" mode="displayBrief">
     <xsl:param name="pos"/>
     <xsl:param name="class"/>
     <xsl:variable name="parId">
@@ -340,7 +340,7 @@
   </xsl:template>
 
   <!-- Review Detail  - a review shouldn't really have a detail - is a simple bit of content. -->
-  <xsl:template match="Content[@type='Review']" mode="ContentDetail">
+  <xsl:template match="Content[@type='Reviews']" mode="ContentDetail">
     <xsl:param name="pos"/>
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"/>
     <xsl:variable name="parId">

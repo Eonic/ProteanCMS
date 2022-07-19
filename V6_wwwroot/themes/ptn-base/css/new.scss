@@ -130,6 +130,7 @@ section.bg-primary {
 section.bg-dark,
 section.bg-primary {
     @extend .text-white;
+    .swiper-button-prev, .swiper-button-next{color:#fff;}
 }
 
 section.bg-primary {
@@ -169,6 +170,7 @@ section.bg-primary {
 
 .swiper-slide {
     align-items: start;
+
 }
 .swiper-wrapper{
     //padding-right:35px;
