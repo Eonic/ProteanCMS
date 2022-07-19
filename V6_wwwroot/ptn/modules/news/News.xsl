@@ -109,13 +109,13 @@
 					</xsl:choose>
 					<xsl:text> </xsl:text>
 				</div>
-
+</div>
 				<xsl:if test="@carouselBullets='true'">
 					<div class="swiper-pagination" id="swiper-pagination-{@id}">
 						<xsl:text> </xsl:text>
 					</div>
 				</xsl:if>
-			</div>
+			
 			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
 				<xsl:text> </xsl:text>
 			</div>
