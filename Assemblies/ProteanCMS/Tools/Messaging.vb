@@ -173,13 +173,19 @@ Public Class Messaging
 
             Dim moDbhelper As New Protean.Cms.dbHelper(dbConn, 1)
             moDbhelper.moPageXml = RootElmt.OwnerDocument
-
+            Dim AttachmentsElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachements")
+            RootElmt.ParentNode.AppendChild(AttachmentsElmt)
             If Not (String.IsNullOrEmpty(ids)) Then
                 sSql = "select * from tblContent where nContentKey in (" & ids & ")"
                 oDs = moDbhelper.GetDataSet(sSql, "Item")
                 For Each dsRow In oDs.Tables("Item").Rows
-                    RootElmt.AppendChild(moDbhelper.GetContentDetailXml(dsRow("nContentKey")))
                     strFilePath = moDbhelper.getContentFilePath(dsRow, xPath)
+
+                    Dim AttachmentElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachement")
+                    AttachmentsElmt.AppendChild(AttachmentElmt)
+                    AttachmentElmt.AppendChild(moDbhelper.GetContentDetailXml(dsRow("nContentKey")))
+                    AttachmentElmt.SetAttribute("file", strFilePath)
+
                     Try
                         Dim oAtt As New Attachment(strFilePath)
                         If Attachments Is Nothing Then
@@ -187,7 +193,8 @@ Public Class Messaging
                         End If
                         Attachments.Add(oAtt)
                     Catch ex As Exception
-                        strError += "Missing file:" & strFilePath & "<br/>"
+                        strError += "Missing file: " & strFilePath & "<br/>"
+                        RootElmt.SetAttribute("error", "Missing file:" & strFilePath)
                     End Try
                 Next
                 oDs = Nothing
@@ -764,7 +771,7 @@ Public Class Messaging
                             Else
                                 activitySchema = oBodyXML.GetAttribute("id")
                             End If
-                            Dim logId As Long = odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString, oBodyXML.OuterXml)
+                            Dim logId As Long = odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString, oXml.OuterXml)
                             odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, logId, 0, activitySchema)
                         Else
                             odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString)

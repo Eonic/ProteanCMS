@@ -390,6 +390,32 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
             End Function
+
+            Public Function ReIndexingAPI(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim sString As String
+                Try
+                    Dim cIPList As String = CStr(myWeb.moConfig("AlternativeAuthenticationIPList"))
+                    If Tools.Text.IsIPAddressInList(myWeb.moRequest.UserHostAddress, cIPList) Then
+                        Dim bIsAuthorized As Boolean = False
+                        bIsAuthorized = ValidateAPICall(myWeb, "Administrator")
+                        If bIsAuthorized Then
+                            Dim objAdmin As Admin = New Admin()
+                            objAdmin.ReIndexing(myWeb)
+                            sString = "success"
+                        Else
+                            sString = "Invalid authentication"
+                        End If
+
+                    Else
+                        sString = "No access to this IPAddress"
+                    End If
+                    Return sString
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "IsParentPage", ex, ""))
+                    Return ex.Message
+                End Try
+
+            End Function
         End Class
 #End Region
 

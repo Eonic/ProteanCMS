@@ -8162,7 +8162,10 @@
       </td>
       <td class="cell description">
         <a href="{$siteURL}{@url}" title="">
-          <xsl:value-of select="node()"/>
+			<xsl:if test="productDetail/ParentProduct/Content/Name">
+				<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> -
+			</xsl:if>
+			<xsl:value-of select="Name"/>
         </a>
         <xsl:apply-templates select="." mode="product-description"/>
         <!-- ################################# Line Options Info ################################# -->
@@ -9097,6 +9100,27 @@
       </td>
     </xsl:if>
   </xsl:template>
+
+<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
+	<!--
+		<td>
+			<xsl:value-of select="@ids"/>
+		</td>
+		-->
+
+</xsl:template>
+
+
+<xsl:template match="Attachements" mode ="Report_ColsValues">
+
+	<td>
+		<xsl:for-each select="Attachement ">
+			<xsl:value-of select="Content/@name"/>
+		</xsl:for-each>
+
+	</td>
+
+</xsl:template>
 
 
   <!-- -->
@@ -13515,7 +13539,13 @@
 								<xsl:text> </xsl:text>
 							</i><xsl:text> </xsl:text>Add New Item
 						</a>
+						<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=updateAllRules&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName=null" class="btn btn-primary btn-xs pull-right">
+							<i class="fa fa-edit fa-white">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Update All Rules
+						</a>
 					</th>
+					
 				</tr>
 				<xsl:apply-templates select="indexkeys" mode="LookupList"/>
 			</table>
@@ -13556,9 +13586,9 @@
 					</i><xsl:text> </xsl:text>Edit
 				</a>
 				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
-					<i class="fa fa-edit fa-white">
+					<i class="fa fa-recycle fa-white">
 						<xsl:text> </xsl:text>
-					</i><xsl:text> </xsl:text>Update
+					</i><xsl:text> </xsl:text>Re-Index
 				</a>
 			</td>
 		</tr>
