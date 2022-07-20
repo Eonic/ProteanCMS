@@ -68,6 +68,7 @@ Partial Public Class Cms
 
         Private gbVersionControl As Boolean = False
 
+
 #End Region
 #Region "Initialisation"
 
@@ -261,6 +262,9 @@ Partial Public Class Cms
             Certificate = 101
 
             '200- reserved for [next thing]
+
+            indexkey = 200
+            'indexdefkey = 201
         End Enum
 
         Enum TableNames
@@ -306,6 +310,9 @@ Partial Public Class Cms
             tblCertificate = 101
 
             '200- reserved for [next thing]
+
+            'tblContentIndex = 200
+            tblContentIndexDef = 200
 
         End Enum
 
@@ -676,6 +683,10 @@ Partial Public Class Cms
                     Return "nCertificateKey"
 
                     '200- reserved for [next thing]
+                    'Add new key id for Index def table by nita
+                Case 200
+                    Return "nContentIndexDefKey"
+
 
             End Select
             Return strReturn
@@ -2180,6 +2191,7 @@ Partial Public Class Cms
                     sSql = "delete from " & getTable(objectType) & " where " & getKey(objectType) & " = " & nId
                     ExeProcessSql(sSql)
 
+
                 End If
 
                 Return nId
@@ -2277,12 +2289,12 @@ Partial Public Class Cms
                     End If
 
                     While oDr.Read
-                            DeleteObject(objectType, oDr(0), bReporting)
-                        End While
-                        While oDr.Read
-                            DeleteObject(objectType, oDr(0), bReporting)
-                        End While
-                    End Using
+                        DeleteObject(objectType, oDr(0), bReporting)
+                    End While
+                    While oDr.Read
+                        DeleteObject(objectType, oDr(0), bReporting)
+                    End While
+                End Using
 
 
             Catch ex As Exception
@@ -2566,8 +2578,7 @@ restart:
                         objectTypes.CartDiscountRules, objectTypes.CartProductCategories,
                         objectTypes.Codes, objectTypes.QuestionaireResult, objectTypes.CourseResult,
                         objectTypes.Certificate, objectTypes.CpdLog, objectTypes.QuestionaireResultDetail, objectTypes.Lookup, objectTypes.CartCarrier, objectTypes.CartDelivery,
-                        objectTypes.Subscription, objectTypes.SubscriptionRenewal, objectTypes.CartPaymentMethod
-
+                        objectTypes.Subscription, objectTypes.SubscriptionRenewal, objectTypes.CartPaymentMethod, objectTypes.indexkey
 
                             '
                             ' Check for Audit Id - if not found, we should be able to retrieve one from the database.
@@ -2628,7 +2639,8 @@ restart:
                             objectTypes.QuestionaireResult, objectTypes.QuestionaireResultDetail, objectTypes.CourseResult,
                             objectTypes.Codes, objectTypes.ContentVersion,
                             objectTypes.Certificate, objectTypes.CpdLog, objectTypes.Lookup, objectTypes.CartCarrier, objectTypes.CartDelivery,
-                            objectTypes.Subscription, objectTypes.SubscriptionRenewal, objectTypes.CartPaymentMethod
+                            objectTypes.Subscription, objectTypes.SubscriptionRenewal, objectTypes.CartPaymentMethod,
+                             objectTypes.indexkey
 
                             'we are using getAuditId to create a new audit record.
                             nAuditId = setObjectInstance(objectTypes.Audit, oInstance)

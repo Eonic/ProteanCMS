@@ -2229,6 +2229,12 @@ ProcessFlow:
                     Case "Reports"
                         ReportsProcess(oPageDetail, sAdminLayout)
 
+
+                    Case "FilterIndex"
+                        FilterIndex(oPageDetail, sAdminLayout)
+
+                    Case "ResetWebConfig"
+                        ResetWebConfig(oPageDetail, sAdminLayout)
                 End Select
 
                 SupplimentalProcess(sAdminLayout, oPageDetail)
@@ -3897,7 +3903,11 @@ AfterProcessFlow:
                 Select Case myWeb.moRequest("ewCmd2")
                     Case "delete"
                         myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Lookup, lookupId)
-
+                        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                            oPageDetail.InnerXml = ""
+                            lookupId = Nothing
+                            GoTo listItems
+                        End If
                         GoTo listItems
                     Case "hide"
                         sSql = "UPDATE dbo.tblLookup " _
@@ -3961,17 +3971,119 @@ listItems:
                                 lookupId = Nothing
                                 GoTo listItems
                             End If
-                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
-                                oPageDetail.InnerXml = ""
-                                lookupId = Nothing
-                                GoTo listItems
-                            End If
+
                         End If
 
                 End Select
 
 
                 sAdminLayout = "ManageLookups"
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
+
+
+        Private Sub FilterIndex(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
+            Dim reportName As String = "Filter Indexes"
+            Dim contentId As Long = 0
+            Dim indexId As String = Nothing
+            Dim sSql As String
+            Dim SchemaNameForUpdate As String
+            Dim indexesDataset As DataSet
+
+
+            Try
+
+                If Not myWeb.moRequest("id") = Nothing Then
+                    indexId = myWeb.moRequest("id")
+                End If
+
+
+                Select Case myWeb.moRequest("ewCmd2")
+                    Case "delete"
+
+                        myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.indexkey, indexId)
+                        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                            oPageDetail.InnerXml = ""
+                            indexId = Nothing
+                            GoTo listItems
+                        End If
+                        GoTo listItems
+                    Case "update"
+                        If Not myWeb.moRequest("SchemaName") = Nothing Then
+                            SchemaNameForUpdate = myWeb.moRequest("SchemaName")
+                            sSql = "spScheduleToUpdateIndexTable"
+                            Dim arrParms As Hashtable = New Hashtable
+                            arrParms.Add("SchemaName", SchemaNameForUpdate)
+                            myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                oPageDetail.InnerXml = ""
+                                indexId = Nothing
+                                GoTo listItems
+                            End If
+                        End If
+                        GoTo listItems
+                    Case Else
+listItems:
+
+
+                        If indexId = Nothing Then
+                            'list Lookup Lists
+                            sSql = "select nContentIndexDefKey, CASE WHen nContentIndexDataType = 1 Then 'Int' when nContentIndexDataType=2 Then 'String' Else 'Date' End As nContentIndexDataType,
+cContentSchemaName, cDefinitionName, cContentValueXpath, Case When bBriefNotDetail=0 Then 'false' Else 'True' End As bBriefNotDetail, nKeywordGroupName
+from tblContentIndexDef"
+
+                            indexesDataset = myWeb.moDbHelper.GetDataSet(sSql, "indexkey", "indexkeys")
+
+                            myWeb.moDbHelper.addTableToDataSet(indexesDataset, "select distinct cContentSchemaName as Name from tblContentIndexDef", "SchemaName")
+
+                            'myWeb.moDbHelper.ReturnNullsEmpty(indexesDataset)
+
+                            If indexesDataset.Tables.Count > 0 Then
+
+                                indexesDataset.Tables(0).Columns("nContentIndexDefKey").ColumnMapping = MappingType.Attribute
+                                indexesDataset.Tables(1).Columns("Name").ColumnMapping = MappingType.Attribute
+
+                                ' lookupsDataset.Tables(0).Columns(2).ColumnMapping = MappingType.Attribute
+                                indexesDataset.Relations.Add("rel1",
+                                indexesDataset.Tables(1).Columns("Name"),
+                                indexesDataset.Tables(0).Columns("cContentSchemaName"), False)
+                                indexesDataset.Relations("rel1").Nested = True
+
+                                'lookupsDataset.Relations.Add("rel2", lookupsDataset.Tables(0).Columns("nLkpParent"), lookupsDataset.Tables(0).Columns("id"), False)
+                                'lookupsDataset.Relations("rel2").Nested = True
+                                indexesDataset.EnforceConstraints = False
+
+                            End If
+
+
+
+                            Dim reportElement As XmlElement = moPageXML.CreateElement("Content")
+                            reportElement.SetAttribute("name", reportName)
+                            reportElement.SetAttribute("type", "Report")
+                            reportElement.InnerXml = indexesDataset.GetXml()
+                            oPageDetail.AppendChild(reportElement)
+
+                        Else
+                            'lookupItem Xform
+                            'oPageDetail.AppendChild(moAdXfm.xFrmIndexes(CLng(indexId), myWeb.moRequest("SchemaName")))
+                            oPageDetail.AppendChild(moAdXfm.xFrmIndexes(CLng(indexId), myWeb.moRequest("SchemaName"), myWeb.moRequest("parentId")))
+
+                            If moAdXfm.valid Then
+                                oPageDetail.InnerXml = ""
+                                indexId = Nothing
+                                GoTo listItems
+                            End If
+
+                        End If
+
+                End Select
+
+
+                sAdminLayout = "FilterIndex"
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
@@ -4821,7 +4933,27 @@ SP:
         End Sub
 
 
+        Private Sub ResetWebConfig(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
 
+            Try
+                Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
+                'Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
+                Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
+                If flag = "True" Then
+                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
+                Else
+                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
+                End If
+                myConfiguration.Save()
+
+                myWeb.moResponse.Redirect(myWeb.mcRequestDomain)
+
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
 
 
     End Class

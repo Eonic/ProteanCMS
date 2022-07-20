@@ -430,25 +430,33 @@ Public Module stdTools
 
     Friend Sub AddExceptionToEventLog(ByVal oCurrentException As Exception, ByVal cCurrentInfo As String, Optional ByVal oOriginalError As Exception = Nothing, Optional ByVal cOriginalInfo As String = "")
         'writes an event to the even log under the heading "EonicWebV4.1"
+        Dim thisError As String
+        Dim LogName As String = "ProteanCMS"
+        Dim cSource As String = "ProteanCMS Site"
+        Dim cMessage As String = "Site: unknown" & vbNewLine & vbNewLine
         Try
             Dim oEventLog As System.Diagnostics.EventLog = Nothing
             Dim oELs() As System.Diagnostics.EventLog = System.Diagnostics.EventLog.GetEventLogs
             Dim i As Integer = 0
             For i = 0 To oELs.Length - 1
-                If oELs(i).Log = "ProteanCMS" Then
+                If oELs(i).Log = LogName Then
                     oEventLog = oELs(i)
                     Exit For
                 End If
             Next
-            If oEventLog Is Nothing Then Exit Sub
-            Dim cSource As String = "ProteanCMS Site"
 
-            oEventLog.Source = cSource
+            If Not System.Web.HttpContext.Current Is Nothing Then
+                cSource = System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST")
+                cMessage = "Site: " & System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST") & vbNewLine & vbNewLine
+            End If
 
-            Dim cMessage As String = ""
+            If oEventLog Is Nothing Then
+                oEventLog = New EventLog(LogName, Environment.MachineName, cSource)
+            End If
+
+
+
             'The Current Error
-
-            cMessage = "Site: " & System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST") & vbNewLine & vbNewLine
 
             If Not oCurrentException Is Nothing Then
                 cMessage &= vbNewLine & "Current Error: " & vbNewLine
@@ -470,13 +478,21 @@ Public Module stdTools
                 cMessage &= "Full Exception:" & oOriginalError.ToString & vbNewLine
             End If
 
-
-
+            If Not EventLog.SourceExists(cSource) Then
+                EventLog.CreateEventSource(LogName, cSource)
+            End If
+            oEventLog.Source = cSource
             oEventLog.WriteEntry(cMessage, EventLogEntryType.Error)
             oEventLog = Nothing
 
         Catch ex As Exception
             'cant do diddly but cry 
+            Try
+                System.IO.File.WriteAllText("F:\HostingSpaces\EliteModels\elitemodelsonline.co.uk\wwwroot\ProteanError.txt", cMessage)
+            Catch ex2 As Exception
+                thisError = ex2.Message
+            End Try
+            thisError = ex.Message
         End Try
     End Sub
 

@@ -109,14 +109,13 @@
 					</xsl:choose>
 					<xsl:text> </xsl:text>
 				</div>
-
-				
-			</div>
-			<xsl:if test="@carouselBullets='true'">
-				<div class="swiper-pagination" id="swiper-pagination-{@id}">
-					<xsl:text> </xsl:text>
-				</div>
-			</xsl:if>
+</div>
+				<xsl:if test="@carouselBullets='true'">
+					<div class="swiper-pagination" id="swiper-pagination-{@id}">
+						<xsl:text> </xsl:text>
+					</div>
+				</xsl:if>
+			
 			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
 				<xsl:text> </xsl:text>
 			</div>
@@ -537,8 +536,8 @@
 		</xsl:if>]
 		}
 	</xsl:template>
-
-	<xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
+	
+		<xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
 		{
 		"@context": "https://schema.org",
 		"@type": "FAQPage",

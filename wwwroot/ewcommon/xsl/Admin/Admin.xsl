@@ -1914,6 +1914,31 @@
       </div>
     </div>
   </xsl:template>
+
+	<xsl:template match="Page[@layout='ResetWebConfig']" mode="Admin">
+		<div class="row">
+			<div class="col-md-3 panel">
+				<div class="panel-body">
+					<ul class="nav nav-stacked">
+						<xsl:for-each select="AdminMenu/descendant-or-self::MenuItem[@cmd='ResetWebConfig']/MenuItem">
+							<xsl:apply-templates select="." mode="button">
+								<xsl:with-param name="level">1</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:for-each>
+						<li>
+						
+							<a href="{$appPath}?ewCmd=ResetWebConfig&amp;pgid={/Page/@id}" title="" class="btn btn-lg btn-primary">
+								<i class="fa fa-gift fa-large">
+									<xsl:text> </xsl:text>
+								</i><xsl:text> </xsl:text>
+								Reset WebConfig
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
   <!-- -->
   <xsl:template match="Page[@layout='Advanced' or @layout='AdvancedMail']" mode="Admin">
     <div class="row" id="tpltAdvancedMode">
@@ -3081,7 +3106,7 @@
 				<xsl:value-of select="$thislevel"/>
 				<xsl:if test="MenuItem"> expandable</xsl:if>
 			</xsl:attribute>
-               
+
       <div class="pageCell">
         <xsl:variable name="pageLink">
           <xsl:apply-templates select="." mode="getHref" />
@@ -3112,12 +3137,11 @@
               </span>
             </xsl:otherwise>
           </xsl:choose>
+
+
+
         </a>
-        
-        
-                
       </div>
-      
       <div class="optionButtons">
 
         <!-- Clone page note: don't offer menu page options to items that are cloned page child pages-->
@@ -3221,29 +3245,10 @@
         </xsl:choose>
 
       </div>
-      
-      <!--code change to display redirect page name below the original page name-->
-        
-        <!--new code - start-->
-      <div xmlns="http://www.w3.org/1999/xhtml">
-          <xsl:if test="format-number(@url,'0')!='NaN'">
-              <div class="fa fa-external-link">
-                <xsl:variable name="urlThis" select="@url"/>
-                <xsl:variable name="urlRef" >
-                  <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$urlThis]/@url"/>
-                  <xsl:text>&amp;ewCmd=Normal</xsl:text>
-                </xsl:variable>
-                <a href="{$urlRef}" >
-                  <span class="pageName">
-                    <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$urlThis]/DisplayName"/>
-                  </span>
-                </a>
-              </div>
-          </xsl:if>
-      </div>
-        <!--new code - end-->
-        
     </li>
+
+
+
 
 
     <!--Expand to Level XSL variant-->
@@ -8157,7 +8162,6 @@
       </td>
       <td class="cell description">
         <a href="{$siteURL}{@url}" title="">
-          
 			<xsl:if test="productDetail/ParentProduct/Content/Name">
 				<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> -
 			</xsl:if>
@@ -8172,7 +8176,7 @@
                 <xsl:apply-templates select="option" mode="optionDetail"/>
               </xsl:when>
               <xsl:otherwise>
-<br/>
+                <br/>
                 <xsl:value-of select="Name"/>
               </xsl:otherwise>
             </xsl:choose>
@@ -9036,7 +9040,6 @@
   <xsl:template match="Page[@layout='Reports' and ContentDetail/Content[@type='xform']]" mode="Admin">
     <!--<div class="report" id="template_AdminXForm">-->
     <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-	  
     <xsl:apply-templates select="ContentDetail/Report" mode="defaultReport"/>
     <!--</div>-->
   </xsl:template>
@@ -9098,26 +9101,27 @@
     </xsl:if>
   </xsl:template>
 
-	<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
-<!--
-			<td>
-				<xsl:value-of select="@ids"/>
-			</td>
-			-->
-
-	</xsl:template>
-
-
-	<xsl:template match="Attachements" mode ="Report_ColsValues">
-
+<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
+	<!--
 		<td>
-			<xsl:for-each select="Attachement ">
+			<xsl:value-of select="@ids"/>
+		</td>
+		-->
+
+</xsl:template>
+
+
+<xsl:template match="Attachements" mode ="Report_ColsValues">
+
+	<td>
+		<xsl:for-each select="Attachement ">
 			<xsl:value-of select="Content/@name"/>
 		</xsl:for-each>
-			
-		</td>
 
-	</xsl:template>
+	</td>
+
+</xsl:template>
+
 
   <!-- -->
   <!--   ##################  Generic Display Form  ##############################   -->
@@ -11671,7 +11675,7 @@
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit
         </a>
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveTop&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveTop&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by top">
           <i class="fa fa-arrow-up fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -11686,7 +11690,7 @@
             <xsl:text> </xsl:text>
           </i>
         </a>
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveBottom&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveBottom&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by bottom">
           <i class="fa fa-arrow-down fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -13264,7 +13268,6 @@
     </td>
   </xsl:template>
 
-
   <xsl:template name="StatusLegend">
     <xsl:param name="status"/>
     <xsl:choose>
@@ -13470,5 +13473,151 @@
     </div>
 
   </xsl:template>
+
+	<!-- code for filter indexes -->
+
+	<xsl:template match="Page[@layout='FilterIndex']" mode="Admin">
+		<div class="row" id="template_AdvancedMode">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						Filter Indexes
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<p class="btn-group headerButtons">
+							<xsl:if test="ContentDetail/Content[@type='xform']">
+								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+								</a>
+							</xsl:if>
+						</p>
+					</div>
+					<div class="panel-body">
+						<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					</div>
+					<xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListIndexes"/>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Report']" mode="ListIndexes">
+		<!--<div class="panel-body">
+			<form method="get" role="form" class="form-inline">
+				<input type="hidden" name="ewCmd" value="FilterIndex"/>
+				<input type="hidden" name="indexkey" value="0"/>
+				
+
+			</form>
+		</div>-->
+		<div class="table-responsive">
+			<table class="table manage-lookups table-hover ">
+				<tr>
+					<th colspan="2">
+						Data Type
+					</th>
+					<th colspan="2">
+						Schema Name
+					</th>
+					<th colspan="2">
+						Defination
+					</th>
+					<th colspan="2">
+						Xpath
+					</th>
+					<th colspan="2">
+						Brief
+					</th>
+					<th class="clearfix buttonCell">
+						<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id=0&amp;SchemaName={indexkeys/SchemaName/@Name}" class="btn btn-success pull-right">
+							<i class="fa fa-plus fa-white">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Add New Item
+						</a>
+					</th>
+				</tr>
+				<xsl:apply-templates select="indexkeys" mode="LookupList"/>
+			</table>
+		</div>
+	</xsl:template>
+
+	<!--<xsl:template match="SchemaName" mode="LookupList">
+	
+		<xsl:apply-templates select="indexkey" mode="LookupList"/>
+	</xsl:template>-->
+
+	<xsl:template match="indexkey" mode="LookupList">
+		<tr>
+			<td colspan="2">
+				<xsl:value-of select="nContentIndexDataType/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cContentSchemaName/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cDefinitionName/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cContentValueXpath/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="bBriefNotDetail/node()"/>
+			</td>
+			<td class="clearfix">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=delete&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-danger btn-xs pull-right">
+					<i class="fa fa-trash-o fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Del
+				</a>
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+					<i class="fa fa-edit fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Edit
+				</a>
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+					<i class="fa fa-edit fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Update
+				</a>
+			</td>
+		</tr>
+	</xsl:template>
+
+	<!-- code for filter indexes -->
+
+	<xsl:template match="Page[@layout='FilterIndex']" mode="Admin">
+		<div class="row" id="template_AdvancedMode">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						Filter Indexes
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<p class="btn-group headerButtons">
+							<xsl:if test="ContentDetail/Content[@type='xform']">
+								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+								</a>
+							</xsl:if>
+						</p>
+					</div>
+					<div class="panel-body">
+						<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					</div>
+					<xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListIndexes"/>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
 
 </xsl:stylesheet>

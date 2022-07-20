@@ -2266,11 +2266,12 @@
         <xsl:apply-templates select="." mode="orderAddresses"/>
         <xsl:apply-templates select="." mode="displayNotes"/>
     </div>
-    <div class="confirmation-cart ">
+     <div class="confirmation-cart ">
         <form method="post" id="cart">
           <xsl:apply-templates select="." mode="orderItems"/>
         </form>
     </div>
+       
   </xsl:template>
 
   <xsl:template match="Order" mode="orderItems">

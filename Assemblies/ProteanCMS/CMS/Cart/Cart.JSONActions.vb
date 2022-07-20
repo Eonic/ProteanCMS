@@ -348,8 +348,6 @@ Partial Public Class Cms
                 If myCart.mnProcessId > 4 Then
                     Return ""
                 Else
-
-
                     Dim country As String = jObj("country")
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
