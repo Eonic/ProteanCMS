@@ -670,12 +670,12 @@ Partial Public Class Cms
 
                                 End While
 
-                        Else
-                            ' Cart no longer exists - a quit command has probably been issued.  Clear the session
-                            mnCartId = 0
-                            mnProcessId = 0
-                            mcCartCmd = ""
-                        End If
+                            Else
+                                ' Cart no longer exists - a quit command has probably been issued.  Clear the session
+                                mnCartId = 0
+                                mnProcessId = 0
+                                mcCartCmd = ""
+                            End If
                         End Using
                         If mnCartId = 0 Then
                             EndSession()
@@ -4407,6 +4407,8 @@ processFlow:
                                 'Step through for multiple addresses
                                 Dim bSavedDelivery As Boolean = False
 
+
+
                                 'check for collection options
                                 If IsNumeric(myWeb.moRequest("cIsDelivery")) Then
                                     'Save the delivery method allready
@@ -4425,12 +4427,12 @@ processFlow:
                                         bSavedDelivery = True
                                     End Using
                                 Else
-                                    'If it exists and we are here means we may have changed the Delivery address
-                                    'country
+                                    'If it exists and we are here means we may have changed the Delivery address country
 
-                                    'TS commented out for ITB as deliery option has been set earlier we don't want to remove unless invalid for target address.
+                                    If LCase(moCartConfig("BlockRemoveDelivery")) <> "on" Then
+                                        RemoveDeliveryOption(mnCartId)
+                                    End If
 
-                                    ' RemoveDeliveryOption(mnCartId)
                                 End If
 
                                 If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
