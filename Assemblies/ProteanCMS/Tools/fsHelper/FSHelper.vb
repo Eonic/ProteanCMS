@@ -22,6 +22,7 @@ Imports System.Security.Principal
 Imports System.Web.Configuration
 Imports Protean.Tools.DelegateWrappers
 Imports System
+Imports System.Text.RegularExpressions
 
 Partial Public Class fsHelper
 
@@ -954,7 +955,11 @@ Partial Public Class fsHelper
 
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-                Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
+                'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "").Replace("---", "-").Replace("£", "")
+
+                Dim fileNameFixed As String = Regex.Replace(file.FileName, "\s+", "-")
+                fileNameFixed = Regex.Replace(fileNameFixed, "[-]{2,}", "-", RegexOptions.None)
+                fileNameFixed = Regex.Replace(fileNameFixed, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
 
                 'Path.GetFileName(file.FileName).Replace(" ", "-")
 
