@@ -2159,6 +2159,8 @@ Partial Public Module xmlTools
             Dim bReset As Boolean = False
 
             Try
+                ' Throw New System.Exception("An exception has occurred.")
+
                 If myWeb Is Nothing Then
                     'ONLY HAPPENS ON ERROR PAGES
                     gbDebug = True
@@ -2289,15 +2291,17 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
 
-                My.Application.Log.WriteException(ex)
+                '  My.Application.Log.WriteException(ex)
 
-                Dim EventLogCategoryType As Short = 1
+                AddExceptionToEventLog(ex, sReturnString)
 
-                '  EventLog.WriteEntry("ProteanCMS", ex.Message & " - " & sReturnString & " - " & ex.StackTrace.ToString, EventLogEntryType.Error, 1, EventLogCategoryType)
+
 
                 'regardless we should return the filename.
                 sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
+
                 myWeb.bPageCache = False 'This is not working 100% - can we understand why?????
+
                 Return sReturnString.Replace("~", "") & "?error=" & ex.Message & ex.StackTrace.Replace(",", "")
 
             End Try
