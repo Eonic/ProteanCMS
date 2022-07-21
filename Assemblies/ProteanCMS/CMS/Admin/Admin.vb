@@ -4012,13 +4012,16 @@ listItems:
                             GoTo listItems
                         End If
                         GoTo listItems
-                    Case "update"
+                    Case "update", "updateAllRules"
+
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
+
                             SchemaNameForUpdate = myWeb.moRequest("SchemaName")
                             sSql = "spScheduleToUpdateIndexTable"
                             Dim arrParms As Hashtable = New Hashtable
                             arrParms.Add("SchemaName", SchemaNameForUpdate)
                             myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
                             If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
                                 oPageDetail.InnerXml = ""
                                 indexId = Nothing
@@ -4026,6 +4029,21 @@ listItems:
                             End If
                         End If
                         GoTo listItems
+                        'Case "updateAllRules"
+
+                        '    SchemaNameForUpdate = "null"
+                        '    sSql = "spScheduleToUpdateIndexTable"
+                        '        Dim arrParms As Hashtable = New Hashtable
+                        '        arrParms.Add("SchemaName", SchemaNameForUpdate)
+                        '        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                        '        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                        '            oPageDetail.InnerXml = ""
+                        '            indexId = Nothing
+                        '            GoTo listItems
+                        '        End If
+
+                        '    GoTo listItems
+
                     Case Else
 listItems:
 
@@ -4955,7 +4973,43 @@ SP:
             End Try
         End Sub
 
+        Private Sub ReIndexing(ByRef aWeb As Protean.Cms)
+            myWeb = aWeb
+            Dim sProcessInfo As String = ""
+            Dim SchemaNameForUpdate As String
+            Dim sSql As String
+            Dim IpAddress As String
+            Dim objServ As Services = New Services()
 
+            Dim mnUserId As Integer = myWeb.mnUserId
+            Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
+            Dim cSql As String
+            Dim oDS As DataSet
+            Dim lastLoginSpan As DateTime
+            Dim CurrentDateTime As DateTime = DateTime.Now
+
+            Try
+
+                cSql = "select top 1  dDateTime from tblActivityLog   where cActivityDetail='ReIndexing'  order by 1 desc"
+                oDS = myWeb.moDbHelper.GetDataSet(cSql, "Index", "IndexRules")
+                lastLoginSpan = oDS.Tables(0).Rows(0).ItemArray(0).ToString()
+                Dim hr As Int32 = CurrentDateTime.Subtract(lastLoginSpan).Hours
+                If (hr >= 1) Then
+                    IpAddress = objServ.GetIpAddress(myWeb.moRequest)
+                    SchemaNameForUpdate = "null"
+                    sSql = "spScheduleToUpdateIndexTable"
+                    Dim arrParms As Hashtable = New Hashtable
+                    arrParms.Add("SchemaName", SchemaNameForUpdate)
+                    myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+
+                    myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, mnUserId, 0, 0, 0, "ReIndexing", True)
+
+                End If
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
     End Class
 
 

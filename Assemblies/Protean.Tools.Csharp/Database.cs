@@ -698,10 +698,12 @@ namespace Protean.Tools
                 // Set the command type
                 oCmd.CommandType = commandtype;
 
+
                 // Set the command timeout
-                if (nConnectTimeout > 15)
+                if (nConnectTimeout == 15)
                 {
-                    oCmd.CommandTimeout = nConnectTimeout;
+                    // oCmd.CommandTimeout = nConnectTimeout;
+                    oCmd.CommandTimeout = 1800;
                 }
 
                 // Set the Paremeters if any
