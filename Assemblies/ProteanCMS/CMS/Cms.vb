@@ -1898,19 +1898,18 @@ Public Class Cms
                                 Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
                                 cContentDetailName = Protean.Tools.Text.CleanName(cContentDetailName, False, True)
                                 Dim RequestedContentName As String = ""
+                                mcOriginalURL = mcOriginalURL.TrimEnd("?")
                                 If mcOriginalURL.Contains("-/") Then
                                     RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
                                 End If
 
                                 If RequestedContentName.Contains("?") Then
                                     RequestedContentName = RequestedContentName.Substring(0, RequestedContentName.IndexOf("?"))
-                                    'myQueryString = RequestedContentName.Substring(mcOriginalURL.LastIndexOf("?"))
                                 End If
 
                                 If RequestedContentName <> cContentDetailName Then
 
                                     'Change to redirect to correct URL, automatic redirects for content name changes
-
                                     If RequestedContentName = "" Then
                                         If mcOriginalURL.EndsWith("-/") Then
                                             Me.msRedirectOnEnd = mcOriginalURL & cContentDetailName
