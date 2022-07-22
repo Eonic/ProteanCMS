@@ -2088,9 +2088,9 @@ Public Class xForm
                 oIptElmt.SetAttribute("end", CStr(oEnd))
             End If
             oIptElmt.SetAttribute("step", CStr(oStep))
-            If oStep <> "" Then
-                oIptElmt.SetAttribute("step", CStr(oStep))
-            End If
+            'If oStep <> "" Then
+            '    oIptElmt.SetAttribute("step", CStr(oStep))
+            'End If
             If sLabel <> "" Then
                 oLabelElmt = moPageXML.CreateElement("label")
                 oLabelElmt.InnerText = sLabel

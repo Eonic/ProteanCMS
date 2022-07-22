@@ -394,8 +394,9 @@ Partial Public Class Cms
             Public Function ReIndexingAPI(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim sString As String
                 Try
-                    Dim cIPList As String = CStr(myWeb.moConfig("AlternativeAuthenticationIPList"))
-                    If Tools.Text.IsIPAddressInList(myWeb.moRequest.UserHostAddress, cIPList) Then
+                    Dim objservices As Services = New Services()
+
+                    If objservices.CheckUserIP() Then
                         Dim bIsAuthorized As Boolean = False
                         bIsAuthorized = ValidateAPICall(myWeb, "Administrator")
                         If bIsAuthorized Then
