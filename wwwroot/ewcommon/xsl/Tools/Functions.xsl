@@ -798,7 +798,7 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js" cookie-consent="strictly-necessary">/* */</script>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="@layout='Modules_Masonary'">
@@ -10351,7 +10351,7 @@
     <xsl:variable name="first" select="substring-before($newlist, $seperator)" />
     <xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
     <xsl:if test="$first!=''">
-      <script type="{$scriptType}" src="{$first}{$bundleVersion}" cookie-consent="strictly-necessary">
+      <script type="{$scriptType}" src="{$first}{$bundleVersion}">
         <xsl:if test="$async!=''">
           <xsl:attribute name="async">async</xsl:attribute>
         </xsl:if>
