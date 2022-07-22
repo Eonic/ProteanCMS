@@ -958,8 +958,9 @@ Partial Public Class fsHelper
                 'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "").Replace("---", "-").Replace("£", "")
 
                 Dim fileNameFixed As String = Regex.Replace(file.FileName, "\s+", "-")
-                fileNameFixed = Regex.Replace(fileNameFixed, "[-]{2,}", "-", RegexOptions.None)
                 fileNameFixed = Regex.Replace(fileNameFixed, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
+                fileNameFixed = Regex.Replace(fileNameFixed, "-{2,}", "-", RegexOptions.None)
+
 
                 'Path.GetFileName(file.FileName).Replace(" ", "-")
 
