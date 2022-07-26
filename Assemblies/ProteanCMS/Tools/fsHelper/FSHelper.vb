@@ -950,6 +950,21 @@ Partial Public Class fsHelper
         statuses.Add(New FilesStatus(New FileInfo(fullName)))
     End Sub
 
+    Public Function CleanfileName(ByVal cFilename As String) As String
+
+        Try
+
+            Dim cCleanfileName As String = Regex.Replace(cFilename, "\s+", "-")
+            cCleanfileName = Regex.Replace(cCleanfileName, "(\s+|\$|\,|\'|\:|\*|&|\?|\/)", "")
+            cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None)
+            Return cCleanfileName
+
+        Catch ex As Exception
+            'RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+            Return ex.Message
+        End Try
+    End Function
+
     ' Upload entire file
     Private Sub UploadWholeFile(ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
         For i As Integer = 0 To context.Request.Files.Count - 1
@@ -961,9 +976,7 @@ Partial Public Class fsHelper
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
                 'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
 
-                Dim fileNameFixed As String = Regex.Replace(file.FileName, "\s+", "-")
-                fileNameFixed = Regex.Replace(fileNameFixed, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
-                fileNameFixed = Regex.Replace(fileNameFixed, "-{2,}", "-", RegexOptions.None)
+                Dim fileNameFixed As String = CleanfileName(file.FileName)
 
                 'Dim fileNameFixed As String = AdminJsonAPI.ReplaceRegularExpression(moApi, file.FileName)
 

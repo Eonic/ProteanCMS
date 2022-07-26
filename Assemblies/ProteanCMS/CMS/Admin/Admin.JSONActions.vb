@@ -5,7 +5,7 @@ Imports System.Xml
 Imports System.Collections
 Imports System.Web.Configuration
 Imports System.Configuration
-Imports System.Text.RegularExpressions
+
 
 Partial Public Class Cms
 
@@ -418,18 +418,20 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function Cleanfilename(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function CleanfileName(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim Filename As String = myApi.moRequest.QueryString("Filename")
+                Dim Filename As String = String.Empty
+                Dim fsHelper As New fsHelper()
 
                 Try
                     If myApi.mbAdminMode Then
 
-                        Dim fileNameFixed As String = Regex.Replace(Filename, "\s+", "-")
-                        fileNameFixed = Regex.Replace(fileNameFixed, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
-                        fileNameFixed = Regex.Replace(fileNameFixed, "-{2,}", "-", RegexOptions.None)
-
-                        JsonResult = fileNameFixed
+                        If myApi.moRequest.QueryString("Filename") IsNot Nothing Then
+                            Filename = myApi.moRequest.QueryString("Filename")
+                        End If
+                        If Filename <> String.Empty Then
+                            JsonResult = fsHelper.CleanfileName(Filename)
+                        End If
 
                     End If
                     Return JsonResult

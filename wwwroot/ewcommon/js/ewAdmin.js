@@ -2112,11 +2112,12 @@ $(document).ready(function () {
     }
 });
 
-function Cleanfilename(filename) {
+function CleanfileName(filename) {
     var newfilename = "";
-    var dataMsg = 'Filename=' + filename;   
+    var dataMsg = 'Filename=' + filename;
+
     $.ajax({
-        url: '/ewapi/Cms.Admin/Cleanfilename',
+        url: '/ewapi/Cms.Admin/CleanfileName',
         data: dataMsg,
         type: 'GET',
         success: function (AjaxResponse) {
