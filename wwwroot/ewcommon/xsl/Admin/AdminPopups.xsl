@@ -167,7 +167,7 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:text>var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r</xsl:text>
+     <xsl:text>var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r</xsl:text>
     <xsl:text disable-output-escaping="yes"><![CDATA[&]]></xsl:text>
     <xsl:text>0x3|0x8;return v.toString(16);});</xsl:text>
 

@@ -443,7 +443,7 @@ Partial Public Class Cms
                     myCart.AddProductOption(jObj)
                     'myCart.UpdatePackagingANdDeliveryType()
                     myCart.GetCart(CartXml.FirstChild)
-                    'persist cart
+                    ''persist cart
                     myCart.close()
 
                     CartXml = updateCartforJSON(CartXml)
