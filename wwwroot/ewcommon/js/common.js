@@ -2880,3 +2880,16 @@ if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('
         }
     });
 }
+
+
+//common function for file upload to restrict pound signature, multiple dashes and multiple spaces
+
+function cleanfilename(filename) {
+    var filename = '' + filename.replace(/ /g, '-') + '';
+    filename = '' + filename.replace(/[/\\#,+()$~%'£":*?{}]/g, '') + '';
+    var newfilename = filename.split('-').filter(function (item) {
+        item = item ? item.replace(/-/g, '') : item
+        return item;
+    }).join('-');
+    return newfilename;
+}

@@ -1,5 +1,6 @@
 var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
 var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
+var ReplaceSignatureUrl = '/ewapi/Cms.Admin/ReplaceRegularExpression';
 var checkiFrameLoaded;
 
 $(document).ready(function() {
@@ -2111,6 +2112,20 @@ $(document).ready(function () {
     }
 });
 
+function Cleanfilename(filename) {
+    var newfilename = "";
+    var dataMsg = 'Filename=' + filename;   
+    $.ajax({
+        url: '/ewapi/Cms.Admin/Cleanfilename',
+        data: dataMsg,
+        type: 'GET',
+        success: function (AjaxResponse) {
+            newfilename = AjaxResponse;           
+        }
+    });
+    return newfilename;
+}
+
 $(document).on('click', '.nextPage', function () {
 
 
@@ -2483,8 +2498,7 @@ if (editProductElement > 0) {
             UrlPathOnChange: function (newContentPath) {
                 
                if ($(".hidUrlChangeFlag").val() == "1") {
-                   if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
-                       debugger;
+                    if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
                         var redirectType = $(".hiddenRedirectType").val();
                         $('.btnRedirectSave').removeAttr("disabled");
                         $("#redirectModal").modal("show");
@@ -2512,3 +2526,5 @@ if (editProductElement > 0) {
         }
     });
 }
+
+

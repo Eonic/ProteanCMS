@@ -5,7 +5,7 @@ Imports System.Xml
 Imports System.Collections
 Imports System.Web.Configuration
 Imports System.Configuration
-
+Imports System.Text.RegularExpressions
 
 Partial Public Class Cms
 
@@ -417,6 +417,29 @@ Partial Public Class Cms
                 End Try
 
             End Function
+
+            Public Function Cleanfilename(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim Filename As String = myApi.moRequest.QueryString("Filename")
+
+                Try
+                    If myApi.mbAdminMode Then
+
+                        Dim fileNameFixed As String = Regex.Replace(Filename, "\s+", "-")
+                        fileNameFixed = Regex.Replace(fileNameFixed, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
+                        fileNameFixed = Regex.Replace(fileNameFixed, "-{2,}", "-", RegexOptions.None)
+
+                        JsonResult = fileNameFixed
+
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+
         End Class
 #End Region
 
