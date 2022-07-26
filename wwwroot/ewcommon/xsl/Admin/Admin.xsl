@@ -4753,6 +4753,11 @@
 				<xsl:with-param name="name">FreeCookieConsent</xsl:with-param>
 				<xsl:with-param name="type">FreeCookieConsent</xsl:with-param>
 			</xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">CookieFirst from https://www.cookiefirst.com//</xsl:with-param>
+				<xsl:with-param name="name">CookieFirst</xsl:with-param>
+				<xsl:with-param name="type">CookieFirst</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <div class="tab-pane panel" id="settings">

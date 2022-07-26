@@ -2498,8 +2498,7 @@ if (editProductElement > 0) {
             UrlPathOnChange: function (newContentPath) {
                 
                if ($(".hidUrlChangeFlag").val() == "1") {
-                   if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
-                       debugger;
+                    if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
                         var redirectType = $(".hiddenRedirectType").val();
                         $('.btnRedirectSave').removeAttr("disabled");
                         $("#redirectModal").modal("show");
