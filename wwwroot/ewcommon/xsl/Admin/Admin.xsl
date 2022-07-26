@@ -5289,18 +5289,14 @@
 
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
+	  
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-	  var filename =  ''+file.name.replace(/ /g, '-')+'';
-	  filename =  ''+filename.replace(/[/\\#,+()$~%'£":*?{}]/g, '')+'';
-	  var newfilename = filename.split('-').filter(function(item) {
-          item = item ? item.replace(/-/g, ''): item
-          return item;
-        }).join('-');
-	 
-	  var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + newfilename + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + newfilename + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + newfilename + '" class="img-responsive" /></a></div>'
-    newItem = newItem + '<div class="description">'
-    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + newfilename + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
-      newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + newfilename + '</span><br/></div>';
+	  var filename = cleanfilename(''+file.name+'');
+
+	  var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + filename + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + filename + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + filename + '" class="img-responsive" /></a></div>'
+      newItem = newItem + '<div class="description">'
+      newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + filename + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
+      newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + filename + '</span><br/></div>';
       newItem = newItem + '</div></div>';
   </xsl:template>
 
@@ -5532,8 +5528,9 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
-    var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '</td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
-    newItem = newItem + '<td><a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
+	  var filename = cleanfilename(file.name)
+	  var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + filename + '</td><td>.' + /[^.]+$/.exec(filename) + '</td>';
+    newItem = newItem + '<td><a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + filename + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
   </xsl:template>
 
 
@@ -5542,9 +5539,10 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='MediaLib']" mode="newItemScript">
-    var newItem = '<div class="item col-md-2 col-sm-4"><div class="panel panel-default"><div class="panel-body"><div class="ItemThumbnail"><img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /></div>'
-    newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
-    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
+	  var filename = cleanfilename(file.name)
+	  var newItem = '<div class="item col-md-2 col-sm-4"><div class="panel panel-default"><div class="panel-body"><div class="ItemThumbnail"><img src="' + targetPath + '/' + filename + '" width="85" height="48 " class="" /></div>'
+    newItem = newItem + '<div class="description">' + filename + '<br /></div>'
+    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + filename + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
   </xsl:template>
 
   <xsl:template match="folder" mode="MediaFolder">

@@ -23,6 +23,7 @@ Imports System.Web.Configuration
 Imports Protean.Tools.DelegateWrappers
 Imports System
 Imports System.Text.RegularExpressions
+Imports System.Web.UI
 
 Partial Public Class fsHelper
 
@@ -40,6 +41,7 @@ Partial Public Class fsHelper
     Public mcPopulateFilesNode As String = ""
     Public mcRoot As String = ""
     Shared msException As String
+    Public AdminJsonAPI As Protean.Cms.Admin.JSONActions
 
     Private _thumbnailPath As String = "/~ptn"
 
@@ -952,15 +954,18 @@ Partial Public Class fsHelper
     Private Sub UploadWholeFile(ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
+            Dim moApi As New Protean.API()
+
 
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-                'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "").Replace("---", "-").Replace("£", "")
+                'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
 
                 Dim fileNameFixed As String = Regex.Replace(file.FileName, "\s+", "-")
                 fileNameFixed = Regex.Replace(fileNameFixed, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
                 fileNameFixed = Regex.Replace(fileNameFixed, "-{2,}", "-", RegexOptions.None)
 
+                'Dim fileNameFixed As String = AdminJsonAPI.ReplaceRegularExpression(moApi, file.FileName)
 
                 'Path.GetFileName(file.FileName).Replace(" ", "-")
 

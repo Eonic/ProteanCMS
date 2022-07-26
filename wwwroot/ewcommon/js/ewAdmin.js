@@ -1,5 +1,6 @@
 var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
 var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
+var ReplaceSignatureUrl = '/ewapi/Cms.Admin/ReplaceRegularExpression';
 var checkiFrameLoaded;
 
 $(document).ready(function() {
@@ -2111,6 +2112,20 @@ $(document).ready(function () {
     }
 });
 
+function Cleanfilename(filename) {
+    var newfilename = "";
+    var dataMsg = 'Filename=' + filename;   
+    $.ajax({
+        url: '/ewapi/Cms.Admin/Cleanfilename',
+        data: dataMsg,
+        type: 'GET',
+        success: function (AjaxResponse) {
+            newfilename = AjaxResponse;           
+        }
+    });
+    return newfilename;
+}
+
 $(document).on('click', '.nextPage', function () {
 
 
@@ -2512,3 +2527,5 @@ if (editProductElement > 0) {
         }
     });
 }
+
+
