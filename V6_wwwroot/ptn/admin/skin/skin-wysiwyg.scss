@@ -115,7 +115,11 @@
         font-size: 13px !important;
         margin-right: -21px;
     }
-    .fullwidthContainer .text-primary.drag{margin-right:0;}
+
+    .fullwidthContainer .text-primary.drag {
+        margin-right: 0;
+    }
+
     a:hover {
         text-decoration: none;
     }
@@ -272,15 +276,19 @@
     }
 
     .accordion-module .editable > div.ptn-edit.options {
-        z-index: 2;
+        z-index: 5;
+        float: right;
+        width: 100px;
+        &:hover{z-index:6;}
     }
+
+    
 
     .ptn-edit.options.addmodule.droppable-hover {
         border-color: $primary;
         opacity: 1 !important;
     }
 }
-
 .ptn-edit .open .dropdown-menu {
     background-color: $admin-header-bg-light;
     font-size: 1em !important;
@@ -318,6 +326,8 @@
             background-color: transparent;
         }
     }
+
+   
 }
 // - In site edit button styling
 .Site, .Email {

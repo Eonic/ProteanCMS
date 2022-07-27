@@ -2111,6 +2111,21 @@ $(document).ready(function () {
     }
 });
 
+function CleanfileName(filename) {
+    var newfilename = "";
+    var dataMsg = 'Filename=' + filename;
+
+    $.ajax({
+        url: '/ewapi/Cms.Admin/CleanfileName',
+        data: dataMsg,
+        type: 'GET',
+        success: function (AjaxResponse) {
+            newfilename = AjaxResponse;           
+        }
+    });
+    return newfilename;
+}
+
 $(document).on('click', '.nextPage', function () {
 
 
@@ -2169,6 +2184,7 @@ $(document).on('click', '.PrevPage', function () {
 });
 
 function ValidateContentForm(event) {
+    
     if (form_check(event)) {
         var pageId = this.getQueryStringParam('pgid');
         $(".hiddenType").val("Page");
@@ -2177,17 +2193,25 @@ function ValidateContentForm(event) {
        editPage.structNameOnChange(newStructName);
        
     }
+    else { return true; }
+
 }
 
 function RedirectClick(redirectType) {
-    
+  
     //var redirectType = $("redirectType").val();
     $(".hiddenRedirectType").val(redirectType);
     if (redirectType == "404Redirect") {
           
-            $(".hiddenParentCheck").val("false");
-            $("#redirectModal").modal("hide");
+         $(".hiddenParentCheck").val("false");
+        $("#redirectModal").modal("hide");
+        var isPage = $(".hiddenType").val();
+        if (isPage == "Page") {
+            document.createElement('form').submit.call(document.EditPage);
+        }
+        else {
             document.createElement('form').submit.call(document.EditContent);
+        }
         }
     else {
         
@@ -2358,16 +2382,23 @@ if (editPageElement) {
 
 
             structNameOnChange: function (newStructName) {
+                if ($(".hidPageChangeFlag").val() == "1") {
+                    if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
+                        var redirectType = $(".hiddenRedirectType").val();
+                        $('.btnRedirectSave').removeAttr("disabled");
+                        $("#redirectModal").modal("show");
+                        var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                        $("#OldUrl").val(oldURLFromXsl);
+                        $("#NewUrl").val(newStructName);
+                        this.structName = newStructName;
+                        $(".hiddenPageId").val(localStorage.pageId);
+                        $(".hiddenProductOldUrl").val(oldURLFromXsl);
+                        $(".hiddenPageNewUrl").val(newStructName);
+                        $(".hiddenRedirectType").val(redirectType);
+                        event.preventDefault();
 
-                if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
-                    $('.btnRedirectSave').removeAttr("disabled");
-                    $("#redirectModal").modal("show");
-                    var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
-                    $("#OldUrl").val(oldURLFromXsl);
-                    $("#NewUrl").val(newStructName);
-                    this.structName = newStructName;
-                    $(".hiddenPageId").val(localStorage.pageId);
-                    event.preventDefault();
+
+                    }
 
                 }
                 else {
@@ -2413,6 +2444,12 @@ $(document).ready(function () {
 $(document).on("change", "#cContentPath", function (event) {
     
     $(".hidUrlChangeFlag").val("1");
+
+});
+
+$(document).on("change", "#cStructName", function (event) {
+
+    $(".hidPageChangeFlag").val("1");
 
 });
 
@@ -2489,3 +2526,5 @@ if (editProductElement > 0) {
         }
     });
 }
+
+

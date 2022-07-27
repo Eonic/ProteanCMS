@@ -1771,7 +1771,7 @@ RedoCheck:
                     oSubContent.SetAttribute("renewal", "true")
                     oSubContent.SetAttribute("renewalStart", xmlDate(dNewStart))
                     oSubContent.SetAttribute("renewalEnd", xmlDate(dNewEnd))
-
+                    myWeb.moCart.mnProcessId = 1 'add the process id because it needs to be less than 5
                     myWeb.moCart.AddItem(SubContentId, 1, Nothing, SubName, Amount, oSubContent.OuterXml)
 
                     Dim billingId As Long = myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " & UserId)
@@ -1780,7 +1780,7 @@ RedoCheck:
 
                     'Collect the payment
                     Dim CurrencyCode As String = "GBP"
-                    Dim PaymentDescription As String = "Renewal of "
+                    Dim PaymentDescription As String = "Renewal of " & oSubContent.GetAttribute("name") & "ref:" & SubId
                     Dim paymentStatus As String = ""
 
                     Dim PayInstance As New XmlDocument()
@@ -1867,6 +1867,76 @@ RedoCheck:
                         'ExpireSubscription(SubKey)
 
                     End If
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug)
+                    Return Nothing
+                End Try
+
+
+            End Function
+
+            Public Function RefreshSubscriptionOrder(ByVal SubXml As XmlElement, bEmailClient As Boolean, nCartId As Long) As String
+                'TS written to fix subscription orders that got created without sending emails
+                Dim cProcessInfo As String
+                Try
+
+                    Dim SubId As Long = CLng("0" & SubXml.GetAttribute("id"))
+
+
+                    Dim renewInterval As DateInterval = DateInterval.Day
+                    Select Case SubXml.GetAttribute("periodUnit")
+                        Case "Week"
+                            renewInterval = DateInterval.WeekOfYear
+                        Case "Year"
+                            renewInterval = DateInterval.Year
+                    End Select
+
+                    Dim dNewStart As Date = DateAdd(renewInterval, CInt(SubXml.GetAttribute("period")) * -1, CDate(SubXml.GetAttribute("expireDate")))
+                    Dim dNewEnd As Date = SubXml.GetAttribute("expireDate")
+
+                    Dim Amount As Double = CDbl(SubXml.GetAttribute("value"))
+                    Dim OrderId As Long = CLng(0 & SubXml.GetAttribute("orderId"))
+                    Dim SubContentId As Long = SubXml.GetAttribute("contentId")
+                    Dim UserId As Long = SubXml.GetAttribute("userId")
+                    Dim SubName As String = SubXml.GetAttribute("name") & " Renewal"
+                    Dim nPaymentMethodId As Long = SubXml.GetAttribute("providerId")
+
+                    'Create the invoice
+                    'Add quote to cart
+                    myWeb.InitialiseCart()
+                    myWeb.moCart.mnCartId = nCartId
+                    myWeb.moCart.mnEwUserId = UserId
+                    myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    myWeb.moCart.GetCart(myWeb.moCart.moCartXml.FirstChild)
+
+                    If Not SubXml.SelectSingleNode("Content/Notes") Is Nothing Then
+                        myWeb.moCart.SetClientNotes(SubXml.SelectSingleNode("Content/Notes").InnerXml)
+                    End If
+                    Dim oSubContent As XmlElement = SubXml.SelectSingleNode("Content")
+                    oSubContent.SetAttribute("renewal", "true")
+                    oSubContent.SetAttribute("renewalStart", xmlDate(dNewStart))
+                    oSubContent.SetAttribute("renewalEnd", xmlDate(dNewEnd))
+                    myWeb.moCart.mnProcessId = 1 'add the process id because it needs to be less than 5
+                    myWeb.moCart.AddItem(SubContentId, 1, Nothing, SubName, Amount, oSubContent.OuterXml)
+
+                    Dim billingId As Long = myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " & UserId)
+                    Dim deliveryId As Long = billingId
+                    myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId)
+
+                    myWeb.moCart.mnProcessId = 6
+                    myWeb.moCart.updateCart("Success")
+                    myWeb.moCart.GetCart()
+                    myWeb.moCart.addDateAndRef(myWeb.moCart.moCartXml.FirstChild, dNewStart)
+
+                    'Send the invoice
+                    If bEmailClient Then
+                        myWeb.moCart.emailReceipts(myWeb.moCart.moCartXml)
+                    End If
+
+                    myWeb.moCart.SaveCartXML(myWeb.moCart.moCartXml.FirstChild)
+
+                    Return "Success"
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug)

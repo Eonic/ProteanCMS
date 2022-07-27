@@ -83,19 +83,21 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="spacebetween">10</xsl:variable>
-		<xsl:variable name="spacebetweenLg">10</xsl:variable>
 		<!--responsive columns variables-->
 
 		<!--end responsive columns variables-->
 		<!-- Output Module -->
-		<div class="swiper-container NewsList content-carousel Grid">
-			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}" data-spacebetween="{$spacebetween}" data-spacebetweenlg="{$spacebetweenLg}">
+		<div class="swiper-container NewsList content-carousel ">
+			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
 				<div class="swiper-wrapper">
+					<xsl:apply-templates select="." mode="contentColumns">
+						<xsl:with-param name="carousel" select="@carousel"/>
+					</xsl:apply-templates>
 					<xsl:choose>
 						<xsl:when test="@linkArticle='true'">
 							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
 								<xsl:with-param name="sortBy" select="@sortBy"/>
+								<xsl:with-param name="class" select="'swiper-slide'"/>
 							</xsl:apply-templates>
 						</xsl:when>
 						<xsl:otherwise>
@@ -107,13 +109,13 @@
 					</xsl:choose>
 					<xsl:text> </xsl:text>
 				</div>
-
+</div>
 				<xsl:if test="@carouselBullets='true'">
 					<div class="swiper-pagination" id="swiper-pagination-{@id}">
 						<xsl:text> </xsl:text>
 					</div>
 				</xsl:if>
-			</div>
+			
 			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
 				<xsl:text> </xsl:text>
 			</div>
@@ -237,9 +239,9 @@
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
-		<div class="grid-item newsarticle {$class}">
+		<div class="listItem newsarticle {$class}">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="concat('grid-item newsarticle ',$class)"/>
+				<xsl:with-param name="class" select="concat('listItem newsarticle ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
@@ -533,6 +535,37 @@
 			"<xsl:value-of select="@instagramURL"/>"
 		</xsl:if>]
 		}
+	</xsl:template>
+	
+		<xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
+		{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		"mainEntity": [
+		<xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+		<xsl:apply-templates select="$page/Contents/Content[@type='FAQ']" mode="JSONLD-list"/>
+		]
+		}
+	</xsl:template>
+
+	<xsl:template match="Content[@type='FAQ']" mode="JSONLD-list">
+		{
+		"@type": "Question",
+		"name": "<xsl:call-template name="escape-json">
+			<xsl:with-param name="string">
+				<xsl:apply-templates select="DisplayName" mode="flattenXhtml"/>
+			</xsl:with-param>
+		</xsl:call-template>",
+		"acceptedAnswer": {
+		"@type": "Answer",
+		"text": "<xsl:call-template name="escape-json">
+			<xsl:with-param name="string">
+				<xsl:apply-templates select="Body" mode="flattenXhtml"/>
+			</xsl:with-param>
+		</xsl:call-template>"
+		}
+		}
+		<xsl:if test="position()!=last()">,</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="Content" mode="ContentDetailCommenting">

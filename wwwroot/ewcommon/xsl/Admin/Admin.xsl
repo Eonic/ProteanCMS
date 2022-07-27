@@ -1914,6 +1914,31 @@
       </div>
     </div>
   </xsl:template>
+
+	<xsl:template match="Page[@layout='ResetWebConfig']" mode="Admin">
+		<div class="row">
+			<div class="col-md-3 panel">
+				<div class="panel-body">
+					<ul class="nav nav-stacked">
+						<xsl:for-each select="AdminMenu/descendant-or-self::MenuItem[@cmd='ResetWebConfig']/MenuItem">
+							<xsl:apply-templates select="." mode="button">
+								<xsl:with-param name="level">1</xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:for-each>
+						<li>
+						
+							<a href="{$appPath}?ewCmd=ResetWebConfig&amp;pgid={/Page/@id}" title="" class="btn btn-lg btn-primary">
+								<i class="fa fa-gift fa-large">
+									<xsl:text> </xsl:text>
+								</i><xsl:text> </xsl:text>
+								Reset WebConfig
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
   <!-- -->
   <xsl:template match="Page[@layout='Advanced' or @layout='AdvancedMail']" mode="Admin">
     <div class="row" id="tpltAdvancedMode">
@@ -4728,6 +4753,11 @@
 				<xsl:with-param name="name">FreeCookieConsent</xsl:with-param>
 				<xsl:with-param name="type">FreeCookieConsent</xsl:with-param>
 			</xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">CookieFirst from https://www.cookiefirst.com//</xsl:with-param>
+				<xsl:with-param name="name">CookieFirst</xsl:with-param>
+				<xsl:with-param name="type">CookieFirst</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <div class="tab-pane panel" id="settings">
@@ -5201,24 +5231,25 @@
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
       var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
       <xsl:apply-templates select="." mode="newItemScript"/>
-      $('#files').prepend(newItem);
+		$('#files').prepend(newItem);
+		
 
-      $('#files .item-image .panel').prepareLibImages();
+		$('#files .item-image .panel').prepareLibImages();
 
-      $("[data-toggle=popover]").popover({
-      html: true,
-      container: '#files',
-      trigger: 'hover',
-      viewport: '#files',
-      content: function () {
-      return $(this).prev('.popoverContent').html();
-      }
-      });
-      if ($('.pickImageModal').exists()) {
-      $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
-      ev.preventDefault();
-      $('.modal-dialog').addClass('loading')
-			$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
+		$("[data-toggle=popover]").popover({
+		html: true,
+		container: '#files',
+		trigger: 'hover',
+		viewport: '#files',
+		content: function () {
+		return $(this).prev('.popoverContent').html();
+		}
+		});
+		if ($('.pickImageModal').exists()) {
+		$('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
+		ev.preventDefault();
+		$('.modal-dialog').addClass('loading')
+		$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
 			var target = $(this).attr("href");
 			// load the url and show modal on success
 			var currentModal = $('.pickImageModal')
@@ -5263,9 +5294,10 @@
 
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
+	  
     var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-
-    var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
+	
+	 var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
     newItem = newItem + '<div class="description">'
     newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
       newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
@@ -5499,7 +5531,7 @@
     acceptFileTypes: /(\.|\/)(pdf|doc?x|zip|xls?x|ppt?x)$/i,
   </xsl:template>
 
-  <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
+ <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
     var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '</td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
     newItem = newItem + '<td><a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
   </xsl:template>
@@ -8137,7 +8169,6 @@
       </td>
       <td class="cell description">
         <a href="{$siteURL}{@url}" title="">
-          
 			<xsl:if test="productDetail/ParentProduct/Content/Name">
 				<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> -
 			</xsl:if>
@@ -8152,7 +8183,7 @@
                 <xsl:apply-templates select="option" mode="optionDetail"/>
               </xsl:when>
               <xsl:otherwise>
-<br/>
+                <br/>
                 <xsl:value-of select="Name"/>
               </xsl:otherwise>
             </xsl:choose>
@@ -9016,7 +9047,6 @@
   <xsl:template match="Page[@layout='Reports' and ContentDetail/Content[@type='xform']]" mode="Admin">
     <!--<div class="report" id="template_AdminXForm">-->
     <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-	  
     <xsl:apply-templates select="ContentDetail/Report" mode="defaultReport"/>
     <!--</div>-->
   </xsl:template>
@@ -9050,7 +9080,7 @@
 				<th>
 					Date/Time
 				</th>
-				<xsl:for-each select="Item[1]/cActivityXml/*/*">
+				<xsl:for-each select="Item[1]/cActivityXml/descendant-or-self::*">
 					<xsl:if test="count(*)=0">
 						<th>
 							<xsl:value-of select="local-name()"/>
@@ -9062,7 +9092,7 @@
 				<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
 					<tr>
                         <xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
-						<xsl:apply-templates select="cActivityXml/*/*" mode="Report_ColsValues"/>
+						<xsl:apply-templates select="cActivityXml/descendant-or-self::*" mode="Report_ColsValues"/>
 					</tr>
 				</span>
 			</xsl:for-each>
@@ -9078,26 +9108,27 @@
     </xsl:if>
   </xsl:template>
 
-	<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
-<!--
-			<td>
-				<xsl:value-of select="@ids"/>
-			</td>
-			-->
-
-	</xsl:template>
-
-
-	<xsl:template match="Attachements" mode ="Report_ColsValues">
-
+<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
+	<!--
 		<td>
-			<xsl:for-each select="Attachement ">
+			<xsl:value-of select="@ids"/>
+		</td>
+		-->
+
+</xsl:template>
+
+
+<xsl:template match="Attachements" mode ="Report_ColsValues">
+
+	<td>
+		<xsl:for-each select="Attachement ">
 			<xsl:value-of select="Content/@name"/>
 		</xsl:for-each>
-			
-		</td>
 
-	</xsl:template>
+	</td>
+
+</xsl:template>
+
 
   <!-- -->
   <!--   ##################  Generic Display Form  ##############################   -->
@@ -10095,7 +10126,7 @@
               <xsl:with-param name="pageTitle" select="'Access Denied'"/>
             </xsl:call-template>
             <xsl:call-template name="SystemPageAdminRow">
-              <xsl:with-param name="pageTitle" select="'Eonic Error'"/>
+              <xsl:with-param name="pageTitle" select="'Protean Error'"/>
             </xsl:call-template>
           </table>
 
@@ -11651,7 +11682,7 @@
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit
         </a>
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveTop&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveTop&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by top">
           <i class="fa fa-arrow-up fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -11666,7 +11697,7 @@
             <xsl:text> </xsl:text>
           </i>
         </a>
-        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveBottom&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
+        <a href="{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveBottom&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by bottom">
           <i class="fa fa-arrow-down fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -13244,7 +13275,6 @@
     </td>
   </xsl:template>
 
-
   <xsl:template name="StatusLegend">
     <xsl:param name="status"/>
     <xsl:choose>
@@ -13450,5 +13480,157 @@
     </div>
 
   </xsl:template>
+
+	<!-- code for filter indexes -->
+
+	<xsl:template match="Page[@layout='FilterIndex']" mode="Admin">
+		<div class="row" id="template_AdvancedMode">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						Filter Indexes
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<p class="btn-group headerButtons">
+							<xsl:if test="ContentDetail/Content[@type='xform']">
+								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+								</a>
+							</xsl:if>
+						</p>
+					</div>
+					<div class="panel-body">
+						<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					</div>
+					<xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListIndexes"/>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Report']" mode="ListIndexes">
+		<!--<div class="panel-body">
+			<form method="get" role="form" class="form-inline">
+				<input type="hidden" name="ewCmd" value="FilterIndex"/>
+				<input type="hidden" name="indexkey" value="0"/>
+				
+
+			</form>
+		</div>-->
+		<div class="table-responsive">
+			<table class="table manage-lookups table-hover ">
+				<tr>
+					<th colspan="2">
+						Data Type
+					</th>
+					<th colspan="2">
+						Schema Name
+					</th>
+					<th colspan="2">
+						Defination
+					</th>
+					<th colspan="2">
+						Xpath
+					</th>
+					<th colspan="2">
+						Brief
+					</th>
+					<th class="clearfix buttonCell">
+						<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id=0&amp;SchemaName={indexkeys/SchemaName/@Name}" class="btn btn-success pull-right">
+							<i class="fa fa-plus fa-white">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Add New Item
+						</a>
+						<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=updateAllRules&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName=null" class="btn btn-primary btn-xs pull-right">
+							<i class="fa fa-edit fa-white">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Update All Rules
+						</a>
+					</th>
+					
+				</tr>
+				<xsl:apply-templates select="indexkeys" mode="LookupList"/>
+			</table>
+		</div>
+	</xsl:template>
+
+	<!--<xsl:template match="SchemaName" mode="LookupList">
+	
+		<xsl:apply-templates select="indexkey" mode="LookupList"/>
+	</xsl:template>-->
+
+	<xsl:template match="indexkey" mode="LookupList">
+		<tr>
+			<td colspan="2">
+				<xsl:value-of select="nContentIndexDataType/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cContentSchemaName/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cDefinitionName/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="cContentValueXpath/node()"/>
+			</td>
+			<td colspan="2">
+				<xsl:value-of select="bBriefNotDetail/node()"/>
+			</td>
+			<td class="clearfix">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=delete&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-danger btn-xs pull-right">
+					<i class="fa fa-trash-o fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Del
+				</a>
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+					<i class="fa fa-edit fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Edit
+				</a>
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+					<i class="fa fa-recycle fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Re-Index
+				</a>
+			</td>
+		</tr>
+	</xsl:template>
+
+	<!-- code for filter indexes -->
+
+	<xsl:template match="Page[@layout='FilterIndex']" mode="Admin">
+		<div class="row" id="template_AdvancedMode">
+			<div class="col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						Filter Indexes
+					</div>
+				</div>
+			</div>
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<p class="btn-group headerButtons">
+							<xsl:if test="ContentDetail/Content[@type='xform']">
+								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+								</a>
+							</xsl:if>
+						</p>
+					</div>
+					<div class="panel-body">
+						<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					</div>
+					<xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="ListIndexes"/>
+				</div>
+			</div>
+
+		</div>
+	</xsl:template>
 
 </xsl:stylesheet>

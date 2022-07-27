@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="SiteMapLarge" box="" title="" link="" linkType="internal" linkText="More links" cols="1" descriptions="false" position=""/>
+					<Content moduleType="SiteMapLarge" box="" title="" link="" linkType="internal" linkText="More links" cols="" descriptions="false" position=""/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>

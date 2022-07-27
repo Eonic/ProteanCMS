@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content contentType="Organisation" moduleType="OrganisationList" box="" title="" link="" linkType="internal" linkText="More Organisations" sortBy="name" order="ascending" cols="1" stepBy="" stepCount="0" display="all" position="" listGroup="true"/>
+					<Content contentType="Organisation" moduleType="OrganisationList" box="" title="" link="" linkType="internal" linkText="More Organisations" sortBy="name" order="ascending" cols="" stepBy="" stepCount="0" display="all" position="" listGroup="true"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>

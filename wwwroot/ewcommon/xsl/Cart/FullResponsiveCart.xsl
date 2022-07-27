@@ -1238,9 +1238,8 @@
   <xsl:template match="Item" mode="CartProductName">
     <xsl:value-of select="Name"/>
   </xsl:template>
-
 	<xsl:template match="Item[productDetail/ParentProduct]" mode="CartProductName">
-		<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> - 
+		<xsl:value-of select="productDetail/ParentProduct/Content/Name"/> -
 		<xsl:value-of select="Name"/>
 	</xsl:template>
 
