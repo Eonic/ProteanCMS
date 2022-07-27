@@ -390,6 +390,58 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
             End Function
+
+            Public Function ReIndexingAPI(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim sString As String
+                Try
+                    Dim objservices As Services = New Services()
+
+                    If objservices.CheckUserIP() Then
+                        Dim bIsAuthorized As Boolean = False
+                        bIsAuthorized = ValidateAPICall(myWeb, "Administrator")
+                        If bIsAuthorized Then
+                            Dim objAdmin As Admin = New Admin()
+                            objAdmin.ReIndexing(myWeb)
+                            sString = "success"
+                        Else
+                            sString = "Invalid authentication"
+                        End If
+
+                    Else
+                        sString = "No access to this IPAddress"
+                    End If
+                    Return sString
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "IsParentPage", ex, ""))
+                    Return ex.Message
+                End Try
+
+            End Function
+
+            Public Function CleanfileName(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim Filename As String = String.Empty
+                Dim fsHelper As New fsHelper()
+
+                Try
+                    If myApi.mbAdminMode Then
+
+                        If myApi.moRequest.QueryString("Filename") IsNot Nothing Then
+                            Filename = myApi.moRequest.QueryString("Filename")
+                        End If
+                        If Filename <> String.Empty Then
+                            JsonResult = fsHelper.CleanfileName(Filename)
+                        End If
+
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+
         End Class
 #End Region
 

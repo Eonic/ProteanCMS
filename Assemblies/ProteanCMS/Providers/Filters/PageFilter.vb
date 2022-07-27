@@ -14,14 +14,15 @@ Namespace Providers
             Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim pageFilterSelect As XmlElement
-                    Dim oDr As SqlDataReader
+                    'Dim oDr As SqlDataReader
 
                     Dim sSql As String = "spGetPagesByParentPageId"
-                    oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
-                    'Adding controls to the form like dropdown, radiobuttons
-                    pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
-                    oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
-
+                    'oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
+                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
+                        'Adding controls to the form like dropdown, radiobuttons
+                        pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
+                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
+                    End Using
                 Catch ex As Exception
 
                 End Try
@@ -35,16 +36,16 @@ Namespace Providers
                     Dim cPageIds As String = String.Empty
                     Dim cnt As Integer
 
-                    If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
-                        If (aWeb.moSession("PageIds") Is Nothing) Then
-                            aWeb.moSession("PageIds") = cPageIds
-                        Else
-                            aWeb.moSession("PageIds") = cPageIds
-                            cPageIds = aWeb.moSession("PageIds")
-                        End If
+                    'If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
+                    '    cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
+                    '    If (aWeb.moSession("PageIds") Is Nothing) Then
+                    '        aWeb.moSession("PageIds") = cPageIds
+                    '    Else
+                    '        aWeb.moSession("PageIds") = cPageIds
+                    '        cPageIds = aWeb.moSession("PageIds")
+                    '    End If
 
-                    End If
+                    'End If
 
                     If (cPageIds <> String.Empty) Then
 

@@ -1115,40 +1115,40 @@ Partial Public Class Cms
                         " FROM tblContent WHERE" &
                         "  (CAST(cContentXmlBrief as xml).exist('" & sXpath & "') = 1 or CAST(cContentXmlDetail as xml).exist('" & sXpath & "') = 1)" &
                         IIf(cContentType = "", "", " AND (cContentSchemaName = '" & SqlFmt(cContentType) & "')")
-                    Dim oDr As SqlDataReader
-                    oDr = myWeb.moDbHelper.getDataReader(cSQL)
-                    Dim nResultCount As Integer
-                    Dim cResultIDsCSV As String = ""
-                    While oDr.Read
-                        'If checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
+                    'Dim oDr As SqlDataReader
+                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                        Dim nResultCount As Integer
+                        Dim cResultIDsCSV As String = ""
+                        While oDr.Read
+                            'If checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
 
 
-                        cResultIDsCSV &= oDr("nContentKey") & ","
+                            cResultIDsCSV &= oDr("nContentKey") & ","
 
 
-                    End While
-                    oDr.Close()
-                    If cResultIDsCSV = "" Then cResultIDsCSV = "0"
-                    nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                        End While
+                        oDr.Close()
 
-                    ' Log the search
-                    If _logSearches Then
-                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Search, myWeb.mnUserId, 0, 0, nResultCount, sSearch)
-                    End If
+                        If cResultIDsCSV = "" Then cResultIDsCSV = "0"
+                        nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
 
-                    Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
+                        ' Log the search
+                        If _logSearches Then
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Search, myWeb.mnUserId, 0, 0, nResultCount, sSearch)
+                        End If
 
-                    oResXML.SetAttribute("SearchString", sSearch)
-                    oResXML.SetAttribute("type", "SearchHeader")
-                    oResXML.SetAttribute("searchType", "XPATH")
-                    oResXML.SetAttribute("Hits", nResultCount)
-                    oResXML.SetAttribute("Time", Now.Subtract(dtStart).TotalMilliseconds)
-                    oResXML.SetAttribute("DebugSQL", cSQL)
+                        Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
 
-                    moContextNode.AppendChild(oResXML)
+                        oResXML.SetAttribute("SearchString", sSearch)
+                        oResXML.SetAttribute("type", "SearchHeader")
+                        oResXML.SetAttribute("searchType", "XPATH")
+                        oResXML.SetAttribute("Hits", nResultCount)
+                        oResXML.SetAttribute("Time", Now.Subtract(dtStart).TotalMilliseconds)
+                        oResXML.SetAttribute("DebugSQL", cSQL)
 
+                        moContextNode.AppendChild(oResXML)
 
-
+                    End Using
 
                 End If
             Catch ex As Exception
@@ -1278,7 +1278,7 @@ Partial Public Class Cms
 
 
                 If cRegExPattern <> "" Or bUserQuery Then
-                    Dim oDr As SqlClient.SqlDataReader
+                    ' Dim oDr As SqlClient.SqlDataReader
 
                     ' Create a Reg Exp to strip out any tags
                     ' Pattern: "<", optionally followed by "/", followed by one or more occurences of any character that isn't ">", followed by ">"
@@ -1299,31 +1299,32 @@ Partial Public Class Cms
 
                     Dim cResultIDsCSV As String = ""
                     If Not bUserQuery Then
-                        oDr = myWeb.moDbHelper.getDataReader(cSql)
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
 
-                        Dim ppppp As Integer = 0
-                        While oDr.Read
-                            Debug.WriteLine("Search loop " & ppppp)
-                            ppppp += 1
-                            'If moDbHelper.checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
+                            Dim ppppp As Integer = 0
+                            While oDr.Read
+                                Debug.WriteLine("Search loop " & ppppp)
+                                ppppp += 1
+                                'If moDbHelper.checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
 
-                            Dim cNewLineLessBrief As String = oDr("cContentXmlBrief")
-                            Dim cNewLineLessDetail As String = oDr("cContentXmlDetail")
-                            If cNewLineLessBrief <> Nothing Then cNewLineLessBrief = Replace(cNewLineLessBrief, Chr(10), "")
-                            If cNewLineLessBrief <> Nothing Then cNewLineLessBrief = Replace(cNewLineLessBrief, Chr(13), "")
-                            If cNewLineLessDetail <> Nothing Then cNewLineLessDetail = Replace(cNewLineLessDetail, Chr(10), "")
-                            If cNewLineLessDetail <> Nothing Then cNewLineLessDetail = Replace(cNewLineLessDetail, Chr(13), "")
+                                Dim cNewLineLessBrief As String = oDr("cContentXmlBrief")
+                                Dim cNewLineLessDetail As String = oDr("cContentXmlDetail")
+                                If cNewLineLessBrief <> Nothing Then cNewLineLessBrief = Replace(cNewLineLessBrief, Chr(10), "")
+                                If cNewLineLessBrief <> Nothing Then cNewLineLessBrief = Replace(cNewLineLessBrief, Chr(13), "")
+                                If cNewLineLessDetail <> Nothing Then cNewLineLessDetail = Replace(cNewLineLessDetail, Chr(10), "")
+                                If cNewLineLessDetail <> Nothing Then cNewLineLessDetail = Replace(cNewLineLessDetail, Chr(13), "")
 
-                            If (reMasterCheck.IsMatch(cNewLineLessBrief) Or reMasterCheck.IsMatch(cNewLineLessDetail)) Then
-                                'If (reMasterCheck.IsMatch(oDr("cContentXmlBrief")) Or reMasterCheck.IsMatch(oDr("cContentXmlDetail"))) Then
-                                'If reMasterCheck.IsMatch(oDr("cContentXmlDetail")) Then
-                                cResultIDsCSV &= oDr("nContentKey") & ","
-                            End If
+                                If (reMasterCheck.IsMatch(cNewLineLessBrief) Or reMasterCheck.IsMatch(cNewLineLessDetail)) Then
+                                    'If (reMasterCheck.IsMatch(oDr("cContentXmlBrief")) Or reMasterCheck.IsMatch(oDr("cContentXmlDetail"))) Then
+                                    'If reMasterCheck.IsMatch(oDr("cContentXmlDetail")) Then
+                                    cResultIDsCSV &= oDr("nContentKey") & ","
+                                End If
 
-                        End While
-                        oDr.Close()
-                        If cResultIDsCSV = "" Then cResultIDsCSV = "0"
-                        nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                            End While
+                            oDr.Close()
+                            If cResultIDsCSV = "" Then cResultIDsCSV = "0"
+                            nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                        End Using
                     Else
                         If myWeb.mnUserId = 0 Then Exit Sub
 
@@ -1372,21 +1373,22 @@ Partial Public Class Cms
 
 
                         cSql &= " ORDER BY cDirName"
-                        oDr = myWeb.moDbHelper.getDataReader(cSql)
-                        While oDr.Read
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
+                            While oDr.Read
 
-                            Dim oContent As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
-                            oContent.SetAttribute("id", oDr("nDirKey"))
-                            oContent.SetAttribute("type", "User")
-                            oContent.SetAttribute("name", oDr("cDirName"))
-                            oContent.InnerXml = oDr("cDirXml")
-                            If reMasterCheck.IsMatch(oContent.OuterXml) Then
-                                nResultCount += 1
-                                oContent.FirstChild.AppendChild(oContent.OwnerDocument.ImportNode(myWeb.moDbHelper.GetUserContactsXml(oDr("nDirKey")).CloneNode(True), True))
-                                moContextNode.AppendChild(oContent)
-                            End If
-                        End While
-                        oDr.Close()
+                                Dim oContent As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
+                                oContent.SetAttribute("id", oDr("nDirKey"))
+                                oContent.SetAttribute("type", "User")
+                                oContent.SetAttribute("name", oDr("cDirName"))
+                                oContent.InnerXml = oDr("cDirXml")
+                                If reMasterCheck.IsMatch(oContent.OuterXml) Then
+                                    nResultCount += 1
+                                    oContent.FirstChild.AppendChild(oContent.OwnerDocument.ImportNode(myWeb.moDbHelper.GetUserContactsXml(oDr("nDirKey")).CloneNode(True), True))
+                                    moContextNode.AppendChild(oContent)
+                                End If
+                            End While
+                            oDr.Close()
+                        End Using
                     End If
 
                     ' Log the search
@@ -1488,7 +1490,7 @@ Partial Public Class Cms
                 End If
 
                 If cSearchWhereCONTENT <> "" Or bUserQuery Then
-                    Dim oDr As SqlClient.SqlDataReader
+                    'Dim oDr As SqlClient.SqlDataReader
 
                     cSql = "SELECT distinct  parentContent.nContentKey, Cast(parentContent.cContentXmlBrief as NVarchar(Max)) as cContentXmlBrief,  Cast(parentContent.cContentXmlDetail as NVarchar(Max)) as cContentXmlDetail, parentContent.nContentPrimaryId, parentContent.cContentName, parentContent.cContentSchemaName " _
                         & " FROM tblContentRelation r  
@@ -1498,22 +1500,23 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                     Dim cResultIDsCSV As String = ""
                     If Not bUserQuery Then
-                        oDr = myWeb.moDbHelper.getDataReader(cSql)
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
 
-                        Dim ppppp As Integer = 0
-                        While oDr.Read
-                            'Debug.WriteLine("Search loop " & ppppp)
-                            'ppppp += 1
+                            Dim ppppp As Integer = 0
+                            While oDr.Read
+                                'Debug.WriteLine("Search loop " & ppppp)
+                                'ppppp += 1
 
-                            Dim cNewLineLessBrief As String = oDr("cContentXmlBrief")
-                            Dim cNewLineLessDetail As String = oDr("cContentXmlDetail")
+                                Dim cNewLineLessBrief As String = oDr("cContentXmlBrief")
+                                Dim cNewLineLessDetail As String = oDr("cContentXmlDetail")
 
-                            cResultIDsCSV &= oDr("nContentKey") & ","
+                                cResultIDsCSV &= oDr("nContentKey") & ","
 
-                        End While
-                        oDr.Close()
-                        If cResultIDsCSV = "" Then cResultIDsCSV = "0"
-                        nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                            End While
+                            oDr.Close()
+                            If cResultIDsCSV = "" Then cResultIDsCSV = "0"
+                            nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                        End Using
                     Else
                         If myWeb.mnUserId = 0 Then Exit Sub
 
@@ -1562,21 +1565,22 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
 
                         cSql &= " ORDER BY cDirName"
-                        oDr = myWeb.moDbHelper.getDataReader(cSql)
-                        While oDr.Read
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
+                            While oDr.Read
 
-                            Dim oContent As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
-                            oContent.SetAttribute("id", oDr("nDirKey"))
-                            oContent.SetAttribute("type", "User")
-                            oContent.SetAttribute("name", oDr("cDirName"))
-                            oContent.InnerXml = oDr("cDirXml")
-                            If reMasterCheck.IsMatch(oContent.OuterXml) Then
-                                nResultCount += 1
-                                oContent.FirstChild.AppendChild(oContent.OwnerDocument.ImportNode(myWeb.moDbHelper.GetUserContactsXml(oDr("nDirKey")).CloneNode(True), True))
-                                moContextNode.AppendChild(oContent)
-                            End If
-                        End While
-                        oDr.Close()
+                                Dim oContent As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
+                                oContent.SetAttribute("id", oDr("nDirKey"))
+                                oContent.SetAttribute("type", "User")
+                                oContent.SetAttribute("name", oDr("cDirName"))
+                                oContent.InnerXml = oDr("cDirXml")
+                                If reMasterCheck.IsMatch(oContent.OuterXml) Then
+                                    nResultCount += 1
+                                    oContent.FirstChild.AppendChild(oContent.OwnerDocument.ImportNode(myWeb.moDbHelper.GetUserContactsXml(oDr("nDirKey")).CloneNode(True), True))
+                                    moContextNode.AppendChild(oContent)
+                                End If
+                            End While
+                            oDr.Close()
+                        End Using
                     End If
 
                     ' Log the search
@@ -1681,7 +1685,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 If dStart <> DateTime.MinValue And dEnd <> DateTime.MinValue Then
 
                     Dim cResultIDsCSV As String = ""
-                    Dim oDr As Data.SqlClient.SqlDataReader
+                    'Dim oDr As Data.SqlClient.SqlDataReader
 
                     ' Set the column to search by
                     Select Case UCase(cSqlColumnToCheck)
@@ -1709,12 +1713,12 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                         & " FROM tblContent sc INNER JOIN tblAudit sa ON sc.nAuditId = sa.nAuditKey" _
                         & " WHERE (" & cSqlDateRange & ")" & IIf(cContentTypes = "", "", " AND (sc.cContentSchemaName IN (" & cContentTypes & "))")
 
-                    oDr = myWeb.moDbHelper.getDataReader(cSql)
-                    While oDr.Read
-                        cResultIDsCSV &= oDr("nContentKey") & ","
-                    End While
-                    oDr.Close()
-
+                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
+                        While oDr.Read
+                            cResultIDsCSV &= oDr("nContentKey") & ","
+                        End While
+                        oDr.Close()
+                    End Using
 
                     If cResultIDsCSV <> "" Then
                         ' Add the content
@@ -1765,22 +1769,23 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     ' therefore let's store The Activity Key + a hash of the date and time and session id
 
                     ' Get the last search for this session
-                    Dim lastSearch As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT TOP 1 nActivityKey,dDatetime,cSessionId FROM tblActivityLog WHERE cSessionId = " & Tools.Database.SqlString(myWeb.moSession.SessionID) & " ORDER BY 1 DESC")
-                    If lastSearch.Read Then
+                    'Dim lastSearch As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT TOP 1 nActivityKey,dDatetime,cSessionId FROM tblActivityLog WHERE cSessionId = " & Tools.Database.SqlString(myWeb.moSession.SessionID) & " ORDER BY 1 DESC")
+                    Using lastSearch As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable("SELECT TOP 1 nActivityKey,dDatetime,cSessionId FROM tblActivityLog WHERE cSessionId = " & Tools.Database.SqlString(myWeb.moSession.SessionID) & " ORDER BY 1 DESC")  'Done by nita on 6/7/22
+                        If lastSearch.Read Then
 
-                        Dim cookieValue As String
-                        cookieValue = lastSearch(0).ToString & "|"
-                        cookieValue &= Tools.Text.AscString(Tools.Encryption.HashString(Format(lastSearch(1).ToString, "s") & lastSearch(2).ToString, Tools.Encryption.Hash.Provider.Md5, False), "|")
+                            Dim cookieValue As String
+                            cookieValue = lastSearch(0).ToString & "|"
+                            cookieValue &= Tools.Text.AscString(Tools.Encryption.HashString(Format(lastSearch(1).ToString, "s") & lastSearch(2).ToString, Tools.Encryption.Hash.Provider.Md5, False), "|")
 
-                        Dim trackingCookie As New System.Web.HttpCookie("search", cookieValue)
-                        trackingCookie.Expires = Now.AddDays(2)
+                            Dim trackingCookie As New System.Web.HttpCookie("search", cookieValue)
+                            trackingCookie.Expires = Now.AddDays(2)
 
-                        myWeb.moResponse.Cookies.Remove("search")
-                        myWeb.moResponse.Cookies.Add(trackingCookie)
+                            myWeb.moResponse.Cookies.Remove("search")
+                            myWeb.moResponse.Cookies.Add(trackingCookie)
 
-                    End If
-                    lastSearch.Close()
-                    lastSearch = Nothing
+                        End If
+                        lastSearch.Close()
+                    End Using
                 End If
 
 

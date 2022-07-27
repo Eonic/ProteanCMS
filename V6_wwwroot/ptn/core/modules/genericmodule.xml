@@ -32,6 +32,9 @@
 			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
 			<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
 			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cModAnim" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cModAnimDelay" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
 			<bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
 			<bind id="bMatchHeight" nodeset="@matchHeight" required="false()" type="string"/>
 			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
@@ -115,10 +118,66 @@
 								<item>
 									<label>Match Height</label>
 									<value>true</value>
+
+									<toggle case="Match_true" event="DOMActivate"/>
 								</item>
 								<help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
+								
 							</select>
+							<switch class="disable">
+								<case id="Match_true">
+									<select bind="Screens" appearance="full" class="multiline bs-only">
+										<label>For Screens</label>
+										<item>
+											<label>
+												<i class="fas fa-mobile-alt"> </i> Extra small
+											</label>
+											<value>xs</value>
+										</item>
+										<item>
+											<label>
+												<i class="fas fa-mobile-alt"> </i> Small
+											</label>
+											<value>sm</value>
+										</item>
+										<item>
+											<label>
+												<i class="fas fa-tablet-alt"> </i> Medium
+											</label>
+											<value>md</value>
+										</item>
+										<item>
+											<label>
+												<i class="fas fa-laptop"> </i> Large
+											</label>
+											<value>lg</value>
+										</item>
+										<item>
+											<label>
+												<i class="fas fa-desktop"> </i> Extra Large
+											</label>
+											<value>xl</value>
+										</item>
+										<item>
+											<label>
+												<i class="fas fa-desktop"> </i> XXL
+											</label>
+											<value>xxl</value>
+										</item>
+										<help class="inline">
+											<ul>
+												<li>Extra small means screens under 576px wide</li>
+												<li>Small screens are 576px-767px</li>
+												<li>Medium screens are 768px-991px</li>
+												<li>Large screens are 992px-1199px</li>
+												<li>Extra large screens are 1200px-1399px</li>
+												<li>Extra extra large screens are 1400px and up</li>
+											</ul>
+										</help>
+									</select>
+								</case>
 
+							</switch>
 						</group>
 						<group class="col-lg-6">
 

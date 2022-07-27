@@ -96,7 +96,7 @@ Partial Public Class Cms
 
             Dim oElmt As XmlElement
             Dim oRow As XmlElement
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             Dim nColumn As Integer
             Dim nColumns As Integer
             Dim cStoredProcedure As String = ""
@@ -125,35 +125,36 @@ Partial Public Class Cms
                         ' Normally we would execute the SP as a Dataset, 
                         ' but because of the security constraints needed,
                         ' we'll run this as a Reader, and convert into Xml
-                        oDr = moDB.getDataReader(cStoredProcedure, CommandType.StoredProcedure, oParams)
+                        'oDr = moDB.getDataReader(cStoredProcedure, CommandType.StoredProcedure, oParams)
+                        Using oDr As SqlDataReader = moDB.getDataReaderDisposable(cStoredProcedure, CommandType.StoredProcedure, oParams)  'Done by nita on 6/7/22
+                            If oDr.HasRows Then
+                                nColumns = oDr.FieldCount
 
-                        If oDr.HasRows Then
-                            nColumns = oDr.FieldCount
 
+                                While oDr.Read
+                                    oRow = addElement(oReport, "row")
+                                    For nColumn = 0 To nColumns - 1
+                                        If Not (oDr.IsDBNull(nColumn)) Then
+                                            Select Case oDr.GetFieldType(nColumn).ToString
+                                                Case "SqlDateTime"
+                                                    cValue = Protean.Tools.Xml.XmlDate(oDr.Item(nColumn).ToString, True)
+                                                Case Else
+                                                    cValue = oDr.Item(nColumn).ToString
+                                            End Select
+                                        End If
 
-                            While oDr.Read
-                                oRow = addElement(oReport, "row")
-                                For nColumn = 0 To nColumns - 1
-                                    If Not (oDr.IsDBNull(nColumn)) Then
-                                        Select Case oDr.GetFieldType(nColumn).ToString
-                                            Case "SqlDateTime"
-                                                cValue = Protean.Tools.Xml.XmlDate(oDr.Item(nColumn).ToString, True)
-                                            Case Else
-                                                cValue = oDr.Item(nColumn).ToString
-                                        End Select
-                                    End If
+                                        ' Check if it's xml
+                                        Dim bAddAsXml As Boolean = False
+                                        If oDr.GetName(nColumn).ToLower.Contains("xml") Then bAddAsXml = True
 
-                                    ' Check if it's xml
-                                    Dim bAddAsXml As Boolean = False
-                                    If oDr.GetName(nColumn).ToLower.Contains("xml") Then bAddAsXml = True
+                                        ' Add the data to the row.
+                                        addElement(oRow, oDr.GetName(nColumn), cValue, bAddAsXml)
+                                    Next
+                                End While
+                            End If
 
-                                    ' Add the data to the row.
-                                    addElement(oRow, oDr.GetName(nColumn), cValue, bAddAsXml)
-                                Next
-                            End While
-                        End If
-
-                        oDr.Close()
+                            oDr.Close()
+                        End Using
                     End If
                 End If
 

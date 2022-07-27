@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="VideoList" contentType="Video" box="" title="" link="" linkType="internal" linkText="More videos" sortBy="publish" order="descending" cols="1" stepBy="" carousel="false" stepCount="0" display="all" position="" />
+          <Content moduleType="VideoList" contentType="Video" box="" title="" link="" linkType="internal" linkText="More videos" sortBy="publish" order="descending" cols="" stepBy="" carousel="false" stepCount="0" display="all" position="" />
         </cContentXmlBrief>
         <cContentXmlDetail/> 
         <nAuditId/>

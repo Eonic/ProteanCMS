@@ -24,24 +24,8 @@
     </xsl:variable>
     
     <div class="clearfix ProductList">
-      <xsl:if test="@carousel='true'">
-        <xsl:attribute name="class">
-          <xsl:text>clearfix ProductList content-scroller</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
-
+      <div>
         <xsl:apply-templates select="." mode="contentColumns"/>
-        <xsl:if test="@autoplay !=''">
-          <xsl:attribute name="data-autoplay">
-            <xsl:value-of select="@autoplay"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@autoPlaySpeed !=''">
-          <xsl:attribute name="data-autoPlaySpeed">
-            <xsl:value-of select="@autoPlaySpeed"/>
-          </xsl:attribute>
-        </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
@@ -59,10 +43,63 @@
     </div>
   </xsl:template>
 
+	<!-- Product Module With Carousel -->
+	<xsl:template match="Content[@type='Module' and @moduleType='ProductList' and @carousel='true']" mode="displayBrief">
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<xsl:variable name="contentList">
+			<xsl:apply-templates select="." mode="getContent">
+				<xsl:with-param name="contentType" select="$contentType" />
+				<xsl:with-param name="startPos" select="$startPos" />
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="totalCount">
+			<xsl:choose>
+				<xsl:when test="@display='related'">
+					<xsl:value-of select="count(Content[@type=$contentType])"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<div class="swiper-container content-carousel ProductList">
+			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
+				<div class="swiper-wrapper">
+					<xsl:apply-templates select="." mode="contentColumns">
+						<xsl:with-param name="carousel" select="@carousel"/>
+					</xsl:apply-templates>
+					<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+						<xsl:with-param name="sortBy" select="@sortBy"/>
+						<xsl:with-param name="class" select="'swiper-slide'"/>
+					</xsl:apply-templates>
+					<xsl:text> </xsl:text>
+				</div>
+			</div>
+			<xsl:if test="@carouselBullets='true'">
+				<div class="swiper-pagination" id="swiper-pagination-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
+			</xsl:if>
+			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="swiper-button-next" id="swiper-button-next-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="row">
+				<span>&#160;</span>
+			</div>
+		</div>
+	</xsl:template>
+
   <!-- Product Brief -->
   <xsl:template match="Content[@type='Product']" mode="displayBrief">
     <xsl:param name="sortBy"/>
     <xsl:param name="pos"/>
+	  <xsl:param name="class"/>
     <xsl:variable name="parId">
       <xsl:choose>
         <xsl:when test="@parId &gt; 0">
@@ -78,9 +115,9 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <div class="listItem product">
+    <div class="{$class} listItem product">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem hproduct'"/>
+        <xsl:with-param name="class" select="concat($class, ' listItem product ')"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
