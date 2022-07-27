@@ -596,8 +596,7 @@ Partial Public Class Cms
                             If (CurrentCartId <> myWeb.moSession("CartId").ToString()) Then
                                 myWeb.moSession("CartId") = Int32.Parse(CurrentCartId)
                                 mcReEstablishSession = "true"
-                                Dim qSql As String = "update tblCartOrder set nCartStatus = 5, cCartSessionId='" & SqlFmt(myWeb.moSession.SessionID) & "'  where nCartOrderKey = " & myWeb.moRequest("CartId")
-                                myWeb.moDbHelper.ExeProcessSql(qSql)
+
                             End If
                         End If
                     End If
