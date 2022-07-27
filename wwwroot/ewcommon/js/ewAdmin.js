@@ -1,6 +1,5 @@
 var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
 var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
-var ReplaceSignatureUrl = '/ewapi/Cms.Admin/ReplaceRegularExpression';
 var checkiFrameLoaded;
 
 $(document).ready(function() {
@@ -2112,11 +2111,12 @@ $(document).ready(function () {
     }
 });
 
-function Cleanfilename(filename) {
+function CleanfileName(filename) {
     var newfilename = "";
-    var dataMsg = 'Filename=' + filename;   
+    var dataMsg = 'Filename=' + filename;
+
     $.ajax({
-        url: '/ewapi/Cms.Admin/Cleanfilename',
+        url: '/ewapi/Cms.Admin/CleanfileName',
         data: dataMsg,
         type: 'GET',
         success: function (AjaxResponse) {
