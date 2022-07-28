@@ -18,7 +18,7 @@ Namespace Providers
                     Dim sSql As String = "spGetOccasionForFilter"
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        pageFilterSelect = oXform.addSelect(oFromGroup, "OccasionFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
+                        pageFilterSelect = oXform.addSelect(oFromGroup, "OccasionFilter", False, "Occasion Filter", "checkbox", ApperanceTypes.Full)
                         oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cCatName", "nCatKey")
                     End Using
                 Catch ex As Exception
@@ -35,14 +35,7 @@ Namespace Providers
                     Dim cnt As Integer
 
                     If (oXform.Instance.SelectNodes("OccasionFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectNodes("OccasionFilter")(0).InnerText
-                        If (aWeb.moSession("PageIds") Is Nothing) Then
-                            aWeb.moSession("PageIds") = cPageIds
-                        Else
-                            aWeb.moSession("PageIds") = cPageIds
-                            cPageIds = aWeb.moSession("PageIds")
-                        End If
-
+                        cPageIds = 11
                     End If
 
                     If (cPageIds <> String.Empty) Then

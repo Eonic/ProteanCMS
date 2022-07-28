@@ -315,6 +315,7 @@ where cl.nStructId = " & myWeb.mnPageId)
             Public Sub ProductFilter(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
 
                 Dim inputs() As String = {"PriceFilter", "ProductFilter", "GroupSizeFilter", "OccasionFilter"}
+                'Dim inputs() As String = {"ProductFilter"}
                 Dim lstOfFilters As List(Of String) = New List(Of String)(inputs)
 
                 Dim Filter As String
