@@ -591,13 +591,11 @@ Partial Public Class Cms
                         bFullCartOption = False
                     End If
                     If (myWeb.moRequest.Form("cartId") IsNot Nothing) Then
-                        If (myWeb.moSession("CartId") <> 0) Then
-                            Dim CurrentCartId As String = myWeb.moRequest.Form("cartId")
-                            If (CurrentCartId <> myWeb.moSession("CartId").ToString()) Then
-                                myWeb.moSession("CartId") = Int32.Parse(CurrentCartId)
-                                mcReEstablishSession = "true"
+                        Dim CurrentCartId As String = myWeb.moRequest.Form("cartId")
+                        If (CurrentCartId <> myWeb.moSession("CartId").ToString()) Then
+                            myWeb.moSession("CartId") = Int32.Parse(CurrentCartId)
+                            mcReEstablishSession = "true"
 
-                            End If
                         End If
                     End If
 
@@ -705,7 +703,7 @@ Partial Public Class Cms
 
                                     If mcReEstablishSession <> "" Then
                                         cSessionFromSessionCookie = mcReEstablishSession
-                                       
+
                                     End If
 
                                 Catch ex As Exception
@@ -6478,106 +6476,106 @@ processFlow:
                         End If
 
                         If ProductXml <> "" Then
-                                oProdXml.InnerXml = ProductXml
-                            Else
-                                If nProductId > 0 Then
-                                    Dim cContentType As String = moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId)
-                                    Dim sItemXml As String = CStr("" & moDBHelper.ExeProcessSqlScalar("Select cContentXmlDetail FROM tblContent WHERE nContentKey = " & nProductId))
-                                    If sItemXml <> "" Then
-                                        oProdXml.InnerXml = sItemXml
-                                    Else
-                                        oProdXml.InnerXml = moDBHelper.ExeProcessSqlScalar("Select cContentXmlBrief FROM tblContent WHERE nContentKey = " & nProductId)
-                                    End If
-                                    If Not oProdXml.SelectSingleNode("/Content/StockCode") Is Nothing Then addNewTextNode("cItemRef", oElmt, oProdXml.SelectSingleNode("/Content/StockCode").InnerText) '@ Where do we get this from?
-                                    If cProductText = "" Then
-                                        cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
-                                    End If
+                            oProdXml.InnerXml = ProductXml
+                        Else
+                            If nProductId > 0 Then
+                                Dim cContentType As String = moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId)
+                                Dim sItemXml As String = CStr("" & moDBHelper.ExeProcessSqlScalar("Select cContentXmlDetail FROM tblContent WHERE nContentKey = " & nProductId))
+                                If sItemXml <> "" Then
+                                    oProdXml.InnerXml = sItemXml
+                                Else
+                                    oProdXml.InnerXml = moDBHelper.ExeProcessSqlScalar("Select cContentXmlBrief FROM tblContent WHERE nContentKey = " & nProductId)
+                                End If
+                                If Not oProdXml.SelectSingleNode("/Content/StockCode") Is Nothing Then addNewTextNode("cItemRef", oElmt, oProdXml.SelectSingleNode("/Content/StockCode").InnerText) '@ Where do we get this from?
+                                If cProductText = "" Then
+                                    cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
+                                End If
 
-                                    If nPrice = 0 Then
-                                        oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
-                                    End If
+                                If nPrice = 0 Then
+                                    oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
+                                End If
 
-                                    If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
-                                        mbOveridePrice = True
-                                    End If
+                                If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
+                                    mbOveridePrice = True
+                                End If
 
-                                    If Not oProdXml.SelectSingleNode("/Content[@ignoreStock='true']") Is Nothing Then
-                                        mbStockControl = False
-                                    End If
+                                If Not oProdXml.SelectSingleNode("/Content[@ignoreStock='true']") Is Nothing Then
+                                    mbStockControl = False
+                                End If
 
-                                    'lets add the discount to the cart if supplied
-                                    If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
-                                        Dim strDiscount1 As String = oProdXml.SelectSingleNode(
+                                'lets add the discount to the cart if supplied
+                                If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
+                                    Dim strDiscount1 As String = oProdXml.SelectSingleNode(
                                                         "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
                                                         ).InnerText
-                                        addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
-                                    End If
-
-                                    If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
-                                        nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
-                                    End If
-
-                                    If (UniqueProduct) Then
-
-                                        If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
-                                            giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
-                                            oProdXml.DocumentElement.AppendChild(giftMessageNode)
-                                        Else
-                                            ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
-                                        End If
-                                    End If
-
-                                    'Add Parent Product to cart if SKU.
-                                    If cContentType = "SKU" Or cContentType = "Ticket" Then
-                                        'Then we need to add the Xml for the ParentProduct.
-                                        Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
-
-                                        Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
-                                        Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
-
-                                        ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
-                                    End If
-
-                                    oProdXml.DocumentElement.SetAttribute("type", cContentType)
+                                    addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
                                 End If
-                            End If
 
-                            addNewTextNode("cItemName", oElmt, cProductText)
-                            addNewTextNode("nItemOptGrpIdx", oElmt, 0) 'Dont Need
-                            addNewTextNode("nItemOptIdx", oElmt, 0) 'Dont Need
-
-                            If myWeb.moRequest("unit") <> "" Then
-                                addNewTextNode("cItemUnit", oElmt, myWeb.moRequest("unit"))
-                            End If
-
-                            If Not oPrice Is Nothing Then
-                                strPrice1 = oPrice.InnerText
-                                nTaxRate = getProductTaxRate(oPrice)
-                            Else
-                                strPrice1 = CStr(nPrice)
-                            End If
-
-                            If mbOveridePrice Then
-                                If myWeb.moRequest("price_" & nProductId) > 0 Then
-                                    strPrice1 = myWeb.moRequest("price_" & nProductId)
+                                If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
+                                    nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
                                 End If
+
+                                If (UniqueProduct) Then
+
+                                    If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                        giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                        oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                    Else
+                                        ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                    End If
+                                End If
+
+                                'Add Parent Product to cart if SKU.
+                                If cContentType = "SKU" Or cContentType = "Ticket" Then
+                                    'Then we need to add the Xml for the ParentProduct.
+                                    Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
+
+                                    Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                    Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+
+                                    ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                                End If
+
+                                oProdXml.DocumentElement.SetAttribute("type", cContentType)
                             End If
+                        End If
 
-                            addNewTextNode("nPrice", oElmt, IIf(IsNumeric(strPrice1), strPrice1, 0))
-                            addNewTextNode("nShpCat", oElmt, -1) '@ Where do we get this from?
-                            addNewTextNode("nTaxRate", oElmt, nTaxRate)
-                            addNewTextNode("nQuantity", oElmt, nQuantity)
-                            addNewTextNode("nWeight", oElmt, nWeight)
-                            addNewTextNode("nParentId", oElmt, 0)
+                        addNewTextNode("cItemName", oElmt, cProductText)
+                        addNewTextNode("nItemOptGrpIdx", oElmt, 0) 'Dont Need
+                        addNewTextNode("nItemOptIdx", oElmt, 0) 'Dont Need
 
-                            If bDepositOnly Then
-                                addNewTextNode("nDepositAmount", oElmt, IIf(IsNumeric(oPrice.GetAttribute("deposit")), oPrice.GetAttribute("deposit"), 0))
+                        If myWeb.moRequest("unit") <> "" Then
+                            addNewTextNode("cItemUnit", oElmt, myWeb.moRequest("unit"))
+                        End If
+
+                        If Not oPrice Is Nothing Then
+                            strPrice1 = oPrice.InnerText
+                            nTaxRate = getProductTaxRate(oPrice)
+                        Else
+                            strPrice1 = CStr(nPrice)
+                        End If
+
+                        If mbOveridePrice Then
+                            If myWeb.moRequest("price_" & nProductId) > 0 Then
+                                strPrice1 = myWeb.moRequest("price_" & nProductId)
                             End If
+                        End If
 
-                            Dim ProductXmlElmt As XmlElement = addNewTextNode("xItemXml", oElmt, "")
-                            ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml
+                        addNewTextNode("nPrice", oElmt, IIf(IsNumeric(strPrice1), strPrice1, 0))
+                        addNewTextNode("nShpCat", oElmt, -1) '@ Where do we get this from?
+                        addNewTextNode("nTaxRate", oElmt, nTaxRate)
+                        addNewTextNode("nQuantity", oElmt, nQuantity)
+                        addNewTextNode("nWeight", oElmt, nWeight)
+                        addNewTextNode("nParentId", oElmt, 0)
 
-                            nItemID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
+                        If bDepositOnly Then
+                            addNewTextNode("nDepositAmount", oElmt, IIf(IsNumeric(oPrice.GetAttribute("deposit")), oPrice.GetAttribute("deposit"), 0))
+                        End If
+
+                        Dim ProductXmlElmt As XmlElement = addNewTextNode("xItemXml", oElmt, "")
+                        ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml
+
+                        nItemID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
 
                         'Options
                         If Not oProdOptions Is Nothing Then
@@ -6663,8 +6661,8 @@ processFlow:
                             AddProductOption(nItemID, myWeb.moRequest("OptionName_" & nProductId), myWeb.moRequest("OptionValue_" & nProductId))
                         End If
                     Else
-                            'Existing
-                            oDS.Relations.Clear()
+                        'Existing
+                        oDS.Relations.Clear()
                         If nQuantity <= 0 Then
                             moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, nItemID, False)
                         Else
@@ -6678,8 +6676,8 @@ processFlow:
                                         oDR1("nQuantity") += nQuantity
                                     End If
                                     oDR1.EndEdit()
-                                        Exit For
-                                    End If
+                                    Exit For
+                                End If
                             Next
                         End If
                         moDBHelper.updateDataset(oDS, "CartItems")
