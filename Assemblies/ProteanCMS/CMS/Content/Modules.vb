@@ -314,11 +314,11 @@ where cl.nStructId = " & myWeb.mnPageId)
 
             Public Sub ProductFilter(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
 
-                Dim inputs() As String = {"PriceFilter", "ProductFilter", "GroupSizeFilter", "OccasionFilter"}
+                Dim inputs() As String = {"PageFilter", "AgeFilter", "PriceFilter"}
                 'Dim inputs() As String = {"ProductFilter"}
                 Dim lstOfFilters As List(Of String) = New List(Of String)(inputs)
 
-                Dim Filter As String
+                Dim Filter As String = ""
 
                 For Each Filter In lstOfFilters
                     Dim formName As String = Filter 'oContentNode.GetAttribute("name")
@@ -328,9 +328,15 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                         Dim filterForm As xForm = New xForm(myWeb)
                         Dim oFrmInstance As XmlElement
-
-
-                        If formName = "PriceFilter" Then
+                        'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
+                        'Dim calledType As Type
+                        'Dim classPath As String = moPrvConfig.Providers(providerName).Parameters("rootClass")
+                        'Dim methodName As String = "ProcessOrder"
+                        If formName = "PageFilter" Then
+                            filters = New Protean.Providers.Filter.PageFilter()
+                        ElseIf formName = "AgeFilter" Then
+                            filters = New Protean.Providers.Filter.AgeFilter()
+                        ElseIf formName = "PriceFilter" Then
                             filters = New Protean.Providers.Filter.PriceFilter()
                         ElseIf formName = "GroupSizeFilter" Then
                             filters = New Protean.Providers.Filter.GroupSizeFilter()
@@ -345,7 +351,11 @@ where cl.nStructId = " & myWeb.mnPageId)
                         filterForm.submission(formName, "", "POST", "return form_check(this);")
 
                         oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, formName + "Group", formName + "Group", "")
-                        If formName = "PriceFilter" Then
+                        If formName = "PageFilter" Then
+                            filterForm.addBind("PageFilter", "PageFilter")
+                        ElseIf formName = "AgeFilter" Then
+                            filterForm.addBind("AgeFilter", "AgeFilter")
+                        ElseIf formName = "PriceFilter" Then
                             filterForm.addBind("PriceFilter", "PriceFilter")
                         ElseIf formName = "GroupSizeFilter" Then
                             filterForm.addBind("GroupSizeFilter", "GroupSizeFilter")

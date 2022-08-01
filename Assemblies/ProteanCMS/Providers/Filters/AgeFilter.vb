@@ -16,7 +16,7 @@ Namespace Providers
                     Dim pageFilterRange As XmlElement
                     'Dim oDr As SqlDataReader
 
-                    Dim sSql As String = "spGetResultForPriceFilter"
+                    Dim sSql As String = "spGetResultForAgeFilter"
                     'oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
