@@ -448,9 +448,6 @@
     <Compile Include="CMS\Content\Contact.vb" />
     <Compile Include="ExternalSynchronisation.vb" />
     <Compile Include="Providers\Filter.BaseProvider.vb" />
-    <Compile Include="Providers\Filters\AgeFilter.vb" />
-    <Compile Include="Providers\Filters\GroupSizeFilter.vb" />
-    <Compile Include="Providers\Filters\OccasionFilter.vb" />
     <Compile Include="Providers\Filters\OfferFilter.vb" />
     <Compile Include="Providers\Filters\PageFilter.vb" />
     <Compile Include="Providers\Filters\PriceFilter.vb" />
