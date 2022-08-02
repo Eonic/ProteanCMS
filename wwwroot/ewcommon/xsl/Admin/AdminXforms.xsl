@@ -627,6 +627,33 @@
 			auto_cleanup_word: "true"</xsl:text>
 	</xsl:template>
 
+	<xsl:template match="textarea[contains(@class,'email')]" mode="tinymceGeneralOptions">
+		<xsl:text>script_url: '/ewcommon/js/tinymce/tinymce.min.js',
+			mode: "exact",
+			theme: "modern",
+			width: "auto",
+            content_css: ['/ewcommon/js/tinymce/plugins/leaui_code_editor/css/pre.css'],
+			convert_urls:true,
+			relative_urls:false,
+			remove_script_host:false,
+			plugins: "table paste link image ewimage media visualchars searchreplace emoticons anchor advlist code visualblocks contextmenu fullscreen searchreplace youtube leaui_code_editor wordcount",
+			entity_enconding: "numeric",
+            image_advtab: true,
+            menubar: "edit insert view format table tools",
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image ewimage",
+			convert_fonts_to_spans: true,
+			gecko_spellcheck: true,
+			theme_advanced_toolbar_location: "top",
+			theme_advanced_toolbar_align: "left",
+			paste_create_paragraphs: false,
+            link_list: tinymcelinklist,
+			paste_use_dialog: true,</xsl:text>
+		<xsl:apply-templates select="." mode="tinymceStyles"/>
+		<xsl:apply-templates select="." mode="tinymceContentCSS"/>
+		<xsl:text>
+			auto_cleanup_word: "true"</xsl:text>
+	</xsl:template>
+
 	<xsl:template match="textarea" mode="tinymcelinklist">
 
 		<xsl:text>

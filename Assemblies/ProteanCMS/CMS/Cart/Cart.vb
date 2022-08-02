@@ -760,7 +760,7 @@ Partial Public Class Cms
                                         If Not (myWeb.moRequest("settlementRef") Is Nothing) Or Not (myWeb.moRequest("settlementRef") Is Nothing) Then
 
                                             ' Set to a holding state that indicates that the settlement has been initiated
-                                            mnProcessId = cartProcess.SettlementInitiated
+                                            ' mnProcessId = cartProcess.SettlementInitiated
 
                                             ' If a cart has been found, we need to update the session ID in it.
                                             If oDr("cCartSessionId") <> mcSessionId Then
@@ -772,7 +772,7 @@ Partial Public Class Cms
                                             moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
 
                                         End If
-                                        If mnProcessId > 5 And mnProcessId <> cartProcess.SettlementInitiated Then
+                                        If mnProcessId > 5 And mnProcessId <> cartProcess.SettlementInitiated And mnProcessId <> cartProcess.DepositPaid Then
                                             ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
                                             EndSession()
                                             mnCartId = 0
@@ -1279,11 +1279,13 @@ processFlow:
                         Else
                             cRedirectCommand = "ChoosePaymentShippingOption"
                         End If
+
                         ' If a settlement has been initiated, then update the process
-                        If mnProcessId = cartProcess.SettlementInitiated Then
-                            mnProcessId = cartProcess.PassForPayment
-                            moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+                        If mnProcessId = cartProcess.DepositPaid Then
+                            ' mnProcessId = cartProcess.PassForPayment
+                            '  moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
                         End If
+
                         ' pickup any google tracking code.
                         Dim item As Object
                         Dim cGoogleTrackingCode As String = ""
@@ -5615,8 +5617,9 @@ processFlow:
                             oInstanceDoc.LoadXml(oXform.Instance.OuterXml)
 
                             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, moServer.MapPath(moCartConfig("NotesToContactsXSL")), False)
+                            Dim ImportElmt As XmlElement = oTransform.ProcessDocument(oInstanceDoc).DocumentElement
 
-                            moDBHelper.importObjects(oTransform.ProcessDocument(oInstanceDoc).DocumentElement, mnCartId, "")
+                            moDBHelper.importObjects(ImportElmt, mnCartId, "")
 
                             oTransform = Nothing
 
