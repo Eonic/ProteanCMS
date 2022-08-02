@@ -20,7 +20,7 @@ Namespace Providers
                     'oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
+                        pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Page Filter", "checkbox", ApperanceTypes.Full)
                         oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
                     End Using
                 Catch ex As Exception
@@ -35,17 +35,6 @@ Namespace Providers
                     Dim cWhereSql As String = String.Empty
                     Dim cPageIds As String = String.Empty
                     Dim cnt As Integer
-
-                    'If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
-                    '    cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
-                    '    If (aWeb.moSession("PageIds") Is Nothing) Then
-                    '        aWeb.moSession("PageIds") = cPageIds
-                    '    Else
-                    '        aWeb.moSession("PageIds") = cPageIds
-                    '        cPageIds = aWeb.moSession("PageIds")
-                    '    End If
-
-                    'End If
 
                     If (cPageIds <> String.Empty) Then
 

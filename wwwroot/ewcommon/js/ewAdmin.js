@@ -1,6 +1,5 @@
 var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
 var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
-var ReplaceSignatureUrl = '/ewapi/Cms.Admin/ReplaceRegularExpression';
 var checkiFrameLoaded;
 
 $(document).ready(function() {
