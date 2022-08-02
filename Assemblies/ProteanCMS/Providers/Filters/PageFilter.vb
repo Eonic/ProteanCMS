@@ -36,22 +36,6 @@ Namespace Providers
                     Dim cPageIds As String = String.Empty
                     Dim cnt As Integer
 
-                    If (oXform.Instance.SelectNodes("ProductFilter") IsNot Nothing) Then
-
-                        cPageIds = 832
-                    End If
-
-                    'If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
-                    '    cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
-                    '    If (aWeb.moSession("PageIds") Is Nothing) Then
-                    '        aWeb.moSession("PageIds") = cPageIds
-                    '    Else
-                    '        aWeb.moSession("PageIds") = cPageIds
-                    '        cPageIds = aWeb.moSession("PageIds")
-                    '    End If
-
-                    'End If
-
                     If (cPageIds <> String.Empty) Then
 
                         If (cWhereSql = String.Empty) Then
