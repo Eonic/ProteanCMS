@@ -2511,7 +2511,7 @@ Partial Public Class Cms
                             For Each oModuleType In ManifestTemp.SelectNodes("/PageLayouts/FilterTypes/Filter")
                                 Dim formPath = oModuleType.GetAttribute("formPath")
                                 Dim FilterTypeName = oModuleType.GetAttribute("type")
-                                oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
+                                ' oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
 
                                 Dim filterTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/FilterTypes")
                                 If filterTypes.SelectSingleNode("Module[@name='" & FilterTypeName & "']") Is Nothing Then

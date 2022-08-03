@@ -10,7 +10,7 @@ Namespace Providers
         Public Class OfferFilter
 
 
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim pageFilterSelect As XmlElement
                     'Dim oDr As SqlDataReader

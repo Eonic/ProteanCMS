@@ -12,7 +12,7 @@ Namespace Providers
         Public Class PriceFilter
 
 
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim nMinPrice As Double = 0
                     Dim nMaxPrice As Double = 0
