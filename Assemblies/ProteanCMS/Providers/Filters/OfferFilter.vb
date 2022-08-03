@@ -5,12 +5,12 @@ Imports Protean.Cms
 Imports Protean.xForm
 
 Namespace Providers
-    Namespace Filter
+    Namespace Filters
 
         Public Class OfferFilter
 
 
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim pageFilterSelect As XmlElement
                     'Dim oDr As SqlDataReader

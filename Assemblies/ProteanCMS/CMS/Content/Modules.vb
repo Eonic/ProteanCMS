@@ -406,40 +406,62 @@ where cl.nStructId = " & myWeb.mnPageId)
                     'current contentfilter id
 
                     Dim nContentFilterId = myWeb.moPageXml.SelectSingleNode("Page/Contents/Content[@moduleType='ContentFilter']").Attributes(0).Value
-                    Dim providerName = myWeb.moConfig("FilterProvider")
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
-                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders")
-                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
-                    Dim calledType As Type
-                    Dim classPath As String = moPrvConfig.Providers(providerName).Parameters("rootClass")
-                    calledType = assemblyInstance.GetType(classPath, True)
-                    Dim methodname As String = "LoadAllFilters"
-                    Dim oFrmInstance As XmlElement
+
+                    'Dim oFrmInstance As XmlElement
                     Dim oFrmGroup As XmlElement
-                    Dim o As Object = Activator.CreateInstance(calledType)
-
-                    Dim args(2) As Object
-                    args(0) = myWeb
-                    args(1) = nContentFilterId
-                    args(2) = oContentNode
-
-
-                    calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
-
                     Dim filterForm As xForm = New xForm(myWeb)
                     'loop through all filters and load control
-                    For Each oFilterElmt In oContentNode.SelectNodes("Filter")
-
-                    Next
-
                     'First Define the xform
                     filterForm.NewFrm(formName)
                     filterForm.submission(formName, "", "POST", "return form_check(this);")
+                    oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
+                    '  filterForm.Instance = oFrmInstance
+                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
-                    filterForm.Instance = oFrmInstance
+                        Dim calledType As Type
+                        Dim className As String = oFilterElmt.GetAttribute("className")
+                        Dim providerName As String = oFilterElmt.GetAttribute("providerName")
+                        If className <> "" Then
 
-                    filterForm.addSubmit(oFrmGroup, "Search", "Search")
+                            If providerName = "" Or LCase(providerName) = "default" Then
+                                providerName = "Protean.Providers.Filters." & className
+                                calledType = System.Type.GetType(providerName, True)
+                            Else
+                                Dim castObject As Object = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders")
+                                Dim moPrvConfig As Protean.ProviderSectionHandler = castObject
+                                Dim ourProvider As Object = moPrvConfig.Providers(providerName)
+                                Dim assemblyInstance As [Assembly]
+
+                                If ourProvider.parameters("path") <> "" Then
+                                    assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(ourProvider.parameters("path")))
+                                Else
+                                    assemblyInstance = [Assembly].Load(ourProvider.Type)
+                                End If
+                                If ourProvider.parameters("rootClass") = "" Then
+                                    calledType = assemblyInstance.GetType("Protean.Providers.Filters." & providerName, True)
+                                Else
+                                    'calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
+                                    calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & "." & className, True)
+                                End If
+                            End If
+
+                            Dim methodname As String = "AddControl"
+
+                            Dim o As Object = Activator.CreateInstance(calledType)
+
+                            Dim args(2) As Object
+                            args(0) = myWeb
+                            args(1) = filterForm
+                            args(2) = oFrmGroup
+
+                            calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
+                        End If
+
+                    Next
+
+                    filterForm.addSubmit(oFrmGroup, "Filter", "Filter")
 
                     filterForm.addValues()
                     'If (filterForm.isSubmitted) Then
@@ -448,11 +470,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                     '    If formName = "ContentFilter" Then
                     '        Filters.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
                     '    End If
-
-
                     'End If
 
-
+                    oContentNode.AppendChild(filterForm.moXformElmt)
 
 
                 Catch ex As Exception

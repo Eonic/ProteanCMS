@@ -6,12 +6,13 @@ Imports Protean.Cms
 Imports Protean.xForm
 
 Namespace Providers
-    Namespace Filter
+
+    Namespace Filters
 
         Public Class PriceFilter
 
 
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim nMinPrice As Double = 0
                     Dim nMaxPrice As Double = 0

@@ -10,7 +10,7 @@ Namespace Providers
 
         Public Class WeightFilter
 
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim pageFilterRange As XmlElement
                     'Dim oDr As SqlDataReader

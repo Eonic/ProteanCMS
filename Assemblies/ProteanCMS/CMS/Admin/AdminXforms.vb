@@ -2314,12 +2314,29 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Protected Function GetFilterFormPath(ByVal SchemaName As String) As String
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim oManifest As XmlDocument = GetSiteManifest(goConfig("cssFramework"))
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Filter[@type='" & SchemaName & "']")
+                    If thisModule Is Nothing Then
+                        Return SchemaName
+                    Else
+                        Return thisModule.GetAttribute("formPath")
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Protected Function GetModuleFormPath(ByVal SchemaName As String) As String
                 Dim cProcessInfo As String = ""
                 Try
 
                     Dim oManifest As XmlDocument = GetSiteManifest()
-                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Module[@type='" & SchemaName & "']")
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Filter[@type='" & SchemaName & "']")
                     If thisModule Is Nothing Then
                         Return SchemaName
                     Else
@@ -2332,51 +2349,67 @@ Partial Public Class Cms
             End Function
 
 
-            Public Function GetSiteManifest() As XmlDocument
+            Public Function GetSiteManifest(Optional sFramework As String = "bs5") As XmlDocument
                 Dim cProcessInfo As String = ""
+
+                Dim ManifestDoc As XmlDocument = Nothing
                 Try
-                    Dim PathPrefix = "ptn\"
-                    Dim ManifestDoc As XmlDocument = Nothing
+                    Select Case sFramework
+                        Case "bs5"
 
-                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "core\modules", "manifest.xml")
-                    Dim rootFolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
-                    Dim fld As DirectoryInfo
-                    For Each fld In rootFolder.GetDirectories
-                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
+                            Dim PathPrefix = "ptn\"
 
-                    Next
-                    If myWeb.moConfig("ClientCommonFolder") <> "" Then
-                        EnumberateManifest(ManifestDoc, myWeb.moConfig("ClientCommonFolder") & "\xsl", "manifest.xml")
-                    End If
+                            EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "core\modules", "manifest.xml")
+                            Dim rootFolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                            Dim fld As DirectoryInfo
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
 
-                    'new local modules
-                    rootFolder = New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & "/modules"))
-                    If rootFolder.Exists Then
-                        For Each fld In rootFolder.GetDirectories
-                            EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "\modules\" & fld.Name, "manifest.xml")
-                        Next
-                    End If
+                            Next
+                            If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                                EnumberateManifest(ManifestDoc, myWeb.moConfig("ClientCommonFolder") & "\xsl", "manifest.xml")
+                            End If
 
-                    EnumberateManifest(ManifestDoc, "/xsl", "manifest.xml")
+                            'new local modules
+                            rootFolder = New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & "/modules"))
+                            If rootFolder.Exists Then
+                                For Each fld In rootFolder.GetDirectories
+                                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "\modules\" & fld.Name, "manifest.xml")
+                                Next
+                            End If
 
-                    If myWeb.moConfig("Search") = "on" Then
-                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\search", "manifest.xml")
-                    End If
-                    If myWeb.moConfig("Membership") = "on" Then
-                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\membership", "manifest.xml")
-                    End If
-                    If myWeb.moConfig("Cart") = "on" Then
-                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\cart", "manifest.xml")
-                    End If
-                    If myWeb.moConfig("Quote") = "on" Then
-                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\quote", "manifest.xml")
-                    End If
-                    If myWeb.moConfig("MailingList") = "on" Then
-                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\mailer", "manifest.xml")
-                    End If
-                    If myWeb.moConfig("Subscriptions") = "on" Then
-                        EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "manifest.xml")
-                    End If
+                            EnumberateManifest(ManifestDoc, "/xsl", "manifest.xml")
+
+                            If myWeb.moConfig("Search") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\search", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Membership") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\membership", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Cart") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\cart", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Quote") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\quote", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("MailingList") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\mailer", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Subscriptions") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "manifest.xml")
+                            End If
+                        Case Else
+
+
+                            Dim PathPrefix = "ewcommon\"
+                            EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "xsl/PageLayouts", "LayoutManifest.xml")
+                            If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                                EnumberateManifest(ManifestDoc, myWeb.moConfig("ClientCommonFolder") & "\xsl", "layoutManifest.xml")
+                            End If
+                            EnumberateManifest(ManifestDoc, "/xsl", "layoutManifest.xml")
+
+                    End Select
+
 
                     Return ManifestDoc
 
@@ -2471,6 +2504,20 @@ Partial Public Class Cms
                                         moduleGroup.ReplaceChild(moduleGroup.OwnerDocument.ImportNode(oModuleType, True), moduleGroup.SelectSingleNode("Module[@name='" & ModuleTypeName & "']"))
 
                                     End If
+                                End If
+                            Next
+
+                            'step through filterTypes to add to ManifestDoc
+                            For Each oModuleType In ManifestTemp.SelectNodes("/PageLayouts/FilterTypes/Filter")
+                                Dim formPath = oModuleType.GetAttribute("formPath")
+                                Dim FilterTypeName = oModuleType.GetAttribute("type")
+                                oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
+
+                                Dim filterTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/FilterTypes")
+                                If filterTypes.SelectSingleNode("Module[@name='" & FilterTypeName & "']") Is Nothing Then
+                                    filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(True), True))
+                                Else
+                                    filterTypes.ReplaceChild(filterTypes.OwnerDocument.ImportNode(oModuleType, True), filterTypes.SelectSingleNode("Filter[@name='" & FilterTypeName & "']"))
                                 End If
                             Next
 
@@ -2831,6 +2878,10 @@ Partial Public Class Cms
                             cXformPath = GetContentFormPath(cContentSchemaName)
                         End If
                     End If
+                    If moRequest("filter") = "true" Then
+                        cXformPath = GetFilterFormPath(cContentSchemaName)
+                    End If
+
 
                     If goConfig("cssFramework") = "bs5" Then
                         If cXformPath.StartsWith("/") Then
@@ -3318,7 +3369,7 @@ Partial Public Class Cms
                             'ok, we need to check through all the things that would require a save first, 
                             'save, then do the action
                             '###############################-SAVE IF NEEDED-########################
-                            If myItem.startswith("Relate") Or myItem.startswith("ewSubmitClone_Relate") Then
+                            If myItem.startswith("Relate") Or myItem.startswith("ewSubmitClone_Relate") Or myItem.startswith("Filter") Then
                                 'if it has no id then its a new piece of content
                                 'we need to check and save
                                 ' If nParId = 0 Then
@@ -3398,6 +3449,31 @@ Partial Public Class Cms
                                     End If
                                     goSession("mcRelAction") = "Add"
                                     goSession("mcRelParent") = nParId
+                                    bResult = True
+                                    Exit For
+                                ElseIf myItem.contains("FilterEdit") Then
+                                    nRelId = relateCmdArr(1)
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & IIf(goRequest.QueryString("pgid") = "", "", "&pgid=" & goRequest.QueryString("pgid")) & "&filter=true"
+                                    goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nRelId
+                                    bResult = True
+                                    Exit For
+                                ElseIf myItem.contains("FilterAdd") Then
+
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString & "&filter=true"
+
+                                    Dim cContentType As String = relateCmdArr(1)
+                                    If (relateCmdArr.Length > 3) Then
+                                        goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=AddContent&type=" & cContentType & "&name=New+" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & "&relationType=" & relateCmdArr(3) & pgidQueryString & "&filter=true"
+                                    Else
+                                        goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=AddContent&type=" & cContentType & "&name=New+" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & pgidQueryString & "&filter=true"
+                                    End If
+                                    goSession("mcRelAction") = "Add"
+                                    goSession("mcRelParent") = nParId
+                                    bResult = True
+                                    Exit For
+                                ElseIf myItem.contains("FilterRemove") Then
+                                    nRelId = relateCmdArr(2)
+                                    myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Content, nRelId)
                                     bResult = True
                                     Exit For
                                 ElseIf myItem.contains("RelateFind") Then

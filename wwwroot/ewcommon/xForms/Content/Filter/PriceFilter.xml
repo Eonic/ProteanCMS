@@ -8,9 +8,9 @@
 				<nVersion/>
 				<cContentForiegnRef/>
 				<cContentName>PriceFilter</cContentName>
-				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content filterType="PriceFilter"  FromPrice="" ToPrice="" Step=""/>
+					<Content type="Filter" filterType="PriceFilter"  FromPrice="" ToPrice="" Step="" className="PriceFilter" providerName="default"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>

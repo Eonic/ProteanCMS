@@ -8,9 +8,9 @@
 				<nVersion/>
 				<cContentForiegnRef/>
 				<cContentName>OfferFilter</cContentName>
-				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content filterType="OfferFilter"  parentPageId=""/>
+					<Content type="Filter" filterType="OfferFilter"  parentPageId="" className="OfferFilter" providerName="default"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>

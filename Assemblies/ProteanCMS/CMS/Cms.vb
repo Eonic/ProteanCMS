@@ -1669,8 +1669,10 @@ Public Class Cms
                         RefreshUserXML()
                     End If
 
-                    sProcessInfo = "Check Admin Mode"
-                    ContentActions()
+                    'TS-Moved to after add bulk related contetn to enable filters to be processed.
+                    'not sure if this is before for a reason. I cannot seem to think of one.
+                    'ContentActions()
+
 
                     If LCase(moConfig("FinalAddBulk")) = "on" Then
 
@@ -1684,8 +1686,10 @@ Public Class Cms
 
                     End If
 
-                    CommonActions()
+                    sProcessInfo = "Check Admin Mode"
+                    ContentActions()
 
+                    CommonActions()
 
                     'TS commented out so Century can perform searches in admin mode
                     '  If Not (mbAdminMode) Then
