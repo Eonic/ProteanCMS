@@ -2111,21 +2111,6 @@ $(document).ready(function () {
     }
 });
 
-function CleanfileName(filename) {
-    var newfilename = "";
-    var dataMsg = 'Filename=' + filename;
-
-    $.ajax({
-        url: '/ewapi/Cms.Admin/CleanfileName',
-        data: dataMsg,
-        type: 'GET',
-        success: function (AjaxResponse) {
-            newfilename = AjaxResponse;           
-        }
-    });
-    return newfilename;
-}
-
 $(document).on('click', '.nextPage', function () {
 
 

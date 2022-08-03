@@ -5229,37 +5229,50 @@
         $.each(data.files, function (index, file) {
 
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
-      var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
-      <xsl:apply-templates select="." mode="newItemScript"/>
-		$('#files').prepend(newItem);
-		
+        var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
+        <xsl:apply-templates select="." mode="newItemScript"/>
+		<!--$('#files').prepend(newItem);-->
+		var newfilename = "";
+        var dataMsg = 'Filename=' + filename;
 
-		$('#files .item-image .panel').prepareLibImages();
+        $.ajax({
+            url: '/ewapi/Cms.Admin/CleanfileName',
+            data: dataMsg,
+            type: 'GET',
+            success: function (response) {
+                newfilename = response;            
+                filename = "/" + filename + "/g";          
+                newItem = newItem.replace(eval(filename), newfilename)            
+                $('#files').prepend(newItem);
+              	$('#files .item-image .panel').prepareLibImages();
 
-		$("[data-toggle=popover]").popover({
-		html: true,
-		container: '#files',
-		trigger: 'hover',
-		viewport: '#files',
-		content: function () {
-		return $(this).prev('.popoverContent').html();
-		}
-		});
-		if ($('.pickImageModal').exists()) {
-		$('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
-		ev.preventDefault();
-		$('.modal-dialog').addClass('loading')
-		$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
-			var target = $(this).attr("href");
-			// load the url and show modal on success
-			var currentModal = $('.pickImageModal')
-			currentModal.load(target, function () {
-			$('.modal-dialog').removeClass('loading')
-			currentModal.modal("show");
-			});
-			});
-			};
-
+		        $("[data-toggle=popover]").popover({
+		        html: true,
+		        container: '#files',
+		        trigger: 'hover',
+		        viewport: '#files',
+		        content: function () {
+		        return $(this).prev('.popoverContent').html();
+		        }
+		        });
+		        if ($('.pickImageModal').exists()) {
+		        $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
+		        ev.preventDefault();
+		        $('.modal-dialog').addClass('loading')
+		        $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
+			        var target = $(this).attr("href");
+			        // load the url and show modal on success
+			        var currentModal = $('.pickImageModal')
+			        currentModal.load(target, function () {
+			        $('.modal-dialog').removeClass('loading')
+			        currentModal.modal("show");
+			        });
+			        });
+			        };
+				
+				
+                    }
+            }); 
 
       });
       },
@@ -5295,13 +5308,14 @@
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
 	  
-    var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-	
-	 var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
-    newItem = newItem + '<div class="description">'
-    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
-      newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
-      newItem = newItem + '</div></div>';
+      var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
+	    
+		 var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
+          newItem = newItem + '<div class="description">'
+          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
+          newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
+          newItem = newItem + '</div></div>';
+		   var filename = file.name;	      
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
@@ -5534,6 +5548,8 @@
  <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
     var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '</td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
     newItem = newItem + '<td><a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
+	
+	 var filename = file.name;	
   </xsl:template>
 
 
@@ -5545,6 +5561,8 @@
     var newItem = '<div class="item col-md-2 col-sm-4"><div class="panel panel-default"><div class="panel-body"><div class="ItemThumbnail"><img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /></div>'
     newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
     newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
+	
+	var filename = file.name;	
   </xsl:template>
 
   <xsl:template match="folder" mode="MediaFolder">

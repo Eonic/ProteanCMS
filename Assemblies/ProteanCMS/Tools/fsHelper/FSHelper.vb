@@ -955,7 +955,7 @@ Partial Public Class fsHelper
         Try
 
             Dim cCleanfileName As String = Regex.Replace(cFilename, "\s+", "-")
-            cCleanfileName = Regex.Replace(cCleanfileName, "(\s+|\$|\,|\'|\:|\*|&|\?|\/)", "")
+            cCleanfileName = Regex.Replace(cCleanfileName, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
             cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None)
             Return cCleanfileName
 
