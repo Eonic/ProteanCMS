@@ -9014,7 +9014,7 @@ Partial Public Class Cms
 
 
                     Dim oDict As New Dictionary(Of String, String)
-                    Dim oDr As SqlDataReader
+                    'Dim oDr As SqlDataReader
 
                     ' Append data for particular lookup id when edit, change by nita on 18Apr22
                     Dim nContentIndexDataType As String = ""
@@ -9044,9 +9044,9 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditProductGroup")
                     If indexId > 0 Then
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & bBriefNotDetail & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
                     Else
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail/><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
                     End If
 
                     If indexId > 0 Then
@@ -9063,29 +9063,30 @@ Partial Public Class Cms
                     MyBase.addInput(oGrp1Elmt, "nContentIndexDefKey", True, "nContentIndexDefKey", "hidden")
                     MyBase.addBind("nContentIndexDefKey", "tblContentIndexDef/nContentIndexDefKey")
 
-                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nContentIndexDataType", True, "Brief Not Detail", ApperanceTypes.Minimal)
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nContentIndexDataType", True, "Data Type", ApperanceTypes.Minimal)
                     MyBase.addOption(oSelElmt, "Int", "1")
                     MyBase.addOption(oSelElmt, "String", "2")
                     MyBase.addOption(oSelElmt, "Date", "3")
                     MyBase.addBind("nContentIndexDataType", "tblContentIndexDef/nContentIndexDataType", "true()")
 
                     Dim sSql As String = "select distinct cContentSchemaName from tblContent"
-                    oDr = moDbHelper.getDataReader(sSql)
-                    'Adding controls to the form like dropdown, radiobuttons
-                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "cContentSchemaName", True, "Select Schema Name", ApperanceTypes.Minimal)
-                    MyBase.addOptionsFromSqlDataReader(oSelElmt, oDr, "cContentSchemaName", "cContentSchemaName")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)
+                        'Adding controls to the form like dropdown, radiobuttons
+                        oSelElmt = MyBase.addSelect1(oGrp1Elmt, "cContentSchemaName", True, "Schema Name", ApperanceTypes.Minimal)
+                        MyBase.addOptionsFromSqlDataReader(oSelElmt, oDr, "cContentSchemaName", "cContentSchemaName")
+                    End Using
                     MyBase.addBind("cContentSchemaName", "tblContentIndexDef/cContentSchemaName", "true()")
 
-                    MyBase.addInput(oGrp1Elmt, "cDefinitionName", True, "Defination")
+                    MyBase.addInput(oGrp1Elmt, "cDefinitionName", True, "Index Rule")
                     MyBase.addBind("cDefinitionName", "tblContentIndexDef/cDefinitionName", "true()")
 
-                    MyBase.addInput(oGrp1Elmt, "cContentValueXpath", True, "Path")
+                    MyBase.addInput(oGrp1Elmt, "cContentValueXpath", True, "XPath")
                     MyBase.addBind("cContentValueXpath", "tblContentIndexDef/cContentValueXpath", "true()")
 
-                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "", ApperanceTypes.Minimal)
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
                     MyBase.addOption(oSelElmt, "Yes", "1")
-                    MyBase.addOption(oSelElmt, "No", "0")
-                    MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "true()")
+                    MyBase.addOption(oSelElmt, "No", "0",)
+                    MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
 
                     MyBase.addInput(oGrp1Elmt, "nKeywordGroupName", True, "nKeywordGroupName", "hidden")
                     MyBase.addBind("nKeywordGroupName", "tblContentIndexDef/nKeywordGroupName")
@@ -9720,6 +9721,9 @@ Partial Public Class Cms
                             oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
                             myWeb.moSession(InstanceSessionName) = Nothing
                             myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Email, mnUserId, 0, 0, nOrderId, "Payment Reminder Sent - " & Now().ToString())
+
+                            Dim oFrmElmt As XmlElement = MyBase.moXformElmt
+                            MyBase.addNote(oFrmElmt, noteTypes.Alert, "Message Sent.")
 
                         End If
                     ElseIf MyBase.isTriggered Then

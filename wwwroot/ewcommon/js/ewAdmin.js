@@ -2111,6 +2111,21 @@ $(document).ready(function () {
     }
 });
 
+function CleanfileName(filename) {
+    var newfilename = "";
+    var dataMsg = 'Filename=' + filename;
+
+    $.ajax({
+        url: '/ewapi/Cms.Admin/CleanfileName',
+        data: dataMsg,
+        type: 'GET',
+        success: function (AjaxResponse) {
+            newfilename = AjaxResponse;           
+        }
+    });
+    return newfilename;
+}
+
 $(document).on('click', '.nextPage', function () {
 
 
@@ -2483,8 +2498,7 @@ if (editProductElement > 0) {
             UrlPathOnChange: function (newContentPath) {
                 
                if ($(".hidUrlChangeFlag").val() == "1") {
-                   if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
-                       debugger;
+                    if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
                         var redirectType = $(".hiddenRedirectType").val();
                         $('.btnRedirectSave').removeAttr("disabled");
                         $("#redirectModal").modal("show");
@@ -2512,3 +2526,5 @@ if (editProductElement > 0) {
         }
     });
 }
+
+

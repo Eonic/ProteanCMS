@@ -704,6 +704,7 @@ Partial Public Class Cms
 
                                     If mcReEstablishSession <> "" Then
                                         cSessionFromSessionCookie = mcReEstablishSession
+
                                     End If
 
                                 Catch ex As Exception
@@ -759,7 +760,7 @@ Partial Public Class Cms
                                         If Not (myWeb.moRequest("settlementRef") Is Nothing) Or Not (myWeb.moRequest("settlementRef") Is Nothing) Then
 
                                             ' Set to a holding state that indicates that the settlement has been initiated
-                                            mnProcessId = cartProcess.SettlementInitiated
+                                            ' mnProcessId = cartProcess.SettlementInitiated
 
                                             ' If a cart has been found, we need to update the session ID in it.
                                             If oDr("cCartSessionId") <> mcSessionId Then
@@ -771,7 +772,7 @@ Partial Public Class Cms
                                             moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
 
                                         End If
-                                        If mnProcessId > 5 And mnProcessId <> cartProcess.SettlementInitiated Then
+                                        If mnProcessId > 5 And mnProcessId <> cartProcess.SettlementInitiated And mnProcessId <> cartProcess.DepositPaid Then
                                             ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
                                             EndSession()
                                             mnCartId = 0
@@ -1278,11 +1279,13 @@ processFlow:
                         Else
                             cRedirectCommand = "ChoosePaymentShippingOption"
                         End If
+
                         ' If a settlement has been initiated, then update the process
-                        If mnProcessId = cartProcess.SettlementInitiated Then
-                            mnProcessId = cartProcess.PassForPayment
-                            moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+                        If mnProcessId = cartProcess.DepositPaid Then
+                            ' mnProcessId = cartProcess.PassForPayment
+                            '  moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
                         End If
+
                         ' pickup any google tracking code.
                         Dim item As Object
                         Dim cGoogleTrackingCode As String = ""
@@ -5614,8 +5617,9 @@ processFlow:
                             oInstanceDoc.LoadXml(oXform.Instance.OuterXml)
 
                             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, moServer.MapPath(moCartConfig("NotesToContactsXSL")), False)
+                            Dim ImportElmt As XmlElement = oTransform.ProcessDocument(oInstanceDoc).DocumentElement
 
-                            moDBHelper.importObjects(oTransform.ProcessDocument(oInstanceDoc).DocumentElement, mnCartId, "")
+                            moDBHelper.importObjects(ImportElmt, mnCartId, "")
 
                             oTransform = Nothing
 
@@ -6422,6 +6426,9 @@ processFlow:
                     'create relationship
                     oDS.Relations.Add("Rel1", oDS.Tables("CartItems").Columns("nCartItemKey"), oDS.Tables("CartItems").Columns("nParentId"), False)
                     oDS.Relations("Rel1").Nested = True
+                    If (myWeb.moRequest("UniqueProduct") IsNot Nothing) Then
+                        UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
+                    End If
                     'loop through the parent rows to check the product
                     If (oDS.Tables("CartItems").Rows.Count > 0 And UniqueProduct = False) Then
 
@@ -6472,7 +6479,6 @@ processFlow:
                             addNewTextNode("cItemURL", oElmt, overideUrl) 'Erm?
                         End If
 
-
                         If ProductXml <> "" Then
                             oProdXml.InnerXml = ProductXml
                         Else
@@ -6504,8 +6510,8 @@ processFlow:
                                 'lets add the discount to the cart if supplied
                                 If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
                                     Dim strDiscount1 As String = oProdXml.SelectSingleNode(
-                                                    "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
-                                                    ).InnerText
+                                                        "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
+                                                        ).InnerText
                                     addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
                                 End If
 
@@ -6635,9 +6641,9 @@ processFlow:
                                         addNewTextNode("nItemOptIdx", oElmt, oProdOptions(i)(1))
 
                                         Dim oPriceElmt As XmlElement = oProdXml.SelectSingleNode(
-                                                                "/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" &
-                                                                "/option[" & oProdOptions(i)(1) & "]/Prices/Price[@currency='" & mcCurrency & "']"
-                                                                )
+                                                                    "/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" &
+                                                                    "/option[" & oProdOptions(i)(1) & "]/Prices/Price[@currency='" & mcCurrency & "']"
+                                                                    )
                                         Dim strPrice2 As String = 0
                                         If Not oPriceElmt Is Nothing Then strPrice2 = oPriceElmt.InnerText
                                         addNewTextNode("nPrice", oElmt, IIf(IsNumeric(strPrice2), strPrice2, 0))
@@ -6648,8 +6654,15 @@ processFlow:
                                     addNewTextNode("nWeight", oElmt, 0)
                                     addNewTextNode("nParentId", oElmt, nItemID)
                                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
+
+
+
                                 End If
                             Next
+                        End If
+                        '
+                        If (myWeb.moRequest("OptionName_" & nProductId) IsNot Nothing) Then
+                            AddProductOption(nItemID, myWeb.moRequest("OptionName_" & nProductId), myWeb.moRequest("OptionValue_" & nProductId))
                         End If
                     Else
                         'Existing
@@ -6667,8 +6680,8 @@ processFlow:
                                         oDR1("nQuantity") += nQuantity
                                     End If
                                     oDR1.EndEdit()
-                                        Exit For
-                                    End If
+                                    Exit For
+                                End If
                             Next
                         End If
                         moDBHelper.updateDataset(oDS, "CartItems")
@@ -8940,6 +8953,52 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 addNewTextNode("nQuantity", oelmt, json.SelectToken("Qunatity"))
                 addNewTextNode("nweight", oelmt, json.SelectToken("Weight"))
                 addNewTextNode("xItemXml", oelmt, json.SelectToken("ItemXml"))
+
+                moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
+                'UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
+            Catch ex As Exception
+
+            End Try
+
+
+        End Sub
+
+        Public Sub AddProductOption(ByVal nCartItemId As Integer, ByVal cOptionName As String, ByVal nOptionCost As Double)
+
+            Try
+                Dim oelmt As XmlElement
+                Dim cSqlUpdate As String
+                Dim oItemInstance As XmlDataDocument = New XmlDataDocument
+                oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
+                oelmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
+
+                'Dim json As Newtonsoft.Json.Linq.JObject = jObj
+
+                'Dim CartItemId As Long = json.SelectToken("CartItemId")
+                'Dim ReplaceId As Long = json.SelectToken("ReplaceId")
+                'Dim OptionName As String = json.SelectToken("ItemName")
+                'Dim ShippingKey As Int32 = Convert.ToInt32(json.SelectToken("ShippingKey"))
+
+                'If (ReplaceId <> 0) Then
+                '    addNewTextNode("nCartItemKey", oelmt, CStr(ReplaceId))
+                'End If
+                addNewTextNode("nCartOrderId", oelmt, CStr(mnCartId))
+                addNewTextNode("nItemId", oelmt, "0")
+                addNewTextNode("cItemURL", oelmt, "") 'Erm?
+                addNewTextNode("cItemName", oelmt, cOptionName)
+                addNewTextNode("nItemOptGrpIdx", oelmt, "0") 'Dont Need
+                addNewTextNode("nItemOptIdx", oelmt, "0") 'Dont Need
+                addNewTextNode("cItemRef", oelmt, "0")
+                addNewTextNode("nPrice", oelmt, nOptionCost)
+                addNewTextNode("nShpCat", oelmt, "-1")
+                addNewTextNode("nDiscountCat", oelmt, "")
+                addNewTextNode("nDiscountValue", oelmt, "0.00")
+                addNewTextNode("nTaxRate", oelmt, "0")
+                addNewTextNode("nParentId", oelmt, nCartItemId)
+                addNewTextNode("cItemUnit", oelmt, "0")
+                addNewTextNode("nQuantity", oelmt, "1")
+                addNewTextNode("nweight", oelmt, "0")
+                addNewTextNode("xItemXml", oelmt, "")
 
                 moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
                 'UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
