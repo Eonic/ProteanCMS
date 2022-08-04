@@ -3427,7 +3427,7 @@ Partial Public Class Cms
                                     bResult = True
                                     '###############################-ACTIONS-########################
                                 ElseIf myItem.contains("RelateEdit") Then
-                                    nRelId = relateCmdArr(1)
+                                    nRelId = relateCmdArr(2)
                                     goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & IIf(goRequest.QueryString("pgid") = "", "", "&pgid=" & goRequest.QueryString("pgid"))
                                     goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nRelId
                                     bResult = True
@@ -3452,9 +3452,10 @@ Partial Public Class Cms
                                     bResult = True
                                     Exit For
                                 ElseIf myItem.contains("FilterEdit") Then
-                                    nRelId = relateCmdArr(1)
-                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & IIf(goRequest.QueryString("pgid") = "", "", "&pgid=" & goRequest.QueryString("pgid")) & "&filter=true"
-                                    goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nRelId
+                                    Dim cContentType As String = relateCmdArr(1)
+                                    nRelId = relateCmdArr(2)
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & IIf(goRequest.QueryString("pgid") = "", "", "&pgid=" & goRequest.QueryString("pgid"))
+                                    goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&type=" & cContentType & "&id=" & nRelId & "&filter=true"
                                     bResult = True
                                     Exit For
                                 ElseIf myItem.contains("FilterAdd") Then
