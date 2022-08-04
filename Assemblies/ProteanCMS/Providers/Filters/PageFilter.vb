@@ -14,11 +14,29 @@ Namespace Providers
             Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
                     Dim pageFilterSelect As XmlElement
-                    'Dim oDr As SqlDataReader
-
+                    'Parent page id flag used to populate the root level pages or pages under current page.
+                    Dim bParentPageId As Boolean = False
+                    Dim nParentId As Integer = 1
                     Dim sSql As String = "spGetPagesByParentPageId"
-                    'oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
-                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
+                    Dim arrParams As New Hashtable
+
+                    oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("PageFilter"))
+
+                    ' Adding a binding to the form bindings
+                    oXform.addBind("PageFilter", "PageFilter", "false()", "string", oXform.model)
+
+
+                    'Get Parent page id flag and current id
+                    If (FilterConfig.Attributes("parId") IsNot Nothing) Then
+                        nParentId = Convert.ToInt32(FilterConfig.Attributes("parId").Value)
+                    End If
+                    If (FilterConfig.Attributes("parentPageId").Value IsNot Nothing) Then
+                        bParentPageId = Convert.ToBoolean(Convert.ToInt32(FilterConfig.Attributes("parentPageId").Value))
+                    End If
+                    If (bParentPageId) Then
+                        arrParams.Add("PageId", nParentId)
+                    End If
+                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
                         pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Page Filter", "checkbox", ApperanceTypes.Full)
                         oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
@@ -28,11 +46,11 @@ Namespace Providers
                 End Try
             End Sub
 
-            Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
 
 
-                    Dim cWhereSql As String = String.Empty
+                    'Dim cWhereSql As String = String.Empty
                     Dim cPageIds As String = String.Empty
                     Dim cnt As Integer
 
@@ -45,18 +63,10 @@ Namespace Providers
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = cWhereSql.Substring(0, cWhereSql.Length - 1)
                             cWhereSql = " nStructId IN (" + cWhereSql + ")"
-                            aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
+
                         End If
 
-                        Dim aPageId() As String = cPageIds.Split(",")
-                        For cnt = 0 To aPageId.Length - 1 Step 1
-                            If (aPageId(cnt) <> String.Empty) Then
 
-                                ' oXform.addRepeat(oFromGroup, aPageId(cnt), "search-filter", aPageId(cnt))
-                                oXform.addSubmit(oFromGroup, "removePage", aPageId(cnt), "submit", "", aPageId(cnt))
-
-                            End If
-                        Next
 
                     End If
 

@@ -405,19 +405,19 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Try
                     'current contentfilter id
 
-                    Dim nContentFilterId = myWeb.moPageXml.SelectSingleNode("Page/Contents/Content[@moduleType='ContentFilter']").Attributes(0).Value
+                    'Dim nContentFilterId = myWeb.moPageXml.SelectSingleNode("Page/Contents/Content[@moduleType='ContentFilter']").Attributes(0).Value
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
 
-                    'Dim oFrmInstance As XmlElement
                     Dim oFrmGroup As XmlElement
                     Dim filterForm As xForm = New xForm(myWeb)
-                    'loop through all filters and load control
-                    'First Define the xform
+
                     filterForm.NewFrm(formName)
                     filterForm.submission(formName, "", "POST", "return form_check(this);")
+
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
-                    '  filterForm.Instance = oFrmInstance
+
+
                     For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
                         Dim calledType As Type
@@ -462,12 +462,15 @@ where cl.nStructId = " & myWeb.mnPageId)
                         End If
 
                     Next
+                    oContentNode.AppendChild(filterForm.moXformElmt)
+
                     Dim whereSQL As String = ""
                     filterForm.addSubmit(oFrmGroup, "Filter", "Filter")
                     filterForm.addValues()
 
                     If (filterForm.isSubmitted) Then
                         filterForm.updateInstanceFromRequest()
+                        filterForm.validate()
                         If (filterForm.valid) Then
                             '    If formName = "ContentFilter" Then
                             '        Filters.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
@@ -497,7 +500,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                                         If ourProvider.parameters("rootClass") = "" Then
                                             calledType = assemblyInstance.GetType("Protean.Providers.Filters." & providerName, True)
                                         Else
-                                            'calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
+
                                             calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & "." & className, True)
                                         End If
                                     End If
@@ -522,8 +525,9 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     oContentNode.AppendChild(filterForm.moXformElmt)
 
-                    ' now we go and get the results from the filter.
 
+                    ' now we go and get the results from the filter.
+                    myWeb.GetPageContentFromSelect(whereSQL,,,,,,,,,,, "Product")
 
 
                 Catch ex As Exception
