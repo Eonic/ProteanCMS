@@ -492,8 +492,11 @@ $(function () {
 ---------------------- Handle Eonic Xforms-------------------------
 */
 $.fn.prepareXform = function () {
-
-    //---- Hide feilds using Javascript
+    //---- Removes whitespace from textarea we cant do in xslt
+    $(this).find('textarea').each(function () {
+        $(this).val($(this).val().trim());
+    });
+    //---- Hide fields using Javascript
 
     $(this).find('input.jsHide').each(function () {
         $(this).parent().addClass('hidden');
