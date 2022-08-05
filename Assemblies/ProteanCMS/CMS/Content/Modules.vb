@@ -394,7 +394,7 @@ where cl.nStructId = " & myWeb.mnPageId)
             '            End If
 
             '        Catch ex As Exception
-            '            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
+            '              RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
             '        End Try
             '    Next
             'End Sub
@@ -515,7 +515,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                                     args(2) = filterForm
                                     args(3) = oFrmGroup
 
-                                    calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
+                                    whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
                                 End If
 
                             Next
@@ -523,11 +523,14 @@ where cl.nStructId = " & myWeb.mnPageId)
                         End If
                     End If
 
-                    oContentNode.AppendChild(filterForm.moXformElmt)
+                    'oContentNode.AppendChild(filterForm.moXformElmt)
 
 
                     ' now we go and get the results from the filter.
-                    myWeb.GetPageContentFromSelect(whereSQL,,,,,,,,,,, "Product")
+                    If (whereSQL <> String.Empty) Then
+                        myWeb.GetPageContentFromSelect(whereSQL,,,,,,,,,,, "Product")
+                    End If
+
 
 
                 Catch ex As Exception

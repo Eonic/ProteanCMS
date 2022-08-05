@@ -10,8 +10,9 @@ Namespace Providers
 
         Public Class PageFilter
 
-
+            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+                Dim cProcessInfo As String = "AddControl"
                 Try
                     Dim pageFilterSelect As XmlElement
                     'Parent page id flag used to populate the root level pages or pages under current page.
@@ -42,40 +43,38 @@ Namespace Providers
                         oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
                     End Using
                 Catch ex As Exception
-
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
             End Sub
 
-            Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+                Dim cProcessInfo As String = "ApplyFilter"
                 Try
-
 
                     'Dim cWhereSql As String = String.Empty
                     Dim cPageIds As String = String.Empty
+                    If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
+                        cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText
+                    End If
                     Dim cnt As Integer
 
                     If (cPageIds <> String.Empty) Then
 
-                        If (cWhereSql = String.Empty) Then
-                            cWhereSql = cWhereSql + cPageIds.ToString() + ","
-                        End If
-                        'call sp and return xml data
+
                         If (cWhereSql <> String.Empty) Then
-                            cWhereSql = cWhereSql.Substring(0, cWhereSql.Length - 1)
-                            cWhereSql = " nStructId IN (" + cWhereSql + ")"
-
+                            cWhereSql = " AND "
                         End If
-
-
+                        cWhereSql = " nStructId IN (" + cPageIds + ")"
 
                     End If
-
+                    Return cWhereSql
                 Catch ex As Exception
-
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
-            End Sub
+            End Function
 
             Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
+                Dim cProcessInfo As String = "RemovePageFromFilter"
                 Try
                     Dim cnt As Integer
                     Dim cntPages As Integer = 0
@@ -96,7 +95,7 @@ Namespace Providers
                     End If
 
                 Catch ex As Exception
-
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
             End Sub
             'Public Function RemovePageFromFilter(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
