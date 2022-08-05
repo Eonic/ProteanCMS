@@ -1,5 +1,5 @@
     
-ALTER PROCEDURE spGetPagesByParentPageId 
+CREATE PROCEDURE spGetPagesByParentPageId 
 @PageId as Int=null   
 AS    
 BEGIN    

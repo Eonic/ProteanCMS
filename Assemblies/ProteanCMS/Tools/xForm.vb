@@ -2088,7 +2088,7 @@ Public Class xForm
                 oIptElmt.SetAttribute("end", CStr(oEnd))
             End If
             oIptElmt.SetAttribute("step", CStr(oStep))
-            If oStep <> "" Then
+            If Convert.ToString(oStep) <> "" Then
                 oIptElmt.SetAttribute("step", CStr(oStep))
             End If
             If sLabel <> "" Then

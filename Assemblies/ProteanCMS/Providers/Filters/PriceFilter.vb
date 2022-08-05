@@ -11,43 +11,38 @@ Namespace Providers
 
         Public Class PriceFilter
 
-
+            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+                Dim cProcessInfo As String = "AddControl"
                 Try
-                    Dim nMinPrice As Double = 0
-                    Dim nMaxPrice As Double = 0
-                    Dim nStep As Integer = 0
+
+                    oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("PriceFilter"))
+
+                    ' Adding a binding to the form bindings
+                    oXform.addBind("PriceFilter", "PriceFilter", "false()", "string", oXform.model)
+
+
+                    Dim nMinPrice As Double = Convert.ToDouble(FilterConfig.Attributes("fromPrice").Value)
+                    Dim nMaxPrice As Double = Convert.ToDouble(FilterConfig.Attributes("toPrice").Value)
+                    Dim nStep As Integer = Convert.ToDouble(FilterConfig.Attributes("step").Value)
                     Dim priceFilterRange As XmlElement
                     priceFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", nMinPrice, nMaxPrice, nStep)
 
                 Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
             End Sub
 
 
-            Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef nSelectedPrice As Double, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+                Dim cProcessInfo As String = "ApplyFilter"
                 Try
-
-
-                    Dim cWhereSql As String = String.Empty
                     Dim nMinPrice As Double
                     Dim cDefinitionName As String = "Price"
-
+                    Dim nSelectedPrice As Double = 0
                     If (oXform.Instance.SelectNodes("PriceFilter") IsNot Nothing) Then
                         nMinPrice = Convert.ToDouble(oXform.Instance.SelectSingleNode("PriceFilter").Attributes("FromPrice").InnerText)
 
-                        If (aWeb.moSession("nMinPrice") Is Nothing) Then
-                            aWeb.moSession("nMinPrice") = nMinPrice
-                        Else
-                            aWeb.moSession("nMinPrice") = nMinPrice
-                            nMinPrice = aWeb.moSession("nMinPrice")
-                        End If
-                        If (aWeb.moSession("nSelectedPrice") Is Nothing) Then
-                            aWeb.moSession("nSelectedPrice") = nSelectedPrice
-                        Else
-                            aWeb.moSession("nSelectedPrice") = nSelectedPrice
-                            nSelectedPrice = aWeb.moSession("nSelectedPrice")
-                        End If
                     End If
 
                     If (nMinPrice <> 0 And nSelectedPrice <> 0) Then
@@ -57,19 +52,14 @@ Namespace Providers
                             cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" + cDefinitionName + "'"
                             cWhereSql = cWhereSql + " And ci.nNumberValue between " + Convert.ToString(nMinPrice) + " and " + Convert.ToString(nSelectedPrice)
                         End If
-                        'call sp and return xml data
-                        If (cWhereSql <> String.Empty) Then
-                            cWhereSql = cWhereSql.Substring(0, cWhereSql.Length - 1)
-                            cWhereSql = " nContentKey In (" + cWhereSql + ")"
-                            aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
-                        End If
+
 
                     End If
-
+                    Return cWhereSql
                 Catch ex As Exception
-
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
-            End Sub
+            End Function
 
 
 
