@@ -301,6 +301,10 @@ $(function () {
 ---------------------- Handle Eonic Xforms-------------------------
 */
 $.fn.prepareXform = function () {
+    //---- Removes whitespace from textarea we cant do in xslt
+    $(this).find('textarea').each(function () {
+        $(this).val($(this).val().trim());
+    });
 
     //---- Hide feilds using Javascript
 
