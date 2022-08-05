@@ -1017,6 +1017,11 @@ Public Class Cms
                         If gnResponseCode = 200 And moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
+
+                        If moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("perfmon") Then
+                            bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
+                        End If
+
                         If Not moRequest("reBundle") Is Nothing Then
                             bPageCache = True
                         End If
@@ -8576,7 +8581,11 @@ Public Class Cms
                 If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
 
 
+                    PerfMon.Log("Web", "SavePage - start file write")
+
                     Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+
+                    PerfMon.Log("Web", "SavePage - end file write")
 
                     '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
 
@@ -8599,6 +8608,9 @@ Public Class Cms
             'cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
             returnException(msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
             'bIsError = True
+
+            PerfMon.Log("Web", "SavePage - error")
+
         End Try
     End Sub
 
