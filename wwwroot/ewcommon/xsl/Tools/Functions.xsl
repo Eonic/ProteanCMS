@@ -529,7 +529,9 @@
 
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
-  <xsl:template match="Page" mode="headerOnlyJS"></xsl:template>
+  <xsl:template match="Page" mode="headerOnlyJS">
+	   <xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
+  </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
     <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
@@ -709,6 +711,9 @@
 
   </xsl:template>
 
+  <xsl:template match="Content" mode="headerOnlyContentJS">
+  </xsl:template>
+	
   <xsl:template match="Content" mode="contentJS">
   </xsl:template>
 
@@ -834,7 +839,13 @@
     </xsl:if>    
   </xsl:template>
 
-
+  <xsl:template match="Content[@type='CookieFirst']" mode="headerOnlyContentJS">
+		<xsl:if test="not($adminMode)">
+            <script src="https://consent.cookiefirst.com/sites/{SiteUrl/node()}-{ApiKey/node()}/consent.js">&#160;</script>
+		</xsl:if>
+	</xsl:template>
+	
+	
 	<xsl:template match="Content[@type='CookiePolicy']" mode="contentJS">
 		<xsl:if test="not($adminMode)">
 				<script type="text/javascript">
@@ -1073,8 +1084,10 @@
 
 	<xsl:template match="Content[@type='FreeCookieConsent']" mode="contentJS">
 		<xsl:if test="not($adminMode)">
+			
 			<!-- Cookie Consent by https://www.FreePrivacyPolicy.com -->
-			<script type="text/javascript" src="//www.freeprivacypolicy.com/public/cookie-consent/4.0.0/cookie-consent.js" charset="UTF-8">
+			
+			<script type="text/javascript" src="//www.freeprivacypolicy.com/public/cookie-consent/4.0.0/cookie-consent1.js" charset="UTF-8">
 				<xsl:text> </xsl:text>
 			</script>
 			<script type="text/javascript" charset="UTF-8">
@@ -6687,7 +6700,7 @@
         <xsl:with-param name="max-width-xxs" select="$max-width-xxs"/>
         <xsl:with-param name="max-height-xxs" select="$max-height-xxs"/>
         <xsl:with-param name="max-width-xs" select="$max-width-xs"/>
-        <xsl:with-param name="max-height-xs" select="$max-width-xs"/>
+        <xsl:with-param name="max-height-xs" select="$max-height-xs"/>
         <xsl:with-param name="max-width-sm" select="$max-width-sm"/>
         <xsl:with-param name="max-height-sm" select="$max-height-sm"/>
         <xsl:with-param name="max-width-md" select="$max-width-md"/>
@@ -7123,7 +7136,7 @@
 								<!--JPG/PNG/GIF Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 575px)'"/>
+									<xsl:with-param name="media" select="'(max-width: 574px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
 									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
 									<xsl:with-param name="class" select="$class"/>
@@ -7448,7 +7461,7 @@
                 <!--JPG/PNG/GIF Images-->
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
-                  <xsl:with-param name="media" select="'(max-width: 575px)'"/>
+                  <xsl:with-param name="media" select="'(max-width: 574px)'"/>
                   <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>

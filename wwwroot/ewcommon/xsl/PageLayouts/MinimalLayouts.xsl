@@ -4150,7 +4150,7 @@
       <xsl:if test="Content[@type='FAQ']">
         <div class="faq-list">
           <a name="pageTop" class="pageTop">&#160;</a>
-          <h3>Question and Answer</h3>
+          <h3>Question and Answerx</h3>
           <ul>
             <xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
           </ul>

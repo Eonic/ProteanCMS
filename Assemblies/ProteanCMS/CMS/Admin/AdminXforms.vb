@@ -9925,6 +9925,9 @@ Partial Public Class Cms
                             myWeb.moSession(InstanceSessionName) = Nothing
                             myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Email, mnUserId, 0, 0, nOrderId, "Payment Reminder Sent - " & Now().ToString())
 
+                            Dim oFrmElmt As XmlElement = MyBase.moXformElmt
+                            MyBase.addNote(oFrmElmt, noteTypes.Alert, "Message Sent.")
+
                         End If
                     ElseIf MyBase.isTriggered Then
                         'we have clicked a trigger so we must update the instance

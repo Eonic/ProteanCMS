@@ -119,11 +119,12 @@ Public Class PerfLog
     Public Sub Log(ByVal cModuleName As String, ByVal cProcessName As String, Optional ByVal cDescription As String = "")
         'If Not bLoggingOn Then Exit Sub
         Try
-            If bLoggingOn Then
 
+            'TS moved to run regardless as this seems to improve peformance if you call these values.
+            If bLoggingOn Then
                 Dim oLN As TimeSpan = Now - dLast
                 nTimeAccumalative += oLN.TotalMilliseconds
-                'Dim nMemDif As Integer = Process.GetCurrentProcess.PrivateMemorySize64 - nMemLast
+
                 Dim memoryPrivate As Long
                 If _workingSetPrivateMemoryCounter Is Nothing Then
                     memoryPrivate = 0
@@ -131,12 +132,17 @@ Public Class PerfLog
                     memoryPrivate = _workingSetPrivateMemoryCounter.NextValue()
                 End If
 
-                Dim nMemDif As Long = memoryPrivate - nMemLast
-                Dim nProcDif As Long = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds - nProcLast
-
                 nMemLast = memoryPrivate
                 nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
 
+                Dim nMemDif As Long = memoryPrivate - nMemLast
+                Dim nProcDif As Long = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds - nProcLast
+                Dim nMemoryCounterNextVal As Long = Nothing
+                If Not _workingSetMemoryCounter Is Nothing Then
+                    nMemoryCounterNextVal = CLng(_workingSetMemoryCounter.NextValue())
+                End If
+
+                '    If bLoggingOn Then
 
                 Dim cEntryFull As String = "INSERT INTO tblPerfMon" &
                 " ( MachineName, Website, SessionID, SessionRequest, Path, [Module], [Procedure],Description, Step, [Time],TimeAccumalative, Requests, PrivateMemorySize64, PrivilegedProcessorTimeMilliseconds)" &
@@ -169,28 +175,28 @@ Public Class PerfLog
                 End If
 
                 cEntryFull &= SqlFmt(cPath) & "','"
-                    cEntryFull &= SqlFmt(cModuleName) & "','"
-                    cEntryFull &= Left(SqlFmt(cProcessName), 254) & "','"
-                    cEntryFull &= Left(SqlFmt(cDescription), 3999) & "',"
-                    cEntryFull &= nStep & ","
-                    cEntryFull &= oLN.TotalMilliseconds & ","
-                    cEntryFull &= nTimeAccumalative & ","
-                    If oPerfMonRequests Is Nothing Then
-                        cEntryFull &= "null,'"
-                    Else
-                        cEntryFull &= oPerfMonRequests.RawValue & ",'"
-                    End If
+                cEntryFull &= SqlFmt(cModuleName) & "','"
+                cEntryFull &= Left(SqlFmt(cProcessName), 254) & "','"
+                cEntryFull &= Left(SqlFmt(cDescription), 3999) & "',"
+                cEntryFull &= nStep & ","
+                cEntryFull &= oLN.TotalMilliseconds & ","
+                cEntryFull &= nTimeAccumalative & ","
+                If oPerfMonRequests Is Nothing Then
+                    cEntryFull &= "null,'"
+                Else
+                    cEntryFull &= oPerfMonRequests.RawValue & ",'"
+                End If
 
-                    cEntryFull &= nMemLast & "','"
-                    If _workingSetMemoryCounter Is Nothing Then
-                        cEntryFull &= ""
-                    Else
-                        cEntryFull &= CLng(_workingSetMemoryCounter.NextValue())
-                    End If
-                    'cEntryFull &= Process.GetCurrentProcess.PrivateMemorySize64 & "','"
-                    'cEntryFull &= Process.GetCurrentProcess.WorkingSet64
-                    cEntryFull &= "')"
-                    nStep += 1
+                cEntryFull &= nMemLast & "','"
+                If _workingSetMemoryCounter Is Nothing Then
+                    cEntryFull &= ""
+                Else
+                    cEntryFull &= CLng(_workingSetMemoryCounter.NextValue())
+                End If
+                'cEntryFull &= Process.GetCurrentProcess.PrivateMemorySize64 & "','"
+                'cEntryFull &= Process.GetCurrentProcess.WorkingSet64
+                cEntryFull &= "')"
+                nStep += 1
 
                 If nStep > 128 Then
                     Dim test As String = "text"
@@ -199,16 +205,16 @@ Public Class PerfLog
                 '   ReDim Preserve Entries(nStep)
                 Entries(nStep - 1) = cEntryFull
 
-                    'nMemLast = Process.GetCurrentProcess.PrivateMemorySize64
-                    'nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
-                    dLast = Now
+                'nMemLast = Process.GetCurrentProcess.PrivateMemorySize64
+                'nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
+                dLast = Now
 
-                    'Else
+                'Else
 
-                    '   Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
-                    '   Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
+                '   Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
+                '   Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
 
-                End If
+            End If
         Catch ex As Exception
             Debug.WriteLine(ex.ToString)
         End Try
