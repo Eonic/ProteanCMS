@@ -8843,7 +8843,7 @@ restart:
 
         'New Method for sku parent change functionality
         Public Sub ChangeParentRelation(ByVal oldParentID As Long, ByVal newParentID As Long, ByVal childid As Long)
-            PerfMon.Log("DBHelper", "ChangeParentRelation")
+            myWeb.PerfMon.Log("DBHelper", "ChangeParentRelation")
             Dim sProcessInfo As String = ""
             If newParentID = 0 Then
                 newParentID = goRequest.Form("updateParent")
