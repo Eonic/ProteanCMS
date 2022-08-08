@@ -2200,7 +2200,7 @@
 					</div>
 				</xsl:when>
 				<xsl:otherwise>
-					<div class="col-md-5 buttons">
+					<div class="col-md-5 buttons">						
 						<button type="button" name="RelateTop_{@id}" value=" " class="btn btn-arrow btn-primary btn-xs" onClick="disableButton(this);{$formName}.submit()">
 							<i class="fa fa-arrow-up fa-white">
 								<xsl:text> </xsl:text>
