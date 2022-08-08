@@ -21,7 +21,7 @@ Partial Public Class Cms
 
 
         Public Sub New(ByRef aWeb As Protean.Cms)
-            PerfMon.Log(mcModuleName, "New")
+            aWeb.PerfMon.Log(mcModuleName, "New")
             Try
                 myWeb = aWeb
                 moPageXml = myWeb.moPageXml
@@ -32,7 +32,7 @@ Partial Public Class Cms
         End Sub
 
         Public Shadows Sub close()
-            PerfMon.Log("mcModuleName", "close")
+            myWeb.PerfMon.Log("mcModuleName", "close")
             Dim cProcessInfo As String = ""
             Try
 
@@ -42,7 +42,7 @@ Partial Public Class Cms
         End Sub
 
         Public Overridable Sub apply()
-            PerfMon.Log(mcModuleName, "apply")
+            myWeb.PerfMon.Log(mcModuleName, "apply")
 
             Dim oElmt As XmlElement
             Dim oReport As XmlElement
@@ -78,7 +78,7 @@ Partial Public Class Cms
         End Sub
 
         Public Sub report_StoredProcedure(ByRef oReport As XmlElement)
-            PerfMon.Log(mcModuleName, "report_StoredProcedure")
+            myWeb.PerfMon.Log(mcModuleName, "report_StoredProcedure")
 
             '***********************************************************************
             ' Report :      Stored Procedure
@@ -164,7 +164,7 @@ Partial Public Class Cms
         End Sub
 
         Sub SetDefaultSortColumn(ByVal nSortColumn As Long, Optional ByVal nSortDirection As SortDirection = SortDirection.Ascending)
-            PerfMon.Log("stdTools", "SetDefaultSortColumn")
+            myWeb.PerfMon.Log("stdTools", "SetDefaultSortColumn")
             Try
                 Dim oElmt As XmlElement
                 If moPageXml.DocumentElement Is Nothing Then

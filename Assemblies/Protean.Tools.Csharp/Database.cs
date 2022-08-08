@@ -1190,7 +1190,7 @@ namespace Protean.Tools
         public void AddXMLValueToNode(string sql, ref XmlElement oElmt)
         {
             string cProcessInfo = "Running Sql: " + sql;
-            XmlDocument oXdoc = new XmlDocument();
+            
             SqlCommand cmd = null/* TODO Change to default(_) if this is not a reference type */;
             try
             {
@@ -1198,22 +1198,21 @@ namespace Protean.Tools
                     oConn.Open();
 
 
-                cmd = new SqlCommand(sql, oConn);
-                XmlReader reader = cmd.ExecuteXmlReader();
-
-                if (reader.Read())
-                    oXdoc.Load(reader);
-
-                if (!(oXdoc.DocumentElement == null))
+                using (cmd = new SqlCommand(sql, oConn))
                 {
-                    XmlNode newNode = oElmt.OwnerDocument.ImportNode(oXdoc.DocumentElement, true);
-                    oElmt.AppendChild(newNode);
-                }
+                    using (XmlReader reader = cmd.ExecuteXmlReader()) { 
+                            XmlDocument oXdoc = new XmlDocument();
+                            if (reader.Read())
+                                oXdoc.Load(reader);
 
-                oXdoc = null;
-
-                reader.Dispose();
-                reader = null;
+                            if (!(oXdoc.DocumentElement == null))
+                            {
+                                XmlNode newNode = oElmt.OwnerDocument.ImportNode(oXdoc.DocumentElement, true);
+                                oElmt.AppendChild(newNode);
+                            }
+                            oXdoc = null;
+                    };
+                };
             }
             catch (Exception ex)
             {
@@ -1222,7 +1221,6 @@ namespace Protean.Tools
 
             finally
             {
-                cmd.Dispose();
                 CloseConnection();
             }
         }

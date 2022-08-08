@@ -20,8 +20,6 @@ Public Module stdTools
     Public goServer As System.Web.HttpServerUtility = System.Web.HttpContext.Current.Server
     Public goApp As System.Web.HttpApplicationState = System.Web.HttpContext.Current.Application
 
-    Public PerfMon As New PerfLog("")
-
     ' Public msException As String = "" 'TODO !-!IMPORTANT!-! WHEN ERROR EVENTS ARE ESTABLISHED THIS SHOULD BE MOVED INSIDE WEB!!!!!
     Public mbDBError As Boolean = False
 
@@ -619,7 +617,7 @@ Public Module stdTools
 
 
     Public Function SqlFmt(ByVal sText As String) As Object
-        'PerfMon.Log("stdTools", "SqlFmt")
+        ''PerfMon.Log("stdTools", "SqlFmt")
         SqlFmt = Replace(sText, "'", "''")
 
     End Function
@@ -636,7 +634,7 @@ Public Module stdTools
     End Function
 
     Public Function niceDate(ByVal dDate As Object) As String
-        PerfMon.Log("stdTools", "niceDate")
+        ''PerfMon
         Dim sdate As String
 
         If IsDate(dDate) Then
@@ -654,7 +652,7 @@ Public Module stdTools
 
 #Region "SQL DATE TIME FUNCTIONS"
     'Public Function sqlDate(ByVal dDate As Object) As String
-    '    'PerfMon.Log("stdTools", "sqlDate")
+    '    ''PerfMon.Log("stdTools", "sqlDate")
 
     '    If IsDate(dDate) Then
     '        sqlDate = "'" & Format(dDate, "dd MMMM yyyy") & "'"
@@ -678,7 +676,7 @@ Public Module stdTools
     'End Function
 
     'Public Function sqlDateTime(ByVal dDate As Object, ByVal stime As Object) As String
-    '    PerfMon.Log("stdTools", "sqlDateTime")
+    '    'PerfMon.Log("stdTools", "sqlDateTime")
 
     '    If IsDate(dDate) Then
     '        sqlDateTime = "'" & Format(dDate, "dd MMMM yyyy") & " " & stime & "'"
@@ -711,7 +709,7 @@ Public Module stdTools
 #Region "XML DATE TIME FUNCTIONS"
 
     'Public Function xmlDate(ByVal dDate As Object) As String
-    '    PerfMon.Log("stdTools", "xmlDate")
+    '    'PerfMon.Log("stdTools", "xmlDate")
     '    Dim sDay As String
     '    Dim sMonth As String
 
@@ -731,7 +729,7 @@ Public Module stdTools
     'End Function
 
     'Public Function xmlDateTime(ByVal dDate As Object) As String
-    '    PerfMon.Log("stdTools", "xmlDateTime")
+    '    'PerfMon.Log("stdTools", "xmlDateTime")
     '    Dim sDay As String
     '    Dim sMonth As String
 
@@ -759,11 +757,11 @@ Public Module stdTools
     End Function
 #End Region
 
-  
+
 
 
     Public Function ButtonSubmitted(ByRef mroRequest As System.Web.HttpRequest, ByVal cButtonName As String) As Boolean
-        '  PerfMon.Log("stdTools", "ButtonSubmitted")
+        '  'PerfMon.Log("stdTools", "ButtonSubmitted")
         Dim bSubmitted As Boolean = False
 
         Dim cNameX As String = cButtonName + ".x"
@@ -776,7 +774,7 @@ Public Module stdTools
 
 
     Public Function UrlResponseToHashTable(ByVal sResponse As String, Optional ByVal sFieldSeperator As String = "&", Optional ByVal sValueSeperator As String = "=", Optional ByVal bURLDecodeValue As Boolean = True) As Hashtable
-        PerfMon.Log("stdTools", "UrlResponseToHashTable")
+        'PerfMon.Log("stdTools", "UrlResponseToHashTable")
         Try
 
             Dim aResponse As String() = Split(sResponse, sFieldSeperator)
@@ -817,7 +815,7 @@ Public Module stdTools
 
 
     Public Function GenerateMD5Hash(ByVal SourceText As String) As String
-        PerfMon.Log("stdTools", "GenerateMD5Hash")
+        'PerfMon.Log("stdTools", "GenerateMD5Hash")
         'This generates a PHP compatible MD5 Hex string for the source value.
 
         Dim md5 As MD5 = MD5CryptoServiceProvider.Create
@@ -845,7 +843,7 @@ Public Module stdTools
 
                 If WebConfigurationManager.AppSettings("PublicKey.Modulus") = "" Then
                     'at the moment this writes a new file that needs to be included in web.config
-                    asym.GenerateNewKeyset(pubkey, privkey)
+                    asym.GenerateNewKeySet(pubkey, privkey)
                     pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
                     privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
                 Else
@@ -917,14 +915,14 @@ Public Module stdTools
     End Function
 
     Public Function EncryptStringOLD(ByVal SourceText As String) As String
-        PerfMon.Log("stdTools", "EncryptString")
+        'PerfMon.Log("stdTools", "EncryptString")
         Dim asym As New Tools.Encryption.Asymmetric
         Dim pubkey As New Tools.Encryption.Asymmetric.PublicKey
         Dim privkey As New Tools.Encryption.Asymmetric.PrivateKey
 
         If WebConfigurationManager.AppSettings("PublicKey.Modulus") = "" Then
             'at the moment this writes a new file that needs to be included in web.config
-            asym.GenerateNewKeyset(pubkey, privkey)
+            asym.GenerateNewKeySet(pubkey, privkey)
             pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
             privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
         Else
@@ -942,7 +940,7 @@ Public Module stdTools
     End Function
 
     Public Function DecryptStringOLD(ByVal encryptedText As String) As String
-        PerfMon.Log("stdTools", "DecryptString")
+        'PerfMon.Log("stdTools", "DecryptString")
         Try
             Dim asym As New Tools.Encryption.Asymmetric
             Dim pubkey As New Tools.Encryption.Asymmetric.PublicKey
@@ -975,7 +973,7 @@ Public Module stdTools
     End Enum
 
     Public Function Round(ByVal nNumber As Object, Optional ByVal nDecimalPlaces As Integer = 2, Optional ByVal nSplitNo As Integer = 5, Optional ByVal bForceRoundup As Boolean = True, Optional ByVal bForceRoundDown As Boolean = False) As Decimal
-        'PerfMon.Log("stdTools", "RoundUp")
+        ''PerfMon.Log("stdTools", "RoundUp")
         Try
             Dim RetVal As Decimal
             If bForceRoundup Then
@@ -996,7 +994,7 @@ Public Module stdTools
     End Function
 
     Public Function RoundUp(ByVal nNumber As Object, Optional ByVal nDecimalPlaces As Integer = 2, Optional ByVal nSplitNo As Integer = 5) As Decimal
-        PerfMon.Log("stdTools", "RoundUp")
+        'PerfMon.Log("stdTools", "RoundUp")
         Try
             'get the dross over with
             If Not IsNumeric(nNumber) Then Return 0
@@ -1131,16 +1129,16 @@ Public Module stdTools
     Public Function strongPassword(ByVal password As String) As Boolean
         Dim pwdRegEx As String = ""
 
-        Dim moPolicy As xmlElement
+        Dim moPolicy As XmlElement
 
         moPolicy = WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy")
 
-        pwdRegEx = "(?=^.{" & moPolicy.FirstChild.SelectSingleNode("minLength").InnerText & _
-            "," & moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText & "}$)" & _
-            "(?=(?:.*?\d){" & moPolicy.FirstChild.SelectSingleNode("numsLength").InnerText & "})" & _
-            "(?=.*[a-z])" & _
-            "(?=(?:.*?[A-Z]){" & moPolicy.FirstChild.SelectSingleNode("upperLength").InnerText & "})" & _
-            "(?=(?:.*?[" & moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText & "]){" & moPolicy.FirstChild.SelectSingleNode("specialLength").InnerText & "})" & _
+        pwdRegEx = "(?=^.{" & moPolicy.FirstChild.SelectSingleNode("minLength").InnerText &
+            "," & moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText & "}$)" &
+            "(?=(?:.*?\d){" & moPolicy.FirstChild.SelectSingleNode("numsLength").InnerText & "})" &
+            "(?=.*[a-z])" &
+            "(?=(?:.*?[A-Z]){" & moPolicy.FirstChild.SelectSingleNode("upperLength").InnerText & "})" &
+            "(?=(?:.*?[" & moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText & "]){" & moPolicy.FirstChild.SelectSingleNode("specialLength").InnerText & "})" &
             "(?!.*\s)[0-9a-zA-Z" & moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText & "]*$"
 
         ' Validate the e-mail address
@@ -1150,7 +1148,7 @@ Public Module stdTools
     End Function
 
     'Sub SetDefaultSortColumn(ByRef moPageXml As XmlDocument, ByVal nSortColumn As Long, Optional ByVal nSortDirection As SortDirection = SortDirection.Ascending)
-    '    PerfMon.Log("stdTools", "SetDefaultSortColumn")
+    '    'PerfMon.Log("stdTools", "SetDefaultSortColumn")
     '    Try
     '        Dim oElmt As XmlElement
     '        If moPageXml.SelectSingleNode("/Page/Request/QueryString/Item[@name='sortCol']") Is Nothing Then

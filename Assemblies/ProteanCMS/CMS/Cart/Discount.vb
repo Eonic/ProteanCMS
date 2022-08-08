@@ -40,7 +40,7 @@ Partial Public Class Cms
             End Enum
 
             Public Sub New(ByRef aWeb As Protean.Cms)
-                PerfMon.Log("Discount", "New")
+                aWeb.PerfMon.Log("Discount", "New")
                 Try
                     myWeb = aWeb
                     moConfig = myWeb.moConfig
@@ -73,7 +73,7 @@ Partial Public Class Cms
                     bIsQuoteOn = LCase(moConfig("Quote")) = "on"
 
                     mcModuleName = "Eonic.Discount"
-                    PerfMon.Log("Discount", "New-End")
+                    myWeb.PerfMon.Log("Discount", "New-End")
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                 End Try
@@ -81,9 +81,9 @@ Partial Public Class Cms
 
 
             Public Sub New(ByRef aCart As Protean.Cms.Cart)
-                PerfMon.Log("Discount", "New")
                 Try
                     myWeb = aCart.myWeb
+                    myWeb.PerfMon.Log("Discount", "New")
                     myCart = aCart
                     moConfig = myWeb.moConfig
                     moCartConfig = WebConfigurationManager.GetWebApplicationSection("protean/cart")
@@ -105,7 +105,7 @@ Partial Public Class Cms
                     End If
 
                     mcModuleName = "Eonic.Discount"
-                    PerfMon.Log("Discount", "New-End")
+                    myWeb.PerfMon.Log("Discount", "New-End")
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
@@ -115,7 +115,7 @@ Partial Public Class Cms
 
 #Region "Discount Application"
             Function CheckDiscounts(ByVal oDsCart As DataSet, ByVal oCartXML As XmlElement, ByVal bFullCart As Boolean, ByVal oNotesElmt As XmlElement) As Decimal
-                PerfMon.Log("Discount", "CheckDiscounts")
+                myWeb.PerfMon.Log("Discount", "CheckDiscounts")
                 If Not bIsCartOn And Not bIsQuoteOn Then Return 0
                 Dim oDsDiscounts As DataSet
                 'Dim cSQL As String
@@ -232,9 +232,9 @@ Partial Public Class Cms
                             'strSQL.Append(")")
                             'End If
 
-                            PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
+                            myWeb.PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
                             oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
-                            PerfMon.Log("Discount", "CheckDiscounts - EndQuery")
+                            myWeb.PerfMon.Log("Discount", "CheckDiscounts - EndQuery")
                         End If
 
                         'TS: Add a union in here to add discount rule applied at an order level.
@@ -560,7 +560,7 @@ Partial Public Class Cms
             End Function
 
             Public Function Discount_ApplyToCart(ByRef oCartXML As XmlElement, ByVal oDiscountXml As XmlDocument) As Decimal
-                PerfMon.Log("Discount", "Discount_ApplyToCart")
+                myWeb.PerfMon.Log("Discount", "Discount_ApplyToCart")
                 Try
                     'for basic we need to loop through and apply the new price
                     'also link the discounts applied
@@ -686,7 +686,7 @@ Partial Public Class Cms
 #Region "Discount Rule Application"
 
             Private Sub Discount_Basic_Money(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer, ByRef cFreeShippingMethods As String, Optional ByRef strbFreeGiftBox As String = "")
-                PerfMon.Log("Discount", "Discount_Basic_Money")
+                myWeb.PerfMon.Log("Discount", "Discount_Basic_Money")
                 'this will work basic monetary discounts
                 Dim oItemLoop As XmlElement
                 Dim oDiscountLoop As XmlElement
@@ -849,7 +849,7 @@ Partial Public Class Cms
             End Sub
 
             Private Sub Discount_Break_Product(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer)
-                PerfMon.Log("Discount", "Discount_Break_Product")
+                myWeb.PerfMon.Log("Discount", "Discount_Break_Product")
                 'this will work basic monetary discounts
                 Dim oItemLoop As XmlElement
                 Dim oPriceElmt As XmlElement
@@ -977,7 +977,7 @@ NoDiscount:
             End Sub
 
             Private Sub Discount_Basic_Percent(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer, ByRef cFreeShippingMethods As String)
-                PerfMon.Log("Discount", "Discount_Basic_Percent")
+                myWeb.PerfMon.Log("Discount", "Discount_Basic_Percent")
                 'this will work basic discount discounts
                 Dim oItemLoop As XmlElement
                 Dim oDiscountLoop As XmlElement
@@ -1043,7 +1043,7 @@ NoDiscount:
             End Sub
 
             Private Sub Discount_XForPriceY(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer)
-                PerfMon.Log("Discount", "Discount_XForPriceY")
+                myWeb.PerfMon.Log("Discount", "Discount_XForPriceY")
                 'this will work basic discount discounts
                 Dim oItemLoop As XmlElement
                 Dim oDiscountLoop As XmlElement
@@ -1122,7 +1122,7 @@ NoDiscount:
 
             Private Sub Discount_CheapestDiscount(ByRef oDiscXml As XmlDocument, ByRef nPriceCount As Integer)
 
-                PerfMon.Log("Discount", "Discount_CheapestFree")
+                myWeb.PerfMon.Log("Discount", "Discount_CheapestFree")
                 'this is going to be the wierdest one
                 'we will need to loop through discounts first, then the items
                 Dim oItemLoop As XmlElement = Nothing
@@ -1303,7 +1303,7 @@ NoDiscount:
             End Sub
 
             Private Sub Discount_Break_Group(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer)
-                PerfMon.Log("Discount", "Discount_Break_Group")
+                myWeb.PerfMon.Log("Discount", "Discount_Break_Group")
                 Try
                     Dim oDiscount As XmlElement
                     Dim nTotalItems As Integer
@@ -1633,7 +1633,7 @@ NoDiscount:
             End Function
 
             Public Sub getAvailableDiscounts(ByRef oRootElmt As XmlElement)
-                PerfMon.Log("Discount", "getAvailableDiscounts")
+                myWeb.PerfMon.Log("Discount", "getAvailableDiscounts")
                 If Not bIsCartOn And Not bIsQuoteOn Then Exit Sub
                 'Gets the discounts applicable to the listed products, filtered by user
                 'and adds them under the relevant content. Will do this for both Brief and Detail
@@ -1725,13 +1725,13 @@ NoDiscount:
 
 
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startGetDataset")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startGetDataset")
 
                         Dim sSql As String = strSQL.ToString
                         Dim oXML As XmlElement = oRootElmt.OwnerDocument.CreateElement("DiscountsRoot")
 
                         Using oDS As DataSet = myWeb.moDbHelper.GetDataSet(sSql, "Discount", "Discounts")
-                            PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
+                            myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
                             If oDS Is Nothing Then
                                 Exit Sub
                             End If
@@ -1744,21 +1744,21 @@ NoDiscount:
                             Next
                             oDS.Tables("Discount").Columns("cAdditionalXML").ColumnMapping = MappingType.SimpleContent
 
-                            PerfMon.Log("Discount", "getAvailableDiscounts-startGetDatasetXml")
+                            myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startGetDatasetXml")
 
                             oXML.InnerXml = Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<")
                         End Using
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-endGetDatasetXml")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endGetDatasetXml")
 
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startIterateContentNodes")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startIterateContentNodes")
 
                         'NB : 19-01-2010 - this still runs many checks for non products
                         ' What does all this do? Nothing is updating the price until you buy it
                         ' It should be appending discounts to the content right? Then why isn't it
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startAddDiscountsToContent")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startAddDiscountsToContent")
                         Dim nStep As Long = 0
 
                         For Each oDiscountElmt In oXML.SelectNodes("Discounts/Discount[not(descendant-or-self::cPromotionalCode/node()!='') or not(descendant-or-self::cPromotionalCode)]")
@@ -1782,9 +1782,9 @@ NoDiscount:
                             End If
                         Next
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-endAddDiscountsToContent-" & nStep & " Contents with Discounts Added")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endAddDiscountsToContent-" & nStep & " Contents with Discounts Added")
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startCalculateDiscounts")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startCalculateDiscounts")
                         'For Each oContentElmt In oRootElmt.SelectNodes("/Page/Contents/descendant-or-self::Content")
                         For Each oContentElmt In oRootElmt.SelectNodes("descendant-or-self::Content[Prices/Price[@currency='" & mcCurrency & "' and node()!=''] and Discount]")
 
@@ -1820,9 +1820,9 @@ NoDiscount:
 
                             Next
                         Next
-                        PerfMon.Log("Discount", "getAvailableDiscounts-endCalculateDiscounts")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endCalculateDiscounts")
                     End If
-                    PerfMon.Log("Discount", "getAvailableDiscounts-endIterateContentNodes")
+                    myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endIterateContentNodes")
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "getAvailableDiscounts", ex, "", "", gbDebug)
@@ -1839,7 +1839,7 @@ NoDiscount:
             ''' <param name="PageElmt"></param>
             ''' <remarks></remarks>
             Public Overridable Sub getDiscountXML(ByRef PageElmt As XmlElement)
-                PerfMon.Log("Discount", "start-getDiscountXML")
+                myWeb.PerfMon.Log("Discount", "start-getDiscountXML")
                 If Not bIsCartOn And Not bIsQuoteOn Then Exit Sub
                 Try
                     Dim nDiscountID As Integer = 0
@@ -1865,7 +1865,7 @@ NoDiscount:
                         sSQL &= " AND dr.nDiscountKey = " & nDiscountID
                     End If
                     oDS = myWeb.moDbHelper.GetDataSet(sSQL, "Discount", "Discounts")
-                    PerfMon.Log("Discount", "getDiscountXML-gotDiscounts")
+                    myWeb.PerfMon.Log("Discount", "getDiscountXML-gotDiscounts")
                     Dim oDC As DataColumn
                     For Each oDC In oDS.Tables("Discount").Columns
                         oDC.ColumnMapping = MappingType.Attribute
@@ -1901,13 +1901,13 @@ NoDiscount:
                                 " da.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & ")"
                     oDS = New DataSet
                     oDS = myWeb.moDbHelper.GetDataSet(sSQL, "Content", "Contents")
-                    PerfMon.Log("Discount", "getDiscountXML-gotContent")
+                    myWeb.PerfMon.Log("Discount", "getDiscountXML-gotContent")
                     oDS.Tables(0).Columns("nDiscountId").ColumnMapping = MappingType.Attribute
                     'now to add them to discounts 
 
                     myWeb.moDbHelper.AddDataSetToContent(oDS, oContent, myWeb.mnPageId, True, , , , False)
 
-                    PerfMon.Log("Discount", "getDiscountXML-appendStart")
+                    myWeb.PerfMon.Log("Discount", "getDiscountXML-appendStart")
 
                     Dim oTmp As XmlElement
                     Dim oDisc As XmlElement
@@ -1925,9 +1925,9 @@ NoDiscount:
                         End If
                         appendCount = appendCount + 1
                     Next
-                    PerfMon.Log("Discount", "getDiscountXML appended " & appendCount & " Items")
+                    myWeb.PerfMon.Log("Discount", "getDiscountXML appended " & appendCount & " Items")
 
-                    PerfMon.Log("Discount", "end-getDiscountXML")
+                    myWeb.PerfMon.Log("Discount", "end-getDiscountXML")
                     PageElmt.AppendChild(oDiscounts)
 
                 Catch ex As Exception
@@ -2002,7 +2002,7 @@ NoDiscount:
             'to use for contentprices
 
             Function getProductPricesByXml_OLD(ByVal cXml As String) As Double
-                PerfMon.Log("Discount", "getProductPricesByXml")
+                myWeb.PerfMon.Log("Discount", "getProductPricesByXml")
                 Dim cGroupXPath As String = ""
                 Dim oProd As XmlNode = myWeb.moPageXml.CreateNode(XmlNodeType.Document, "", "product")
                 Dim oPrices As XmlNodeList
@@ -2060,7 +2060,7 @@ NoDiscount:
             End Function
 
             Function getProductPricesByXml(ByVal cXml As String) As Double
-                PerfMon.Log("Cart", "getProductPricesByXml")
+                myWeb.PerfMon.Log("Cart", "getProductPricesByXml")
                 Dim cGroupXPath As String = ""
                 Dim oProd As XmlNode = myWeb.moPageXml.CreateNode(XmlNodeType.Document, "", "product")
                 Dim oDefaultPrice As XmlNode
@@ -2118,7 +2118,7 @@ NoDiscount:
             Private Sub applyDiscountsToPriceXml(ByVal oContentElmt As XmlElement, ByVal oDiscountElmt As XmlElement)
 
                 Try
-                    'PerfMon.Log("Cart", "applyDiscountsToPriceXml")
+                    'myWeb.PerfMon.Log("Cart", "applyDiscountsToPriceXml")
 
                     Dim cGroups As String = mcGroups
                     If cGroups = "" Then cGroups &= "default,all,Standard,standard" Else cGroups &= ",default,all,Standard,standard"
@@ -2173,13 +2173,13 @@ NoDiscount:
 
 
             Function getGroupsByName() As String
-                PerfMon.Log("Discount", "getGroupsByName")
+                myWeb.PerfMon.Log("Discount", "getGroupsByName")
                 Dim cReturn As String = ""
                 Dim oDs As DataSet
                 Dim oDr As DataRow
                 Dim cProcessInfo As String = ""
                 Try
-                    PerfMon.Log("Discount", "getGroupsByName-start")
+                    myWeb.PerfMon.Log("Discount", "getGroupsByName-start")
                     If myWeb.mnUserId > 0 Then
                         oDs = myWeb.moDbHelper.GetDataSet("select * from tblDirectory g inner join tblDirectoryRelation r on g.nDirKey = r.nDirParentId where r.nDirChildId = " & myWeb.mnUserId, "Groups")
                         If oDs.Tables("Groups").Rows.Count > 0 Then
@@ -2189,7 +2189,7 @@ NoDiscount:
                             cReturn = Mid(cReturn, 2)
                         End If
                     End If
-                    PerfMon.Log("Discount", "getGroupsByName-end")
+                    myWeb.PerfMon.Log("Discount", "getGroupsByName-end")
                     Return cReturn
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug)

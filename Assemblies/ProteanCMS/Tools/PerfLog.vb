@@ -21,7 +21,7 @@ Public Class PerfLog
     Private nStep As Integer
     Private oBuilder As StringBuilder
     Private oPerfMonRequests As PerformanceCounter
-    Private Entries(0) As String
+    Private Entries(1000) As String
     Dim dLast As Date = Now
     Dim nTimeAccumalative As Double = 0
     Dim nMemLast As Integer = 0
@@ -144,12 +144,17 @@ Public Class PerfLog
                 cEntryFull &= "'"
                 cEntryFull &= moServer.MachineName & "','"
                 cEntryFull &= cSiteName & "','"
-                Try
-                    cEntryFull &= CStr(moSession.SessionID & "") & "','"
-                    cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
-                Catch ex As Exception
+                If moSession.SessionID IsNot Nothing Then
+                    Try
+                        cEntryFull &= CStr(moSession.SessionID & "") & "','"
+                        cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
+                    Catch ex As Exception
+                        cEntryFull &= "','','"
+                    End Try
+                Else
                     cEntryFull &= "','','"
-                End Try
+                End If
+
                 'If moSession.SessionID Is Nothing Then
 
                 'Else
@@ -157,46 +162,53 @@ Public Class PerfLog
                 '    cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
                 'End If
                 Dim cPath As String = ""
-                If Not System.Web.HttpContext.Current.Request Is Nothing Then
-                    cPath = System.Web.HttpContext.Current.Request("path")
+                If Not System.Web.HttpContext.Current Is Nothing Then
+                    If Not System.Web.HttpContext.Current.Request Is Nothing Then
+                        cPath = System.Web.HttpContext.Current.Request("path")
+                    End If
                 End If
+
                 cEntryFull &= SqlFmt(cPath) & "','"
-                cEntryFull &= SqlFmt(cModuleName) & "','"
-                cEntryFull &= Left(SqlFmt(cProcessName), 254) & "','"
-                cEntryFull &= Left(SqlFmt(cDescription), 3999) & "',"
-                cEntryFull &= nStep & ","
-                cEntryFull &= oLN.TotalMilliseconds & ","
-                cEntryFull &= nTimeAccumalative & ","
-                If oPerfMonRequests Is Nothing Then
-                    cEntryFull &= "null,'"
-                Else
-                    cEntryFull &= oPerfMonRequests.RawValue & ",'"
+                    cEntryFull &= SqlFmt(cModuleName) & "','"
+                    cEntryFull &= Left(SqlFmt(cProcessName), 254) & "','"
+                    cEntryFull &= Left(SqlFmt(cDescription), 3999) & "',"
+                    cEntryFull &= nStep & ","
+                    cEntryFull &= oLN.TotalMilliseconds & ","
+                    cEntryFull &= nTimeAccumalative & ","
+                    If oPerfMonRequests Is Nothing Then
+                        cEntryFull &= "null,'"
+                    Else
+                        cEntryFull &= oPerfMonRequests.RawValue & ",'"
+                    End If
+
+                    cEntryFull &= nMemLast & "','"
+                    If _workingSetMemoryCounter Is Nothing Then
+                        cEntryFull &= ""
+                    Else
+                        cEntryFull &= CLng(_workingSetMemoryCounter.NextValue())
+                    End If
+                    'cEntryFull &= Process.GetCurrentProcess.PrivateMemorySize64 & "','"
+                    'cEntryFull &= Process.GetCurrentProcess.WorkingSet64
+                    cEntryFull &= "')"
+                    nStep += 1
+
+                If nStep > 128 Then
+                    Dim test As String = "text"
                 End If
 
-                cEntryFull &= nMemLast & "','"
-                If _workingSetMemoryCounter Is Nothing Then
-                    cEntryFull &= ""
-                Else
-                    cEntryFull &= CLng(_workingSetMemoryCounter.NextValue())
-                End If
-                'cEntryFull &= Process.GetCurrentProcess.PrivateMemorySize64 & "','"
-                'cEntryFull &= Process.GetCurrentProcess.WorkingSet64
-                cEntryFull &= "')"
-                nStep += 1
-
-                ReDim Preserve Entries(nStep)
+                '   ReDim Preserve Entries(nStep)
                 Entries(nStep - 1) = cEntryFull
 
-                'nMemLast = Process.GetCurrentProcess.PrivateMemorySize64
-                'nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
-                dLast = Now
+                    'nMemLast = Process.GetCurrentProcess.PrivateMemorySize64
+                    'nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
+                    dLast = Now
 
-                'Else
+                    'Else
 
-                '   Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
-                '   Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
+                    '   Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
+                    '   Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
 
-            End If
+                End If
         Catch ex As Exception
             Debug.WriteLine(ex.ToString)
         End Try
@@ -219,7 +231,7 @@ Public Class PerfLog
                             dbAuth = "Integrated Security=SSPI;"
                         End If
                     End If
-                    ConStr = "Data Source=" & moConfig("DatabaseServer") & "; " & _
+                    ConStr = "Data Source=" & moConfig("DatabaseServer") & "; " &
                         "Initial Catalog=" & moConfig("DatabaseName") & "; " & dbAuth
                 End If
                 Dim oCon As New SqlClient.SqlConnection(ConStr)
@@ -238,12 +250,17 @@ Public Class PerfLog
                         End Try
                     End If
                 Next
+                oCmd.Dispose()
                 oCon.Close()
+                oCon.Dispose()
+                oCon = Nothing
                 bLoggingOn = False
             End If
         Catch ex As Exception
 
             Debug.WriteLine(cProcessInfo & " - errormsg - " & ex.ToString)
+        Finally
+            Entries = Nothing
         End Try
     End Sub
 

@@ -67,7 +67,7 @@ Public Class CssWebClient
                 'check for fullpath
                 Dim origServiceUrl As String = Serviceurl
 
-                PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "start-" & Serviceurl)
+                'PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "start-" & Serviceurl)
 
                 If goRequest.ServerVariables("SERVER_NAME") = "localhost" And goRequest.ServerVariables("SERVER_PORT") <> "80" Then
                     Serviceurl = ":" & goRequest.ServerVariables("SERVER_PORT") & Serviceurl
@@ -87,7 +87,7 @@ Public Class CssWebClient
                 httpHandlerRequest = WebRequest.Create(Serviceurl)
                 Dim serviceRequest As HttpWebRequest = httpHandlerRequest
                 Dim response As HttpWebResponse = CType(serviceRequest.GetResponse(), HttpWebResponse)
-                PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "end-" & Serviceurl)
+                ' PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "end-" & Serviceurl)
                 Dim strResponse As String
                 Using receiveStream As Stream = response.GetResponseStream()
                     Using readStream As New StreamReader(receiveStream, Encoding.UTF8)

@@ -2753,10 +2753,10 @@ AfterProcessFlow:
                             'NB: New (Web) Transform
                             Dim styleFile As String = CStr(myWeb.goServer.MapPath("/xsl/import/" & cXsltPath))
                             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
-                            PerfMon.Log("Admin", "FileImportProcess-startxsl")
+                            myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl")
                             oTransform.mbDebug = gbDebug
                             oTransform.ProcessDocument(oImportXml)
-                            PerfMon.Log("Admin", "FileImportProcess-endxsl")
+                            myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl")
                             'We display the results
                             Dim oPreviewElmt2 As XmlElement = moPageXML.CreateElement("PreviewImport")
                             If oTransform.HasError Then
@@ -4813,7 +4813,7 @@ SP:
         Public Sub MemberCodesProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
 
             Dim cProcessInfo As String = ""
-            PerfMon.Log("Admin", "MemberCodesProcess")
+            myWeb.PerfMon.Log("Admin", "MemberCodesProcess")
 
             Try
 

@@ -55,7 +55,7 @@ Partial Public Class Cms
             Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
 
-                PerfMon.Log("AdminXforms", "New")
+                myWeb.PerfMon.Log("AdminXforms", "New")
                 Try
                     myWeb = aWeb
                     goConfig = myWeb.moConfig
@@ -9280,7 +9280,7 @@ Partial Public Class Cms
 #End Region
 #Region " Initialisation"
                 Public Sub New(ByVal ContentId As Long, ByRef Form As xForm)
-                    PerfMon.Log(mcModuleName, "New")
+                    '  myWeb.PerfMon.Log(mcModuleName, "New")
                     Try
                         ' Set variables
                         _contentId = ContentId
@@ -9295,7 +9295,7 @@ Partial Public Class Cms
 #End Region
 #Region " Public Methods"
                 Public Sub Refresh()
-                    PerfMon.Log(mcModuleName, "Refresh")
+                    ' myWeb.PerfMon.Log(mcModuleName, "Refresh")
                     Try
                         _selects = _form.RootGroup.SelectNodes(_selectsXPath)
                     Catch ex As Exception
@@ -9303,7 +9303,7 @@ Partial Public Class Cms
                     End Try
                 End Sub
                 Public Function IsActive() As Boolean
-                    PerfMon.Log(mcModuleName, "IsActive")
+                    'myWeb.PerfMon.Log(mcModuleName, "IsActive")
                     Try
                         Return (_selects.Count > 0)
                     Catch ex As Exception
@@ -9312,7 +9312,7 @@ Partial Public Class Cms
                     End Try
                 End Function
                 Public Sub ProcessSelects()
-                    PerfMon.Log(mcModuleName, "ProcessSelects")
+                    ' myWeb.PerfMon.Log(mcModuleName, "ProcessSelects")
 
                     Dim menuId As Long
                     Dim bind As XmlElement
@@ -9474,7 +9474,7 @@ Partial Public Class Cms
 
 
                 Public Sub ProcessRequest(ByVal ContentId As Long)
-                    PerfMon.Log(mcModuleName, "ProcessRequest")
+                    ' myWeb.PerfMon.Log(mcModuleName, "ProcessRequest")
 
                     Dim InclusionList As String = ""
                     Dim ScopeList As String = ""
@@ -9531,11 +9531,9 @@ Partial Public Class Cms
 #End Region
 #Region " Initialisation"
                     Public Sub New(ByRef selectItem As XmlElement)
-                        PerfMon.Log(mcModuleName, "New")
                         Try
                             _rootMode = RootModes.Exclude
                             Item = selectItem
-
                         Catch ex As Exception
                             '  returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                         End Try
@@ -9604,8 +9602,6 @@ Partial Public Class Cms
 #End Region
 #Region " Private Methods"
                     Private Function getPropertyFromClass(ByRef propertyName As String) As String
-
-                        PerfMon.Log(mcModuleName, "getPropertyFromClass")
                         Try
 
                             Dim pattern As String = "^.*\s" & propertyName & "-([\S]*)\s.*$"
