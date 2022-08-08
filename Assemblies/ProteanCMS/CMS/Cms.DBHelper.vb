@@ -8841,6 +8841,27 @@ restart:
 
         End Sub
 
+        'New Method for sku parent change functionality
+        Public Sub ChangeParentRelation(ByVal oldParentID As Long, ByVal newParentID As Long, ByVal childid As Long)
+            PerfMon.Log("DBHelper", "ChangeParentRelation")
+            Dim sProcessInfo As String = ""
+            If newParentID = 0 Then
+                newParentID = goRequest.Form("updateParent")
+            End If
+            Try
+                'single update staetment
+                Dim cSQl As String
+                cSQl = "update tblContentRelation set nContentParentId= " & newParentID & " where nContentParentId= " & oldParentID & " and nContentChildId =" & childid & ""
+                Dim nID As Integer = ExeProcessSqlScalar(cSQl)
+
+            Catch ex As Exception
+
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ChangeParentRelation", ex, sProcessInfo))
+
+            End Try
+
+        End Sub
+
         Public Function insertContentRelation(ByVal nParentID As Integer, ByVal nChildIDs As String, Optional ByVal b2Way As Boolean = False, Optional ByVal rType As String = "", Optional ByVal bHaltRecursion As Boolean = False) As String
             myWeb.PerfMon.Log("DBHelper", "insertContentRelation")
             Try
