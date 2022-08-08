@@ -10,7 +10,7 @@
 				<cContentName>PriceFilter</cContentName>
 				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content type="Filter" filterType="PriceFilter"  FromPrice="" ToPrice="" Step="" className="PriceFilter" providerName="default"/>
+					<Content type="Filter" filterType="PriceFilter"  fromPrice="" toPrice="" step="" className="PriceFilter" providerName="default"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -35,12 +35,12 @@
 		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
 		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
 		
-		<bind id="nFromPrice" nodeset="tblContent/cContentXmlBrief/Content/@FromPrice" required="false()" type="string"/>
-		<bind id="nToPrice" nodeset="tblContent/cContentXmlBrief/Content/@ToPrice" required="false()" type="string"/>
-		<bind id="nStep" nodeset="tblContent/cContentXmlBrief/Content/@Step" required="false()" type="string"/>
+		<bind id="nFromPrice" nodeset="tblContent/cContentXmlBrief/Content/@fromPrice" required="false()" type="string"/>
+		<bind id="nToPrice" nodeset="tblContent/cContentXmlBrief/Content/@toPrice" required="false()" type="string"/>
+		<bind id="nStep" nodeset="tblContent/cContentXmlBrief/Content/@step" required="false()" type="string"/>
 	</model>
 	<group ref="EditContent" class="2col">
-		<label>Edit Page Filter</label>
+		<label>Edit Price Filter</label>
 		<group>
 			<group>
 				<input bind="nContentKey" class="hidden">
