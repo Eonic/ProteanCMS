@@ -45,7 +45,7 @@ Public Class FeedHandler
 
 
     Public Sub New(ByVal cURL As String, ByVal cXSLPath As String, ByVal nPageId As Long, ByVal nSaveMode As Integer, Optional ByRef oResultRecorderElmt As XmlElement = Nothing, Optional ByVal cItemNodeName As String = "")
-        PerfMon.Log("FeedHandler", "New")
+        'PerfMon.Log("FeedHandler", "New")
         Try
             oDBH = New Cms.dbHelper("Data Source=" & oConfig("DatabaseServer") & "; " &
             "Initial Catalog=" & oConfig("DatabaseName") & "; " &

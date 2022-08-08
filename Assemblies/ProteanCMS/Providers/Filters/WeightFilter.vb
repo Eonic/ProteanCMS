@@ -1,4 +1,5 @@
 ﻿
+
 Imports System.Data.SqlClient
 Imports System.Xml
 Imports Protean.Cms
@@ -7,19 +8,19 @@ Imports Protean.xForm
 Namespace Providers
     Namespace Filter
 
-        Public Class OccasionFilter
+        Public Class WeightFilter
 
-
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Try
-                    Dim pageFilterSelect As XmlElement
+                    Dim pageFilterRange As XmlElement
                     'Dim oDr As SqlDataReader
 
-                    Dim sSql As String = "spGetOccasionForFilter"
+                    Dim sSql As String = "spGetResultForWeightFilter"
+                    'oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        pageFilterSelect = oXform.addSelect(oFromGroup, "OccasionFilter", False, "Select By Page", "checkbox", ApperanceTypes.Full)
-                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cCatName", "nCatKey")
+                        pageFilterRange = oXform.addRange(oFromGroup, "WeightFilter", True, "Weight Range", 100, 300, 50)
+                        oXform.addOptionsFromSqlDataReader(pageFilterRange, oDr, "cContentName", "nContentId")
                     End Using
                 Catch ex As Exception
 
@@ -34,8 +35,8 @@ Namespace Providers
                     Dim cPageIds As String = String.Empty
                     Dim cnt As Integer
 
-                    If (oXform.Instance.SelectNodes("OccasionFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectNodes("OccasionFilter")(0).InnerText
+                    If (oXform.Instance.SelectNodes("WeightFilter") IsNot Nothing) Then
+                        cPageIds = oXform.Instance.SelectNodes("WeightFilter")(0).InnerText
                         If (aWeb.moSession("PageIds") Is Nothing) Then
                             aWeb.moSession("PageIds") = cPageIds
                         Else

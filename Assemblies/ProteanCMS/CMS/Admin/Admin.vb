@@ -2082,6 +2082,43 @@ ProcessFlow:
 
                         End If
 
+                        'New case for SKU Parent Change functionality
+                    Case "ParentChange"
+                        If ButtonSubmitted(myWeb.moRequest, "updateParent") Then
+                            'code for saving results of 2nd form submission
+                            'get all id's from request
+                            Dim oldParentID As Long = myWeb.moRequest.QueryString("oldParentID")
+                            Dim childId As Long = myWeb.moRequest.QueryString("childId")
+                            Dim newParentID As Long = myWeb.moRequest.QueryString("newParId")
+                            myWeb.moDbHelper.ChangeParentRelation(oldParentID, newParentID, childId)
+
+                            'redirect to the parent content xform
+                            myWeb.moSession("ewCmd") = ""
+                            If myWeb.moRequest("redirect") = "normal" Then
+                                If mcEwCmd = "Normal" Or mcEwCmd = "NormalMail" Then
+                                    myWeb.msRedirectOnEnd = "?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.mnPageId 'myWeb.moSession("lastPage")
+                                Else
+                                    myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                End If
+                            Else
+                                myWeb.msRedirectOnEnd = myWeb.moRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & myWeb.moRequest.Form.Get("id") & IIf(myWeb.moRequest.QueryString("pgid") = "", "", "&pgid=" & myWeb.moRequest.QueryString("pgid"))
+                            End If
+                        Else
+                            'Process for related content
+                            Dim nRelParent As Long = CLng("0" & myWeb.moRequest("RelParent"))
+                            Dim redirect As String = ""
+                            If nRelParent = 0 Then
+                                nRelParent = CLng("0" & myWeb.moSession("mcRelParent"))
+                            Else
+                                redirect = "normal"
+                            End If
+                            oPageDetail.AppendChild(moAdXfm.xFrmFindParent(nRelParent, myWeb.moRequest.QueryString("childId"), myWeb.moRequest.QueryString("type"), oPageDetail, "nParentContentId", False, "tblcontentRelation", "nContentChildId", "nContentParentId", redirect))
+                            sAdminLayout = "ParentChange"
+                        End If
+                        If moAdXfm.valid Then
+
+                        End If
+
                     Case "LocateSearch"
                         'Process for related content
                         bLoadStructure = True
@@ -2753,10 +2790,10 @@ AfterProcessFlow:
                             'NB: New (Web) Transform
                             Dim styleFile As String = CStr(myWeb.goServer.MapPath("/xsl/import/" & cXsltPath))
                             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
-                            PerfMon.Log("Admin", "FileImportProcess-startxsl")
+                            myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl")
                             oTransform.mbDebug = gbDebug
                             oTransform.ProcessDocument(oImportXml)
-                            PerfMon.Log("Admin", "FileImportProcess-endxsl")
+                            myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl")
                             'We display the results
                             Dim oPreviewElmt2 As XmlElement = moPageXML.CreateElement("PreviewImport")
                             If oTransform.HasError Then
@@ -4813,7 +4850,7 @@ SP:
         Public Sub MemberCodesProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
 
             Dim cProcessInfo As String = ""
-            PerfMon.Log("Admin", "MemberCodesProcess")
+            myWeb.PerfMon.Log("Admin", "MemberCodesProcess")
 
             Try
 

@@ -83,7 +83,7 @@ Namespace Providers
                 End Function
 
                 Public Function GetPaymentForm(ByRef oWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
-                    PerfMon.Log("Protean.Providers.payment.PayPalPro", "GetPaymentForm")
+                    myWeb.PerfMon.Log("Protean.Providers.payment.PayPalPro", "GetPaymentForm")
                     Dim sSql As String
 
                     Dim ccXform As xForm
@@ -937,7 +937,7 @@ Namespace Providers
                 End Function
 
                 Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
-                    PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
+                    myWeb.PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                     Dim moCartConfig As System.Collections.Specialized.NameValueCollection = myWeb.moCart.moCartConfig
                     Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                     Dim oFrmInstance As XmlElement
@@ -981,7 +981,7 @@ Namespace Providers
                 End Function
 
                 Function xfrmSecure3DReturn(ByVal acs_url As String) As xForm
-                    PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
+                    myWeb.PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                     Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                     Dim oFrmInstance As XmlElement
                     Dim oFrmGroup As XmlElement
@@ -1010,7 +1010,7 @@ Namespace Providers
                 End Function
 
                 Public Function getCountryISONum(ByRef sCountry As String) As String
-                    PerfMon.Log(mcModuleName, "getCountryISONum")
+                    myWeb.PerfMon.Log(mcModuleName, "getCountryISONum")
                     'Dim oDr As SqlDataReader
                     Dim sSql As String
                     Dim strReturn As String = ""
