@@ -26,7 +26,15 @@ Namespace Providers
                     Dim nMaxPrice As Double = Convert.ToDouble(FilterConfig.Attributes("toPrice").Value)
                     Dim nStep As Integer = Convert.ToDouble(FilterConfig.Attributes("step").Value)
                     Dim priceFilterRange As XmlElement
-                    priceFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", nMinPrice, nMaxPrice, nStep)
+                    Dim cnt As Integer
+                    'priceFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", nMinPrice, nMaxPrice, nStep)
+                    priceFilterRange = oXform.addSelect1(oFromGroup, "PriceFilter", False, "Price Filter", "")
+                    For cnt = nMinPrice To nMaxPrice
+
+                        Dim optionName As String = cnt.ToString() + "-" + (cnt + nStep).ToString()
+                        oXform.addOption(priceFilterRange, optionName.ToString(), optionName.ToString(), False, "")
+                        cnt = cnt + nStep
+                    Next
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
@@ -37,28 +45,32 @@ Namespace Providers
             Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
                 Dim cProcessInfo As String = "ApplyFilter"
                 Try
-                    Dim nMinPrice As Double
+
+                    Dim priceRange() As String
                     Dim cDefinitionName As String = "Price"
-                    Dim nSelectedPrice As Double = 0
+                    Dim cSelectedPrice As String = String.Empty
                     If (oXform.Instance.SelectNodes("PriceFilter") IsNot Nothing) Then
-                        nMinPrice = Convert.ToDouble(oXform.Instance.SelectSingleNode("PriceFilter").Attributes("FromPrice").InnerText)
+                        cSelectedPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter").InnerText)
 
                     End If
+                    If (cSelectedPrice <> String.Empty) Then
+                        priceRange = cSelectedPrice.Split("-")
 
-                    If (nMinPrice <> 0 And nSelectedPrice <> 0) Then
-
-                        If (cWhereSql = String.Empty) Then
-                            cWhereSql = cWhereSql + " ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
-                            cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" + cDefinitionName + "'"
-                            cWhereSql = cWhereSql + " And ci.nNumberValue between " + Convert.ToString(nMinPrice) + " and " + Convert.ToString(nSelectedPrice)
+                        If (cWhereSql <> String.Empty) Then
+                            cWhereSql = cWhereSql + " AND "
                         End If
 
+                        cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
+                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" + cDefinitionName + "'"
+                        cWhereSql = cWhereSql + " And ci.nNumberValue between " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
+
 
                     End If
-                    Return cWhereSql
+
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
+                Return cWhereSql
             End Function
 
 
