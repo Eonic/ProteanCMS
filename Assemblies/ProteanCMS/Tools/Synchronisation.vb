@@ -183,10 +183,10 @@ Partial Public Class Cms
                     If Not String.IsNullOrEmpty(xslPath) Then
 
                         Dim transformer As New Protean.XmlHelper.Transform(_myWeb, _myWeb.goServer.MapPath(xslPath), False)
-                        PerfMon.Log("Admin", "FileSyncTransform-startxsl")
+                        _myWeb.PerfMon.Log("Admin", "FileSyncTransform-startxsl")
                         transformer.mbDebug = gbDebug
                         transformer.ProcessDocument(importXmlDocument)
-                        PerfMon.Log("Admin", "FileSyncTransform-endxsl")
+                        _myWeb.PerfMon.Log("Admin", "FileSyncTransform-endxsl")
                         transformer = Nothing
 
                         If importXmlDocument.SelectNodes("/Instances/Instance").Count > 0 Then

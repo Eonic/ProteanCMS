@@ -55,7 +55,7 @@ Partial Public Class Cms
             Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
 
-                PerfMon.Log("AdminXforms", "New")
+                myWeb.PerfMon.Log("AdminXforms", "New")
                 Try
                     myWeb = aWeb
                     goConfig = myWeb.moConfig
@@ -3489,6 +3489,17 @@ Partial Public Class Cms
                                     goSession("mcRelParent") = nParId
                                     bResult = True
                                     Exit For
+                                    ' New condition for sku parent change functionality
+                                ElseIf myItem.contains("RelateParentChange") Then
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString
+                                    Dim cContentType As String = relateCmdArr(1)
+
+                                    goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=ParentChange&type=" & cContentType & "&direction=" & relateCmdArr(4) & "&RelType=" & relateCmdArr(4) & "&childId=" & relateCmdArr(2) & "&oldParentID=" & nParId & pgidQueryString
+
+                                    goSession("mcRelAction") = "Find"
+                                    goSession("mcRelParent") = nParId
+                                    bResult = True
+                                    Exit For
                                 End If
                             End If
                         Next
@@ -6510,6 +6521,125 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            'New xForm for return product for change 
+            Public Function xFrmFindParent(ByVal nParentID As String, ByVal childId As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
+                Dim oFrmElmt As XmlElement
+                Dim oSelElmt1 As XmlElement
+                Dim oSelElmt2 As XmlElement
+                Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
+                Dim bCascade As Boolean = False
+                Dim cProcessInfo As String = ""
+
+                Try
+                    Dim cParentContentName As String = convertEntitiesToCodes(moDbHelper.getNameByKey(dbHelper.objectTypes.Content, nParentID))
+
+                    MyBase.NewFrm("FindRelatedContent")
+                    MyBase.Instance.InnerXml = "<nParentContentId>" & nParentID & "</nParentContentId>" &
+                          "<cSchemaName>" & cContentType & "</cSchemaName>" &
+                        "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" & cParentContentName & "</cParentContentName><redirect>" & redirect & "</redirect><cSearch/>"
+
+                    'MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
+                    MyBase.submission("AddRelated", "", "post", "form_check(this)")
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "SearchRelated", , "Search For " & cContentType)
+
+                    'Definitions
+                    If redirect <> "" Then
+                        MyBase.addInput(oFrmElmt, "redirect", True, "redirect", "hidden")
+                        MyBase.addBind("redirect", "redirect")
+                    End If
+                    MyBase.addInput(oFrmElmt, "nParentContentId", True, "nParentContentId", "hidden")
+                    MyBase.addBind("nParentContentId", "nParentContentId")
+
+                    MyBase.addInput(oFrmElmt, "cSchemaName", True, "cSchemaName", "hidden")
+                    MyBase.addBind("cSchemaName", "cSchemaName")
+
+                    'What we are searching for
+                    MyBase.addInput(oFrmElmt, "cSearch", True, "Search Text")
+                    MyBase.addBind("cSearch", "cSearch", "false()")
+
+                    'Pages
+                    oSelElmt1 = MyBase.addSelect1(oFrmElmt, "cSection", False, "Page", , ApperanceTypes.Minimal)
+                    MyBase.addOption(oSelElmt1, "All", 0)
+                    MyBase.addOption(oSelElmt1, "All Orphan " & cContentType & "s", -1)
+                    Dim cSQL As String
+                    cSQL = "SELECT tblContentStructure.* FROM tblContentStructure ORDER BY nStructOrder"
+                    Dim oDS As New DataSet
+                    oDS = moDbHelper.GetDataSet(cSQL, "Menu", "Struct")
+                    oDS.Relations.Add("RelMenu", oDS.Tables("Menu").Columns("nStructKey"), oDS.Tables("Menu").Columns("nStructParID"), False)
+                    oDS.Relations("RelMenu").Nested = True
+                    Dim oMenuXml As New XmlDocument
+                    oMenuXml.InnerXml = oDS.GetXml
+                    Dim oMenuElmt As XmlElement
+                    For Each oMenuElmt In oMenuXml.SelectNodes("descendant-or-self::Menu")
+                        Dim oTmpNode As XmlElement = oMenuElmt
+                        Dim cNameString As String = ""
+                        Do Until oTmpNode.ParentNode.Name = "Struct"
+                            cNameString &= "-"
+                            oTmpNode = oTmpNode.ParentNode
+                        Loop
+                        cNameString &= oMenuElmt.SelectSingleNode("cStructName").InnerText
+                        MyBase.addOption(oSelElmt1, cNameString, oMenuElmt.SelectSingleNode("nStructKey").InnerText)
+                    Next
+                    MyBase.addBind("cSection", "cSection", "true()")
+                    'Search sub pages
+                    oSelElmt2 = MyBase.addSelect(oFrmElmt, "nSearchChildren", True, "&#160;", "", ApperanceTypes.Full)
+                    MyBase.addOption(oSelElmt2, "Search all sub-pages", 1)
+                    MyBase.addBind("nSearchChildren", "nSearchChildren", "false()")
+
+                    If cContentType.Contains("Product") And cContentType.Contains("SKU") Then
+                        oSelElmt2 = MyBase.addSelect(oFrmElmt, "nIncludeRelated", True, "&#160;", "", ApperanceTypes.Full)
+                        MyBase.addOption(oSelElmt2, "Include Related Sku's", 1)
+                        MyBase.addBind("nIncludeRelated", "nIncludeRelated", "false()")
+                    End If
+
+                    'search button
+                    MyBase.addSubmit(oFrmElmt, "Search", "Search", "ewSubmit")
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.addValues()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            'Dim nPar As Integer = goRequest.QueryString("GroupId")
+                            If Not IsNumeric(nParId) Then
+                                Dim oParElmt As XmlElement = MyBase.Instance.SelectSingleNode(nParId)
+                                If Not oParElmt Is Nothing Then nParId = oParElmt.InnerText
+                            End If
+                            Dim nRoot As Integer = MyBase.Instance.SelectSingleNode("cSection").InnerText
+                            Dim bChilds As Boolean = IIf(MyBase.Instance.SelectSingleNode("nSearchChildren").InnerText = "1", True, False)
+                            Dim cExpression As String = MyBase.Instance.SelectSingleNode("cSearch").InnerText
+                            Dim bIncRelated As Boolean = IIf(MyBase.Instance.SelectSingleNode("nIncludeRelated").InnerText = "1", True, False)
+
+                            Dim sSQL As String = "Select " & cSelectField & " From " & cTableName & " WHERE " & cFilterField & " = " & nParId
+                            Using oDre As SqlDataReader = moDbHelper.getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                                Dim cTmp As String = ""
+                                Do While oDre.Read
+                                    cTmp &= oDre(0) & ","
+                                Loop
+
+                                If Not cTmp = "" Then cTmp = Left(cTmp, Len(cTmp) - 1)
+                                oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, nParId, IIf(bIgnoreParID, 0, nParId), cTmp.Split(","), bIncRelated))
+
+                            End Using
+                        End If
+
+                    Else
+                        MyBase.Instance.InnerXml = "<nParentContentId>" & nParentID & "</nParentContentId>" &
+                          "<cSchemaName>" & cContentType & "</cSchemaName>" &
+                          "<cSection>0</cSection>" &
+                          "<nSearchChildren>1</nSearchChildren>" &
+                          "<cParentContentName>" & cParentContentName & "</cParentContentName>" &
+                          "<redirect>" & redirect & "</redirect><cSearch/>"
+                        MyBase.addValues()
+                    End If
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Public Function xFrmProductGroup(ByVal nGroupId As Integer, Optional ByVal SchemaName As String = "Discount") As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim oGrp1Elmt As XmlElement
@@ -9280,7 +9410,7 @@ Partial Public Class Cms
 #End Region
 #Region " Initialisation"
                 Public Sub New(ByVal ContentId As Long, ByRef Form As xForm)
-                    PerfMon.Log(mcModuleName, "New")
+                    '  myWeb.PerfMon.Log(mcModuleName, "New")
                     Try
                         ' Set variables
                         _contentId = ContentId
@@ -9295,7 +9425,7 @@ Partial Public Class Cms
 #End Region
 #Region " Public Methods"
                 Public Sub Refresh()
-                    PerfMon.Log(mcModuleName, "Refresh")
+                    ' myWeb.PerfMon.Log(mcModuleName, "Refresh")
                     Try
                         _selects = _form.RootGroup.SelectNodes(_selectsXPath)
                     Catch ex As Exception
@@ -9303,7 +9433,7 @@ Partial Public Class Cms
                     End Try
                 End Sub
                 Public Function IsActive() As Boolean
-                    PerfMon.Log(mcModuleName, "IsActive")
+                    'myWeb.PerfMon.Log(mcModuleName, "IsActive")
                     Try
                         Return (_selects.Count > 0)
                     Catch ex As Exception
@@ -9312,7 +9442,7 @@ Partial Public Class Cms
                     End Try
                 End Function
                 Public Sub ProcessSelects()
-                    PerfMon.Log(mcModuleName, "ProcessSelects")
+                    ' myWeb.PerfMon.Log(mcModuleName, "ProcessSelects")
 
                     Dim menuId As Long
                     Dim bind As XmlElement
@@ -9474,7 +9604,7 @@ Partial Public Class Cms
 
 
                 Public Sub ProcessRequest(ByVal ContentId As Long)
-                    PerfMon.Log(mcModuleName, "ProcessRequest")
+                    ' myWeb.PerfMon.Log(mcModuleName, "ProcessRequest")
 
                     Dim InclusionList As String = ""
                     Dim ScopeList As String = ""
@@ -9531,11 +9661,9 @@ Partial Public Class Cms
 #End Region
 #Region " Initialisation"
                     Public Sub New(ByRef selectItem As XmlElement)
-                        PerfMon.Log(mcModuleName, "New")
                         Try
                             _rootMode = RootModes.Exclude
                             Item = selectItem
-
                         Catch ex As Exception
                             '  returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                         End Try
@@ -9604,8 +9732,6 @@ Partial Public Class Cms
 #End Region
 #Region " Private Methods"
                     Private Function getPropertyFromClass(ByRef propertyName As String) As String
-
-                        PerfMon.Log(mcModuleName, "getPropertyFromClass")
                         Try
 
                             Dim pattern As String = "^.*\s" & propertyName & "-([\S]*)\s.*$"
@@ -9798,6 +9924,9 @@ Partial Public Class Cms
                             oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
                             myWeb.moSession(InstanceSessionName) = Nothing
                             myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Email, mnUserId, 0, 0, nOrderId, "Payment Reminder Sent - " & Now().ToString())
+
+                            Dim oFrmElmt As XmlElement = MyBase.moXformElmt
+                            MyBase.addNote(oFrmElmt, noteTypes.Alert, "Message Sent.")
 
                         End If
                     ElseIf MyBase.isTriggered Then

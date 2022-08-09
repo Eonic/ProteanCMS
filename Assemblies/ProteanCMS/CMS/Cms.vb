@@ -1017,6 +1017,11 @@ Public Class Cms
                         If gnResponseCode = 200 And moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
+
+                        If moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("perfmon") Then
+                            bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
+                        End If
+
                         If Not moRequest("reBundle") Is Nothing Then
                             bPageCache = True
                         End If
@@ -1360,7 +1365,7 @@ Public Class Cms
 
                                     Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
 
-                                    PerfMon.Log("Web", "GetPageHTML-startxsl")
+
                                     If moConfig("XslTimeout") <> "" Then
                                         oTransform.TimeOut = moConfig("XslTimeout")
                                     End If
@@ -1369,13 +1374,18 @@ Public Class Cms
                                     If bPageCache Then
 
                                         Dim textWriter As New StringWriterWithEncoding(System.Text.Encoding.UTF8)
-
+                                        PerfMon.Log("Web", "GetPageHTML-startxsl")
                                         oTransform.ProcessTimed(moPageXml, textWriter)
+                                        PerfMon.Log("Web", "GetPageHTML-endxsl")
+
                                         'save the page
                                         If Not oTransform.bError Then
                                             If bPageCache Then
-                                                SavePage(sCachePath, textWriter.ToString())
-                                                sServeFile = mcPageCacheFolder & sCachePath
+                                                Dim pagestring As String = textWriter.ToString()
+                                                moResponse.Write(pagestring)
+                                                moResponse.Flush()
+                                                SavePage(sCachePath, pagestring)
+                                                'sServeFile = mcPageCacheFolder & sCachePath
                                             Else
                                                 moResponse.Write(textWriter.ToString())
                                             End If
@@ -1493,7 +1503,10 @@ Public Class Cms
                                         End If
                                     Else
                                         moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
+                                        PerfMon.Log("Web", "GetPageHTML-startxsl")
+
                                         oTransform.ProcessTimed(moPageXml, moResponse)
+                                        PerfMon.Log("Web", "GetPageHTML-endxsl")
                                     End If
 
                                 End If
@@ -1514,7 +1527,6 @@ Public Class Cms
                                 'we don't need this anymore.
                                 If Not ibIndexMode Then
                                     If msRedirectOnEnd = "" Then
-                                        PerfMon.Write()
                                         moPageXml = Nothing
                                         If sServeFile = "" Then
                                             Close()
@@ -1584,6 +1596,9 @@ Public Class Cms
                     RestartAppPool()
                 End If
             End If
+            PerfMon.Log("Web", "GetPageHTML-Final")
+            PerfMon.Write()
+
         End Try
 
     End Sub
@@ -4595,7 +4610,7 @@ Public Class Cms
     Public Overridable Function GetStructureXML(Optional ByVal nUserId As Long = 0, Optional ByVal nRootId As Long = 0, Optional ByVal nCloneContextId As Long = 0) As XmlElement
 
         Dim cFunctionDef As String = "GetStructureXML([Long], [Long], [Long])"
-        Protean.PerfMon.Log("Web", cFunctionDef)
+        PerfMon.Log("Web", cFunctionDef)
 
         Try
 
@@ -4621,7 +4636,7 @@ Public Class Cms
     Public Overridable Function GetStructureXML(ByVal cMenuId As String, Optional ByVal nUserId As Long = 0, Optional ByVal nRootId As Long = 0, Optional ByVal bLockRoot As Boolean = False, Optional ByVal nCloneContextId As Long = 0) As XmlElement
 
         Dim cFunctionDef As String = "GetStructureXML(String, [Long], [Long], [Boolean], [Long])"
-        Protean.PerfMon.Log("Web", cFunctionDef)
+        PerfMon.Log("Web", cFunctionDef)
 
         Try
 
@@ -4640,7 +4655,7 @@ Public Class Cms
                                            ) As XmlElement
 
         Dim cFunctionDef As String = "GetStructureXML(String, [Long], [Long], [Boolean], [Long])"
-        Protean.PerfMon.Log("Web", cFunctionDef)
+        PerfMon.Log("Web", cFunctionDef)
 
         Dim sSql As String
         Dim oDs As DataSet
@@ -4721,7 +4736,7 @@ Public Class Cms
 
 
                 sProcessInfo = "GetStructureXML-dsToXml"
-                Protean.PerfMon.Log("Web", sProcessInfo)
+                PerfMon.Log("Web", sProcessInfo)
 
                 'TS added lines to avoid whitespace issues
                 Dim oXml As New XmlDocument
@@ -4785,7 +4800,7 @@ Public Class Cms
                                             ByVal cRootNodeName As String
                                             ) As XmlElement
         Dim cFunctionDef As String = "GetStructureXML(Long,Long,Long,String,Boolean,Boolean,Boolean,Boolean,Boolean,String,String)"
-        Protean.PerfMon.Log("Web", cFunctionDef)
+        PerfMon.Log("Web", cFunctionDef)
 
         Dim oDs As Data.DataSet
         Dim oElmt As XmlElement
@@ -4865,7 +4880,7 @@ Public Class Cms
             ' OR if site caching is turned on and membership is off, then save a single site structure for all users (i.e. don;t use session)
             If bUseCache Then
                 sProcessInfo = "GetStructureXML-CheckCaching"
-                Protean.PerfMon.Log("Web", sProcessInfo)
+                PerfMon.Log("Web", sProcessInfo)
 
                 If moSession("cacheMode") <> "" Then
                     cCacheMode = moSession("cacheMode")
@@ -4896,18 +4911,18 @@ Public Class Cms
                             cacheSearchCriteria &= " AND cCacheSessionID = '" & moSession.SessionID & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12"
                         End If
                         sProcessInfo = "GetStructureXML-SelectFromCache"
-                        Protean.PerfMon.Log("Web", sProcessInfo)
+                        PerfMon.Log("Web", sProcessInfo)
                         ' Get the cached structure - returns empty string if no structure found.
                         sSql = "SELECT TOP 1 cCacheStructure FROM dbo.tblXmlCache " _
                                     & cacheSearchCriteria
 
                         sProcessInfo = "GetStructureXML-getCachefromDB-Start"
-                        Protean.PerfMon.Log("Web", sProcessInfo)
+                        PerfMon.Log("Web", sProcessInfo)
 
                         moDbHelper.AddXMLValueToNode(sSql, oCache)
 
                         sProcessInfo = "GetStructureXML-getCachefromDB-End"
-                        Protean.PerfMon.Log("Web", sProcessInfo)
+                        PerfMon.Log("Web", sProcessInfo)
 
 
                     End If
@@ -4956,7 +4971,7 @@ Public Class Cms
                 sSql = "EXEC getContentStructure_v2 @userId=" & nUserId & ", @bAdminMode=" & CInt(mbAdminMode) & ", @dateNow=" & Protean.sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=1"
 
                 sProcessInfo = "GetStructureXML-getContentStrcuture"
-                Protean.PerfMon.Log("Web", sProcessInfo)
+                PerfMon.Log("Web", sProcessInfo)
 
                 If bIncludeExpiredAndHidden Then sSql += ",@bShowAll=1"
 
@@ -4973,7 +4988,7 @@ Public Class Cms
                     End If
 
                     sProcessInfo = "GetStructureXML-getPageVersions"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
 
                     moDbHelper.addTableToDataSet(oDs, sSql, "PageVersion")
                     oDs.Relations.Add("rel02", oDs.Tables(0).Columns("id"), oDs.Tables(1).Columns("vParId"), False)
@@ -5044,7 +5059,7 @@ Public Class Cms
                     oElmt = moPageXml.CreateElement(cRootNodeName)
 
                     sProcessInfo = "GetStructureXML-dsToXml"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
 
                     'TS added lines to avoid whitespace issues
                     Dim oXml As New XmlDocument
@@ -5060,7 +5075,7 @@ Public Class Cms
                     ''Rename the VersionMenuNodes
                     'If mbAdminMode And Features.ContainsKey("PageVersions") Then
                     '    sProcessInfo = "GetStructureXML-RenameVersions"
-                    '    Protean.PerfMon.Log("Web", sProcessInfo)
+                    '    PerfMon.Log("Web", sProcessInfo)
                     '    Dim oVersionMenuItems As XmlNodeList = oElmt.SelectNodes(cRootNodeName & "/" & cMenuItemNodeName & "[@vParId!='']")
                     '    For Each oVerMenuItem As XmlElement In oVersionMenuItems
                     '        Tools.Xml.renameNode(oVerMenuItem, "PageVersion")
@@ -5075,7 +5090,7 @@ Public Class Cms
                     ' The genuine root node will be node with a parId of 0 (possibly also including System Pages)
 
                     sProcessInfo = "GetStructureXML-CleanOrphans"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
 
                     Dim oRootMenuItems As XmlNodeList = oElmt.SelectNodes(cRootNodeName & "/" & cMenuItemNodeName & "[@parId!=0]")
                     For Each oRootMenuItem As XmlNode In oRootMenuItems
@@ -5091,7 +5106,7 @@ Public Class Cms
                     ' If a clonecontextnode has been passed, then we need to get that for now
 
                     sProcessInfo = "GetStructureXML-GetIndicativeRootId"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
 
                     If nCloneContextId > 0 Then
                         nTempRootId = nCloneContextId
@@ -5108,7 +5123,7 @@ Public Class Cms
                     ' Note - we only want to find cloned nodes under the root id in question
                     If gbClone Then
 
-                        Protean.PerfMon.Log("Web", "GetStructureXML-cloneNodes")
+                        PerfMon.Log("Web", "GetStructureXML-cloneNodes")
                         Dim cNodeSnapshot As New Hashtable()
 
                         ' GET CLONE SNAPSHOT
@@ -5148,7 +5163,7 @@ Public Class Cms
                     ' PROPOGATE THE PERMISSIONS AND PRUNE
                     ' ===================================
                     sProcessInfo = "GetStructureXML-TidyMenunode"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
                     Me.TidyMenunode(oElmt.FirstChild, "OPEN", "", bPruneEvenIfInAdminMode Or Not (mbAdminMode), nUserId, cMenuItemNodeName, cRootNodeName)
 
                     For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName & " | descendant-or-self::PageVersion")
@@ -5198,7 +5213,7 @@ Public Class Cms
                         ' LOCK THE ROOT
                         '===============
                         sProcessInfo = "GetStructureXML-lockRoot"
-                        Protean.PerfMon.Log("Web", sProcessInfo)
+                        PerfMon.Log("Web", sProcessInfo)
                         Dim oMenuFirstChild As XmlElement = oElmt.FirstChild
                         oMenuFirstChild.SetAttribute("Locked", True)
                     End If
@@ -5216,7 +5231,7 @@ Public Class Cms
                 ' Only if caching is on, user is logged on, and not in AdminMode.
                 If bUseCache And cCacheMode = "on" Then
                     sProcessInfo = "GetStructureXML-addCacheToStructure"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
                     'If Not moRequest("reBundle") Is Nothing Then
                     '    moDbHelper.clearStructureCacheAll()
                     'End If
@@ -5252,7 +5267,7 @@ Public Class Cms
             ' MENU TIDY: XML TIDY
             ' ===================================
             sProcessInfo = "GetStructureXML-txt2xml"
-            Protean.PerfMon.Log("Web", sProcessInfo)
+            PerfMon.Log("Web", sProcessInfo)
 
             Dim sUrl As String
             Dim cPageName As String
@@ -5602,7 +5617,7 @@ Public Class Cms
             ' GET THE ROOT NODE
             ' ==================
             ' get the Menu from the site root.
-            Protean.PerfMon.Log("Web", "GetStructureXML-rootnode")
+            PerfMon.Log("Web", "GetStructureXML-rootnode")
             If nRootId > 0 Then
                 Dim cCloneModifier As String = ""
                 If nCloneContextId > 0 Then
@@ -5636,7 +5651,7 @@ Public Class Cms
             ' ===================================
             If bAddMenuToPageXML AndAlso Not moPageXml.DocumentElement Is Nothing Then
                 sProcessInfo = "GetStructureXML-addMenuToPageXML"
-                Protean.PerfMon.Log("Web", sProcessInfo)
+                PerfMon.Log("Web", sProcessInfo)
                 ' Check if there's already a menu node.
                 If moPageXml.SelectSingleNode("/Page/" & cRootNodeName) Is Nothing Then
                     ' No menu node - add it to the pagexml
@@ -5648,7 +5663,7 @@ Public Class Cms
             End If
 
             sProcessInfo = "GetStructureXML-End"
-            Protean.PerfMon.Log("Web", sProcessInfo)
+            PerfMon.Log("Web", sProcessInfo)
 
             Return oElmt
 
@@ -8508,7 +8523,7 @@ Public Class Cms
     End Function
 
     Public Sub SavePage(ByVal cUrl As String, ByVal cBody As String)
-        PerfMon.Log("Indexer", "IndexPage")
+        PerfMon.Log(mcModuleName, "SavePage")
         Dim cProcessInfo As String = ""
         Dim filename As String = ""
         Dim filepath As String = ""
@@ -8548,7 +8563,7 @@ Public Class Cms
             End If
 
             cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename
-
+            PerfMon.Log(mcModuleName, "SavePage", cProcessInfo)
             Dim cleanfilename As String = goServer.UrlDecode(filename)
 
             'Limit the file length to 255
@@ -8571,34 +8586,30 @@ Public Class Cms
             Dim sError As String = oFS.CreatePath(filepath)
 
             If sError = "1" Then
-
+                PerfMon.Log(mcModuleName, "SavePage - start file write")
                 Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-
-
                     Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
-
-                    '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
-
-                    'Else
-                    '   cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
-                    '  Err.Raise(1001, "File not saved", cProcessInfo)
-                    '   End If
                 Else
                     cProcessInfo &= "<Error>Create File: " & filepath & " - " & sError & "</Error>" & vbCrLf
                 End If
-
+                oImp.UndoImpersonation()
+                oImp = Nothing
+                PerfMon.Log(mcModuleName, "SavePage - end file write")
             Else
                 cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
             End If
 
             oFS = Nothing
-
+            PerfMon.Log("Web", "SavePage - End")
         Catch ex As Exception
             'if saving of a page fails we are not that bothered.
             'cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
             returnException(msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
             'bIsError = True
+
+            PerfMon.Log("Web", "SavePage - error")
+
         End Try
     End Sub
 

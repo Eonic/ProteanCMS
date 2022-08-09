@@ -3911,7 +3911,48 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content" mode="LocateContentNode">
+
+	<!--   ##################  Parent Change   ##############################   -->
+	<!-- -->
+	<xsl:template match="Page[@layout='ParentChange']" mode="Admin">
+		<div class="row" id="tpltParentChange">
+			<div class="col-md-4">
+				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+			</div>
+			<div class="col-md-8">
+
+				<xsl:text> </xsl:text>
+				<xsl:if test="ContentDetail/RelatedResults">
+					<form name="myform" action="" method="post" class="panel panel-default">
+						<input type="hidden" name="id" value="{ContentDetail/RelatedResults/@nParentID}"/>
+						<input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
+						<input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
+						
+						<table cellpadding="0" cellspacing="1" class="table">
+							<tbody>								
+								<tr>
+									<th>Name</th>
+									<th>Move SKU</th>								
+								</tr>
+								<tr>
+									<xsl:for-each select="ContentDetail/RelatedResults/Content">
+										<xsl:sort select="@name" />
+										<xsl:apply-templates select="." mode="LocateParentChange">
+											<xsl:with-param name="indent">&#160;</xsl:with-param>
+										</xsl:apply-templates>										
+									</xsl:for-each>
+								</tr>
+								
+							</tbody>
+						</table>
+					</form>
+				</xsl:if>
+			</div>
+		</div>
+	</xsl:template>
+
+
+	<xsl:template match="Content" mode="LocateContentNode">
     <xsl:param name="indent"/>
     <xsl:variable name="relationType" select="$page/Request/QueryString/Item[@name='relationType']/node()"/>
 
@@ -3970,6 +4011,44 @@
 	-->
 
   </xsl:template>
+
+
+	<xsl:template match="Content" mode="LocateParentChange">
+		<xsl:param name="indent"/>
+		<xsl:variable name="relationType" select="$page/Request/QueryString/Item[@name='relationType']/node()"/>
+
+		<span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
+			<tr>
+				<td>
+					<xsl:apply-templates select="." mode="ContentListName">
+						<xsl:with-param name="indent" select="$indent"/>
+					</xsl:apply-templates>
+				</td>
+				<td>
+					<xsl:if test="@publishDate!=''">
+						<xsl:call-template name="DD_Mon_YYYY">
+							<xsl:with-param name="date">
+								<xsl:value-of select="@publishDate"/>
+							</xsl:with-param>
+							<xsl:with-param name="showTime">false</xsl:with-param>
+						</xsl:call-template>
+					</xsl:if>
+				</td>
+				<td class="relate">
+					<!--<a href="?ewCmd=ParentChange&amp;newParId={@id}" name="updateParent" title="Make Parent" class="btn btn-xs btn-success">
+						Make Parent
+					</a>-->
+					<button type="submit" name="updateParent" value="{@id}" onClick="disableButton(this);?ewCmd=ParentChange&amp;newParId={@id}" class="btn btn-success principle">
+						<i class="fa fa-plus fa-white">
+							<xsl:text> </xsl:text>
+						</i><xsl:text> </xsl:text>Make Parent
+					</button>
+					
+				</td>
+			</tr>
+		</span>
+	
+	</xsl:template>
   <!-- -->
   <!-- BJR -->
   <!--   ##################  Product Groups   ##############################   -->

@@ -349,7 +349,7 @@ Namespace Providers
                 End Function
 
                 Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
-                    PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
+                    'PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                     Dim moCartConfig As System.Collections.Specialized.NameValueCollection = myWeb.moCart.moCartConfig
                     Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                     Dim oFrmInstance As XmlElement

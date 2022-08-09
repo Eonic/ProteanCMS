@@ -2041,7 +2041,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:choose>
-        <xsl:when test="value!=''">
+        <xsl:when test="normalize-space(value)!=''">
           <xsl:copy-of select="value/node()"/>
         </xsl:when>
         <xsl:otherwise>
