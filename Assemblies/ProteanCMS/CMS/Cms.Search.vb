@@ -109,7 +109,7 @@ Partial Public Class Cms
         End Class
 
         Public Sub New(ByRef aWeb As Protean.Cms)
-            myWeb.PerfMon.Log("Search", "New")
+            'myWeb.PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables
