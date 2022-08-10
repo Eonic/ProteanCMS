@@ -536,18 +536,30 @@ Public Class XmlHelper
         Private Function CurrentDomain_AssemblyResolve(ByVal sender As Object, ByVal args As ResolveEventArgs) As Assembly
             Dim assembly, objExecutingAssemblies As Assembly
             Dim strTempAsmbPath As String = ""
-            objExecutingAssemblies = args.RequestingAssembly
-            Dim arrReferencedAssmbNames As AssemblyName() = objExecutingAssemblies.GetReferencedAssemblies()
+            Try
+                objExecutingAssemblies = args.RequestingAssembly
+                If Not objExecutingAssemblies = Nothing Then
 
-            For Each strAssmbName As AssemblyName In arrReferencedAssmbNames
-                If strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) = args.Name.Substring(0, args.Name.IndexOf(",")) Then
-                    strTempAsmbPath = goServer.MapPath(compiledFolder) & "\" + args.Name.Substring(0, args.Name.IndexOf(",")) & ".dll"
-                    Exit For
+                    Dim arrReferencedAssmbNames As AssemblyName() = objExecutingAssemblies.GetReferencedAssemblies()
+
+                    For Each strAssmbName As AssemblyName In arrReferencedAssmbNames
+                        If strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) = args.Name.Substring(0, args.Name.IndexOf(",")) Then
+                            strTempAsmbPath = goServer.MapPath(compiledFolder) & "\" + args.Name.Substring(0, args.Name.IndexOf(",")) & ".dll"
+                            Exit For
+                        End If
+                    Next
+
+                    assembly = Assembly.LoadFrom(strTempAsmbPath)
+                    Return assembly
+                Else
+                    Return Nothing
                 End If
-            Next
+            Catch ex As Exception
+                transformException = ex
+                ' returnException(myWeb.msException, "Protean.XmlHelper.Transform", "CurrentDomain_AssemblyResolve", ex, msXslFile, Nothing, gbDebug)
+                bError = True
+            End Try
 
-            assembly = Assembly.LoadFrom(strTempAsmbPath)
-            Return assembly
         End Function
 
         Public Property XSLFile() As String

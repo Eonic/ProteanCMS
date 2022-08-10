@@ -23,26 +23,27 @@ Public Class ewTidyTest : Implements IHttpHandler, IRequiresSessionState
 
         Dim oEw As Protean.Cms = New Protean.Cms
         oEw.InitializeVariables()
-        Dim filepath As String = "/ewCache/FS-Alpha-TEST.html"
 
+        context.Response.Write("Testing Impersonation: User:" & oEw.moConfig("AdminDomain") & "/" & oEw.moConfig("AdminAcct"))
+        context.Response.Write("<br/>")
+        Dim AdminGroup = "Protean Users" 'oEw.moConfig("AdminGroup")
+        context.Response.Write("Testing Impersonation: Admin Group:" & AdminGroup)
+        Dim Execution_Start As New System.Diagnostics.Stopwatch
+        Execution_Start.Start()
         Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-        If oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), , oEw.moConfig("AdminGroup")) Then
+        If oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), , AdminGroup) Then
+
+            context.Response.Write("<br/>")
+            context.Response.Write("impersonation successful - time:" & Execution_Start.Elapsed.ToString())
+
+            oImp.UndoImpersonation()
+            oImp = Nothing
 
 
-            Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
 
-            context.Response.Write("file written")
-
-            '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
-
-            'Else
-            '   cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
-            '  Err.Raise(1001, "File not saved", cProcessInfo)
-            '   End If
         Else
-            ' Response.write() "<Error>Create File: " & filepath & " - " & sError & "</Error>" & vbCrLf)
 
-                  context.Response.Write("impersonation failed")
+            context.Response.Write("impersonation failed")
         End If
 
 

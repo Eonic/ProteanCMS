@@ -338,9 +338,6 @@ Partial Public Class fsHelper
             Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
 
-
-
-
                 Dim startDir As String
                 If mcRoot = "../" Then
                     mcRoot = ""

@@ -6739,8 +6739,6 @@ restart:
 
         Public Function logActivity(ByVal nActivityType As ActivityType, ByVal nUserDirId As Long, ByVal nStructId As Long, Optional ByVal nArtId As Long = 0, Optional ByVal cActivityDetail As String = "", Optional ByVal cForiegnRef As String = "") As Long
             Dim cSubName As String = "logActivity(ActivityType,Int,Int,[Int],[String])"
-            myWeb.PerfMon.Log("DBHelper", cSubName)
-
             Try
                 Return logActivity(nActivityType, nUserDirId, nStructId, nArtId, 0, cActivityDetail, False, cForiegnRef)
             Catch ex As Exception
@@ -6757,8 +6755,6 @@ restart:
         Public Function logActivity(ByVal loggedActivityType As ActivityType, ByVal userDirId As Long, ByVal structId As Long, ByVal artId As Long, ByVal otherId As Long, ByVal activityDetail As String, ByVal removePreviousActivitiesFromCurrentSession As Boolean, Optional cForiegnRef As String = Nothing) As Long
 
             Dim cSubName As String = "logActivity(ActivityType,Int,Int,Int,Int,String,Boolean)"
-
-            myWeb.PerfMon.Log("DBHelper", cSubName)
             Dim sSql As String
             Dim cProcessInfo As String = ""
             Dim sessionId As String = ""
