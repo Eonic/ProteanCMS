@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
 <Content type="xform" name="EditContent">
 	<model>
 		<instance>
@@ -7,10 +8,10 @@
 				<nContentPrimaryId/>
 				<nVersion/>
 				<cContentForiegnRef/>
-				<cContentName>OfferFilter</cContentName>
+				<cContentName>WeightFilter</cContentName>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content filterType="OfferFilter"  parentPageId=""/>
+					<Content filterType="WeightFilter" FromWeight="" ToWeight="" Step=""/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -28,15 +29,18 @@
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
-		<bind id="cModuleLinkPage" nodeset="tblContent/cContentXmlBrief/Content/@parentPageId" required="true()" type="string"/>
 		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
 		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
 		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
 		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
 		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
+
+		<bind id="nFromWeight" nodeset="tblContent/cContentXmlBrief/Content/@FromWeight" required="false()" type="string"/>
+		<bind id="nToWeight" nodeset="tblContent/cContentXmlBrief/Content/@ToWeight" required="false()" type="string"/>
+		<bind id="nStep" nodeset="tblContent/cContentXmlBrief/Content/@Step" required="false()" type="string"/>
 	</model>
 	<group ref="EditContent" class="2col">
-		<label>Edit Offer Filter</label>
+		<label>Edit Weight Filter</label>
 		<group>
 			<group>
 				<input bind="nContentKey" class="hidden">
@@ -67,23 +71,22 @@
 		</group>
 		<group>
 			<group>
-				<select1 bind="cModuleLinkPage" appearance="full" class="vshort">
-					<label class="label-border-top label-heading">Display Pages</label>
-					<item>
-						<label>All pages with products</label>
-						<value>0</value>
-					</item>
-					<item>
-						<label>Pages with products under current page</label>
-						<value>1</value>
-					</item>
-				</select1>
+				<input bind="nFromWeight" type="text" >
+					<label>From Weight</label>
+				</input>
+				<input bind="nToWeight" type="text" >
+
+					<label>To Weight</label>
+				</input>
+				<input bind="nStep" type="text" >
+					<label>Step</label>
+				</input>
 			</group>
 		</group>
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Offer Filter</label>
+			<label>Save Weight Filter</label>
 		</submit>
 	</group>
 </Content>

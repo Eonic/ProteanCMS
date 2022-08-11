@@ -16,7 +16,7 @@ Public Class MailQueue
     Public Sub New()
         MyBase.New()
         moConfig = WebConfigurationManager.GetWebApplicationSection("protean/web")
-        PerfMon.Log("MailQueue", "New")
+        'PerfMon.Log("MailQueue", "New")
         mcModuleName = "MailQueue"
     End Sub
 
@@ -27,10 +27,10 @@ Public Class MailQueue
 
 
     Public Function Add(ByVal nPageId As Integer, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String, Optional ByVal cBody As String = "", Optional ByVal cGroups_CSV As String = "", Optional ByVal nUserId As Integer = 0, Optional ByVal bSkipQue As Boolean = False) As Integer
-        PerfMon.Log("MailQueue", "Add")
+        'PerfMon.Log("MailQueue", "Add")
         Try
-            oDBT_Local = New Cms.dbHelper("Data Source=" & moConfig("DatabaseServer") & "; " & _
-            "Initial Catalog=" & moConfig("DatabaseName") & "; " & _
+            oDBT_Local = New Cms.dbHelper("Data Source=" & moConfig("DatabaseServer") & "; " &
+            "Initial Catalog=" & moConfig("DatabaseName") & "; " &
             moConfig("DatabaseAuth"), 1)
 
 
@@ -50,10 +50,10 @@ Public Class MailQueue
 
             Dim cSQL As String = ""
             If Not cGroups_CSV = "" And nUserId = 0 Then
-                cSQL = "SELECT nDirKey, cDirXml" & _
-                " FROM tblDirectory" & _
-                " WHERE (((SELECT TOP 1 nDirChildId" & _
-                    " FROM tblDirectoryRelation" & _
+                cSQL = "SELECT nDirKey, cDirXml" &
+                " FROM tblDirectory" &
+                " WHERE (((SELECT TOP 1 nDirChildId" &
+                    " FROM tblDirectoryRelation" &
                     " WHERE (nDirParentId IN (" & cGroups_CSV & ")) AND (nDirChildId = tblDirectory.ndirKey))) IS NOT NULL)"
             ElseIf cGroups_CSV = "" And Not nUserId = 0 Then
                 'send to individual
@@ -91,7 +91,7 @@ Public Class MailQueue
     End Function
 
     Private Function AddRequest(ByVal nPageId As Integer, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String, Optional ByVal cBody As String = "", Optional ByVal bSkipQue As Boolean = False) As Integer
-        PerfMon.Log("MailQueue", "AddRequest")
+        'PerfMon.Log("MailQueue", "AddRequest")
         Try
             Dim cSQL As String = "INSERT INTO tblMailRequests (nPageId, cBody, cFromEmail, cFromName, cSubject, cSiteURL, cMailServer, nStatus, nPriority) VALUES ("
             cSQL &= nPageId & ","
@@ -110,7 +110,7 @@ Public Class MailQueue
     End Function
 
     Private Function AddRecipient(ByVal nRequestKey As Integer, ByVal nUserID As Integer, ByVal cToEmail As String, ByVal cToName As String) As Integer
-        PerfMon.Log("MailQueue", "AddRecipient")
+        'PerfMon.Log("MailQueue", "AddRecipient")
         Try
             Dim cSQL As String = "INSERT INTO tblMailRequestRecipients (nRequestId, nUserId, nStatus, nRetries, cEmail, cName) VALUES ("
             cSQL &= nRequestKey & ","
@@ -126,7 +126,7 @@ Public Class MailQueue
     End Function
 
     Private Sub FinishRequest(ByVal nRequestId As Integer)
-        PerfMon.Log("MailQueue", "FinishRequest")
+        'PerfMon.Log("MailQueue", "FinishRequest")
         Try
             Dim cSQL As String = "UPDATE tblMailRequests SET nStatus = 1 WHERE nMailRequestKey = " & nRequestId
             oDBT_Remote.ExeProcessSql(cSQL)
@@ -136,7 +136,7 @@ Public Class MailQueue
     End Sub
 
     Public Function GetEmailPage(ByVal nPageId As Integer, ByVal nUserId As Integer) As String
-        PerfMon.Log("MailQueue", "GetEmaiPage")
+        'PerfMon.Log("MailQueue", "GetEmaiPage")
         Try
             Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
             Dim oWeb As New Protean.Cms
@@ -158,7 +158,7 @@ Public Class MailQueue
     End Function
 
     Private Function NameEntities(ByVal cString As String) As String
-        PerfMon.Log("MailQueue", "NameEntities")
+        'PerfMon.Log("MailQueue", "NameEntities")
         cString = Replace(cString, "'", "&apos; ") '&#39;
         cString = Replace(cString, "¡", "&iexcl;") '&#161;
         cString = Replace(cString, "¤", "&curren;") '&#164;

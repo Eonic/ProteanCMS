@@ -100,7 +100,6 @@ Namespace Providers
                 End Function
 
                 Public Function GetPaymentForm(ByRef myWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As Protean.xForm
-                    PerfMon.Log("Protean.Providers.payment.SkipPayment", "GetPaymentForm")
                     Dim cProcessInfo As String = ""
                     Try
 

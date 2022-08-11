@@ -8,9 +8,9 @@
 				<nVersion/>
 				<cContentForiegnRef/>
 				<cContentName>PageFilter</cContentName>
-				<cContentSchemaName>PageFilter</cContentSchemaName>
+				<cContentSchemaName>Filter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content filterType="PageFilter" parentPageId=""/>
+					<Content type="Filter" filterType="PageFilter"  parentPageId="" className="PageFilter" providerName="default"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -67,9 +67,17 @@
 		</group>
     <group>
 		  <group>
-        <select1 bind="cModuleLinkPage" class="siteTree">
-          <label>Show children of</label>
-        </select1>
+			  <select1 bind="cModuleLinkPage" appearance="full" class="vshort">
+				  <label class="label-border-top label-heading">Display Pages</label>
+				  <item>
+					  <label>All pages with products</label>
+					  <value>0</value>
+				  </item>
+				  <item>
+					  <label>Pages with products under current page</label>
+					  <value>1</value>
+				  </item>
+			  </select1>
 		  </group>
     </group>
 	</group>

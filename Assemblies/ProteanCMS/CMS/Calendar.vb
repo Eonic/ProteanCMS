@@ -37,7 +37,7 @@ Partial Public Class Cms
         ''' <param name="aWeb">Eonic Web Parent Object</param>
         ''' <remarks>Sets up a local DBhelper and moPageXml to use inhertited from Web</remarks>
         Public Sub New(ByRef aWeb As Protean.Cms)
-            PerfMon.Log(mcModuleName, "New")
+            aWeb.PerfMon.Log(mcModuleName, "New")
             Try
                 myWeb = aWeb
                 moDB = myWeb.moDbHelper
@@ -64,7 +64,7 @@ Partial Public Class Cms
         ''' <remarks>Use a For loop to looking the relvant nodes within the main content</remarks>
         Public Sub apply()
 
-            PerfMon.Log(mcModuleName, "apply")
+            myWeb.PerfMon.Log(mcModuleName, "apply")
 
             Dim cProcessInfo As String = ""
             Dim oCalContent As XmlElement
@@ -92,7 +92,7 @@ Partial Public Class Cms
 
         Public Sub add(ByRef xmlContentNode As XmlElement, ByVal cMonthsToGet As Integer, ByVal bSDateAsToday As Boolean, ByVal cSDateinMonths As String, ByVal sContentTypes As String)
 
-            PerfMon.Log(mcModuleName, "add - start")
+            myWeb.PerfMon.Log(mcModuleName, "add - start")
             Dim cProcessInfo As String = ""
 
 
@@ -269,7 +269,7 @@ Partial Public Class Cms
 
         'Public Sub add(ByRef oContentNode As XmlElement, ByVal cGetMonth As Integer, ByVal bSDateAsToday As Boolean, ByVal cSDateinMonths As String, ByVal sContentTypes As String)
 
-        '    PerfMon.Log(mcModuleName, "add - start")
+        '    myWeb.PerfMon.Log(mcModuleName, "add - start")
 
         '    Dim cProcessInfo As String = ""
         '    Dim oCalContent As XmlElement
@@ -359,14 +359,14 @@ Partial Public Class Cms
         '        End If
 
         '        ' Get the Calendar XML
-        '        PerfMon.Log(mcModuleName, "GetCalendarXML - start")
+        '        myWeb.PerfMon.Log(mcModuleName, "GetCalendarXML - start")
         '        Dim oCalendar As New Protean.Tools.Calendar(dStart_date, dEnd_date)
 
         '        ' Add the node to oCalContent
         '        Dim oCalendarelmt As XmlElement = oCalContent.OwnerDocument.CreateElement("CalendarView")
         '        oCalendarelmt.InnerXml = oCalendar.GetCalendarXML.OuterXml
         '        oCalContent.AppendChild(oCalendarelmt)
-        '        PerfMon.Log(mcModuleName, "GetCalendarXML - start")                ' Find the visible start and end dates as unique IDs
+        '        myWeb.PerfMon.Log(mcModuleName, "GetCalendarXML - start")                ' Find the visible start and end dates as unique IDs
         '        Dim oDays As XmlNodeList = oCalendarelmt.SelectNodes("//Day")
 
         '        If oDays.Count > 0 Then
@@ -383,14 +383,14 @@ Partial Public Class Cms
         '                Dim cTypeXPath As String = "@type='" & Replace(sContentTypes, ",", "' or @type='") & "'"
 
         '                ' Get the content for the available types.
-        '                PerfMon.Log(mcModuleName, "loop - start")
+        '                myWeb.PerfMon.Log(mcModuleName, "loop - start")
         '                For Each oContent As XmlElement In moPageXml.SelectNodes("/Page/Contents/Content[" & cTypeXPath & "]")
 
         '                    Dim cGetContentId As String = oContent.GetAttribute("id")
         '                    Dim sTemp As String = oContent.SelectSingleNode("StartDate").InnerText.ToString
-        '                    PerfMon.Log(mcModuleName, "process Content" & cGetContentId)
+        '                    myWeb.PerfMon.Log(mcModuleName, "process Content" & cGetContentId)
         '                    If cGetContentId = 186 Then
-        '                        PerfMon.Log(mcModuleName, "Our Pain")
+        '                        myWeb.PerfMon.Log(mcModuleName, "Our Pain")
         '                    End If
 
         '                    '  Get the content's date and scope
@@ -424,12 +424,12 @@ Partial Public Class Cms
         '                    End If
 
         '                Next
-        '                PerfMon.Log(mcModuleName, "loop - end")
+        '                myWeb.PerfMon.Log(mcModuleName, "loop - end")
         '            End If
 
         '        End If
 
-        '        PerfMon.Log(mcModuleName, "add - end")
+        '        myWeb.PerfMon.Log(mcModuleName, "add - end")
 
         '    Catch ex As Exception
         '        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "add", ex, cProcessInfo))

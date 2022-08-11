@@ -723,7 +723,7 @@ ProcessFlow:
 
 
                 Public Sub maintainUserInGroup(ByVal nUserId As Long, ByVal nGroupId As Long, ByVal remove As Boolean, Optional ByVal cUserEmail As String = Nothing, Optional ByVal cGroupName As String = Nothing, Optional isLast As Boolean = False)
-                    PerfMon.Log("Messaging", "maintainUserInGroup")
+                    'PerfMon.Log("Messaging", "maintainUserInGroup")
                     Try
                         'do nothing this is a placeholder
 
@@ -742,7 +742,7 @@ ProcessFlow:
                 End Sub
 
                 Overloads Function SendMailToList_Queued(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cGroups As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
-                    PerfMon.Log("Messaging", "SendMailToList_Queued")
+                    'PerfMon.Log("Messaging", "SendMailToList_Queued")
 
                     Dim cProcessInfo As String = ""
 
@@ -817,7 +817,7 @@ ProcessFlow:
                 End Function
 
                 Public Overloads Function SendQueuedMail(ByVal oMailn As Net.Mail.MailMessage, ByVal cHost As String, ByVal cPickupLocation As String) As String
-                    PerfMon.Log("Messaging", "SendQueuedMail")
+                    'PerfMon.Log("Messaging", "SendQueuedMail")
                     Try
                         If oMailn Is Nothing Then Return "No Email Supplied"
                         Dim oSmtpn As New SmtpClient
@@ -836,7 +836,7 @@ ProcessFlow:
                 End Function
 
                 Public Function AddToList(ListId As String, Name As String, Email As String, values As IDictionary) As Boolean
-                    PerfMon.Log("Activities", "AddToList")
+                    'PerfMon.Log("Activities", "AddToList")
                     Try
                         'do nothing this is a placeholder
                         Return Nothing
@@ -847,7 +847,7 @@ ProcessFlow:
                 End Function
 
                 Public Function RemoveFromList(ListId As String, Email As String) As Boolean
-                    PerfMon.Log("Activities", "RemoveFromList")
+                    'PerfMon.Log("Activities", "RemoveFromList")
                     Try
                         'do nothing this is a placeholder
                         Return Nothing

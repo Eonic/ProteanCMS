@@ -2188,7 +2188,7 @@ RedoCheck:
                 Public Sub New(ByRef aWeb As Protean.Cms)
                     MyBase.New(aWeb)
 
-                    PerfMon.Log("AdminXforms", "New")
+                    aWeb.PerfMon.Log("AdminXforms", "New")
                     Try
                         myWeb = aWeb
                         goConfig = myWeb.moConfig

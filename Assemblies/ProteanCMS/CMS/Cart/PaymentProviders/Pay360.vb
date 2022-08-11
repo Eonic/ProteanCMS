@@ -71,7 +71,7 @@ Namespace Providers
 
 
                 Public Overloads Function GetPaymentForm(ByRef oWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
-                    PerfMon.Log("PaymentProviders", "GetPaymentForm")
+                    oWeb.PerfMon.Log("PaymentProviders", "GetPaymentForm")
                     Dim sSql As String
 
                     Dim ccXform As xForm
@@ -569,7 +569,7 @@ Namespace Providers
 
 
                 Private Function getPay360Address(ByRef oRoot As XmlElement, ByRef sType As String) As String
-                    PerfMon.Log("PaymentProviders", "getSecPayAddress")
+                    myWeb.PerfMon.Log("PaymentProviders", "getSecPayAddress")
                     Dim oCartAdd As XmlElement
 
                     Dim sAddress As String
@@ -652,7 +652,7 @@ Namespace Providers
 
                 Private Function getPay360Order(ByRef oRoot As XmlElement) As String
 
-                    PerfMon.Log("PaymentProviders", "getSecPayOrder")
+                    myWeb.PerfMon.Log("PaymentProviders", "getSecPayOrder")
                     Dim sOrder As String
                     Dim cProcessInfo As String = "getSecPayOrder"
                     Dim oItem As XmlElement
@@ -682,7 +682,6 @@ Namespace Providers
                 End Function
 
                 Private Function fmtSecPayDate(ByVal sdate As String) As String
-                    PerfMon.Log("PaymentProviders", "fmtSecPayDate")
                     Dim cProcessInfo As String = "fmtSecPayDate"
                     Dim strReturn As String = ""
                     Try
@@ -697,7 +696,7 @@ Namespace Providers
                 End Function
 
                 Public Function FormatCreditCardNumber(ByVal sCCNumber As String) As Long
-                    PerfMon.Log("PaymentProviders", "FormatCreditCardNumber")
+                    myWeb.PerfMon.Log("PaymentProviders", "FormatCreditCardNumber")
                     Dim cResult As String = ""
                     Dim oRE As Regex = New Regex("\D")
                     cResult = oRE.Replace(sCCNumber, "")

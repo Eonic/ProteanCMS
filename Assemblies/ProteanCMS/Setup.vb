@@ -292,7 +292,7 @@ Public Class Setup
     End Sub
 
     Public Function ReturnPageHTML(Optional ByVal nPageId As Long = 0, Optional ByVal bReturnBlankError As Boolean = False) As String
-        PerfMon.Log("Setup", "ReturnPageHTML")
+        'PerfMon.Log("Setup", "ReturnPageHTML")
         Dim sProcessInfo As String = "Transform PageXML using XSLT"
         Dim cPageHTML As String
         Dim icPageWriter As StringWriter = New IO.StringWriter
@@ -1963,7 +1963,7 @@ DoOptions:
 
         Public Sub New(ByRef asetup As Protean.Setup)
             MyBase.New(asetup.myWeb.msException)
-            PerfMon.Log("Discount", "New")
+            'PerfMon.Log("Discount", "New")
             Try
                 mySetup = asetup
                 goConfig = mySetup.goConfig
@@ -1975,7 +1975,7 @@ DoOptions:
 
 
         Public Function GuessDBName() As String
-            PerfMon.Log("Setup", "GuessDBName")
+            'PerfMon.Log("Setup", "GuessDBName")
             Try
                 Dim siteUrl As String = goRequest.ServerVariables("SERVER_NAME")
                 Dim PrePropURL As String = goConfig("PrePropUrl") & ""

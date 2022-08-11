@@ -91,7 +91,7 @@ Public Class ExternalSynchronisation
     End Sub
 
     Public Function GetDBAuth() As String
-        PerfMon.Log("dbHelper", "getDBAuth")
+        'PerfMon.Log("dbHelper", "getDBAuth")
         Try
             Dim dbAuth As String
             If moConfig("DatabasePassword") <> "" Then
@@ -825,11 +825,9 @@ EndIt:
 
         Private Function tidyXhtml(ByVal shtml As String, Optional ByVal bReturnNumbericEntities As Boolean = False) As String
             Dim sTidyXhtml As String
-            PerfMon.Log("Web", "tidyXhtmlFrag")
-
+            'PerfMon.Log("Web", "tidyXhtmlFrag")
 
             sTidyXhtml = tidyXhtmlFrag(shtml, bReturnNumbericEntities)
-
 
             Return sTidyXhtml
 

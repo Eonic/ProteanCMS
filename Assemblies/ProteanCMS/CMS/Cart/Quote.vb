@@ -46,7 +46,7 @@ Partial Public Class Cms
         End Sub
 
         Private Overloads Sub InitializeVariables()
-            PerfMon.Log("Quote", "InitializeVariables")
+            'PerfMon.Log("Quote", "InitializeVariables")
             'Author:        Trevor Spink
             'Copyright:     Eonic Ltd 2006
             'Date:          2006-10-04
@@ -226,7 +226,7 @@ Partial Public Class Cms
         End Sub
 
         Public Shadows Sub close()
-            PerfMon.Log("Quote", "close")
+            'PerfMon.Log("Quote", "close")
             Dim cProcessInfo As String = ""
             Try
                 PersistVariables()
@@ -238,7 +238,7 @@ Partial Public Class Cms
         End Sub
 
         Public Overrides Sub PersistVariables()
-            PerfMon.Log("Quote", "PersistVariables")
+            'PerfMon.Log("Quote", "PersistVariables")
             'Author:        Trevor Spink
             'Copyright:     Eonic Ltd 2003
             'Date:          2003-02-01
@@ -282,7 +282,7 @@ Partial Public Class Cms
         End Sub
 
         Overrides Sub checkButtons()
-            PerfMon.Log("Quote", "checkButtons")
+            'PerfMon.Log("Quote", "checkButtons")
             Dim cProcessInfo As String = ""
             Try
                 'legacy button handling looking at button values rather than names, should not be required soon
@@ -356,7 +356,7 @@ Partial Public Class Cms
         End Sub
 
         Public Overrides Sub apply()
-            PerfMon.Log("Quote", "apply")
+            'PerfMon.Log("Quote", "apply")
             '   this function is the main function.
 
             Dim oCartXML As XmlDocument = moPageXml
@@ -764,7 +764,7 @@ processFlow:
 
 
         Overrides Sub emailReceipts(ByRef oCartElmt As XmlElement)
-            PerfMon.Log("Quote", "emailReceipts")
+            'PerfMon.Log("Quote", "emailReceipts")
             Dim sMessageResponse As String
             Dim cProcessInfo As String = ""
             Dim oElmtTemp As XmlElement = oCartElmt.OwnerDocument.CreateElement("Temp")
@@ -795,7 +795,7 @@ processFlow:
         End Sub
 
         Public Overrides Sub EndSession()
-            PerfMon.Log("Quote", "EndSession")
+            'PerfMon.Log("Quote", "EndSession")
             Dim sProcessInfo As String = ""
             Dim sSql As String
             Dim cProcessInfo As String = ""
@@ -813,7 +813,7 @@ processFlow:
         End Sub
 
         Public Function QuoteToOrder() As Boolean
-            PerfMon.Log("Quote", "QuoteToOrder")
+            'PerfMon.Log("Quote", "QuoteToOrder")
             Dim cProcessInfo As String = "Quote to Order"
             Try
                 Dim nCurrentCart As Integer = myWeb.moSession("CartId")
@@ -959,7 +959,7 @@ processFlow:
         End Function
 
         Public Overrides Sub MakeCurrent(ByVal nOrderID As Integer)
-            PerfMon.Log("Quote", "MakeCurrent")
+            'PerfMon.Log("Quote", "MakeCurrent")
             'procedure to make a selected historical
             'order or quote into the currently active one
 
@@ -1064,7 +1064,7 @@ processFlow:
         End Sub
 
         Public Sub SaveQuote()
-            PerfMon.Log("Quote", "SaveQuote")
+            'PerfMon.Log("Quote", "SaveQuote")
             '   set the cart status to 7
 
             Dim sSql As String
