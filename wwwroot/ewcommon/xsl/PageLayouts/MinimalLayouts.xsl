@@ -628,7 +628,7 @@
             </div>
           </xsl:if>
           <xsl:apply-templates select="." mode="displayBrief"/>
-          <xsl:if test="@linkText!='' and @link!=''">
+          <xsl:if test="(@linkText!='' and @link!='') or @linkType='form'">
             <div class="entryFooter">
               <xsl:if test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
                 <xsl:attribute name="class">entryFooter center-nobox-footer</xsl:attribute>
@@ -645,6 +645,7 @@
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:with-param>
+				  <xsl:with-param name="linkType" select="@linkType"/>
                 <xsl:with-param name="linkText" select="@linkText"/>
                 <xsl:with-param name="altText" select="@title"/>
               </xsl:apply-templates>
@@ -4150,7 +4151,7 @@
       <xsl:if test="Content[@type='FAQ']">
         <div class="faq-list">
           <a name="pageTop" class="pageTop">&#160;</a>
-          <h3>Question and Answerx</h3>
+          <h3>Question and Answer</h3>
           <ul>
             <xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
           </ul>
@@ -6260,7 +6261,7 @@
                   <span class="value-title" title="{EndDate/node()}T{translate(Times/@end,',',':')}"></span>
                 </span>
               </xsl:if>
-              <xsl:text>&#160;</xsl:text>
+              <xsl:text> </xsl:text>
               <xsl:if test="Times/@start!='' and Times/@start!=','">
                 <span class="times">
                   <xsl:value-of select="translate(Times/@start,',',':')"/>
@@ -6348,7 +6349,7 @@
                     <span class="value-title" title="{EndDate/node()}T{translate(Times/@end,',',':')}"></span>
                   </span>
                 </xsl:if>
-                <xsl:text>&#160;</xsl:text>
+                <xsl:text> </xsl:text>
                 <xsl:if test="Times/@start!='' and Times/@start!=','">
                   <span class="times">
                     <xsl:value-of select="translate(Times/@start,',',':')"/>
