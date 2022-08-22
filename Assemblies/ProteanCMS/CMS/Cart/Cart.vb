@@ -3667,7 +3667,7 @@ processFlow:
                         If CLng(cItemQuantity) > CLng(StockLevel) And mnProcessId < 6 Then
                             If oCartElmt.SelectSingleNode("error") Is Nothing Then oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"))
                             oError = oCartElmt.SelectSingleNode("error")
-                            oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & oProd.SelectSingleNode("//Name").InnerText & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
+                            oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & convertEntitiesToCodes(oProd.SelectSingleNode("//Name").InnerText) & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
                             oMsg.SetAttribute("type", "stock")
                         End If
                     End If

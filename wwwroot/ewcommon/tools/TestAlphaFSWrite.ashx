@@ -30,8 +30,8 @@ Public Class ewTidyTest : Implements IHttpHandler, IRequiresSessionState
 
 
             'System.IO.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
-
-            Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
+            '
+            ' Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
 
             oImp.UndoImpersonation()
             oImp = Nothing
