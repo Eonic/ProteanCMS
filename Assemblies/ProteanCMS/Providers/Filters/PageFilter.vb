@@ -51,15 +51,18 @@ Namespace Providers
                 Dim cProcessInfo As String = "ApplyFilter"
                 Try
 
-                    'Dim cWhereSql As String = String.Empty
+
                     Dim cPageIds As String = String.Empty
-                    If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
+                    If aWeb.moSession("PageFilter") IsNot Nothing Then
+                        cPageIds = Convert.ToString(aWeb.moSession("PageFilter"))
+                    ElseIf (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
                         cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText
+
                     End If
-                    Dim cnt As Integer
 
                     If (cPageIds <> String.Empty) Then
 
+                        aWeb.moSession("PageFilter") = cPageIds
 
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = " AND "
@@ -79,8 +82,8 @@ Namespace Providers
                     Dim cnt As Integer
                     Dim cntPages As Integer = 0
                     Dim cPageIds As String = String.Empty
-                    If (aWeb.moSession("PageIds") IsNot Nothing) Then
-                        cPageIds = aWeb.moSession("PageIds")
+                    If (aWeb.moSession("PageFilter") IsNot Nothing) Then
+                        cPageIds = aWeb.moSession("PageFilter")
                         cPageIds = cPageIds.Replace(cPageId, "")
 
                         Dim aPageId() As String = cPageIds.Split(",")
@@ -91,23 +94,13 @@ Namespace Providers
                                 End If
                             End If
                         Next
-                        aWeb.moSession("PageIds") = Left(cPageIds, cPageIds.Length - 1)
+                        aWeb.moSession("PageFilter") = Left(cPageIds, cPageIds.Length - 1)
                     End If
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
             End Sub
-            'Public Function RemovePageFromFilter(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-            '    Try
-            '        If (myA.moSession("PageIds") IsNot Nothing) Then
-
-            '            aWeb.moSession.Remove("PageIds")
-            '        End If
-            '    Catch ex As Exception
-
-            '    End Try
-            'End Function
 
         End Class
         ' End Class

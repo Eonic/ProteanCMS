@@ -528,6 +528,7 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
+                        myWeb.moSession("FilterApplied") = "true"
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,,,,,,, "Product")
                     End If
 
