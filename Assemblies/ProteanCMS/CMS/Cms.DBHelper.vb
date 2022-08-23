@@ -8374,7 +8374,9 @@ restart:
                     If Not oDs.Tables(0).Columns("position") Is Nothing Then
                         oDs.Tables(0).Columns("position").ColumnMapping = Data.MappingType.Attribute
                     End If
-
+                    If Not oDs.Tables(0).Columns("overall_count") Is Nothing Then
+                        oDs.Tables(0).Columns("overall_count").ColumnMapping = Data.MappingType.Attribute
+                    End If
                     If Not oDs.Tables(0).Columns("update") Is Nothing Then
                         If Not dUpdateDate = Nothing Then
                             .Columns("update").ColumnMapping = Data.MappingType.Attribute
