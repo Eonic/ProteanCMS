@@ -379,6 +379,10 @@ Partial Public Class Cms
                 If inputJson("pageType") IsNot Nothing Then
                     sType = inputJson("pageType").ToObject(Of String)()
                 End If
+
+                If inputJson("pageurl") IsNot Nothing Then
+                    hiddenOldUrl = inputJson("pageurl").ToObject(Of String)()
+                End If
                 Try
                     If myApi.mbAdminMode Then
                         JsonResult = moAdminRedirect.RedirectPage(redirectType, oldUrl, newUrl, hiddenOldUrl, isParentPage, sType, pageId)
