@@ -2183,7 +2183,7 @@ function ValidateContentForm(event) {
 }
 
 function RedirectClick(redirectType) {
-    debugger;
+  
     //var redirectType = $("redirectType").val();
     $(".hiddenRedirectType").val(redirectType);
     if (redirectType == "404Redirect") {
@@ -2204,7 +2204,6 @@ function RedirectClick(redirectType) {
 
         var pageId = $(".hiddenPageId").val();
         var type = $(".hiddenType").val();
-       
         var inputJson = { pageId: pageId };
         var isParent = "false";
         if (type == "Page") {
@@ -2224,7 +2223,7 @@ function RedirectClick(redirectType) {
                     else {
                         var newUrl = $("#NewUrl").val();
                         var oldUrl = $("#OldUrl").val();
-                        inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type};
+                        inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
                         axios.post(redirectAPIUrl, inputJson)
                             .then(function (response) {
                                 if (response.data == "success") {
@@ -2241,7 +2240,6 @@ function RedirectClick(redirectType) {
                 });
         }
         else if (type == "Product") {
-            debugger;
             var newUrl = $("#NewUrl").val();
             var oldUrl = $("#OldUrl").val();
             inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
@@ -2266,7 +2264,7 @@ function RedirectClick(redirectType) {
 }//);
 
 function CreateRedirectRule() {
-    debugger;
+
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
@@ -2372,7 +2370,6 @@ if (editPageElement) {
             structNameOnChange: function (newStructName) {
                 if ($(".hidPageChangeFlag").val() == "1") {
                     if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
-                       
                         var redirectType = $(".hiddenRedirectType").val();
                         $('.btnRedirectSave').removeAttr("disabled");
                         $("#redirectModal").modal("show");
