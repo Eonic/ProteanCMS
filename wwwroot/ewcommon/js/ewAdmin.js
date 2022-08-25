@@ -2183,7 +2183,7 @@ function ValidateContentForm(event) {
 }
 
 function RedirectClick(redirectType) {
-  
+    debugger;
     //var redirectType = $("redirectType").val();
     $(".hiddenRedirectType").val(redirectType);
     if (redirectType == "404Redirect") {
@@ -2204,6 +2204,7 @@ function RedirectClick(redirectType) {
 
         var pageId = $(".hiddenPageId").val();
         var type = $(".hiddenType").val();
+       
         var inputJson = { pageId: pageId };
         var isParent = "false";
         if (type == "Page") {
@@ -2223,7 +2224,7 @@ function RedirectClick(redirectType) {
                     else {
                         var newUrl = $("#NewUrl").val();
                         var oldUrl = $("#OldUrl").val();
-                        inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
+                        inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type};
                         axios.post(redirectAPIUrl, inputJson)
                             .then(function (response) {
                                 if (response.data == "success") {
@@ -2240,6 +2241,7 @@ function RedirectClick(redirectType) {
                 });
         }
         else if (type == "Product") {
+            debugger;
             var newUrl = $("#NewUrl").val();
             var oldUrl = $("#OldUrl").val();
             inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
@@ -2264,7 +2266,7 @@ function RedirectClick(redirectType) {
 }//);
 
 function CreateRedirectRule() {
-
+    debugger;
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
@@ -2288,14 +2290,15 @@ $(document).on("click", "#btnNocreateRuleForChild", function (event) {
 });
 
 $(document).on("click", "#btnYescreateRuleForChild", function (event) {
-
+   
+    var pageurl = $(".hiddenOldUrl").val();
     var pageId = $(".hiddenPageId").val();
     var redirectType = $("input[name*='redirectOption']").val();
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
     var isParent = $("input[name*='IsParent']").val();
-    inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
+    inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type ,pageurl: pageurl};
     axios.post(redirectAPIUrl, inputJson)
         .then(function (response) {
             if (response.data == "success") {
@@ -2369,10 +2372,15 @@ if (editPageElement) {
             structNameOnChange: function (newStructName) {
                 if ($(".hidPageChangeFlag").val() == "1") {
                     if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
+                       
                         var redirectType = $(".hiddenRedirectType").val();
                         $('.btnRedirectSave').removeAttr("disabled");
                         $("#redirectModal").modal("show");
                         var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                        var url = $(".hiddenOldUrl").val();
+                       
+                        //oldURLFromXsl = oldURLFromXsl.replace(' ', '-');
+                        //newStructName = newStructName.replace(' ', '-');
                         $("#OldUrl").val(oldURLFromXsl);
                         $("#NewUrl").val(newStructName);
                         this.structName = newStructName;
