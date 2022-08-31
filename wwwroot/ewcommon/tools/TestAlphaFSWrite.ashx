@@ -29,7 +29,7 @@ Public Class ewTidyTest : Implements IHttpHandler, IRequiresSessionState
         If oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), , oEw.moConfig("AdminGroup")) Then
 
 
-            Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
+            '  Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
 
             context.Response.Write("file written")
 
@@ -42,7 +42,7 @@ Public Class ewTidyTest : Implements IHttpHandler, IRequiresSessionState
         Else
             ' Response.write() "<Error>Create File: " & filepath & " - " & sError & "</Error>" & vbCrLf)
 
-                  context.Response.Write("impersonation failed")
+            context.Response.Write("impersonation failed")
         End If
 
 
