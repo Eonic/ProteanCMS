@@ -40,8 +40,9 @@ Namespace Providers
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
                         pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Page Filter", "checkbox", ApperanceTypes.Full)
-                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
+                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                     End Using
+
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
@@ -53,14 +54,15 @@ Namespace Providers
 
 
                     Dim cPageIds As String = String.Empty
-                    If aWeb.moSession("PageFilter") IsNot Nothing Then
-                        cPageIds = Convert.ToString(aWeb.moSession("PageFilter"))
-                    ElseIf (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText
+                    'If aWeb.moSession("PageFilter") IsNot Nothing Then
+                    '    cPageIds = Convert.ToString(aWeb.moSession("PageFilter"))
+                    'Else
+                    If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
+                            cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText
 
-                    End If
+                        End If
 
-                    If (cPageIds <> String.Empty) Then
+                        If (cPageIds <> String.Empty) Then
 
                         aWeb.moSession("PageFilter") = cPageIds
 

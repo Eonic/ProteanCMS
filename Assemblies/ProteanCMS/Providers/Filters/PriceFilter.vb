@@ -15,6 +15,8 @@ Namespace Providers
             Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
                 Dim cProcessInfo As String = "AddControl"
                 Try
+                    Dim sSql As String = "spGetPriceRange"
+                    Dim arrParams As New Hashtable
 
                     oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("PriceFilter"))
 
@@ -28,13 +30,22 @@ Namespace Providers
                     Dim priceFilterRange As XmlElement
                     Dim cnt As Integer
                     'priceFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", nMinPrice, nMaxPrice, nStep)
-                    priceFilterRange = oXform.addSelect1(oFromGroup, "PriceFilter", False, "Price Filter", "")
-                    For cnt = nMinPrice To nMaxPrice
+                    'priceFilterRange = oXform.addSelect1(oFromGroup, "PriceFilter", False, "Price Filter", "")
+                    'For cnt = nMinPrice To nMaxPrice
 
-                        Dim optionName As String = cnt.ToString() + "-" + (cnt + nStep).ToString()
-                        oXform.addOption(priceFilterRange, optionName.ToString(), optionName.ToString(), False, "")
-                        cnt = cnt + nStep
-                    Next
+                    '    Dim optionName As String = cnt.ToString() + "-" + (cnt + nStep).ToString()
+                    '    oXform.addOption(priceFilterRange, optionName.ToString(), optionName.ToString(), False, "")
+                    '    cnt = cnt + nStep
+                    'Next
+
+                    arrParams.Add("MinPrice", nMinPrice)
+                    arrParams.Add("MaxPrice", nMaxPrice)
+                    arrParams.Add("Step", nStep)
+                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
+                        'Adding controls to the form like dropdown, radiobuttons
+                        priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, "Price Filter", "checkbox", ApperanceTypes.Full)
+                        oXform.addOptionsFromSqlDataReader(priceFilterRange, oDr, "name", "value")
+                    End Using
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
@@ -53,7 +64,9 @@ Namespace Providers
                         cSelectedPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter").InnerText)
 
                     End If
+
                     If (cSelectedPrice <> String.Empty) Then
+                        aWeb.moSession("PriceFilter") = cSelectedPrice
                         priceRange = cSelectedPrice.Split("-")
 
                         If (cWhereSql <> String.Empty) Then
