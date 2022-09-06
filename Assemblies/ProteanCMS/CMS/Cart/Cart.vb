@@ -939,7 +939,7 @@ Partial Public Class Cms
                 If mnCartId > 0 Then
                     ' Only update the process if less than 6 we don't ever want to change the status of a completed order other than within the admin system. Boo Yah!
                     Dim currentStatus As Integer = moDBHelper.ExeProcessSqlScalar("select nCartStatus from tblCartOrder where nCartOrderKey = " & mnCartId)
-                    If currentStatus < 6 Then
+                    If currentStatus < 6 Or (currentStatus = 10 And mnProcessId = 6) Then
                         '   If we have a cart, update its status in the db
                         If mnProcessId <> currentStatus Then
                             sSql = "update tblCartOrder set nCartStatus = " & mnProcessId & ", nGiftListId = " & mnGiftListId & ", nCartUserDirId = " & myWeb.mnUserId & " where nCartOrderKey = " & mnCartId
@@ -1282,6 +1282,9 @@ processFlow:
 
                         ' If a settlement has been initiated, then update the process
                         If mnProcessId = cartProcess.DepositPaid Then
+
+                            myWeb.moSession("Settlement") = "true"
+
                             ' mnProcessId = cartProcess.PassForPayment
                             '  moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
                         End If
@@ -1562,12 +1565,25 @@ processFlow:
                                         End If
                                     End If
                                 End If
-                                purchaseActions(oContentElmt)
+
+                                If myWeb.moSession("Settlement") = "true" Then
+                                    'modifiy the cartXml in line with settlement
+                                    If mnProcessId = Cart.cartProcess.DepositPaid Then
+                                        mnProcessId = Cart.cartProcess.Complete
+
+                                    End If
+                                    myWeb.moSession("Settlement") = Nothing
+                                End If
+
+
+
                                 If mnProcessId = Cart.cartProcess.DepositPaid Then
                                     AddToLists("Deposit", oContentElmt)
                                 Else
                                     AddToLists("Invoice", oContentElmt)
                                 End If
+
+                                purchaseActions(oContentElmt)
 
                                 If myWeb.mnUserId > 0 Then
                                     If Not moSubscription Is Nothing Then
@@ -1801,7 +1817,7 @@ processFlow:
                         Loop
 
                         oCartElmt.SetAttribute("settlementID", cUniqueLink)
-                        oCartElmt.SetAttribute("transStatus", "Complete")
+                        oCartElmt.SetAttribute("transStatus", "Deposit Paid")
                         UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
                         If outstandingAmount = 0 Then
                             mnProcessId = 6
@@ -1810,16 +1826,18 @@ processFlow:
                         End If
 
                     Case "settlement"
+                        mnProcessId = 6
                         Dim totalPaid As Double = oCartElmt.GetAttribute("paymentMade")
                         totalPaid = totalPaid + amountPaid
                         Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - totalPaid
                         oCartElmt.SetAttribute("paymentMade", totalPaid)
                         oCartElmt.SetAttribute("outstandingAmount", outstandingAmount)
                         oCartElmt.SetAttribute("payableAmount", outstandingAmount)
-
+                        oCartElmt.SetAttribute("transStatus", "Settlement Paid")
+                        oCartElmt.SetAttribute("status", "Settlement Paid")
+                        oCartElmt.SetAttribute("statusId", mnProcessId.ToString())
                         UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
 
-                        mnProcessId = 6
                     Case Else
                         PayableType = "full"
                 End Select
@@ -3058,7 +3076,7 @@ processFlow:
                             End If
 
                             ' Set the payableType 
-                            If IsDBNull(oRow("nAmountReceived")) Or nStatusId = 10 Then
+                            If IsDBNull(oRow("nAmountReceived")) AndAlso nStatusId <> 10 Then
                                 oCartElmt.SetAttribute("payableType", "deposit")
                             Else
                                 oCartElmt.SetAttribute("payableType", "settlement")

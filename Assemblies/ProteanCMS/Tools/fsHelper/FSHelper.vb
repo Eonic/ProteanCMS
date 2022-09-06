@@ -855,19 +855,21 @@ Partial Public Class fsHelper
                 OptimiseImages(path & "/" & ofolder.Name, nFileCount, nSavings, lossless, tinyAPIKey)
 
             Next
+            If thisDir.Name.StartsWith("~") Then
+                For Each ofile In thisDir.GetFiles
+                    Dim oImgTool As New Protean.Tools.Image("")
+                    oImgTool.TinifyKey = tinyAPIKey
+                    newSavings = newSavings + oImgTool.CompressImage(ofile, lossless)
+                    nFileCount = nFileCount + 1
+                Next
+                Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
+                    Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes("Last Optimised:" & Now().ToLongDateString & " Savings:" & newSavings & " FileCount:" & nFileCount)
+                    fs.Write(info, 0, info.Length)
+                    fs.Close()
+                End Using
 
-            For Each ofile In thisDir.GetFiles
-                Dim oImgTool As New Protean.Tools.Image("")
-                oImgTool.TinifyKey = tinyAPIKey
-                newSavings = newSavings + oImgTool.CompressImage(ofile, lossless)
-                nFileCount = nFileCount + 1
-            Next
+            End If
 
-            Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
-                Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes("Last Optimised:" & Now().ToLongDateString & " Savings:" & newSavings)
-                fs.Write(info, 0, info.Length)
-                fs.Close()
-            End Using
 
             nSavings = nSavings + newSavings
             Return nFileCount & " Files Updated " & nSavings / 1024 & " Kb have been saved"

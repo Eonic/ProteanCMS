@@ -527,18 +527,29 @@ Public Class Image
     End Function
 
     Async Sub TinyCompress(ByVal filepathFrom As String, ByVal filepathTo As String)
-
+        Dim cProcessInfo As String = ""
         Try
+
+            ' Try
+            '     Tinify.Key = TinifyKey
+            '     Await Tinify.Validate()
+            ' Catch
+            '     cProcessInfo = "Key Validation Failed"
+            ' End Try
+
+            TinifyAPI.Tinify.Key = TinifyKey
+            Dim compressionsThisMonth = TinifyAPI.Tinify.CompressionCount
             Dim tinifyImg As Task(Of TinifyAPI.Source) = TinifyAPI.Tinify.FromFile(filepathFrom)
 
             Dim newImage As TinifyAPI.Source = Await tinifyImg
 
             Await newImage.ToFile(filepathTo)
 
-            Dim compressionsThisMonth = TinifyAPI.Tinify.CompressionCount
+
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, ""))
+
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo))
         End Try
 
 
@@ -550,7 +561,7 @@ Public Class Image
 
             If imgfileInfo.Extension = ".jpg" Or imgfileInfo.Extension = ".png" Or imgfileInfo.Extension = ".gif" Or imgfileInfo.Extension = ".webp" Then
                 If TinifyKey <> "" Then
-                    TinifyAPI.Tinify.Key = TinifyKey
+
                     Dim NewFileName As String = imgfileInfo.FullName.Replace(".png", fileSuffix & ".png")
                     NewFileName = imgfileInfo.FullName.Replace(".jpg", fileSuffix & ".jpg")
 

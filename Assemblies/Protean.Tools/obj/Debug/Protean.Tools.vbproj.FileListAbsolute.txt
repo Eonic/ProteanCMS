@@ -604,3 +604,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Tinify.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Tinify.pdb

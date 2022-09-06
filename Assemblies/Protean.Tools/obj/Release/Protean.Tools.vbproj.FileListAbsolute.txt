@@ -290,3 +290,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Numerics
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Buffers.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Tinify.dll
