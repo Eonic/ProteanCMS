@@ -9083,8 +9083,10 @@
     <xsl:if test="count(Content[@type='Tag'])&gt;0">
       <div class="tags">
         <!--Tags-->
-        <xsl:call-template name="term2039" />
-        <xsl:text>: </xsl:text>
+		  <span class="tag-label">
+			  <xsl:call-template name="term2039" />
+			  <xsl:text>: </xsl:text>
+		  </span>
         <xsl:apply-templates select="ms:node-set($articleList)" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
@@ -9105,9 +9107,11 @@
       </xsl:apply-templates>
       <a href="{$parentURL}" rel="tag">
         <xsl:apply-templates select="Name" mode="displayBrief"/>
-        <xsl:if test="@relatedCount!=''">
-          &#160;(<xsl:value-of select="@relatedCount"/>)
-        </xsl:if>
+		  <span class="tag-count">
+			  <xsl:if test="@relatedCount!=''">
+				  &#160;(<xsl:value-of select="@relatedCount"/>)
+			  </xsl:if>
+		  </span>
       </a>
       <xsl:if test="position()!=last()">
         <span class="tag-comma">
@@ -15103,8 +15107,10 @@
       </xsl:apply-templates>
       <a href="{$parentURL}" rel="tag">
         <xsl:apply-templates select="Name" mode="displayBrief"/>
-        <xsl:if test="@relatedCount!=''">
-          (<xsl:value-of select="@relatedCount"/>)
+		  <xsl:if test="@relatedCount!=''">
+			  <span class="tag-count">
+				  (<xsl:value-of select="@relatedCount"/>)
+			  </span>
         </xsl:if>
       </a>
     </li>
