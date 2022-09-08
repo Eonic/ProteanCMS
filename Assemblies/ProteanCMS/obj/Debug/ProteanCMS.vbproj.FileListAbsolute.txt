@@ -1514,5 +1514,5 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Buffers.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Memory.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Numerics.Vectors.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\icsharpcode.sharpziplib.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\icsharpcode.sharpziplib.xml

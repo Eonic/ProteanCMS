@@ -4663,7 +4663,7 @@
         <xsl:when test="$page[@cssFramework='bs3']">
           <div class="morelink">
 			  <xsl:choose>
-				  <xsl:when test="$linkType='form'">
+				  <xsl:when test="$linkType='form' or $linkType='modalLink'">
 					  <span>
 						  <a href="#" data-toggle="modal" data-target="#{$link}" class="btn btn-default btn-sm">
 							  <xsl:value-of select="@linkText"/>
