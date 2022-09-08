@@ -427,12 +427,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
     <Error Condition="!Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-AnyCPU.12.1.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-AnyCPU.12.1.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets'))" />
-    <Error Condition="!Exists('..\..\..\EonicClients\IntoTheBlue_DevOps\packages\Magick.NET-Q8-x64.12.1.0\build\netstandard20\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\EonicClients\IntoTheBlue_DevOps\packages\Magick.NET-Q8-x64.12.1.0\build\netstandard20\Magick.NET-Q8-x64.targets'))" />
     <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-x64.12.1.0\build\netstandard20\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-x64.12.1.0\build\netstandard20\Magick.NET-Q8-x64.targets'))" />
   </Target>
   <Import Project="..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets" Condition="Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" />
-  <Import Project="..\..\packages\Magick.NET-Q8-AnyCPU.12.1.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-AnyCPU.12.1.0\build\netstandard20\Magick.NET-Q8-AnyCPU.targets')" />
-  <Import Project="..\..\..\EonicClients\IntoTheBlue_DevOps\packages\Magick.NET-Q8-x64.12.1.0\build\netstandard20\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\..\EonicClients\IntoTheBlue_DevOps\packages\Magick.NET-Q8-x64.12.1.0\build\netstandard20\Magick.NET-Q8-x64.targets')" />
   <Import Project="..\..\packages\Magick.NET-Q8-x64.12.1.0\build\netstandard20\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-x64.12.1.0\build\netstandard20\Magick.NET-Q8-x64.targets')" />
 </Project>
