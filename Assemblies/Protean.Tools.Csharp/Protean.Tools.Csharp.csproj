@@ -144,6 +144,8 @@
     <Compile Include="Calendar.cs" />
     <Compile Include="Encryption.cs" />
     <Compile Include="Errors.cs" />
+    <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\Order.cs" />
     <Compile Include="MySqlDatabase.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Global.cs" />
@@ -171,6 +173,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Clients\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
- </Project>
+</Project>

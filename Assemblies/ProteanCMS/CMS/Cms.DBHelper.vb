@@ -794,7 +794,7 @@ Partial Public Class Cms
         End Function
 
         Public Function getFRef(ByVal objectType As objectTypes) As String
-            myWeb.PerfMon.Log("DBHelper", "getFRef")
+
             Select Case objectType
                 Case 0
                     Return "cContentForiegnRef"
@@ -3221,7 +3221,7 @@ restart:
 
         Public Function getObjectByRef(ByVal objectType As objectTypes, ByVal cForeignRef As String, Optional ByVal cSchemaType As String = "") As Long
             Dim cProcName As String = "getObjectByRef (ObjectTypes,String,[String])"
-            myWeb.PerfMon.Log("DBHelper", cProcName)
+            ' myWeb.PerfMon.Log("DBHelper", cProcName)
             Dim nId As String = 0
             Dim cProcessInfo As String = ""
             Try
@@ -3242,7 +3242,7 @@ restart:
 
         Public Function getObjectByRef(ByVal cTableName As String, ByVal cTableKey As String, ByVal cTableFRef As String, ByVal objectType As objectTypes, ByVal cForeignRef As String, Optional ByVal cSchemaType As String = "") As Long
             Dim cProcName As String = "getObjectByRef (String,String,String,ObjectTypes,String,[String])"
-            myWeb.PerfMon.Log("DBHelper", cProcName)
+            '  myWeb.PerfMon.Log("DBHelper", cProcName)
             Dim sSql As String = ""
             Dim nId As String = 0
             'Dim oDr As SqlDataReader

@@ -12,7 +12,6 @@ using System.Collections.Generic;
 
 namespace Protean.Tools
 {
-
     public class Database : IDisposable
     {
         private driverType oDriver;

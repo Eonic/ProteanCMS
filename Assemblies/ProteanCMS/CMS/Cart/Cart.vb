@@ -25,7 +25,7 @@ Partial Public Class Cms
 
         Public moPageXml As XmlDocument
 
-        Public Shadows mcModuleName As String = "Eonic.Cart"
+        Public Shadows mcModuleName As String = "Protean.Cms.Cart"
 
         'Session EonicWeb Details
         Public mcEwDataConn As String
@@ -230,166 +230,166 @@ Partial Public Class Cms
             End Sub
         End Class
 
-        Class Order
+        'Class Order
 
-            Private OrderElmt As XmlElement
-            Protected Friend myWeb As Cms
-            Public moConfig As System.Collections.Specialized.NameValueCollection
-            Private moServer As System.Web.HttpServerUtility
+        '    Private OrderElmt As XmlElement
+        '    Protected Friend myWeb As Cms
+        '    Public moConfig As System.Collections.Specialized.NameValueCollection
+        '    Private moServer As System.Web.HttpServerUtility
 
-            Dim nFirstPayment As Double
-            Dim nRepeatPayment As Double
-            Dim sRepeatInterval As String
-            Dim nRepeatLength As Integer
-            Dim bDelayStart As Boolean
-            Dim dStartDate As Date
+        '    Dim nFirstPayment As Double
+        '    Dim nRepeatPayment As Double
+        '    Dim sRepeatInterval As String
+        '    Dim nRepeatLength As Integer
+        '    Dim bDelayStart As Boolean
+        '    Dim dStartDate As Date
 
-            Dim sPaymentMethod As String
-            Dim sTransactionRef As String
-            Dim sDescription As String
+        '    Dim sPaymentMethod As String
+        '    Dim sTransactionRef As String
+        '    Dim sDescription As String
 
-            Dim sGivenName As String
-            Dim sBillingAddress1 As String
-            Dim sBillingAddress2 As String
-            Dim sBillingTown As String
-            Dim sBillingCounty As String
-            Dim sBillingPostcode As String
-            Dim sEmail As String
+        '    Dim sGivenName As String
+        '    Dim sBillingAddress1 As String
+        '    Dim sBillingAddress2 As String
+        '    Dim sBillingTown As String
+        '    Dim sBillingCounty As String
+        '    Dim sBillingPostcode As String
+        '    Dim sEmail As String
 
-            Public moPageXml As XmlDocument
-
-
-
-            Sub New(ByRef aWeb As Protean.Cms)
-                aWeb.PerfMon.Log("Order", "New")
-                myWeb = aWeb
-                moConfig = myWeb.moConfig
-                moPageXml = myWeb.moPageXml
-                moServer = aWeb.moCtx.Server
-                OrderElmt = moPageXml.CreateElement("Order")
-            End Sub
-
-            ReadOnly Property xml As XmlElement
-                Get
-                    Return OrderElmt
-                End Get
-            End Property
-
-            Property PaymentMethod As String
-                Get
-                    Return sPaymentMethod
-                End Get
-                Set(ByVal Value As String)
-                    sPaymentMethod = Value
-                    OrderElmt.SetAttribute("paymentMethod", Value)
-                End Set
-            End Property
-
-            Property firstPayment As Double
-                Get
-                    Return nFirstPayment
-                End Get
-                Set(ByVal Value As Double)
-                    nFirstPayment = Value
-                    OrderElmt.SetAttribute("total", Value)
-                End Set
-            End Property
-
-            Property repeatPayment As Double
-                Get
-                    Return nRepeatPayment
-                End Get
-                Set(ByVal Value As Double)
-                    nRepeatPayment = Value
-                    OrderElmt.SetAttribute("repeatPrice", Value)
-                End Set
-            End Property
-
-            Property repeatInterval As String
-                Get
-                    Return sRepeatInterval
-                End Get
-                Set(ByVal Value As String)
-                    sRepeatInterval = Value
-                    OrderElmt.SetAttribute("repeatInterval", Value)
-                End Set
-            End Property
-
-            Property repeatLength As Integer
-                Get
-                    Return nRepeatLength
-                End Get
-                Set(ByVal Value As Integer)
-                    nRepeatLength = Value
-                    OrderElmt.SetAttribute("repeatLength", Value)
-                End Set
-            End Property
-
-            Property delayStart As Boolean
-                Get
-                    Return bDelayStart
-                End Get
-                Set(ByVal Value As Boolean)
-                    bDelayStart = Value
-                    If Value Then
-                        OrderElmt.SetAttribute("delayStart", "true")
-                    Else
-                        OrderElmt.SetAttribute("delayStart", "false")
-                    End If
-                End Set
-            End Property
-
-            Property startDate As Date
-                Get
-                    Return dStartDate
-                End Get
-                Set(ByVal Value As Date)
-                    dStartDate = Value
-                    OrderElmt.SetAttribute("startDate", xmlDate(dStartDate))
-                End Set
-            End Property
-
-            Property TransactionRef As String
-                Get
-                    Return sTransactionRef
-                End Get
-                Set(ByVal Value As String)
-                    sTransactionRef = Value
-                    OrderElmt.SetAttribute("transactionRef", sTransactionRef)
-                End Set
-            End Property
+        '    Public moPageXml As XmlDocument
 
 
-            Property description As String
-                Get
-                    Return sDescription
-                End Get
-                Set(ByVal Value As String)
-                    sDescription = Value
-                    Dim descElmt As XmlElement = moPageXml.CreateElement("Description")
-                    descElmt.InnerText = sDescription
-                    OrderElmt.AppendChild(descElmt)
-                End Set
-            End Property
 
-            Sub SetAddress(ByVal GivenName As String, ByVal Email As String, ByVal Telephone As String, ByVal TelephoneCountryCode As String, ByVal Company As String, ByVal Street As String, ByVal City As String, ByVal State As String, ByVal PostalCode As String, ByVal Country As String)
+        '    Sub New(ByRef aWeb As Protean.Cms)
+        '        aWeb.PerfMon.Log("Order", "New")
+        '        myWeb = aWeb
+        '        moConfig = myWeb.moConfig
+        '        moPageXml = myWeb.moPageXml
+        '        moServer = aWeb.moCtx.Server
+        '        OrderElmt = moPageXml.CreateElement("Order")
+        '    End Sub
 
-                Dim addElmt As XmlElement = moPageXml.CreateElement("Contact")
-                addElmt.SetAttribute("type", "Billing Address")
-                xmlTools.addElement(addElmt, "GivenName", GivenName)
-                xmlTools.addElement(addElmt, "Email", Email)
-                xmlTools.addElement(addElmt, "Telephone", Telephone)
-                xmlTools.addElement(addElmt, "TelephoneCountryCode", TelephoneCountryCode)
-                xmlTools.addElement(addElmt, "Company", Company)
-                xmlTools.addElement(addElmt, "Street", Street)
-                xmlTools.addElement(addElmt, "City", City)
-                xmlTools.addElement(addElmt, "State", State)
-                xmlTools.addElement(addElmt, "PostalCode", PostalCode)
-                xmlTools.addElement(addElmt, "Country", Country)
-                OrderElmt.AppendChild(addElmt)
-            End Sub
+        '    ReadOnly Property xml As XmlElement
+        '        Get
+        '            Return OrderElmt
+        '        End Get
+        '    End Property
 
-        End Class
+        '    Property PaymentMethod As String
+        '        Get
+        '            Return sPaymentMethod
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sPaymentMethod = Value
+        '            OrderElmt.SetAttribute("paymentMethod", Value)
+        '        End Set
+        '    End Property
+
+        '    Property firstPayment As Double
+        '        Get
+        '            Return nFirstPayment
+        '        End Get
+        '        Set(ByVal Value As Double)
+        '            nFirstPayment = Value
+        '            OrderElmt.SetAttribute("total", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatPayment As Double
+        '        Get
+        '            Return nRepeatPayment
+        '        End Get
+        '        Set(ByVal Value As Double)
+        '            nRepeatPayment = Value
+        '            OrderElmt.SetAttribute("repeatPrice", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatInterval As String
+        '        Get
+        '            Return sRepeatInterval
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sRepeatInterval = Value
+        '            OrderElmt.SetAttribute("repeatInterval", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatLength As Integer
+        '        Get
+        '            Return nRepeatLength
+        '        End Get
+        '        Set(ByVal Value As Integer)
+        '            nRepeatLength = Value
+        '            OrderElmt.SetAttribute("repeatLength", Value)
+        '        End Set
+        '    End Property
+
+        '    Property delayStart As Boolean
+        '        Get
+        '            Return bDelayStart
+        '        End Get
+        '        Set(ByVal Value As Boolean)
+        '            bDelayStart = Value
+        '            If Value Then
+        '                OrderElmt.SetAttribute("delayStart", "true")
+        '            Else
+        '                OrderElmt.SetAttribute("delayStart", "false")
+        '            End If
+        '        End Set
+        '    End Property
+
+        '    Property startDate As Date
+        '        Get
+        '            Return dStartDate
+        '        End Get
+        '        Set(ByVal Value As Date)
+        '            dStartDate = Value
+        '            OrderElmt.SetAttribute("startDate", xmlDate(dStartDate))
+        '        End Set
+        '    End Property
+
+        '    Property TransactionRef As String
+        '        Get
+        '            Return sTransactionRef
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sTransactionRef = Value
+        '            OrderElmt.SetAttribute("transactionRef", sTransactionRef)
+        '        End Set
+        '    End Property
+
+
+        '    Property description As String
+        '        Get
+        '            Return sDescription
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sDescription = Value
+        '            Dim descElmt As XmlElement = moPageXml.CreateElement("Description")
+        '            descElmt.InnerText = sDescription
+        '            OrderElmt.AppendChild(descElmt)
+        '        End Set
+        '    End Property
+
+        '    Sub SetAddress(ByVal GivenName As String, ByVal Email As String, ByVal Telephone As String, ByVal TelephoneCountryCode As String, ByVal Company As String, ByVal Street As String, ByVal City As String, ByVal State As String, ByVal PostalCode As String, ByVal Country As String)
+
+        '        Dim addElmt As XmlElement = moPageXml.CreateElement("Contact")
+        '        addElmt.SetAttribute("type", "Billing Address")
+        '        xmlTools.addElement(addElmt, "GivenName", GivenName)
+        '        xmlTools.addElement(addElmt, "Email", Email)
+        '        xmlTools.addElement(addElmt, "Telephone", Telephone)
+        '        xmlTools.addElement(addElmt, "TelephoneCountryCode", TelephoneCountryCode)
+        '        xmlTools.addElement(addElmt, "Company", Company)
+        '        xmlTools.addElement(addElmt, "Street", Street)
+        '        xmlTools.addElement(addElmt, "City", City)
+        '        xmlTools.addElement(addElmt, "State", State)
+        '        xmlTools.addElement(addElmt, "PostalCode", PostalCode)
+        '        xmlTools.addElement(addElmt, "Country", Country)
+        '        OrderElmt.AppendChild(addElmt)
+        '    End Sub
+
+        'End Class
 
 
 #End Region
@@ -6793,10 +6793,15 @@ processFlow:
                                     'Add Item
                                     If myWeb.moRequest.Form.Get("donationAmount") <> "" Then
                                         If IsNumeric(myWeb.moRequest.Form.Get("donationAmount")) Then
-                                            AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
-                                        End If
-                                    Else
-                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
+                                            Dim CartItemName As String = "Donation"
+                                            If myWeb.moRequest.Form.Get("donationName") <> "" Then
+                                                CartItemName = myWeb.moRequest.Form.Get("donationName")
+                                            End If
+
+                                            AddItem(nProductKey, nQuantity, oOptions, CartItemName, CDbl(myWeb.moRequest.Form.Get("donationAmount")))
+                                                End If
+                                            Else
+                                                AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
                                     End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
