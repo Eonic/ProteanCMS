@@ -2,20 +2,20 @@ var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
 var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 var checkiFrameLoaded;
 
-$(document).ready(function() {
-    $(".all-breadcrumb").click(function(){
+$(document).ready(function () {
+    $(".all-breadcrumb").click(function () {
         $(".admin-breadcrumb").addClass("breadcrumb-height");
         $(".all-breadcrumb").hide();
         $(".less-breadcrumb").show();
         return false;
     });
-    $(".less-breadcrumb").click(function() {
+    $(".less-breadcrumb").click(function () {
         $(".admin-breadcrumb").removeClass("breadcrumb-height");
         $(".all-breadcrumb").show();
         $(".less-breadcrumb").hide();
         return false;
     });
-    if ($(".admin-breadcrumb").height() < $(".admin-breadcrumb-inner").height()){
+    if ($(".admin-breadcrumb").height() < $(".admin-breadcrumb-inner").height()) {
         $(".all-breadcrumb").show();
 
     };
@@ -290,7 +290,7 @@ $(document).ready(function() {
     });
 
     $(".modal.pick-page").on('shown.bs.modal', function (e) {
-        
+
         $(e.currentTarget).find('#MenuTree').ajaxtreeview({
             loadPath: treeviewPath,
             ajaxCmd: '',
@@ -471,7 +471,7 @@ $(document).ready(function() {
         if (valueSelected.toLowerCase() === "delete") {
             var activeProductCheckboxes = $('.inventory-bulk-checkbox[data-status="1"]');
             activeProductCheckboxes.prop('checked', false);
-            activeProductCheckboxes.prop('disabled', true);           
+            activeProductCheckboxes.prop('disabled', true);
         }
 
         //select all value based on items checked.
@@ -689,7 +689,7 @@ $.fn.prepareAdminXform = function () {
 };
 
 function passImgToForm(targetForm, targetField) {
-    
+
     cUrl = (document.forms['imageDetailsForm'].elements['cPathName'].value).replace(/'/g, "")
     cAlt = (document.forms['imageDetailsForm'].elements['cDesc'].value).replace(/'/g, "")
     cWidth = document.forms['imageDetailsForm'].elements['nWidth'].value
@@ -923,17 +923,18 @@ Original preload function has been kept but is unused.
         // Method for if the level param is in play
         expandToLevel: function (settings) {
 
-            $('#MenuTree li.levelExpandable:has(".activeParent,.inactiveParent")').each(function () {
+            $('#MenuTree li.levelExpandable').has(".activeParent,.inactiveParent").each(function () {
                 $(this).removeClass('levelExpandable');
                 $(this).removeClass('expandable');
                 var ewPageId = $(this).attr('id').replace(/node/, "");
                 $(this).insertAfter('<div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-fw"> </i></div>')
                     .load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId }, function () {
-                        $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
+
+                        $(this).children().find('li').not(".activeParent,.inactiveParent").addClass('expandable');
                         $("#MenuTree").buildTree(settings);
                         settings.level = settings.level - 1;
                         if (settings.level > 0) {
-                            $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('levelExpandable');
+                            $(this).children().find('li').has(".activeParent,.inactiveParent").addClass('levelExpandable');
                             $("#MenuTree").expandToLevel(settings);
                         }
                     });
@@ -944,21 +945,31 @@ Original preload function has been kept but is unused.
         // This function handles the tree's classes and mouse bindings for the "hit area"'s
         buildTree: function (settings) {
             // Add Hit area's (the clickable part)
-            $('#MenuTree li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            $('#MenuTree li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            //$('#MenuTree li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            //$('#MenuTree li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            if ($('#MenuTree li.collapsable i.hitarea').length == 0) {
+
+                $('#MenuTree li.collapsable').not('i.hitarea').has(".activeParent,.inactiveParent").prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            }
+
+            if ($('#MenuTree li.expandable i.hitarea').length == 0) {
+
+                $('#MenuTree li.expandable').not('i.hitarea').has(".activeParent,.inactiveParent").prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            }
+
             // Sort out assignments of the last tag
             $('#MenuTree').applyLast();
             // Remove any mouse bindings currently on the hitarea's
             $('#MenuTree li div.hitarea').unbind("click");
 
             //Mouse binding for open nodes
-            $('#MenuTree li.collapsable').find('.hitarea').unbind("click").click(function () {
+            $('#MenuTree li.collapsable').find('i.hitarea').unbind("click").click(function () {
                 // Remove old class assingments
 
                 $(this).removeClass('collapsable-hitarea').addClass('expandable-hitarea');
                 $(this).removeClass('fa-chevron-down').addClass('fa-chevron-right');
 
-                
+
 
                 // Remove the child tree
 
@@ -967,7 +978,7 @@ Original preload function has been kept but is unused.
                 // Reset Class Status
                 $(this).parent().removeClass('collapsable').addClass('expandable');
                 // Set kids to be closed again
-                $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
+                $(this).children().find('li').not(".activeParent,.inactiveParent").addClass('expandable');
                 // Calling a rebuild assings the correct functionality
                 $("#MenuTree").buildTree(settings)
                 //settings doesn't work in the next line? so used above
@@ -1005,7 +1016,7 @@ Original preload function has been kept but is unused.
                     var originalPageId = $("#MenuTree").urlParam('pgid');
                     $(this).parent().find('ul').load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: originalPageId, expId: ewPageId, context: ewCloneContextId }, function () {
                         // Find out which of the kids have kids
-                        $(this).children().find('li').has('i.activeParent').addClass('expandable');
+                        $(this).children().find('li').not('i.activeParent').addClass('expandable');
                         // Rebuild the tree
                         $("#MenuTree").buildTree(settings)
 
@@ -1017,8 +1028,8 @@ Original preload function has been kept but is unused.
 
                     $(this).parent().find('ul').load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId, context: ewCloneContextId }, function () {
                         // Find out which of the kids have kids
-                        //alert('test');
-                        $(this).children().find('li').has('i.activeParent,i.inactiveParent').addClass('expandable');
+
+                        $(this).children().find('li').not('i.activeParent,i.inactiveParent').addClass('expandable');
                         // Rebuild the tree
                         $("#MenuTree").buildTree(settings)
 
@@ -1034,8 +1045,20 @@ Original preload function has been kept but is unused.
         // Same as above, prototype buildTree for no reloads      
         buildTree_noreload: function (settings) {
             // Add Hit area's (the clickable part)
-            $('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            $('#MenuTree li.expandable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            //$('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            //$('#MenuTree li.expandable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+
+            if ($('#MenuTree li.collapsable i.hitarea').length == 0) {
+
+                $('#MenuTree li.collapsable').not('i.hitarea').has(".activeParent,.inactiveParent").prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            }
+
+            if ($('#MenuTree li.expandable i.hitarea').length == 0) {
+
+                $('#MenuTree li.expandable').not('i.hitarea').has(".activeParent,.inactiveParent").prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            }
+
+
             // Sort out assignments of the last tag
             $('#MenuTree').applyLast();
             // Remove any mouse bindings currently on the hitarea's
@@ -1093,7 +1116,9 @@ Original preload function has been kept but is unused.
                     var originalPageId = $("#MenuTree").urlParam('pgid');
                     $(this).parent().next().load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: originalPageId, expId: ewPageId, context: ewCloneContextId }, function () {
                         // Find out which of the kids have kids
-                        $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
+                        if ($(this).children().find('li').length != 0) {
+                            $(this).children().find('li').not(".activeParent,.inactiveParent").addClass('expandable');
+                        }
                         // Rebuild the tree
                         $("#MenuTree").buildTree_noreload(settings)
                     });
@@ -1105,7 +1130,7 @@ Original preload function has been kept but is unused.
 
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
-                           // alert($(loadNode).html());
+                            // alert($(loadNode).html());
                         }
                         else {
                             $(loadNode).find("ul .list-group-item").insertAfter(parentNode)
@@ -1113,7 +1138,9 @@ Original preload function has been kept but is unused.
                         loadNode.remove()
 
                         // Find out which of the kids have kids
-                        loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
+                        if (loadNode.children().find('li').length != 0) {
+                            loadNode.children().find('li').not('.activeParent,.inactiveParent').addClass('expandable');
+                        }
                         // Rebuild the tree
                         $("#MenuTree").buildTree_noreload(settings)
                     });
@@ -1268,7 +1295,7 @@ Original preload function has been kept but is unused.
 
         moveTop: function (moveId) {
             var moveIdNode = "node" + moveId;
-          
+
             if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
                 $('#MenuTree li#' + moveIdNode).addClass("locked");
                 $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
@@ -2169,26 +2196,26 @@ $(document).on('click', '.PrevPage', function () {
 });
 
 function ValidateContentForm(event) {
-    
+
     if (form_check(event)) {
         var pageId = this.getQueryStringParam('pgid');
         $(".hiddenType").val("Page");
         $(".hiddenPageId").val(pageId);
         var newStructName = $("#cStructName").val();
-       editPage.structNameOnChange(newStructName);
-       
+        editPage.structNameOnChange(newStructName);
+
     }
     else { return true; }
 
 }
 
 function RedirectClick(redirectType) {
-  
+
     //var redirectType = $("redirectType").val();
     $(".hiddenRedirectType").val(redirectType);
     if (redirectType == "404Redirect") {
-          
-         $(".hiddenParentCheck").val("false");
+
+        $(".hiddenParentCheck").val("false");
         $("#redirectModal").modal("hide");
         var isPage = $(".hiddenType").val();
         if (isPage == "Page") {
@@ -2197,9 +2224,9 @@ function RedirectClick(redirectType) {
         else {
             document.createElement('form').submit.call(document.EditContent);
         }
-        }
+    }
     else {
-        
+
         $("input[name*='redirectOption']").val(redirectType);
 
         var pageId = $(".hiddenPageId").val();
@@ -2212,8 +2239,8 @@ function RedirectClick(redirectType) {
 
                     if (response.data == "True") {
                         isParent = response.data;
-                       
-                       
+
+
                         $("#RedirectionChildConfirmationModal").modal("show");
                         $("#btnYescreateRuleForChild").removeAttr("disabled");
                         $("#btnNocreateRuleForChild").removeAttr("disabled");
@@ -2230,7 +2257,7 @@ function RedirectClick(redirectType) {
                                     $("#redirectModal").modal("hide");
                                     $(".hiddenParentCheck").val("false");
                                     localStorage.originalStructName = newUrl;
-                                   
+
                                 }
                             });
 
@@ -2258,7 +2285,7 @@ function RedirectClick(redirectType) {
 
     }
 
-    
+
 
 
 }//);
@@ -2289,20 +2316,21 @@ $(document).on("click", "#btnNocreateRuleForChild", function (event) {
 
 $(document).on("click", "#btnYescreateRuleForChild", function (event) {
 
+    var pageurl = $(".hiddenOldUrl").val();
     var pageId = $(".hiddenPageId").val();
     var redirectType = $("input[name*='redirectOption']").val();
     var newUrl = $("#NewUrl").val();
     var oldUrl = $("#OldUrl").val();
     var type = $(".hiddenType").val();
     var isParent = $("input[name*='IsParent']").val();
-    inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
+    inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type, pageurl: pageurl };
     axios.post(redirectAPIUrl, inputJson)
         .then(function (response) {
             if (response.data == "success") {
                 $("#RedirectionChildConfirmationModal").modal("hide");
                 $("#redirectModal").modal("hide");
                 document.createElement('form').submit.call(document.EditPage);
-               
+
 
             }
         });
@@ -2373,6 +2401,10 @@ if (editPageElement) {
                         $('.btnRedirectSave').removeAttr("disabled");
                         $("#redirectModal").modal("show");
                         var oldURLFromXsl = $(".hiddenProductOldUrlFromXsl").val();
+                        var url = $(".hiddenOldUrl").val();
+
+                        //oldURLFromXsl = oldURLFromXsl.replace(' ', '-');
+                        //newStructName = newStructName.replace(' ', '-');
                         $("#OldUrl").val(oldURLFromXsl);
                         $("#NewUrl").val(newStructName);
                         this.structName = newStructName;
@@ -2411,7 +2443,7 @@ if (editPageElement) {
         }
     });
 
-    }
+}
 
 
 $(document).ready(function () {
@@ -2427,7 +2459,7 @@ $(document).ready(function () {
 });
 
 $(document).on("change", "#cContentPath", function (event) {
-    
+
     $(".hidUrlChangeFlag").val("1");
 
 });
@@ -2442,17 +2474,17 @@ $(document).on("change", "#cStructName", function (event) {
 
 
 function ValidateProductForm(event) {
-    
+
     if (form_check(event)) {
         var productId = this.getQueryStringParam('id');
         if (productId != null) {
-        $(".hiddenParentCheck").val("False");
-        $(".hiddenType").val("Product");
-        $(".hiddenPageId").val(productId);
-        var cNewContentPath = $("#cContentPath").val();
-        return editProduct.UrlPathOnChange(cNewContentPath);
-    }
-    else { return true;}
+            $(".hiddenParentCheck").val("False");
+            $(".hiddenType").val("Product");
+            $(".hiddenPageId").val(productId);
+            var cNewContentPath = $("#cContentPath").val();
+            return editProduct.UrlPathOnChange(cNewContentPath);
+        }
+        else { return true; }
     }
 }
 //Edit Product
@@ -2481,8 +2513,8 @@ if (editProductElement > 0) {
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
-                
-               if ($(".hidUrlChangeFlag").val() == "1") {
+
+                if ($(".hidUrlChangeFlag").val() == "1") {
                     if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
                         var redirectType = $(".hiddenRedirectType").val();
                         $('.btnRedirectSave').removeAttr("disabled");

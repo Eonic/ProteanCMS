@@ -566,7 +566,7 @@ Recheck:
                         If goRequest("ewCmd2") = "Do" Then
                             Dim oFsh As New fsHelper(myWeb.moCtx)
                             oFsh.mcRoot = myWeb.goServer.MapPath("/")
-                            AddResponse(oFsh.OptimiseImages("/Images", 0, 0, False))
+                            AddResponse(oFsh.OptimiseImages("/Images", 0, 0, False, goConfig("TinifyKey")))
                             cStep = 1
                         End If
 

@@ -603,7 +603,7 @@ Partial Public Class Cms
         End Function
 
         Protected Friend Function getKey(ByVal objectType As objectTypes) As String
-            myWeb.PerfMon.Log("DBHelper", "getKey")
+
             Dim strReturn As String = ""
             Select Case objectType
                 Case 0

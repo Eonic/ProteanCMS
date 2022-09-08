@@ -842,24 +842,36 @@ Partial Public Class fsHelper
 
     End Function
 
-    Public Function OptimiseImages(ByVal path As String, Optional ByRef nFileCount As Long = 0, Optional ByRef nSavings As Long = 0, ByVal Optional lossless As Boolean = True) As String
+    Public Function OptimiseImages(ByVal path As String, Optional ByRef nFileCount As Long = 0, Optional ByRef nSavings As Long = 0, ByVal Optional lossless As Boolean = True, ByVal Optional tinyAPIKey As String = "") As String
         Try
             Dim thisDir As New DirectoryInfo(goServer.MapPath(path))
             Dim ofile As FileInfo
             Dim ofolder As DirectoryInfo
+            Dim newSavings As Long = 0
 
             Dim nLengthBefore As Long = 0
 
             For Each ofolder In thisDir.GetDirectories()
-                OptimiseImages(path & "/" & ofolder.Name, nFileCount, nSavings, lossless)
-            Next
+                OptimiseImages(path & "/" & ofolder.Name, nFileCount, nSavings, lossless, tinyAPIKey)
 
-            For Each ofile In thisDir.GetFiles
-                Dim oImgTool As New Protean.Tools.Image("")
-                nSavings = nSavings + oImgTool.CompressImage(ofile, lossless)
-                nFileCount = nFileCount + 1
             Next
+            If thisDir.Name.StartsWith("~") Then
+                For Each ofile In thisDir.GetFiles
+                    Dim oImgTool As New Protean.Tools.Image("")
+                    oImgTool.TinifyKey = tinyAPIKey
+                    newSavings = newSavings + oImgTool.CompressImage(ofile, lossless)
+                    nFileCount = nFileCount + 1
+                Next
+                Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
+                    Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes("Last Optimised:" & Now().ToLongDateString & " Savings:" & newSavings & " FileCount:" & nFileCount)
+                    fs.Write(info, 0, info.Length)
+                    fs.Close()
+                End Using
 
+            End If
+
+
+            nSavings = nSavings + newSavings
             Return nFileCount & " Files Updated " & nSavings / 1024 & " Kb have been saved"
 
         Catch ex As Exception
@@ -874,7 +886,7 @@ Partial Public Class fsHelper
 
 
             context.Response.AddHeader("Pragma", "no-cache")
-            context.Response.AddHeader("Cache-Control", "private, no-cache")
+            context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
             mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
             mcRoot = context.Server.MapPath("/")
@@ -908,7 +920,7 @@ Partial Public Class fsHelper
     End Sub
 
     Private Sub ReturnOptions(ByVal context As System.Web.HttpContext)
-        context.Response.AddHeader("Allow", "POST,PUT,OPTIONS")
+        context.Response.AddHeader("Allow", "POST, PUT, OPTIONS")
         context.Response.StatusCode = 200
     End Sub
 
@@ -929,7 +941,7 @@ Partial Public Class fsHelper
     ' Upload partial file
     Private Sub UploadPartialFile(ByVal fileName As String, ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
         If context.Request.Files.Count <> 1 Then
-            Throw New System.Web.HttpRequestValidationException("Attempt to upload chunked file containing more than one fragment per request")
+            Throw New System.Web.HttpRequestValidationException("Attempt To upload chunked file containing more than one fragment per request")
         End If
         Dim inputStream = context.Request.Files(0).InputStream
         Dim fullName = mcStartFolder & Path.GetFileName(fileName)
