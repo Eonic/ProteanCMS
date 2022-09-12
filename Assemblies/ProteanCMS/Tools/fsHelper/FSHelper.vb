@@ -856,18 +856,20 @@ Partial Public Class fsHelper
 
             Next
             If thisDir.Name.StartsWith("~") Then
-                For Each ofile In thisDir.GetFiles
-                    Dim oImgTool As New Protean.Tools.Image("")
-                    oImgTool.TinifyKey = tinyAPIKey
-                    newSavings = newSavings + oImgTool.CompressImage(ofile, lossless)
-                    nFileCount = nFileCount + 1
-                Next
-                Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
-                    Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes("Last Optimised:" & Now().ToLongDateString & " Savings:" & newSavings & " FileCount:" & nFileCount)
-                    fs.Write(info, 0, info.Length)
-                    fs.Close()
-                End Using
-
+                Dim LogFile As FileInfo = New FileInfo(goServer.MapPath(path) & "/optimiselog.txt")
+                If LogFile.Exists = False Then
+                    For Each ofile In thisDir.GetFiles
+                        Dim oImgTool As New Protean.Tools.Image("")
+                        oImgTool.TinifyKey = tinyAPIKey
+                        newSavings = newSavings + oImgTool.CompressImage(ofile, lossless)
+                        nFileCount = nFileCount + 1
+                    Next
+                    Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
+                        Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes("Last Optimised:" & Now().ToLongDateString & " Savings:" & newSavings & " FileCount:" & nFileCount)
+                        fs.Write(info, 0, info.Length)
+                        fs.Close()
+                    End Using
+                End If
             End If
 
 

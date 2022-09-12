@@ -530,26 +530,29 @@ Public Class Image
         Dim cProcessInfo As String = ""
         Try
 
-            ' Try
-            '     Tinify.Key = TinifyKey
-            '     Await Tinify.Validate()
-            ' Catch
-            '     cProcessInfo = "Key Validation Failed"
-            ' End Try
+            Try
+                Tinify.Key = TinifyKey
+                Dim bIsValid As Boolean = Tinify.Validate().GetAwaiter().GetResult()
+                If bIsValid = True Then
+                    cProcessInfo = "Key Validation Succeeded"
+                End If
+            Catch
+                cProcessInfo = "Key Validation Failed"
+            End Try
 
             TinifyAPI.Tinify.Key = TinifyKey
-            Dim compressionsThisMonth = TinifyAPI.Tinify.CompressionCount
-            Dim tinifyImg As Task(Of TinifyAPI.Source) = TinifyAPI.Tinify.FromFile(filepathFrom)
+                Dim compressionsThisMonth = TinifyAPI.Tinify.CompressionCount
+                Dim tinifyImg As Task(Of TinifyAPI.Source) = TinifyAPI.Tinify.FromFile(filepathFrom)
 
-            Dim newImage As TinifyAPI.Source = Await tinifyImg
+            Dim newImage As TinifyAPI.Source = tinifyImg.GetAwaiter().GetResult()
 
-            Await newImage.ToFile(filepathTo)
+            newImage.ToFile(filepathTo).GetAwaiter().GetResult()
 
 
 
         Catch ex As Exception
 
-            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo))
         End Try
 
 
