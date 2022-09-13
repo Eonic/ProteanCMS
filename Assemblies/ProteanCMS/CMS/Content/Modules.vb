@@ -408,7 +408,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     'Dim nContentFilterId = myWeb.moPageXml.SelectSingleNode("Page/Contents/Content[@moduleType='ContentFilter']").Attributes(0).Value
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
-
+                    Dim cnt As Int16
                     Dim oFrmGroup As XmlElement
                     Dim filterForm As xForm = New xForm(myWeb)
 
@@ -474,62 +474,73 @@ where cl.nStructId = " & myWeb.mnPageId)
                         filterForm.updateInstanceFromRequest()
                         filterForm.validate()
                         If (filterForm.valid) Then
+                            If (myWeb.moRequest.Form("Submit") = "Remove Filter") Then
+                                myWeb.moSession.Remove("FilterApplied")
+                            End If
+
+                            If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
+                                If (Convert.ToString(myWeb.moRequest.Form("Submit")).Contains("Remove -")) Then
+                                    Dim aFilter() As String = Convert.ToString(myWeb.moRequest.Form("Submit")).Split("-")
+                                    If (aFilter.Length > 0) Then
+                                        Dim sessionValue As String = myWeb.moSession(aFilter(1).Trim())
+                                        sessionValue.Replace(aFilter(2).Trim(), "")
+                                        myWeb.moSession(aFilter(1).Trim()) = sessionValue
+                                    End If
+                                End If
+                            End If
 
                             For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
-                                    Dim calledType As Type
-                                    Dim className As String = oFilterElmt.GetAttribute("className")
-                                    Dim providerName As String = oFilterElmt.GetAttribute("providerName")
+                                Dim calledType As Type
+                                Dim className As String = oFilterElmt.GetAttribute("className")
+                                Dim providerName As String = oFilterElmt.GetAttribute("providerName")
 
-                                    If className <> "" Then
+                                If className <> "" Then
                                     If (myWeb.moRequest.Form("Submit") = "Remove Filter") Then
                                         myWeb.moSession.Remove(className)
                                     End If
                                     If providerName = "" Or LCase(providerName) = "default" Then
-                                            providerName = "Protean.Providers.Filters." & className
-                                            calledType = System.Type.GetType(providerName, True)
+                                        providerName = "Protean.Providers.Filters." & className
+                                        calledType = System.Type.GetType(providerName, True)
+                                    Else
+                                        Dim castObject As Object = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders")
+                                        Dim moPrvConfig As Protean.ProviderSectionHandler = castObject
+                                        Dim ourProvider As Object = moPrvConfig.Providers(providerName)
+                                        Dim assemblyInstance As [Assembly]
+
+                                        If ourProvider.parameters("path") <> "" Then
+                                            assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(ourProvider.parameters("path")))
                                         Else
-                                            Dim castObject As Object = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders")
-                                            Dim moPrvConfig As Protean.ProviderSectionHandler = castObject
-                                            Dim ourProvider As Object = moPrvConfig.Providers(providerName)
-                                            Dim assemblyInstance As [Assembly]
-
-                                            If ourProvider.parameters("path") <> "" Then
-                                                assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(ourProvider.parameters("path")))
-                                            Else
-                                                assemblyInstance = [Assembly].Load(ourProvider.Type)
-                                            End If
-                                            If ourProvider.parameters("rootClass") = "" Then
-                                                calledType = assemblyInstance.GetType("Protean.Providers.Filters." & providerName, True)
-                                            Else
-
-                                                calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & "." & className, True)
-                                            End If
+                                            assemblyInstance = [Assembly].Load(ourProvider.Type)
                                         End If
+                                        If ourProvider.parameters("rootClass") = "" Then
+                                            calledType = assemblyInstance.GetType("Protean.Providers.Filters." & providerName, True)
+                                        Else
 
-                                        Dim methodname As String = "ApplyFilter"
-
-                                        Dim o As Object = Activator.CreateInstance(calledType)
-
-                                        Dim args(3) As Object
-                                        args(0) = myWeb
-                                        args(1) = whereSQL
-                                        args(2) = filterForm
-                                        args(3) = oFrmGroup
-
-                                        whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
+                                            calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & "." & className, True)
+                                        End If
                                     End If
 
-                                Next
+                                    Dim methodname As String = "ApplyFilter"
 
-                            End If
+                                    Dim o As Object = Activator.CreateInstance(calledType)
+
+                                    Dim args(3) As Object
+                                    args(0) = myWeb
+                                    args(1) = whereSQL
+                                    args(2) = filterForm
+                                    args(3) = oFrmGroup
+
+                                    whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
+                                End If
+
+                            Next
+
                         End If
-
-
-                    If (myWeb.moRequest.Form("Submit") = "Remove Filter") Then
-                        myWeb.moSession.Remove("FilterApplied")
-
                     End If
+
+
+
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
@@ -544,7 +555,15 @@ where cl.nStructId = " & myWeb.mnPageId)
                                     If (myWeb.moSession(className) IsNot Nothing) Then
                                         Dim filterValue As String = Convert.ToString(myWeb.moSession(className))
 
-                                        filterForm.addSubmit(oFrmGroup, Convert.ToString(myWeb.moSession(className)), "", True)
+                                        Dim cFilterIds As String = myWeb.moSession(className)
+                                        Dim aFilterId() As String = cFilterIds.Split(",")
+                                        For cnt = 0 To aFilterId.Length - 1 Step 1
+                                            If (aFilterId(cnt) <> String.Empty) Then
+                                                If aFilterId(cnt) <> "" Then
+                                                    filterForm.addSubmit(oFrmGroup, "Remove - " + className + "-" + aFilterId(cnt), aFilterId(cnt))
+                                                End If
+                                            End If
+                                        Next
                                     End If
                                 End If
                             Next
