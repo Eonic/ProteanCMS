@@ -609,8 +609,8 @@ Partial Public Class Cms
                             mnCartId = 0
                         Else
 
-                            If moConfig("CartSessionTimeOut") IsNot Nothing Then
-                                HttpContext.Current.Session.Timeout = 3600 * CInt(moConfig("CartSessionTimeOut"))
+                            If moConfig("CartSessionTimeOut") IsNot Nothing And moConfig("CartSessionTimeOut") <> 0 Then
+                                HttpContext.Current.Session.Timeout = 60 * CInt(moConfig("CartSessionTimeOut"))
                             End If
 
                             mnCartId = CInt(myWeb.moSession("CartId"))
