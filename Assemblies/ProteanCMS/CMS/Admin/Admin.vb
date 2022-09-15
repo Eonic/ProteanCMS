@@ -986,8 +986,15 @@ ProcessFlow:
                                     'skip if already defined in Xform.
                                     myWeb.moSession("lastPage") = ""
                                 ElseIf myWeb.moSession("lastPage") <> "" Then
-                                    myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
-                                    myWeb.moSession("lastPage") = ""
+                                    If mcEwCmd = "EditPageSEO" Then
+
+                                        myWeb.msRedirectOnEnd = "/?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.moRequest("pgid")
+
+                                    Else
+
+                                        myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                        myWeb.moSession("lastPage") = ""
+                                    End If
                                 Else
                                     oPageDetail.RemoveAll()
                                     moAdXfm.valid = False
