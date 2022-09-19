@@ -109,11 +109,11 @@ Partial Public Class Cms
         End Class
 
         Public Sub New(ByRef aWeb As Protean.Cms)
-            'myWeb.PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables
                 myWeb = aWeb
+                myWeb.PerfMon.Log("Search", "New")
                 moPageXml = myWeb.moPageXml
                 moConfig = myWeb.moConfig
 
@@ -153,7 +153,7 @@ Partial Public Class Cms
         End Sub
 
         Public Sub New(ByRef myAPi As Protean.API)
-            myWeb.PerfMon.Log("Search", "New")
+            myAPi.PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables

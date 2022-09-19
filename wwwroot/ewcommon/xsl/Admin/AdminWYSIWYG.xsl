@@ -2427,7 +2427,7 @@
             </xsl:if>
 
             <xsl:choose>
-              <xsl:when test="parent::*[name()='Content']">
+              <xsl:when test="parent::*[name()='Content' and @display='related']">
                 <xsl:variable name="parId" select="parent::*[name()='Content']/@id"/>
                 <li class="divider">&#160;</li>
                 <li class="updown">
