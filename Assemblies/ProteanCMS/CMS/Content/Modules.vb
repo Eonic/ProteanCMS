@@ -471,6 +471,32 @@ where cl.nStructId = " & myWeb.mnPageId)
                     filterForm.addValues()
 
                     If (filterForm.isSubmitted) Then
+                        If (myWeb.moSession("FilterApplied") IsNot Nothing) Then
+                            If (myWeb.moSession("FilterApplied") = "true") Then
+                                For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
+                                    Dim className As String = oFilterElmt.GetAttribute("className")
+
+                                    If (myWeb.moSession(className) IsNot Nothing) Then
+                                            Dim filterValue As String = Convert.ToString(myWeb.moSession(className))
+
+
+                                            filterForm.Instance.SelectSingleNode(className).InnerText = Convert.ToString(myWeb.moSession(className))
+
+
+                                            Dim cFilterIds As String = myWeb.moSession(className)
+                                            Dim aFilterId() As String = cFilterIds.Split(",")
+                                            For cnt = 0 To aFilterId.Length - 1 Step 1
+                                                If (aFilterId(cnt) <> String.Empty) Then
+                                                    If aFilterId(cnt) <> "" Then
+                                                        filterForm.addSubmit(oFrmGroup, "Remove - " + className + "-" + aFilterId(cnt), aFilterId(cnt))
+                                                    End If
+                                                End If
+                                            Next
+
+                                    End If
+                                Next
+                            End If
+                        End If
                         filterForm.updateInstanceFromRequest()
                         filterForm.validate()
                         If (filterForm.valid) Then
@@ -547,28 +573,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                         myWeb.moSession("FilterApplied") = "true"
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,,,,,,, "Product")
                     End If
-                    If (myWeb.moSession("FilterApplied") IsNot Nothing) Then
-                        If (myWeb.moSession("FilterApplied") = "true") Then
-                            For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
-                                Dim className As String = oFilterElmt.GetAttribute("className")
-                                If (myWeb.moSession(className) IsNot Nothing) Then
-                                    If (myWeb.moSession(className) IsNot Nothing) Then
-                                        Dim filterValue As String = Convert.ToString(myWeb.moSession(className))
 
-                                        Dim cFilterIds As String = myWeb.moSession(className)
-                                        Dim aFilterId() As String = cFilterIds.Split(",")
-                                        For cnt = 0 To aFilterId.Length - 1 Step 1
-                                            If (aFilterId(cnt) <> String.Empty) Then
-                                                If aFilterId(cnt) <> "" Then
-                                                    filterForm.addSubmit(oFrmGroup, "Remove - " + className + "-" + aFilterId(cnt), aFilterId(cnt))
-                                                End If
-                                            End If
-                                        Next
-                                    End If
-                                End If
-                            Next
-                        End If
-                    End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "ContentFilter", ex, "", cProcessInfo, gbDebug)
                 End Try
