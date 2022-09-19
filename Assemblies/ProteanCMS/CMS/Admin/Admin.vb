@@ -987,7 +987,6 @@ ProcessFlow:
                                     myWeb.moSession("lastPage") = ""
                                 ElseIf myWeb.moSession("lastPage") <> "" Then
                                     If mcEwCmd = "EditPageSEO" Then
-
                                         myWeb.msRedirectOnEnd = "/?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.moRequest("pgid")
 
                                     Else
