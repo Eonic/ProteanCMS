@@ -1007,7 +1007,7 @@ Original preload function has been kept but is unused.
                     // Unbind after first click to prevent stupid users multiclicking
                     $('#MenuTree li i.hitarea').unbind("click");
                     // Remove current classes from the hit-area
-                    debugger;
+                  
                     $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
                     $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
                     // Get the node's ID (used in load)

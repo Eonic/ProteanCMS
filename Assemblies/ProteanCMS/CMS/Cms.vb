@@ -1928,25 +1928,22 @@ Public Class Cms
                                 End If
 
                                 If RequestedContentName <> cContentDetailName Then
-
                                     'Change to redirect to correct URL, automatic redirects for content name changes
                                     If RequestedContentName = "" Then
                                         If mcOriginalURL.EndsWith("-/") Then
+                                            mbRedirectPerm = True
                                             Me.msRedirectOnEnd = mcOriginalURL & cContentDetailName
                                         Else
                                             Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("/Item"))
+                                            mbRedirectPerm = True
                                             Me.msRedirectOnEnd = PathBefore & "/" & mnArtId & "-/" & cContentDetailName
                                         End If
 
                                     Else
                                         Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length)
+                                        mbRedirectPerm = True
                                         Me.msRedirectOnEnd = PathBefore & cContentDetailName
                                     End If
-
-
-                                    '  mnPageId = gnPageNotFoundId
-                                    '  oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
-                                    '  mnProteanCMSError = 1005
                                 End If
                             End If
                         End If
@@ -8528,7 +8525,6 @@ Public Class Cms
     End Function
 
     Public Sub SavePage(ByVal cUrl As String, ByVal cBody As String)
-        PerfMon.Log(mcModuleName, "SavePage")
         Dim cProcessInfo As String = ""
         Dim filename As String = ""
         Dim filepath As String = ""
@@ -8588,19 +8584,34 @@ Public Class Cms
             ' End If
 
             If filepath = "" Then filepath = "/"
+
+            PerfMon.Log(mcModuleName, "Create Path - Start")
             Dim sError As String = oFS.CreatePath(filepath)
+            PerfMon.Log(mcModuleName, "Create Path - End")
 
             If sError = "1" Then
-                PerfMon.Log(mcModuleName, "SavePage - start file write")
+                PerfMon.Log(mcModuleName, "Impersonation - Start")
+
+
+
+
+
+
                 Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+
+                    PerfMon.Log(mcModuleName, "Impersonation - End")
+
+                    PerfMon.Log(mcModuleName, "SavePage - start file write")
+
                     Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+                    PerfMon.Log(mcModuleName, "SavePage - end file write")
                 Else
                     cProcessInfo &= "<Error>Create File: " & filepath & " - " & sError & "</Error>" & vbCrLf
                 End If
                 oImp.UndoImpersonation()
                 oImp = Nothing
-                PerfMon.Log(mcModuleName, "SavePage - end file write")
+
             Else
                 cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
             End If

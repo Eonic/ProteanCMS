@@ -23,21 +23,15 @@ Public Class ewTidyTest : Implements IHttpHandler, IRequiresSessionState
 
         Dim oEw As Protean.Cms = New Protean.Cms
         oEw.InitializeVariables()
-        Dim filepath As String = "ewCache\FS-Alpha-TEST " & GetRandomAlphaNumeric(230) & ".html"
+        Dim filepath As String = "/ewCache/FS-Alpha-TEST.html"
 
         Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
         If oImp.ImpersonateValidUser(oEw.moConfig("AdminAcct"), oEw.moConfig("AdminDomain"), oEw.moConfig("AdminPassword"), , oEw.moConfig("AdminGroup")) Then
 
 
-            'System.IO.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
-            '
-            ' Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
+            '  Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
 
-            oImp.UndoImpersonation()
-            oImp = Nothing
-
-
-            context.Response.Write("file written - " & filepath)
+            context.Response.Write("file written")
 
             '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
 

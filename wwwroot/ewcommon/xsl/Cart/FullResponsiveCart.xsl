@@ -2203,7 +2203,7 @@
 			  If you have any queries, please call for assistance.-->
         <xsl:call-template name="term3026" />
       </xsl:if>
-      <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
+      <xsl:if test="@payableType='settlement' and @payableAmount = 0">
         <p>
           <!--Payment Made-->
           <xsl:call-template name="term3027" />
@@ -2397,7 +2397,7 @@
                     <!--Transaction Made-->
                     <xsl:call-template name="term3049" />
                   </xsl:when>
-                  <xsl:when test="@payableType='settlement' and not(@transStatus)">
+                  <xsl:when test="@payableType='settlement'">
                     <!--Payment Received-->
                     <xsl:call-template name="term3050" />
                   </xsl:when>
@@ -2415,11 +2415,11 @@
           <div class="payable-amount">
             <span>
               <xsl:choose>
-                <xsl:when test="@payableType='deposit' and not(@transStatus)">
+                <xsl:when test="@payableType='deposit' and @transStatus='Deposit Paid'">
                   <!--Deposit Payable-->
                   <xsl:call-template name="term3051" />:
                 </xsl:when>
-                <xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">
+                <xsl:when test="@payableType='settlement' and @transStatus='Settlement Paid'">
                   <!--Amount Outstanding-->
                   <xsl:call-template name="term3052" />
                 </xsl:when>
