@@ -463,16 +463,28 @@ Partial Public Class Cms
                                     thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
                                     thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
                                     If thisContentType = sType Then
-                                        sNewUrl = "/" & thisPrefix & "/" & sNewUrl & "/"
-                                        sOldUrl = "/" & thisPrefix & "/" & sOldUrl & "/"
+                                        If myWeb.moConfig("TrailingSlash") = "on" Then
+                                            sNewUrl = "/" & thisPrefix & "/" & sNewUrl & "/"
+                                            sOldUrl = "/" & thisPrefix & "/" & sOldUrl & "/"
+                                        Else
+                                            sNewUrl = "/" & thisPrefix & "/" & sNewUrl
+                                            sOldUrl = "/" & thisPrefix & "/" & sOldUrl
+                                        End If
+
                                     End If
                                 Next
 
                             Else
 
                                 Dim url As String = myWeb.GetContentUrl(nPageId)
-                                sOldUrl = sUrl & url & "/" & sOldUrl & "/"
-                                sNewUrl = sUrl & url & "/" & sNewUrl & "/"
+                                If myWeb.moConfig("TrailingSlash") = "on" Then
+                                    sOldUrl = sUrl & url & "/" & sOldUrl & "/"
+                                    sNewUrl = sUrl & url & "/" & sNewUrl & "/"
+                                Else
+                                    sOldUrl = sUrl & url & "/" & sOldUrl
+                                    sNewUrl = sUrl & url & "/" & sNewUrl
+                                End If
+
                             End If
                             'End If
                     End Select
