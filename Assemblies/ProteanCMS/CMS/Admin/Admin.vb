@@ -4151,59 +4151,7 @@ from tblContentIndexDef"
             End Try
         End Sub
 
-        Private Sub LatitudeLongitudeReport(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
-            Dim sProcessInfo As String = ""
-            Dim reportName As String = "Latitude Longitude Report"
-            Dim contentId As Long = 0
-            Dim indexId As String = Nothing
-            Dim sSql As String
-            Dim SchemaNameForUpdate As String
-            Dim indexesDataset As DataSet
 
-
-            Try
-
-                If Not myWeb.moRequest("id") = Nothing Then
-                    indexId = myWeb.moRequest("id")
-                End If
-
-                If Not myWeb.moRequest("ewCmd2") = Nothing Then
-
-listItems:
-                    If indexId = Nothing Then
-                        'list Lookup Lists
-                        sSql = "spLatitudeLongitudeReport"
-
-                        indexesDataset = myWeb.moDbHelper.GetDataSet(sSql, "Item", "latitudeLongitudeItem")
-
-                        If indexesDataset.Tables.Count > 0 Then
-                            indexesDataset.EnforceConstraints = False
-                        End If
-
-                        Dim reportElement As XmlElement = moPageXML.CreateElement("Content")
-                        reportElement.SetAttribute("name", reportName)
-                        reportElement.SetAttribute("type", "Report")
-                        reportElement.InnerXml = indexesDataset.GetXml()
-                        oPageDetail.AppendChild(reportElement)
-
-                    Else
-
-                        If moAdXfm.valid Then
-                            oPageDetail.InnerXml = ""
-                            indexId = Nothing
-                            GoTo listItems
-                        End If
-
-                    End If
-
-                End If
-
-                'sAdminLayout = "Latitude-Longitude-Report"
-
-            Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
-            End Try
-        End Sub
 
         Private Sub ProductGroupsProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String, Optional ByVal nGroupID As Integer = 0)
             Dim sProcessInfo As String = ""
@@ -5036,9 +4984,6 @@ SP:
                     If moAdXfm.valid Then
                         myWeb.moDbHelper.GetReport(oPageDetail, moAdXfm.Instance.FirstChild)
                     End If
-                End If
-                If myWeb.moRequest("ewCmd2") = "Latitude-Longitude-Report" Then
-                    LatitudeLongitudeReport(oPageDetail, sAdminLayout)
                 End If
                 If oPageDetail.InnerXml = "" Then
                     myWeb.moDbHelper.ListReports(oPageDetail)
