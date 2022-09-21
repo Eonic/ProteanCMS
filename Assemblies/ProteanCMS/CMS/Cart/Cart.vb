@@ -12,8 +12,7 @@ Imports Protean.Tools.Xml.XmlNodeState
 Imports System
 Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
-Imports System.Web
-
+Imports System.Collections.Generic
 
 Partial Public Class Cms
 
@@ -608,14 +607,7 @@ Partial Public Class Cms
                         If Not (IsNumeric(myWeb.moSession("CartId"))) Or myWeb.moSession("CartId") <= 0 Then
                             mnCartId = 0
                         Else
-
-                            If moConfig("CartSessionTimeOut") IsNot Nothing And moConfig("CartSessionTimeOut") <> 0 Then
-                                HttpContext.Current.Session.Timeout = 60 * CInt(moConfig("CartSessionTimeOut"))
-                            End If
-
                             mnCartId = CInt(myWeb.moSession("CartId"))
-
-
                         End If
                     End If
 
@@ -1593,6 +1585,11 @@ processFlow:
                                 End If
 
                                 purchaseActions(oContentElmt)
+                                'update the cart if purchase actions have changed it
+                                'GetCart(oElmt)
+                                'done for ammerdown as we have removed a product.
+
+
 
                                 If myWeb.mnUserId > 0 Then
                                     If Not moSubscription Is Nothing Then
@@ -1600,15 +1597,14 @@ processFlow:
                                     End If
                                 End If
 
-
                                 If (moCartConfig("SendReceiptEmailForAwaitingPaymentStatusId") IsNot Nothing) Then
                                     If (oElmt.GetAttribute("statusId") <> moCartConfig("SendReceiptEmailForAwaitingPaymentStatusId")) Then
                                         emailReceipts(oContentElmt)
-
                                     End If
                                 Else
                                     emailReceipts(oContentElmt)
                                 End If
+
 
                                 moDiscount.DisablePromotionalDiscounts()
 
@@ -1777,7 +1773,7 @@ processFlow:
 
                     Dim oElmtEmail As XmlElement
                     oElmtEmail = moPageXml.CreateElement("Reciept")
-                    oCartElmt.AppendChild(oElmtEmail)
+                    oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmtEmail, True))
                     oElmtEmail.InnerText = sMessageResponse
 
                     If sMessageResponse = "Message Sent" Then
@@ -1875,32 +1871,41 @@ processFlow:
                     Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
                     Dim calledType As Type
                     Dim classPath As String = moPrvConfig.Providers(providerName).Parameters("rootClass")
+
+                    Dim passCMS As String = moPrvConfig.Providers(providerName).Parameters("passCMS")
+
                     Dim methodName As String = "ProcessOrder"
                     calledType = assemblyInstance.GetType(classPath, True)
                     Dim o As Object = Activator.CreateInstance(calledType)
 
                     Dim args(0) As Object
-                    args(0) = oCartElmt
 
+                    If passCMS = "true" Then
+                        ReDim args(1)
+                        args(0) = Me.myWeb
+                        args(1) = oCartElmt
+                    Else
+                        args(o) = oCartElmt
+                    End If
 
                     If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
 
-                        Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
-                        If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
-                            Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
-                            sSql &= mnCartId & ",'"
-                            sSql &= sDiscoutCode & "')"
+                            Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
+                            If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
+                                Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
+                                sSql &= mnCartId & ",'"
+                                sSql &= sDiscoutCode & "')"
 
 
-                            moDBHelper.ExeProcessSql(sSql)
+                                moDBHelper.ExeProcessSql(sSql)
+                            End If
                         End If
+                        calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
                     End If
-                    calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
-
-                End If
 
 
-                For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
+                    For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
                     Dim classPath As String = ocNode.GetAttribute("purchaseAction")
                     Dim assemblyName As String = ocNode.GetAttribute("assembly")
                     Dim providerName As String = ocNode.GetAttribute("providerName")
@@ -3085,10 +3090,15 @@ processFlow:
                             End If
 
                             ' Set the payableType 
-                            If IsDBNull(oRow("nAmountReceived")) AndAlso nStatusId <> 10 Then
+                            If Not (IsNumeric(oRow("nAmountReceived"))) AndAlso nStatusId <> 10 Then
                                 oCartElmt.SetAttribute("payableType", "deposit")
                             Else
                                 oCartElmt.SetAttribute("payableType", "settlement")
+                            End If
+
+                            'TS added for additional orders not sure if this will break elsewhere.
+                            If Not (IsNumeric(oRow("nAmountReceived"))) AndAlso nStatusId = 10 Then
+                                oCartElmt.SetAttribute("payableType", "deposit")
                             End If
 
                             If nPayable = 0 Then
@@ -3106,7 +3116,8 @@ processFlow:
                             oElmt = moPageXml.CreateElement("Notes")
                             oElmt.InnerXml = oRow("cClientNotes")
                             If oElmt.FirstChild.Name = "Notes" Then
-                                oCartElmt.AppendChild(oElmt.SelectSingleNode("Notes"))
+                                Dim NewNotes As XmlElement = oCartElmt.OwnerDocument.ImportNode(oElmt.SelectSingleNode("Notes"), True)
+                                oCartElmt.AppendChild(NewNotes)
                             Else
                                 oCartElmt.AppendChild(oElmt)
                             End If
@@ -3181,14 +3192,17 @@ processFlow:
                             Dim tempInstance As New XmlDocument
                             tempInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nCartIdUse))
                             Dim tempOrder As XmlElement = tempInstance.SelectSingleNode("descendant-or-self::Order")
-                            If oCartElmt.GetAttribute("InvoiceDate") = "" And tempOrder.GetAttribute("InvoiceDate") <> "" Then
-                                oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                            If Not tempOrder Is Nothing Then
+                                If oCartElmt.GetAttribute("InvoiceDate") = "" And tempOrder.GetAttribute("InvoiceDate") <> "" Then
+                                    oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                                End If
+                                If oCartElmt.GetAttribute("InvoiceRef") = "" And tempOrder.GetAttribute("InvoiceRef") <> "" Then
+                                    oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                                End If
+                                tempInstance = Nothing
+                                tempOrder = Nothing
                             End If
-                            If oCartElmt.GetAttribute("InvoiceRef") = "" And tempOrder.GetAttribute("InvoiceRef") <> "" Then
-                                oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
-                            End If
-                            tempInstance = Nothing
-                            tempOrder = Nothing
+
                         End If
 
                     Next
@@ -3694,7 +3708,7 @@ processFlow:
                         If CLng(cItemQuantity) > CLng(StockLevel) And mnProcessId < 6 Then
                             If oCartElmt.SelectSingleNode("error") Is Nothing Then oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"))
                             oError = oCartElmt.SelectSingleNode("error")
-                            oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & convertEntitiesToCodes(oProd.SelectSingleNode("//Name").InnerText) & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
+                            oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & oProd.SelectSingleNode("//Name").InnerText & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
                             oMsg.SetAttribute("type", "stock")
                         End If
                     End If
@@ -5466,6 +5480,7 @@ processFlow:
                         Else
                             Dim cTicketTypes As String = moCartConfig("TicketTypes")
                             ''Modify the notes for dependant on tickets
+                            Dim totalAttendees As Integer = 0
                             If cTicketTypes <> "" Then
                                 If Not moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType!='']]").Count = 0 Then
                                     Dim ticketType As String
@@ -5484,13 +5499,16 @@ processFlow:
                                         Dim i As Integer = 0
                                         Dim oItemElmt As XmlElement
                                         For Each oItemElmt In moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType='" & ticketType & "']]")
-                                            For i = 1 To oItemElmt.GetAttribute("quantity")
 
+                                            For i = 1 To oItemElmt.GetAttribute("quantity")
+                                                totalAttendees = totalAttendees + 1
                                                 'Update the instance
                                                 oNotesRoot.AppendChild(blankElmt.CloneNode(True))
                                                 Dim newElmt As XmlElement = oNotesRoot.LastChild
                                                 newElmt.SelectSingleNode("AttTicketType").InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
                                                 newElmt.SetAttribute("id", ticketType & nCount)
+                                                newElmt.SetAttribute("itemId", oItemElmt.GetAttribute("id"))
+
                                                 newElmt = Nothing
 
                                                 'Update the binds
@@ -5501,7 +5519,8 @@ processFlow:
                                                     If newElmt2.GetAttribute("id") <> "" Then
                                                         newElmt2.SetAttribute("id", newElmt2.GetAttribute("id") & "-" & ticketType & nCount)
                                                     End If
-                                                    If i > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
+                                                    'remove lead booker from all subsequent tickets
+                                                    If totalAttendees > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
                                                         newElmt2.SetAttribute("required", "false()")
                                                     End If
                                                 Next
@@ -5529,16 +5548,21 @@ processFlow:
 
                                                         newElmt2.SetAttribute("bind", newElmt2.GetAttribute("bind") & "-" & ticketType & nCount)
                                                     End If
-
-                                                    If i > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
-                                                        newElmt2.ParentNode.RemoveChild(newElmt2)
-                                                    End If
-
                                                 Next
+                                                If totalAttendees > 1 Then
+                                                    For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*[@lead-booker-only='true']")
+                                                        'remove lead booker from all subsequent tickets
+                                                        newElmt2.ParentNode.RemoveChild(newElmt2)
+                                                    Next
+                                                End If
+
                                                 newElmt = Nothing
                                                 nCount = nCount + 1
                                             Next
                                         Next
+
+
+
                                         'remove the blanks
                                         For Each newElmt2 In oControlRoot.SelectNodes("descendant-or-self::*[@delete]")
                                             newElmt2.ParentNode.RemoveChild(newElmt2)
