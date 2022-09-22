@@ -470,14 +470,8 @@
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
         <!-- common css -->
-        <xsl:choose>
-          <xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
-            <xsl:apply-templates select="." mode="commonStyle"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="." mode="criticalPathCSS"/>
-          </xsl:otherwise>
-        </xsl:choose>
+		  <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
+       
 
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
 
@@ -489,6 +483,17 @@
       <xsl:apply-templates select="." mode="bodyBuilder"/>
     </html>
   </xsl:template>
+
+	<xsl:template match="Page" mode="headerCommonStyle">
+		<xsl:choose>
+			<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
+				<xsl:apply-templates select="." mode="commonStyle"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="." mode="criticalPathCSS"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
@@ -1828,13 +1833,18 @@
       </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
-        <xsl:apply-templates select="." mode="commonStyle"/>
-      </xsl:if>
+		<xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
+      
 
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
+
+	<xsl:template match="Page" mode="footerCommonStyle">
+		<xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+			<xsl:apply-templates select="." mode="commonStyle"/>
+		</xsl:if>
+	</xsl:template>
 
   <xsl:template match="Page" mode="bodyStyle">
     <!-- Placeholder to overide -->
