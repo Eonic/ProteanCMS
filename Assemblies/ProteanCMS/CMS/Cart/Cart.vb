@@ -1885,7 +1885,7 @@ processFlow:
                         args(0) = Me.myWeb
                         args(1) = oCartElmt
                     Else
-                        args(o) = oCartElmt
+                        args(0) = oCartElmt
                     End If
 
                     If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
