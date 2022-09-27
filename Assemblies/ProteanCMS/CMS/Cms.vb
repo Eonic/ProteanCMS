@@ -3644,9 +3644,7 @@ Public Class Cms
         Try
 
             ' Apply the possiblity of getting contents into a node other than the page contents node
-            If (moSession("FilterApplied") IsNot Nothing) Then
-                oRoot = moPageXml.SelectSingleNode("//Contents/Content[@moduleType='ContentFilter']")
-            ElseIf oContentsNode Is Nothing Then
+            If oContentsNode Is Nothing Then
                 oRoot = moPageXml.SelectSingleNode("//Contents")
 
                 If oRoot Is Nothing Then
@@ -3746,9 +3744,7 @@ Public Class Cms
             End If
             nCount = oDs.Tables("Content").Rows.Count
             PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
-            If (moSession("FilterApplied") IsNot Nothing) Then
-                oRoot.SetAttribute("resultCount", nCount)
-            End If
+
             moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
 
             'If gbCart Or gbQuote Then
