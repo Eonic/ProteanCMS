@@ -6033,7 +6033,7 @@
   <!--   ################   Events   ###############   -->
 
   <!-- Event Module -->
-  <xsl:template match="Content[@type='Module' and @moduleType='EventList']" mode="displayBrief">
+  <xsl:template match="Content[@type='Module' and (@moduleType='EventList' or @moduleType='ListHistoricEvents')]" mode="displayBrief">
     <!-- Set Variables -->
     <xsl:variable name="contentType" select="@contentType" />
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
@@ -6269,7 +6269,13 @@
                     <xsl:text> - </xsl:text>
                     <xsl:value-of select="translate(Times/@end,',',':')"/>
                   </xsl:if>
-                </span>
+                </span>&#160;
+				  <span class="timezone">
+					  <xsl:call-template name="getTimeZone">
+					<xsl:with-param name="utcTimeZone" select="Times/@timezone"/>
+				  </xsl:call-template>
+					 
+				  </span>
               </xsl:if>
             </p>
           </xsl:if>
@@ -6358,6 +6364,9 @@
                       <xsl:value-of select="translate(Times/@end,',',':')"/>
                     </xsl:if>
                   </span>
+					<span class="timezone">
+						<xsl:value-of select="Times/@timezone"/>
+					</span>
                 </xsl:if>
               </p>
             </xsl:if>
@@ -6426,6 +6435,9 @@
                         </span>
                       </xsl:if>
                     </span>
+					  <span class="timezone">
+						  <xsl:value-of select="Times/@timezone"/>
+					  </span>
                   </xsl:if>
                 </strong>
               </h5>
