@@ -628,7 +628,7 @@
             </div>
           </xsl:if>
           <xsl:apply-templates select="." mode="displayBrief"/>
-          <xsl:if test="@linkText!='' and @link!=''">
+          <xsl:if test="(@linkText!='' and @link!='') or @linkType='form'">
             <div class="entryFooter">
               <xsl:if test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
                 <xsl:attribute name="class">entryFooter center-nobox-footer</xsl:attribute>
@@ -645,6 +645,7 @@
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:with-param>
+				  <xsl:with-param name="linkType" select="@linkType"/>
                 <xsl:with-param name="linkText" select="@linkText"/>
                 <xsl:with-param name="altText" select="@title"/>
               </xsl:apply-templates>
@@ -6032,7 +6033,7 @@
   <!--   ################   Events   ###############   -->
 
   <!-- Event Module -->
-  <xsl:template match="Content[@type='Module' and @moduleType='EventList']" mode="displayBrief">
+  <xsl:template match="Content[@type='Module' and (@moduleType='EventList' or @moduleType='ListHistoricEvents')]" mode="displayBrief">
     <!-- Set Variables -->
     <xsl:variable name="contentType" select="@contentType" />
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
@@ -6260,7 +6261,7 @@
                   <span class="value-title" title="{EndDate/node()}T{translate(Times/@end,',',':')}"></span>
                 </span>
               </xsl:if>
-              <xsl:text>&#160;</xsl:text>
+              <xsl:text> </xsl:text>
               <xsl:if test="Times/@start!='' and Times/@start!=','">
                 <span class="times">
                   <xsl:value-of select="translate(Times/@start,',',':')"/>
@@ -6268,7 +6269,13 @@
                     <xsl:text> - </xsl:text>
                     <xsl:value-of select="translate(Times/@end,',',':')"/>
                   </xsl:if>
-                </span>
+                </span>&#160;
+				  <span class="timezone">
+					  <xsl:call-template name="getTimeZone">
+					<xsl:with-param name="utcTimeZone" select="Times/@timezone"/>
+				  </xsl:call-template>
+					 
+				  </span>
               </xsl:if>
             </p>
           </xsl:if>
@@ -6348,7 +6355,7 @@
                     <span class="value-title" title="{EndDate/node()}T{translate(Times/@end,',',':')}"></span>
                   </span>
                 </xsl:if>
-                <xsl:text>&#160;</xsl:text>
+                <xsl:text> </xsl:text>
                 <xsl:if test="Times/@start!='' and Times/@start!=','">
                   <span class="times">
                     <xsl:value-of select="translate(Times/@start,',',':')"/>
@@ -6357,6 +6364,9 @@
                       <xsl:value-of select="translate(Times/@end,',',':')"/>
                     </xsl:if>
                   </span>
+					<span class="timezone">
+						<xsl:value-of select="Times/@timezone"/>
+					</span>
                 </xsl:if>
               </p>
             </xsl:if>
@@ -6425,6 +6435,9 @@
                         </span>
                       </xsl:if>
                     </span>
+					  <span class="timezone">
+						  <xsl:value-of select="Times/@timezone"/>
+					  </span>
                   </xsl:if>
                 </strong>
               </h5>
@@ -9082,8 +9095,10 @@
     <xsl:if test="count(Content[@type='Tag'])&gt;0">
       <div class="tags">
         <!--Tags-->
-        <xsl:call-template name="term2039" />
-        <xsl:text>: </xsl:text>
+		  <span class="tag-label">
+			  <xsl:call-template name="term2039" />
+			  <xsl:text>: </xsl:text>
+		  </span>
         <xsl:apply-templates select="ms:node-set($articleList)" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
@@ -9104,9 +9119,11 @@
       </xsl:apply-templates>
       <a href="{$parentURL}" rel="tag">
         <xsl:apply-templates select="Name" mode="displayBrief"/>
-        <xsl:if test="@relatedCount!=''">
-          &#160;(<xsl:value-of select="@relatedCount"/>)
-        </xsl:if>
+		  <span class="tag-count">
+			  <xsl:if test="@relatedCount!=''">
+				  &#160;(<xsl:value-of select="@relatedCount"/>)
+			  </xsl:if>
+		  </span>
       </a>
       <xsl:if test="position()!=last()">
         <span class="tag-comma">
@@ -11482,7 +11499,7 @@
 			<xsl:with-param name="string">
 				<xsl:apply-templates select="Summary" mode="flattenXhtml"/>
 			</xsl:with-param>
-		</xsl:call-template>"
+		</xsl:call-template>",
 		"reviewRating": {
 		"@type": "Rating",
 		"bestRating": "5",
@@ -15102,8 +15119,10 @@
       </xsl:apply-templates>
       <a href="{$parentURL}" rel="tag">
         <xsl:apply-templates select="Name" mode="displayBrief"/>
-        <xsl:if test="@relatedCount!=''">
-          (<xsl:value-of select="@relatedCount"/>)
+		  <xsl:if test="@relatedCount!=''">
+			  <span class="tag-count">
+				  (<xsl:value-of select="@relatedCount"/>)
+			  </span>
         </xsl:if>
       </a>
     </li>

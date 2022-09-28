@@ -21,7 +21,7 @@ Public Class PerfLog
     Private nStep As Integer
     Private oBuilder As StringBuilder
     Private oPerfMonRequests As PerformanceCounter
-    Private Entries(0) As String
+    Private Entries(1000) As String
     Dim dLast As Date = Now
     Dim nTimeAccumalative As Double = 0
     Dim nMemLast As Integer = 0
@@ -119,11 +119,12 @@ Public Class PerfLog
     Public Sub Log(ByVal cModuleName As String, ByVal cProcessName As String, Optional ByVal cDescription As String = "")
         'If Not bLoggingOn Then Exit Sub
         Try
-            If bLoggingOn Then
 
+            'TS moved to run regardless as this seems to improve peformance if you call these values.
+            If bLoggingOn Then
                 Dim oLN As TimeSpan = Now - dLast
                 nTimeAccumalative += oLN.TotalMilliseconds
-                'Dim nMemDif As Integer = Process.GetCurrentProcess.PrivateMemorySize64 - nMemLast
+
                 Dim memoryPrivate As Long
                 If _workingSetPrivateMemoryCounter Is Nothing Then
                     memoryPrivate = 0
@@ -131,12 +132,17 @@ Public Class PerfLog
                     memoryPrivate = _workingSetPrivateMemoryCounter.NextValue()
                 End If
 
-                Dim nMemDif As Long = memoryPrivate - nMemLast
-                Dim nProcDif As Long = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds - nProcLast
-
                 nMemLast = memoryPrivate
                 nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
 
+                Dim nMemDif As Long = memoryPrivate - nMemLast
+                Dim nProcDif As Long = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds - nProcLast
+                Dim nMemoryCounterNextVal As Long = Nothing
+                If Not _workingSetMemoryCounter Is Nothing Then
+                    nMemoryCounterNextVal = CLng(_workingSetMemoryCounter.NextValue())
+                End If
+
+                '    If bLoggingOn Then
 
                 Dim cEntryFull As String = "INSERT INTO tblPerfMon" &
                 " ( MachineName, Website, SessionID, SessionRequest, Path, [Module], [Procedure],Description, Step, [Time],TimeAccumalative, Requests, PrivateMemorySize64, PrivilegedProcessorTimeMilliseconds)" &
@@ -144,12 +150,17 @@ Public Class PerfLog
                 cEntryFull &= "'"
                 cEntryFull &= moServer.MachineName & "','"
                 cEntryFull &= cSiteName & "','"
-                Try
-                    cEntryFull &= CStr(moSession.SessionID & "") & "','"
-                    cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
-                Catch ex As Exception
+                If moSession.SessionID IsNot Nothing Then
+                    Try
+                        cEntryFull &= CStr(moSession.SessionID & "") & "','"
+                        cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
+                    Catch ex As Exception
+                        cEntryFull &= "','','"
+                    End Try
+                Else
                     cEntryFull &= "','','"
-                End Try
+                End If
+
                 'If moSession.SessionID Is Nothing Then
 
                 'Else
@@ -157,9 +168,12 @@ Public Class PerfLog
                 '    cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
                 'End If
                 Dim cPath As String = ""
-                If Not System.Web.HttpContext.Current.Request Is Nothing Then
-                    cPath = System.Web.HttpContext.Current.Request("path")
+                If Not System.Web.HttpContext.Current Is Nothing Then
+                    If Not System.Web.HttpContext.Current.Request Is Nothing Then
+                        cPath = System.Web.HttpContext.Current.Request("path")
+                    End If
                 End If
+
                 cEntryFull &= SqlFmt(cPath) & "','"
                 cEntryFull &= SqlFmt(cModuleName) & "','"
                 cEntryFull &= Left(SqlFmt(cProcessName), 254) & "','"
@@ -184,7 +198,11 @@ Public Class PerfLog
                 cEntryFull &= "')"
                 nStep += 1
 
-                ReDim Preserve Entries(nStep)
+                If nStep > 128 Then
+                    Dim test As String = "text"
+                End If
+
+                '   ReDim Preserve Entries(nStep)
                 Entries(nStep - 1) = cEntryFull
 
                 'nMemLast = Process.GetCurrentProcess.PrivateMemorySize64
@@ -219,7 +237,7 @@ Public Class PerfLog
                             dbAuth = "Integrated Security=SSPI;"
                         End If
                     End If
-                    ConStr = "Data Source=" & moConfig("DatabaseServer") & "; " & _
+                    ConStr = "Data Source=" & moConfig("DatabaseServer") & "; " &
                         "Initial Catalog=" & moConfig("DatabaseName") & "; " & dbAuth
                 End If
                 Dim oCon As New SqlClient.SqlConnection(ConStr)
@@ -238,12 +256,17 @@ Public Class PerfLog
                         End Try
                     End If
                 Next
+                oCmd.Dispose()
                 oCon.Close()
+                oCon.Dispose()
+                oCon = Nothing
                 bLoggingOn = False
             End If
         Catch ex As Exception
 
             Debug.WriteLine(cProcessInfo & " - errormsg - " & ex.ToString)
+        Finally
+            Entries = Nothing
         End Try
     End Sub
 

@@ -3911,7 +3911,48 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content" mode="LocateContentNode">
+
+	<!--   ##################  Parent Change   ##############################   -->
+	<!-- -->
+	<xsl:template match="Page[@layout='ParentChange']" mode="Admin">
+		<div class="row" id="tpltParentChange">
+			<div class="col-md-4">
+				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+			</div>
+			<div class="col-md-8">
+
+				<xsl:text> </xsl:text>
+				<xsl:if test="ContentDetail/RelatedResults">
+					<form name="myform" action="" method="post" class="panel panel-default">
+						<input type="hidden" name="id" value="{ContentDetail/RelatedResults/@nParentID}"/>
+						<input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
+						<input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
+						
+						<table cellpadding="0" cellspacing="1" class="table">
+							<tbody>								
+								<tr>
+									<th>Name</th>
+									<th>Move SKU</th>								
+								</tr>
+								<tr>
+									<xsl:for-each select="ContentDetail/RelatedResults/Content">
+										<xsl:sort select="@name" />
+										<xsl:apply-templates select="." mode="LocateParentChange">
+											<xsl:with-param name="indent">&#160;</xsl:with-param>
+										</xsl:apply-templates>										
+									</xsl:for-each>
+								</tr>
+								
+							</tbody>
+						</table>
+					</form>
+				</xsl:if>
+			</div>
+		</div>
+	</xsl:template>
+
+
+	<xsl:template match="Content" mode="LocateContentNode">
     <xsl:param name="indent"/>
     <xsl:variable name="relationType" select="$page/Request/QueryString/Item[@name='relationType']/node()"/>
 
@@ -3970,6 +4011,44 @@
 	-->
 
   </xsl:template>
+
+
+	<xsl:template match="Content" mode="LocateParentChange">
+		<xsl:param name="indent"/>
+		<xsl:variable name="relationType" select="$page/Request/QueryString/Item[@name='relationType']/node()"/>
+
+		<span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
+			<tr>
+				<td>
+					<xsl:apply-templates select="." mode="ContentListName">
+						<xsl:with-param name="indent" select="$indent"/>
+					</xsl:apply-templates>
+				</td>
+				<td>
+					<xsl:if test="@publishDate!=''">
+						<xsl:call-template name="DD_Mon_YYYY">
+							<xsl:with-param name="date">
+								<xsl:value-of select="@publishDate"/>
+							</xsl:with-param>
+							<xsl:with-param name="showTime">false</xsl:with-param>
+						</xsl:call-template>
+					</xsl:if>
+				</td>
+				<td class="relate">
+					<!--<a href="?ewCmd=ParentChange&amp;newParId={@id}" name="updateParent" title="Make Parent" class="btn btn-xs btn-success">
+						Make Parent
+					</a>-->
+					<button type="submit" name="updateParent" value="{@id}" onClick="disableButton(this);?ewCmd=ParentChange&amp;newParId={@id}" class="btn btn-success principle">
+						<i class="fa fa-plus fa-white">
+							<xsl:text> </xsl:text>
+						</i><xsl:text> </xsl:text>Make Parent
+					</button>
+					
+				</td>
+			</tr>
+		</span>
+	
+	</xsl:template>
   <!-- -->
   <!-- BJR -->
   <!--   ##################  Product Groups   ##############################   -->
@@ -5229,37 +5308,50 @@
         $.each(data.files, function (index, file) {
 
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
-      var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
-      <xsl:apply-templates select="." mode="newItemScript"/>
-		$('#files').prepend(newItem);
-		
+        var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
+        <xsl:apply-templates select="." mode="newItemScript"/>
+		<!--$('#files').prepend(newItem);-->
+		var newfilename = "";
+        var dataMsg = 'Filename=' + filename;
 
-		$('#files .item-image .panel').prepareLibImages();
+        $.ajax({
+            url: '/ewapi/Cms.Admin/CleanfileName',
+            data: dataMsg,
+            type: 'GET',
+            success: function (response) {
+                newfilename = response;            
+                filename = "/" + filename + "/g";          
+                newItem = newItem.replace(eval(filename), newfilename)            
+                $('#files').prepend(newItem);
+              	$('#files .item-image .panel').prepareLibImages();
 
-		$("[data-toggle=popover]").popover({
-		html: true,
-		container: '#files',
-		trigger: 'hover',
-		viewport: '#files',
-		content: function () {
-		return $(this).prev('.popoverContent').html();
-		}
-		});
-		if ($('.pickImageModal').exists()) {
-		$('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
-		ev.preventDefault();
-		$('.modal-dialog').addClass('loading')
-		$('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
-			var target = $(this).attr("href");
-			// load the url and show modal on success
-			var currentModal = $('.pickImageModal')
-			currentModal.load(target, function () {
-			$('.modal-dialog').removeClass('loading')
-			currentModal.modal("show");
-			});
-			});
-			};
-
+		        $("[data-toggle=popover]").popover({
+		        html: true,
+		        container: '#files',
+		        trigger: 'hover',
+		        viewport: '#files',
+		        content: function () {
+		        return $(this).prev('.popoverContent').html();
+		        }
+		        });
+		        if ($('.pickImageModal').exists()) {
+		        $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
+		        ev.preventDefault();
+		        $('.modal-dialog').addClass('loading')
+		        $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
+			        var target = $(this).attr("href");
+			        // load the url and show modal on success
+			        var currentModal = $('.pickImageModal')
+			        currentModal.load(target, function () {
+			        $('.modal-dialog').removeClass('loading')
+			        currentModal.modal("show");
+			        });
+			        });
+			        };
+				
+				
+                    }
+            }); 
 
       });
       },
@@ -5295,13 +5387,14 @@
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
 	  
-    var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-	
-	 var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
-    newItem = newItem + '<div class="description">'
-    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
-      newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
-      newItem = newItem + '</div></div>';
+      var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
+	    
+		 var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
+          newItem = newItem + '<div class="description">'
+          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
+          newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
+          newItem = newItem + '</div></div>';
+		   var filename = file.name;	      
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
@@ -5534,6 +5627,8 @@
  <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
     var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '</td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
     newItem = newItem + '<td><a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
+	
+	 var filename = file.name;	
   </xsl:template>
 
 
@@ -5545,6 +5640,8 @@
     var newItem = '<div class="item col-md-2 col-sm-4"><div class="panel panel-default"><div class="panel-body"><div class="ItemThumbnail"><img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /></div>'
     newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
     newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
+	
+	var filename = file.name;	
   </xsl:template>
 
   <xsl:template match="folder" mode="MediaFolder">
@@ -7724,17 +7821,27 @@
               </a>
             </dd>
           </xsl:if>
-          <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
             <dt>Payment Made</dt>
             <dd>
               <xsl:value-of select="$currency"/>
               <xsl:value-of select="format-number(@paymentMade,'0.00')" />
             </dd>
-            <dt>Total Payment Received</dt>
-            <dd>
-              <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-            </dd>
-          </xsl:if>
+			<xsl:choose>
+				<xsl:when test="@outstandingAmount&gt;0">
+					<dt>Total Outstanding</dt>
+					<dd>
+						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
+					</dd>
+				</xsl:when>
+				<xsl:otherwise>
+					<dt>Total Payment Received</dt>
+					<dd>
+						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
+					</dd>
+				</xsl:otherwise>
+			</xsl:choose>
+			  
+
           </dl>
           <xsl:if test="not(Payment)">
           <h4>Payment Details</h4>
@@ -7953,21 +8060,35 @@
           <td colspan="4">&#160;</td>
           <td class="total heading">Total Value:</td>
           <td class="total amount">
-            <xsl:value-of select="$currency"/>
+            <xsl:value-of select="$currency"/>&#160;
             <xsl:value-of select="format-number(@total, '0.00')"/>
           </td>
         </tr>
         <xsl:if test="@paymentMade">
+			<xsl:if test="@transStatus='Settlement Paid'">
+				<tr>
+					<td colspan="4">&#160;</td>
+					<td class="total heading">
+						Deposit Paid:
+					</td>
+					<td class="total amount">
+						<xsl:value-of select="$currency"/>&#160;
+						<xsl:value-of select="format-number(@total - @paymentMade, '0.00')"/>
+					</td>
+				</tr>
+			</xsl:if>
           <tr>
             <td colspan="4">&#160;</td>
             <td class="total heading">
               <xsl:choose>
-                <xsl:when test="@transStatus">Transaction Made</xsl:when>
-                <xsl:when test="@payableType='settlement' and not(@transStatus)">Payment Received</xsl:when>
+                <xsl:when test="@transStatus">
+					<xsl:value-of select="@transStatus"/>:
+				</xsl:when>
+                <xsl:when test="@payableType='settlement' and @tranStatus='Settlement Paid'">Payment Received:</xsl:when>
               </xsl:choose>
             </td>
             <td class="total amount">
-              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="$currency"/>&#160;
               <xsl:value-of select="format-number(@paymentMade, '0.00')"/>
             </td>
           </tr>
@@ -7976,13 +8097,10 @@
           <tr>
             <td colspan="4">&#160;</td>
             <td class="total heading">
-              <xsl:choose>
-                <xsl:when test="@payableType='deposit' and not(@transStatus)">Deposit Payable</xsl:when>
-                <xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">Amount Outstanding</xsl:when>
-              </xsl:choose>
+              Amount Outstanding:
             </td>
             <td class="total amount">
-              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="$currency"/>&#160;
               <xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
             </td>
           </tr>
@@ -8419,10 +8537,18 @@
           <p>
             Payment Made:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
           </p>
-          <p>
-            Total Payment Received:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-          </p>
-        </xsl:if>
+			<xsl:choose>
+				<xsl:when test="@outstandingAmount&gt;0">
+					Total Payment Outstanding:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<p>
+						Total Payment Received:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
+					</p>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</xsl:if>
       </div>
 
       <!-- Terminus class fix to floating columns -->

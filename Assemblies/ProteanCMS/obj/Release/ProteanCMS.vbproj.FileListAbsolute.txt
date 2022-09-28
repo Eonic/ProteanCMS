@@ -487,7 +487,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.V
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JSPool.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\LibSassHost.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Lucene.Net.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.JsonWebTokens.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.Logging.dll
@@ -543,7 +542,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JSPool.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\LibSassHost.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Lucene.Net.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Lucene.Net.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.JsonWebTokens.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.Logging.xml
@@ -577,3 +575,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-arm64.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Tinify.dll

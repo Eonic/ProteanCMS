@@ -9,7 +9,6 @@ Imports System
 Class Encryption
 
     Public Function GenerateMD5Hash(ByVal SourceText As String) As String
-        PerfMon.Log("stdTools", "GenerateMD5Hash")
         'This generates a PHP compatible MD5 Hex string for the source value.
 
         Dim md5 As MD5 = MD5CryptoServiceProvider.Create

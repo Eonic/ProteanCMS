@@ -1520,16 +1520,17 @@ Partial Public Module xmlTools
         ''' <returns></returns>
         Public Function GetFilterButtons() As Object
             Try
-                Dim oXformDoc As XmlDocument = New XmlDocument()
-
+                Dim oXformDoc As XmlDocument
                 Dim oChoices As XmlElement
                 Dim buttonName As String = ""
                 Dim projectPath As String = ""
-                Dim xmlButtons As XmlElement = oXformDoc.CreateElement("buttons")
                 If (myWeb.moConfig("ProjectPath") <> String.Empty) Then
                     projectPath = myWeb.moConfig("ProjectPath")
                 End If
-                oXformDoc.Load(goServer.MapPath(projectPath & "/xsl") & "/LayoutManifest.xml")
+                Dim oAdminXforms As New Protean.Cms.Admin.AdminXforms(myWeb)
+                oXformDoc = oAdminXforms.GetSiteManifest(myWeb.moConfig("cssFramework"))
+
+                Dim xmlButtons As XmlElement = oXformDoc.CreateElement("buttons")
                 For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/FilterTypes/Filter")
                     Dim buttonElement As XmlElement = oXformDoc.CreateElement("button")
                     buttonElement.InnerText = oChoices.InnerText
@@ -1539,6 +1540,7 @@ Partial Public Module xmlTools
 
                 Next
                 Return xmlButtons
+
             Catch ex As Exception
                 Return "Error - Filter Buttons" & ex.Message
             End Try

@@ -68,8 +68,6 @@ Namespace Providers
                 End Enum
 
                 Public Overloads Function GetPaymentForm(ByRef oWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
-                    PerfMon.Log("Protean.Providers.payment.SagePayV3", "GetPaymentForm")
-                    PerfMon.Log("PaymentProviders", "SagePayV3")
 
                     Dim oRequest As HttpWebRequest
                     Dim oResponse As HttpWebResponse
@@ -550,7 +548,6 @@ Namespace Providers
                 End Function
 
                 Private Function fmtSecPayDate(ByVal sdate As String) As String
-                    PerfMon.Log("PaymentProviders", "fmtSecPayDate")
                     Dim cProcessInfo As String = "fmtSecPayDate"
                     Dim strReturn As String = ""
                     Try
@@ -565,7 +562,6 @@ Namespace Providers
                 End Function
 
                 Public Function FormatCreditCardNumber(ByVal sCCNumber As String) As Long
-                    PerfMon.Log("PaymentProviders", "FormatCreditCardNumber")
                     Dim cResult As String = ""
                     Dim oRE As Regex = New Regex("\D")
                     cResult = oRE.Replace(sCCNumber, "")
