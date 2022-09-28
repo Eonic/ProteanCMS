@@ -441,7 +441,7 @@ Partial Public Class Cms
                         Dim arr() As String
                         arr = sUrl.Split("?"c)
                         sUrl = arr(0)
-                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
+                        ' sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
                     End If
 
                     Select Case sType
@@ -473,6 +473,11 @@ Partial Public Class Cms
                                 Dim url As String = myWeb.GetContentUrl(nPageId)
                                 sOldUrl = sUrl & url & "/" & sOldUrl
                                 sNewUrl = sUrl & url & "/" & sNewUrl
+
+                            End If
+                            If myWeb.moConfig("TrailingSlash") IsNot Nothing And (myWeb.moConfig("TrailingSlash") = "on") Then
+                                sOldUrl = sOldUrl & "/"
+                                sNewUrl = sNewUrl & "/"
                             End If
                             'End If
                     End Select

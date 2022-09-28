@@ -986,8 +986,17 @@ ProcessFlow:
                                     'skip if already defined in Xform.
                                     myWeb.moSession("lastPage") = ""
                                 ElseIf myWeb.moSession("lastPage") <> "" Then
-                                    myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
-                                    myWeb.moSession("lastPage") = ""
+                                    If mcEwCmd = "EditPageSEO" Then
+                                        If Not (String.IsNullOrEmpty("" & myWeb.moRequest("pgid"))) Then
+                                            myWeb.msRedirectOnEnd = "/?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.moRequest("pgid")
+                                        Else
+                                            myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                            myWeb.moSession("lastPage") = ""
+                                        End If
+                                    Else
+                                        myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                        myWeb.moSession("lastPage") = ""
+                                    End If
                                 Else
                                     oPageDetail.RemoveAll()
                                     moAdXfm.valid = False
@@ -4145,6 +4154,8 @@ from tblContentIndexDef"
             End Try
         End Sub
 
+
+
         Private Sub ProductGroupsProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String, Optional ByVal nGroupID As Integer = 0)
             Dim sProcessInfo As String = ""
             sAdminLayout = "ProductGroups"
@@ -4977,7 +4988,6 @@ SP:
                         myWeb.moDbHelper.GetReport(oPageDetail, moAdXfm.Instance.FirstChild)
                     End If
                 End If
-
                 If oPageDetail.InnerXml = "" Then
                     myWeb.moDbHelper.ListReports(oPageDetail)
                 End If

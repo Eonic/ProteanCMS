@@ -1018,7 +1018,7 @@ Public Class Cms
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
 
-                        If moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("perfmon") Then
+                        If moRequest("perfmon") = "on" And moRequest.QueryString.Count() = 1 Then
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
 
@@ -1138,7 +1138,7 @@ Public Class Cms
 
 
     Public Overridable Sub GetPageHTML()
-        PerfMon.Log("Web", "GetPageHTML")
+        PerfMon.Log("Web", "GetPageHTML - start")
         Dim sProcessInfo As String = ""
         Dim sCachePath As String = ""
         Dim sServeFile As String = ""
@@ -1556,6 +1556,7 @@ Public Class Cms
                         End If
                         Dim filelen As Int16 = goServer.MapPath("/" & gcProjectPath).Length + sServeFile.Length
                         moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate))
+                        PerfMon.Log("Web", "GetPageHTML - serve cached file")
                         If filelen > 260 Then
                             moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/" & gcProjectPath) & sServeFile))
                         Else
