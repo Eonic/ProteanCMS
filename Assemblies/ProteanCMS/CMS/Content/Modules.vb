@@ -423,7 +423,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     'Dim nContentFilterId = myWeb.moPageXml.SelectSingleNode("Page/Contents/Content[@moduleType='ContentFilter']").Attributes(0).Value
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
-
+                    Dim cnt As Int16
                     Dim oFrmGroup As XmlElement
                     Dim filterForm As xForm = New xForm(myWeb)
 
@@ -480,15 +480,55 @@ where cl.nStructId = " & myWeb.mnPageId)
                     oContentNode.AppendChild(filterForm.moXformElmt)
 
                     Dim whereSQL As String = ""
+                    filterForm.addSubmit(oFrmGroup, "Remove Filter", "Remove Filter")
                     filterForm.addSubmit(oFrmGroup, "Filter", "Filter")
+
                     filterForm.addValues()
 
                     If (filterForm.isSubmitted) Then
+                        If (myWeb.moSession("FilterApplied") IsNot Nothing) Then
+                            If (myWeb.moSession("FilterApplied") = "true") Then
+                                For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
+                                    Dim className As String = oFilterElmt.GetAttribute("className")
+
+                                    If (myWeb.moSession(className) IsNot Nothing) Then
+                                            Dim filterValue As String = Convert.ToString(myWeb.moSession(className))
+
+
+                                            filterForm.Instance.SelectSingleNode(className).InnerText = Convert.ToString(myWeb.moSession(className))
+
+
+                                            Dim cFilterIds As String = myWeb.moSession(className)
+                                            Dim aFilterId() As String = cFilterIds.Split(",")
+                                            For cnt = 0 To aFilterId.Length - 1 Step 1
+                                                If (aFilterId(cnt) <> String.Empty) Then
+                                                    If aFilterId(cnt) <> "" Then
+                                                        filterForm.addSubmit(oFrmGroup, "Remove - " + className + "-" + aFilterId(cnt), aFilterId(cnt))
+                                                    End If
+                                                End If
+                                            Next
+
+                                    End If
+                                Next
+                            End If
+                        End If
                         filterForm.updateInstanceFromRequest()
                         filterForm.validate()
                         If (filterForm.valid) Then
-                            '    If formName = "ContentFilter" Then
-                            '        Filters.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
+                            If (myWeb.moRequest.Form("Submit") = "Remove Filter") Then
+                                myWeb.moSession.Remove("FilterApplied")
+                            End If
+
+                            If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
+                                If (Convert.ToString(myWeb.moRequest.Form("Submit")).Contains("Remove -")) Then
+                                    Dim aFilter() As String = Convert.ToString(myWeb.moRequest.Form("Submit")).Split("-")
+                                    If (aFilter.Length > 0) Then
+                                        Dim sessionValue As String = myWeb.moSession(aFilter(1).Trim())
+                                        sessionValue.Replace(aFilter(2).Trim(), "")
+                                        myWeb.moSession(aFilter(1).Trim()) = sessionValue
+                                    End If
+                                End If
+                            End If
 
                             For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
@@ -497,7 +537,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                                 Dim providerName As String = oFilterElmt.GetAttribute("providerName")
 
                                 If className <> "" Then
-
+                                    If (myWeb.moRequest.Form("Submit") = "Remove Filter") Then
+                                        myWeb.moSession.Remove(className)
+                                    End If
                                     If providerName = "" Or LCase(providerName) = "default" Then
                                         providerName = "Protean.Providers.Filters." & className
                                         calledType = System.Type.GetType(providerName, True)
@@ -538,15 +580,14 @@ where cl.nStructId = " & myWeb.mnPageId)
                         End If
                     End If
 
-                    'oContentNode.AppendChild(filterForm.moXformElmt)
+
 
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
+                        myWeb.moSession("FilterApplied") = "true"
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,,,,,,, "Product")
                     End If
-
-
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "ContentFilter", ex, "", cProcessInfo, gbDebug)

@@ -20,11 +20,15 @@ Namespace Providers
                     Dim nParentId As Integer = 1
                     Dim sSql As String = "spGetPagesByParentPageId"
                     Dim arrParams As New Hashtable
+                    Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PageFilter")
+                    If (aWeb.moSession("PageFilter") IsNot Nothing) Then
+                        oXml.InnerText = Convert.ToString(aWeb.moSession("PageFilter"))
+                    End If
+                    oXform.Instance.AppendChild(oXml)
 
-                    oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("PageFilter"))
 
                     ' Adding a binding to the form bindings
-                    oXform.addBind("PageFilter", "PageFilter", "false()", "string", oXform.model)
+                    oXform.addBind("PageFilter", "PageFilter", "false()", "string", oXform.model,)
 
 
                     'Get Parent page id flag and current id
@@ -40,8 +44,9 @@ Namespace Providers
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
                         pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Page Filter", "checkbox", ApperanceTypes.Full)
-                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "cStructName", "nStructKey")
+                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                     End Using
+
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
@@ -51,15 +56,17 @@ Namespace Providers
                 Dim cProcessInfo As String = "ApplyFilter"
                 Try
 
-                    'Dim cWhereSql As String = String.Empty
+
                     Dim cPageIds As String = String.Empty
+
                     If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
                         cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText
+
                     End If
-                    Dim cnt As Integer
 
                     If (cPageIds <> String.Empty) Then
 
+                        aWeb.moSession("PageFilter") = cPageIds
 
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = " AND "
@@ -79,8 +86,8 @@ Namespace Providers
                     Dim cnt As Integer
                     Dim cntPages As Integer = 0
                     Dim cPageIds As String = String.Empty
-                    If (aWeb.moSession("PageIds") IsNot Nothing) Then
-                        cPageIds = aWeb.moSession("PageIds")
+                    If (aWeb.moSession("PageFilter") IsNot Nothing) Then
+                        cPageIds = aWeb.moSession("PageFilter")
                         cPageIds = cPageIds.Replace(cPageId, "")
 
                         Dim aPageId() As String = cPageIds.Split(",")
@@ -91,23 +98,13 @@ Namespace Providers
                                 End If
                             End If
                         Next
-                        aWeb.moSession("PageIds") = Left(cPageIds, cPageIds.Length - 1)
+                        aWeb.moSession("PageFilter") = Left(cPageIds, cPageIds.Length - 1)
                     End If
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
             End Sub
-            'Public Function RemovePageFromFilter(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-            '    Try
-            '        If (myA.moSession("PageIds") IsNot Nothing) Then
-
-            '            aWeb.moSession.Remove("PageIds")
-            '        End If
-            '    Catch ex As Exception
-
-            '    End Try
-            'End Function
 
         End Class
         ' End Class

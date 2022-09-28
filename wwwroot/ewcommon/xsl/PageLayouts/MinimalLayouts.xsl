@@ -11499,7 +11499,7 @@
 			<xsl:with-param name="string">
 				<xsl:apply-templates select="Summary" mode="flattenXhtml"/>
 			</xsl:with-param>
-		</xsl:call-template>"
+		</xsl:call-template>",
 		"reviewRating": {
 		"@type": "Rating",
 		"bestRating": "5",
