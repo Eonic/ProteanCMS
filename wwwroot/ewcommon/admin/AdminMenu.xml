@@ -9,6 +9,7 @@
           <MenuItem name="Move Content" cmd="MoveContent" display="false" icon="fa-mail-forward"/>
           <MenuItem name="Locate Content" cmd="LocateContent" display="false" icon="fa-mail-reply-all fa-flip-horizontal"/>
           <MenuItem name="Related Item Search" cmd="RelateSearch" display="false" icon="fa-search"/>
+			<MenuItem name="Parent Change" cmd="ParentChange" display="false" icon="fa-search"/>
           <MenuItem name="Locate Search" cmd="LocateSearch" display="false" icon="fa-search"/>
           <MenuItem name="Copy Content" cmd="CopyContent" display="false" icon="fa-copy"/>
           <MenuItem name="Hide Content" cmd="HideContent" display="false" icon="fa-minus-square"/>

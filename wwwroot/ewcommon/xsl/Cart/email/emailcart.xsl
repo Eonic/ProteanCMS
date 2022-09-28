@@ -134,8 +134,8 @@
           <td class="total heading" align="right">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
-                <xsl:when test="@transStatus">Deposit Paid</xsl:when>
-                <xsl:when test="@payableType='settlement' and not(@transStatus)">Payment Received</xsl:when>
+                <xsl:when test="@transStatus">Deposit Paid:</xsl:when>
+                <xsl:when test="@payableType='settlement'">Payment Received:</xsl:when>
               </xsl:choose>
             </font>
           </td>

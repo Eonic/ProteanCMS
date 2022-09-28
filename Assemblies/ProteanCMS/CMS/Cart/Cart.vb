@@ -12,6 +12,7 @@ Imports Protean.Tools.Xml.XmlNodeState
 Imports System
 Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
+Imports System.Collections.Generic
 
 Partial Public Class Cms
 
@@ -25,7 +26,7 @@ Partial Public Class Cms
 
         Public moPageXml As XmlDocument
 
-        Public Shadows mcModuleName As String = "Eonic.Cart"
+        Public Shadows mcModuleName As String = "Protean.Cms.Cart"
 
         'Session EonicWeb Details
         Public mcEwDataConn As String
@@ -225,171 +226,171 @@ Partial Public Class Cms
             Public Name As String
             Public Value As String
             Sub New(ByVal cName As String, ByVal cValue As String)
-                PerfMon.Log("Cart", "New")
                 Name = cName
                 Value = cValue
             End Sub
         End Class
 
-        Class Order
+        'Class Order
 
-            Private OrderElmt As XmlElement
-            Protected Friend myWeb As Cms
-            Public moConfig As System.Collections.Specialized.NameValueCollection
-            Private moServer As System.Web.HttpServerUtility
+        '    Private OrderElmt As XmlElement
+        '    Protected Friend myWeb As Cms
+        '    Public moConfig As System.Collections.Specialized.NameValueCollection
+        '    Private moServer As System.Web.HttpServerUtility
 
-            Dim nFirstPayment As Double
-            Dim nRepeatPayment As Double
-            Dim sRepeatInterval As String
-            Dim nRepeatLength As Integer
-            Dim bDelayStart As Boolean
-            Dim dStartDate As Date
+        '    Dim nFirstPayment As Double
+        '    Dim nRepeatPayment As Double
+        '    Dim sRepeatInterval As String
+        '    Dim nRepeatLength As Integer
+        '    Dim bDelayStart As Boolean
+        '    Dim dStartDate As Date
 
-            Dim sPaymentMethod As String
-            Dim sTransactionRef As String
-            Dim sDescription As String
+        '    Dim sPaymentMethod As String
+        '    Dim sTransactionRef As String
+        '    Dim sDescription As String
 
-            Dim sGivenName As String
-            Dim sBillingAddress1 As String
-            Dim sBillingAddress2 As String
-            Dim sBillingTown As String
-            Dim sBillingCounty As String
-            Dim sBillingPostcode As String
-            Dim sEmail As String
+        '    Dim sGivenName As String
+        '    Dim sBillingAddress1 As String
+        '    Dim sBillingAddress2 As String
+        '    Dim sBillingTown As String
+        '    Dim sBillingCounty As String
+        '    Dim sBillingPostcode As String
+        '    Dim sEmail As String
 
-            Public moPageXml As XmlDocument
-
-
-            Sub New(ByRef aWeb As Protean.Cms)
-                PerfMon.Log("Order", "New")
-                myWeb = aWeb
-                moConfig = myWeb.moConfig
-                moPageXml = myWeb.moPageXml
-                moServer = aWeb.moCtx.Server
-                OrderElmt = moPageXml.CreateElement("Order")
-            End Sub
-
-            ReadOnly Property xml As XmlElement
-                Get
-                    Return OrderElmt
-                End Get
-            End Property
-
-            Property PaymentMethod As String
-                Get
-                    Return sPaymentMethod
-                End Get
-                Set(ByVal Value As String)
-                    sPaymentMethod = Value
-                    OrderElmt.SetAttribute("paymentMethod", Value)
-                End Set
-            End Property
-
-            Property firstPayment As Double
-                Get
-                    Return nFirstPayment
-                End Get
-                Set(ByVal Value As Double)
-                    nFirstPayment = Value
-                    OrderElmt.SetAttribute("total", Value)
-                End Set
-            End Property
-
-            Property repeatPayment As Double
-                Get
-                    Return nRepeatPayment
-                End Get
-                Set(ByVal Value As Double)
-                    nRepeatPayment = Value
-                    OrderElmt.SetAttribute("repeatPrice", Value)
-                End Set
-            End Property
-
-            Property repeatInterval As String
-                Get
-                    Return sRepeatInterval
-                End Get
-                Set(ByVal Value As String)
-                    sRepeatInterval = Value
-                    OrderElmt.SetAttribute("repeatInterval", Value)
-                End Set
-            End Property
-
-            Property repeatLength As Integer
-                Get
-                    Return nRepeatLength
-                End Get
-                Set(ByVal Value As Integer)
-                    nRepeatLength = Value
-                    OrderElmt.SetAttribute("repeatLength", Value)
-                End Set
-            End Property
-
-            Property delayStart As Boolean
-                Get
-                    Return bDelayStart
-                End Get
-                Set(ByVal Value As Boolean)
-                    bDelayStart = Value
-                    If Value Then
-                        OrderElmt.SetAttribute("delayStart", "true")
-                    Else
-                        OrderElmt.SetAttribute("delayStart", "false")
-                    End If
-                End Set
-            End Property
-
-            Property startDate As Date
-                Get
-                    Return dStartDate
-                End Get
-                Set(ByVal Value As Date)
-                    dStartDate = Value
-                    OrderElmt.SetAttribute("startDate", xmlDate(dStartDate))
-                End Set
-            End Property
-
-            Property TransactionRef As String
-                Get
-                    Return sTransactionRef
-                End Get
-                Set(ByVal Value As String)
-                    sTransactionRef = Value
-                    OrderElmt.SetAttribute("transactionRef", sTransactionRef)
-                End Set
-            End Property
+        '    Public moPageXml As XmlDocument
 
 
-            Property description As String
-                Get
-                    Return sDescription
-                End Get
-                Set(ByVal Value As String)
-                    sDescription = Value
-                    Dim descElmt As XmlElement = moPageXml.CreateElement("Description")
-                    descElmt.InnerText = sDescription
-                    OrderElmt.AppendChild(descElmt)
-                End Set
-            End Property
 
-            Sub SetAddress(ByVal GivenName As String, ByVal Email As String, ByVal Telephone As String, ByVal TelephoneCountryCode As String, ByVal Company As String, ByVal Street As String, ByVal City As String, ByVal State As String, ByVal PostalCode As String, ByVal Country As String)
+        '    Sub New(ByRef aWeb As Protean.Cms)
+        '        aWeb.PerfMon.Log("Order", "New")
+        '        myWeb = aWeb
+        '        moConfig = myWeb.moConfig
+        '        moPageXml = myWeb.moPageXml
+        '        moServer = aWeb.moCtx.Server
+        '        OrderElmt = moPageXml.CreateElement("Order")
+        '    End Sub
 
-                Dim addElmt As XmlElement = moPageXml.CreateElement("Contact")
-                addElmt.SetAttribute("type", "Billing Address")
-                xmlTools.addElement(addElmt, "GivenName", GivenName)
-                xmlTools.addElement(addElmt, "Email", Email)
-                xmlTools.addElement(addElmt, "Telephone", Telephone)
-                xmlTools.addElement(addElmt, "TelephoneCountryCode", TelephoneCountryCode)
-                xmlTools.addElement(addElmt, "Company", Company)
-                xmlTools.addElement(addElmt, "Street", Street)
-                xmlTools.addElement(addElmt, "City", City)
-                xmlTools.addElement(addElmt, "State", State)
-                xmlTools.addElement(addElmt, "PostalCode", PostalCode)
-                xmlTools.addElement(addElmt, "Country", Country)
-                OrderElmt.AppendChild(addElmt)
-            End Sub
+        '    ReadOnly Property xml As XmlElement
+        '        Get
+        '            Return OrderElmt
+        '        End Get
+        '    End Property
 
-        End Class
+        '    Property PaymentMethod As String
+        '        Get
+        '            Return sPaymentMethod
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sPaymentMethod = Value
+        '            OrderElmt.SetAttribute("paymentMethod", Value)
+        '        End Set
+        '    End Property
+
+        '    Property firstPayment As Double
+        '        Get
+        '            Return nFirstPayment
+        '        End Get
+        '        Set(ByVal Value As Double)
+        '            nFirstPayment = Value
+        '            OrderElmt.SetAttribute("total", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatPayment As Double
+        '        Get
+        '            Return nRepeatPayment
+        '        End Get
+        '        Set(ByVal Value As Double)
+        '            nRepeatPayment = Value
+        '            OrderElmt.SetAttribute("repeatPrice", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatInterval As String
+        '        Get
+        '            Return sRepeatInterval
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sRepeatInterval = Value
+        '            OrderElmt.SetAttribute("repeatInterval", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatLength As Integer
+        '        Get
+        '            Return nRepeatLength
+        '        End Get
+        '        Set(ByVal Value As Integer)
+        '            nRepeatLength = Value
+        '            OrderElmt.SetAttribute("repeatLength", Value)
+        '        End Set
+        '    End Property
+
+        '    Property delayStart As Boolean
+        '        Get
+        '            Return bDelayStart
+        '        End Get
+        '        Set(ByVal Value As Boolean)
+        '            bDelayStart = Value
+        '            If Value Then
+        '                OrderElmt.SetAttribute("delayStart", "true")
+        '            Else
+        '                OrderElmt.SetAttribute("delayStart", "false")
+        '            End If
+        '        End Set
+        '    End Property
+
+        '    Property startDate As Date
+        '        Get
+        '            Return dStartDate
+        '        End Get
+        '        Set(ByVal Value As Date)
+        '            dStartDate = Value
+        '            OrderElmt.SetAttribute("startDate", xmlDate(dStartDate))
+        '        End Set
+        '    End Property
+
+        '    Property TransactionRef As String
+        '        Get
+        '            Return sTransactionRef
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sTransactionRef = Value
+        '            OrderElmt.SetAttribute("transactionRef", sTransactionRef)
+        '        End Set
+        '    End Property
+
+
+        '    Property description As String
+        '        Get
+        '            Return sDescription
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sDescription = Value
+        '            Dim descElmt As XmlElement = moPageXml.CreateElement("Description")
+        '            descElmt.InnerText = sDescription
+        '            OrderElmt.AppendChild(descElmt)
+        '        End Set
+        '    End Property
+
+        '    Sub SetAddress(ByVal GivenName As String, ByVal Email As String, ByVal Telephone As String, ByVal TelephoneCountryCode As String, ByVal Company As String, ByVal Street As String, ByVal City As String, ByVal State As String, ByVal PostalCode As String, ByVal Country As String)
+
+        '        Dim addElmt As XmlElement = moPageXml.CreateElement("Contact")
+        '        addElmt.SetAttribute("type", "Billing Address")
+        '        xmlTools.addElement(addElmt, "GivenName", GivenName)
+        '        xmlTools.addElement(addElmt, "Email", Email)
+        '        xmlTools.addElement(addElmt, "Telephone", Telephone)
+        '        xmlTools.addElement(addElmt, "TelephoneCountryCode", TelephoneCountryCode)
+        '        xmlTools.addElement(addElmt, "Company", Company)
+        '        xmlTools.addElement(addElmt, "Street", Street)
+        '        xmlTools.addElement(addElmt, "City", City)
+        '        xmlTools.addElement(addElmt, "State", State)
+        '        xmlTools.addElement(addElmt, "PostalCode", PostalCode)
+        '        xmlTools.addElement(addElmt, "Country", Country)
+        '        OrderElmt.AppendChild(addElmt)
+        '    End Sub
+
+        'End Class
 
 
 #End Region
@@ -439,10 +440,10 @@ Partial Public Class Cms
         Protected Friend myWeb As Cms
 
         Public Sub New(ByRef aWeb As Protean.Cms)
-            PerfMon.Log("Cart", "New")
             Dim cProcessInfo As String = ""
             Try
                 myWeb = aWeb
+                myWeb.PerfMon.Log("Cart", "New")
                 moConfig = myWeb.moConfig
                 moPageXml = myWeb.moPageXml
                 moDBHelper = myWeb.moDbHelper
@@ -456,7 +457,7 @@ Partial Public Class Cms
 
 
         Public Sub InitializeVariables()
-            PerfMon.Log("Cart", "InitializeVariables")
+            myWeb.PerfMon.Log("Cart", "InitializeVariables")
             'Author:        Trevor Spink
             'Copyright:     Eonic Ltd 2006
             'Date:          2006-10-04
@@ -747,9 +748,9 @@ Partial Public Class Cms
 
                             End If
 
-                            PerfMon.Log("Cart", "InitializeVariables - check for cart start")
+                            myWeb.PerfMon.Log("Cart", "InitializeVariables - check for cart start")
                             Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)
-                                PerfMon.Log("Cart", "InitializeVariables - check for cart end")
+                                myWeb.PerfMon.Log("Cart", "InitializeVariables - check for cart end")
 
                                 If oDr.HasRows Then
                                     While oDr.Read
@@ -760,7 +761,7 @@ Partial Public Class Cms
                                         If Not (myWeb.moRequest("settlementRef") Is Nothing) Or Not (myWeb.moRequest("settlementRef") Is Nothing) Then
 
                                             ' Set to a holding state that indicates that the settlement has been initiated
-                                            mnProcessId = cartProcess.SettlementInitiated
+                                            ' mnProcessId = cartProcess.SettlementInitiated
 
                                             ' If a cart has been found, we need to update the session ID in it.
                                             If oDr("cCartSessionId") <> mcSessionId Then
@@ -772,7 +773,7 @@ Partial Public Class Cms
                                             moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
 
                                         End If
-                                        If mnProcessId > 5 And mnProcessId <> cartProcess.SettlementInitiated Then
+                                        If mnProcessId > 5 And mnProcessId <> cartProcess.SettlementInitiated And mnProcessId <> cartProcess.DepositPaid Then
                                             ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
                                             EndSession()
                                             mnCartId = 0
@@ -902,7 +903,7 @@ Partial Public Class Cms
 
 
         Public Shadows Sub close()
-            PerfMon.Log("Cart", "close")
+            myWeb.PerfMon.Log("Cart", "close")
             Dim cProcessInfo As String = ""
             Try
                 PersistVariables()
@@ -912,7 +913,7 @@ Partial Public Class Cms
         End Sub
 
         Public Overridable Sub PersistVariables()
-            PerfMon.Log("Cart", "PersistVariables")
+            myWeb.PerfMon.Log("Cart", "PersistVariables")
             'Author:        Trevor Spink
             'Copyright:     Eonic Ltd 2003
             'Date:          2003-02-01
@@ -939,7 +940,7 @@ Partial Public Class Cms
                 If mnCartId > 0 Then
                     ' Only update the process if less than 6 we don't ever want to change the status of a completed order other than within the admin system. Boo Yah!
                     Dim currentStatus As Integer = moDBHelper.ExeProcessSqlScalar("select nCartStatus from tblCartOrder where nCartOrderKey = " & mnCartId)
-                    If currentStatus < 6 Then
+                    If currentStatus < 6 Or (currentStatus = 10 And mnProcessId = 6) Then
                         '   If we have a cart, update its status in the db
                         If mnProcessId <> currentStatus Then
                             sSql = "update tblCartOrder set nCartStatus = " & mnProcessId & ", nGiftListId = " & mnGiftListId & ", nCartUserDirId = " & myWeb.mnUserId & " where nCartOrderKey = " & mnCartId
@@ -968,7 +969,7 @@ Partial Public Class Cms
         End Sub
 
         Overridable Sub checkButtons()
-            PerfMon.Log("Cart", "checkButtons")
+            myWeb.PerfMon.Log("Cart", "checkButtons")
             Dim cProcessInfo As String = ""
             Try
 
@@ -1072,7 +1073,7 @@ Partial Public Class Cms
 
 
         Public Overridable Sub apply()
-            PerfMon.Log("Cart", "apply")
+            myWeb.PerfMon.Log("Cart", "apply")
             ' this function is the main function.
 
             Dim oCartXML As XmlDocument = moPageXml
@@ -1279,11 +1280,16 @@ processFlow:
                         Else
                             cRedirectCommand = "ChoosePaymentShippingOption"
                         End If
+
                         ' If a settlement has been initiated, then update the process
-                        If mnProcessId = cartProcess.SettlementInitiated Then
-                            mnProcessId = cartProcess.PassForPayment
-                            moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+                        If mnProcessId = cartProcess.DepositPaid Then
+
+                            myWeb.moSession("Settlement") = "true"
+
+                            ' mnProcessId = cartProcess.PassForPayment
+                            '  moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
                         End If
+
                         ' pickup any google tracking code.
                         Dim item As Object
                         Dim cGoogleTrackingCode As String = ""
@@ -1560,12 +1566,30 @@ processFlow:
                                         End If
                                     End If
                                 End If
-                                purchaseActions(oContentElmt)
+
+                                If myWeb.moSession("Settlement") = "true" Then
+                                    'modifiy the cartXml in line with settlement
+                                    If mnProcessId = Cart.cartProcess.DepositPaid Then
+                                        mnProcessId = Cart.cartProcess.Complete
+
+                                    End If
+                                    myWeb.moSession("Settlement") = Nothing
+                                End If
+
+
+
                                 If mnProcessId = Cart.cartProcess.DepositPaid Then
                                     AddToLists("Deposit", oContentElmt)
                                 Else
                                     AddToLists("Invoice", oContentElmt)
                                 End If
+
+                                purchaseActions(oContentElmt)
+                                'update the cart if purchase actions have changed it
+                                'GetCart(oElmt)
+                                'done for ammerdown as we have removed a product.
+
+
 
                                 If myWeb.mnUserId > 0 Then
                                     If Not moSubscription Is Nothing Then
@@ -1573,15 +1597,14 @@ processFlow:
                                     End If
                                 End If
 
-
                                 If (moCartConfig("SendReceiptEmailForAwaitingPaymentStatusId") IsNot Nothing) Then
                                     If (oElmt.GetAttribute("statusId") <> moCartConfig("SendReceiptEmailForAwaitingPaymentStatusId")) Then
                                         emailReceipts(oContentElmt)
-
                                     End If
                                 Else
                                     emailReceipts(oContentElmt)
                                 End If
+
 
                                 moDiscount.DisablePromotionalDiscounts()
 
@@ -1725,7 +1748,7 @@ processFlow:
         End Function
 
         Overridable Sub emailReceipts(ByRef oCartElmt As XmlElement)
-            PerfMon.Log("Cart", "emailReceipts")
+            myWeb.PerfMon.Log("Cart", "emailReceipts")
             Dim sMessageResponse As String
             Dim cProcessInfo As String = ""
             Try
@@ -1750,7 +1773,7 @@ processFlow:
 
                     Dim oElmtEmail As XmlElement
                     oElmtEmail = moPageXml.CreateElement("Reciept")
-                    oCartElmt.AppendChild(oElmtEmail)
+                    oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmtEmail, True))
                     oElmtEmail.InnerText = sMessageResponse
 
                     If sMessageResponse = "Message Sent" Then
@@ -1764,6 +1787,35 @@ processFlow:
             End Try
 
         End Sub
+
+        Public Function AddPayment(ByVal amountPaid As Double, ByVal Description As String)
+            Dim cProcessInfo As String = ""
+            Dim sSql As String
+            Try
+                Dim nAmountReceived As Double
+                ' Get the amount received so far
+                sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
+                Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            nAmountReceived = CDbl(oDr("nAmountReceived"))
+                        End While
+                    End If
+                End Using
+                nAmountReceived = nAmountReceived + amountPaid
+
+                sSql = "update tblCartOrder set nAmountReceived = " & nAmountReceived & " where nCartOrderKey = " & mnCartId
+                moDBHelper.ExeProcessSql(sSql)
+
+                mnPaymentId = moDBHelper.savePayment(mnCartId, myWeb.mnUserId, "", "", Description, Nothing, DateTime.Now, False, amountPaid, "deduction")
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug)
+
+            Finally
+                'oDr = Nothing
+            End Try
+        End Function
 
 
         Public Function ConfirmPayment(ByRef oCartElmt As XmlElement, ByRef PaymentDetailXml As XmlElement, ByVal providerPaymentRef As String, ByVal providerName As String, ByVal amountPaid As Double)
@@ -1799,7 +1851,7 @@ processFlow:
                         Loop
 
                         oCartElmt.SetAttribute("settlementID", cUniqueLink)
-                        oCartElmt.SetAttribute("transStatus", "Complete")
+                        oCartElmt.SetAttribute("transStatus", "Deposit Paid")
                         UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
                         If outstandingAmount = 0 Then
                             mnProcessId = 6
@@ -1808,16 +1860,18 @@ processFlow:
                         End If
 
                     Case "settlement"
+                        mnProcessId = 6
                         Dim totalPaid As Double = oCartElmt.GetAttribute("paymentMade")
                         totalPaid = totalPaid + amountPaid
                         Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - totalPaid
                         oCartElmt.SetAttribute("paymentMade", totalPaid)
                         oCartElmt.SetAttribute("outstandingAmount", outstandingAmount)
                         oCartElmt.SetAttribute("payableAmount", outstandingAmount)
-
+                        oCartElmt.SetAttribute("transStatus", "Settlement Paid")
+                        oCartElmt.SetAttribute("status", "Settlement Paid")
+                        oCartElmt.SetAttribute("statusId", mnProcessId.ToString())
                         UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
 
-                        mnProcessId = 6
                     Case Else
                         PayableType = "full"
                 End Select
@@ -1833,7 +1887,7 @@ processFlow:
         End Function
 
         Overridable Sub purchaseActions(ByRef oCartElmt As XmlElement)
-            PerfMon.Log("Cart", "purchaseActions")
+            myWeb.PerfMon.Log("Cart", "purchaseActions")
             ' Dim sMessageResponse As String
             Dim cProcessInfo As String = ""
             Dim ocNode As XmlElement
@@ -1846,32 +1900,41 @@ processFlow:
                     Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
                     Dim calledType As Type
                     Dim classPath As String = moPrvConfig.Providers(providerName).Parameters("rootClass")
+
+                    Dim passCMS As String = moPrvConfig.Providers(providerName).Parameters("passCMS")
+
                     Dim methodName As String = "ProcessOrder"
                     calledType = assemblyInstance.GetType(classPath, True)
                     Dim o As Object = Activator.CreateInstance(calledType)
 
                     Dim args(0) As Object
-                    args(0) = oCartElmt
 
+                    If passCMS = "true" Then
+                        ReDim args(1)
+                        args(0) = Me.myWeb
+                        args(1) = oCartElmt
+                    Else
+                        args(0) = oCartElmt
+                    End If
 
                     If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
 
-                        Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
-                        If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
-                            Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
-                            sSql &= mnCartId & ",'"
-                            sSql &= sDiscoutCode & "')"
+                            Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
+                            If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
+                                Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
+                                sSql &= mnCartId & ",'"
+                                sSql &= sDiscoutCode & "')"
 
 
-                            moDBHelper.ExeProcessSql(sSql)
+                                moDBHelper.ExeProcessSql(sSql)
+                            End If
                         End If
+                        calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
                     End If
-                    calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
-
-                End If
 
 
-                For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
+                    For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
                     Dim classPath As String = ocNode.GetAttribute("purchaseAction")
                     Dim assemblyName As String = ocNode.GetAttribute("assembly")
                     Dim providerName As String = ocNode.GetAttribute("providerName")
@@ -1939,7 +2002,7 @@ processFlow:
         ''' <param name="StepName"></param>
         ''' <param name="oCartElmt"></param>
         Overridable Sub AddToLists(StepName As String, ByRef oCartElmt As XmlElement, Optional Name As String = "", Optional Email As String = "", Optional valDict As System.Collections.Generic.Dictionary(Of String, String) = Nothing)
-            PerfMon.Log("Cart", "AddToLists")
+            myWeb.PerfMon.Log("Cart", "AddToLists")
             ' Dim sMessageResponse As String
             Dim cProcessInfo As String = ""
             Try
@@ -1978,7 +2041,9 @@ processFlow:
                                 xsltPath = moMailConfig("Pure360InvoiceList")
                                 If moMailConfig("QuoteList") <> "" Then
                                     'if we have invoiced the customer we don't want to send them quote reminders
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                    If Not oMessaging.Activities Is Nothing Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                    End If
                                 End If
                             Case "Quote"
                                 ListId = moMailConfig("QuoteList")
@@ -2000,8 +2065,9 @@ processFlow:
                                 valDict.Add("FirstName", firstName)
                                 valDict.Add("LastName", lastName)
                             End If
-
-                            oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
+                            If Not oMessaging.Activities Is Nothing Then
+                                oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
+                            End If
                         End If
 
                     End If
@@ -2043,7 +2109,7 @@ processFlow:
             End Try
         End Sub
         'Sub GetCartSummary(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)
-        '    PerfMon.Log("Cart", "GetCartSummary")
+        '    myWeb.PerfMon.Log("Cart", "GetCartSummary")
         '    '   Sets content for the XML to be displayed in the small summary plugin attached
         '    '   to the current content page
 
@@ -2211,7 +2277,7 @@ processFlow:
         'End Sub
         'Public Sub GetCartSummary(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)
         '    'made same as get cart
-        '    PerfMon.Log("Cart", "GetCartSummary")
+        '    myWeb.PerfMon.Log("Cart", "GetCartSummary")
         '    '   Content for the XML that will display all the information stored for the Cart
         '    '   This is a list of cart items (and quantity, price ...), totals,
         '    '   billing & delivery addressi and delivery method.
@@ -2505,7 +2571,7 @@ processFlow:
         ''' <param name="nSelCartId"></param>
         ''' <remarks></remarks>
         Sub GetCartSummary(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)
-            PerfMon.Log("Cart", "GetCartSummary")
+            myWeb.PerfMon.Log("Cart", "GetCartSummary")
             '   Sets content for the XML to be displayed in the small summary plugin attached
             '   to the current content page
             Dim oElmt As XmlElement
@@ -2539,7 +2605,7 @@ processFlow:
 
         Public Sub GetCart(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)
             oCartElmt.InnerXml = ""
-            PerfMon.Log("Cart", "GetCart")
+            myWeb.PerfMon.Log("Cart", "GetCart")
             '   Content for the XML that will display all the information stored for the Cart
             '   This is a list of cart items (and quantity, price ...), totals,
             '   billing & delivery addressi and delivery method.
@@ -2681,6 +2747,9 @@ processFlow:
                                             If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
                                                 If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
                                                     nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
+                                                    '  Else
+                                                    'TS added if full price product and also deposit in cart.
+                                                    '      nPayableAmount = nPayableAmount + CDbl("0" & oCheckPrice.InnerText()) * oRow("quantity")
                                                 End If
                                             End If
                                             nTaxRate = getProductTaxRate(oCheckPrice)
@@ -3046,17 +3115,23 @@ processFlow:
                                     nPayable = nTotalAmount - CDbl(oRow("nAmountReceived"))
                                     If nPayable > 0 Then
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                        oCartElmt.SetAttribute("outstandingAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                     End If
-                                    oCartElmt.SetAttribute("paymentMade", FormatNumber(CDbl(oRow("nLastPaymentMade")), 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                    oCartElmt.SetAttribute("paymentMade", FormatNumber(CDbl(oRow("nAmountReceived")), 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                     oCartElmt.SetAttribute("payableType", "settlement")
                                 End If
                             End If
 
                             ' Set the payableType 
-                            If IsDBNull(oRow("nAmountReceived")) Or nStatusId = 10 Then
+                            If Not (IsNumeric(oRow("nAmountReceived"))) AndAlso nStatusId <> 10 Then
                                 oCartElmt.SetAttribute("payableType", "deposit")
                             Else
                                 oCartElmt.SetAttribute("payableType", "settlement")
+                            End If
+
+                            'TS added for additional orders not sure if this will break elsewhere.
+                            If Not (IsNumeric(oRow("nAmountReceived"))) AndAlso nStatusId = 10 Then
+                                oCartElmt.SetAttribute("payableType", "deposit")
                             End If
 
                             If nPayable = 0 Then
@@ -3074,7 +3149,8 @@ processFlow:
                             oElmt = moPageXml.CreateElement("Notes")
                             oElmt.InnerXml = oRow("cClientNotes")
                             If oElmt.FirstChild.Name = "Notes" Then
-                                oCartElmt.AppendChild(oElmt.SelectSingleNode("Notes"))
+                                Dim NewNotes As XmlElement = oCartElmt.OwnerDocument.ImportNode(oElmt.SelectSingleNode("Notes"), True)
+                                oCartElmt.AppendChild(NewNotes)
                             Else
                                 oCartElmt.AppendChild(oElmt)
                             End If
@@ -3091,7 +3167,7 @@ processFlow:
                                 oElmt.SetAttribute("ref", oRow2("cPayMthdProviderRef"))
                                 oElmt.SetAttribute("acct", oRow2("cPayMthdAcctName"))
                             Next
-                            oCartElmt.AppendChild(oElmt)
+                            oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmt, True))
                         End If
 
                         'Add Delivery Details
@@ -3105,7 +3181,7 @@ processFlow:
                                 oElmt.SetAttribute("notes", oRow2("cCarrierNotes"))
                                 oElmt.SetAttribute("deliveryDate", xmlDate(oRow2("dExpectedDeliveryDate")))
                                 oElmt.SetAttribute("collectionDate", xmlDate(oRow2("dCollectionDate")))
-                                oCartElmt.AppendChild(oElmt)
+                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmt, True))
                             Next
                             oldCartId = nCartIdUse
                         End If
@@ -3149,14 +3225,17 @@ processFlow:
                             Dim tempInstance As New XmlDocument
                             tempInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nCartIdUse))
                             Dim tempOrder As XmlElement = tempInstance.SelectSingleNode("descendant-or-self::Order")
-                            If oCartElmt.GetAttribute("InvoiceDate") = "" And tempOrder.GetAttribute("InvoiceDate") <> "" Then
-                                oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                            If Not tempOrder Is Nothing Then
+                                If oCartElmt.GetAttribute("InvoiceDate") = "" And tempOrder.GetAttribute("InvoiceDate") <> "" Then
+                                    oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                                End If
+                                If oCartElmt.GetAttribute("InvoiceRef") = "" And tempOrder.GetAttribute("InvoiceRef") <> "" Then
+                                    oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                                End If
+                                tempInstance = Nothing
+                                tempOrder = Nothing
                             End If
-                            If oCartElmt.GetAttribute("InvoiceRef") = "" And tempOrder.GetAttribute("InvoiceRef") <> "" Then
-                                oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
-                            End If
-                            tempInstance = Nothing
-                            tempOrder = Nothing
+
                         End If
 
                     Next
@@ -3305,7 +3384,7 @@ processFlow:
         End Function
 
         Sub getShippingDetailXml(ByRef oCartXml As XmlElement, ByVal nShippingId As Long)
-            PerfMon.Log("Cart", "getShippingDetailXml")
+            myWeb.PerfMon.Log("Cart", "getShippingDetailXml")
             Dim cProcessInfo As String = ""
             Dim oDs As DataSet
             Dim sSql As String = "select cShipOptName as Name, cShipOptCarrier as Carrier, cShipOptTime as DeliveryTime from tblCartShippingMethods where nShipOptKey=" & nShippingId
@@ -3327,7 +3406,7 @@ processFlow:
         End Sub
 
         Function getProductPricesByXml(ByVal cXml As String, ByVal cUnit As String, ByVal nQuantity As Long, Optional ByVal PriceType As String = "Prices") As Double
-            PerfMon.Log("Cart", "getProductPricesByXml")
+            myWeb.PerfMon.Log("Cart", "getProductPricesByXml")
             Dim cGroupXPath As String = ""
             Dim oProd As XmlElement = moPageXml.CreateElement("product")
             Try
@@ -3351,7 +3430,7 @@ processFlow:
         End Function
 
         Function getProductTaxRate(ByVal priceXml As XmlElement) As Double
-            PerfMon.Log("Cart", "getProductVatRate")
+            myWeb.PerfMon.Log("Cart", "getProductVatRate")
             Dim cGroupXPath As String = ""
             Dim oProd As XmlNode = moPageXml.CreateNode(XmlNodeType.Document, "", "product")
             Try
@@ -3381,7 +3460,7 @@ processFlow:
         End Function
 
         Function getContentPricesNode(ByVal oContentXml As XmlElement, ByVal cUnit As String, ByVal nQuantity As Long, Optional ByVal PriceType As String = "Prices") As XmlElement
-            PerfMon.Log("Cart", "getContentPricesNode")
+            myWeb.PerfMon.Log("Cart", "getContentPricesNode")
             Dim cGroupXPath As String = ""
             Dim oDefaultPrice As XmlNode
 
@@ -3474,7 +3553,7 @@ processFlow:
         End Function
 
         Function getOptionPricesByXml(ByVal cXml As String, ByVal nGroupIndex As Integer, ByVal nOptionIndex As Integer) As Double
-            PerfMon.Log("Cart", "getOptionPricesByXml")
+            myWeb.PerfMon.Log("Cart", "getOptionPricesByXml")
             Dim cGroupXPath As String = ""
             Dim oProd As XmlNode = moPageXml.CreateNode(XmlNodeType.Document, "", "product")
             Dim oDefaultPrice As XmlNode
@@ -3533,7 +3612,7 @@ processFlow:
 
         Private Sub CheckQuantities(ByRef oCartElmt As XmlElement, ByVal cProdXml As String, ByVal cItemQuantity As String)
 
-            PerfMon.Log("Cart", "CheckQuantities")
+            myWeb.PerfMon.Log("Cart", "CheckQuantities")
             ' Check each product against max and mins
 
             Try
@@ -3626,7 +3705,7 @@ processFlow:
 
 
         Private Sub CheckStock(ByRef oCartElmt As XmlElement, ByVal cProdXml As String, ByVal cItemQuantity As String)
-            PerfMon.Log("Cart", "CheckStock")
+            myWeb.PerfMon.Log("Cart", "CheckStock")
             Dim oProd As XmlNode = moPageXml.CreateNode(XmlNodeType.Document, "", "product")
             Dim oStock As XmlNode
             Dim oError As XmlElement
@@ -3675,7 +3754,7 @@ processFlow:
         End Sub
 
         Public Sub UpdateStockLevels(ByRef oCartElmt As XmlElement)
-            PerfMon.Log("Cart", "UpdateStockLevels")
+            myWeb.PerfMon.Log("Cart", "UpdateStockLevels")
             Dim sSql As String
             Dim oDs As DataSet
             Dim oRow As DataRow
@@ -3744,7 +3823,7 @@ processFlow:
         End Sub
 
         Public Sub UpdateGiftListLevels()
-            PerfMon.Log("Cart", "UpdateGiftListLevels")
+            myWeb.PerfMon.Log("Cart", "UpdateGiftListLevels")
             Dim sSql As String
 
             Dim cProcessInfo As String = ""
@@ -3766,7 +3845,7 @@ processFlow:
         End Sub
         'deprecated for the single call function above.
         Public Sub UpdateGiftListLevels_Old()
-            PerfMon.Log("Cart", "UpdateGiftListLevels_Old")
+            myWeb.PerfMon.Log("Cart", "UpdateGiftListLevels_Old")
             Dim sSql As String
             Dim oDs As DataSet
             Dim oRow As DataRow
@@ -3809,7 +3888,7 @@ processFlow:
         End Sub
 
         Public Function getGroupsByName() As String
-            PerfMon.Log("Cart", "getGroupsByName")
+            myWeb.PerfMon.Log("Cart", "getGroupsByName")
             '!!!!!!!!!!!!!! Should this be in Membership Object???
 
             Dim cReturn As String
@@ -4080,7 +4159,7 @@ processFlow:
 
 
         Public Overridable Function contactXform(ByVal cAddressType As String, ByVal cSubmitName As String, ByVal cCmdType As String, ByVal cCmdAction As String, ByVal bDontPopulate As Boolean, Optional ContactId As Long = 0, Optional cmd2 As String = "") As xForm
-            PerfMon.Log("Cart", "contactXform")
+            myWeb.PerfMon.Log("Cart", "contactXform")
             Dim oXform As xForm = New xForm(myWeb.msException)
             Dim oGrpElmt As XmlElement
             Dim oDs As DataSet
@@ -4519,7 +4598,7 @@ processFlow:
 
 
         Public Overridable Function pickContactXform(ByVal cAddressType As String, Optional ByVal submitPrefix As String = "", Optional ByVal cCmdType As String = "cartCmd", Optional ByVal cCmdAction As String = "") As xForm
-            PerfMon.Log("Cart", "pickContactXform")
+            myWeb.PerfMon.Log("Cart", "pickContactXform")
             Dim oXform As xForm = New xForm(myWeb.msException)
 
             Dim oReturnForm As xForm
@@ -5013,7 +5092,7 @@ processFlow:
         End Sub
 
         Protected Sub UpdateExistingUserAddress(ByRef oContactXform As xForm)
-            PerfMon.Log("Cart", "UpdateExistingUserAddress")
+            myWeb.PerfMon.Log("Cart", "UpdateExistingUserAddress")
             ' Check if it exists - if it does then update the nContactKey node
             Dim oTempCXform As New xForm(myWeb.msException)
             Dim cProcessInfo As String = ""
@@ -5135,7 +5214,7 @@ processFlow:
 
 
         Public Overridable Function discountsXform(Optional ByVal formName As String = "notesForm", Optional ByVal action As String = "?cartCmd=Discounts") As xForm
-            PerfMon.Log("Cart", "notesXform")
+            myWeb.PerfMon.Log("Cart", "notesXform")
             '   this function is called for the collection from a form and addition to the database
             '   of address information.
 
@@ -5306,7 +5385,7 @@ processFlow:
 
 
         Public Overridable Function notesXform(Optional ByVal formName As String = "notesForm", Optional ByVal action As String = "?cartCmd=Notes", Optional oCart As XmlElement = Nothing) As xForm
-            PerfMon.Log("Cart", "notesXform")
+            myWeb.PerfMon.Log("Cart", "notesXform")
             '   this function is called for the collection from a form and addition to the database
             '   of address information.
 
@@ -5434,6 +5513,7 @@ processFlow:
                         Else
                             Dim cTicketTypes As String = moCartConfig("TicketTypes")
                             ''Modify the notes for dependant on tickets
+                            Dim totalAttendees As Integer = 0
                             If cTicketTypes <> "" Then
                                 If Not moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType!='']]").Count = 0 Then
                                     Dim ticketType As String
@@ -5452,13 +5532,16 @@ processFlow:
                                         Dim i As Integer = 0
                                         Dim oItemElmt As XmlElement
                                         For Each oItemElmt In moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType='" & ticketType & "']]")
-                                            For i = 1 To oItemElmt.GetAttribute("quantity")
 
+                                            For i = 1 To oItemElmt.GetAttribute("quantity")
+                                                totalAttendees = totalAttendees + 1
                                                 'Update the instance
                                                 oNotesRoot.AppendChild(blankElmt.CloneNode(True))
                                                 Dim newElmt As XmlElement = oNotesRoot.LastChild
                                                 newElmt.SelectSingleNode("AttTicketType").InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
                                                 newElmt.SetAttribute("id", ticketType & nCount)
+                                                newElmt.SetAttribute("itemId", oItemElmt.GetAttribute("id"))
+
                                                 newElmt = Nothing
 
                                                 'Update the binds
@@ -5469,7 +5552,8 @@ processFlow:
                                                     If newElmt2.GetAttribute("id") <> "" Then
                                                         newElmt2.SetAttribute("id", newElmt2.GetAttribute("id") & "-" & ticketType & nCount)
                                                     End If
-                                                    If i > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
+                                                    'remove lead booker from all subsequent tickets
+                                                    If totalAttendees > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
                                                         newElmt2.SetAttribute("required", "false()")
                                                     End If
                                                 Next
@@ -5497,16 +5581,21 @@ processFlow:
 
                                                         newElmt2.SetAttribute("bind", newElmt2.GetAttribute("bind") & "-" & ticketType & nCount)
                                                     End If
-
-                                                    If i > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
-                                                        newElmt2.ParentNode.RemoveChild(newElmt2)
-                                                    End If
-
                                                 Next
+                                                If totalAttendees > 1 Then
+                                                    For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*[@lead-booker-only='true']")
+                                                        'remove lead booker from all subsequent tickets
+                                                        newElmt2.ParentNode.RemoveChild(newElmt2)
+                                                    Next
+                                                End If
+
                                                 newElmt = Nothing
                                                 nCount = nCount + 1
                                             Next
                                         Next
+
+
+
                                         'remove the blanks
                                         For Each newElmt2 In oControlRoot.SelectNodes("descendant-or-self::*[@delete]")
                                             newElmt2.ParentNode.RemoveChild(newElmt2)
@@ -5615,8 +5704,9 @@ processFlow:
                             oInstanceDoc.LoadXml(oXform.Instance.OuterXml)
 
                             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, moServer.MapPath(moCartConfig("NotesToContactsXSL")), False)
+                            Dim ImportElmt As XmlElement = oTransform.ProcessDocument(oInstanceDoc).DocumentElement
 
-                            moDBHelper.importObjects(oTransform.ProcessDocument(oInstanceDoc).DocumentElement, mnCartId, "")
+                            moDBHelper.importObjects(ImportElmt, mnCartId, "")
 
                             oTransform = Nothing
 
@@ -5648,7 +5738,7 @@ processFlow:
 
         Public Overridable Function optionsXform(ByRef cartElmt As XmlElement) As xForm
 
-            PerfMon.Log("Cart", "optionsXform")
+            myWeb.PerfMon.Log("Cart", "optionsXform")
             Dim ods As DataSet
             Dim ods2 As DataSet
             Dim oRow As DataRow
@@ -6175,7 +6265,7 @@ processFlow:
 
 
         Public Function getParentCountries(ByRef sTarget As String, ByRef nIndex As Integer) As String
-            PerfMon.Log("Cart", "getParentCountries")
+            myWeb.PerfMon.Log("Cart", "getParentCountries")
             Dim sSql As String
             Dim oLocations As Hashtable
 
@@ -6245,7 +6335,7 @@ processFlow:
         End Function
 
         Private Function iterateCountryList(ByRef oDict As Hashtable, ByRef nParent As Integer, ByRef nIndex As Integer) As String
-            PerfMon.Log("Cart", "iterateCountryList")
+            myWeb.PerfMon.Log("Cart", "iterateCountryList")
             Dim arrTmp As Object
             Dim sListReturn As String
             Dim cProcessInfo As String = ""
@@ -6272,7 +6362,7 @@ processFlow:
         End Function
 
         Public Sub addDateAndRef(ByRef oCartElmt As XmlElement, Optional invoiceDate As DateTime = Nothing, Optional nCartId As Long = 0)
-            PerfMon.Log("Cart", "addDateAndRef")
+            myWeb.PerfMon.Log("Cart", "addDateAndRef")
             ' adds current date and an invoice reference number to the cart object.
             ' so the cart now contains all details needed for an invoice
             Dim cProcessInfo As String = ""
@@ -6297,7 +6387,7 @@ processFlow:
         End Sub
 
         Public Function CreateNewCart(ByRef oCartElmt As XmlElement, Optional ByVal cCartSchemaName As String = "Order") As Long
-            PerfMon.Log("Cart", "CreateNewCart")
+            myWeb.PerfMon.Log("Cart", "CreateNewCart")
             '   user has started shopping so we need to initialise the cart and add it to the db
 
             Dim cProcessInfo As String = ""
@@ -6400,7 +6490,7 @@ processFlow:
         End Sub
 
         Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional bDepositOnly As Boolean = False) As Boolean
-            PerfMon.Log("Cart", "AddItem")
+            myWeb.PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
             Dim oDR1 As DataRow 'Parent Rows
@@ -6526,7 +6616,7 @@ processFlow:
                                     End If
                                 End If
 
-                                'Add Parent Product to cart if SKU.
+                                'Add Parent Product to cart if SKU.add
                                 If cContentType = "SKU" Or cContentType = "Ticket" Then
                                     'Then we need to add the Xml for the ParentProduct.
                                     Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
@@ -6691,7 +6781,7 @@ processFlow:
         End Function
 
         Public Overridable Function AddItems() As Boolean
-            PerfMon.Log("Cart", "AddItems")
+            myWeb.PerfMon.Log("Cart", "AddItems")
             'this function checks for an identical item in the database.
             ' If there is, the quantity is increased accordingly.
             ' If not, a new item is added to the table
@@ -6769,10 +6859,15 @@ processFlow:
                                     'Add Item
                                     If myWeb.moRequest.Form.Get("donationAmount") <> "" Then
                                         If IsNumeric(myWeb.moRequest.Form.Get("donationAmount")) Then
-                                            AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
-                                        End If
-                                    Else
-                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
+                                            Dim CartItemName As String = "Donation"
+                                            If myWeb.moRequest.Form.Get("donationName") <> "" Then
+                                                CartItemName = myWeb.moRequest.Form.Get("donationName")
+                                            End If
+
+                                            AddItem(nProductKey, nQuantity, oOptions, CartItemName, CDbl(myWeb.moRequest.Form.Get("donationAmount")))
+                                                End If
+                                            Else
+                                                AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
                                     End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
@@ -6801,7 +6896,7 @@ processFlow:
 
             Else
 
-                PerfMon.Log("Cart", "RemoveItem")
+                myWeb.PerfMon.Log("Cart", "RemoveItem")
                 '   deletes record from item table in db
                 Dim sSql As String
                 Dim oDs As DataSet
@@ -6849,7 +6944,7 @@ processFlow:
         End Function
 
         Public Function UpdateItem(Optional ByVal nItemId As Long = 0, Optional ByVal nContentId As Long = 0, Optional ByVal qty As Long = 1, Optional ByVal SkipPackaging As Boolean = False) As Integer
-            PerfMon.Log("Cart", "RemoveItem")
+            myWeb.PerfMon.Log("Cart", "RemoveItem")
             '   deletes record from item table in db
 
             'Dim oDr As SqlDataReader
@@ -6918,7 +7013,7 @@ processFlow:
 
 
         Public Sub UpdateItemPrice(ByVal nItemId As Long, ByVal nPrice As Double)
-            PerfMon.Log("Cart", "RemoveItem")
+            myWeb.PerfMon.Log("Cart", "RemoveItem")
             '   deletes record from item table in db
 
             Dim sSql As String
@@ -6963,7 +7058,7 @@ processFlow:
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub EmptyCart()
-            PerfMon.Log("Cart", "EmptyCart")
+            myWeb.PerfMon.Log("Cart", "EmptyCart")
 
             'Dim oDr As SqlDataReader
             Dim sSql As String
@@ -6987,7 +7082,7 @@ processFlow:
         End Sub
 
         Public Sub UpdateCartDeposit(ByRef oRoot As XmlElement, ByVal nPaymentAmount As Double, ByVal cPaymentType As String)
-            PerfMon.Log("Cart", "UpdateCartDeposit")
+            myWeb.PerfMon.Log("Cart", "UpdateCartDeposit")
             'Dim oDr As SqlDataReader
             Dim sSql As String
             Dim nAmountReceived As Double = 0.0#
@@ -7026,7 +7121,7 @@ processFlow:
         End Sub
 
         Public Sub QuitCart()
-            PerfMon.Log("Cart", "QuitCart")
+            myWeb.PerfMon.Log("Cart", "QuitCart")
             '   set the cart status to 7
 
             Dim sSql As String
@@ -7055,7 +7150,7 @@ processFlow:
         End Sub
 
         Public Overridable Sub EndSession()
-            PerfMon.Log("Cart", "EndSession")
+            myWeb.PerfMon.Log("Cart", "EndSession")
             Dim sProcessInfo As String = ""
             Dim sSql As String
             Dim cProcessInfo As String = ""
@@ -7077,7 +7172,7 @@ processFlow:
         End Sub
 
         Public Function updateCart(ByRef cSuccessfulCartCmd As String) As Object
-            PerfMon.Log("Cart", "updateCart")
+            myWeb.PerfMon.Log("Cart", "updateCart")
             '   user can decide to change the quantity of identical items or change the shipping options
             '   changes to the database are made in this function
 
@@ -7181,7 +7276,7 @@ processFlow:
         End Function
 
         Public Sub ListOrders(ByRef oContentsXML As XmlElement, ByVal ProcessId As cartProcess)
-            PerfMon.Log("Cart", "ListOrders")
+            myWeb.PerfMon.Log("Cart", "ListOrders")
             Dim oRoot As XmlElement
             Dim oElmt As XmlElement
             Dim sSql As String
@@ -7217,7 +7312,7 @@ processFlow:
         End Sub
 
         Public Sub ListShippingLocations(ByRef oContentsXML As XmlElement, Optional ByVal OptId As Long = 0)
-            PerfMon.Log("Cart", "ListShippingLocations")
+            myWeb.PerfMon.Log("Cart", "ListShippingLocations")
             Dim oRoot As XmlElement
             Dim oElmt As XmlElement
             Dim sSql As String
@@ -7271,7 +7366,7 @@ processFlow:
         End Sub
 
         Public Sub ListDeliveryMethods(ByRef oContentsXML As XmlElement)
-            PerfMon.Log("Cart", "ListDeliveryMethods")
+            myWeb.PerfMon.Log("Cart", "ListDeliveryMethods")
             Dim oElmt As XmlElement
             Dim sSql As String
             Dim oDs As DataSet
@@ -7304,7 +7399,7 @@ processFlow:
 
 
         Public Sub ListCarriers(ByRef oContentsXML As XmlElement)
-            PerfMon.Log("Cart", "ListDeliveryMethods")
+            myWeb.PerfMon.Log("Cart", "ListDeliveryMethods")
             Dim oElmt As XmlElement
             Dim sSql As String
             Dim oDs As DataSet
@@ -7333,7 +7428,7 @@ processFlow:
         End Sub
 
         Public Sub ListPaymentProviders(ByRef oContentsXML As XmlElement)
-            PerfMon.Log("Cart", "ListPaymentProviders")
+            myWeb.PerfMon.Log("Cart", "ListPaymentProviders")
             Dim oElmt As XmlElement
             Dim oElmt2 As XmlElement
             Dim cProcessInfo As String = ""
@@ -7389,7 +7484,7 @@ processFlow:
 
 
         Private Sub AddDeliveryFromGiftList(ByVal nGiftListId As String)
-            PerfMon.Log("Cart", "AddDeliveryFromGiftList")
+            myWeb.PerfMon.Log("Cart", "AddDeliveryFromGiftList")
             Dim oDs As DataSet
             Dim oXml As XmlDocument = New XmlDocument
             Dim cProcessInfo As String = ""
@@ -7435,7 +7530,7 @@ processFlow:
         ''' <param name="cContactCountry">Optional: The name of the current current to work out the tax rate for.  If empty, then the default tax rate is assumed.</param>
         ''' <remarks>If customer is logged on user and they are in a specified group, then void their tax rate</remarks>
         Public Sub UpdateTaxRate(Optional ByRef cContactCountry As String = "")
-            PerfMon.Log("Cart", "UpdateTaxRate")
+            myWeb.PerfMon.Log("Cart", "UpdateTaxRate")
             Dim sCountryList As String
             Dim aVatRates() As String
             Dim cVatRate As String
@@ -7504,7 +7599,7 @@ processFlow:
                     sSql = "update tblCartOrder set nTaxRate = " & mnTaxRate & " where nCartOrderKey=" & mnCartId
                     moDBHelper.ExeProcessSql(sSql)
                 End If
-                PerfMon.Log("Cart", "UpdateTaxEnd")
+                myWeb.PerfMon.Log("Cart", "UpdateTaxEnd")
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "UpdateTaxRate", ex, "", cProcessInfo, gbDebug)
 
@@ -7513,7 +7608,7 @@ processFlow:
         End Sub
 
         Public Sub populateCountriesDropDown(ByRef oXform As xForm, ByRef oCountriesDropDown As XmlElement, Optional ByVal cAddressType As String = "", Optional IDValues As Boolean = False)
-            PerfMon.Log("Cart", "populateCountriesDropDown")
+            myWeb.PerfMon.Log("Cart", "populateCountriesDropDown")
             Dim sSql As String
             'Dim oDr As SqlDataReader
             Dim oLoctree As XmlElement
@@ -7588,7 +7683,7 @@ processFlow:
         End Sub
 
         Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cAttachementTemplatePath As String = "", Optional ByVal cBCCEmail As String = "") As Object
-            PerfMon.Log("Cart", "emailCart")
+            myWeb.PerfMon.Log("Cart", "emailCart")
             Dim oXml As XmlDocument = New XmlDocument
             Dim cProcessInfo As String = "emailCart"
             Try
@@ -7614,7 +7709,7 @@ processFlow:
                     Dim oTransform As Protean.XmlHelper.Transform
 
                     Dim styleFile As String = CType(cAttachementTemplatePath, String)
-                    PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
+                    myWeb.PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                     oTransform = New Protean.XmlHelper.Transform(myWeb, styleFile, False)
 
                     myWeb.msException = ""
@@ -7656,7 +7751,7 @@ processFlow:
         End Function
 
         Public Sub DoNotesItem(ByVal cAction As String)
-            PerfMon.Log("Cart", "DoNotesItem")
+            myWeb.PerfMon.Log("Cart", "DoNotesItem")
             Dim sSql As String
             Dim cNotes As String ' xml string value, gets reused
             Dim oNoteElmt As XmlElement
@@ -7822,7 +7917,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Sub
 
         Public Sub ListOrders(Optional ByVal sOrderID As String = "0", Optional ByVal bListAllQuotes As Boolean = False, Optional ByVal ProcessId As Integer = 0, Optional ByRef oPageDetail As XmlElement = Nothing, Optional ByVal bForceRefresh As Boolean = False, Optional nUserId As Long = 0)
-            PerfMon.Log("Cart", "ListOrders")
+            myWeb.PerfMon.Log("Cart", "ListOrders")
             If myWeb.mnUserId = 0 Then Exit Sub ' if not logged in, dont bother
             'For listing a users previous orders/quotes
 
@@ -8045,7 +8140,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
 
         Public Overridable Sub MakeCurrent(ByVal nOrderID As Integer)
-            PerfMon.Log("Cart", "MakeCurrent")
+            myWeb.PerfMon.Log("Cart", "MakeCurrent")
             'procedure to make a selected historical
             'order or quote into the currently active one
 
@@ -8141,7 +8236,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Sub
 
         Public Function DeleteCart(ByVal nOrderID As Integer) As Boolean
-            PerfMon.Log("Cart", "DeleteCart")
+            myWeb.PerfMon.Log("Cart", "DeleteCart")
             If myWeb.mnUserId = 0 Then Exit Function
             If nOrderID <= 0 Then Exit Function
             Try
@@ -8170,7 +8265,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Function
 
         Public Sub SaveCartXML(ByVal cartXML As XmlElement, Optional nCartId As Long = 0)
-            PerfMon.Log("Cart", "SaveCartXML")
+            myWeb.PerfMon.Log("Cart", "SaveCartXML")
             If nCartId = 0 Then nCartId = mnCartId
             Try
                 If nCartId > 0 Then
@@ -8191,7 +8286,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         ''' </summary>
         ''' <returns></returns>
         Public Function SelectCurrency() As Boolean
-            If Not PerfMon Is Nothing Then PerfMon.Log("Cart", "SelectCurrency")
+            If Not myWeb.PerfMon Is Nothing Then myWeb.PerfMon.Log("Cart", "SelectCurrency")
             Dim cProcessInfo As String = ""
             Try
                 cProcessInfo = "checking of Override"
@@ -8311,7 +8406,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         ''' takes the mcCurrencyRef and sets the currency for the current order 
         ''' </summary>
         Public Sub GetCurrencyDefinition()
-            If Not PerfMon Is Nothing Then PerfMon.Log("Cart", "GetCurrencyDefinition")
+            If Not myWeb.PerfMon Is Nothing Then myWeb.PerfMon.Log("Cart", "GetCurrencyDefinition")
             Dim cProcessInfo As String = ""
             Try
                 If Not mcCurrencyRef = "" And Not mcCurrencyRef Is Nothing Then

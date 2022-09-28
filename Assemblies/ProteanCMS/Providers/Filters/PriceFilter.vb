@@ -6,113 +6,91 @@ Imports Protean.Cms
 Imports Protean.xForm
 
 Namespace Providers
-    Namespace Filter
+
+    Namespace Filters
 
         Public Class PriceFilter
 
-
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+                Dim cProcessInfo As String = "AddControl"
                 Try
-                    Dim pageFilterRange As XmlElement
-                    'Dim oDr As SqlDataReader
+                    Dim sSql As String = "spGetPriceRange"
+                    Dim arrParams As New Hashtable
 
-                    Dim sSql As String = "spGetResultForPriceFilter"
-                    'oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
-                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure)  'Done by nita on 6/7/22
+                    oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("PriceFilter"))
+
+                    ' Adding a binding to the form bindings
+                    oXform.addBind("PriceFilter", "PriceFilter", "false()", "string", oXform.model)
+
+
+                    Dim nMinPrice As Double = Convert.ToDouble(FilterConfig.Attributes("fromPrice").Value)
+                    Dim nMaxPrice As Double = Convert.ToDouble(FilterConfig.Attributes("toPrice").Value)
+                    Dim nStep As Integer = Convert.ToDouble(FilterConfig.Attributes("step").Value)
+                    Dim priceFilterRange As XmlElement
+                    Dim cnt As Integer
+                    'priceFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", nMinPrice, nMaxPrice, nStep)
+                    'priceFilterRange = oXform.addSelect1(oFromGroup, "PriceFilter", False, "Price Filter", "")
+                    'For cnt = nMinPrice To nMaxPrice
+
+                    '    Dim optionName As String = cnt.ToString() + "-" + (cnt + nStep).ToString()
+                    '    oXform.addOption(priceFilterRange, optionName.ToString(), optionName.ToString(), False, "")
+                    '    cnt = cnt + nStep
+                    'Next
+
+                    arrParams.Add("MinPrice", nMinPrice)
+                    arrParams.Add("MaxPrice", nMaxPrice)
+                    arrParams.Add("Step", nStep)
+                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        pageFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 100, 300, 50)
-                        oXform.addOptionsFromSqlDataReader(pageFilterRange, oDr, "cContentName", "nContentId")
+                        priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, "Price Filter", "checkbox", ApperanceTypes.Full)
+                        oXform.addOptionsFromSqlDataReader(priceFilterRange, oDr, "name", "value")
                     End Using
+
                 Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
             End Sub
 
 
-            Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+                Dim cProcessInfo As String = "ApplyFilter"
                 Try
 
-
-                    Dim cWhereSql As String = String.Empty
-                    Dim cPageIds As String = String.Empty
-                    Dim cnt As Integer
-
+                    Dim priceRange() As String
+                    Dim cDefinitionName As String = "Price"
+                    Dim cSelectedPrice As String = String.Empty
                     If (oXform.Instance.SelectNodes("PriceFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectNodes("PriceFilter")(0).InnerText
-                        If (aWeb.moSession("PageIds") Is Nothing) Then
-                            aWeb.moSession("PageIds") = cPageIds
-                        Else
-                            aWeb.moSession("PageIds") = cPageIds
-                            cPageIds = aWeb.moSession("PageIds")
-                        End If
+                        cSelectedPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter").InnerText)
 
                     End If
 
-                    If (cPageIds <> String.Empty) Then
+                    If (cSelectedPrice <> String.Empty) Then
+                        aWeb.moSession("PriceFilter") = cSelectedPrice
+                        priceRange = cSelectedPrice.Split("-")
 
-                        If (cWhereSql = String.Empty) Then
-                            cWhereSql = cWhereSql + cPageIds.ToString() + ","
-                        End If
-                        'call sp and return xml data
                         If (cWhereSql <> String.Empty) Then
-                            cWhereSql = cWhereSql.Substring(0, cWhereSql.Length - 1)
-                            cWhereSql = " nStructId IN (" + cWhereSql + ")"
-                            aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
+                            cWhereSql = cWhereSql + " AND "
                         End If
 
-                        Dim aPageId() As String = cPageIds.Split(",")
-                        For cnt = 0 To aPageId.Length - 1 Step 1
-                            If (aPageId(cnt) <> String.Empty) Then
+                        cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
+                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" + cDefinitionName + "'"
+                        cWhereSql = cWhereSql + " And ci.nNumberValue between " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
 
-                                ' oXform.addRepeat(oFromGroup, aPageId(cnt), "search-filter", aPageId(cnt))
-                                oXform.addSubmit(oFromGroup, "removePage", aPageId(cnt), "submit", "", aPageId(cnt))
-
-                            End If
-                        Next
 
                     End If
 
                 Catch ex As Exception
-
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
-            End Sub
+                Return cWhereSql
+            End Function
 
-            Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
-                Try
-                    Dim cnt As Integer
-                    Dim cntPages As Integer = 0
-                    Dim cPageIds As String = String.Empty
-                    If (aWeb.moSession("PageIds") IsNot Nothing) Then
-                        cPageIds = aWeb.moSession("PageIds")
-                        cPageIds = cPageIds.Replace(cPageId, "")
 
-                        Dim aPageId() As String = cPageIds.Split(",")
-                        For cnt = 0 To aPageId.Length - 1 Step 1
-                            If (aPageId(cnt) <> String.Empty) Then
-                                If aPageId(cnt) <> "" Then
-                                    cPageIds = cPageIds + aPageId(cnt) + ","
-                                End If
-                            End If
-                        Next
-                        aWeb.moSession("PageIds") = Left(cPageIds, cPageIds.Length - 1)
-                    End If
 
-                Catch ex As Exception
-
-                End Try
-            End Sub
-            'Public Function RemovePageFromFilter(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-            '    Try
-            '        If (myA.moSession("PageIds") IsNot Nothing) Then
-
-            '            aWeb.moSession.Remove("PageIds")
-            '        End If
-            '    Catch ex As Exception
-
-            '    End Try
-            'End Function
 
         End Class
-        ' End Class
+
     End Namespace
 End Namespace
 

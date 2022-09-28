@@ -28,7 +28,7 @@ Public Class FileDoc
     Dim mcModuleName As String = "FileDoc"
 
     Public Sub New(ByVal thePath As String)
-        PerfMon.Log("FileDoc", "New")
+        'PerfMon.Log("FileDoc", "New")
         Try
             cPath = thePath
         Catch ex As Exception
@@ -39,7 +39,7 @@ Public Class FileDoc
 
     Public ReadOnly Property Extension() As String
         Get
-            PerfMon.Log("FileDoc", "Extension")
+            'PerfMon.Log("FileDoc", "Extension")
             Try
                 Dim cTest As String = ""
                 Dim cExt As String = ""
@@ -61,7 +61,7 @@ Public Class FileDoc
 
     Public ReadOnly Property Text() As String
         Get
-            PerfMon.Log("FileDoc", "Text")
+            'PerfMon.Log("FileDoc", "Text")
             Try
                 Select Case Extension
                     Case "doc"
@@ -96,7 +96,7 @@ Public Class FileDoc
     End Property
 
     Public Overrides Function ToString() As String
-        PerfMon.Log("FileDoc", "ToString")
+        'PerfMon.Log("FileDoc", "ToString")
         Try
             Return Me.Text
         Catch ex As Exception
@@ -107,7 +107,7 @@ Public Class FileDoc
 
 #Region "Typed Document Handlers"
     Private Function DocWord() As String
-        PerfMon.Log("FileDoc", "DocWord")
+        'PerfMon.Log("FileDoc", "DocWord")
         Dim oIF As Protean.Tools.IFilter.DefaultParser
         Try
             oIF = New IFilter.DefaultParser
@@ -121,7 +121,7 @@ Public Class FileDoc
     End Function
 
     Private Function DocExcel() As String
-        PerfMon.Log("FileDoc", "DocExcel")
+        'PerfMon.Log("FileDoc", "DocExcel")
         Dim oIF As Tools.IFilter.DefaultParser
         Try
             oIF = New IFilter.DefaultParser
@@ -135,7 +135,7 @@ Public Class FileDoc
     End Function
 
     Private Function DocPDF() As String
-        PerfMon.Log("FileDoc", "DocPDF")
+        'PerfMon.Log("FileDoc", "DocPDF")
         Dim oIF As IFilter.DefaultParser
         Try
             oIF = New IFilter.DefaultParser
@@ -150,7 +150,6 @@ Public Class FileDoc
     End Function
 
     Private Function DocText() As String
-        PerfMon.Log("FileDoc", "DocText")
         Dim oIF As IFilter.DefaultParser
         Try
             oIF = New IFilter.DefaultParser
