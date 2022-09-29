@@ -1919,22 +1919,22 @@ processFlow:
 
                     If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
 
-                            Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
-                            If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
-                                Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
-                                sSql &= mnCartId & ",'"
-                                sSql &= sDiscoutCode & "')"
+                        Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
+                        If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
+                            Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
+                            sSql &= mnCartId & ",'"
+                            sSql &= sDiscoutCode & "')"
 
 
-                                moDBHelper.ExeProcessSql(sSql)
-                            End If
+                            moDBHelper.ExeProcessSql(sSql)
                         End If
-                        calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
-
                     End If
+                    calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
+                End If
 
 
-                    For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
+                For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
                     Dim classPath As String = ocNode.GetAttribute("purchaseAction")
                     Dim assemblyName As String = ocNode.GetAttribute("assembly")
                     Dim providerName As String = ocNode.GetAttribute("providerName")
@@ -2744,14 +2744,15 @@ processFlow:
                                         cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         If Not oCheckPrice Is Nothing Then
                                             nCheckPrice = oCheckPrice.InnerText
-                                            If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
-                                                If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
-                                                    nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
-                                                    '  Else
-                                                    'TS added if full price product and also deposit in cart.
-                                                    '      nPayableAmount = nPayableAmount + CDbl("0" & oCheckPrice.InnerText()) * oRow("quantity")
-                                                End If
-                                            End If
+                                            'TS moved to the end when calcuating deposit totals as we need non deposit items to have discounts calculated allready.
+                                            'If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
+                                            '    If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
+                                            '        nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
+                                            '    Else
+                                            '        'TS added if full price product and also deposit in cart.
+                                            '        nPayableAmount = nPayableAmount + CDbl("0" & oCheckPrice.InnerText()) * oRow("quantity")
+                                            '    End If
+                                            'End If
                                             nTaxRate = getProductTaxRate(oCheckPrice)
                                         End If
                                         'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
@@ -3089,6 +3090,20 @@ processFlow:
                                 If mcDepositAmount <> "" Then
                                     If mcDepositAmount = 0 Then
                                         'we defer to calculating the deposit by line about
+                                        Dim oItem As XmlElement
+
+                                        nPayableAmount = 0
+                                        If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
+                                            For Each oItem In oCartElmt.SelectNodes("Item")
+                                                If oItem.SelectSingleNode("nDepositAmount") Is Nothing Then
+                                                    nPayableAmount = nPayableAmount + CDbl(oItem.GetAttribute("itemTotal"))
+                                                Else
+                                                    nPayableAmount = nPayableAmount + CDbl(oItem.SelectSingleNode("nDepositAmount").InnerText())
+                                                End If
+                                            Next
+                                        End If
+
+
                                         nPayable = nPayableAmount
 
                                     ElseIf Right(mcDepositAmount, 1) = "%" Then
@@ -6865,9 +6880,9 @@ processFlow:
                                             End If
 
                                             AddItem(nProductKey, nQuantity, oOptions, CartItemName, CDbl(myWeb.moRequest.Form.Get("donationAmount")))
-                                                End If
-                                            Else
-                                                AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
+                                        End If
+                                    Else
+                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
                                     End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
