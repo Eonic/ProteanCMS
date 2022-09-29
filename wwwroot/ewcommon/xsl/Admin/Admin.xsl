@@ -7821,17 +7821,27 @@
               </a>
             </dd>
           </xsl:if>
-          <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
             <dt>Payment Made</dt>
             <dd>
               <xsl:value-of select="$currency"/>
               <xsl:value-of select="format-number(@paymentMade,'0.00')" />
             </dd>
-            <dt>Total Payment Received</dt>
-            <dd>
-              <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-            </dd>
-          </xsl:if>
+			<xsl:choose>
+				<xsl:when test="@outstandingAmount&gt;0">
+					<dt>Total Outstanding</dt>
+					<dd>
+						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
+					</dd>
+				</xsl:when>
+				<xsl:otherwise>
+					<dt>Total Payment Received</dt>
+					<dd>
+						<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
+					</dd>
+				</xsl:otherwise>
+			</xsl:choose>
+			  
+
           </dl>
           <xsl:if test="not(Payment)">
           <h4>Payment Details</h4>
@@ -8050,21 +8060,35 @@
           <td colspan="4">&#160;</td>
           <td class="total heading">Total Value:</td>
           <td class="total amount">
-            <xsl:value-of select="$currency"/>
+            <xsl:value-of select="$currency"/>&#160;
             <xsl:value-of select="format-number(@total, '0.00')"/>
           </td>
         </tr>
         <xsl:if test="@paymentMade">
+			<xsl:if test="@transStatus='Settlement Paid'">
+				<tr>
+					<td colspan="4">&#160;</td>
+					<td class="total heading">
+						Deposit Paid:
+					</td>
+					<td class="total amount">
+						<xsl:value-of select="$currency"/>&#160;
+						<xsl:value-of select="format-number(@total - @paymentMade, '0.00')"/>
+					</td>
+				</tr>
+			</xsl:if>
           <tr>
             <td colspan="4">&#160;</td>
             <td class="total heading">
               <xsl:choose>
-                <xsl:when test="@transStatus">Transaction Made</xsl:when>
-                <xsl:when test="@payableType='settlement' and not(@transStatus)">Payment Received</xsl:when>
+                <xsl:when test="@transStatus">
+					<xsl:value-of select="@transStatus"/>:
+				</xsl:when>
+                <xsl:when test="@payableType='settlement' and @tranStatus='Settlement Paid'">Payment Received:</xsl:when>
               </xsl:choose>
             </td>
             <td class="total amount">
-              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="$currency"/>&#160;
               <xsl:value-of select="format-number(@paymentMade, '0.00')"/>
             </td>
           </tr>
@@ -8073,13 +8097,10 @@
           <tr>
             <td colspan="4">&#160;</td>
             <td class="total heading">
-              <xsl:choose>
-                <xsl:when test="@payableType='deposit' and not(@transStatus)">Deposit Payable</xsl:when>
-                <xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">Amount Outstanding</xsl:when>
-              </xsl:choose>
+              Amount Outstanding:
             </td>
             <td class="total amount">
-              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="$currency"/>&#160;
               <xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
             </td>
           </tr>
@@ -8516,10 +8537,18 @@
           <p>
             Payment Made:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
           </p>
-          <p>
-            Total Payment Received:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-          </p>
-        </xsl:if>
+			<xsl:choose>
+				<xsl:when test="@outstandingAmount&gt;0">
+					Total Payment Outstanding:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@outstandingAmount, '0.00')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<p>
+						Total Payment Received:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
+					</p>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</xsl:if>
       </div>
 
       <!-- Terminus class fix to floating columns -->

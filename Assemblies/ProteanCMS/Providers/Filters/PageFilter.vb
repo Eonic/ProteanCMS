@@ -20,11 +20,15 @@ Namespace Providers
                     Dim nParentId As Integer = 1
                     Dim sSql As String = "spGetPagesByParentPageId"
                     Dim arrParams As New Hashtable
+                    Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PageFilter")
+                    If (aWeb.moSession("PageFilter") IsNot Nothing) Then
+                        oXml.InnerText = Convert.ToString(aWeb.moSession("PageFilter"))
+                    End If
+                    oXform.Instance.AppendChild(oXml)
 
-                    oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("PageFilter"))
 
                     ' Adding a binding to the form bindings
-                    oXform.addBind("PageFilter", "PageFilter", "false()", "string", oXform.model)
+                    oXform.addBind("PageFilter", "PageFilter", "false()", "string", oXform.model,)
 
 
                     'Get Parent page id flag and current id
@@ -54,15 +58,13 @@ Namespace Providers
 
 
                     Dim cPageIds As String = String.Empty
-                    'If aWeb.moSession("PageFilter") IsNot Nothing Then
-                    '    cPageIds = Convert.ToString(aWeb.moSession("PageFilter"))
-                    'Else
+
                     If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
-                            cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText
+                        cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText
 
-                        End If
+                    End If
 
-                        If (cPageIds <> String.Empty) Then
+                    If (cPageIds <> String.Empty) Then
 
                         aWeb.moSession("PageFilter") = cPageIds
 

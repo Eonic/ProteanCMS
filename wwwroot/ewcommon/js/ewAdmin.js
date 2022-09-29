@@ -948,26 +948,25 @@ Original preload function has been kept but is unused.
                 //$('#MenuTree li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
                 
                 $('#MenuTree li').each(function () {
-
+                  
                     if ($(this).hasClass('collapsable')) {
-                        var t = $(this)[0];
-                        var t1 = $(t)[0];
-                        if ($(t1).find('.collapsable-hitarea')!=undefined) {
-                            //  if (!$(this).has('i.hitarea .activeParent') == false || !$(this).has('i.hitarea.inactiveParent')==false) {
+                       
+                        if ($(this).find('.collapsable-hitarea').length == 0) {
+                            if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
                             $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-                            //  }
+                              }
                         }
                     }
 
 
 
                     if ($(this).hasClass('expandable')) {
-                        var t = $(this)[0];
-                        var t1 = $(t)[0];
-                        if ($(t1).find('.expandable-hitarea') != undefined ) {
-                            //if ($(this).has('activeParent') || $(this).has('inactiveParent')) {
+                      
+                      
+                        if ($(this).find('.expandable-hitarea').length == 0) {
+                            if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length==1) {
                             $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
-                            // }
+                             }
                         }
                     }
 
@@ -1008,7 +1007,7 @@ Original preload function has been kept but is unused.
                     // Unbind after first click to prevent stupid users multiclicking
                     $('#MenuTree li i.hitarea').unbind("click");
                     // Remove current classes from the hit-area
-                    debugger;
+                  
                     $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
                     $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
                     // Get the node's ID (used in load)
@@ -1067,41 +1066,30 @@ Original preload function has been kept but is unused.
                 //$('#MenuTree li.expandable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
 
                 $('#MenuTree li').each(function () {
-
+                   
                     if ($(this).hasClass('collapsable')) {
-                        var t = $(this)[0];
-                        var t1 = $(t)[0];
-                        if ($(t1).find('.collapsable-hitarea') != undefined) {
-                            //  if (!$(this).has('i.hitarea .activeParent') == false || !$(this).has('i.hitarea.inactiveParent')==false) {
-                            $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-                            //  }
+                      
+                        if ($(this).find('.collapsable-hitarea').length == 0) {
+                            if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
+                                $(this).prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+                              }
                         }
                     }
 
 
 
                     if ($(this).hasClass('expandable')) {
-                        var t = $(this)[0];
-                        var t1 = $(t)[0];
-                        if ($(t1).find('.expandable-hitarea') != undefined) {
-                            //if ($(this).has('activeParent') || $(this).has('inactiveParent')) {
-                            $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
-                            // }
+                       
+                        if ($(this).find('.expandable-hitarea').length == 0) {
+                            if ($(this).find('.activeParent').length == 1 || $(this).find('.inactiveParent').length == 1) {
+                                $(this).prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+                             }
                         }
                     }
 
 
                 });
-                //if ($('#MenuTree li.collapsable i.hitarea').length == 0) {
-
-                //    $('#MenuTree li.collapsable').not('i.hitarea').has(".activeParent,.inactiveParent").prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-                //}
-
-                //if ($('#MenuTree li.expandable i.hitarea').length == 0) {
-
-                //    $('#MenuTree li.expandable').not('i.hitarea').has(".activeParent,.inactiveParent").prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
-                //}
-
+                
 
                 // Sort out assignments of the last tag
                 $('#MenuTree').applyLast();

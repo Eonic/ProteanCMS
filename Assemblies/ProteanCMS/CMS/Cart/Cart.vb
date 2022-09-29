@@ -12,6 +12,7 @@ Imports Protean.Tools.Xml.XmlNodeState
 Imports System
 Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
+Imports System.Collections.Generic
 
 Partial Public Class Cms
 
@@ -25,7 +26,7 @@ Partial Public Class Cms
 
         Public moPageXml As XmlDocument
 
-        Public Shadows mcModuleName As String = "Eonic.Cart"
+        Public Shadows mcModuleName As String = "Protean.Cms.Cart"
 
         'Session EonicWeb Details
         Public mcEwDataConn As String
@@ -230,166 +231,166 @@ Partial Public Class Cms
             End Sub
         End Class
 
-        Class Order
+        'Class Order
 
-            Private OrderElmt As XmlElement
-            Protected Friend myWeb As Cms
-            Public moConfig As System.Collections.Specialized.NameValueCollection
-            Private moServer As System.Web.HttpServerUtility
+        '    Private OrderElmt As XmlElement
+        '    Protected Friend myWeb As Cms
+        '    Public moConfig As System.Collections.Specialized.NameValueCollection
+        '    Private moServer As System.Web.HttpServerUtility
 
-            Dim nFirstPayment As Double
-            Dim nRepeatPayment As Double
-            Dim sRepeatInterval As String
-            Dim nRepeatLength As Integer
-            Dim bDelayStart As Boolean
-            Dim dStartDate As Date
+        '    Dim nFirstPayment As Double
+        '    Dim nRepeatPayment As Double
+        '    Dim sRepeatInterval As String
+        '    Dim nRepeatLength As Integer
+        '    Dim bDelayStart As Boolean
+        '    Dim dStartDate As Date
 
-            Dim sPaymentMethod As String
-            Dim sTransactionRef As String
-            Dim sDescription As String
+        '    Dim sPaymentMethod As String
+        '    Dim sTransactionRef As String
+        '    Dim sDescription As String
 
-            Dim sGivenName As String
-            Dim sBillingAddress1 As String
-            Dim sBillingAddress2 As String
-            Dim sBillingTown As String
-            Dim sBillingCounty As String
-            Dim sBillingPostcode As String
-            Dim sEmail As String
+        '    Dim sGivenName As String
+        '    Dim sBillingAddress1 As String
+        '    Dim sBillingAddress2 As String
+        '    Dim sBillingTown As String
+        '    Dim sBillingCounty As String
+        '    Dim sBillingPostcode As String
+        '    Dim sEmail As String
 
-            Public moPageXml As XmlDocument
-
-
-
-            Sub New(ByRef aWeb As Protean.Cms)
-                aWeb.PerfMon.Log("Order", "New")
-                myWeb = aWeb
-                moConfig = myWeb.moConfig
-                moPageXml = myWeb.moPageXml
-                moServer = aWeb.moCtx.Server
-                OrderElmt = moPageXml.CreateElement("Order")
-            End Sub
-
-            ReadOnly Property xml As XmlElement
-                Get
-                    Return OrderElmt
-                End Get
-            End Property
-
-            Property PaymentMethod As String
-                Get
-                    Return sPaymentMethod
-                End Get
-                Set(ByVal Value As String)
-                    sPaymentMethod = Value
-                    OrderElmt.SetAttribute("paymentMethod", Value)
-                End Set
-            End Property
-
-            Property firstPayment As Double
-                Get
-                    Return nFirstPayment
-                End Get
-                Set(ByVal Value As Double)
-                    nFirstPayment = Value
-                    OrderElmt.SetAttribute("total", Value)
-                End Set
-            End Property
-
-            Property repeatPayment As Double
-                Get
-                    Return nRepeatPayment
-                End Get
-                Set(ByVal Value As Double)
-                    nRepeatPayment = Value
-                    OrderElmt.SetAttribute("repeatPrice", Value)
-                End Set
-            End Property
-
-            Property repeatInterval As String
-                Get
-                    Return sRepeatInterval
-                End Get
-                Set(ByVal Value As String)
-                    sRepeatInterval = Value
-                    OrderElmt.SetAttribute("repeatInterval", Value)
-                End Set
-            End Property
-
-            Property repeatLength As Integer
-                Get
-                    Return nRepeatLength
-                End Get
-                Set(ByVal Value As Integer)
-                    nRepeatLength = Value
-                    OrderElmt.SetAttribute("repeatLength", Value)
-                End Set
-            End Property
-
-            Property delayStart As Boolean
-                Get
-                    Return bDelayStart
-                End Get
-                Set(ByVal Value As Boolean)
-                    bDelayStart = Value
-                    If Value Then
-                        OrderElmt.SetAttribute("delayStart", "true")
-                    Else
-                        OrderElmt.SetAttribute("delayStart", "false")
-                    End If
-                End Set
-            End Property
-
-            Property startDate As Date
-                Get
-                    Return dStartDate
-                End Get
-                Set(ByVal Value As Date)
-                    dStartDate = Value
-                    OrderElmt.SetAttribute("startDate", xmlDate(dStartDate))
-                End Set
-            End Property
-
-            Property TransactionRef As String
-                Get
-                    Return sTransactionRef
-                End Get
-                Set(ByVal Value As String)
-                    sTransactionRef = Value
-                    OrderElmt.SetAttribute("transactionRef", sTransactionRef)
-                End Set
-            End Property
+        '    Public moPageXml As XmlDocument
 
 
-            Property description As String
-                Get
-                    Return sDescription
-                End Get
-                Set(ByVal Value As String)
-                    sDescription = Value
-                    Dim descElmt As XmlElement = moPageXml.CreateElement("Description")
-                    descElmt.InnerText = sDescription
-                    OrderElmt.AppendChild(descElmt)
-                End Set
-            End Property
 
-            Sub SetAddress(ByVal GivenName As String, ByVal Email As String, ByVal Telephone As String, ByVal TelephoneCountryCode As String, ByVal Company As String, ByVal Street As String, ByVal City As String, ByVal State As String, ByVal PostalCode As String, ByVal Country As String)
+        '    Sub New(ByRef aWeb As Protean.Cms)
+        '        aWeb.PerfMon.Log("Order", "New")
+        '        myWeb = aWeb
+        '        moConfig = myWeb.moConfig
+        '        moPageXml = myWeb.moPageXml
+        '        moServer = aWeb.moCtx.Server
+        '        OrderElmt = moPageXml.CreateElement("Order")
+        '    End Sub
 
-                Dim addElmt As XmlElement = moPageXml.CreateElement("Contact")
-                addElmt.SetAttribute("type", "Billing Address")
-                xmlTools.addElement(addElmt, "GivenName", GivenName)
-                xmlTools.addElement(addElmt, "Email", Email)
-                xmlTools.addElement(addElmt, "Telephone", Telephone)
-                xmlTools.addElement(addElmt, "TelephoneCountryCode", TelephoneCountryCode)
-                xmlTools.addElement(addElmt, "Company", Company)
-                xmlTools.addElement(addElmt, "Street", Street)
-                xmlTools.addElement(addElmt, "City", City)
-                xmlTools.addElement(addElmt, "State", State)
-                xmlTools.addElement(addElmt, "PostalCode", PostalCode)
-                xmlTools.addElement(addElmt, "Country", Country)
-                OrderElmt.AppendChild(addElmt)
-            End Sub
+        '    ReadOnly Property xml As XmlElement
+        '        Get
+        '            Return OrderElmt
+        '        End Get
+        '    End Property
 
-        End Class
+        '    Property PaymentMethod As String
+        '        Get
+        '            Return sPaymentMethod
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sPaymentMethod = Value
+        '            OrderElmt.SetAttribute("paymentMethod", Value)
+        '        End Set
+        '    End Property
+
+        '    Property firstPayment As Double
+        '        Get
+        '            Return nFirstPayment
+        '        End Get
+        '        Set(ByVal Value As Double)
+        '            nFirstPayment = Value
+        '            OrderElmt.SetAttribute("total", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatPayment As Double
+        '        Get
+        '            Return nRepeatPayment
+        '        End Get
+        '        Set(ByVal Value As Double)
+        '            nRepeatPayment = Value
+        '            OrderElmt.SetAttribute("repeatPrice", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatInterval As String
+        '        Get
+        '            Return sRepeatInterval
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sRepeatInterval = Value
+        '            OrderElmt.SetAttribute("repeatInterval", Value)
+        '        End Set
+        '    End Property
+
+        '    Property repeatLength As Integer
+        '        Get
+        '            Return nRepeatLength
+        '        End Get
+        '        Set(ByVal Value As Integer)
+        '            nRepeatLength = Value
+        '            OrderElmt.SetAttribute("repeatLength", Value)
+        '        End Set
+        '    End Property
+
+        '    Property delayStart As Boolean
+        '        Get
+        '            Return bDelayStart
+        '        End Get
+        '        Set(ByVal Value As Boolean)
+        '            bDelayStart = Value
+        '            If Value Then
+        '                OrderElmt.SetAttribute("delayStart", "true")
+        '            Else
+        '                OrderElmt.SetAttribute("delayStart", "false")
+        '            End If
+        '        End Set
+        '    End Property
+
+        '    Property startDate As Date
+        '        Get
+        '            Return dStartDate
+        '        End Get
+        '        Set(ByVal Value As Date)
+        '            dStartDate = Value
+        '            OrderElmt.SetAttribute("startDate", xmlDate(dStartDate))
+        '        End Set
+        '    End Property
+
+        '    Property TransactionRef As String
+        '        Get
+        '            Return sTransactionRef
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sTransactionRef = Value
+        '            OrderElmt.SetAttribute("transactionRef", sTransactionRef)
+        '        End Set
+        '    End Property
+
+
+        '    Property description As String
+        '        Get
+        '            Return sDescription
+        '        End Get
+        '        Set(ByVal Value As String)
+        '            sDescription = Value
+        '            Dim descElmt As XmlElement = moPageXml.CreateElement("Description")
+        '            descElmt.InnerText = sDescription
+        '            OrderElmt.AppendChild(descElmt)
+        '        End Set
+        '    End Property
+
+        '    Sub SetAddress(ByVal GivenName As String, ByVal Email As String, ByVal Telephone As String, ByVal TelephoneCountryCode As String, ByVal Company As String, ByVal Street As String, ByVal City As String, ByVal State As String, ByVal PostalCode As String, ByVal Country As String)
+
+        '        Dim addElmt As XmlElement = moPageXml.CreateElement("Contact")
+        '        addElmt.SetAttribute("type", "Billing Address")
+        '        xmlTools.addElement(addElmt, "GivenName", GivenName)
+        '        xmlTools.addElement(addElmt, "Email", Email)
+        '        xmlTools.addElement(addElmt, "Telephone", Telephone)
+        '        xmlTools.addElement(addElmt, "TelephoneCountryCode", TelephoneCountryCode)
+        '        xmlTools.addElement(addElmt, "Company", Company)
+        '        xmlTools.addElement(addElmt, "Street", Street)
+        '        xmlTools.addElement(addElmt, "City", City)
+        '        xmlTools.addElement(addElmt, "State", State)
+        '        xmlTools.addElement(addElmt, "PostalCode", PostalCode)
+        '        xmlTools.addElement(addElmt, "Country", Country)
+        '        OrderElmt.AppendChild(addElmt)
+        '    End Sub
+
+        'End Class
 
 
 #End Region
@@ -939,7 +940,7 @@ Partial Public Class Cms
                 If mnCartId > 0 Then
                     ' Only update the process if less than 6 we don't ever want to change the status of a completed order other than within the admin system. Boo Yah!
                     Dim currentStatus As Integer = moDBHelper.ExeProcessSqlScalar("select nCartStatus from tblCartOrder where nCartOrderKey = " & mnCartId)
-                    If currentStatus < 6 Then
+                    If currentStatus < 6 Or (currentStatus = 10 And mnProcessId = 6) Then
                         '   If we have a cart, update its status in the db
                         If mnProcessId <> currentStatus Then
                             sSql = "update tblCartOrder set nCartStatus = " & mnProcessId & ", nGiftListId = " & mnGiftListId & ", nCartUserDirId = " & myWeb.mnUserId & " where nCartOrderKey = " & mnCartId
@@ -1282,6 +1283,9 @@ processFlow:
 
                         ' If a settlement has been initiated, then update the process
                         If mnProcessId = cartProcess.DepositPaid Then
+
+                            myWeb.moSession("Settlement") = "true"
+
                             ' mnProcessId = cartProcess.PassForPayment
                             '  moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
                         End If
@@ -1562,12 +1566,30 @@ processFlow:
                                         End If
                                     End If
                                 End If
-                                purchaseActions(oContentElmt)
+
+                                If myWeb.moSession("Settlement") = "true" Then
+                                    'modifiy the cartXml in line with settlement
+                                    If mnProcessId = Cart.cartProcess.DepositPaid Then
+                                        mnProcessId = Cart.cartProcess.Complete
+
+                                    End If
+                                    myWeb.moSession("Settlement") = Nothing
+                                End If
+
+
+
                                 If mnProcessId = Cart.cartProcess.DepositPaid Then
                                     AddToLists("Deposit", oContentElmt)
                                 Else
                                     AddToLists("Invoice", oContentElmt)
                                 End If
+
+                                purchaseActions(oContentElmt)
+                                'update the cart if purchase actions have changed it
+                                'GetCart(oElmt)
+                                'done for ammerdown as we have removed a product.
+
+
 
                                 If myWeb.mnUserId > 0 Then
                                     If Not moSubscription Is Nothing Then
@@ -1575,15 +1597,14 @@ processFlow:
                                     End If
                                 End If
 
-
                                 If (moCartConfig("SendReceiptEmailForAwaitingPaymentStatusId") IsNot Nothing) Then
                                     If (oElmt.GetAttribute("statusId") <> moCartConfig("SendReceiptEmailForAwaitingPaymentStatusId")) Then
                                         emailReceipts(oContentElmt)
-
                                     End If
                                 Else
                                     emailReceipts(oContentElmt)
                                 End If
+
 
                                 moDiscount.DisablePromotionalDiscounts()
 
@@ -1752,7 +1773,7 @@ processFlow:
 
                     Dim oElmtEmail As XmlElement
                     oElmtEmail = moPageXml.CreateElement("Reciept")
-                    oCartElmt.AppendChild(oElmtEmail)
+                    oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmtEmail, True))
                     oElmtEmail.InnerText = sMessageResponse
 
                     If sMessageResponse = "Message Sent" Then
@@ -1801,7 +1822,7 @@ processFlow:
                         Loop
 
                         oCartElmt.SetAttribute("settlementID", cUniqueLink)
-                        oCartElmt.SetAttribute("transStatus", "Complete")
+                        oCartElmt.SetAttribute("transStatus", "Deposit Paid")
                         UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
                         If outstandingAmount = 0 Then
                             mnProcessId = 6
@@ -1810,16 +1831,18 @@ processFlow:
                         End If
 
                     Case "settlement"
+                        mnProcessId = 6
                         Dim totalPaid As Double = oCartElmt.GetAttribute("paymentMade")
                         totalPaid = totalPaid + amountPaid
                         Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - totalPaid
                         oCartElmt.SetAttribute("paymentMade", totalPaid)
                         oCartElmt.SetAttribute("outstandingAmount", outstandingAmount)
                         oCartElmt.SetAttribute("payableAmount", outstandingAmount)
-
+                        oCartElmt.SetAttribute("transStatus", "Settlement Paid")
+                        oCartElmt.SetAttribute("status", "Settlement Paid")
+                        oCartElmt.SetAttribute("statusId", mnProcessId.ToString())
                         UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
 
-                        mnProcessId = 6
                     Case Else
                         PayableType = "full"
                 End Select
@@ -1848,32 +1871,41 @@ processFlow:
                     Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
                     Dim calledType As Type
                     Dim classPath As String = moPrvConfig.Providers(providerName).Parameters("rootClass")
+
+                    Dim passCMS As String = moPrvConfig.Providers(providerName).Parameters("passCMS")
+
                     Dim methodName As String = "ProcessOrder"
                     calledType = assemblyInstance.GetType(classPath, True)
                     Dim o As Object = Activator.CreateInstance(calledType)
 
                     Dim args(0) As Object
-                    args(0) = oCartElmt
 
+                    If passCMS = "true" Then
+                        ReDim args(1)
+                        args(0) = Me.myWeb
+                        args(1) = oCartElmt
+                    Else
+                        args(0) = oCartElmt
+                    End If
 
                     If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
 
-                        Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
-                        If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
-                            Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
-                            sSql &= mnCartId & ",'"
-                            sSql &= sDiscoutCode & "')"
+                            Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
+                            If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
+                                Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
+                                sSql &= mnCartId & ",'"
+                                sSql &= sDiscoutCode & "')"
 
 
-                            moDBHelper.ExeProcessSql(sSql)
+                                moDBHelper.ExeProcessSql(sSql)
+                            End If
                         End If
+                        calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
                     End If
-                    calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
-
-                End If
 
 
-                For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
+                    For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
                     Dim classPath As String = ocNode.GetAttribute("purchaseAction")
                     Dim assemblyName As String = ocNode.GetAttribute("assembly")
                     Dim providerName As String = ocNode.GetAttribute("providerName")
@@ -3058,10 +3090,15 @@ processFlow:
                             End If
 
                             ' Set the payableType 
-                            If IsDBNull(oRow("nAmountReceived")) Or nStatusId = 10 Then
+                            If Not (IsNumeric(oRow("nAmountReceived"))) AndAlso nStatusId <> 10 Then
                                 oCartElmt.SetAttribute("payableType", "deposit")
                             Else
                                 oCartElmt.SetAttribute("payableType", "settlement")
+                            End If
+
+                            'TS added for additional orders not sure if this will break elsewhere.
+                            If Not (IsNumeric(oRow("nAmountReceived"))) AndAlso nStatusId = 10 Then
+                                oCartElmt.SetAttribute("payableType", "deposit")
                             End If
 
                             If nPayable = 0 Then
@@ -3079,7 +3116,8 @@ processFlow:
                             oElmt = moPageXml.CreateElement("Notes")
                             oElmt.InnerXml = oRow("cClientNotes")
                             If oElmt.FirstChild.Name = "Notes" Then
-                                oCartElmt.AppendChild(oElmt.SelectSingleNode("Notes"))
+                                Dim NewNotes As XmlElement = oCartElmt.OwnerDocument.ImportNode(oElmt.SelectSingleNode("Notes"), True)
+                                oCartElmt.AppendChild(NewNotes)
                             Else
                                 oCartElmt.AppendChild(oElmt)
                             End If
@@ -3154,14 +3192,17 @@ processFlow:
                             Dim tempInstance As New XmlDocument
                             tempInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nCartIdUse))
                             Dim tempOrder As XmlElement = tempInstance.SelectSingleNode("descendant-or-self::Order")
-                            If oCartElmt.GetAttribute("InvoiceDate") = "" And tempOrder.GetAttribute("InvoiceDate") <> "" Then
-                                oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                            If Not tempOrder Is Nothing Then
+                                If oCartElmt.GetAttribute("InvoiceDate") = "" And tempOrder.GetAttribute("InvoiceDate") <> "" Then
+                                    oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                                End If
+                                If oCartElmt.GetAttribute("InvoiceRef") = "" And tempOrder.GetAttribute("InvoiceRef") <> "" Then
+                                    oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                                End If
+                                tempInstance = Nothing
+                                tempOrder = Nothing
                             End If
-                            If oCartElmt.GetAttribute("InvoiceRef") = "" And tempOrder.GetAttribute("InvoiceRef") <> "" Then
-                                oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
-                            End If
-                            tempInstance = Nothing
-                            tempOrder = Nothing
+
                         End If
 
                     Next
@@ -3667,7 +3708,7 @@ processFlow:
                         If CLng(cItemQuantity) > CLng(StockLevel) And mnProcessId < 6 Then
                             If oCartElmt.SelectSingleNode("error") Is Nothing Then oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"))
                             oError = oCartElmt.SelectSingleNode("error")
-                            oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & convertEntitiesToCodes(oProd.SelectSingleNode("//Name").InnerText) & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
+                            oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & oProd.SelectSingleNode("//Name").InnerText & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
                             oMsg.SetAttribute("type", "stock")
                         End If
                     End If
@@ -5439,6 +5480,7 @@ processFlow:
                         Else
                             Dim cTicketTypes As String = moCartConfig("TicketTypes")
                             ''Modify the notes for dependant on tickets
+                            Dim totalAttendees As Integer = 0
                             If cTicketTypes <> "" Then
                                 If Not moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType!='']]").Count = 0 Then
                                     Dim ticketType As String
@@ -5457,13 +5499,16 @@ processFlow:
                                         Dim i As Integer = 0
                                         Dim oItemElmt As XmlElement
                                         For Each oItemElmt In moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType='" & ticketType & "']]")
-                                            For i = 1 To oItemElmt.GetAttribute("quantity")
 
+                                            For i = 1 To oItemElmt.GetAttribute("quantity")
+                                                totalAttendees = totalAttendees + 1
                                                 'Update the instance
                                                 oNotesRoot.AppendChild(blankElmt.CloneNode(True))
                                                 Dim newElmt As XmlElement = oNotesRoot.LastChild
                                                 newElmt.SelectSingleNode("AttTicketType").InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
                                                 newElmt.SetAttribute("id", ticketType & nCount)
+                                                newElmt.SetAttribute("itemId", oItemElmt.GetAttribute("id"))
+
                                                 newElmt = Nothing
 
                                                 'Update the binds
@@ -5474,7 +5519,8 @@ processFlow:
                                                     If newElmt2.GetAttribute("id") <> "" Then
                                                         newElmt2.SetAttribute("id", newElmt2.GetAttribute("id") & "-" & ticketType & nCount)
                                                     End If
-                                                    If i > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
+                                                    'remove lead booker from all subsequent tickets
+                                                    If totalAttendees > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
                                                         newElmt2.SetAttribute("required", "false()")
                                                     End If
                                                 Next
@@ -5502,16 +5548,21 @@ processFlow:
 
                                                         newElmt2.SetAttribute("bind", newElmt2.GetAttribute("bind") & "-" & ticketType & nCount)
                                                     End If
-
-                                                    If i > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
-                                                        newElmt2.ParentNode.RemoveChild(newElmt2)
-                                                    End If
-
                                                 Next
+                                                If totalAttendees > 1 Then
+                                                    For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*[@lead-booker-only='true']")
+                                                        'remove lead booker from all subsequent tickets
+                                                        newElmt2.ParentNode.RemoveChild(newElmt2)
+                                                    Next
+                                                End If
+
                                                 newElmt = Nothing
                                                 nCount = nCount + 1
                                             Next
                                         Next
+
+
+
                                         'remove the blanks
                                         For Each newElmt2 In oControlRoot.SelectNodes("descendant-or-self::*[@delete]")
                                             newElmt2.ParentNode.RemoveChild(newElmt2)
@@ -6775,10 +6826,15 @@ processFlow:
                                     'Add Item
                                     If myWeb.moRequest.Form.Get("donationAmount") <> "" Then
                                         If IsNumeric(myWeb.moRequest.Form.Get("donationAmount")) Then
-                                            AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
-                                        End If
-                                    Else
-                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
+                                            Dim CartItemName As String = "Donation"
+                                            If myWeb.moRequest.Form.Get("donationName") <> "" Then
+                                                CartItemName = myWeb.moRequest.Form.Get("donationName")
+                                            End If
+
+                                            AddItem(nProductKey, nQuantity, oOptions, CartItemName, CDbl(myWeb.moRequest.Form.Get("donationAmount")))
+                                                End If
+                                            Else
+                                                AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
                                     End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"

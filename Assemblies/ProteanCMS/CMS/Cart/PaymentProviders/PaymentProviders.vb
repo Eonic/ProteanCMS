@@ -3266,7 +3266,9 @@ Partial Public Class Cms
                         Next
                         modbHelper.updateDataset(oDs, "Order")
 
-                        savedPaymentId = savePayment(myWeb.mnUserId, "Pay On Account", mnCartId, "Pay on Account", oPayElmt, Now, False, 0) '0 amount paid as yet
+                        myWeb.moCart.ConfirmPayment(oRoot, ccXform.Instance, "", "Pay On Account", Decimal.ToDouble(mnPaymentAmount))
+
+                        ' savedPaymentId = savePayment(myWeb.mnUserId, "Pay On Account", mnCartId, "Pay on Account", oPayElmt, Now, False, 0) '0 amount paid as yet
                     Else
                         ccXform.valid = False
                     End If
