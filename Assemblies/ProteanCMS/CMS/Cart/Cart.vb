@@ -1890,22 +1890,22 @@ processFlow:
 
                     If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
 
-                            Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
-                            If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
-                                Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
-                                sSql &= mnCartId & ",'"
-                                sSql &= sDiscoutCode & "')"
+                        Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
+                        If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
+                            Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
+                            sSql &= mnCartId & ",'"
+                            sSql &= sDiscoutCode & "')"
 
 
-                                moDBHelper.ExeProcessSql(sSql)
-                            End If
+                            moDBHelper.ExeProcessSql(sSql)
                         End If
-                        calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
-
                     End If
+                    calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
+                End If
 
 
-                    For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
+                For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
                     Dim classPath As String = ocNode.GetAttribute("purchaseAction")
                     Dim assemblyName As String = ocNode.GetAttribute("assembly")
                     Dim providerName As String = ocNode.GetAttribute("providerName")
@@ -6480,8 +6480,20 @@ processFlow:
                     'create relationship
                     oDS.Relations.Add("Rel1", oDS.Tables("CartItems").Columns("nCartItemKey"), oDS.Tables("CartItems").Columns("nParentId"), False)
                     oDS.Relations("Rel1").Nested = True
+
+
+
                     If (myWeb.moRequest("UniqueProduct") IsNot Nothing) Then
-                        UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
+                        Dim StrUniqueProduct As String = myWeb.moRequest("UniqueProduct").ToString()
+                        If (StrUniqueProduct.Contains(",")) Then
+
+                            Dim sUniqueProd() As String = Split(StrUniqueProduct, ",")
+                            StrUniqueProduct = sUniqueProd(0).ToString()
+                            UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
+
+                        Else
+                            UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
+                        End If
                     End If
                     'loop through the parent rows to check the product
                     If (oDS.Tables("CartItems").Rows.Count > 0 And UniqueProduct = False) Then
@@ -6564,8 +6576,8 @@ processFlow:
                                 'lets add the discount to the cart if supplied
                                 If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
                                     Dim strDiscount1 As String = oProdXml.SelectSingleNode(
-                                                        "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
-                                                        ).InnerText
+                                                    "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
+                                                    ).InnerText
                                     addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
                                 End If
 
@@ -6695,9 +6707,9 @@ processFlow:
                                         addNewTextNode("nItemOptIdx", oElmt, oProdOptions(i)(1))
 
                                         Dim oPriceElmt As XmlElement = oProdXml.SelectSingleNode(
-                                                                    "/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" &
-                                                                    "/option[" & oProdOptions(i)(1) & "]/Prices/Price[@currency='" & mcCurrency & "']"
-                                                                    )
+                                                                "/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" &
+                                                                "/option[" & oProdOptions(i)(1) & "]/Prices/Price[@currency='" & mcCurrency & "']"
+                                                                )
                                         Dim strPrice2 As String = 0
                                         If Not oPriceElmt Is Nothing Then strPrice2 = oPriceElmt.InnerText
                                         addNewTextNode("nPrice", oElmt, IIf(IsNumeric(strPrice2), strPrice2, 0))
@@ -6832,9 +6844,9 @@ processFlow:
                                             End If
 
                                             AddItem(nProductKey, nQuantity, oOptions, CartItemName, CDbl(myWeb.moRequest.Form.Get("donationAmount")))
-                                                End If
-                                            Else
-                                                AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
+                                        End If
+                                    Else
+                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
                                     End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
