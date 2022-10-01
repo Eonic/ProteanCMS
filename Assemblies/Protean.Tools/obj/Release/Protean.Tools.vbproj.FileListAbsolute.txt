@@ -276,9 +276,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.v
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.Native-Q8-arm64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.Native-Q8-x64.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.Native-Q8-x86.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Memory.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Numerics.Vectors.dll

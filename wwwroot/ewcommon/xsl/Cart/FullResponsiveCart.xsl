@@ -1322,6 +1322,9 @@
             <xsl:value-of select="@nDiscountKey"/>
           </xsl:variable>
           <div class="discount">
+			<span class="label label-success">
+			  <i class="fa fa-certificate">&#160;</i>&#160;
+				  <xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/></span>
             <xsl:if test="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']/@src!=''">
               <xsl:copy-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']"/>
             </xsl:if>

@@ -398,6 +398,21 @@ where cl.nStructId = " & myWeb.mnPageId)
             '        End Try
             '    Next
             'End Sub
+            Public Sub ListHistoricEvents(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
+                Dim cProcessInfo As String = "ListHistoricEvents"
+                Dim PageId As String = oContentNode.GetAttribute("grabberRoot")
+                Dim nItemsPerPage As Long = 0
+                Dim nCurrentPage As Long = 1
+
+                Try
+                    myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " and a.dExpireDate < GETDATE() and c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
+                    ,,, nItemsPerPage,,,,, nCurrentPage,,, True)
+
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "ListHistoricEvents", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Sub
 
 
             Public Sub ContentFilter(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)

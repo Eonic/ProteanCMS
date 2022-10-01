@@ -1788,6 +1788,35 @@ processFlow:
 
         End Sub
 
+        Public Function AddPayment(ByVal amountPaid As Double, ByVal Description As String)
+            Dim cProcessInfo As String = ""
+            Dim sSql As String
+            Try
+                Dim nAmountReceived As Double
+                ' Get the amount received so far
+                sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
+                Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            nAmountReceived = CDbl(oDr("nAmountReceived"))
+                        End While
+                    End If
+                End Using
+                nAmountReceived = nAmountReceived + amountPaid
+
+                sSql = "update tblCartOrder set nAmountReceived = " & nAmountReceived & " where nCartOrderKey = " & mnCartId
+                moDBHelper.ExeProcessSql(sSql)
+
+                mnPaymentId = moDBHelper.savePayment(mnCartId, myWeb.mnUserId, "", "", Description, Nothing, DateTime.Now, False, amountPaid, "deduction")
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug)
+
+            Finally
+                'oDr = Nothing
+            End Try
+        End Function
+
 
         Public Function ConfirmPayment(ByRef oCartElmt As XmlElement, ByRef PaymentDetailXml As XmlElement, ByVal providerPaymentRef As String, ByVal providerName As String, ByVal amountPaid As Double)
             Dim cProcessInfo As String = ""
@@ -2715,11 +2744,15 @@ processFlow:
                                         cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         If Not oCheckPrice Is Nothing Then
                                             nCheckPrice = oCheckPrice.InnerText
-                                            If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
-                                                If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
-                                                    nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
-                                                End If
-                                            End If
+                                            'TS moved to the end when calcuating deposit totals as we need non deposit items to have discounts calculated allready.
+                                            'If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
+                                            '    If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
+                                            '        nPayableAmount = nPayableAmount + CDbl("0" & oRow("nDepositAmount")) * oRow("quantity")
+                                            '    Else
+                                            '        'TS added if full price product and also deposit in cart.
+                                            '        nPayableAmount = nPayableAmount + CDbl("0" & oCheckPrice.InnerText()) * oRow("quantity")
+                                            '    End If
+                                            'End If
                                             nTaxRate = getProductTaxRate(oCheckPrice)
                                         End If
                                         'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
@@ -3057,6 +3090,20 @@ processFlow:
                                 If mcDepositAmount <> "" Then
                                     If mcDepositAmount = 0 Then
                                         'we defer to calculating the deposit by line about
+                                        Dim oItem As XmlElement
+
+                                        nPayableAmount = 0
+                                        If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
+                                            For Each oItem In oCartElmt.SelectNodes("Item")
+                                                If oItem.SelectSingleNode("nDepositAmount") Is Nothing Then
+                                                    nPayableAmount = nPayableAmount + CDbl(oItem.GetAttribute("itemTotal"))
+                                                Else
+                                                    nPayableAmount = nPayableAmount + CDbl(oItem.SelectSingleNode("nDepositAmount").InnerText())
+                                                End If
+                                            Next
+                                        End If
+
+
                                         nPayable = nPayableAmount
 
                                     ElseIf Right(mcDepositAmount, 1) = "%" Then
@@ -3083,8 +3130,9 @@ processFlow:
                                     nPayable = nTotalAmount - CDbl(oRow("nAmountReceived"))
                                     If nPayable > 0 Then
                                         oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                        oCartElmt.SetAttribute("outstandingAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                     End If
-                                    oCartElmt.SetAttribute("paymentMade", FormatNumber(CDbl(oRow("nLastPaymentMade")), 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                    oCartElmt.SetAttribute("paymentMade", FormatNumber(CDbl(oRow("nAmountReceived")), 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                     oCartElmt.SetAttribute("payableType", "settlement")
                                 End If
                             End If
@@ -3134,7 +3182,7 @@ processFlow:
                                 oElmt.SetAttribute("ref", oRow2("cPayMthdProviderRef"))
                                 oElmt.SetAttribute("acct", oRow2("cPayMthdAcctName"))
                             Next
-                            oCartElmt.AppendChild(oElmt)
+                            oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmt, True))
                         End If
 
                         'Add Delivery Details
@@ -3148,7 +3196,7 @@ processFlow:
                                 oElmt.SetAttribute("notes", oRow2("cCarrierNotes"))
                                 oElmt.SetAttribute("deliveryDate", xmlDate(oRow2("dExpectedDeliveryDate")))
                                 oElmt.SetAttribute("collectionDate", xmlDate(oRow2("dCollectionDate")))
-                                oCartElmt.AppendChild(oElmt)
+                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmt, True))
                             Next
                             oldCartId = nCartIdUse
                         End If
@@ -6595,7 +6643,7 @@ processFlow:
                                     End If
                                 End If
 
-                                'Add Parent Product to cart if SKU.
+                                'Add Parent Product to cart if SKU.add
                                 If cContentType = "SKU" Or cContentType = "Ticket" Then
                                     'Then we need to add the Xml for the ParentProduct.
                                     Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")

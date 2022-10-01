@@ -1859,6 +1859,200 @@
     </xsl:if>
   </xsl:template>
 
+
+	<!-- -->
+	<xsl:template match="input[contains(@class,'timezone')]" mode="xform_control">
+		<xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+		<xsl:variable name="inlineHint">
+			<xsl:choose>
+				<xsl:when test="hint[@class='inline']">
+					<xsl:value-of select="hint[@class='inline']/node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="msg_required_inline"/>
+					<xsl:value-of select="$label_low"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<xsl:variable name="hValue" select="substring-before(value/node(),',')"/>
+		<xsl:variable name="mValue" select="substring-after(value/node(),',')"/>
+		<div class="input-group">
+			<select name="{$ref}" id="{$ref}">
+				<xsl:attribute name="class">
+					<xsl:value-of select="@class"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="@class"/>
+					<xsl:text>timezone form-control</xsl:text>
+				</xsl:attribute>
+				<option value="-12:00">
+					<xsl:if test="value/node()='-12:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					(GMT -12:00) Eniwetok, Kwajalein</option>
+				<option value="-11:00">
+					<xsl:if test="value/node()='-11:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -11:00) Midway Island, Samoa</option>
+				<option value="-10:00">
+					<xsl:if test="value/node()='-10:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -10:00) Hawaii</option>
+				<option value="-09:50">
+					<xsl:if test="value/node()='-09:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -9:30) Taiohae</option>
+				<option value="-09:00">
+					<xsl:if test="value/node()='-09:00'">
+					<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -9:00) Alaska</option>
+				<option value="-08:00">
+					<xsl:if test="value/node()='-08:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+				<option value="-07:00">
+					<xsl:if test="value/node()='-07:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+				<option value="-06:00">
+					<xsl:if test="value/node()='-06:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+				<option value="-05:00">
+					<xsl:if test="value/node()='-05:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+				<option value="-04:50">
+					<xsl:if test="value/node()='-04:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -4:30) Caracas</option>
+				<option value="-04:00">
+					<xsl:if test="value/node()='-04:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+				<option value="-03:50">
+					<xsl:if test="value/node()='-03:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -3:30) Newfoundland</option>
+				<option value="-03:00">
+					<xsl:if test="value/node()='-03:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+				<option value="-02:00">
+					<xsl:if test="value/node()='-02:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -2:00) Mid-Atlantic</option>
+				<option value="-01:00">
+					<xsl:if test="value/node()='-01:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT -1:00) Azores, Cape Verde Islands</option>
+				<option value="+00:00">
+					<xsl:if test="value/node()='+00:00' or not(value/node()!='')">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+				<option value="+01:00">
+					<xsl:if test="value/node()='+01:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
+				<option value="+02:00">
+					<xsl:if test="value/node()='+02:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +2:00) Kaliningrad, South Africa</option>
+				<option value="+03:00">
+					<xsl:if test="value/node()='+03:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+				<option value="+03:50">
+					<xsl:if test="value/node()='+03:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +3:30) Tehran</option>
+				<option value="+04:00">
+					<xsl:if test="value/node()='+04:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+				<option value="+04:50">
+					<xsl:if test="value/node()='+04:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +4:30) Kabul</option>
+				<option value="+05:00">
+					<xsl:if test="value/node()='+05:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+				<option value="+05:50">
+					<xsl:if test="value/node()='+05:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+				<option value="+05:75">
+					<xsl:if test="value/node()='+05:75'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +5:45) Kathmandu, Pokhara</option>
+				<option value="+06:00">
+					<xsl:if test="value/node()='+06:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +6:00) Almaty, Dhaka, Colombo</option>
+				<option value="+06:50">
+					<xsl:if test="value/node()='+06:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +6:30) Yangon, Mandalay</option>
+				<option value="+07:00">
+					<xsl:if test="value/node()='+07:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+				<option value="+08:00">
+					<xsl:if test="value/node()='+08:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+				<option value="+08:75">
+					<xsl:if test="value/node()='+08:75'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +8:45) Eucla</option>
+				<option value="+09:00">
+					<xsl:if test="value/node()='+09:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+				<option value="+09:50">
+					<xsl:if test="value/node()='+09:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +9:30) Adelaide, Darwin</option>
+				<option value="+10:00">
+					<xsl:if test="value/node()='+10:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+				<option value="+10:50">
+					<xsl:if test="value/node()='+10:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +10:30) Lord Howe Island</option>
+				<option value="+11:00">
+					<xsl:if test="value/node()='+11:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+				<option value="+11:50">
+					<xsl:if test="value/node()='+11:50'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +11:30) Norfolk Island</option>
+				<option value="+12:00">
+					<xsl:if test="value/node()='+12:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+				<option value="+12:75">
+					<xsl:if test="value/node()='+12:75'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +12:45) Chatham Islands</option>
+				<option value="+13:00">
+					<xsl:if test="value/node()='+13:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +13:00) Apia, Nukualofa</option>
+				<option value="+14:00">
+					<xsl:if test="value/node()='+14:00'">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>(GMT +14:00) Line Islands, Tokelau</option>
+			</select>
+		</div>
+	</xsl:template>	
+	
+	
   <!-- ========================== CONTROL : Colour Picker ========================== -->
   <!-- -->
   <xsl:template match="input[contains(@class,'colorPicker')]" mode="xform_control">
