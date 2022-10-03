@@ -15,6 +15,7 @@ Namespace Providers
                 Dim cProcessInfo As String = "AddControl"
                 Try
                     Dim pageFilterSelect As XmlElement
+                    Dim sCotrolDisplayName As String = "Page Filter"
                     'Parent page id flag used to populate the root level pages or pages under current page.
                     Dim bParentPageId As Boolean = False
                     Dim nParentId As Integer = 1
@@ -29,8 +30,9 @@ Namespace Providers
 
                     ' Adding a binding to the form bindings
                     oXform.addBind("PageFilter", "PageFilter", "false()", "string", oXform.model,)
-
-
+                    If (FilterConfig.Attributes("name") IsNot Nothing) Then
+                        sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
+                    End If
                     'Get Parent page id flag and current id
                     If (FilterConfig.Attributes("parId") IsNot Nothing) Then
                         nParentId = Convert.ToInt32(FilterConfig.Attributes("parId").Value)
@@ -41,9 +43,11 @@ Namespace Providers
                     If (bParentPageId) Then
                         arrParams.Add("PageId", nParentId)
                     End If
+
+
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, "Page Filter", "checkbox", ApperanceTypes.Full)
+                        pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
                         oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                     End Using
 

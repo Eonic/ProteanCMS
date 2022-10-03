@@ -17,7 +17,7 @@ Namespace Providers
                 Try
                     Dim sSql As String = "spGetPriceRange"
                     Dim arrParams As New Hashtable
-
+                    Dim sCotrolDisplayName As String = "Price Filter"
                     oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("PriceFilter"))
 
                     ' Adding a binding to the form bindings
@@ -38,12 +38,16 @@ Namespace Providers
                     '    cnt = cnt + nStep
                     'Next
 
+                    If (FilterConfig.Attributes("name") IsNot Nothing) Then
+                        sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
+                    End If
+
                     arrParams.Add("MinPrice", nMinPrice)
                     arrParams.Add("MaxPrice", nMaxPrice)
                     arrParams.Add("Step", nStep)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, "Price Filter", "checkbox", ApperanceTypes.Full)
+                        priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
                         oXform.addOptionsFromSqlDataReader(priceFilterRange, oDr, "name", "value")
                     End Using
 
