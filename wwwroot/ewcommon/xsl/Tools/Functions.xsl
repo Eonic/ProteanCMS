@@ -3741,6 +3741,98 @@
 
   </xsl:template>
 
+	<xsl:template name="getTimeZone">
+		<xsl:param name="utcTimeZone"/>
+		<xsl:choose>
+			<xsl:when test="$utcTimeZone='-12:00'">(GMT -12:00) Eniwetok, Kwajalein</xsl:when>
+			<xsl:when test="$utcTimeZone='-11:00'">(GMT -11:00) Midway Island, Samoa</xsl:when>
+			<xsl:when test="$utcTimeZone='-10:00'">(GMT -10:00) Hawaii</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:50'">(GMT -9:30) Taiohae</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:00'">(GMT -9:00) Alaska</xsl:when>
+			<xsl:when test="$utcTimeZone='-08:00'">(GMT -8:00) Pacific Time (US &amp; Canada)</xsl:when>
+			<xsl:when test="$utcTimeZone='-07:00'">(GMT -7:00) Mountain Time (US &amp; Canada)</xsl:when>
+			<xsl:when test="$utcTimeZone='-06:00'">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</xsl:when>
+			<xsl:when test="$utcTimeZone='-05:00'">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:50'">(GMT -4:30) Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:00'">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:50'">(GMT -3:30) Newfoundland</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:00'">(GMT -3:00) Brazil, Buenos Aires, Georgetown</xsl:when>
+			<xsl:when test="$utcTimeZone='-02:00'">(GMT -2:00) Mid-Atlantic</xsl:when>
+			<xsl:when test="$utcTimeZone='-01:00'">(GMT -1:00) Azores, Cape Verde Islands</xsl:when>
+			<xsl:when test="$utcTimeZone='+00:00'">(GMT) Western Europe Time, London, Lisbon, Casablanca</xsl:when>
+			<xsl:when test="$utcTimeZone='+01:00'">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</xsl:when>
+			<xsl:when test="$utcTimeZone='+02:00'">(GMT +2:00) Kaliningrad, South Africa</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:00'">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:50'">(GMT +3:30) Tehran</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:00'">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:50'">(GMT +4:30) Kabul</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:00'">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:50'">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:75'">(GMT +5:45) Kathmandu, Pokhara</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:00'">(GMT +6:00) Almaty, Dhaka, Colombo</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:50'">(GMT +6:30) Yangon, Mandalay</xsl:when>
+			<xsl:when test="$utcTimeZone='+07:00'">(GMT +7:00) Bangkok, Hanoi, Jakarta</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:00'">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:75'">(GMT +8:45) Eucla</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:00'">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:50'">(GMT +9:30) Adelaide, Darwin</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:00'">(GMT +10:00) Eastern Australia, Guam, Vladivostok</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:50'">(GMT +10:30) Lord Howe Island</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:00'">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:50'">(GMT +11:30) Norfolk Island</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:00'">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:75'">(GMT +12:45) Chatham Islands</xsl:when>
+			<xsl:when test="$utcTimeZone='+13:00'">(GMT +13:00) Apia, Nukualofa</xsl:when>
+			<xsl:when test="$utcTimeZone='+14:00'">(GMT +14:00) Line Islands, Tokelau</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="getTimeZoneIANA">
+		<xsl:param name="utcTimeZone"/>
+		<xsl:choose>
+			<xsl:when test="$utcTimeZone='-12:00'">Etc/GMT+12</xsl:when>
+			<xsl:when test="$utcTimeZone='-11:00'">Pacific/Pago_Pago</xsl:when>
+			<xsl:when test="$utcTimeZone='-10:00'">America/Adak</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:50'">Pacific/Marquesas</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:00'">Pacific/Gambier</xsl:when>
+			<xsl:when test="$utcTimeZone='-08:00'">America/Los_Angeles</xsl:when>
+			<xsl:when test="$utcTimeZone='-07:00'">America/Denver</xsl:when>
+			<xsl:when test="$utcTimeZone='-06:00'">America/Chicago</xsl:when>
+			<xsl:when test="$utcTimeZone='-05:00'">America/New_York</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:50'">America/Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:00'">America/Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:50'">Canada/Newfoundland</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:00'">America/Buenos_Aires</xsl:when>
+			<xsl:when test="$utcTimeZone='-02:00'">Atlantic/South_Georgia</xsl:when>
+			<xsl:when test="$utcTimeZone='-01:00'">Atlantic/Azores</xsl:when>
+			<xsl:when test="$utcTimeZone='+00:00'">Europe/London</xsl:when>
+			<xsl:when test="$utcTimeZone='+01:00'">Europe/Amsterdam</xsl:when>
+			<xsl:when test="$utcTimeZone='+02:00'">Africa/Maputo</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:00'">Europe/Moscow</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:50'">Iran</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:00'">Asia/Dubai</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:50'">Asia/Kabul</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:00'">Indian/Maldives</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:50'">Asia/Colombo</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:75'">Asia/Kathmandu</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:00'">Asia/Urumqi</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:50'">Asia/Yangon</xsl:when>
+			<xsl:when test="$utcTimeZone='+07:00'">Asia/Bangkok</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:00'">Asia/Hong_Kong</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:75'">Australia/Eucla</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:00'">Asia/Tokyo</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:50'">Australia/Darwin</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:00'">Asia/Vladivostok</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:50'">Australia/Lord_Howe</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:00'">Asia/Magadan</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:50'">Pacific/Norfolk</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:00'">Pacific/Auckland</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:75'">Pacific/Chatham</xsl:when>
+			<xsl:when test="$utcTimeZone='+13:00'">Pacific/Apia</xsl:when>
+			<xsl:when test="$utcTimeZone='+14:00'">Pacific/Kiritimati</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
 
   <!--   ################################################   Menu & Content display name  ##############################################   -->
   <!-- Display Name for a Page -->

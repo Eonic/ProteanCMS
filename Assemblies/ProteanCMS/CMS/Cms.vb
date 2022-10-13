@@ -3626,7 +3626,7 @@ Public Class Cms
     ''' <param name="distinct"></param>
     ''' <param name="cShowSpecificContentTypes"></param>
     ''' 
-    Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False, Optional cShowSpecificContentTypes As String = "")
+    Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False, Optional cShowSpecificContentTypes As String = "", Optional ignoreActiveAndDate As Boolean = False)
         PerfMon.Log("Web", "GetPageContentFromSelect")
         Dim oRoot As XmlElement
         Dim sSql As String
@@ -3719,9 +3719,10 @@ Public Class Cms
                 If sPrimarySql <> "" Then sMembershipSql = " and " & sMembershipSql
             End If
 
-            'show only live content that is within date, unless we are in admin mode.
-            sFilterSql = GetStandardFilterSQLForContent((sPrimarySql <> "" Or sMembershipSql <> ""))
-
+            If ignoreActiveAndDate = False Then
+                'show only live content that is within date, unless we are in admin mode.
+                sFilterSql = GetStandardFilterSQLForContent((sPrimarySql <> "" Or sMembershipSql <> ""))
+            End If
 
             ' add "and" if clause before
             If sPrimarySql <> "" Or sMembershipSql <> "" Or sFilterSql <> "" Then sWhereSql = " and " & sWhereSql
