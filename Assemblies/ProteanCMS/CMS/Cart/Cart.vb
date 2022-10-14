@@ -3102,9 +3102,9 @@ processFlow:
                                         If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
                                             For Each oItem In oCartElmt.SelectNodes("Item")
                                                 If oItem.SelectSingleNode("nDepositAmount") Is Nothing Then
-                                                    nPayableAmount = nPayableAmount + CDbl(oItem.GetAttribute("itemTotal"))
+                                                    nPayableAmount = nPayableAmount + CDbl(oItem.GetAttribute("itemTotal")) * CLng(oItem.GetAttribute("quantity"))
                                                 Else
-                                                    nPayableAmount = nPayableAmount + CDbl(oItem.SelectSingleNode("nDepositAmount").InnerText())
+                                                    nPayableAmount = nPayableAmount + CDbl(oItem.SelectSingleNode("nDepositAmount").InnerText()) * CLng(oItem.GetAttribute("quantity"))
                                                 End If
                                             Next
                                         End If

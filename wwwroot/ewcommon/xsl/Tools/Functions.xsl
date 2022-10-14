@@ -5329,6 +5329,12 @@
         <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+		  <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='off'">
+			  <xsl:if test="$page/Request/ServerVariables/Item[@name='SERVER_PORT']!='80'">
+				  <xsl:text>:</xsl:text>
+				  <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_PORT']/node()"/>
+			  </xsl:if>			  
+		  </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$thisPageUrl"/>
@@ -10486,16 +10492,11 @@
     <xsl:param name="bundle-path"/>
     <xsl:call-template name="render-css-files">
       <xsl:with-param name="list" select="ew:BundleCSS($comma-separated-files,$bundle-path)"/>
-
-
       <xsl:with-param name="ie8mode">
-
         <xsl:if test="(contains($userAgent, 'MSIE 7.0') or contains($userAgent, 'MSIE 8.0') or contains($userAgent, 'MSIE 9.0'))">
           <xsl:text>1</xsl:text>
-
         </xsl:if>
       </xsl:with-param>
-
     </xsl:call-template>
   </xsl:template>
 
