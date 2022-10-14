@@ -825,6 +825,11 @@
           <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
+		  
+		  <xsl:if test="//Content[@carousel='swiper']">
+			  <script src="/ewcommon/js/jquery/swiper/swiper-bundle.min.js">/* */</script>
+			  <!-- !!! MIN VERSION CAUSES ERROR -->
+		  </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery' or @moduleType='Carousel'] and not(/Page/@adminMode)">
           <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
         </xsl:if>
@@ -8193,6 +8198,8 @@
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="showImage"/>
     <xsl:param name="class"/>
+	  <xsl:param name="width"/>
+	  <xsl:param name="height"/>
     <xsl:param name="forceResize"/>
     <xsl:variable name="VForceResize">
       <xsl:choose>
@@ -8274,13 +8281,27 @@
         <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
         <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
         <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-        <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
-          <xsl:if test="$imgId != ''">
-            <xsl:attribute name="id">
-              <xsl:value-of select="$imgId"/>
-            </xsl:attribute>
-          </xsl:if>
-        </img>
+		  <xsl:choose>
+			  <xsl:when test="$width or $height">
+				  <img src="{$displaySrc}" width="{$width}" height="{$height}" alt="{$alt}" class="detail photo">
+					  <xsl:if test="$imgId != ''">
+						  <xsl:attribute name="id">
+							  <xsl:value-of select="$imgId"/>
+						  </xsl:attribute>
+					  </xsl:if>
+				  </img>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
+					  <xsl:if test="$imgId != ''">
+						  <xsl:attribute name="id">
+							  <xsl:value-of select="$imgId"/>
+						  </xsl:attribute>
+					  </xsl:if>
+				  </img>
+			  </xsl:otherwise>
+		  </xsl:choose>
+        
       </xsl:when>
       <!--<xsl:otherwise>
         -->
