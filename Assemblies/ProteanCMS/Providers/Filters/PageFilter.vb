@@ -15,6 +15,7 @@ Namespace Providers
                 Dim cProcessInfo As String = "AddControl"
                 Try
                     Dim pageFilterSelect As XmlElement
+                    Dim pageFilterButtons As XmlElement
                     Dim sCotrolDisplayName As String = "Page Filter"
                     'Parent page id flag used to populate the root level pages or pages under current page.
                     Dim bParentPageId As Boolean = False
@@ -22,8 +23,13 @@ Namespace Providers
                     Dim sSql As String = "spGetPagesByParentPageId"
                     Dim arrParams As New Hashtable
                     Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PageFilter")
-                    If (aWeb.moSession("PageFilter") IsNot Nothing) Then
-                        oXml.InnerText = Convert.ToString(aWeb.moSession("PageFilter"))
+                    'If (aWeb.moSession("PageFilter") IsNot Nothing) Then
+                    '    oXml.InnerText = Convert.ToString(aWeb.moSession("PageFilter"))
+                    'End If
+
+                    If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
+                        oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PageFilter"))
+
                     End If
                     oXform.Instance.AppendChild(oXml)
 
@@ -50,7 +56,24 @@ Namespace Providers
                         pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
                         oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                     End Using
+                    If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']") IsNot Nothing) Then
+                        If (oXml.InnerText.Trim() <> String.Empty) Then
+                            Dim sText As String
+                            Dim cnt As Integer
+                            Dim aPages() As String = oXml.InnerText.Split(",")
+                            If (aPages.Length <> 0) Then
+                                For cnt = 0 To aPages.Length - 1
+                                    sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().InnerText
+                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                                Next
 
+                            Else
+
+                                sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
+                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                            End If
+                        End If
+                    End If
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
@@ -70,7 +93,7 @@ Namespace Providers
 
                     If (cPageIds <> String.Empty) Then
 
-                        aWeb.moSession("PageFilter") = cPageIds
+                        'aWeb.moSession("PageFilter") = cPageIds
 
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = " AND "
