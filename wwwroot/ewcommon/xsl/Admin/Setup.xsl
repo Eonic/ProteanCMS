@@ -666,14 +666,27 @@
                 Doing this will optimise all the images in the images folder. <br/>
                 <strong>Are you sure you wish to continue?</strong><br/>
               </p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-danger">
-                <i class="fa fa-times">&#160;</i>&#160;
-                Cancel
-              </a>
-              &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=OptimiseImages&amp;ewCmd2=Do" class="btn btn-success">
-                <i class="fa fa-eraser">&#160;</i>&#160;Optimise Images
-              </a>
+			  <form action="/ewcommon/setup/default.ashx?ewCmd=OptimiseImages&amp;ewCmd2=Do" method="post">
+				  <div class="form-group">
+					  <div class="form-group">
+						  <label for="folderPath">Start Folder Path</label>
+						  <input type="text" class="form-control" id="folderPath" name="folderPath" value="/images"/>
+                    </div>
+					  <div class="checkbox">
+						  <label>
+							  <input name="resizedonly" type="checkbox"/> Dynamically resized Images only
+                          </label>
+					  </div>
+                  <button type="submit" class="btn btn-success">
+                    <i class="fa fa-eraser">&#160;</i>&#160;Optimise Images
+                  </button>
+				</div>
+			  </form>
+				<a href="/ewcommon/setup/default.ashx" class="btn btn-danger">
+					<i class="fa fa-times">&#160;</i>&#160;
+					Cancel
+				</a>
+				&#160;&#160;&#160;
             </xsl:otherwise>
           </xsl:choose>
         </div>

@@ -566,7 +566,16 @@ Recheck:
                         If goRequest("ewCmd2") = "Do" Then
                             Dim oFsh As New fsHelper(myWeb.moCtx)
                             oFsh.mcRoot = myWeb.goServer.MapPath("/")
-                            AddResponse(oFsh.OptimiseImages("/Images", 0, 0, False, goConfig("TinifyKey")))
+
+                            Dim folderPrefix As String = ""
+                            If goRequest("resizedonly") <> "" Then
+                                folderPrefix = "~"
+                            End If
+                            Dim folderPath As String = "/Images"
+                            If goRequest("folderPath") <> "" Then
+                                folderPath = goRequest("folderPath")
+                            End If
+                            AddResponse(oFsh.OptimiseImages(folderPath, 0, 0, False, goConfig("TinifyKey"), folderPrefix))
                             cStep = 1
                         End If
 
