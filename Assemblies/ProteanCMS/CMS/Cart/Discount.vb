@@ -603,7 +603,7 @@ Partial Public Class Cms
 
 
                             'now to add the discount items to the cart
-                            For Each oDiscountElmt In oDiscountXml.SelectNodes("Discounts/Item[@id=" & nId & "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3)]")
+                            For Each oDiscountElmt In oDiscountXml.SelectNodes("Discounts/Item[@id=" & nId & "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3) or (@nDiscountCat=5)]")
                                 oDiscountElmt.SetAttribute("AppliedToCart", 1)
                                 oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountElmt.CloneNode(True), True))
                             Next

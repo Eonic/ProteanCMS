@@ -470,14 +470,8 @@
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
         <!-- common css -->
-        <xsl:choose>
-          <xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
-            <xsl:apply-templates select="." mode="commonStyle"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="." mode="criticalPathCSS"/>
-          </xsl:otherwise>
-        </xsl:choose>
+		  <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
+       
 
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
 
@@ -489,6 +483,17 @@
       <xsl:apply-templates select="." mode="bodyBuilder"/>
     </html>
   </xsl:template>
+
+	<xsl:template match="Page" mode="headerCommonStyle">
+		<xsl:choose>
+			<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
+				<xsl:apply-templates select="." mode="commonStyle"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="." mode="criticalPathCSS"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
@@ -820,6 +825,11 @@
           <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
+		  
+		  <xsl:if test="//Content[@carousel='swiper']">
+			  <script src="/ewcommon/js/jquery/swiper/swiper-bundle.min.js">/* */</script>
+			  <!-- !!! MIN VERSION CAUSES ERROR -->
+		  </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery' or @moduleType='Carousel'] and not(/Page/@adminMode)">
           <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
         </xsl:if>
@@ -1828,13 +1838,18 @@
       </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
-        <xsl:apply-templates select="." mode="commonStyle"/>
-      </xsl:if>
+		<xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
+      
 
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
+
+	<xsl:template match="Page" mode="footerCommonStyle">
+		<xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+			<xsl:apply-templates select="." mode="commonStyle"/>
+		</xsl:if>
+	</xsl:template>
 
   <xsl:template match="Page" mode="bodyStyle">
     <!-- Placeholder to overide -->
@@ -3726,6 +3741,98 @@
 
   </xsl:template>
 
+	<xsl:template name="getTimeZone">
+		<xsl:param name="utcTimeZone"/>
+		<xsl:choose>
+			<xsl:when test="$utcTimeZone='-12:00'">(GMT -12:00) Eniwetok, Kwajalein</xsl:when>
+			<xsl:when test="$utcTimeZone='-11:00'">(GMT -11:00) Midway Island, Samoa</xsl:when>
+			<xsl:when test="$utcTimeZone='-10:00'">(GMT -10:00) Hawaii</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:50'">(GMT -9:30) Taiohae</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:00'">(GMT -9:00) Alaska</xsl:when>
+			<xsl:when test="$utcTimeZone='-08:00'">(GMT -8:00) Pacific Time (US &amp; Canada)</xsl:when>
+			<xsl:when test="$utcTimeZone='-07:00'">(GMT -7:00) Mountain Time (US &amp; Canada)</xsl:when>
+			<xsl:when test="$utcTimeZone='-06:00'">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</xsl:when>
+			<xsl:when test="$utcTimeZone='-05:00'">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:50'">(GMT -4:30) Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:00'">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:50'">(GMT -3:30) Newfoundland</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:00'">(GMT -3:00) Brazil, Buenos Aires, Georgetown</xsl:when>
+			<xsl:when test="$utcTimeZone='-02:00'">(GMT -2:00) Mid-Atlantic</xsl:when>
+			<xsl:when test="$utcTimeZone='-01:00'">(GMT -1:00) Azores, Cape Verde Islands</xsl:when>
+			<xsl:when test="$utcTimeZone='+00:00'">(GMT) Western Europe Time, London, Lisbon, Casablanca</xsl:when>
+			<xsl:when test="$utcTimeZone='+01:00'">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</xsl:when>
+			<xsl:when test="$utcTimeZone='+02:00'">(GMT +2:00) Kaliningrad, South Africa</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:00'">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:50'">(GMT +3:30) Tehran</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:00'">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:50'">(GMT +4:30) Kabul</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:00'">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:50'">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:75'">(GMT +5:45) Kathmandu, Pokhara</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:00'">(GMT +6:00) Almaty, Dhaka, Colombo</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:50'">(GMT +6:30) Yangon, Mandalay</xsl:when>
+			<xsl:when test="$utcTimeZone='+07:00'">(GMT +7:00) Bangkok, Hanoi, Jakarta</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:00'">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:75'">(GMT +8:45) Eucla</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:00'">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:50'">(GMT +9:30) Adelaide, Darwin</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:00'">(GMT +10:00) Eastern Australia, Guam, Vladivostok</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:50'">(GMT +10:30) Lord Howe Island</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:00'">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:50'">(GMT +11:30) Norfolk Island</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:00'">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:75'">(GMT +12:45) Chatham Islands</xsl:when>
+			<xsl:when test="$utcTimeZone='+13:00'">(GMT +13:00) Apia, Nukualofa</xsl:when>
+			<xsl:when test="$utcTimeZone='+14:00'">(GMT +14:00) Line Islands, Tokelau</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="getTimeZoneIANA">
+		<xsl:param name="utcTimeZone"/>
+		<xsl:choose>
+			<xsl:when test="$utcTimeZone='-12:00'">Etc/GMT+12</xsl:when>
+			<xsl:when test="$utcTimeZone='-11:00'">Pacific/Pago_Pago</xsl:when>
+			<xsl:when test="$utcTimeZone='-10:00'">America/Adak</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:50'">Pacific/Marquesas</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:00'">Pacific/Gambier</xsl:when>
+			<xsl:when test="$utcTimeZone='-08:00'">America/Los_Angeles</xsl:when>
+			<xsl:when test="$utcTimeZone='-07:00'">America/Denver</xsl:when>
+			<xsl:when test="$utcTimeZone='-06:00'">America/Chicago</xsl:when>
+			<xsl:when test="$utcTimeZone='-05:00'">America/New_York</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:50'">America/Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:00'">America/Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:50'">Canada/Newfoundland</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:00'">America/Buenos_Aires</xsl:when>
+			<xsl:when test="$utcTimeZone='-02:00'">Atlantic/South_Georgia</xsl:when>
+			<xsl:when test="$utcTimeZone='-01:00'">Atlantic/Azores</xsl:when>
+			<xsl:when test="$utcTimeZone='+00:00'">Europe/London</xsl:when>
+			<xsl:when test="$utcTimeZone='+01:00'">Europe/Amsterdam</xsl:when>
+			<xsl:when test="$utcTimeZone='+02:00'">Africa/Maputo</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:00'">Europe/Moscow</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:50'">Iran</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:00'">Asia/Dubai</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:50'">Asia/Kabul</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:00'">Indian/Maldives</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:50'">Asia/Colombo</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:75'">Asia/Kathmandu</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:00'">Asia/Urumqi</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:50'">Asia/Yangon</xsl:when>
+			<xsl:when test="$utcTimeZone='+07:00'">Asia/Bangkok</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:00'">Asia/Hong_Kong</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:75'">Australia/Eucla</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:00'">Asia/Tokyo</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:50'">Australia/Darwin</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:00'">Asia/Vladivostok</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:50'">Australia/Lord_Howe</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:00'">Asia/Magadan</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:50'">Pacific/Norfolk</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:00'">Pacific/Auckland</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:75'">Pacific/Chatham</xsl:when>
+			<xsl:when test="$utcTimeZone='+13:00'">Pacific/Apia</xsl:when>
+			<xsl:when test="$utcTimeZone='+14:00'">Pacific/Kiritimati</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
 
   <!--   ################################################   Menu & Content display name  ##############################################   -->
   <!-- Display Name for a Page -->
@@ -4651,6 +4758,7 @@
 
   <xsl:template match="Content[@type='Module']" mode="moreLink">
     <xsl:variable name="link" select="@link"/>
+	  <xsl:variable name="linkType" select="@linkType"/>
     <xsl:if test="$link!=''">
       <xsl:variable name="numbertest">
         <!-- Test if link is numeric then link is internal-->
@@ -4661,54 +4769,65 @@
       <xsl:choose>
         <xsl:when test="$page[@cssFramework='bs3']">
           <div class="morelink">
-            <span>
-              <a title="{@linkText}" class="btn btn-default btn-sm">
-                <xsl:choose>
-                  <xsl:when test="$numbertest = 'number'">
-                    <xsl:variable name="pageId" select="@link"/>
-                    <xsl:attribute name="href">
-                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
-                    </xsl:attribute>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:choose>
-                      <xsl:when test="contains($link,'#')">
-                        <xsl:attribute name="class">
-                          <xsl:text>btn btn-default btn-sm scroll-to-anchor</xsl:text>
-                        </xsl:attribute>
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                      </xsl:when>
-                      <xsl:when test="contains($link,'http')">
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="rel">external</xsl:attribute>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <xsl:attribute name="href">
-                          <xsl:text>http://</xsl:text>
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="rel">external</xsl:attribute>
-                      </xsl:otherwise>
-                    </xsl:choose>
+			  <xsl:choose>
+				  <xsl:when test="$linkType='form' or $linkType='modalLink'">
+					  <span>
+						  <a href="#" data-toggle="modal" data-target="#{$link}" class="btn btn-default btn-sm">
+							  <xsl:value-of select="@linkText"/>
+						  </a>
+					  </span>
+			        </xsl:when>
+				  <xsl:otherwise>
+					  <span>
+						  <a title="{@linkText}" class="btn btn-default btn-sm">
+							  <xsl:choose>
+								  <xsl:when test="$numbertest = 'number'">
+									  <xsl:variable name="pageId" select="@link"/>
+									  <xsl:attribute name="href">
+										  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+									  </xsl:attribute>
+								  </xsl:when>
+								  <xsl:otherwise>
+									  <xsl:choose>
+										  <xsl:when test="contains($link,'#')">
+											  <xsl:attribute name="class">
+												  <xsl:text>btn btn-default btn-sm scroll-to-anchor</xsl:text>
+											  </xsl:attribute>
+											  <xsl:attribute name="href">
+												  <xsl:value-of select="$link"/>
+											  </xsl:attribute>
+										  </xsl:when>
+										  <xsl:when test="contains($link,'http')">
+											  <xsl:attribute name="href">
+												  <xsl:value-of select="$link"/>
+											  </xsl:attribute>
+											  <xsl:attribute name="rel">external</xsl:attribute>
+										  </xsl:when>
+										  <xsl:otherwise>
+											  <xsl:attribute name="href">
+												  <xsl:text>http://</xsl:text>
+												  <xsl:value-of select="$link"/>
+											  </xsl:attribute>
+											  <xsl:attribute name="rel">external</xsl:attribute>
+										  </xsl:otherwise>
+									  </xsl:choose>
 
-                  </xsl:otherwise>
-                </xsl:choose>
+								  </xsl:otherwise>
+							  </xsl:choose>
 
-                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
-                  <xsl:attribute name="onclick">
-                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-                    <xsl:value-of select="$link"/>
-                    <xsl:text>');</xsl:text>
-                  </xsl:attribute>
-                </xsl:if>
+							  <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+								  <xsl:attribute name="onclick">
+									  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+									  <xsl:value-of select="$link"/>
+									  <xsl:text>');</xsl:text>
+								  </xsl:attribute>
+							  </xsl:if>
 
-                <xsl:value-of select="@linkText"/>
-              </a>
-            </span>
+							  <xsl:value-of select="@linkText"/>
+						  </a>
+					  </span>
+				  </xsl:otherwise>
+			  </xsl:choose>
           </div>
         </xsl:when>
         <xsl:otherwise>
@@ -8079,6 +8198,8 @@
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="showImage"/>
     <xsl:param name="class"/>
+	  <xsl:param name="width"/>
+	  <xsl:param name="height"/>
     <xsl:param name="forceResize"/>
     <xsl:variable name="VForceResize">
       <xsl:choose>
@@ -8160,13 +8281,27 @@
         <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
         <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
         <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-        <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
-          <xsl:if test="$imgId != ''">
-            <xsl:attribute name="id">
-              <xsl:value-of select="$imgId"/>
-            </xsl:attribute>
-          </xsl:if>
-        </img>
+		  <xsl:choose>
+			  <xsl:when test="$width or $height">
+				  <img src="{$displaySrc}" width="{$width}" height="{$height}" alt="{$alt}" class="detail photo">
+					  <xsl:if test="$imgId != ''">
+						  <xsl:attribute name="id">
+							  <xsl:value-of select="$imgId"/>
+						  </xsl:attribute>
+					  </xsl:if>
+				  </img>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
+					  <xsl:if test="$imgId != ''">
+						  <xsl:attribute name="id">
+							  <xsl:value-of select="$imgId"/>
+						  </xsl:attribute>
+					  </xsl:if>
+				  </img>
+			  </xsl:otherwise>
+		  </xsl:choose>
+        
       </xsl:when>
       <!--<xsl:otherwise>
         -->

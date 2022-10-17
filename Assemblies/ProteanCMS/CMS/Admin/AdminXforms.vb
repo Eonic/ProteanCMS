@@ -3427,7 +3427,7 @@ Partial Public Class Cms
                                     bResult = True
                                     '###############################-ACTIONS-########################
                                 ElseIf myItem.contains("RelateEdit") Then
-                                    nRelId = relateCmdArr(2)
+                                    nRelId = relateCmdArr(1)
                                     goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & IIf(goRequest.QueryString("pgid") = "", "", "&pgid=" & goRequest.QueryString("pgid"))
                                     goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nRelId
                                     bResult = True
