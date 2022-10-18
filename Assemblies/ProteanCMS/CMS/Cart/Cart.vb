@@ -13,6 +13,8 @@ Imports System
 Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
 Imports System.Collections.Generic
+Imports System.Web
+
 
 Partial Public Class Cms
 
@@ -607,6 +609,9 @@ Partial Public Class Cms
                         If Not (IsNumeric(myWeb.moSession("CartId"))) Or myWeb.moSession("CartId") <= 0 Then
                             mnCartId = 0
                         Else
+                            If moConfig("CartSessionTimeOut") IsNot Nothing And moConfig("CartSessionTimeOut") <> 0 Then
+                                HttpContext.Current.Session.Timeout = 60 * CInt(moConfig("CartSessionTimeOut"))
+                            End If
                             mnCartId = CInt(myWeb.moSession("CartId"))
                         End If
                     End If
