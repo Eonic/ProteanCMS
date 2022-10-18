@@ -420,6 +420,10 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Try
                     'current contentfilter id
 
+                    If (oContentNode.Attributes("resultCount") IsNot Nothing) Then
+
+                    End If
+
                     'Dim nContentFilterId = myWeb.moPageXml.SelectSingleNode("Page/Contents/Content[@moduleType='ContentFilter']").Attributes(0).Value
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
@@ -480,8 +484,8 @@ where cl.nStructId = " & myWeb.mnPageId)
                     oContentNode.AppendChild(filterForm.moXformElmt)
 
                     Dim whereSQL As String = ""
-                    filterForm.addSubmit(oFrmGroup, "Remove Filter", "Remove Filter")
-                    filterForm.addSubmit(oFrmGroup, "Filter", "Filter")
+                    filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilter")
+                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "ShowExperiences")
 
                     filterForm.addValues()
 
@@ -515,9 +519,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                         filterForm.updateInstanceFromRequest()
                         filterForm.validate()
                         If (filterForm.valid) Then
-                            If (myWeb.moRequest.Form("Submit") = "Remove Filter") Then
-                                myWeb.moSession.Remove("FilterApplied")
-                            End If
+
 
                             If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
                                 If (Convert.ToString(myWeb.moRequest.Form("Submit")).Contains("Remove -")) Then
@@ -586,7 +588,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
                         myWeb.moSession("FilterApplied") = "true"
-                        myWeb.GetPageContentFromSelect(whereSQL,,,,,,,,,,, "Product")
+                        myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, "Product")
+                        oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
+
                     End If
 
                 Catch ex As Exception
