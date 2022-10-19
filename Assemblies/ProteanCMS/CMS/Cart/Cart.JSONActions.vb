@@ -15,7 +15,7 @@ Imports System.Text
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports System.Collections.Generic
-Imports IntoTheBlue.Web
+
 
 
 Partial Public Class Cms
@@ -940,37 +940,6 @@ Partial Public Class Cms
 
             End Function
 
-            ''' <summary>
-            ''' Add Missing order 
-            ''' </summary>
-            ''' <param name="myApi"></param>
-            ''' <param name="jObj"></param>
-            ''' <returns></returns>
-            Public Function AddMissingOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-                Try
-                    Dim josResult As String = ""
-                    Dim bIsAuthorized As Boolean = False
-                    Dim validGroup = IIf(jObj("validGroup") IsNot Nothing, CStr(jObj("validGroup")), "")
-                    bIsAuthorized = ValidateAPICall(myWeb, validGroup)
-
-                    If bIsAuthorized = False Then Return "Error -Authorization Failed"
-
-                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CType(jObj("nProviderReference"), Long), 0)
-                    Dim receiptID = jObj("receiptID")
-                    Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
-                    Dim strConsumerRef = ""
-                    If cProviderName <> "" And receiptID <> 0 Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
-                        strConsumerRef = oPayProv.Activities.CompleteOrder(receiptID)
-                        josResult = strConsumerRef
-                    End If
-                    Return josResult
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
-                    Return "Error" 'ex.Message
-                End Try
-
-            End Function
 
 
             ''' <summary>
