@@ -602,5 +602,3 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbp
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.Native-Q8-x64.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.xml
