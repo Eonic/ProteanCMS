@@ -615,8 +615,6 @@ Partial Public Class Cms
                                 End If
 
                             End If
-
-                        End If
                             mnCartId = CInt(myWeb.moSession("CartId"))
                         End If
                     End If
