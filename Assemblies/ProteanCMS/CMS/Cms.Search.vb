@@ -153,7 +153,7 @@ Partial Public Class Cms
         End Sub
 
         Public Sub New(ByRef myAPi As Protean.API)
-            myAPi.PerfMon.Log("Search", "New")
+            'myAPi.PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables
@@ -755,7 +755,7 @@ Partial Public Class Cms
         End Sub
 
         Sub IndexQuery(ByRef myAPI As Protean.API, ByVal cQuery As String, Optional HitsLimit As Integer = 300, Optional fuzzySearch As String = "on")
-            myWeb.PerfMon.Log("Search", "IndexQuery")
+            ' myWeb.PerfMon.Log("Search", "IndexQuery")
             Dim processInfo As String = "Looking for : " & cQuery
             Try
                 If myWeb Is Nothing Then
