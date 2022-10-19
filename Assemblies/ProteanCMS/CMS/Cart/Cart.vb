@@ -609,12 +609,6 @@ Partial Public Class Cms
                         If Not (IsNumeric(myWeb.moSession("CartId"))) Or myWeb.moSession("CartId") <= 0 Then
                             mnCartId = 0
                         Else
-                            If moConfig("CartSessionTimeOut") IsNot Nothing Then
-                                If moConfig("CartSessionTimeOut") <> 0 Then
-                                    myWeb.moSession.Timeout = 60 * CInt(moConfig("CartSessionTimeOut"))
-                                End If
-
-                            End If
                             mnCartId = CInt(myWeb.moSession("CartId"))
                         End If
                     End If
