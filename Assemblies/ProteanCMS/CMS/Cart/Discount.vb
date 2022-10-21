@@ -128,7 +128,7 @@ Partial Public Class Cms
 
 
                 Dim sSQLArr() As String = Nothing
-                Dim cntProduct As Int16 = 0
+
                 Dim nCount As Integer
                 Dim dDisountAmount As Double = 0
                 Dim xmlCartItem As XmlElement
@@ -223,14 +223,6 @@ Partial Public Class Cms
                                 strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0))")
                             End If
 
-                            '   Else
-                            'strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '' AND  tblCartDiscountRules.nDiscountCodeType = 0) ")
-                            'If cPromoCodeUserEntered <> "" Then
-                            'strSQL.Append("OR (tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
-                            '            strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0)")
-                            ' End If
-                            'strSQL.Append(")")
-                            'End If
 
                             myWeb.PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
                             oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
@@ -242,81 +234,83 @@ Partial Public Class Cms
                         'It is used for validation order total, minimum order value and  maximum order value.
                         'If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                         'if total crossed more or less than defined range then it will remove promocode for the user.
+
+
                         If oDsDiscounts IsNot Nothing Then
                             If oDsDiscounts.Tables("Discount").Rows.Count > 0 Then
 
                                 If cPromoCodeUserEntered <> "" Then
+                                    Dim nMinQuantity As Integer = CInt("0" + oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinQuantity"))
+                                    Dim dMinPrice As Double = CInt("0" + oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinPrice"))
+                                    Dim dMaxPrice As Double = 0
                                     Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                     Dim validateAddedDiscount As Boolean = True
-                                    Dim minQuantity As String = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinQuantity")
                                     Dim totalAmount As Double = 0
-                                    Dim doc As New XmlDocument()
                                     Dim bApplyToTotal As Boolean = False
-                                    doc.LoadXml(additionalInfo)
-                                    If (additionalInfo <> String.Empty) Then
-                                        If (doc.InnerXml.Contains("bApplyToOrder")) Then
-                                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
-                                                bApplyToTotal = False
-                                            Else
-                                                bApplyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
-                                            End If
+                                    Dim docAdditionalXMl As XmlDocument = New XmlDocument()
+                                    Dim iCount As Int16 = 0
+                                    Dim iDiscount As Int16 = oDsDiscounts.Tables("Discount").Rows.Count
+                                    Dim drDiscount As DataRow
+                                    Dim nValidProductCount As Int16 = 0
+
+                                    docAdditionalXMl.LoadXml(additionalInfo)
+                                    'check promocode is for total amount or not
+                                    If (docAdditionalXMl.InnerXml.Contains("bApplyToOrder")) Then
+                                        If (docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
+                                            bApplyToTotal = False
+                                        Else
+                                            bApplyToTotal = Convert.ToBoolean(docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                                         End If
+                                    End If
+                                    'check if maximum price for individual is set
+                                    If (docAdditionalXMl.InnerXml.Contains("nDiscountMaxPrice")) Then
+                                        dMaxPrice = CDbl("0" & docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
                                     End If
 
 
                                     If oDsCart.Tables("Item").Rows.Count > 0 Then
-                                        Dim iCount As Int16 = 0
-                                        Dim iDiscount As Int16 = oDsDiscounts.Tables("Discount").Rows.Count
-                                        Dim drDiscount As DataRow
                                         For Each drItem As DataRow In oDsCart.Tables("Item").Rows
 
                                             If (drItem(15) = 0) Then
                                                 totalAmount = totalAmount + drItem(6)
-                                                If (bApplyToTotal = False) Then
-                                                    validateAddedDiscount = ValidateDiscount(drItem(6), additionalInfo, bApplyToTotal)
-                                                    If (minQuantity <> String.Empty) Then
-                                                        If (validateAddedDiscount) Then
-                                                            cntProduct = cntProduct + 1
-                                                        Else
 
-                                                            For iCount = 0 To iDiscount - 1
-                                                                If (iCount < iDiscount) Then
-                                                                    drDiscount = oDsDiscounts.Tables("Discount").Rows(iCount)
-                                                                    If (drDiscount(15) = drItem(0)) Then
-                                                                        oDsDiscounts.Tables("Discount").Rows.RemoveAt(iCount)
-                                                                        iDiscount = iDiscount - 1
-                                                                    End If
+                                                If (dMaxPrice <> 0) Then
+                                                    If (drItem(6) >= dMinPrice And drItem(6) <= dMaxPrice) Then
+                                                        nValidProductCount = nValidProductCount + 1
+                                                    Else
+                                                        For iCount = 0 To iDiscount - 1 'looping inside discount row for valid items else remove it from the list
+                                                            If (iCount < iDiscount) Then
+                                                                drDiscount = oDsDiscounts.Tables("Discount").Rows(iCount)
+                                                                If (drDiscount(15) = drItem(0)) Then
+                                                                    oDsDiscounts.Tables("Discount").Rows.RemoveAt(iCount)
+                                                                    iDiscount = iDiscount - 1
                                                                 End If
-                                                            Next
-                                                        End If
+                                                            End If
+                                                        Next
                                                     End If
-
                                                 End If
-
                                             End If
 
                                         Next
+
                                     End If
+
+                                    If (nValidProductCount < nMinQuantity) Then 'check quantity is valid for total items in cart
+                                        validateAddedDiscount = False
+                                    End If
+
+
+                                    'validate discount if it is on total
                                     If (bApplyToTotal) Then
-                                        validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo, bApplyToTotal)
-                                    End If
-                                    If (minQuantity <> String.Empty) Then
-                                        If (cntProduct >= Convert.ToInt16(minQuantity)) Then
-                                            validateAddedDiscount = True
-                                        Else
-                                            validateAddedDiscount = False
+                                            validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
+                                        End If
+                                        If validateAddedDiscount = False Then
+                                            RemoveDiscountCode()
+                                            oDsDiscounts = Nothing
                                         End If
                                     End If
-
-
-                                    If validateAddedDiscount = False Then
-                                        RemoveDiscountCode()
-                                        oDsDiscounts = Nothing
-                                    End If
-                                End If
-
-                            Else
-                                        Dim oItemElmt As XmlElement
+                                Else
+                                Dim oItemElmt As XmlElement
                                 For Each oItemElmt In oCartXML.SelectNodes("Item")
                                     'later sites are dependant on these values
                                     oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), , , mbRoundUp))
@@ -1493,8 +1487,12 @@ NoDiscount:
                 Dim oDiscountMessage As String = "The promo code you have provided is invalid for this transaction"
                 Dim minimumOrderTotal As Double = 0
                 Dim maximumOrderTotal As Double = 0
+                Dim dMaxPrice As Double = 0
+                Dim nDiscountQuantity As Integer = 0
+                Dim itemCost As Double = 0
                 Dim productGroups As Int32 = 0
-
+                Dim dMinPrice As Double = 0
+                Dim nCount As Integer = 0
                 Dim applyToTotal As Boolean = False
 
                 Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
@@ -1509,6 +1507,8 @@ NoDiscount:
                             docOrder.LoadXml(sXmlContent)
                             ' Dim OrderPaymentStatus As String = docOrder.SelectSingleNode("Order").Attributes("status").Value
                             Dim orderTotal As Double = docOrder.SelectSingleNode("Order").Attributes("total").Value
+                            'check for quantity
+                            Dim nItemCount As Integer = docOrder.SelectNodes("Order/Item").Count
 
                             If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
                                 '' call stored procedure else existing code.
@@ -1547,6 +1547,8 @@ NoDiscount:
                                 End If
 
                             Else
+
+
                                 Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                 doc.LoadXml(additionalInfo)
 
@@ -1556,6 +1558,9 @@ NoDiscount:
                                 If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
                                     maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
                                 End If
+                                If (doc.InnerXml.Contains("nDiscountMaxPrice")) Then
+                                    dMaxPrice = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
+                                End If
 
                                 If (doc.InnerXml.Contains("bApplyToOrder")) Then
                                     If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
@@ -1564,14 +1569,13 @@ NoDiscount:
                                         applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                                     End If
 
-                                    ''ValidateDiscount(totalAmount, additionalInfo, bApplyToTotal)
-                                    'If (maximumOrderTotal <> 0) Then
-                                    '    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
-                                    '        oDsDiscounts.Clear()
-                                    '        oDsDiscounts = Nothing
-                                    '        Return oDiscountMessage
-                                    '    End If
-                                    'End If
+                                    If (maximumOrderTotal <> 0) Then
+                                        If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+                                            oDsDiscounts.Clear()
+                                            oDsDiscounts = Nothing
+                                            Return oDiscountMessage
+                                        End If
+                                    End If
                                     If (applyToTotal) Then
                                         If (maximumOrderTotal <> 0) Then
                                             If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
@@ -1580,9 +1584,29 @@ NoDiscount:
                                                 Return oDiscountMessage
                                             End If
                                         End If
+
                                     End If
+                                    'check maximum item price value set or not
+                                    If (dMaxPrice <> 0) Then
+                                        'validate quantity of cart as individual item not total quantity of item purchased
+                                        nDiscountQuantity = CInt("0" & oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinQuantity"))
+                                        dMinPrice = CDbl("0" & oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinPrice"))
+
+                                        For Each item As XmlNode In docOrder.SelectNodes("Order/Item")
+                                            itemCost = item.Attributes("itemTotal").Value
+                                            If (itemCost >= dMinPrice And itemCost <= dMaxPrice) Then
+                                                nCount = nCount + 1
+                                            End If
+                                        Next
+                                        If (nCount < nDiscountQuantity) Then
+                                            oDsDiscounts.Clear()
+                                            oDsDiscounts = Nothing
+                                            Return oDiscountMessage
+                                        End If
+                                    End If
+
                                 End If
-                                oDsDiscounts.Clear()
+                                    oDsDiscounts.Clear()
                                 oDsDiscounts = Nothing
                             End If
                             'myCart.moCartXml
@@ -1638,12 +1662,14 @@ NoDiscount:
                 End Try
             End Function
 
-            Public Function ValidateDiscount(ByVal dAmount As Double, ByVal additionalInfo As String, Optional ByVal bApplyToTotal As Boolean = False) As Boolean
+            Public Function ValidateDiscount(ByVal dAmount As Double, ByVal additionalInfo As String) As Boolean
                 Dim cProcessInfo As String = "ValidateDiscount"
                 Try
                     Dim doc As New XmlDocument()
+                    Dim applyToTotal As Boolean = False
                     Dim minimumOrderTotal As Double = 0
                     Dim maximumOrderTotal As Double = 0
+                    'Dim dMaxPrice As Double = 0
                     If (additionalInfo <> String.Empty) Then
 
 
@@ -1655,21 +1681,36 @@ NoDiscount:
                         If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
                             maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
                         End If
+                        'If (doc.InnerXml.Contains("nDiscountMaxPrice")) Then
+                        '    dMaxPrice = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
+                        'End If
 
-                        If (bApplyToTotal) Then
+                        If (doc.InnerXml.Contains("bApplyToOrder")) Then
+                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
+                                applyToTotal = False
+                            Else
+                                applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
+                            End If
                             If (maximumOrderTotal <> 0) Then
                                 If Not (dAmount >= minimumOrderTotal And dAmount <= maximumOrderTotal) Then
                                     Return False
                                 End If
                             End If
-                        Else
-                            If (maximumOrderTotal <> 0) Then
-                                If Not (dAmount >= minimumOrderTotal And dAmount <= maximumOrderTotal) Then
-                                    Return False
+                            If (applyToTotal) Then
+                                If (maximumOrderTotal <> 0) Then
+                                    If Not (dAmount >= minimumOrderTotal And dAmount <= maximumOrderTotal) Then
+                                        Return False
+                                    End If
                                 End If
+                                'Else
+                                '    If (dMaxPrice <> 0) Then
+                                '        If Not (dAmount >= dMinPrice And dAmount <= dMaxPrice) Then
+                                '            Return False
+                                '        End If
+                                '    End If
                             End If
+
                         End If
-
                         Return True
 
                     End If
