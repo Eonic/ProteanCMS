@@ -7396,7 +7396,7 @@
               </xsl:call-template>
             </xsl:variable>
 
-            <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
+
 
             <!--xsl:if test="$responsiveImageSizes='on'"-->
 
@@ -7614,6 +7614,11 @@
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <!--FALLBACK IMAGE TAG-->
+				  <xsl:variable name="imageSize">
+					  <xsl:if test="not(contains($newSrc,'awaiting-image-thumbnail.gif'))">
+						  <xsl:value-of select="ew:ImageSize($newSrc)"/>
+					  </xsl:if>
+				  </xsl:variable>
                 <img>
                   <!-- SRC -->
                   <xsl:choose>
@@ -7638,7 +7643,7 @@
                         <xsl:value-of select="$max-width"/>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:value-of select="substring-before($imageSize,'x')" />
+						  <xsl:value-of select="substring-before($imageSize,'x')" />
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:attribute>
@@ -10549,7 +10554,10 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <link rel="stylesheet" type="text/css" href="{$first}{$bundleVersion}" />
+			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+				<noscript>
+					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+				</noscript>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>

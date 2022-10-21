@@ -217,7 +217,11 @@
 
     <script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
     <script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
+	  <!--
+	  TS commented out as was breaking bootstrap modal - not sure this is needed ???
+	  
     <script type="text/javascript" src="/ewcommon/js/jQuery/simplemodal/jquery.simplemodal-1.4.4.min.js">&#160;</script>
+	-->
     <xsl:if test="@cssFramework!='bs3'">
       <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
     </xsl:if>
@@ -275,6 +279,20 @@
       <xsl:apply-templates select="." mode="adminFooter"/>
       <xsl:apply-templates select="." mode="footerJs"/>
       <script>keepAlive();</script>
+		<div class="modal fade" id="AdminAlertModal" role="dialog" style ="padding-top:15%!important">
+			<div class="modal-dialog">
+				<div class="modal-content  alert alert-danger" role="alert">
+					<div class="modal-body">
+						<i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
+						<xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-times">&#160;</i>
+						</button>
+						<span id="errorMessage">&#160;</span>
+					</div>
+				</div>
+			</div>
+		</div>
       <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
     </body>
   </xsl:template>
@@ -5438,6 +5456,7 @@
                           <xsl:text> x </xsl:text>
                           <xsl:value-of select="@height"/>
                         </xsl:if>
+						  (<xsl:value-of select="@length"/>kb)
                       </div>
                     </div>
                     <a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover{position()}" data-placement="top">
@@ -5498,6 +5517,12 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
+					  <a class="btn btn-xs btn-primary" href="javascript:CompressImage('/images/{parent::folder/@path}/{@name}{@extension}')">
+						  <i class="fa fa-compress fa-white">
+							  <xsl:text> </xsl:text>
+						  </i>
+						  <span class="sr-only"> Compress</span>
+					  </a>
                     <a class="btn btn-xs btn-primary" href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
                       <i class="fa fa-arrows fa-white">
                         <xsl:text> </xsl:text>
@@ -5529,6 +5554,7 @@
                   <xsl:value-of select="@width"/>
                   <xsl:text> x </xsl:text>
                   <xsl:value-of select="@height"/>
+					(<xsl:value-of select="@length"/>kb)
                 </xsl:when>
                 <xsl:otherwise>
                   &#160;
