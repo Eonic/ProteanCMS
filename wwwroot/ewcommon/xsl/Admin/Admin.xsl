@@ -7550,7 +7550,7 @@
         &#160;
         <xsl:value-of select="@currency"/>
       </td>
-		<xsl:if test="Order/@status='Deposit Paid'">
+		<xsl:if test="@statusId='Deposit Paid'">
 			<td>
 				<xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@paymentMade,'0.00')"/>
 				<!-- COMMENTED THIS LINE AS @TOTAL ALREADY INCLUDES THE SHIPPING -->
@@ -7982,7 +7982,12 @@
                 </th>
                 <td>
                   <xsl:value-of select="cPayMthdProviderName"/>
-                </td>
+					<br/>
+					<small>
+				    <xsl:value-of select="cPayMthdAcctName"/>
+						</small>
+					
+				</td>
                 <th scope="row">
                   <xsl:value-of select="nPaymentAmount"/>
                 </th>
@@ -9232,21 +9237,25 @@
 				<th>
 					Date/Time
 				</th>
-				<xsl:for-each select="Item[1]/cActivityXml/descendant-or-self::*">
-					<xsl:if test="count(*)=0">
+				<xsl:for-each select="Item[last()]/cActivityXml/descendant-or-self::*">
+					<xsl:if test="count(*)=0 or local-name()='Attachements'">
 						<th>
 							<xsl:value-of select="local-name()"/>
 						</th>
-					</xsl:if>
+		</xsl:if>
 				</xsl:for-each>
+				<th>
+					Refering Page
+				</th>
 			</tr>
 			<xsl:for-each select="Item">
-				<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
-					<tr>
-                        <xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
-						<xsl:apply-templates select="cActivityXml/descendant-or-self::*" mode="Report_ColsValues"/>
-					</tr>
-				</span>
+				<tr>
+					<xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
+					<xsl:apply-templates select="cActivityXml/descendant-or-self::*" mode="Report_ColsValues"/>
+					<td><small>
+				<xsl:value-of select="cActivityXml/Items/@sessionReferrer"/>
+				</small>	</td>
+				</tr>
 			</xsl:for-each>
 		</table>
 	</xsl:template>
@@ -9260,26 +9269,19 @@
     </xsl:if>
   </xsl:template>
 
-<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
-	<!--
+	<xsl:template match="*[local-name()='AttachmentIds']" mode ="Report_ColsValues">
 		<td>
-			<xsl:value-of select="@ids"/>
+		 	<xsl:value-of select="@ids"/>
 		</td>
-		-->
+	</xsl:template>
 
-</xsl:template>
-
-
-<xsl:template match="Attachements" mode ="Report_ColsValues">
-
-	<td>
-		<xsl:for-each select="Attachement ">
-			<xsl:value-of select="Content/@name"/>
-		</xsl:for-each>
-
-	</td>
-
-</xsl:template>
+	<xsl:template match="Attachements" mode ="Report_ColsValues">
+		<td>
+			<xsl:for-each select="Attachement ">
+				<xsl:value-of select="Content/@name"/>
+			</xsl:for-each>
+		</td>
+	</xsl:template>
 
 
   <!-- -->

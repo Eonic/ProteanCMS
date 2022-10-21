@@ -128,7 +128,7 @@ Partial Public Class Cms
 
 
                 Dim sSQLArr() As String = Nothing
-
+                Dim cntProduct As Int16 = 0
                 Dim nCount As Integer
                 Dim dDisountAmount As Double = 0
                 Dim xmlCartItem As XmlElement
@@ -248,24 +248,75 @@ Partial Public Class Cms
                                 If cPromoCodeUserEntered <> "" Then
                                     Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                     Dim validateAddedDiscount As Boolean = True
+                                    Dim minQuantity As String = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinQuantity")
                                     Dim totalAmount As Double = 0
-                                    If oDsCart.Tables("Item").Rows.Count > 0 Then
-                                        For Each drItem As DataRow In oDsCart.Tables("Item").Rows
-                                            If (drItem(15) = 0) Then
-                                                totalAmount = totalAmount + drItem(6)
+                                    Dim doc As New XmlDocument()
+                                    Dim bApplyToTotal As Boolean = False
+                                    doc.LoadXml(additionalInfo)
+                                    If (additionalInfo <> String.Empty) Then
+                                        If (doc.InnerXml.Contains("bApplyToOrder")) Then
+                                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
+                                                bApplyToTotal = False
+                                            Else
+                                                bApplyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                                             End If
-                                        Next
-
+                                        End If
                                     End If
 
-                                    validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
+
+                                    If oDsCart.Tables("Item").Rows.Count > 0 Then
+                                        Dim iCount As Int16 = 0
+                                        Dim iDiscount As Int16 = oDsDiscounts.Tables("Discount").Rows.Count
+                                        Dim drDiscount As DataRow
+                                        For Each drItem As DataRow In oDsCart.Tables("Item").Rows
+
+                                            If (drItem(15) = 0) Then
+                                                totalAmount = totalAmount + drItem(6)
+                                                If (bApplyToTotal = False) Then
+                                                    validateAddedDiscount = ValidateDiscount(drItem(6), additionalInfo, bApplyToTotal)
+                                                    If (minQuantity <> String.Empty) Then
+                                                        If (validateAddedDiscount) Then
+                                                            cntProduct = cntProduct + 1
+                                                        Else
+
+                                                            For iCount = 0 To iDiscount - 1
+                                                                If (iCount < iDiscount) Then
+                                                                    drDiscount = oDsDiscounts.Tables("Discount").Rows(iCount)
+                                                                    If (drDiscount(15) = drItem(0)) Then
+                                                                        oDsDiscounts.Tables("Discount").Rows.RemoveAt(iCount)
+                                                                        iDiscount = iDiscount - 1
+                                                                    End If
+                                                                End If
+                                                            Next
+                                                        End If
+                                                    End If
+
+                                                End If
+
+                                            End If
+
+                                        Next
+                                    End If
+                                    If (bApplyToTotal) Then
+                                        validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo, bApplyToTotal)
+                                    End If
+                                    If (minQuantity <> String.Empty) Then
+                                        If (cntProduct >= Convert.ToInt16(minQuantity)) Then
+                                            validateAddedDiscount = True
+                                        Else
+                                            validateAddedDiscount = False
+                                        End If
+                                    End If
+
+
                                     If validateAddedDiscount = False Then
                                         RemoveDiscountCode()
                                         oDsDiscounts = Nothing
                                     End If
                                 End If
+
                             Else
-                                Dim oItemElmt As XmlElement
+                                        Dim oItemElmt As XmlElement
                                 For Each oItemElmt In oCartXML.SelectNodes("Item")
                                     'later sites are dependant on these values
                                     oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), , , mbRoundUp))
@@ -1512,13 +1563,15 @@ NoDiscount:
                                     Else
                                         applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                                     End If
-                                    If (maximumOrderTotal <> 0) Then
-                                        If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
-                                            oDsDiscounts.Clear()
-                                            oDsDiscounts = Nothing
-                                            Return oDiscountMessage
-                                        End If
-                                    End If
+
+                                    ''ValidateDiscount(totalAmount, additionalInfo, bApplyToTotal)
+                                    'If (maximumOrderTotal <> 0) Then
+                                    '    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+                                    '        oDsDiscounts.Clear()
+                                    '        oDsDiscounts = Nothing
+                                    '        Return oDiscountMessage
+                                    '    End If
+                                    'End If
                                     If (applyToTotal) Then
                                         If (maximumOrderTotal <> 0) Then
                                             If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
@@ -1585,11 +1638,10 @@ NoDiscount:
                 End Try
             End Function
 
-            Public Function ValidateDiscount(ByVal orderTotal As Double, ByVal additionalInfo As String) As Boolean
+            Public Function ValidateDiscount(ByVal dAmount As Double, ByVal additionalInfo As String, Optional ByVal bApplyToTotal As Boolean = False) As Boolean
                 Dim cProcessInfo As String = "ValidateDiscount"
                 Try
                     Dim doc As New XmlDocument()
-                    Dim applyToTotal As Boolean = False
                     Dim minimumOrderTotal As Double = 0
                     Dim maximumOrderTotal As Double = 0
                     If (additionalInfo <> String.Empty) Then
@@ -1604,26 +1656,20 @@ NoDiscount:
                             maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
                         End If
 
-                        If (doc.InnerXml.Contains("bApplyToOrder")) Then
-                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
-                                applyToTotal = False
-                            Else
-                                applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
-                            End If
+                        If (bApplyToTotal) Then
                             If (maximumOrderTotal <> 0) Then
-                                If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
-
+                                If Not (dAmount >= minimumOrderTotal And dAmount <= maximumOrderTotal) Then
                                     Return False
                                 End If
                             End If
-                            If (applyToTotal) Then
-                                If (maximumOrderTotal <> 0) Then
-                                    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
-                                        Return False
-                                    End If
+                        Else
+                            If (maximumOrderTotal <> 0) Then
+                                If Not (dAmount >= minimumOrderTotal And dAmount <= maximumOrderTotal) Then
+                                    Return False
                                 End If
                             End If
                         End If
+
                         Return True
 
                     End If
