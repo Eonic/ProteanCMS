@@ -382,7 +382,9 @@
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
-   
+	<xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
+			  <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
+		  </xsl:if>
 	   
          <xsl:if test="$GoogleGA4MeasurementID!=''">
 			    <!-- GA4 Tag Manager -->

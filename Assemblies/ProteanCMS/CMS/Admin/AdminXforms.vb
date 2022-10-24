@@ -2336,7 +2336,7 @@ Partial Public Class Cms
                 Try
 
                     Dim oManifest As XmlDocument = GetSiteManifest()
-                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Filter[@type='" & SchemaName & "']")
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Module[@type='" & SchemaName & "']")
                     If thisModule Is Nothing Then
                         Return SchemaName
                     Else
@@ -2846,7 +2846,8 @@ Partial Public Class Cms
                                 oTempInstance.AppendChild(prodCatElmt)
                             End If
                         End If
-
+                    Else
+                        cModuleType = moRequest("cModuleType")
                     End If
 
                     If Not goSession("oContentInstance") Is Nothing Then
