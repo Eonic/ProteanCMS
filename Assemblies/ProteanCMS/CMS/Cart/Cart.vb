@@ -3034,7 +3034,7 @@ processFlow:
 
                         End If
 
-                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 4 Then
+                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Then
                             shipCost = -1
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")
@@ -6568,16 +6568,10 @@ processFlow:
 
 
                     If (myWeb.moRequest("UniqueProduct") IsNot Nothing) Then
-                        Dim StrUniqueProduct As String = myWeb.moRequest("UniqueProduct").ToString()
-                        If (StrUniqueProduct.Contains(",")) Then
 
-                            Dim sUniqueProd() As String = Split(StrUniqueProduct, ",")
-                            StrUniqueProduct = sUniqueProd(0).ToString()
-                            UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
+                        UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
 
-                        Else
-                            UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
-                        End If
+                    End If
                     End If
                     'loop through the parent rows to check the product
                     If (oDS.Tables("CartItems").Rows.Count > 0 And UniqueProduct = False) Then
