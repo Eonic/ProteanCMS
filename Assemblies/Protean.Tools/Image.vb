@@ -541,8 +541,8 @@ Public Class Image
             End Try
 
             TinifyAPI.Tinify.Key = TinifyKey
-                Dim compressionsThisMonth = TinifyAPI.Tinify.CompressionCount
-                Dim tinifyImg As Task(Of TinifyAPI.Source) = TinifyAPI.Tinify.FromFile(filepathFrom)
+            Dim compressionsThisMonth = TinifyAPI.Tinify.CompressionCount
+            Dim tinifyImg As Task(Of TinifyAPI.Source) = TinifyAPI.Tinify.FromFile(filepathFrom)
 
             Dim newImage As TinifyAPI.Source = tinifyImg.GetAwaiter().GetResult()
 
@@ -552,7 +552,7 @@ Public Class Image
 
         Catch ex As Exception
 
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo))
         End Try
 
 
