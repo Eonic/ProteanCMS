@@ -17,8 +17,8 @@ $(document).ready(function() {
     });
     if ($(".admin-breadcrumb").height() < $(".admin-breadcrumb-inner").height()){
         $(".all-breadcrumb").show();
-
     };
+
     $("[data-toggle=popover]").popover({
         html: true,
         content: function () {

@@ -938,20 +938,13 @@
   <!--   ################################################   breadcrumb   ##################################################   -->
   <!-- -->
   <xsl:template match="MenuItem" mode="adminBreadcrumbSt">
-    <xsl:variable name="url">
-      <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
-    </xsl:variable>
     <xsl:apply-templates select="." mode="adminMenuLinkSt"/>
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="adminBreadcrumbSt"/>
   </xsl:template>
 
   <xsl:template match="MenuItem" mode="adminBreadcrumbId">
     <xsl:param name="thispageid"/>
-    <xsl:variable name="url">
-      <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
-    </xsl:variable>
-    <xsl:apply-templates select="." mode="adminMenuLinkSt"/>
-    <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=$thispageid]]" mode="adminBreadcrumbSt"/>
+    <xsl:apply-templates select="descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id=$thispageid]]" mode="adminMenuLinkSt"/>
   </xsl:template>
 
   <!-- Generic Menu Link -->
@@ -1029,8 +1022,10 @@
           </ul>
         </xsl:for-each>
       </div>
-      <a href="" class="all-breadcrumb">see all locations</a>
-      <a href="" class="less-breadcrumb">hide locations</a>
+      <a href="" class="all-breadcrumb">
+		  <i class="fa fa-angle-down">&#160;</i>&#160;see all locations</a>
+      <a href="" class="less-breadcrumb">
+		  <i class="fa fa-angle-up">&#160;</i>&#160;hide locations</a>
     </div>
   </xsl:template>
 
