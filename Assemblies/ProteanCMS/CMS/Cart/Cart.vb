@@ -6572,7 +6572,7 @@ processFlow:
                         UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
 
                     End If
-                    End If
+
                     'loop through the parent rows to check the product
                     If (oDS.Tables("CartItems").Rows.Count > 0 And UniqueProduct = False) Then
 
