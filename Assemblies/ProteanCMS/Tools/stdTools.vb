@@ -426,7 +426,7 @@ Public Module stdTools
         AddExceptionToEventLog(oException, cFurtherInfo)
     End Sub
 
-    Friend Sub AddExceptionToEventLog(ByVal oCurrentException As Exception, ByVal cCurrentInfo As String, Optional ByVal oOriginalError As Exception = Nothing, Optional ByVal cOriginalInfo As String = "")
+    Public Sub AddExceptionToEventLog(ByVal oCurrentException As Exception, ByVal cCurrentInfo As String, Optional ByVal oOriginalError As Exception = Nothing, Optional ByVal cOriginalInfo As String = "")
         'writes an event to the even log under the heading "EonicWebV4.1"
         Dim thisError As String
         Dim LogName As String = "ProteanCMS"
@@ -452,10 +452,7 @@ Public Module stdTools
                 oEventLog = New EventLog(LogName, Environment.MachineName, cSource)
             End If
 
-
-
             'The Current Error
-
             If Not oCurrentException Is Nothing Then
                 cMessage &= vbNewLine & "Current Error: " & vbNewLine
                 cMessage &= "Info:" & cCurrentInfo & vbNewLine
@@ -486,7 +483,7 @@ Public Module stdTools
         Catch ex As Exception
             'cant do diddly but cry 
             Try
-                System.IO.File.WriteAllText("F:\HostingSpaces\EliteModels\elitemodelsonline.co.uk\wwwroot\ProteanError.txt", cMessage)
+                System.IO.File.WriteAllText("F:\HostingSpaces\ProteanError.txt", cMessage)
             Catch ex2 As Exception
                 thisError = ex2.Message
             End Try

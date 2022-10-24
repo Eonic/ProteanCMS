@@ -17,6 +17,7 @@ Imports Newtonsoft.Json.Linq
 Imports System.Collections.Generic
 
 
+
 Partial Public Class Cms
 
     Partial Public Class Cart
@@ -104,14 +105,14 @@ Partial Public Class Cms
 
 
                     If myCart.mnCartId < 1 Then
-                            myCart.CreateNewCart(CartXml, "Order")
-                            If myCart.mcItemOrderType <> "" Then
-                                myCart.mmcOrderType = myCart.mcItemOrderType
-                            Else
-                                myCart.mmcOrderType = ""
-                            End If
-                            myCart.mnProcessId = 1
+                        myCart.CreateNewCart(CartXml, "Order")
+                        If myCart.mcItemOrderType <> "" Then
+                            myCart.mmcOrderType = myCart.mcItemOrderType
+                        Else
+                            myCart.mmcOrderType = ""
                         End If
+                        myCart.mnProcessId = 1
+                    End If
                     If myCart.mnProcessId > 4 Then
                         Return ""
 
@@ -208,52 +209,52 @@ Partial Public Class Cms
                 Try
 
                     Dim cProcessInfo As String = ""
-                        Dim ItemCount As Long = 1
+                    Dim ItemCount As Long = 1
 
-                        Dim item As Newtonsoft.Json.Linq.JObject
-                        Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    Dim item As Newtonsoft.Json.Linq.JObject
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
 
-                        If myCart.mnCartId < 1 Then
-                            myCart.CreateNewCart(CartXml)
-                            If myCart.mcItemOrderType <> "" Then
-                                myCart.mmcOrderType = myCart.mcItemOrderType
-                            Else
-                                myCart.mmcOrderType = ""
-                            End If
-                            myCart.mnProcessId = 1
+                    If myCart.mnCartId < 1 Then
+                        myCart.CreateNewCart(CartXml)
+                        If myCart.mcItemOrderType <> "" Then
+                            myCart.mmcOrderType = myCart.mcItemOrderType
+                        Else
+                            myCart.mmcOrderType = ""
                         End If
+                        myCart.mnProcessId = 1
+                    End If
 
-                        For Each item In jObj("Item")
-                            If item("contentId") Is Nothing Then
-                                If item("qty") = "0" Then
-                                    ItemCount = myCart.RemoveItem(item("itemId"), 0)
-                                Else
-                                    ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"), item("skipPackaging"))
-                                End If
+                    For Each item In jObj("Item")
+                        If item("contentId") Is Nothing Then
+                            If item("qty") = "0" Then
+                                ItemCount = myCart.RemoveItem(item("itemId"), 0)
                             Else
-                                If item("qty") = "0" Then
-                                    ItemCount = myCart.RemoveItem(0, item("contentId"))
-                                Else
-                                    ItemCount = myCart.UpdateItem(0, item("contentId"), item("qty"))
-                                End If
+                                ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"), item("skipPackaging"))
                             End If
-                        Next
-
-                        If ItemCount = 0 Then
-                            myCart.QuitCart()
-                            myCart.EndSession()
+                        Else
+                            If item("qty") = "0" Then
+                                ItemCount = myCart.RemoveItem(0, item("contentId"))
+                            Else
+                                ItemCount = myCart.UpdateItem(0, item("contentId"), item("qty"))
+                            End If
                         End If
+                    Next
 
-                        'Output the new cart
-                        myCart.GetCart(CartXml.FirstChild)
-                        'persist cart
-                        myCart.close()
-                        CartXml = updateCartforJSON(CartXml)
+                    If ItemCount = 0 Then
+                        myCart.QuitCart()
+                        myCart.EndSession()
+                    End If
 
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                        jsonString = jsonString.Replace("""@", """_")
-                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
-                        Return jsonString
+                    'Output the new cart
+                    myCart.GetCart(CartXml.FirstChild)
+                    'persist cart
+                    myCart.close()
+                    CartXml = updateCartforJSON(CartXml)
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -938,6 +939,8 @@ Partial Public Class Cms
                 End Try
 
             End Function
+
+
 
             ''' <summary>
             ''' Process New payment

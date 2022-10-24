@@ -24,6 +24,7 @@ Imports System.Net.Mail
 Imports Protean.Tools.Dictionary
 Imports Protean.Tools.Xml
 Imports System
+Imports System.Threading
 
 Partial Public Class Cms
 
@@ -7373,7 +7374,7 @@ restart:
                             If Not ObjectsXml.SelectSingleNode("DeleteNonEntries/@type") Is Nothing Then
                                 cDeleteTempType = ObjectsXml.SelectSingleNode("DeleteNonEntries/@type").InnerText.ToString
                             End If
-                            cDeleteTempTableName = "_temp_" & Date.Now.ToString
+                            cDeleteTempTableName = "temp_" & Date.Now.ToString
                             cDeleteTempTableName = cDeleteTempTableName.Replace("/", "_").Replace(":", "_").Replace(" ", "_")
                             'Remember to import the SP into the database to be used
                             'The next line is currently not used, it was incase of having to use a Store Procedure, however that did not overcome the collation error
@@ -7429,8 +7430,10 @@ restart:
                     Else
                         bResetLocations = True
                         Dim resetNode As XmlElement = ObjectsXml.SelectSingleNode("ResetLocations")
-                        If IsNumeric(resetNode.GetAttribute("enabled")) Then
-                            nResetLocationIfHere = CLng(resetNode.GetAttribute("enabled"))
+                        If Not resetNode Is Nothing Then
+                            If IsNumeric(resetNode.GetAttribute("enabled")) Then
+                                nResetLocationIfHere = CLng(resetNode.GetAttribute("enabled"))
+                            End If
                         End If
                     End If
 
@@ -7450,12 +7453,11 @@ restart:
                     If nThreads = 0 Then nThreads = 10
                     System.Threading.ThreadPool.SetMaxThreads(nThreads, nThreads)
 
-                    Dim doneEvents(totalInstances) As System.Threading.ManualResetEvent
 
-                    Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
+                    Dim doneEvents = New List(Of ManualResetEvent)()
+                    'Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
 
                     For Each oInstance In ObjectsXml.SelectNodes("Instance | instance")
-
                         completeCount = completeCount + 1
                         If completeCount > startNo Then
 
@@ -7471,24 +7473,43 @@ restart:
                             stateObj.bOrphan = bOrphan
                             stateObj.bDeleteNonEntries = bDeleteNonEntries
                             stateObj.cDeleteTempTableName = cDeleteTempTableName
+                            stateObj.cDeleteTempType = cDeleteTempType
                             stateObj.moTransform = oTransform
-
+                            stateObj.oResetEvt = New System.Threading.ManualResetEvent(False)
                             If oInstance.NextSibling Is Nothing Then
-                                cProcessInfo = "Is Last"
-                                eventsDoneEvt.Set()
+                                stateObj.LastItem = True
+                            Else
+                                stateObj.LastItem = False
                             End If
 
-                            System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
+                            stateObj.cDefiningWhereStmt = cDefiningWhereStmt
+                            stateObj.cDefiningField = cDefiningField
+                            stateObj.cDefiningFieldValue = cDefiningFieldValue
 
-                            stateObj = Nothing
-                        End If
+                            doneEvents.Add(stateObj.oResetEvt)
+                                System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
+
+                                stateObj = Nothing
+                            End If
                     Next
 
 
 
-                    eventsDoneEvt.WaitOne()
+                    '' eventsDoneEvt.WaitOne()
 
-                    'System.Threading.WaitHandle.WaitAll(doneEvents)
+                    ''    If System.Threading.WaitHandle.WaitAll(doneEvents, New TimeSpan(0, 0, 5), False) Then
+
+
+
+                    updateActivity(logId, ReturnMessage & " Complete")
+
+                        'Clear Page Cache
+
+                        myWeb.ClearPageCache()
+
+
+                        Return ReturnMessage
+                    ''       End If
 
                     'Me.updateActivity(logId, "Importing " & totalInstances & "Objects, " & completeCount & " Complete")
 
@@ -7556,84 +7577,10 @@ restart:
 
                     'End If
 
-                    If bDeleteNonEntries Then
 
-                        Dim cSQL As String = ""
-
-                        'The following check ensures if the temp table is empty, nothing is deleted
-                        'This is incase nothing is imported, maybe due to wrong import XSL
-                        Dim nSizeCheck As String = ""
-                        cSQL = "SELECT * FROM " & cDeleteTempTableName
-                        nSizeCheck = "" + Me.ExeProcessSqlScalar(cSQL)
-
-                        If Not nSizeCheck.Equals("") Then
-
-                            'Remove anything that's not from tblContent (future upgrade to support further tables maybe?)
-                            'cSQL = "DELETE FROM " & cDeleteTempTableName & " WHERE cTableName != 'tblContent'"
-                            'Me.ExeProcessSql(cSQL)
-                            Select Case cDeleteTempType
-                                Case "Content"
-                                    'Delete Content Items
-                                    cSQL = "Select nContentKey FROM tblContent " _
-                                        & "WHERE nContentKey IN (SELECT nContentKey FROM tblContent c " _
-                                        & " LEFT OUTER JOIN " & cDeleteTempTableName & " t " _
-                                        & " ON c.cContentForiegnRef = t.cImportID "
-                                    If cDefiningWhereStmt = "" Then
-                                        cSQL += " WHERE t.cImportID is null AND c." & cDefiningField & " = '" & SqlFmt(cDefiningFieldValue) & "'"
-                                    Else
-                                        cSQL += " WHERE t.cImportID is null AND c." & cDefiningField & " = '" & SqlFmt(cDefiningFieldValue) & "' AND " & cDefiningWhereStmt & ""
-                                    End If
-                                    cSQL += ")"
-
-                                    'Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                                    Using oDR As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
-                                        Do While oDR.Read
-                                            myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, oDR(0))
-                                        Loop
-                                    End Using
-                                Case "Directory"
-                                    'Delete Directory Items
-                                    cSQL = "Select nDirKey FROM tblDirectory " _
-                                                                  & "WHERE nDirKey IN (SELECT nDirKey FROM tblDirectory d " _
-                                                                  & " LEFT OUTER JOIN " & cDeleteTempTableName & " t " _
-                                                                  & " ON d.cDirForiegnRef = t.cImportID "
-                                    If cDefiningWhereStmt = "" Then
-                                        cSQL += " WHERE t.cImportID is null AND d." & cDefiningField & " = '" & SqlFmt(cDefiningFieldValue) & "'"
-                                    Else
-                                        cSQL += " WHERE t.cImportID is null AND d." & cDefiningField & " = '" & SqlFmt(cDefiningFieldValue) & "' AND " & cDefiningWhereStmt & ""
-                                    End If
-                                    cSQL += ")"
-
-                                    Using oDr As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
-
-                                        Do While oDr.Read
-                                            If oDr(0) <> 1 Then
-                                                'dont delete admin logon
-                                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Directory, oDr(0))
-                                            End If
-                                        Loop
-                                    End Using
-                            End Select
-
-
-
-                        End If
-                        cSQL = "DROP TABLE " & cDeleteTempTableName
-                        Me.ExeProcessSql(cSQL)
-                    End If
-
-
-                    updateActivity(logId, ReturnMessage & " Complete")
-
-                    'Clear Page Cache
-
-                    myWeb.ClearPageCache()
-
-
-                    Return ReturnMessage
 
                 Else
-                    Return ""
+                        Return ""
                 End If
 
 
@@ -11517,8 +11464,14 @@ ReturnMe:
             Public bOrphan As Boolean
             Public bDeleteNonEntries As Boolean
             Public cDeleteTempTableName As String
+            Public cDeleteTempType As String
             Public modbhelper As dbHelper
             Public moTransform As Protean.XmlHelper.Transform
+            Public oResetEvt As ManualResetEvent
+            Public LastItem As Boolean
+            Public cDefiningWhereStmt As String
+            Public cDefiningField As String
+            Public cDefiningFieldValue As String
         End Class
 
 
@@ -11744,10 +11697,79 @@ ReturnMe:
 
                 fRefNode = Nothing
 
+                If ImportStateObj.bDeleteNonEntries And ImportStateObj.LastItem Then
+
+                    Dim cSQL As String = ""
+
+                    'The following check ensures if the temp table is empty, nothing is deleted
+                    'This is incase nothing is imported, maybe due to wrong import XSL
+                    Dim nSizeCheck As String = ""
+                    cSQL = "SELECT * FROM " & ImportStateObj.cDeleteTempTableName
+                    nSizeCheck = "" + modbhelper.ExeProcessSqlScalar(cSQL)
+
+                    If Not nSizeCheck.Equals("") Then
+
+                        'Remove anything that's not from tblContent (future upgrade to support further tables maybe?)
+                        'cSQL = "DELETE FROM " & cDeleteTempTableName & " WHERE cTableName != 'tblContent'"
+                        'Me.ExeProcessSql(cSQL)
+                        Select Case ImportStateObj.cDeleteTempType
+                            Case "Content"
+                                'Delete Content Items
+                                cSQL = "Select nContentKey FROM tblContent " _
+                                & "WHERE nContentKey IN (SELECT nContentKey FROM tblContent c " _
+                                & " LEFT OUTER JOIN " & ImportStateObj.cDeleteTempTableName & " t " _
+                                & " ON c.cContentForiegnRef = t.cImportID "
+                                If ImportStateObj.cDefiningWhereStmt = "" Then
+                                    cSQL += " WHERE t.cImportID is null AND c." & ImportStateObj.cDefiningField & " = '" & SqlFmt(ImportStateObj.cDefiningFieldValue) & "'"
+                                Else
+                                    cSQL += " WHERE t.cImportID is null AND c." & ImportStateObj.cDefiningField & " = '" & SqlFmt(ImportStateObj.cDefiningFieldValue) & "' AND " & ImportStateObj.cDefiningWhereStmt & ""
+                                End If
+                                cSQL += ")"
+
+                                'Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
+                                Using oDR As SqlDataReader = modbhelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                    Do While oDR.Read
+                                        modbhelper.DeleteObject(Cms.dbHelper.objectTypes.Content, oDR(0))
+                                    Loop
+                                End Using
+                            Case "Directory"
+                                'Delete Directory Items
+                                cSQL = "Select nDirKey FROM tblDirectory " _
+                                                          & "WHERE nDirKey IN (SELECT nDirKey FROM tblDirectory d " _
+                                                          & " LEFT OUTER JOIN " & ImportStateObj.cDeleteTempTableName & " t " _
+                                                          & " ON d.cDirForiegnRef = t.cImportID "
+                                If ImportStateObj.cDefiningWhereStmt = "" Then
+                                    cSQL += " WHERE t.cImportID is null AND d." & ImportStateObj.cDefiningField & " = '" & SqlFmt(ImportStateObj.cDefiningFieldValue) & "'"
+                                Else
+                                    cSQL += " WHERE t.cImportID is null AND d." & ImportStateObj.cDefiningField & " = '" & SqlFmt(ImportStateObj.cDefiningFieldValue) & "' AND " & ImportStateObj.cDefiningWhereStmt & ""
+                                End If
+                                cSQL += ")"
+
+                                Using oDr As SqlDataReader = modbhelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+
+                                    Do While oDr.Read
+                                        If oDr(0) <> 1 Then
+                                            'dont delete admin logon
+                                            modbhelper.DeleteObject(Cms.dbHelper.objectTypes.Directory, oDr(0))
+                                        End If
+                                    Loop
+                                End Using
+                        End Select
+
+
+
+                    End If
+                    cSQL = "DROP TABLE " & ImportStateObj.cDeleteTempTableName
+                    modbhelper.ExeProcessSql(cSQL)
+                End If
+
             Catch ex As Exception
                 modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0, 0, ErrorId, Right(ex.Message & " - " & ex.StackTrace, 700), fRef)
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""))
             Finally
+                If Not ImportStateObj.oResetEvt Is Nothing Then
+                    ImportStateObj.oResetEvt.Set()
+                End If
                 modbhelper.CloseConnection()
                 modbhelper = Nothing
             End Try

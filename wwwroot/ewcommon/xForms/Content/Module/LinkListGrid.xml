@@ -211,12 +211,17 @@
         <select1 bind="carousel" appearance="full"  class="form-group">
           <label>Add articles to a carousel</label>
           <item>
-            <label>Yes</label>
+            <label>Slick Carousel</label>
             <value>true</value>
             <toggle case="Carousel_true" event="DOMActivate"/>
           </item>
+			<item>
+				<label>Swiper Carousel</label>
+				<value>swiper</value>
+				<toggle case="Carousel_swiper" event="DOMActivate"/>
+			</item>
           <item>
-            <label>No</label>
+            <label>No Carousel</label>
             <value>false</value>
             <toggle case="Carousel_false" event="DOMActivate"/>
           </item>
@@ -264,6 +269,47 @@
               </select1>
             </group>
           </case>
+			<case id="Carousel_swiper" >
+				<group class="inline">
+					<!--<select1 bind="autoplay"  appearance="full" class="form-group ">
+						<label>Auto play</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>
+					<input bind="autoPlaySpeed" class="form-group ">
+						<label>autoplay Speed (milliseconds) </label>
+					</input>-->
+
+					<!--<select1 bind="carouselBullets" appearance="full"  class="form-group">
+						<label>Show navigation bullets for carousel</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>-->
+					<!--<select1 bind="carouselHeight" appearance="full"  class="form-group">
+						<label>Match height of carousel items</label>
+						<item>
+							<label>Yes</label>
+							<value>true</value>
+						</item>
+						<item>
+							<label>No</label>
+							<value>false</value>
+						</item>
+					</select1>-->
+				</group>
+			</case>
           <case id="Carousel_false"/>
         </switch>
 
