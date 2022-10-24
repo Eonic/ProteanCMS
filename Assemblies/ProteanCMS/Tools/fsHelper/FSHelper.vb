@@ -1094,6 +1094,7 @@ Partial Public Class fsHelper
                         Dim cExt As String = LCase(fi.Extension)
                         Dim fileElem As XmlElement = XmlElement("file", fi.Name)
                         fileElem.Attributes.Append(XmlAttribute("Extension", cExt))
+                        fileElem.Attributes.Append(XmlAttribute("length", (CDbl(fi.Length) / 1000)))
                         'PerfMon.Log("fsHelper", "AddElements-Addfile", fi.Name)
                         Select Case cExt
 

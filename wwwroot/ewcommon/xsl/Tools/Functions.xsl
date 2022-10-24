@@ -470,14 +470,8 @@
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
         <!-- common css -->
-        <xsl:choose>
-          <xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
-            <xsl:apply-templates select="." mode="commonStyle"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="." mode="criticalPathCSS"/>
-          </xsl:otherwise>
-        </xsl:choose>
+		  <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
+       
 
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
 
@@ -489,6 +483,17 @@
       <xsl:apply-templates select="." mode="bodyBuilder"/>
     </html>
   </xsl:template>
+
+	<xsl:template match="Page" mode="headerCommonStyle">
+		<xsl:choose>
+			<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
+				<xsl:apply-templates select="." mode="commonStyle"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="." mode="criticalPathCSS"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
@@ -820,6 +825,11 @@
           <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
+		  
+		  <xsl:if test="//Content[@carousel='swiper']">
+			  <script src="/ewcommon/js/jquery/swiper/swiper-bundle.min.js">/* */</script>
+			  <!-- !!! MIN VERSION CAUSES ERROR -->
+		  </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery' or @moduleType='Carousel'] and not(/Page/@adminMode)">
           <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
         </xsl:if>
@@ -1828,13 +1838,18 @@
       </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
-        <xsl:apply-templates select="." mode="commonStyle"/>
-      </xsl:if>
+		<xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
+      
 
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
+
+	<xsl:template match="Page" mode="footerCommonStyle">
+		<xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+			<xsl:apply-templates select="." mode="commonStyle"/>
+		</xsl:if>
+	</xsl:template>
 
   <xsl:template match="Page" mode="bodyStyle">
     <!-- Placeholder to overide -->
@@ -7387,7 +7402,7 @@
               </xsl:call-template>
             </xsl:variable>
 
-            <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
+
 
             <!--xsl:if test="$responsiveImageSizes='on'"-->
 
@@ -7605,6 +7620,11 @@
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <!--FALLBACK IMAGE TAG-->
+				  <xsl:variable name="imageSize">
+					  <xsl:if test="not(contains($newSrc,'awaiting-image-thumbnail.gif'))">
+						  <xsl:value-of select="ew:ImageSize($newSrc)"/>
+					  </xsl:if>
+				  </xsl:variable>
                 <img>
                   <!-- SRC -->
                   <xsl:choose>
@@ -7629,7 +7649,7 @@
                         <xsl:value-of select="$max-width"/>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:value-of select="substring-before($imageSize,'x')" />
+						  <xsl:value-of select="substring-before($imageSize,'x')" />
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:attribute>
@@ -8189,6 +8209,8 @@
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="showImage"/>
     <xsl:param name="class"/>
+	  <xsl:param name="width"/>
+	  <xsl:param name="height"/>
     <xsl:param name="forceResize"/>
     <xsl:variable name="VForceResize">
       <xsl:choose>
@@ -8270,13 +8292,27 @@
         <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
         <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
         <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-        <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
-          <xsl:if test="$imgId != ''">
-            <xsl:attribute name="id">
-              <xsl:value-of select="$imgId"/>
-            </xsl:attribute>
-          </xsl:if>
-        </img>
+		  <xsl:choose>
+			  <xsl:when test="$width or $height">
+				  <img src="{$displaySrc}" width="{$width}" height="{$height}" alt="{$alt}" class="detail photo">
+					  <xsl:if test="$imgId != ''">
+						  <xsl:attribute name="id">
+							  <xsl:value-of select="$imgId"/>
+						  </xsl:attribute>
+					  </xsl:if>
+				  </img>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
+					  <xsl:if test="$imgId != ''">
+						  <xsl:attribute name="id">
+							  <xsl:value-of select="$imgId"/>
+						  </xsl:attribute>
+					  </xsl:if>
+				  </img>
+			  </xsl:otherwise>
+		  </xsl:choose>
+        
       </xsl:when>
       <!--<xsl:otherwise>
         -->
@@ -10519,7 +10555,10 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <link rel="stylesheet" type="text/css" href="{$first}{$bundleVersion}" />
+			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+				<noscript>
+					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+				</noscript>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>

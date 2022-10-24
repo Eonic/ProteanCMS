@@ -14,6 +14,8 @@ Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
 Imports System.Collections.Generic
 
+
+
 Partial Public Class Cms
 
     Public Class Cart
@@ -3032,7 +3034,7 @@ processFlow:
 
                         End If
 
-                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 4 Then
+                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Then
                             shipCost = -1
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")
@@ -6562,9 +6564,15 @@ processFlow:
                     'create relationship
                     oDS.Relations.Add("Rel1", oDS.Tables("CartItems").Columns("nCartItemKey"), oDS.Tables("CartItems").Columns("nParentId"), False)
                     oDS.Relations("Rel1").Nested = True
+
+
+
                     If (myWeb.moRequest("UniqueProduct") IsNot Nothing) Then
+
                         UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
+
                     End If
+
                     'loop through the parent rows to check the product
                     If (oDS.Tables("CartItems").Rows.Count > 0 And UniqueProduct = False) Then
 
@@ -6646,8 +6654,8 @@ processFlow:
                                 'lets add the discount to the cart if supplied
                                 If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
                                     Dim strDiscount1 As String = oProdXml.SelectSingleNode(
-                                                        "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
-                                                        ).InnerText
+                                                    "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
+                                                    ).InnerText
                                     addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
                                 End If
 
@@ -6777,9 +6785,9 @@ processFlow:
                                         addNewTextNode("nItemOptIdx", oElmt, oProdOptions(i)(1))
 
                                         Dim oPriceElmt As XmlElement = oProdXml.SelectSingleNode(
-                                                                    "/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" &
-                                                                    "/option[" & oProdOptions(i)(1) & "]/Prices/Price[@currency='" & mcCurrency & "']"
-                                                                    )
+                                                                "/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" &
+                                                                "/option[" & oProdOptions(i)(1) & "]/Prices/Price[@currency='" & mcCurrency & "']"
+                                                                )
                                         Dim strPrice2 As String = 0
                                         If Not oPriceElmt Is Nothing Then strPrice2 = oPriceElmt.InnerText
                                         addNewTextNode("nPrice", oElmt, IIf(IsNumeric(strPrice2), strPrice2, 0))
