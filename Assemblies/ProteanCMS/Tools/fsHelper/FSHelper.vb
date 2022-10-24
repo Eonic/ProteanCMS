@@ -24,6 +24,7 @@ Imports Protean.Tools.DelegateWrappers
 Imports System
 Imports System.Text.RegularExpressions
 Imports System.Web.UI
+Imports System.Web
 
 Partial Public Class fsHelper
 
@@ -851,6 +852,7 @@ Partial Public Class fsHelper
 
             Dim nLengthBefore As Long = 0
 
+            path = HttpUtility.UrlDecode(path)
 
             For Each ofolder In thisDir.GetDirectories()
                 OptimiseImages(path & "/" & ofolder.Name, nFileCount, nSavings, lossless, tinyAPIKey)
@@ -877,7 +879,7 @@ Partial Public Class fsHelper
                         End Using
                     Else
                         Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
-                            Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(LogText)
+                            Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(LogText & vbCrLf)
                             fs.Write(info, 0, info.Length)
                             fs.Close()
                         End Using
