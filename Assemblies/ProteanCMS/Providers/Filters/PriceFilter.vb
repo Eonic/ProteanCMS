@@ -17,8 +17,15 @@ Namespace Providers
                 Try
                     Dim sSql As String = "spGetPriceRange"
                     Dim arrParams As New Hashtable
+                    Dim sCotrolDisplayName As String = "Price Filter"
+                    Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PriceFilter")
 
-                    oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("PriceFilter"))
+                    If (aWeb.moRequest.Form("PriceFilter") IsNot Nothing) Then
+                        oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PriceFilter"))
+
+                    End If
+
+                    oXform.Instance.AppendChild(oXml)
 
                     ' Adding a binding to the form bindings
                     oXform.addBind("PriceFilter", "PriceFilter", "false()", "string", oXform.model)
@@ -29,24 +36,37 @@ Namespace Providers
                     Dim nStep As Integer = Convert.ToDouble(FilterConfig.Attributes("step").Value)
                     Dim priceFilterRange As XmlElement
                     Dim cnt As Integer
-                    'priceFilterRange = oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", nMinPrice, nMaxPrice, nStep)
-                    'priceFilterRange = oXform.addSelect1(oFromGroup, "PriceFilter", False, "Price Filter", "")
-                    'For cnt = nMinPrice To nMaxPrice
 
-                    '    Dim optionName As String = cnt.ToString() + "-" + (cnt + nStep).ToString()
-                    '    oXform.addOption(priceFilterRange, optionName.ToString(), optionName.ToString(), False, "")
-                    '    cnt = cnt + nStep
-                    'Next
+                    If (FilterConfig.Attributes("name") IsNot Nothing) Then
+                        sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
+                    End If
 
                     arrParams.Add("MinPrice", nMinPrice)
                     arrParams.Add("MaxPrice", nMaxPrice)
                     arrParams.Add("Step", nStep)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, "Price Filter", "checkbox", ApperanceTypes.Full)
+                        priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
                         oXform.addOptionsFromSqlDataReader(priceFilterRange, oDr, "name", "value")
                     End Using
+                    If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
+                        If (oXml.InnerText.Trim() <> String.Empty) Then
+                            Dim sText As String
 
+                            Dim aPrice() As String = oXml.InnerText.Split(",")
+                            If (aPrice.Length <> 0) Then
+                                For cnt = 0 To aPrice.Length - 1
+                                    sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().InnerText
+                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                                Next
+
+                            Else
+
+                                sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
+                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                            End If
+                        End If
+                    End If
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
@@ -66,7 +86,7 @@ Namespace Providers
                     End If
 
                     If (cSelectedPrice <> String.Empty) Then
-                        aWeb.moSession("PriceFilter") = cSelectedPrice
+
                         priceRange = cSelectedPrice.Split("-")
 
                         If (cWhereSql <> String.Empty) Then

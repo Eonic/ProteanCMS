@@ -529,9 +529,9 @@ Public Class Image
     Async Sub TinyCompress(ByVal filepathFrom As String, ByVal filepathTo As String)
         Dim cProcessInfo As String = ""
         Try
-
+            Tinify.Key = TinifyKey
             Try
-                Tinify.Key = TinifyKey
+
                 Dim bIsValid As Boolean = Tinify.Validate().GetAwaiter().GetResult()
                 If bIsValid = True Then
                     cProcessInfo = "Key Validation Succeeded"
@@ -540,19 +540,17 @@ Public Class Image
                 cProcessInfo = "Key Validation Failed"
             End Try
 
-            TinifyAPI.Tinify.Key = TinifyKey
-                Dim compressionsThisMonth = TinifyAPI.Tinify.CompressionCount
-                Dim tinifyImg As Task(Of TinifyAPI.Source) = TinifyAPI.Tinify.FromFile(filepathFrom)
-
+            Dim compressionsThisMonth = TinifyAPI.Tinify.CompressionCount
+            Dim tinifyImg As Task(Of TinifyAPI.Source) = TinifyAPI.Tinify.FromFile(filepathFrom)
             Dim newImage As TinifyAPI.Source = tinifyImg.GetAwaiter().GetResult()
-
-            newImage.ToFile(filepathTo).GetAwaiter().GetResult()
-
-
+            If Not newImage Is Nothing Then
+                newImage.ToFile(filepathTo).GetAwaiter().GetResult()
+            Else
+                cProcessInfo = "Compression Failed" & filepathFrom
+            End If
 
         Catch ex As Exception
-
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo))
         End Try
 
 
@@ -561,19 +559,16 @@ Public Class Image
     Public Function CompressImage(ByVal imgfileInfo As FileInfo, ByVal lossless As Boolean, Optional ByVal Quality As Int16 = 0, Optional fileSuffix As String = "") As Long
         Dim difference As Long
         Try
-
-            If imgfileInfo.Extension = ".jpg" Or imgfileInfo.Extension = ".png" Or imgfileInfo.Extension = ".gif" Or imgfileInfo.Extension = ".webp" Then
+            Dim ext As String = LCase(imgfileInfo.Extension)
+            If ext = ".jpg" Or ext = ".jpeg" Or ext = ".png" Or ext = ".gif" Or ext = ".webp" Then
                 If TinifyKey <> "" Then
 
-                    Dim NewFileName As String = imgfileInfo.FullName.Replace(".png", fileSuffix & ".png")
-                    NewFileName = imgfileInfo.FullName.Replace(".jpg", fileSuffix & ".jpg")
-
+                    Dim NewFileName As String = imgfileInfo.FullName.Replace(ext, fileSuffix & ext)
                     Dim initialFileSize As Long = imgfileInfo.Length
 
                     TinyCompress(imgfileInfo.FullName, NewFileName)
 
                     imgfileInfo.Refresh()
-
                     difference = initialFileSize - imgfileInfo.Length
 
                 Else
@@ -609,21 +604,21 @@ Public Class Image
                             End If
                             Dim newImgFile As New FileInfo(NewFileName)
                             difference = imgfileInfo.Length
-                            'Dim optimizer As New ImageMagick.ImageOptimizers.PngOptimizer()
-                            'If lossless Then
-                            '    optimizer.LosslessCompress(newImgFile)
-                            'Else
-                            '    optimizer.OptimalCompression = True
-                            '    Try
-                            '        optimizer.Compress(newImgFile)
-                            '    Catch ex As Exception
-                            '        optimizer = Nothing
-                            '        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
-                            '    End Try
-                            'End If
+                            Dim optimizer As New ImageMagick.ImageOptimizers.PngOptimizer()
+                            If lossless Then
+                                optimizer.LosslessCompress(newImgFile)
+                            Else
+                                optimizer.OptimalCompression = True
+                                Try
+                                    optimizer.Compress(newImgFile)
+                                Catch ex As Exception
+                                    optimizer = Nothing
+                                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+                                End Try
+                            End If
                             newImgFile.Refresh()
                             difference = difference - newImgFile.Length
-                   ' optimizer = Nothing
+                            optimizer = Nothing
                         Case ".jpg", ".jpeg"
 
                             Dim NewFileName As String = imgfileInfo.FullName.Replace(".jpg", fileSuffix & ".jpg")

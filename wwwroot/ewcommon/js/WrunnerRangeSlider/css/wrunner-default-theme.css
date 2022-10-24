@@ -1,0 +1,184 @@
+.wrunner__division_theme_default.wrunner__division_direction_horizontal {
+  height: 0.5rem;
+  width: 0.1rem;
+}
+
+.wrunner__division_theme_default.wrunner__division_direction_vertical {
+  height: 0.1rem;
+  width: 0.5rem;
+}
+
+.wrunner__division_theme_default.wrunner__division {
+  background-color: #cb73a4;
+}
+
+.wrunner__divisions_theme_default.wrunner__divisions_direction_horizontal {
+  top: 3.5rem;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.wrunner__divisions_theme_default.wrunner__divisions_direction_vertical {
+  height: 100%;
+  width: 0.5rem;
+  left: 0;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.wrunner__divisions_theme_default.wrunner__divisions {
+  position: absolute;
+  display: flex;
+}
+
+.wrunner__handle_theme_default.wrunner__handle_direction_horizontal {
+  margin-top: -0.35rem;
+  margin-left: -0.6rem;
+}
+
+.wrunner__handle_theme_default.wrunner__handle_direction_vertical {
+  margin-top: -0.6rem;
+  margin-left: -0.4rem;
+}
+
+.wrunner__handle_theme_default.wrunner__handle {
+  position: absolute;
+  height: 1.25rem;
+  width: 1.25rem;
+  border-radius: 40%;
+  background-color: #cf579a;
+  transition-duration: 0.2s;
+  transition-property: transform, background-color, border-radius;
+  cursor: pointer;
+  z-index: 1;
+}
+.wrunner__handle_theme_default.wrunner__handle:hover {
+  transform: scale(1.1);
+  border-radius: 50%;
+  background-color: #c54a8e;
+}
+.wrunner__handle_theme_default.wrunner__handle:active {
+  transform: scale(0.9);
+  border-radius: 50%;
+  background-color: #aa3d9c;
+}
+
+.wrunner__outer_theme_default.wrunner__outer_direction_horizontal {
+  height: 4rem;
+  width: 100%;
+}
+
+.wrunner__outer_theme_default.wrunner__outer_direction_vertical {
+  height: 100%;
+  width: 5.5rem;
+  min-height: 10rem;
+}
+
+.wrunner__outer_theme_default.wrunner__outer {
+  position: relative;
+  padding-top: 0.1px;
+}
+
+.wrunner__path_theme_default.wrunner__path_direction_horizontal {
+  height: 0.5rem;
+  width: 100%;
+  top: 2.3rem;
+}
+
+.wrunner__path_theme_default.wrunner__path_direction_vertical {
+  height: 100%;
+  width: 0.5rem;
+  left: 1.2rem;
+}
+
+.wrunner__path_theme_default.wrunner__path {
+  position: absolute;
+  background-color: rgba(205,205,205,0.75);
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.wrunner__pathPassed_theme_default.wrunner__pathPassed_direction_horizontal {
+  height: 100%;
+}
+
+.wrunner__pathPassed_theme_default.wrunner__pathPassed_direction_vertical {
+  width: 100%;
+  bottom: 0;
+}
+
+.wrunner__pathPassed_theme_default.wrunner__pathPassed {
+  position: absolute;
+  background-color: #cb73a4;
+  border-radius: 0.25rem;
+}
+
+.wrunner__valueNote_theme_default.wrunner__valueNote_direction_horizontal {
+  top: 0;
+  min-width: 1.5rem;
+  border-radius: 0.8rem 0.3rem 0.8rem 0.3rem;
+}
+.wrunner__valueNote_theme_default.wrunner__valueNote_direction_horizontal::after {
+  left: 50%;
+  margin-left: -0.25rem;
+  bottom: -0.5rem;
+  border: 0.25rem solid transparent;
+  border-top-color: #c54a8e;
+}
+
+.wrunner__valueNote_theme_default.wrunner__valueNote_direction_vertical {
+  left: 2.5rem;
+  min-width: 1.5rem;
+  border-radius: 0.3rem 0.7rem 0.3rem 0.7rem;
+}
+.wrunner__valueNote_theme_default.wrunner__valueNote_direction_vertical::after {
+  top: 50%;
+  margin-top: -0.25rem;
+  left: -0.5rem;
+  border: 0.25rem solid transparent;
+  border-right-color: #c54a8e;
+}
+
+.wrunner__valueNote_theme_default.wrunner__valueNote_display_hidden {
+  display: none;
+}
+
+.wrunner__valueNote_theme_default.wrunner__valueNote_display_visible {
+  display: block;
+}
+
+.wrunner__valueNote_theme_default.wrunner__valueNote {
+  position: absolute;
+  padding: 0.35rem;
+  background-color: #c54a8e;
+  text-align: center;
+  color: #fff;
+  font-size: 0.75rem;
+  font-family: lato;
+  font-weight: 900;
+  cursor: default;
+}
+.wrunner__valueNote_theme_default.wrunner__valueNote::after {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 0;
+  width: 0;
+}
+
+.wrunner_theme_default.wrunner_direction_horizontal {
+  width: 100%;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  box-sizing: border-box;
+}
+
+.wrunner_theme_default.wrunner_direction_vertical {
+  height: 100%;
+  width: max-content;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  box-sizing: border-box;
+}
+
+

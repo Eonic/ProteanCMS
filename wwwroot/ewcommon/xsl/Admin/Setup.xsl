@@ -662,18 +662,40 @@
               <xsl:call-template name="ProgressResponses"/>
             </xsl:when>
             <xsl:otherwise>
-              <p>
-                Doing this will optimise all the images in the images folder. <br/>
+            
+			  <form action="/ewcommon/setup/default.ashx?ewCmd=OptimiseImages&amp;ewCmd2=Do" method="post" class="panel panel-primary">
+				  <div class="panel-heading">
+					  <h3 class="panel-title">Optimise Images</h3>
+				  </div>
+				  <div class="form-group panel-body">
+					  <div>
+						    <p>
+                Proceeding will optimise all the images in the specified folder. <br/>
                 <strong>Are you sure you wish to continue?</strong><br/>
               </p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-danger">
-                <i class="fa fa-times">&#160;</i>&#160;
-                Cancel
-              </a>
-              &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=OptimiseImages&amp;ewCmd2=Do" class="btn btn-success">
-                <i class="fa fa-eraser">&#160;</i>&#160;Optimise Images
-              </a>
+					  </div>
+					  <div class="form-group">
+						  <label for="folderPath">Start Folder Path</label>
+						  <input type="text" class="form-control" id="folderPath" name="folderPath" value="/images"/>
+                    </div>
+					  <div class="checkbox">
+						  <label>
+							  <input name="resizedonly" type="checkbox"/> Dynamically resized Images only
+                          </label>
+					  </div>
+                 
+				</div>
+				  <div class="panel-footer">
+					  <a href="/ewcommon/setup/default.ashx" class="btn btn-danger">
+						  <i class="fa fa-times">&#160;</i>&#160;
+						  Cancel
+					  </a>
+					   <button type="submit" class="btn btn-success principle">
+                    <i class="fa fa-eraser">&#160;</i>&#160;Optimise Images
+                  </button>
+				  </div>
+			  </form>				
+				&#160;&#160;&#160;
             </xsl:otherwise>
           </xsl:choose>
         </div>

@@ -5,7 +5,7 @@ Imports System.Xml
 Imports System.Collections
 Imports System.Web.Configuration
 Imports System.Configuration
-
+Imports Alphaleonis.Win32.Filesystem
 
 Partial Public Class Cms
 
@@ -435,6 +435,31 @@ Partial Public Class Cms
                         End If
                         If Filename <> String.Empty Then
                             JsonResult = fsHelper.CleanfileName(Filename)
+                        End If
+
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function CompressImage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = "0"
+                Dim Filename As String = String.Empty
+                Dim fsHelper As New fsHelper()
+                Dim TinyAPIKey As String = goConfig("TinifyKey")
+                Try
+                    If myApi.mbAdminMode Then
+
+                        If myApi.moRequest.QueryString("Filename") IsNot Nothing Then
+                            Dim oImgTool As New Protean.Tools.Image("")
+                            oImgTool.TinifyKey = TinyAPIKey
+                            Dim oFile As IO.FileInfo = New IO.FileInfo(myApi.goServer.MapPath(myApi.moRequest.QueryString("Filename")))
+                            JsonResult = "reduction:'" & (oImgTool.CompressImage(oFile, True) / 1000) & "'"
+                            oFile.Refresh()
+                            JsonResult = JsonResult & ",new_size:'" & (oFile.Length / 1000) & "'"
                         End If
 
                     End If

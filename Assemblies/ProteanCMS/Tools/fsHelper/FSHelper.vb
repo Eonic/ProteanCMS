@@ -24,6 +24,7 @@ Imports Protean.Tools.DelegateWrappers
 Imports System
 Imports System.Text.RegularExpressions
 Imports System.Web.UI
+Imports System.Web
 
 Partial Public Class fsHelper
 
@@ -842,7 +843,7 @@ Partial Public Class fsHelper
 
     End Function
 
-    Public Function OptimiseImages(ByVal path As String, Optional ByRef nFileCount As Long = 0, Optional ByRef nSavings As Long = 0, ByVal Optional lossless As Boolean = True, ByVal Optional tinyAPIKey As String = "") As String
+    Public Function OptimiseImages(ByVal path As String, Optional ByRef nFileCount As Long = 0, Optional ByRef nSavings As Long = 0, ByVal Optional lossless As Boolean = True, ByVal Optional tinyAPIKey As String = "", ByVal Optional FolderPrefix As String = "") As String
         Try
             Dim thisDir As New DirectoryInfo(goServer.MapPath(path))
             Dim ofile As FileInfo
@@ -851,28 +852,41 @@ Partial Public Class fsHelper
 
             Dim nLengthBefore As Long = 0
 
+            path = HttpUtility.UrlDecode(path)
+
             For Each ofolder In thisDir.GetDirectories()
                 OptimiseImages(path & "/" & ofolder.Name, nFileCount, nSavings, lossless, tinyAPIKey)
-
             Next
-            If thisDir.Name.StartsWith("~") Then
+
+            If thisDir.Name.StartsWith(FolderPrefix) Or FolderPrefix = "" Then
                 Dim LogFile As FileInfo = New FileInfo(goServer.MapPath(path) & "/optimiselog.txt")
-                If LogFile.Exists = False Then
+                If LogFile.Exists = False Or DateAndTime.DateDiff(DateInterval.Hour, LogFile.LastWriteTimeUtc(), Now()) > 24 Then
+                    Dim FileCountBefore = nFileCount
+
                     For Each ofile In thisDir.GetFiles
                         Dim oImgTool As New Protean.Tools.Image("")
                         oImgTool.TinifyKey = tinyAPIKey
                         newSavings = newSavings + oImgTool.CompressImage(ofile, lossless)
                         nFileCount = nFileCount + 1
                     Next
-                    Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
-                        Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes("Last Optimised:" & Now().ToLongDateString & " Savings:" & newSavings & " FileCount:" & nFileCount)
-                        fs.Write(info, 0, info.Length)
-                        fs.Close()
-                    End Using
+
+                    Dim FilesProcessedCount As Long = nFileCount - FileCountBefore
+                    Dim LogText As String = "Last Optimised:" & Now().ToLongDateString & " Savings:" & newSavings & " FileCount:" & FilesProcessedCount & vbCrLf
+                    If LogFile.Exists Then
+                        Using fs As StreamWriter = File.AppendText(goServer.MapPath(path) & "/optimiselog.txt")
+                            fs.WriteLine(LogText)
+                            fs.Close()
+                        End Using
+                    Else
+                        Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
+                            Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(LogText & vbCrLf)
+                            fs.Write(info, 0, info.Length)
+                            fs.Close()
+                        End Using
+                    End If
+
                 End If
             End If
-
-
             nSavings = nSavings + newSavings
             Return nFileCount & " Files Updated " & nSavings / 1024 & " Kb have been saved"
 
@@ -1080,6 +1094,7 @@ Partial Public Class fsHelper
                         Dim cExt As String = LCase(fi.Extension)
                         Dim fileElem As XmlElement = XmlElement("file", fi.Name)
                         fileElem.Attributes.Append(XmlAttribute("Extension", cExt))
+                        fileElem.Attributes.Append(XmlAttribute("length", (CDbl(fi.Length) / 1000)))
                         'PerfMon.Log("fsHelper", "AddElements-Addfile", fi.Name)
                         Select Case cExt
 

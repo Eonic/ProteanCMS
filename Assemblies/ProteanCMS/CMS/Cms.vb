@@ -5470,6 +5470,9 @@ Public Class Cms
 
                     If sUrl = "/" Then
                         sUrl = DomainURL
+                        If moRequest.ServerVariables("SERVER_PORT") <> "80" And moRequest.ServerVariables("SERVER_PORT") <> "443" Then
+                            sUrl = sUrl & ":" & moRequest.ServerVariables("SERVER_PORT")
+                        End If
                     End If
                     If moConfig("LowerCaseUrl") = "on" Then
                         sUrl = sUrl.ToLower()
