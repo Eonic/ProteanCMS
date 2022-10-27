@@ -47,14 +47,14 @@
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
     <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
     <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
-    <AssemblyFileVersionSettings>None.None.None.None</AssemblyFileVersionSettings>
-    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
+    <AssemblyVersionSettings>None.None.None.Increment</AssemblyVersionSettings>
+    <AssemblyFileVersionSettings>None.None.None.Increment</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>None.None.None.Increment</AssemblyInfoVersionSettings>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.55.2</AssemblyVersion>
+    <AssemblyVersion>6.0.55.3</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -420,7 +420,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_DetectChanges="False" BuildVersion_ConfigurationName="Release" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_IncrementBeforeBuild="True" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Release" BuildVersion_DetectChanges="False" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />

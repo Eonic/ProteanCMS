@@ -1569,6 +1569,10 @@ Public Class Cms
 
             End Select
 
+            If Not moSession Is Nothing Then
+                'clears the recaptcha flag for the session
+                moSession("recaptcha") = Nothing
+            End If
 
         Catch ex As Exception
             If mcEwSiteXsl <> moConfig("SiteXsl") Then mcEwSiteXsl = moConfig("SiteXsl")
@@ -1657,8 +1661,8 @@ Public Class Cms
                                     mnPageId = gnPageNotFoundId
                                     moPageXml = New XmlDocument()
                                     BuildPageXML()
-                                    moResponse.StatusCode = 404
-
+                                    'moResponse.StatusCode = 404
+                                    gnResponseCode = 404
                                 End If
 
                             End If
@@ -8695,6 +8699,7 @@ from tblcontent C
 #End Region
 
     Protected Overrides Sub Finalize()
+
         MyBase.Finalize()
     End Sub
 End Class
