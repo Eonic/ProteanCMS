@@ -716,6 +716,7 @@ Public Class Cms
 
                 If mnArtId < 1 Then
                     If Not moRequest("artid") = "" Then
+
                         mnArtId = Me.GetRequestItemAsInteger("artid", 0)
                     End If
                 End If
@@ -1643,7 +1644,8 @@ Public Class Cms
                                     mnPageId = gnPageNotFoundId
                                     moPageXml = New XmlDocument()
                                     BuildPageXML()
-                                    moResponse.StatusCode = 404
+                                    '  moResponse.StatusCode = 404
+                                    gnResponseCode = 404
 
                                 End If
                             End If
@@ -5989,6 +5991,9 @@ Public Class Cms
                         GetPageContentXml(mnPageId)
                     End If
                 End If
+                If mnPageId = gnPageNotFoundId Then
+                    GetPageContentXml(mnPageId)
+                End If
             Else
                 'if we are on a system page we only want the content on that page not parents.
                 GetPageContentXml(mnPageId)
@@ -7081,6 +7086,7 @@ Public Class Cms
                             If gnPageNotFoundId > 1 Then
                                 ' msRedirectOnEnd = "/System+Pages/Page+Not+Found"
                                 mnPageId = gnPageNotFoundId
+                                mnArtId = 0
                                 moPageXml = New XmlDocument()
                                 BuildPageXML()
                                 moResponse.StatusCode = 404
