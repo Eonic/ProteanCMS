@@ -7313,6 +7313,7 @@
 									</xsl:choose>
 									<!-- Width -->
 									<xsl:attribute name="width">
+										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-width"/>
@@ -7324,6 +7325,7 @@
 									</xsl:attribute>
 									<!-- Height -->
 									<xsl:attribute name="height">
+										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-height"/>
