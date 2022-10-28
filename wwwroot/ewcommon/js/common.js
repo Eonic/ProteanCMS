@@ -1576,7 +1576,7 @@ function displaySuccessMessage() {
             }
         }
 
-        $('#xFrmAlertModal').modal();
+        $('#xFrmAlertModal').show();
     } else { alert(arguments[0]); }
 }
 

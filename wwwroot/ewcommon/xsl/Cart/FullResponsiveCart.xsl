@@ -2784,7 +2784,7 @@
 
 
 	<!-- GA4 Ecommerce Events -->
-	<!--<xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
+	<xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
 		gtag("event", "add_to_cart",
 		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
 		);
@@ -2811,9 +2811,9 @@
 		]
 		}
 	</xsl:template>
-  -->
+
   
-  <!--<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="google-ga4-event">
+    <xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="google-ga4-event">
 		gtag("event", "purchase",
 		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
 		);
@@ -2822,13 +2822,13 @@
 	<xsl:template match="Page" mode="google-ga4-transaction">
 		{
 		currency: "<xsl:value-of select="Cart/@currency"/>",
-    transaction_id: "<xsl:value-of select="Cart/Order/@InvoiceRef"/>",
+		transaction_id: "<xsl:value-of select="Cart/Order/@InvoiceRef"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		items: [
 		<xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
 		]
 		}
-	</xsl:template>-->
+	</xsl:template>
   
   <xsl:template match="Page[Cart/Order/@cmd='Billing']" mode="google-ga4-event">
 		gtag("event", "add_shipping_info",
@@ -2857,9 +2857,9 @@
 		price: <xsl:value-of select="@price"/>,
 		quantity: <xsl:value-of select="@quantity"/>
 		}
-		<!--<xsl:if test="following-sibling()::Item">
+		<xsl:if test="following-sibling::Item">
 			  <xsl:text>,</xsl:text>
-	    </xsl:if>-->
+	    </xsl:if>
 	</xsl:template>
 
 </xsl:stylesheet>

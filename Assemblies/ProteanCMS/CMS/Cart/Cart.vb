@@ -14,6 +14,8 @@ Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
 Imports System.Collections.Generic
 
+
+
 Partial Public Class Cms
 
     Public Class Cart
@@ -1798,7 +1800,7 @@ processFlow:
                 Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
                     If oDr.HasRows Then
                         While oDr.Read
-                            nAmountReceived = CDbl(oDr("nAmountReceived"))
+                            nAmountReceived = CDbl(0 & oDr("nAmountReceived"))
                         End While
                     End If
                 End Using
@@ -1849,15 +1851,18 @@ processFlow:
                                 If Not oDr.HasRows Then cUniqueLink = testLink
                             End Using
                         Loop
-
-                        oCartElmt.SetAttribute("settlementID", cUniqueLink)
-                        oCartElmt.SetAttribute("transStatus", "Deposit Paid")
-                        UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
                         If outstandingAmount = 0 Then
+                            PayableType = "full"
+                            oCartElmt.SetAttribute("transStatus", "Paid In Full")
                             mnProcessId = 6
                         Else
+                            oCartElmt.SetAttribute("settlementID", cUniqueLink)
+                            oCartElmt.SetAttribute("transStatus", "Deposit Paid")
                             mnProcessId = 10
                         End If
+
+                        UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
+
 
                     Case "settlement"
                         mnProcessId = 6
@@ -1874,6 +1879,9 @@ processFlow:
 
                     Case Else
                         PayableType = "full"
+                        UpdateCartDeposit(oCartElmt, amountPaid, PayableType)
+                        oCartElmt.SetAttribute("transStatus", "Paid In Full")
+                        mnProcessId = 6
                 End Select
 
                 mnPaymentId = moDBHelper.savePayment(mnCartId, myWeb.mnUserId, providerName, providerPaymentRef, providerName, PaymentDetailXml, DateTime.Now, False, amountPaid, PayableType)
@@ -3026,7 +3034,7 @@ processFlow:
 
                         End If
 
-                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 4 Then
+                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Then
                             shipCost = -1
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")
@@ -3096,9 +3104,9 @@ processFlow:
                                         If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
                                             For Each oItem In oCartElmt.SelectNodes("Item")
                                                 If oItem.SelectSingleNode("nDepositAmount") Is Nothing Then
-                                                    nPayableAmount = nPayableAmount + CDbl(oItem.GetAttribute("itemTotal"))
+                                                    nPayableAmount = nPayableAmount + CDbl(oItem.GetAttribute("itemTotal")) * CLng(oItem.GetAttribute("quantity"))
                                                 Else
-                                                    nPayableAmount = nPayableAmount + CDbl(oItem.SelectSingleNode("nDepositAmount").InnerText())
+                                                    nPayableAmount = nPayableAmount + CDbl(oItem.SelectSingleNode("nDepositAmount").InnerText()) * CLng(oItem.GetAttribute("quantity"))
                                                 End If
                                             Next
                                         End If
@@ -3128,14 +3136,20 @@ processFlow:
                                 ' A deposit has been paid - should I check if it's the same as the total amount?
                                 If IsNumeric(oRow("nAmountReceived")) Then
                                     nPayable = nTotalAmount - CDbl(oRow("nAmountReceived"))
+                                    oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                    oCartElmt.SetAttribute("outstandingAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+
                                     If nPayable > 0 Then
-                                        oCartElmt.SetAttribute("payableAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
-                                        oCartElmt.SetAttribute("outstandingAmount", FormatNumber(nPayable, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                        'this is a deposit payment
+                                    Else
+                                        'this is settling the full amount, deposit items may have been moved to another order
+                                        nStatusId = 6
+                                        mnProcessId = 6
                                     End If
                                     oCartElmt.SetAttribute("paymentMade", FormatNumber(CDbl(oRow("nAmountReceived")), 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
-                                    oCartElmt.SetAttribute("payableType", "settlement")
+                                        oCartElmt.SetAttribute("payableType", "settlement")
+                                    End If
                                 End If
-                            End If
 
                             ' Set the payableType 
                             If Not (IsNumeric(oRow("nAmountReceived"))) AndAlso nStatusId <> 10 Then
@@ -5229,7 +5243,7 @@ processFlow:
 
 
         Public Overridable Function discountsXform(Optional ByVal formName As String = "notesForm", Optional ByVal action As String = "?cartCmd=Discounts") As xForm
-            myWeb.PerfMon.Log("Cart", "notesXform")
+            myWeb.PerfMon.Log("Cart", "discountsXform")
             '   this function is called for the collection from a form and addition to the database
             '   of address information.
 
@@ -5342,7 +5356,7 @@ processFlow:
                 Return oXform
 
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "discountsXform", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -5532,93 +5546,107 @@ processFlow:
                             If cTicketTypes <> "" Then
                                 If Not moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType!='']]").Count = 0 Then
                                     Dim ticketType As String
-                                    For Each ticketType In Split(cTicketTypes, ",")
+                                    ' For Each ticketType In Split(cTicketTypes, ",")
+                                    Dim oNotesRoot As XmlElement = oXform.Instance.SelectSingleNode("Notes/Notes")
+                                    Dim oBindRoot As XmlElement = oXform.model.SelectSingleNode("bind")
+                                    Dim oControlRoot As XmlElement = oXform.moXformElmt.SelectSingleNode("group")
 
-                                        Dim blankElmt As XmlElement = oXform.Instance.SelectSingleNode("Notes/Notes/Attendee[@type='" & ticketType & "']")
-                                        Dim blankBind As XmlElement = oXform.model.SelectSingleNode("bind/bind[@nodeset='Attendee' and @class='" & ticketType & "']")
-                                        Dim blankControl As XmlElement = oXform.moXformElmt.SelectSingleNode("group/group[contains(@class,'" & ticketType & "')]")
-                                        Dim oNotesRoot As XmlElement = oXform.Instance.SelectSingleNode("Notes/Notes")
-                                        Dim oBindRoot As XmlElement = oXform.model.SelectSingleNode("bind")
-                                        Dim oControlRoot As XmlElement = oXform.moXformElmt.SelectSingleNode("group")
+                                    'Case for Run
+                                    Dim newElmt2 As XmlElement
+                                    Dim nCount As Integer = 0
+                                    Dim i As Integer = 0
+                                    Dim oItemElmt As XmlElement
 
-                                        'Case for Run
-                                        Dim newElmt2 As XmlElement
-                                        Dim nCount As Integer = 0
-                                        Dim i As Integer = 0
-                                        Dim oItemElmt As XmlElement
-                                        For Each oItemElmt In moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType='" & ticketType & "']]")
+                                    'For Each oItemElmt In moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType='" & ticketType & "']]")
+                                    For Each oItemElmt In moCartXml.SelectNodes("Order/Item")
 
-                                            For i = 1 To oItemElmt.GetAttribute("quantity")
-                                                totalAttendees = totalAttendees + 1
-                                                'Update the instance
-                                                oNotesRoot.AppendChild(blankElmt.CloneNode(True))
-                                                Dim newElmt As XmlElement = oNotesRoot.LastChild
-                                                newElmt.SelectSingleNode("AttTicketType").InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
-                                                newElmt.SetAttribute("id", ticketType & nCount)
-                                                newElmt.SetAttribute("itemId", oItemElmt.GetAttribute("id"))
+                                        ticketType = oItemElmt.SelectSingleNode("productDetail/Name/@ticketType").InnerText
 
-                                                newElmt = Nothing
+                                        Dim blankElmt As XmlElement = oXform.Instance.SelectSingleNode("Notes/Notes/Attendee[@type='" & ticketType & "'][1]")
+                                        Dim blankBind As XmlElement = oXform.model.SelectSingleNode("bind/bind[@nodeset='Attendee' and @class='" & ticketType & "'][1]")
+                                        Dim blankControl As XmlElement = oXform.moXformElmt.SelectSingleNode("group/group[contains(@class,'" & ticketType & "')][1]")
 
-                                                'Update the binds
-                                                oBindRoot.AppendChild(blankBind.CloneNode(True))
-                                                newElmt = oBindRoot.LastChild
-                                                newElmt.SetAttribute("nodeset", "Attendee[@id='" & ticketType & nCount & "']")
-                                                For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*")
-                                                    If newElmt2.GetAttribute("id") <> "" Then
-                                                        newElmt2.SetAttribute("id", newElmt2.GetAttribute("id") & "-" & ticketType & nCount)
-                                                    End If
-                                                    'remove lead booker from all subsequent tickets
-                                                    If totalAttendees > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
-                                                        newElmt2.SetAttribute("required", "false()")
-                                                    End If
-                                                Next
-                                                newElmt = Nothing
-                                                'Update the controls
-                                                If Not blankControl Is Nothing Then
-                                                    oControlRoot.AppendChild(blankControl.CloneNode(True))
+                                        For i = 1 To oItemElmt.GetAttribute("quantity")
+                                            totalAttendees = totalAttendees + 1
+                                            'Update the instance
+                                            oNotesRoot.AppendChild(blankElmt.CloneNode(True))
+                                            Dim newElmt As XmlElement = oNotesRoot.LastChild
+                                            newElmt.SelectSingleNode("AttTicketType").InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
+                                            newElmt.SetAttribute("id", ticketType & nCount)
+                                            newElmt.SetAttribute("itemId", oItemElmt.GetAttribute("id"))
+
+                                            newElmt = Nothing
+
+                                            'Update the binds
+                                            oBindRoot.AppendChild(blankBind.CloneNode(True))
+                                            newElmt = oBindRoot.LastChild
+                                            newElmt.SetAttribute("nodeset", "Attendee[@id='" & ticketType & nCount & "']")
+                                            For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*")
+                                                If newElmt2.GetAttribute("id") <> "" Then
+                                                    newElmt2.SetAttribute("id", newElmt2.GetAttribute("id") & "-" & ticketType & nCount)
                                                 End If
-                                                newElmt = oControlRoot.LastChild
-
-                                                Dim labelElmt As XmlElement = moPageXml.CreateElement("label")
-                                                labelElmt.InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
-                                                newElmt.InsertBefore(labelElmt, newElmt.FirstChild)
-
-                                                For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*[@bind]")
-                                                    If newElmt2.GetAttribute("bind") <> "" Then
-                                                        If i <> oItemElmt.GetAttribute("quantity") Then
-                                                            'remove all but the last delcarations
-                                                            If CStr(newElmt2.GetAttribute("bind")).StartsWith("AttDeclaration") Then
-                                                                'newElmt2.ParentNode.RemoveChild(newElmt2.PreviousSibling)
-                                                                Dim delGroup As XmlElement = newElmt2.ParentNode
-                                                                delGroup.SetAttribute("delete", True)
-                                                            End If
-                                                        End If
-
-                                                        newElmt2.SetAttribute("bind", newElmt2.GetAttribute("bind") & "-" & ticketType & nCount)
-                                                    End If
-                                                Next
-                                                If totalAttendees > 1 Then
-                                                    For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*[@lead-booker-only='true']")
-                                                        'remove lead booker from all subsequent tickets
-                                                        newElmt2.ParentNode.RemoveChild(newElmt2)
-                                                    Next
+                                                'remove lead booker from all subsequent tickets
+                                                If totalAttendees > 1 And newElmt2.GetAttribute("lead-booker-only") = "true" Then
+                                                    newElmt2.SetAttribute("required", "false()")
                                                 End If
-
-                                                newElmt = Nothing
-                                                nCount = nCount + 1
                                             Next
+                                            newElmt = Nothing
+                                            'Update the controls
+                                            If Not blankControl Is Nothing Then
+                                                oControlRoot.AppendChild(blankControl.CloneNode(True))
+                                            End If
+                                            newElmt = oControlRoot.LastChild
+
+                                            Dim labelElmt As XmlElement = moPageXml.CreateElement("label")
+                                            labelElmt.InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
+                                            newElmt.InsertBefore(labelElmt, newElmt.FirstChild)
+
+                                            For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*[@bind]")
+                                                If newElmt2.GetAttribute("bind") <> "" Then
+                                                    If i <> oItemElmt.GetAttribute("quantity") Then
+                                                        'remove all but the last delcarations
+                                                        If CStr(newElmt2.GetAttribute("bind")).StartsWith("AttDeclaration") Then
+                                                            'newElmt2.ParentNode.RemoveChild(newElmt2.PreviousSibling)
+                                                            Dim delGroup As XmlElement = newElmt2.ParentNode
+                                                            delGroup.SetAttribute("delete", True)
+                                                        End If
+                                                    End If
+
+                                                    newElmt2.SetAttribute("bind", newElmt2.GetAttribute("bind") & "-" & ticketType & nCount)
+                                                End If
+                                            Next
+                                            If totalAttendees > 1 Then
+                                                For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*[@lead-booker-only='true']")
+                                                    'remove lead booker from all subsequent tickets
+                                                    newElmt2.ParentNode.RemoveChild(newElmt2)
+                                                Next
+                                            End If
+
+                                            newElmt = Nothing
+                                            nCount = nCount + 1
                                         Next
 
+                                    Next
+
+                                    'remove the blanks
+                                    For Each newElmt2 In oControlRoot.SelectNodes("descendant-or-self::*[@delete]")
+                                        newElmt2.ParentNode.RemoveChild(newElmt2)
+                                    Next
 
 
-                                        'remove the blanks
-                                        For Each newElmt2 In oControlRoot.SelectNodes("descendant-or-self::*[@delete]")
-                                            newElmt2.ParentNode.RemoveChild(newElmt2)
-                                        Next
+                                    For Each ticketType In cTicketTypes.Split(",")
+                                        'remove the initial versions
+                                        Dim blankElmt As XmlElement = oXform.Instance.SelectSingleNode("Notes/Notes/Attendee[@type='" & ticketType & "'][1]")
+                                        Dim blankBind As XmlElement = oXform.model.SelectSingleNode("bind/bind[@nodeset='Attendee' and @class='" & ticketType & "'][1]")
+                                        Dim blankControl As XmlElement = oXform.moXformElmt.SelectSingleNode("group/group[contains(@class,'" & ticketType & "')][1]")
+
                                         blankElmt.ParentNode.RemoveChild(blankElmt)
                                         blankBind.ParentNode.RemoveChild(blankBind)
                                         blankControl.ParentNode.RemoveChild(blankControl)
                                     Next
+
+
+
                                 End If
                             End If
 
@@ -5675,28 +5703,36 @@ processFlow:
                         moPageXml.PreserveWhitespace = False
                         savedInstance.InnerXml = sXmlContent
 
-                        If oXform.Instance.SelectNodes("*/*").Count > savedInstance.SelectNodes("*/*").Count Then
+                        If oXform.Instance.SelectNodes("*/*/*").Count > savedInstance.SelectNodes("*/*/*").Count Then
                             ' we have a greater amount of childnodes we need to merge....
-                            Dim oStepElmt As XmlElement
-                            Dim oStepElmtCount As Integer = 0
+
+                            ' Dim oStepElmtCount As Integer = 0
 
                             'step through each child element and replace where attributes match, leaving final
-                            For Each oStepElmt In oXform.Instance.SelectNodes("*/*")
-                                Dim attXpath As String = oStepElmt.Name
-                                Dim attElmt As XmlAttribute
-                                Dim bfirst As Boolean = True
-                                For Each attElmt In oStepElmt.Attributes
-                                    If bfirst Then attXpath = attXpath & "["
-                                    If Not bfirst Then attXpath = attXpath & " and "
-                                    attXpath = attXpath + "@" & attElmt.Name & "='" & attElmt.Value & "'"
-                                    bfirst = False
-                                Next
-                                If Not bfirst Then attXpath = attXpath & "]"
+                            For Each oStepElmt As XmlElement In oXform.Instance.SelectNodes("*/*/*")
 
-                                If Not savedInstance.SelectSingleNode("*/" & attXpath) Is Nothing Then
-                                    oStepElmt.ParentNode.ReplaceChild(savedInstance.SelectSingleNode("*/" & attXpath).CloneNode(True), oStepElmt)
+                                Dim replacementNode As XmlElement = savedInstance.SelectSingleNode("*/*/*[@id='" & oStepElmt.GetAttribute("id") & "']")
+
+                                If Not replacementNode Is Nothing Then
+                                    oStepElmt.ParentNode.ReplaceChild(replacementNode.CloneNode(True), oStepElmt)
                                 End If
-                                oStepElmtCount = oStepElmtCount + 1
+
+
+                                'Dim attXpath As String = oStepElmt.Name
+                                'Dim attElmt As XmlAttribute
+                                'Dim bfirst As Boolean = True
+                                'For Each attElmt In oStepElmt.Attributes
+                                '    If bfirst Then attXpath = attXpath & "["
+                                '    If Not bfirst Then attXpath = attXpath & " and "
+                                '    attXpath = attXpath + "@" & attElmt.Name & "='" & attElmt.Value & "'"
+                                '    bfirst = False
+                                'Next
+                                'If Not bfirst Then attXpath = attXpath & "]"
+
+                                'If Not savedInstance.SelectSingleNode("*/*/" & attXpath) Is Nothing Then
+                                '    oStepElmt.ParentNode.ReplaceChild(savedInstance.SelectSingleNode("*/*/" & attXpath).CloneNode(True), oStepElmt)
+                                'End If
+                                'oStepElmtCount = oStepElmtCount + 1
                             Next
 
                         Else
@@ -6532,17 +6568,11 @@ processFlow:
 
 
                     If (myWeb.moRequest("UniqueProduct") IsNot Nothing) Then
-                        Dim StrUniqueProduct As String = myWeb.moRequest("UniqueProduct").ToString()
-                        If (StrUniqueProduct.Contains(",")) Then
 
-                            Dim sUniqueProd() As String = Split(StrUniqueProduct, ",")
-                            StrUniqueProduct = sUniqueProd(0).ToString()
-                            UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
+                        UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
 
-                        Else
-                            UniqueProduct = Convert.ToBoolean(myWeb.moRequest("UniqueProduct"))
-                        End If
                     End If
+
                     'loop through the parent rows to check the product
                     If (oDS.Tables("CartItems").Rows.Count > 0 And UniqueProduct = False) Then
 
@@ -7127,7 +7157,7 @@ processFlow:
                     Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
                         If oDr.HasRows Then
                             While oDr.Read
-                                nAmountReceived = CDbl(oDr("nAmountReceived"))
+                                nAmountReceived = CDbl("0" & oDr("nAmountReceived"))
                                 cUniqueLink = ", cSettlementID='OLD_" & oDr("cSettlementID") & "' "
                             End While
                         End If

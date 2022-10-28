@@ -5344,6 +5344,12 @@
         <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+		  <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='off'">
+			  <xsl:if test="$page/Request/ServerVariables/Item[@name='SERVER_PORT']!='80'">
+				  <xsl:text>:</xsl:text>
+				  <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_PORT']/node()"/>
+			  </xsl:if>			  
+		  </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$thisPageUrl"/>
@@ -7398,7 +7404,7 @@
               </xsl:call-template>
             </xsl:variable>
 
-            <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
+
 
             <!--xsl:if test="$responsiveImageSizes='on'"-->
 
@@ -7616,6 +7622,11 @@
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <!--FALLBACK IMAGE TAG-->
+				  <xsl:variable name="imageSize">
+					  <xsl:if test="not(contains($newSrc,'awaiting-image-thumbnail.gif'))">
+						  <xsl:value-of select="ew:ImageSize($newSrc)"/>
+					  </xsl:if>
+				  </xsl:variable>
                 <img>
                   <!-- SRC -->
                   <xsl:choose>
@@ -7640,7 +7651,7 @@
                         <xsl:value-of select="$max-width"/>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:value-of select="substring-before($imageSize,'x')" />
+						  <xsl:value-of select="substring-before($imageSize,'x')" />
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:attribute>
@@ -10519,16 +10530,11 @@
     <xsl:param name="bundle-path"/>
     <xsl:call-template name="render-css-files">
       <xsl:with-param name="list" select="ew:BundleCSS($comma-separated-files,$bundle-path)"/>
-
-
       <xsl:with-param name="ie8mode">
-
         <xsl:if test="(contains($userAgent, 'MSIE 7.0') or contains($userAgent, 'MSIE 8.0') or contains($userAgent, 'MSIE 9.0'))">
           <xsl:text>1</xsl:text>
-
         </xsl:if>
       </xsl:with-param>
-
     </xsl:call-template>
   </xsl:template>
 
@@ -10551,7 +10557,10 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <link rel="stylesheet" type="text/css" href="{$first}{$bundleVersion}" />
+			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+				<noscript>
+					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+				</noscript>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
