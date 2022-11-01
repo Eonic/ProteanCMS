@@ -53,7 +53,12 @@ Namespace Providers
 
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
+                        If (oXml.InnerText <> String.Empty) Then
+                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox filter-selected", ApperanceTypes.Full)
+                        Else
+                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
+                        End If
+
                         oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                     End Using
                     If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']") IsNot Nothing) Then
@@ -64,13 +69,13 @@ Namespace Providers
                             If (aPages.Length <> 0) Then
                                 For cnt = 0 To aPages.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().InnerText
-                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
                                 Next
 
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
                             End If
                         End If
                     End If
