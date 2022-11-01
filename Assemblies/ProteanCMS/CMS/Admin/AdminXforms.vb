@@ -2245,7 +2245,7 @@ Partial Public Class Cms
                 Dim oXformDoc As XmlDocument = New XmlDocument
                 Try
 
-                    If moRequest("cModuleBox") <> "" Then
+                    If moRequest("cModuleBox") <> "" Or moRequest("cModuleType") <> "" Then
                         ' case for when the content form is being submitted
                         If goConfig("cssFramework") = "bs5" Then
                             Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
@@ -2870,7 +2870,7 @@ Partial Public Class Cms
                     If AlternateFormName <> "" Then cXformPath = AlternateFormName
 
                     If cModuleType <> "" Then
-                        cXformPath = cXformPath & "/" & cModuleType
+                        '  cXformPath = cXformPath & "/" & cModuleType
                         If goConfig("cssFramework") = "bs5" Then
                             cXformPath = GetModuleFormPath(cModuleType)
                         End If

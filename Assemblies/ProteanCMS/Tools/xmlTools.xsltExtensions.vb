@@ -1229,7 +1229,8 @@ Partial Public Module xmlTools
             End Try
         End Function
 
-        Public Function CreateWebP(ByVal cVirtualPath As String) As String
+
+        Public Function CreateWebP(ByVal cVirtualPath As String, ByVal forceCheck As Boolean) As String
             Dim cProcessInfo As String = ""
             Try
 
@@ -1251,13 +1252,12 @@ Partial Public Module xmlTools
 
                     Dim webpFileName As String = Replace(cVirtualPath, "." & filetype, ".webp")
                     Dim newFilepath As String = ""
-                    If myWeb.mbAdminMode Then
+                    If myWeb.mbAdminMode Or forceCheck Then
                         'create a WEBP version of the image.
                         If VirtualFileExists(webpFileName) = 0 Then
                             Using bitMap As New Bitmap(goServer.MapPath(cVirtualPath))
                                 Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
                                     Dim encoder As New Imazen.WebP.SimpleEncoder
-
                                     encoder.Encode(bitMap, saveImageStream, WebPQuality)
                                 End Using
                             End Using
@@ -1266,6 +1266,23 @@ Partial Public Module xmlTools
 
                     Return webpFileName
                 End If
+
+
+            Catch ex As Exception
+                If LCase(myWeb.moConfig("Debug")) = "on" Then
+                    ' reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
+                    Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message & " - " & ex.StackTrace
+                Else
+                    Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
+                End If
+            End Try
+        End Function
+
+        Public Function CreateWebP(ByVal cVirtualPath As String) As String
+            Dim cProcessInfo As String = ""
+            Try
+
+                Return CreateWebP(cVirtualPath, False)
 
 
             Catch ex As Exception
