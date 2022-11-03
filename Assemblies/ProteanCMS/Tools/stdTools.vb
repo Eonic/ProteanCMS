@@ -70,7 +70,13 @@ Public Module stdTools
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
         Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-        Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
+        Dim moRequest As System.Web.HttpRequest
+
+        If Not System.Web.HttpContext.Current Is Nothing Then
+            moRequest = System.Web.HttpContext.Current.Request
+        End If
+
+
         'Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
         sProcessInfo = "Getting Host"
 
@@ -97,8 +103,10 @@ Public Module stdTools
 
                 oExceptionXml.LoadXml("<Page layout=""Error""><Contents/></Page>")
                 'oExceptionXml.DocumentElement.SetAttribute("baseUrl", "http://" & moRequest.ServerVariables("HTTP_HOST"))
-                Dim mbIsUsingHTTPS As Boolean = (moRequest.ServerVariables("HTTPS") = "on")
-
+                Dim mbIsUsingHTTPS As Boolean = False
+                If Not moRequest Is Nothing Then
+                    mbIsUsingHTTPS = (moRequest.ServerVariables("HTTPS") = "on")
+                End If
                 oExceptionXml.DocumentElement.SetAttribute("baseUrl", IIf(mbIsUsingHTTPS, "https://", "http://") & cHost)
                 oElmt = oExceptionXml.CreateElement("Content")
                 oElmt.SetAttribute("type", "Formatted Text")
