@@ -955,8 +955,8 @@ Partial Public Class Cms
 
                     If bIsAuthorized = False Then Return "Error -Authorization Failed"
 
-                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CType(jObj("nProviderReference"), Long), 0)
-                    Dim receiptID = jObj("receiptID")
+
+                    Dim receiptID = jObj("AuthNumber")
                     Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
                     Dim strConsumerRef = ""
                     If cProviderName <> "" And receiptID <> 0 Then
