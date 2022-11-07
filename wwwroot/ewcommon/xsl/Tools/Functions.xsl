@@ -1269,7 +1269,7 @@
       </noscript>
       <!-- End Facebook Pixel Code -->
     </xsl:if>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
+
 
     <xsl:apply-templates select="." mode="JSONLD"/>
 
@@ -1291,6 +1291,8 @@
 
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
+	  
+	<xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
   </xsl:template>
 
@@ -9497,11 +9499,7 @@
 						<xsl:value-of select="$price"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:apply-templates select="$page" mode="formatPrice">
-							<xsl:with-param name="price">
-								<xsl:value-of select="$price"/>
-							</xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:value-of select="format-number($price,'###,###,##0.00')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 	</xsl:template>

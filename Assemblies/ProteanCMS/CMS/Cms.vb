@@ -8107,7 +8107,7 @@ Public Class Cms
                     httpPrefix = "https://"
                 End If
 
-                For Each oElmt In goLangConfig.ChildNodes
+                For Each oElmt In goLangConfig.SelectNodes("Language")
                     Select Case LCase(oElmt.GetAttribute("identMethod"))
                         Case "domain"
                             If oElmt.GetAttribute("identifier") = moRequest.ServerVariables("HTTP_HOST") Then
@@ -8152,7 +8152,7 @@ Public Class Cms
 
             End If
         Catch ex As Exception
-
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetRequestLanguage", ex, ""))
         End Try
 
     End Sub
