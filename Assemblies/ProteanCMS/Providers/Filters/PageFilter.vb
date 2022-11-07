@@ -59,23 +59,31 @@ Namespace Providers
                             pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
                         End If
 
-                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
+                        'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
+                        While oDr.Read
+                            Dim name As String = Convert.ToString(oDr("cStructName")) + "<span class='filter-count'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
+                            Dim value As String = Convert.ToString(oDr("nStructKey"))
+                            oXform.addOption(pageFilterSelect, name, value)
+                        End While
+
                     End Using
                     If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']") IsNot Nothing) Then
                         If (oXml.InnerText.Trim() <> String.Empty) Then
                             Dim sText As String
+                            Dim sValue As String
                             Dim cnt As Integer
                             Dim aPages() As String = oXml.InnerText.Split(",")
                             If (aPages.Length <> 0) Then
                                 For cnt = 0 To aPages.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().InnerText
+                                    'sValue = oFormGroup
                                     oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
                                 Next
 
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "submit", " filter-applied", "", oXml.InnerText)
+                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
                             End If
                         End If
                     End If
