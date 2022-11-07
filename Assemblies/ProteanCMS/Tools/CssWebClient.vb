@@ -104,7 +104,8 @@ Public Class CssWebClient
             ComputeCSS(fullCss, cssSplit)
         Catch ex As Exception
             cProcessInfo = ex.Message
-            returnException(msException, mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
+            'WE DO NOT !!!!! want this to return an html exception becuase it will throw a loop.
+            'returnException(msException, mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
