@@ -2192,9 +2192,13 @@ Partial Public Module xmlTools
                 End If
 
                 If gbDebug Then
+                    'in debug mode we simply return the files as a list, for XSLT to render.
                     sReturnString = CommaSeparatedFilenames.Replace("~", "")
                 Else
+
                     If Not myWeb.moCtx.Application.Get(TargetFile) Is Nothing And bReset = False Then
+                        'check to see if the filename is saved in the application variable.
+
                         sReturnString = myWeb.moCtx.Application.Get(TargetFile)
 
                         If Not sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then

@@ -5237,35 +5237,36 @@ Public Class Cms
                 If bUseCache And cCacheMode = "on" Then
                     sProcessInfo = "GetStructureXML-addCacheToStructure"
                     PerfMon.Log("Web", sProcessInfo)
-                    'If Not moRequest("reBundle") Is Nothing Then
-                    '    moDbHelper.clearStructureCacheAll()
-                    'End If
+                    'ts this was commented out I have restored 04/11/2022 please leave not to say why commented next time
+                    If Not moRequest("reBundle") Is Nothing Then
+                        moDbHelper.clearStructureCacheAll()
+                    End If
                     'only cache if MenuItem / Menu
                     If cMenuItemNodeName = "MenuItem" And cRootNodeName = "Menu" Then
-                        If mbAdminMode Then
-                            goApp("AdminStructureCache") = oElmt.InnerXml
+                            If mbAdminMode Then
+                                goApp("AdminStructureCache") = oElmt.InnerXml
+                            Else
+                                moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
+                            End If
                         Else
                             moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
+
                         End If
-                    Else
-                        moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
+
+
+
+                        'sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
+                        '        & "VALUES (" _
+                        '        & "'" & IIf(bAuth, Eonic.SqlFmt(moSession.SessionID), "") & "'," _
+                        '        & Eonic.SqlFmt(nUserId) & "," _
+                        '        & "'" & Eonic.SqlFmt(oElmt.InnerXml) & "'," _
+                        '        & "'" & cCacheType & "'" _
+                        '        & ")"
+                        'moDbHelper.ExeProcessSql(sSql)
 
                     End If
 
-
-
-                    'sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
-                    '        & "VALUES (" _
-                    '        & "'" & IIf(bAuth, Eonic.SqlFmt(moSession.SessionID), "") & "'," _
-                    '        & Eonic.SqlFmt(nUserId) & "," _
-                    '        & "'" & Eonic.SqlFmt(oElmt.InnerXml) & "'," _
-                    '        & "'" & cCacheType & "'" _
-                    '        & ")"
-                    'moDbHelper.ExeProcessSql(sSql)
-
                 End If
-
-            End If
 
             'Now we need to do some page dependant processing
 
