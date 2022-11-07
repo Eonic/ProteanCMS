@@ -1443,7 +1443,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.IdentityModel.Token
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Memory.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Net.FtpClient.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Numerics.Vectors.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
@@ -1494,7 +1493,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.IdentityModel.Token
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Memory.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Net.FtpClient.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Numerics.Vectors.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\MySql.Data.xml
