@@ -23,6 +23,7 @@ Imports System.Collections.Generic
 Imports Imazen.WebP
 Imports System.Drawing
 Imports System.Data.SqlClient
+Imports Microsoft.SqlServer
 
 Partial Public Module xmlTools
 
@@ -2168,7 +2169,7 @@ Partial Public Module xmlTools
 
 
 
-        Public Function BundleCSS(ByVal CommaSeparatedFilenames As String, ByVal TargetFile As String) As Object
+        Public Function BundleCSS(ByVal CommaSeparatedFilenames As String, ByVal TargetPath As String) As Object
             If Split(CommaSeparatedFilenames, ",").Count > 1 Then
                 Throw New NotSupportedException("BundleCSS: this function does not currently support multiple less files")
             End If
@@ -2196,12 +2197,34 @@ Partial Public Module xmlTools
                     sReturnString = CommaSeparatedFilenames.Replace("~", "")
                 Else
 
-                    If Not myWeb.moCtx.Application.Get(TargetFile) Is Nothing And bReset = False Then
+                    Dim bAppVarExists As Boolean = False
+                    ' New logic to stop rebuilding css when application is killed or restarted.
+                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
+                        bAppVarExists = True
+                    End If
+
+                    If bAppVarExists = False Then
+                        'check if the file exists.
+                        If VirtualFileExists("/css" & TargetPath.Replace("~", "") & "/style.css") Then
+                            'regenerate the application variable from the files in the folder
+                            'we do not want to recreate all css everytime the application pool is reset anymore.
+                            Dim sReturnStringNew As String = ""
+                            Dim myFile As String
+                            For Each myFile In IO.Directory.GetFiles(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "")), "*.css")
+                                sReturnStringNew = sReturnStringNew & "/css" & TargetPath.Replace("~", "") & "/" & Path.GetFileName(myFile) & ","
+                            Next
+                            myWeb.moCtx.Application.Set(TargetPath, sReturnStringNew.Trim(","))
+                            bAppVarExists = True
+                        End If
+                    End If
+
+
+                    If bAppVarExists And bReset = False Then
                         'check to see if the filename is saved in the application variable.
 
-                        sReturnString = myWeb.moCtx.Application.Get(TargetFile)
+                        sReturnString = myWeb.moCtx.Application.Get(TargetPath)
 
-                        If Not sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
+                        If Not sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.TrimStart("~")) Then
                             myWeb.bPageCache = False
                         End If
 
@@ -2224,7 +2247,7 @@ Partial Public Module xmlTools
 
                             fsh.initialiseVariables(fsHelper.LibraryType.Style)
 
-                            scriptFile = String.Format("{0}/style.css", TargetFile)
+                            scriptFile = String.Format("{0}/style.css", TargetPath)
                             sReturnError = "error getting " & CommaSeparatedFilenames
                             'sReturnError = "error getting " & oCssWebClient.FullCssFile
 
@@ -2235,7 +2258,7 @@ Partial Public Module xmlTools
                             Dim maxAttempt As String = 5
                             Try
                                 For cnt = 1 To maxAttempt
-                                    scriptFile = fsh.SaveFile("style.css", TargetFile, info)
+                                    scriptFile = fsh.SaveFile("style.css", TargetPath, info)
                                     If Not scriptFile.Contains("ERROR:") Then
                                         Exit For
                                     End If
@@ -2248,10 +2271,10 @@ Partial Public Module xmlTools
 
                             If scriptFile.Contains("ERROR:") Then
                                 myWeb.bPageCache = False
-                                scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
+                                scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetPath)
                             End If  'we can try adding addional error handling here if we have exact code returned from issue
 
-                            If scriptFile.StartsWith(TargetFile.TrimStart("~"), StringComparison.InvariantCultureIgnoreCase) Then
+                            If scriptFile.StartsWith(TargetPath.TrimStart("~"), StringComparison.InvariantCultureIgnoreCase) Then
                                 sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
                             Else
                                 myWeb.bPageCache = False
@@ -2261,19 +2284,19 @@ Partial Public Module xmlTools
 
                             'hdlrClient will store the resultant cssSplits, store them to disk and application state, and return the file list to the xslt transformation
                             For i As Integer = 0 To oCssWebClient.CssSplits.Count - 1
-                                scriptFile = String.Format("{0}/style{1}.css", TargetFile, i)
+                                scriptFile = String.Format("{0}/style{1}.css", TargetPath, i)
 
                                 info = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.CssSplits(i))
                                 'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
                                 'TS commented out as modified save file to overwrite by using WriteAllBytes
-                                scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetFile, info)
+                                scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetPath, info)
 
                                 If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & "ERROR: ") Then
                                     myWeb.bPageCache = False
 
                                 End If
 
-                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
+                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.TrimStart("~")) Then
                                     'file has been saved successfully.
                                     sReturnString += "," & scriptFile
                                 Else
@@ -2285,7 +2308,10 @@ Partial Public Module xmlTools
                             Next
 
                             If sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css") Then
-                                myWeb.moCtx.Application.Set(TargetFile, sReturnString)
+                                'check the file exists before we set the application variable...
+                                If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/style.css") Then
+                                    myWeb.moCtx.Application.Set(TargetPath, sReturnString)
+                                End If
                             Else
                                 sReturnString = sReturnString & sReturnError
                             End If
@@ -2307,7 +2333,7 @@ Partial Public Module xmlTools
 
             Catch ioex As IOException    'New changes on 9/12/21'
                 myWeb.bPageCache = False
-                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
+                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetPath)
                 ' Return ioex.StackTrace
                 Return sReturnString
 
@@ -2318,7 +2344,7 @@ Partial Public Module xmlTools
                 AddExceptionToEventLog(ex, sReturnString)
 
                 'regardless we should return the filename.
-                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetFile)
+                sReturnString = "/" & myWeb.moConfig("ProjectPath") & "css" & String.Format("{0}/style.css", TargetPath)
 
                 myWeb.bPageCache = False 'This is not working 100% - can we understand why?????B
 

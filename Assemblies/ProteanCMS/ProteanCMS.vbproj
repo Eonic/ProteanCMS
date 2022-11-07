@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.55.47</AssemblyVersion>
+    <AssemblyVersion>6.0.55.65</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -893,6 +893,10 @@
     <WCFMetadataStorage Include="Service References\proteancms.com\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
+      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
+      <Name>Protean.Tools.Csharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Protean.Tools\Protean.Tools.vbproj">
       <Project>{76e7c871-9cec-4795-b6f2-66439dcd9367}</Project>
       <Name>Protean.Tools</Name>
