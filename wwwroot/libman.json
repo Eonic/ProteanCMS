@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "jsdelivr",
+      "library": "swiper@8.4.4",
+      "destination": "/ewcommon/js/jquery/swiper"
+    }
+  ]
+}

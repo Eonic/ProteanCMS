@@ -153,7 +153,7 @@ Partial Public Class Cms
         End Sub
 
         Public Sub New(ByRef myAPi As Protean.API)
-            myAPi.PerfMon.Log("Search", "New")
+            'myAPi.PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables
@@ -400,7 +400,7 @@ Partial Public Class Cms
                 Dim pageStart As Integer = Math.Max(myWeb.GetRequestItemAsInteger("pageStart", 1), 1)
                 Dim pageSize As Integer = myWeb.GetRequestItemAsInteger("pageSize", _pagingDefaultSize)
                 Dim pageEnd As Integer
-
+                Dim totalResults As Long = 0
                 'allow paging as per config setting 
                 'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
                 If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
@@ -514,7 +514,7 @@ Partial Public Class Cms
                     ' Paging settings
                     ' Hits is so lightweight that we don't have to filter it beforehand
                     ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
-                    Dim totalResults As Long = results.TotalHits
+                    totalResults = results.TotalHits
 
 
                     If pageSize <= 0 Then
@@ -542,7 +542,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
 
-                    resultsXML.SetAttribute("totalResults", totalResults)
+
                     resultsXML.SetAttribute("pageSize", pageSize) 'Max Number of items per page
                     resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / pageSize))
 
@@ -717,11 +717,18 @@ Partial Public Class Cms
 
                                         moContextNode.AppendChild(result)
                                         resultsCount = resultsCount + 1
+                                    Else
+                                        processInfo = "this is a duplicate art id"
+                                        totalResults = totalResults - 1
                                     End If
+                                Else
+                                    processInfo = "this is a duplicate art id"
+                                    totalResults = totalResults - 1
                                 End If
                             Else
                                 ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
                                 processInfo = "not found in live page filter"
+                                totalResults = totalResults - 1
                             End If
                         Next
 
@@ -733,7 +740,7 @@ Partial Public Class Cms
                 Else
                     resultsXML.SetAttribute("Time", "0")
                 End If
-
+                resultsXML.SetAttribute("totalResults", totalResults)
                 resultsXML.SetAttribute("searchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
@@ -748,7 +755,7 @@ Partial Public Class Cms
         End Sub
 
         Sub IndexQuery(ByRef myAPI As Protean.API, ByVal cQuery As String, Optional HitsLimit As Integer = 300, Optional fuzzySearch As String = "on")
-            myWeb.PerfMon.Log("Search", "IndexQuery")
+            ' myWeb.PerfMon.Log("Search", "IndexQuery")
             Dim processInfo As String = "Looking for : " & cQuery
             Try
                 If myWeb Is Nothing Then
@@ -2322,6 +2329,9 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 ' If not, remove the last quote
                 ' e.g. from "My test" with this"
                 '      to   "My test" with this
+
+                keywords = keywords.Replace("AND", "and")
+
                 If IsOdd(Regex.Matches(keywords, """").Count) Then
                     ' remove the last quote
                     keywords = Tools.Text.ReplaceLastCharacter(keywords, """"c, " ")

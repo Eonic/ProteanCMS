@@ -217,7 +217,11 @@
 
     <script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
     <script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
+	  <!--
+	  TS commented out as was breaking bootstrap modal - not sure this is needed ???
+	  
     <script type="text/javascript" src="/ewcommon/js/jQuery/simplemodal/jquery.simplemodal-1.4.4.min.js">&#160;</script>
+	-->
     <xsl:if test="@cssFramework!='bs3'">
       <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
     </xsl:if>
@@ -275,6 +279,20 @@
       <xsl:apply-templates select="." mode="adminFooter"/>
       <xsl:apply-templates select="." mode="footerJs"/>
       <script>keepAlive();</script>
+		<div class="modal fade" id="AdminAlertModal" role="dialog" style ="padding-top:15%!important">
+			<div class="modal-dialog">
+				<div class="modal-content  alert alert-danger" role="alert">
+					<div class="modal-body">
+						<i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
+						<xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-times">&#160;</i>
+						</button>
+						<span id="errorMessage">&#160;</span>
+					</div>
+				</div>
+			</div>
+		</div>
       <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
     </body>
   </xsl:template>
@@ -920,20 +938,13 @@
   <!--   ################################################   breadcrumb   ##################################################   -->
   <!-- -->
   <xsl:template match="MenuItem" mode="adminBreadcrumbSt">
-    <xsl:variable name="url">
-      <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
-    </xsl:variable>
     <xsl:apply-templates select="." mode="adminMenuLinkSt"/>
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="adminBreadcrumbSt"/>
   </xsl:template>
 
   <xsl:template match="MenuItem" mode="adminBreadcrumbId">
     <xsl:param name="thispageid"/>
-    <xsl:variable name="url">
-      <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
-    </xsl:variable>
-    <xsl:apply-templates select="." mode="adminMenuLinkSt"/>
-    <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=$thispageid]]" mode="adminBreadcrumbSt"/>
+    <xsl:apply-templates select="descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id=$thispageid]]" mode="adminMenuLinkSt"/>
   </xsl:template>
 
   <!-- Generic Menu Link -->
@@ -1011,8 +1022,10 @@
           </ul>
         </xsl:for-each>
       </div>
-      <a href="" class="all-breadcrumb">see all locations</a>
-      <a href="" class="less-breadcrumb">hide locations</a>
+      <a href="" class="all-breadcrumb">
+		  <i class="fa fa-angle-down">&#160;</i>&#160;see all locations</a>
+      <a href="" class="less-breadcrumb">
+		  <i class="fa fa-angle-up">&#160;</i>&#160;hide locations</a>
     </div>
   </xsl:template>
 
@@ -4567,6 +4580,11 @@
             <xsl:with-param name="name">criticalPathCSS</xsl:with-param>
             <xsl:with-param name="type">PlainText</xsl:with-param>
           </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Meta Refresh</xsl:with-param>
+				<xsl:with-param name="name">metaRefresh</xsl:with-param>
+				<xsl:with-param name="type">PlainText</xsl:with-param>
+			</xsl:call-template>
           <tr>
             <th colspan="3">Meta Tags - Hidden information for search engines.</th>
           </tr>
@@ -5438,6 +5456,7 @@
                           <xsl:text> x </xsl:text>
                           <xsl:value-of select="@height"/>
                         </xsl:if>
+						  (<xsl:value-of select="@length"/>kb)
                       </div>
                     </div>
                     <a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover{position()}" data-placement="top">
@@ -5498,6 +5517,12 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
+					  <a class="btn btn-xs btn-primary" href="javascript:CompressImage('/images/{parent::folder/@path}/{@name}{@extension}')">
+						  <i class="fa fa-compress fa-white">
+							  <xsl:text> </xsl:text>
+						  </i>
+						  <span class="sr-only"> Compress</span>
+					  </a>
                     <a class="btn btn-xs btn-primary" href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
                       <i class="fa fa-arrows fa-white">
                         <xsl:text> </xsl:text>
@@ -5529,6 +5554,7 @@
                   <xsl:value-of select="@width"/>
                   <xsl:text> x </xsl:text>
                   <xsl:value-of select="@height"/>
+					(<xsl:value-of select="@length"/>kb)
                 </xsl:when>
                 <xsl:otherwise>
                   &#160;
@@ -7524,7 +7550,7 @@
         &#160;
         <xsl:value-of select="@currency"/>
       </td>
-		<xsl:if test="Order/@status='Deposit Paid'">
+		<xsl:if test="@statusId='Deposit Paid'">
 			<td>
 				<xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@paymentMade,'0.00')"/>
 				<!-- COMMENTED THIS LINE AS @TOTAL ALREADY INCLUDES THE SHIPPING -->
@@ -7956,7 +7982,12 @@
                 </th>
                 <td>
                   <xsl:value-of select="cPayMthdProviderName"/>
-                </td>
+					<br/>
+					<small>
+				    <xsl:value-of select="cPayMthdAcctName"/>
+						</small>
+					
+				</td>
                 <th scope="row">
                   <xsl:value-of select="nPaymentAmount"/>
                 </th>
@@ -9206,21 +9237,25 @@
 				<th>
 					Date/Time
 				</th>
-				<xsl:for-each select="Item[1]/cActivityXml/descendant-or-self::*">
-					<xsl:if test="count(*)=0">
+				<xsl:for-each select="Item[last()]/cActivityXml/descendant-or-self::*">
+					<xsl:if test="count(*)=0 or local-name()='Attachements'">
 						<th>
 							<xsl:value-of select="local-name()"/>
 						</th>
-					</xsl:if>
+		</xsl:if>
 				</xsl:for-each>
+				<th>
+					Refering Page
+				</th>
 			</tr>
 			<xsl:for-each select="Item">
-				<span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
-					<tr>
-                        <xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
-						<xsl:apply-templates select="cActivityXml/descendant-or-self::*" mode="Report_ColsValues"/>
-					</tr>
-				</span>
+				<tr>
+					<xsl:apply-templates select="DateTime" mode="Report_ColsValues"/>
+					<xsl:apply-templates select="cActivityXml/descendant-or-self::*" mode="Report_ColsValues"/>
+					<td><small>
+				<xsl:value-of select="cActivityXml/Items/@sessionReferrer"/>
+				</small>	</td>
+				</tr>
 			</xsl:for-each>
 		</table>
 	</xsl:template>
@@ -9234,26 +9269,19 @@
     </xsl:if>
   </xsl:template>
 
-<xsl:template match="AttachmentIds" mode ="Report_ColsValues">
-	<!--
+	<xsl:template match="*[local-name()='AttachmentIds']" mode ="Report_ColsValues">
 		<td>
-			<xsl:value-of select="@ids"/>
+		 	<xsl:value-of select="@ids"/>
 		</td>
-		-->
+	</xsl:template>
 
-</xsl:template>
-
-
-<xsl:template match="Attachements" mode ="Report_ColsValues">
-
-	<td>
-		<xsl:for-each select="Attachement ">
-			<xsl:value-of select="Content/@name"/>
-		</xsl:for-each>
-
-	</td>
-
-</xsl:template>
+	<xsl:template match="Attachements" mode ="Report_ColsValues">
+		<td>
+			<xsl:for-each select="Attachement ">
+				<xsl:value-of select="Content/@name"/>
+			</xsl:for-each>
+		</td>
+	</xsl:template>
 
 
   <!-- -->
