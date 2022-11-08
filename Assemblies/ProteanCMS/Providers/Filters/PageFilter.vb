@@ -61,7 +61,7 @@ Namespace Providers
 
                         'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                         While oDr.Read
-                            Dim name As String = Convert.ToString(oDr("cStructName")) + "<span class='filter-count'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
+                            Dim name As String = Convert.ToString(oDr("cStructName")) + " " + Convert.ToString(oDr("ProductCount"))
                             Dim value As String = Convert.ToString(oDr("nStructKey"))
                             oXform.addOption(pageFilterSelect, name, value)
                         End While
