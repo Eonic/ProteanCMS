@@ -745,7 +745,9 @@ Public Class Cms
     End Sub
 
     Public Sub Close()
-        PerfMon.Log("Base", "Close")
+        If Not moCtx Is Nothing Then
+            PerfMon.Log("Base", "Close")
+        End If
         Dim sProcessInfo As String = ""
         Try
 
@@ -5978,27 +5980,43 @@ Public Class Cms
                 Dim parentXpath As String = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]"
 
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
-                'step through the tree from home to our current page
-                For Each oElmt In oPageElmt.SelectNodes(parentXpath)
-                    oElmt.SetAttribute("active", "1")
-                    Dim nPageId As Long = oElmt.GetAttribute("id")
-                    GetPageContentXml(nPageId)
-                    nPageId = Nothing
-                    IsInTree = True
-                Next
 
-                If mbPreview And IsInTree = False Then
-                    GetPageContentXml(mnPageId)
-                End If
 
-                If Features.ContainsKey("PageVersions") Then
-                    If IsInTree = False And mbAdminMode = True Then
+
+                'this is for load more steppers - we do not want any other content other than the one on the list
+                'the page url looks like
+                ' /ourpage/?singleContentType=Product&startPos=10&rows=10
+
+                If moRequest("singleContentType") <> "" Then
+                    'sql for content on page and permissions etc
+                    Dim sFilterSql As String = GetStandardFilterSQLForContent()
+                    sFilterSql = sFilterSql & "pageidxxxxx=" & mnPageId
+                    GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType"), sFilterSql)
+                Else
+                    'step through the tree from home to our current page
+                    For Each oElmt In oPageElmt.SelectNodes(parentXpath)
+                        oElmt.SetAttribute("active", "1")
+                        Dim nPageId As Long = oElmt.GetAttribute("id")
+                        GetPageContentXml(nPageId)
+                        nPageId = Nothing
+                        IsInTree = True
+                    Next
+
+                    If mbPreview And IsInTree = False Then
+                        GetPageContentXml(mnPageId)
+                    End If
+
+                    If Features.ContainsKey("PageVersions") Then
+                        If IsInTree = False And mbAdminMode = True Then
+                            GetPageContentXml(mnPageId)
+                        End If
+                    End If
+                    If mnPageId = gnPageNotFoundId Then
                         GetPageContentXml(mnPageId)
                     End If
                 End If
-                If mnPageId = gnPageNotFoundId Then
-                    GetPageContentXml(mnPageId)
-                End If
+
+
             Else
                 'if we are on a system page we only want the content on that page not parents.
                 GetPageContentXml(mnPageId)
