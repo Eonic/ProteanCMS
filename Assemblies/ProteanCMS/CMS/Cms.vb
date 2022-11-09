@@ -5990,8 +5990,15 @@ Public Class Cms
                 If moRequest("singleContentType") <> "" Then
                     'sql for content on page and permissions etc
                     Dim sFilterSql As String = GetStandardFilterSQLForContent()
-                    sFilterSql = sFilterSql & "pageidxxxxx=" & mnPageId
-                    GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType"), sFilterSql)
+                    sFilterSql = sFilterSql & " and nstructid=" & mnPageId
+                    Dim cSort As String = "|ASC_cl.nDisplayOrder"
+                    Select Case moRequest("sortby")
+                        Case "name"
+                            cSort = "|ASC_c.cContentName"
+                        Case Else
+                            cSort = "|ASC_cl.nDisplayOrder"
+                    End Select
+                    GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType") & cSort, sFilterSql)
                 Else
                     'step through the tree from home to our current page
                     For Each oElmt In oPageElmt.SelectNodes(parentXpath)
