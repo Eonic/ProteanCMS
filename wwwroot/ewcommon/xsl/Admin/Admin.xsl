@@ -4580,6 +4580,11 @@
             <xsl:with-param name="name">criticalPathCSS</xsl:with-param>
             <xsl:with-param name="type">PlainText</xsl:with-param>
           </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Meta Refresh</xsl:with-param>
+				<xsl:with-param name="name">metaRefresh</xsl:with-param>
+				<xsl:with-param name="type">PlainText</xsl:with-param>
+			</xsl:call-template>
           <tr>
             <th colspan="3">Meta Tags - Hidden information for search engines.</th>
           </tr>
@@ -5202,7 +5207,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
+  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='AddModule'  or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
     <script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->

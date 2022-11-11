@@ -44,9 +44,14 @@ Namespace Providers
                     arrParams.Add("MinPrice", nMinPrice)
                     arrParams.Add("MaxPrice", nMaxPrice)
                     arrParams.Add("Step", nStep)
-                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
+                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
                         'Adding controls to the form like dropdown, radiobuttons
-                        priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
+                        If (oXml.InnerText <> String.Empty) Then
+                            priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox filter-selected", ApperanceTypes.Full)
+                        Else
+                            priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
+                        End If
+
                         oXform.addOptionsFromSqlDataReader(priceFilterRange, oDr, "name", "value")
                     End Using
                     If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
@@ -57,13 +62,13 @@ Namespace Providers
                             If (aPrice.Length <> 0) Then
                                 For cnt = 0 To aPrice.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().InnerText
-                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
                                 Next
 
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
                             End If
                         End If
                     End If

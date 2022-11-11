@@ -8058,7 +8058,7 @@
 		discount: 0,
 		index: 0,
 		item_brand: "<xsl:value-of select="Manufacturer/node()"/>",
-		price: <xsl:value-of select="@price"/>
+		price: <xsl:apply-templates  select="." mode="PriceNumberic"/>
 		}
 		<!--<xsl:if test="following-sibling()::Item">
 			  <xsl:text>,</xsl:text>

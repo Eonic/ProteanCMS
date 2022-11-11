@@ -716,6 +716,7 @@ Public Class Cms
 
                 If mnArtId < 1 Then
                     If Not moRequest("artid") = "" Then
+
                         mnArtId = Me.GetRequestItemAsInteger("artid", 0)
                     End If
                 End If
@@ -744,7 +745,9 @@ Public Class Cms
     End Sub
 
     Public Sub Close()
-        PerfMon.Log("Base", "Close")
+        If Not moCtx Is Nothing Then
+            PerfMon.Log("Base", "Close")
+        End If
         Dim sProcessInfo As String = ""
         Try
 
@@ -1568,6 +1571,10 @@ Public Class Cms
 
             End Select
 
+            If Not moSession Is Nothing Then
+                'clears the recaptcha flag for the session
+                moSession("recaptcha") = Nothing
+            End If
 
         Catch ex As Exception
             If mcEwSiteXsl <> moConfig("SiteXsl") Then mcEwSiteXsl = moConfig("SiteXsl")
@@ -1643,7 +1650,8 @@ Public Class Cms
                                     mnPageId = gnPageNotFoundId
                                     moPageXml = New XmlDocument()
                                     BuildPageXML()
-                                    moResponse.StatusCode = 404
+                                    '  moResponse.StatusCode = 404
+                                    gnResponseCode = 404
 
                                 End If
                             End If
@@ -1655,8 +1663,8 @@ Public Class Cms
                                     mnPageId = gnPageNotFoundId
                                     moPageXml = New XmlDocument()
                                     BuildPageXML()
-                                    moResponse.StatusCode = 404
-
+                                    'moResponse.StatusCode = 404
+                                    gnResponseCode = 404
                                 End If
 
                             End If
@@ -5231,35 +5239,36 @@ Public Class Cms
                 If bUseCache And cCacheMode = "on" Then
                     sProcessInfo = "GetStructureXML-addCacheToStructure"
                     PerfMon.Log("Web", sProcessInfo)
-                    'If Not moRequest("reBundle") Is Nothing Then
-                    '    moDbHelper.clearStructureCacheAll()
-                    'End If
+                    'ts this was commented out I have restored 04/11/2022 please leave not to say why commented next time
+                    If Not moRequest("reBundle") Is Nothing Then
+                        moDbHelper.clearStructureCacheAll()
+                    End If
                     'only cache if MenuItem / Menu
                     If cMenuItemNodeName = "MenuItem" And cRootNodeName = "Menu" Then
-                        If mbAdminMode Then
-                            goApp("AdminStructureCache") = oElmt.InnerXml
+                            If mbAdminMode Then
+                                goApp("AdminStructureCache") = oElmt.InnerXml
+                            Else
+                                moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
+                            End If
                         Else
                             moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
+
                         End If
-                    Else
-                        moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
+
+
+
+                        'sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
+                        '        & "VALUES (" _
+                        '        & "'" & IIf(bAuth, Eonic.SqlFmt(moSession.SessionID), "") & "'," _
+                        '        & Eonic.SqlFmt(nUserId) & "," _
+                        '        & "'" & Eonic.SqlFmt(oElmt.InnerXml) & "'," _
+                        '        & "'" & cCacheType & "'" _
+                        '        & ")"
+                        'moDbHelper.ExeProcessSql(sSql)
 
                     End If
 
-
-
-                    'sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
-                    '        & "VALUES (" _
-                    '        & "'" & IIf(bAuth, Eonic.SqlFmt(moSession.SessionID), "") & "'," _
-                    '        & Eonic.SqlFmt(nUserId) & "," _
-                    '        & "'" & Eonic.SqlFmt(oElmt.InnerXml) & "'," _
-                    '        & "'" & cCacheType & "'" _
-                    '        & ")"
-                    'moDbHelper.ExeProcessSql(sSql)
-
                 End If
-
-            End If
 
             'Now we need to do some page dependant processing
 
@@ -5971,24 +5980,50 @@ Public Class Cms
                 Dim parentXpath As String = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]"
 
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
-                'step through the tree from home to our current page
-                For Each oElmt In oPageElmt.SelectNodes(parentXpath)
-                    oElmt.SetAttribute("active", "1")
-                    Dim nPageId As Long = oElmt.GetAttribute("id")
-                    GetPageContentXml(nPageId)
-                    nPageId = Nothing
-                    IsInTree = True
-                Next
 
-                If mbPreview And IsInTree = False Then
-                    GetPageContentXml(mnPageId)
-                End If
 
-                If Features.ContainsKey("PageVersions") Then
-                    If IsInTree = False And mbAdminMode = True Then
+
+                'this is for load more steppers - we do not want any other content other than the one on the list
+                'the page url looks like
+                ' /ourpage/?singleContentType=Product&startPos=10&rows=10
+
+                If moRequest("singleContentType") <> "" Then
+                    'sql for content on page and permissions etc
+                    Dim sFilterSql As String = GetStandardFilterSQLForContent()
+                    sFilterSql = sFilterSql & " and nstructid=" & mnPageId
+                    Dim cSort As String = "|ASC_cl.nDisplayOrder"
+                    Select Case moRequest("sortby")
+                        Case "name"
+                            cSort = "|ASC_c.cContentName"
+                        Case Else
+                            cSort = "|ASC_cl.nDisplayOrder"
+                    End Select
+                    GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType") & cSort, sFilterSql)
+                Else
+                    'step through the tree from home to our current page
+                    For Each oElmt In oPageElmt.SelectNodes(parentXpath)
+                        oElmt.SetAttribute("active", "1")
+                        Dim nPageId As Long = oElmt.GetAttribute("id")
+                        GetPageContentXml(nPageId)
+                        nPageId = Nothing
+                        IsInTree = True
+                    Next
+
+                    If mbPreview And IsInTree = False Then
+                        GetPageContentXml(mnPageId)
+                    End If
+
+                    If Features.ContainsKey("PageVersions") Then
+                        If IsInTree = False And mbAdminMode = True Then
+                            GetPageContentXml(mnPageId)
+                        End If
+                    End If
+                    If mnPageId = gnPageNotFoundId Then
                         GetPageContentXml(mnPageId)
                     End If
                 End If
+
+
             Else
                 'if we are on a system page we only want the content on that page not parents.
                 GetPageContentXml(mnPageId)
@@ -7081,6 +7116,7 @@ Public Class Cms
                             If gnPageNotFoundId > 1 Then
                                 ' msRedirectOnEnd = "/System+Pages/Page+Not+Found"
                                 mnPageId = gnPageNotFoundId
+                                mnArtId = 0
                                 moPageXml = New XmlDocument()
                                 BuildPageXML()
                                 moResponse.StatusCode = 404
@@ -8096,7 +8132,7 @@ Public Class Cms
                     httpPrefix = "https://"
                 End If
 
-                For Each oElmt In goLangConfig.ChildNodes
+                For Each oElmt In goLangConfig.SelectNodes("Language")
                     Select Case LCase(oElmt.GetAttribute("identMethod"))
                         Case "domain"
                             If oElmt.GetAttribute("identifier") = moRequest.ServerVariables("HTTP_HOST") Then
@@ -8141,7 +8177,7 @@ Public Class Cms
 
             End If
         Catch ex As Exception
-
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetRequestLanguage", ex, ""))
         End Try
 
     End Sub
@@ -8689,6 +8725,7 @@ from tblcontent C
 #End Region
 
     Protected Overrides Sub Finalize()
+
         MyBase.Finalize()
     End Sub
 End Class

@@ -211,15 +211,15 @@
         <select1 bind="carousel" appearance="full"  class="form-group">
           <label>Add articles to a carousel</label>
           <item>
-            <label>Slick Carousel</label>
+            <label>Carousel</label>
             <value>true</value>
             <toggle case="Carousel_true" event="DOMActivate"/>
           </item>
-			<item>
+			<!--<item>
 				<label>Swiper Carousel</label>
 				<value>swiper</value>
 				<toggle case="Carousel_swiper" event="DOMActivate"/>
-			</item>
+			</item>-->
           <item>
             <label>No Carousel</label>
             <value>false</value>
