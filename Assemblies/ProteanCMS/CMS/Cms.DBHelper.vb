@@ -7691,7 +7691,7 @@ restart:
                                     For Each relContId In oRelation.GetAttribute("relatedContentId").Split(",")
                                         If IsNumeric(relContId) Then
                                             If LCase(oRelation.GetAttribute("direction")) = "child" Then
-                                                insertContentRelation(Convert.ToInt32(relContId), savedId, True, oRelation.GetAttribute("type"), True)
+                                                insertContentRelation(Convert.ToInt32(relContId), savedId, False, oRelation.GetAttribute("type"), True)
                                             Else
                                                 insertContentRelation(savedId, Convert.ToInt32(relContId), True, oRelation.GetAttribute("type"), True)
                                             End If
