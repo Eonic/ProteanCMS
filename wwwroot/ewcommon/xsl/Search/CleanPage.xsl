@@ -89,6 +89,8 @@
     <meta name="name">
       <xsl:attribute name="content">
         <xsl:apply-templates select="//ContentDetail/Content" mode="getDisplayName"/>
+		  -
+		<xsl:value-of select="//ContentDetail/Content/StockCode"/>
       </xsl:attribute>
     </meta>
     <meta name="abstract">

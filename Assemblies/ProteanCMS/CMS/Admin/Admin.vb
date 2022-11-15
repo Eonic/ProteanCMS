@@ -23,6 +23,7 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
+Imports Lucene.Net.Support
 
 Partial Public Class Cms
     Public Class Admin
@@ -1967,6 +1968,10 @@ ProcessFlow:
                     Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersRefunded", "OrdersHistory", "OrdersAwaitingPayment", "OrdersSaved", "OrdersInProgress", "BulkCartAction"
 
                         OrderProcess(oPageDetail, sAdminLayout, "Order")
+                    Case "EventBookings"
+                        EventBookingProcess(oPageDetail, sAdminLayout)
+
+
                     Case "Quotes", "QuotesFailed", "QuotesDeposit", "QuotesHistory"
                         OrderProcess(oPageDetail, sAdminLayout, "Quote")
 
@@ -4973,6 +4978,43 @@ SP:
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "MemberCodesProcess", ex, "", cProcessInfo, gbDebug)
+            End Try
+        End Sub
+
+        Private Sub EventBookingProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
+
+            Try
+                'Case "cpdReportsPage"
+
+                'get a list of events with tickets sold in the future
+                Dim oEvtsDs As DataSet = myWeb.moDbHelper.GetDataSet("select nContentKey, cContentName, cContentXmlBrief from tblContent where cContentSchemaName = 'Event'", "Event", "Events")
+                Dim sSql As String = "spTicketsSoldSummary"
+                myWeb.moDbHelper.addTableToDataSet(oEvtsDs, sSql, "Ticket")
+
+                oEvtsDs.Tables(0).Columns(0).ColumnMapping = Data.MappingType.Attribute
+                oEvtsDs.Tables(0).Columns(1).ColumnMapping = Data.MappingType.Attribute
+                oEvtsDs.Tables(0).Columns("cContentXmlBrief").ColumnMapping = Data.MappingType.SimpleContent
+                oEvtsDs.Relations.Add("rel01", oEvtsDs.Tables(0).Columns("nContentKey"), oEvtsDs.Tables(1).Columns("EventKey"), False)
+                oEvtsDs.Relations("rel01").Nested = True
+
+
+                Dim oXml As New XmlDocument
+                oXml.LoadXml(oEvtsDs.GetXml())
+                oPageDetail.AppendChild(moPageXML.ImportNode(oXml.DocumentElement, True))
+
+                If myWeb.moRequest("ewCmd2") <> "" Then
+                    oPageDetail.AppendChild(moAdXfm.xFrmGetReport(myWeb.moRequest("ewCmd2")))
+                    If moAdXfm.valid Then
+                        myWeb.moDbHelper.GetReport(oPageDetail, moAdXfm.Instance.FirstChild)
+                    End If
+                End If
+                If oPageDetail.InnerXml = "" Then
+                    myWeb.moDbHelper.ListReports(oPageDetail)
+                End If
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "EventBookingProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 

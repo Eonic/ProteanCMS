@@ -1305,7 +1305,14 @@ processFlow:
                             End If
                         Next item
 
-                        myWeb.msRedirectOnEnd = mcPagePath & "cartCmd=" & cRedirectCommand & "&refSessionId=" & mcSessionId & cGoogleTrackingCode
+                        If mnCartId > 0 Then
+
+                            myWeb.msRedirectOnEnd = mcPagePath & "cartCmd=" & cRedirectCommand & "&refSessionId=" & mcSessionId & cGoogleTrackingCode
+                        Else
+
+                            mnProcessError = -1
+                            GetCart(oElmt)
+                        End If
 
                         ' myWeb.moResponse.Redirect(mcPagePath & "cartCmd=" & cRedirectCommand & "&refSessionId=" & mcSessionId & cGoogleTrackingCode)
                     Case "Archive"
@@ -1869,7 +1876,7 @@ processFlow:
                         Dim totalPaid As Double = oCartElmt.GetAttribute("paymentMade")
                         totalPaid = totalPaid + amountPaid
                         Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - totalPaid
-                        oCartElmt.SetAttribute("paymentMade", totalPaid)
+                        oCartElmt.SetAttribute("paymentMade", amountPaid)
                         oCartElmt.SetAttribute("outstandingAmount", outstandingAmount)
                         oCartElmt.SetAttribute("payableAmount", outstandingAmount)
                         oCartElmt.SetAttribute("transStatus", "Settlement Paid")
@@ -5593,6 +5600,7 @@ processFlow:
                                             newElmt = Nothing
                                             'Update the controls
                                             If Not blankControl Is Nothing Then
+                                                blankControl.SetAttribute("id", "ticket-form-" & totalAttendees)
                                                 oControlRoot.AppendChild(blankControl.CloneNode(True))
                                             End If
                                             newElmt = oControlRoot.LastChild

@@ -386,18 +386,7 @@
 			  <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
 		  </xsl:if>
 	   
-         <xsl:if test="$GoogleGA4MeasurementID!=''">
-			    <!-- GA4 Tag Manager -->
-				<script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-                    <script cookie-consent="tracking">
-                      window.dataLayer = window.dataLayer || [];
-                      function gtag(){dataLayer.push(arguments);}
-                      gtag('js', new Date());
-                      gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
-					  <xsl:apply-templates select="." mode="google-ga4-event"/>
-                </script>
-				<!-- End GA4 Tag Manager -->		 
-		 </xsl:if>
+
         <xsl:if test="$GoogleTagManagerID!=''">
 
 	
@@ -1264,6 +1253,7 @@
       
 	  
       </script>
+		
       <noscript>
         <img height="1" width="1" src="https://www.facebook.com/tr?id={Contents/Content[@name='fb-pixel_id']}&amp;ev=PageView&amp;noscript=1"/>
       </noscript>
@@ -1282,6 +1272,20 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
       </xsl:otherwise>
     </xsl:choose>
+
+	  <xsl:if test="$GoogleGA4MeasurementID!=''">
+		  <!-- GA4 Tag Manager -->
+		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+		  <script cookie-consent="tracking">
+			  window.dataLayer = window.dataLayer || [];
+			  function gtag(){dataLayer.push(arguments);}
+			  gtag('js', new Date());
+			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
+			  <xsl:apply-templates select="." mode="google-ga4-event"/>
+		  </script>
+		  <!-- End GA4 Tag Manager -->
+	  </xsl:if>
+	  
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
 
@@ -10560,7 +10564,7 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
 				<noscript>
 					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
 				</noscript>

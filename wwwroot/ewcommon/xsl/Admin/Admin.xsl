@@ -12451,6 +12451,8 @@
         <a href="{$appPath}?ewCmd=CartReports" class="btn btn-default">Sales By Product</a>
         <a href="{$appPath}?ewCmd=CartActivityDrilldown" class="btn btn-default">Sales By Page</a>
         <a href="{$appPath}?ewCmd=CartActivityPeriod" class="btn btn-default">Sales By Period</a>
+	  
+        <a href="{$appPath}?ewCmd=EventBookings" class="btn btn-default"><i class="fa fa-ticket">&#160;</i>Event Bookings</a>
       </div>
       <div class="col-md-9" id="column2">
         &#160;
@@ -12937,6 +12939,38 @@
       </ul>
     </xsl:if>
   </xsl:template>
+	
+	
+  <xsl:template match="Page[@layout='EventBookings']" mode="Admin">
+	  
+    <div class="row" id="tpltCartActivity">
+      <div class="col-md-3">
+		  <div class="list-group">
+        <xsl:apply-templates select="ContentDetail/Events/Event[Ticket]" mode="eventList"/>
+		  <div class="list-group-item">
+	    <a class="btn btn-default" href="?ewCmd=EventBookings&amp;ewCmd2=pastbookings">Past Events</a>
+		  </div> 
+			  </div>
+      </div>
+      <div class="col-md-9">
+        <xsl:choose>
+          <xsl:when test="ContentDetail/Content[@type='Report']/Report">
+            <xsl:apply-templates select="ContentDetail/Content[@type='Report']/Report" mode="CartReport"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="." mode="CartReport"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </div>
+    </div>
+  </xsl:template>
+
+	<xsl:template match="Event" mode="eventList">
+		<div class="list-group-item">
+		<xsl:value-of select="cContentBriefXml/StartDate/node()"/> -	<xsl:value-of select="cContentName/node()"/>
+	</div> 
+	
+	</xsl:template>
 
   <xsl:template match="Report[@cGrouping='Group']" mode="CartReportDrilldown">
     <table border="1">
