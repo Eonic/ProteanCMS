@@ -10562,7 +10562,7 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
 				<noscript>
 					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
 				</noscript>
