@@ -6850,17 +6850,17 @@
 		<xsl:param name="no-stretch" select="true()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
-  	<xsl:param name="max-width-xxs"/>
+  	    <xsl:param name="max-width-xxs"/>
 		<xsl:param name="max-height-xxs"/>
-  	<xsl:param name="max-width-xs"/>
+  	    <xsl:param name="max-width-xs"/>
 		<xsl:param name="max-height-xs"/>
-  	<xsl:param name="max-width-sm"/>
+  	    <xsl:param name="max-width-sm"/>
 		<xsl:param name="max-height-sm"/>
-  	<xsl:param name="max-width-md"/>
+  	    <xsl:param name="max-width-md"/>
 		<xsl:param name="max-height-md"/>
-  	<xsl:param name="max-width-lg"/>
+  	    <xsl:param name="max-width-lg"/>
 		<xsl:param name="max-height-lg"/>
-   	<xsl:param name="forceResize"/>
+   	    <xsl:param name="forceResize"/>
 		<xsl:param name="class"/>
 		<xsl:param name="style"/>
     <xsl:param name="imageUrl"/>
@@ -10566,10 +10566,18 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
-				<noscript>
+			<xsl:choose>
+				<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS'])">
 					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
-				</noscript>
+				</xsl:when>
+				<xsl:otherwise>
+					<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
+					<noscript>
+						<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+					</noscript>
+				</xsl:otherwise>
+			</xsl:choose>
+
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
