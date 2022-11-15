@@ -309,7 +309,7 @@ Public Class Indexer
                             Dim oPageErrElmt As XmlElement = oIndexInfo.CreateElement("errorInfo")
                             oPageErrElmt.SetAttribute("pgid", xWeb.mnPageId)
                             oPageErrElmt.SetAttribute("type", "Page")
-                            oPageErrElmt.InnerText = ex.Message
+                            oPageErrElmt.InnerText = ex.Message & ex.StackTrace
                             oInfoElmt.AppendChild(oPageErrElmt)
                             nPagesSkipped += 1
                         End Try
@@ -404,13 +404,27 @@ Public Class Indexer
                                                                 If DocName = "" Then
                                                                     DocName = xFilePath.Name
                                                                 End If
-
+                                                                If DocName = "" Then
+                                                                    DocName = oElmt.SelectSingleNode("Title").InnerText()
+                                                                End If
+                                                                If DocName = "" Then
+                                                                    DocName = "Document for Download"
+                                                                End If
                                                                 Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText))
-                                                                IndexPage(xWeb.mnPageId, "<h1>" & DocName & "</h1>" & fileAsText, oDocElmt.InnerText, DocName, "Download", xWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
 
                                                                 Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
+                                                                oPageElmt.SetAttribute("name", DocName)
                                                                 oPageElmt.SetAttribute("file", oDocElmt.InnerText)
+                                                                oPageElmt.SetAttribute("publish", oElmt.GetAttribute("publish"))
+                                                                oPageElmt.SetAttribute("updated", oElmt.GetAttribute("update"))
                                                                 oInfoElmt.AppendChild(oPageElmt)
+
+                                                                Dim dPublish As Date = IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing)
+                                                                Dim dUpdate As Date = IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing)
+
+                                                                IndexPage(xWeb.mnPageId, "<h1>" & DocName & "</h1>" & fileAsText, oDocElmt.InnerText, DocName, "Download", xWeb.mnArtId, cPageExtract, dPublish, dUpdate)
+
+
 
                                                                 nIndexed += 1
                                                                 nDocumentsIndexed += 1

@@ -41,6 +41,16 @@
 
 						<h3>The Index details are as follows:</h3>
 						<table cellspacing="0" id="indexerSummary">
+							<xsl:for-each select="/indexInfo/@*">
+								<tr>
+									<th>
+										<xsl:value-of select="name()"/>
+									</th>
+									<td>
+										<xsl:value-of select="node()"/>
+									</td>
+								</tr>
+							</xsl:for-each>
 							<xsl:for-each select="/indexInfo/* | /indexInfo/error/Error">
 								<tr>
 									<th>
@@ -56,22 +66,16 @@
 												</xsl:call-template>
 											</xsl:when>
 											<xsl:otherwise>
-												<xsl:value-of select="node()"/>
+												<xsl:value-of select="@name"/>
+										-
+										<xsl:value-of select="@url"/>
+										<xsl:value-of select="@file"/>
 											</xsl:otherwise>
 										</xsl:choose>
 									</td>
 								</tr>
 							</xsl:for-each>
-							<xsl:for-each select="/indexInfo/@*">
-								<tr>
-									<th>
-										<xsl:value-of select="name()"/>
-									</th>
-									<td>
-										<xsl:value-of select="."/>
-									</td>
-								</tr>
-							</xsl:for-each>
+							
 						</table>
 					</div>
 				</div>

@@ -904,10 +904,10 @@ Public Class IndexerAsync
 
                     Interlocked.Decrement(nPagesRemaining)
 
-                    If oInfoElmt.GetAttribute("indexCount") Then
+                    If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
                         oInfoElmt.SetAttribute("indexCount", nIndexed)
                     End If
-                    If oInfoElmt.GetAttribute("pagesIndexed") Then
+                    If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
                         oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
                     End If
                     If oInfoElmt.GetAttribute("pagesRemaining") IsNot Nothing Then

@@ -311,93 +311,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                 End Try
             End Sub
 
-            'need to remove
-            'Public Sub ProductFilter(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
 
-            '    Dim inputs() As String = {"PageFilter", "PriceFilter"}
-            '    'Dim inputs() As String = {"ProductFilter"}
-            '    Dim lstOfFilters As List(Of String) = New List(Of String)(inputs)
-
-            '    Dim Filter As String = ""
-
-            '    For Each Filter In lstOfFilters
-            '        Dim formName As String = Filter 'oContentNode.GetAttribute("name")
-            '        Dim oFrmGroup As XmlElement
-            '        Dim filters As Object
-            '        Try
-
-            '            Dim filterForm As xForm = New xForm(myWeb)
-            '            Dim oFrmInstance As XmlElement
-            '            'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
-            '            'Dim calledType As Type
-            '            'Dim classPath As String = moPrvConfig.Providers(providerName).Parameters("rootClass")
-            '            'Dim methodName As String = "ProcessOrder"
-            '            If formName = "PageFilter" Then
-            '                filters = New Protean.Providers.Filter.PageFilter()
-            '            ElseIf formName = "AgeFilter" Then
-            '                filters = New Protean.Providers.Filter.AgeFilter()
-            '            ElseIf formName = "PriceFilter" Then
-            '                filters = New Protean.Providers.Filter.PriceFilter()
-            '            ElseIf formName = "GroupSizeFilter" Then
-            '                filters = New Protean.Providers.Filter.GroupSizeFilter()
-            '            ElseIf formName = "ProductFilter" Then
-            '                filters = New Protean.Providers.Filter.PageFilter()
-            '            ElseIf formName = "OccasionFilter" Then
-            '                filters = New Protean.Providers.Filter.OccasionFilter()
-            '            End If
-
-            '            filterForm.NewFrm(formName)
-
-            '            filterForm.submission(formName, "", "POST", "return form_check(this);")
-
-            '            oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, formName + "Group", formName + "Group", "")
-            '            If formName = "PageFilter" Then
-            '                filterForm.addBind("PageFilter", "PageFilter")
-            '            ElseIf formName = "AgeFilter" Then
-            '                filterForm.addBind("AgeFilter", "AgeFilter")
-            '            ElseIf formName = "PriceFilter" Then
-            '                filterForm.addBind("PriceFilter", "PriceFilter")
-            '            ElseIf formName = "GroupSizeFilter" Then
-            '                filterForm.addBind("GroupSizeFilter", "GroupSizeFilter")
-            '            ElseIf formName = "ProductFilter" Then
-            '                filterForm.addBind("PageFilter", "PageFilter", "true()")
-            '            ElseIf formName = "OccasionFilter" Then
-            '                filterForm.addBind("PageFilter", "PageFilter")
-            '            End If
-            '            filters.AddControl(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
-            '            oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "submit", "contentSubmit", "")
-            '            oContentNode.AppendChild(filterForm.moXformElmt)
-            '            If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
-            '                If (myWeb.moRequest.Form("Submit").ToLower() <> "search") Then
-            '                    filters.RemovePageFromFilter(myWeb, myWeb.moRequest.Form("Submit"))
-            '                End If
-            '            End If
-            '            oFrmInstance = filterForm.Instance
-            '            If (myWeb.moSession("PageIds") IsNot Nothing) Then
-            '                Protean.Tools.Xml.addElement(oFrmInstance, formName, Convert.ToString(myWeb.moSession("PageIds")))
-            '            Else
-            '                Protean.Tools.Xml.addElement(oFrmInstance, formName)
-            '            End If
-
-            '            filterForm.Instance = oFrmInstance
-
-            '            filterForm.addSubmit(oFrmGroup, "Search", "Search")
-            '            filterForm.addValues()
-            '            If (filterForm.isSubmitted) Then
-            '                'If (filterForm.valid) Then
-            '                filterForm.updateInstanceFromRequest()
-            '                If formName = "ContentFilter" Then
-            '                    filters.ApplyFilter(myWeb, myWeb.mnPageId, filterForm, oFrmGroup)
-            '                End If
-
-
-            '            End If
-
-            '        Catch ex As Exception
-            '              RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
-            '        End Try
-            '    Next
-            'End Sub
             Public Sub ListHistoricEvents(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Dim cProcessInfo As String = "ListHistoricEvents"
                 Dim PageId As String = oContentNode.GetAttribute("grabberRoot")
@@ -423,7 +337,7 @@ where cl.nStructId = " & myWeb.mnPageId)
 
 
 
-                    'Dim nContentFilterId = myWeb.moPageXml.SelectSingleNode("Page/Contents/Content[@moduleType='ContentFilter']").Attributes(0).Value
+
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
                     Dim cnt As Int16
@@ -434,8 +348,8 @@ where cl.nStructId = " & myWeb.mnPageId)
                     filterForm.submission(formName, "", "POST", "return form_check(this);")
 
                     If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
-                        If (Convert.ToString(myWeb.moRequest.Form("Submit")).Contains("Clear Filters")) Then
-                            myWeb.moRequest.Form.Clear()
+                        If (Convert.ToString(myWeb.moRequest.Form("Submit")).ToLower.Contains("clear filters")) Then
+                            myWeb.moResponse.Redirect(myWeb.moRequest.RawUrl)
                         End If
                     End If
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
@@ -466,7 +380,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                                 If ourProvider.parameters("rootClass") = "" Then
                                     calledType = assemblyInstance.GetType("Protean.Providers.Filters." & providerName, True)
                                 Else
-                                    'calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
+
                                     calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & "." & className, True)
                                 End If
                             End If
@@ -490,38 +404,10 @@ where cl.nStructId = " & myWeb.mnPageId)
                     Dim whereSQL As String = ""
 
                     filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "ShowExperiences")
-                    filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilter")
+                    'filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
                     filterForm.addValues()
 
                     If (filterForm.isSubmitted) Then
-                        'If (myWeb.moSession("FilterApplied") IsNot Nothing) Then
-                        '    If (myWeb.moSession("FilterApplied") = "true") Then
-                        '        For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
-                        '            Dim className As String = oFilterElmt.GetAttribute("className")
-
-                        '            If (myWeb.moSession(className) IsNot Nothing) Then
-                        '                Dim filterValue As String = Convert.ToString(myWeb.moSession(className))
-
-
-                        '                filterForm.Instance.SelectSingleNode(className).InnerText = Convert.ToString(myWeb.moSession(className))
-
-
-                        '                Dim cFilterIds As String = myWeb.moSession(className)
-                        '                Dim aFilterId() As String = cFilterIds.Split(",")
-                        '                For cnt = 0 To aFilterId.Length - 1 Step 1
-                        '                    If (aFilterId(cnt) <> String.Empty) Then
-                        '                        If aFilterId(cnt) <> "" Then
-                        '                            filterForm.addSubmit(oFrmGroup, "Remove - " + className + "-" + aFilterId(cnt), aFilterId(cnt))
-                        '                        End If
-                        '                    End If
-                        '                Next
-
-                        '            End If
-                        '        Next
-                        '    End If
-                        'End If
-
-
 
                         filterForm.updateInstanceFromRequest()
                         filterForm.validate()
@@ -537,9 +423,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                                 Dim providerName As String = oFilterElmt.GetAttribute("providerName")
 
                                 If className <> "" Then
-                                    If (myWeb.moRequest.Form("Submit") = "Remove Filter") Then
-                                        myWeb.moSession.Remove(className)
-                                    End If
+
                                     If providerName = "" Or LCase(providerName) = "default" Then
                                         providerName = "Protean.Providers.Filters." & className
                                         calledType = System.Type.GetType(providerName, True)
@@ -585,7 +469,7 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
-                        myWeb.moSession("FilterApplied") = "true"
+
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, "Product")
                         oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
 

@@ -382,7 +382,9 @@
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
-   
+	<xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
+			  <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
+		  </xsl:if>
 	   
          <xsl:if test="$GoogleGA4MeasurementID!=''">
 			    <!-- GA4 Tag Manager -->
@@ -825,11 +827,6 @@
           <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
-		  
-		  <xsl:if test="//Content[@carousel='swiper']">
-			  <script src="/ewcommon/js/jquery/swiper/swiper-bundle.min.js">/* */</script>
-			  <!-- !!! MIN VERSION CAUSES ERROR -->
-		  </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery' or @moduleType='Carousel'] and not(/Page/@adminMode)">
           <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
         </xsl:if>
@@ -1272,7 +1269,7 @@
       </noscript>
       <!-- End Facebook Pixel Code -->
     </xsl:if>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
+
 
     <xsl:apply-templates select="." mode="JSONLD"/>
 
@@ -1294,6 +1291,8 @@
 
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
+	  
+	<xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
   </xsl:template>
 
@@ -6881,6 +6880,16 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+	  <xsl:variable name="bForceResize">
+        <xsl:choose>
+          <xsl:when test="$forceResize">
+            <xsl:value-of select="true()"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="false()"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
      
       <xsl:variable name="imageType">
       <xsl:choose>
@@ -7204,17 +7213,17 @@
 						<xsl:variable name="image">
 							<picture>
 
-								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc)"/>
-								<xsl:variable name="newSrc-xxs-x2-webp" select="ew:CreateWebP($newSrc-xxs-x2)"/>
-								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
-								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2)"/>
-								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
-								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2)"/>
-								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
-								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2)"/>
-								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
-								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2)"/>
-								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
+								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$bForceResize)"/>
+								<xsl:variable name="newSrc-xxs-x2-webp" select="ew:CreateWebP($newSrc-xxs-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$bForceResize)"/>
+								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$bForceResize)"/>
+								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$bForceResize)"/>
+								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$bForceResize)"/>
+								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$bForceResize)"/>
+								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$bForceResize)"/>
 
 
 								<!--WebP Images-->
@@ -7319,6 +7328,7 @@
 									</xsl:choose>
 									<!-- Width -->
 									<xsl:attribute name="width">
+										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-width"/>
@@ -7330,6 +7340,7 @@
 									</xsl:attribute>
 									<!-- Height -->
 									<xsl:attribute name="height">
+										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-height"/>
@@ -7539,12 +7550,12 @@
             <xsl:variable name="image">
               <picture>
 
-                <xsl:variable name="newSrc-xxs-webp" select="ew:CreateWebP($newSrc-xxs)"/>
-                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
-                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
-                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
-                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
-                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
+                <xsl:variable name="newSrc-xxs-webp" select="ew:CreateWebP($newSrc-xxs,$bForceResize)"/>
+                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$bForceResize)"/>
+                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$bForceResize)"/>
+                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$bForceResize)"/>
+                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$bForceResize)"/>
+                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$bForceResize)"/>
 
 
                 <!--WebP Images-->
@@ -9490,11 +9501,7 @@
 						<xsl:value-of select="$price"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:apply-templates select="$page" mode="formatPrice">
-							<xsl:with-param name="price">
-								<xsl:value-of select="$price"/>
-							</xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:value-of select="format-number($price,'###,###,##0.00')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 	</xsl:template>

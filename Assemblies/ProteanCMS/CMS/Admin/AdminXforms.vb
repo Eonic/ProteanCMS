@@ -2245,7 +2245,7 @@ Partial Public Class Cms
                 Dim oXformDoc As XmlDocument = New XmlDocument
                 Try
 
-                    If moRequest("cModuleBox") <> "" Then
+                    If moRequest("cModuleBox") <> "" Or moRequest("cModuleType") <> "" Then
                         ' case for when the content form is being submitted
                         If goConfig("cssFramework") = "bs5" Then
                             Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
@@ -2336,7 +2336,7 @@ Partial Public Class Cms
                 Try
 
                     Dim oManifest As XmlDocument = GetSiteManifest()
-                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Filter[@type='" & SchemaName & "']")
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Module[@type='" & SchemaName & "']")
                     If thisModule Is Nothing Then
                         Return SchemaName
                     Else
@@ -2846,7 +2846,8 @@ Partial Public Class Cms
                                 oTempInstance.AppendChild(prodCatElmt)
                             End If
                         End If
-
+                    Else
+                        cModuleType = moRequest("cModuleType")
                     End If
 
                     If Not goSession("oContentInstance") Is Nothing Then
@@ -2869,9 +2870,13 @@ Partial Public Class Cms
                     If AlternateFormName <> "" Then cXformPath = AlternateFormName
 
                     If cModuleType <> "" Then
-                        cXformPath = cXformPath & "/" & cModuleType
                         If goConfig("cssFramework") = "bs5" Then
                             cXformPath = GetModuleFormPath(cModuleType)
+                        Else
+                            If Not cXformPath.EndsWith("/" & cModuleType) Then
+                                cXformPath = cXformPath & "/" & cModuleType
+                            End If
+
                         End If
                     Else
                         If goConfig("cssFramework") = "bs5" Then
