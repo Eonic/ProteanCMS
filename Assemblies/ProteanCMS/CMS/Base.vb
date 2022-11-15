@@ -91,6 +91,8 @@ Public Class Base
     Public mbPreview As Boolean = False
     Public mbPreviewHidden As Boolean = False
 
+    Public PerfMon As PerfLog
+
 #End Region
 
 #Region "Constructors"
@@ -118,6 +120,7 @@ Public Class Base
             goServer = moCtx.Server
             goCache = moCtx.Cache
 
+            PerfMon = New PerfLog("")
             PerfMon.Log("Base", "New")
 
             EnumberateFeatures()
@@ -190,4 +193,7 @@ Public Class Base
         Me.disposedValue = True
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class

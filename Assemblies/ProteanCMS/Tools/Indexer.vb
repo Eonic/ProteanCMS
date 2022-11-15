@@ -51,7 +51,7 @@ Public Class Indexer
 
 
     Public Sub New(ByRef aWeb As Protean.Cms)
-        PerfMon.Log("Indexer", "New")
+        'PerfMon.Log("Indexer", "New")
         mcModuleName = "Eonic.Search.Indexer"
         Dim cProcessInfo As String = ""
         myWeb = aWeb
@@ -131,7 +131,7 @@ Public Class Indexer
     End Function
 
     Public Sub DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False)
-        PerfMon.Log("Indexer", "DoIndex")
+        'PerfMon.Log("Indexer", "DoIndex")
         Dim cProcessInfo As String = ""
         Dim cPageHtml As String = ""
         Dim cPageExtract As String = ""
@@ -309,7 +309,7 @@ Public Class Indexer
                             Dim oPageErrElmt As XmlElement = oIndexInfo.CreateElement("errorInfo")
                             oPageErrElmt.SetAttribute("pgid", xWeb.mnPageId)
                             oPageErrElmt.SetAttribute("type", "Page")
-                            oPageErrElmt.InnerText = ex.Message
+                            oPageErrElmt.InnerText = ex.Message & ex.StackTrace
                             oInfoElmt.AppendChild(oPageErrElmt)
                             nPagesSkipped += 1
                         End Try
@@ -404,13 +404,27 @@ Public Class Indexer
                                                                 If DocName = "" Then
                                                                     DocName = xFilePath.Name
                                                                 End If
-
+                                                                If DocName = "" Then
+                                                                    DocName = oElmt.SelectSingleNode("Title").InnerText()
+                                                                End If
+                                                                If DocName = "" Then
+                                                                    DocName = "Document for Download"
+                                                                End If
                                                                 Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText))
-                                                                IndexPage(xWeb.mnPageId, "<h1>" & DocName & "</h1>" & fileAsText, oDocElmt.InnerText, DocName, "Download", xWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
 
                                                                 Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
+                                                                oPageElmt.SetAttribute("name", DocName)
                                                                 oPageElmt.SetAttribute("file", oDocElmt.InnerText)
+                                                                oPageElmt.SetAttribute("publish", oElmt.GetAttribute("publish"))
+                                                                oPageElmt.SetAttribute("updated", oElmt.GetAttribute("update"))
                                                                 oInfoElmt.AppendChild(oPageElmt)
+
+                                                                Dim dPublish As Date = IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing)
+                                                                Dim dUpdate As Date = IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing)
+
+                                                                IndexPage(xWeb.mnPageId, "<h1>" & DocName & "</h1>" & fileAsText, oDocElmt.InnerText, DocName, "Download", xWeb.mnArtId, cPageExtract, dPublish, dUpdate)
+
+
 
                                                                 nIndexed += 1
                                                                 nDocumentsIndexed += 1
@@ -611,7 +625,7 @@ Public Class Indexer
     End Sub
 
     Private Sub StartIndex()
-        PerfMon.Log("Indexer", "StartIndex")
+        'PerfMon.Log("Indexer", "StartIndex")
         Dim cProcessInfo As String = ""
         Try
             oImp = New Protean.Tools.Security.Impersonate 'for access
@@ -649,7 +663,7 @@ Public Class Indexer
     End Sub
 
     Private Sub EmptyFolder(ByVal cDirectory As String)
-        PerfMon.Log("Indexer", "EmptyFolder")
+        'PerfMon.Log("Indexer", "EmptyFolder")
         Dim cProcessInfo As String = ""
         Try
             If bNewIndex Then
@@ -695,7 +709,7 @@ Public Class Indexer
     Private Sub IndexPage(ByVal url As String, ByVal pageXml As XmlElement, Optional ByVal pageType As String = "Page")
 
         Dim methodName As String = "IndexPage(String,XmlElement,[String])"
-        PerfMon.Log("Indexer", methodName)
+        'PerfMon.Log("Indexer", methodName)
 
         Dim processInfo As String = url
 
@@ -875,7 +889,7 @@ Public Class Indexer
     End Sub
 
     Private Sub IndexPage(ByVal nPageId As Integer, ByVal cPageText As String, ByVal cURL As String, ByVal cPageTitle As String, Optional ByVal cContentType As String = "Page", Optional ByVal nContentId As Long = 0, Optional ByVal cAbstract As String = "", Optional ByVal dPublish As Date = Nothing, Optional ByVal dUpdate As Date = Nothing)
-        PerfMon.Log("Indexer", "IndexPage")
+        'PerfMon.Log("Indexer", "IndexPage")
         Dim cProcessInfo As String = cURL
 
         Try
@@ -925,7 +939,7 @@ Public Class Indexer
     End Sub
 
     Private Sub SavePage(ByVal cUrl As String, ByVal cBody As String)
-        PerfMon.Log("Indexer", "IndexPage")
+        'PerfMon.Log("Indexer", "SavePage")
         Dim cProcessInfo As String = ""
         Dim filename As String = ""
         Dim filepath As String = ""
@@ -1001,7 +1015,7 @@ Public Class Indexer
     End Sub
 
     Private Sub StopIndex()
-        PerfMon.Log("Indexer", "StopIndex")
+        'PerfMon.Log("Indexer", "StopIndex")
         Dim cProcessInfo As String = ""
         Try
             oIndexWriter.Optimize()
@@ -1017,7 +1031,7 @@ Public Class Indexer
     End Sub
 
     Private Function GetFileText(ByVal cPath As String, Optional ByVal cOtherText As String = "") As String
-        PerfMon.Log("Indexer", "GetFileText")
+        'PerfMon.Log("Indexer", "GetFileText")
         Dim cProcessInfo As String = ""
         Try
             Dim oFile As New FileDoc(cPath)
@@ -1030,7 +1044,7 @@ Public Class Indexer
     End Function
 
     Private Sub CopyFolderContents(ByVal cLocation As String, ByVal cDestination As String)
-        PerfMon.Log("Indexer", "CopyFolderContents")
+        'PerfMon.Log("Indexer", "CopyFolderContents")
         Dim cProcessInfo As String = ""
         Try
             Dim oDI As New IO.DirectoryInfo(mcIndexWriteFolder)

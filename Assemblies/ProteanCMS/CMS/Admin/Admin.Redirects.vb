@@ -28,7 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "false") As String
 
                 Try
 
@@ -53,7 +53,7 @@ Partial Public Class Cms
                         Next
                     Else
                         'Add redirect
-                        If isParentPage = "False" Then
+                        If isParentPage.ToLower() = "false" Then
                             Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
                             Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
                             If Not redirectSectionXmlNode Is Nothing Then
@@ -441,7 +441,7 @@ Partial Public Class Cms
                         Dim arr() As String
                         arr = sUrl.Split("?"c)
                         sUrl = arr(0)
-                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
+                        ' sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
                     End If
 
                     Select Case sType
@@ -473,6 +473,11 @@ Partial Public Class Cms
                                 Dim url As String = myWeb.GetContentUrl(nPageId)
                                 sOldUrl = sUrl & url & "/" & sOldUrl
                                 sNewUrl = sUrl & url & "/" & sNewUrl
+
+                            End If
+                            If myWeb.moConfig("TrailingSlash") IsNot Nothing And (myWeb.moConfig("TrailingSlash") = "on") Then
+                                sOldUrl = sOldUrl & "/"
+                                sNewUrl = sNewUrl & "/"
                             End If
                             'End If
                     End Select

@@ -627,6 +627,33 @@
 			auto_cleanup_word: "true"</xsl:text>
 	</xsl:template>
 
+	<xsl:template match="textarea[contains(@class,'email')]" mode="tinymceGeneralOptions">
+		<xsl:text>script_url: '/ewcommon/js/tinymce/tinymce.min.js',
+			mode: "exact",
+			theme: "modern",
+			width: "auto",
+            content_css: ['/ewcommon/js/tinymce/plugins/leaui_code_editor/css/pre.css'],
+			convert_urls:true,
+			relative_urls:false,
+			remove_script_host:false,
+			plugins: "table paste link image ewimage media visualchars searchreplace emoticons anchor advlist code visualblocks contextmenu fullscreen searchreplace youtube leaui_code_editor wordcount",
+			entity_enconding: "numeric",
+            image_advtab: true,
+            menubar: "edit insert view format table tools",
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image ewimage",
+			convert_fonts_to_spans: true,
+			gecko_spellcheck: true,
+			theme_advanced_toolbar_location: "top",
+			theme_advanced_toolbar_align: "left",
+			paste_create_paragraphs: false,
+            link_list: tinymcelinklist,
+			paste_use_dialog: true,</xsl:text>
+		<xsl:apply-templates select="." mode="tinymceStyles"/>
+		<xsl:apply-templates select="." mode="tinymceContentCSS"/>
+		<xsl:text>
+			auto_cleanup_word: "true"</xsl:text>
+	</xsl:template>
+
 	<xsl:template match="textarea" mode="tinymcelinklist">
 
 		<xsl:text>
@@ -761,14 +788,13 @@
 		"a[href|target|title|style|class|onmouseover|onmouseout|onclick|id|name],"
 		+ "img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style],"
 		+ "table[cellspacing|cellpadding|border|height|width|style|class],"
-		+ "p[align|style|class],"
-		+ "span[class],"
+		+ "p[align|style|class|id],"
 		+ "form[action|method|name|style|class],object[*],param[*],embed[*],"
 		+ "input[type|value|name|style|class|src|alt|border|size],"
 		+ "textarea[type|value|name|style|class|src|alt|border|size|cols|rows],"
 		+ "td/th[colspan|rowspan|align|valign|style|class],"
-		+ "h1[style|class],h2[style|class],h3[style|class],h4[style|class],h5[style|class],h6[style|class],"
-		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class],span[style|class],"
+		+ "h1[style|class|id],h2[style|class|id],h3[style|class|id],h4[style|class|id],h5[style|class|id],h6[style|class|id],"
+		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class|id],span[style|class|id],"
 		+ "thead[style|class],tbody[style|class],tr[class],dd[style|class],dl[style|class],dt[style|class],"
 		+ "sup,sub,pre,address,strong,b,em,i[class],u,s,hr,blockquote,br,"
 		+ "cite[class|id|title],code[class|title],samp,iframe[width|height|src|frameborder|allowfullscreen]"
@@ -1712,32 +1738,49 @@
 		<xsl:variable name="filterButtons">
 			<xsl:call-template name="getFilterButtons"/>
 		</xsl:variable>
-		<div>
+		<xsl:variable name="thisGroup" select="."/>
+		<div class="list-group">
 
 
 			<xsl:for-each select="ms:node-set($filterButtons)/*/*">
-
-
-
 				<xsl:variable name="buttonName" select="node()"/>
 				<xsl:variable name="filterType" select="@filterType"/>
 
+				<div class="list-group-item row">
+					<div class="col-md-3">
+					<label>
+						<xsl:value-of select="$buttonName"/>
+					</label>
+					</div>
+					<div class="col-md-6">
+						
+					</div>
+					<div class="col-md-3">
 				<xsl:choose>
-					<xsl:when test="ancestor::Content/Content[@filtertype=$buttonName]">
-						<button type="button" name="Edit {$buttonName}" class="btn btn-primary">
-							Edit <xsl:value-of select="$buttonName"/>
+					<xsl:when test="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]">
+						<xsl:variable name="relatedContent" select="concat('FilterEdit_',$filterType)" />
+						<xsl:variable name="filterId" select="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]/@id"/>
+						
+						<button type="submit" name="{concat('FilterRemove_',$filterType)}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-danger pull-right">
+							<i class="fa fa-times">&#160;</i>&#160;Del
+						</button>
+						<button type="submit" name="{$relatedContent}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-primary pull-right">
+							<i class="fa fa-edit">&#160;</i>&#160;Edit
 						</button>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="relatedContent" select="concat('RelateAdd_',$filterType)" />
+						<xsl:variable name="relatedContent" select="concat('FilterAdd_',$filterType)" />
 						<xsl:variable name="FilterType" select="concat($relatedContent,'_1Way_~inactive')" />
-
-
-						<button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-primary">
-							Add <xsl:value-of select="$buttonName"/>
+						<button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-sm btn-primary pull-right">
+							<i class="fa fa-plus">&#160;</i>&#160;
+							Add 
 						</button>
 					</xsl:otherwise>
 				</xsl:choose>
+				
+						</div>
+
+				</div>
 			</xsl:for-each>
 		</div>
 	</xsl:template>
@@ -2183,7 +2226,7 @@
 					</div>
 				</xsl:when>
 				<xsl:otherwise>
-					<div class="col-md-5 buttons">
+					<div class="col-md-5 buttons">						
 						<button type="button" name="RelateTop_{@id}" value=" " class="btn btn-arrow btn-primary btn-xs" onClick="disableButton(this);{$formName}.submit()">
 							<i class="fa fa-arrow-up fa-white">
 								<xsl:text> </xsl:text>
@@ -3019,6 +3062,8 @@
 						<input name="type" type="hidden"  class="hiddenType" />
 						<input  name="redirectOption" type="hidden" class="hiddenRedirectType" />
 						<input name="UrlChangeFlag" type="hidden"  class="hidUrlChangeFlag" />
+					<input name="PageChangeFlag" type="hidden"  class="hidPageChangeFlag" />
+					<input name="pageNewUrl" type="hidden" class="hiddenPageNewUrl" />
 					</div>
 				</div>
 			</div>
@@ -3046,6 +3091,7 @@
 				<input name="IsParent" type="hidden" class="hiddenParentCheck" />
 				<input name="pageId" type="hidden"  class="hiddenPageId" />
 				<input name="redirectOption" type="hidden" class="hiddenRedirectType" />
+				
 			</div>
 		</div>
 

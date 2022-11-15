@@ -382,7 +382,9 @@
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
-   
+	<xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
+			  <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
+		  </xsl:if>
 	   
          <xsl:if test="$GoogleGA4MeasurementID!=''">
 			    <!-- GA4 Tag Manager -->
@@ -470,14 +472,8 @@
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
         <!-- common css -->
-        <xsl:choose>
-          <xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
-            <xsl:apply-templates select="." mode="commonStyle"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="." mode="criticalPathCSS"/>
-          </xsl:otherwise>
-        </xsl:choose>
+		  <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
+       
 
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
 
@@ -489,6 +485,17 @@
       <xsl:apply-templates select="." mode="bodyBuilder"/>
     </html>
   </xsl:template>
+
+	<xsl:template match="Page" mode="headerCommonStyle">
+		<xsl:choose>
+			<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS']) or $adminMode">
+				<xsl:apply-templates select="." mode="commonStyle"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="." mode="criticalPathCSS"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
@@ -529,7 +536,9 @@
 
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
-  <xsl:template match="Page" mode="headerOnlyJS"></xsl:template>
+  <xsl:template match="Page" mode="headerOnlyJS">
+	   <xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
+  </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
     <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
@@ -709,6 +718,9 @@
 
   </xsl:template>
 
+  <xsl:template match="Content" mode="headerOnlyContentJS">
+  </xsl:template>
+	
   <xsl:template match="Content" mode="contentJS">
   </xsl:template>
 
@@ -798,7 +810,7 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js" cookie-consent="strictly-necessary">/* */</script>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="@layout='Modules_Masonary'">
@@ -834,7 +846,13 @@
     </xsl:if>    
   </xsl:template>
 
-
+  <xsl:template match="Content[@type='CookieFirst']" mode="headerOnlyContentJS">
+		<xsl:if test="not($adminMode)">
+            <script src="https://consent.cookiefirst.com/sites/{SiteUrl/node()}-{ApiKey/node()}/consent.js">&#160;</script>
+		</xsl:if>
+	</xsl:template>
+	
+	
 	<xsl:template match="Content[@type='CookiePolicy']" mode="contentJS">
 		<xsl:if test="not($adminMode)">
 				<script type="text/javascript">
@@ -1073,8 +1091,10 @@
 
 	<xsl:template match="Content[@type='FreeCookieConsent']" mode="contentJS">
 		<xsl:if test="not($adminMode)">
+			
 			<!-- Cookie Consent by https://www.FreePrivacyPolicy.com -->
-			<script type="text/javascript" src="//www.freeprivacypolicy.com/public/cookie-consent/4.0.0/cookie-consent.js" charset="UTF-8">
+			
+			<script type="text/javascript" src="//www.freeprivacypolicy.com/public/cookie-consent/4.0.0/cookie-consent1.js" charset="UTF-8">
 				<xsl:text> </xsl:text>
 			</script>
 			<script type="text/javascript" charset="UTF-8">
@@ -1249,7 +1269,7 @@
       </noscript>
       <!-- End Facebook Pixel Code -->
     </xsl:if>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
+
 
     <xsl:apply-templates select="." mode="JSONLD"/>
 
@@ -1271,6 +1291,8 @@
 
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
+	  
+	<xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
   </xsl:template>
 
@@ -1815,13 +1837,18 @@
       </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
-        <xsl:apply-templates select="." mode="commonStyle"/>
-      </xsl:if>
+		<xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
+      
 
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
+
+	<xsl:template match="Page" mode="footerCommonStyle">
+		<xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+			<xsl:apply-templates select="." mode="commonStyle"/>
+		</xsl:if>
+	</xsl:template>
 
   <xsl:template match="Page" mode="bodyStyle">
     <!-- Placeholder to overide -->
@@ -3713,6 +3740,98 @@
 
   </xsl:template>
 
+	<xsl:template name="getTimeZone">
+		<xsl:param name="utcTimeZone"/>
+		<xsl:choose>
+			<xsl:when test="$utcTimeZone='-12:00'">(GMT -12:00) Eniwetok, Kwajalein</xsl:when>
+			<xsl:when test="$utcTimeZone='-11:00'">(GMT -11:00) Midway Island, Samoa</xsl:when>
+			<xsl:when test="$utcTimeZone='-10:00'">(GMT -10:00) Hawaii</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:50'">(GMT -9:30) Taiohae</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:00'">(GMT -9:00) Alaska</xsl:when>
+			<xsl:when test="$utcTimeZone='-08:00'">(GMT -8:00) Pacific Time (US &amp; Canada)</xsl:when>
+			<xsl:when test="$utcTimeZone='-07:00'">(GMT -7:00) Mountain Time (US &amp; Canada)</xsl:when>
+			<xsl:when test="$utcTimeZone='-06:00'">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</xsl:when>
+			<xsl:when test="$utcTimeZone='-05:00'">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:50'">(GMT -4:30) Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:00'">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:50'">(GMT -3:30) Newfoundland</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:00'">(GMT -3:00) Brazil, Buenos Aires, Georgetown</xsl:when>
+			<xsl:when test="$utcTimeZone='-02:00'">(GMT -2:00) Mid-Atlantic</xsl:when>
+			<xsl:when test="$utcTimeZone='-01:00'">(GMT -1:00) Azores, Cape Verde Islands</xsl:when>
+			<xsl:when test="$utcTimeZone='+00:00'">(GMT) Western Europe Time, London, Lisbon, Casablanca</xsl:when>
+			<xsl:when test="$utcTimeZone='+01:00'">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</xsl:when>
+			<xsl:when test="$utcTimeZone='+02:00'">(GMT +2:00) Kaliningrad, South Africa</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:00'">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:50'">(GMT +3:30) Tehran</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:00'">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:50'">(GMT +4:30) Kabul</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:00'">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:50'">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:75'">(GMT +5:45) Kathmandu, Pokhara</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:00'">(GMT +6:00) Almaty, Dhaka, Colombo</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:50'">(GMT +6:30) Yangon, Mandalay</xsl:when>
+			<xsl:when test="$utcTimeZone='+07:00'">(GMT +7:00) Bangkok, Hanoi, Jakarta</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:00'">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:75'">(GMT +8:45) Eucla</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:00'">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:50'">(GMT +9:30) Adelaide, Darwin</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:00'">(GMT +10:00) Eastern Australia, Guam, Vladivostok</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:50'">(GMT +10:30) Lord Howe Island</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:00'">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:50'">(GMT +11:30) Norfolk Island</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:00'">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:75'">(GMT +12:45) Chatham Islands</xsl:when>
+			<xsl:when test="$utcTimeZone='+13:00'">(GMT +13:00) Apia, Nukualofa</xsl:when>
+			<xsl:when test="$utcTimeZone='+14:00'">(GMT +14:00) Line Islands, Tokelau</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="getTimeZoneIANA">
+		<xsl:param name="utcTimeZone"/>
+		<xsl:choose>
+			<xsl:when test="$utcTimeZone='-12:00'">Etc/GMT+12</xsl:when>
+			<xsl:when test="$utcTimeZone='-11:00'">Pacific/Pago_Pago</xsl:when>
+			<xsl:when test="$utcTimeZone='-10:00'">America/Adak</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:50'">Pacific/Marquesas</xsl:when>
+			<xsl:when test="$utcTimeZone='-09:00'">Pacific/Gambier</xsl:when>
+			<xsl:when test="$utcTimeZone='-08:00'">America/Los_Angeles</xsl:when>
+			<xsl:when test="$utcTimeZone='-07:00'">America/Denver</xsl:when>
+			<xsl:when test="$utcTimeZone='-06:00'">America/Chicago</xsl:when>
+			<xsl:when test="$utcTimeZone='-05:00'">America/New_York</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:50'">America/Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-04:00'">America/Caracas</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:50'">Canada/Newfoundland</xsl:when>
+			<xsl:when test="$utcTimeZone='-03:00'">America/Buenos_Aires</xsl:when>
+			<xsl:when test="$utcTimeZone='-02:00'">Atlantic/South_Georgia</xsl:when>
+			<xsl:when test="$utcTimeZone='-01:00'">Atlantic/Azores</xsl:when>
+			<xsl:when test="$utcTimeZone='+00:00'">Europe/London</xsl:when>
+			<xsl:when test="$utcTimeZone='+01:00'">Europe/Amsterdam</xsl:when>
+			<xsl:when test="$utcTimeZone='+02:00'">Africa/Maputo</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:00'">Europe/Moscow</xsl:when>
+			<xsl:when test="$utcTimeZone='+03:50'">Iran</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:00'">Asia/Dubai</xsl:when>
+			<xsl:when test="$utcTimeZone='+04:50'">Asia/Kabul</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:00'">Indian/Maldives</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:50'">Asia/Colombo</xsl:when>
+			<xsl:when test="$utcTimeZone='+05:75'">Asia/Kathmandu</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:00'">Asia/Urumqi</xsl:when>
+			<xsl:when test="$utcTimeZone='+06:50'">Asia/Yangon</xsl:when>
+			<xsl:when test="$utcTimeZone='+07:00'">Asia/Bangkok</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:00'">Asia/Hong_Kong</xsl:when>
+			<xsl:when test="$utcTimeZone='+08:75'">Australia/Eucla</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:00'">Asia/Tokyo</xsl:when>
+			<xsl:when test="$utcTimeZone='+09:50'">Australia/Darwin</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:00'">Asia/Vladivostok</xsl:when>
+			<xsl:when test="$utcTimeZone='+10:50'">Australia/Lord_Howe</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:00'">Asia/Magadan</xsl:when>
+			<xsl:when test="$utcTimeZone='+11:50'">Pacific/Norfolk</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:00'">Pacific/Auckland</xsl:when>
+			<xsl:when test="$utcTimeZone='+12:75'">Pacific/Chatham</xsl:when>
+			<xsl:when test="$utcTimeZone='+13:00'">Pacific/Apia</xsl:when>
+			<xsl:when test="$utcTimeZone='+14:00'">Pacific/Kiritimati</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
 
   <!--   ################################################   Menu & Content display name  ##############################################   -->
   <!-- Display Name for a Page -->
@@ -4638,6 +4757,7 @@
 
   <xsl:template match="Content[@type='Module']" mode="moreLink">
     <xsl:variable name="link" select="@link"/>
+	  <xsl:variable name="linkType" select="@linkType"/>
     <xsl:if test="$link!=''">
       <xsl:variable name="numbertest">
         <!-- Test if link is numeric then link is internal-->
@@ -4648,54 +4768,65 @@
       <xsl:choose>
         <xsl:when test="$page[@cssFramework='bs3']">
           <div class="morelink">
-            <span>
-              <a title="{@linkText}" class="btn btn-default btn-sm">
-                <xsl:choose>
-                  <xsl:when test="$numbertest = 'number'">
-                    <xsl:variable name="pageId" select="@link"/>
-                    <xsl:attribute name="href">
-                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
-                    </xsl:attribute>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:choose>
-                      <xsl:when test="contains($link,'#')">
-                        <xsl:attribute name="class">
-                          <xsl:text>btn btn-default btn-sm scroll-to-anchor</xsl:text>
-                        </xsl:attribute>
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                      </xsl:when>
-                      <xsl:when test="contains($link,'http')">
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="rel">external</xsl:attribute>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <xsl:attribute name="href">
-                          <xsl:text>http://</xsl:text>
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="rel">external</xsl:attribute>
-                      </xsl:otherwise>
-                    </xsl:choose>
+			  <xsl:choose>
+				  <xsl:when test="$linkType='form' or $linkType='modalLink'">
+					  <span>
+						  <a href="#" data-toggle="modal" data-target="#{$link}" class="btn btn-default btn-sm">
+							  <xsl:value-of select="@linkText"/>
+						  </a>
+					  </span>
+			        </xsl:when>
+				  <xsl:otherwise>
+					  <span>
+						  <a title="{@linkText}" class="btn btn-default btn-sm">
+							  <xsl:choose>
+								  <xsl:when test="$numbertest = 'number'">
+									  <xsl:variable name="pageId" select="@link"/>
+									  <xsl:attribute name="href">
+										  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+									  </xsl:attribute>
+								  </xsl:when>
+								  <xsl:otherwise>
+									  <xsl:choose>
+										  <xsl:when test="contains($link,'#')">
+											  <xsl:attribute name="class">
+												  <xsl:text>btn btn-default btn-sm scroll-to-anchor</xsl:text>
+											  </xsl:attribute>
+											  <xsl:attribute name="href">
+												  <xsl:value-of select="$link"/>
+											  </xsl:attribute>
+										  </xsl:when>
+										  <xsl:when test="contains($link,'http')">
+											  <xsl:attribute name="href">
+												  <xsl:value-of select="$link"/>
+											  </xsl:attribute>
+											  <xsl:attribute name="rel">external</xsl:attribute>
+										  </xsl:when>
+										  <xsl:otherwise>
+											  <xsl:attribute name="href">
+												  <xsl:text>http://</xsl:text>
+												  <xsl:value-of select="$link"/>
+											  </xsl:attribute>
+											  <xsl:attribute name="rel">external</xsl:attribute>
+										  </xsl:otherwise>
+									  </xsl:choose>
 
-                  </xsl:otherwise>
-                </xsl:choose>
+								  </xsl:otherwise>
+							  </xsl:choose>
 
-                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
-                  <xsl:attribute name="onclick">
-                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-                    <xsl:value-of select="$link"/>
-                    <xsl:text>');</xsl:text>
-                  </xsl:attribute>
-                </xsl:if>
+							  <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+								  <xsl:attribute name="onclick">
+									  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+									  <xsl:value-of select="$link"/>
+									  <xsl:text>');</xsl:text>
+								  </xsl:attribute>
+							  </xsl:if>
 
-                <xsl:value-of select="@linkText"/>
-              </a>
-            </span>
+							  <xsl:value-of select="@linkText"/>
+						  </a>
+					  </span>
+				  </xsl:otherwise>
+			  </xsl:choose>
           </div>
         </xsl:when>
         <xsl:otherwise>
@@ -5212,6 +5343,12 @@
         <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+		  <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='off'">
+			  <xsl:if test="$page/Request/ServerVariables/Item[@name='SERVER_PORT']!='80'">
+				  <xsl:text>:</xsl:text>
+				  <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_PORT']/node()"/>
+			  </xsl:if>			  
+		  </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$thisPageUrl"/>
@@ -6687,7 +6824,7 @@
         <xsl:with-param name="max-width-xxs" select="$max-width-xxs"/>
         <xsl:with-param name="max-height-xxs" select="$max-height-xxs"/>
         <xsl:with-param name="max-width-xs" select="$max-width-xs"/>
-        <xsl:with-param name="max-height-xs" select="$max-width-xs"/>
+        <xsl:with-param name="max-height-xs" select="$max-height-xs"/>
         <xsl:with-param name="max-width-sm" select="$max-width-sm"/>
         <xsl:with-param name="max-height-sm" select="$max-height-sm"/>
         <xsl:with-param name="max-width-md" select="$max-width-md"/>
@@ -6740,6 +6877,16 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:apply-templates select="." mode="getThCrop"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+	  <xsl:variable name="bForceResize">
+        <xsl:choose>
+          <xsl:when test="$forceResize">
+            <xsl:value-of select="true()"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="false()"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -7066,17 +7213,17 @@
 						<xsl:variable name="image">
 							<picture>
 
-								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc)"/>
-								<xsl:variable name="newSrc-xxs-x2-webp" select="ew:CreateWebP($newSrc-xxs-x2)"/>
-								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
-								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2)"/>
-								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
-								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2)"/>
-								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
-								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2)"/>
-								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
-								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2)"/>
-								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
+								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$bForceResize)"/>
+								<xsl:variable name="newSrc-xxs-x2-webp" select="ew:CreateWebP($newSrc-xxs-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$bForceResize)"/>
+								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$bForceResize)"/>
+								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$bForceResize)"/>
+								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$bForceResize)"/>
+								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$bForceResize)"/>
+								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$bForceResize)"/>
 
 
 								<!--WebP Images-->
@@ -7123,7 +7270,7 @@
 								<!--JPG/PNG/GIF Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="$imageType"/>
-									<xsl:with-param name="media" select="'(max-width: 575px)'"/>
+									<xsl:with-param name="media" select="'(max-width: 574px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
 									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
 									<xsl:with-param name="class" select="$class"/>
@@ -7181,6 +7328,7 @@
 									</xsl:choose>
 									<!-- Width -->
 									<xsl:attribute name="width">
+										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-width"/>
@@ -7192,6 +7340,7 @@
 									</xsl:attribute>
 									<!-- Height -->
 									<xsl:attribute name="height">
+										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-height"/>
@@ -7264,7 +7413,7 @@
               </xsl:call-template>
             </xsl:variable>
 
-            <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
+
 
             <!--xsl:if test="$responsiveImageSizes='on'"-->
 
@@ -7401,12 +7550,12 @@
             <xsl:variable name="image">
               <picture>
 
-                <xsl:variable name="newSrc-xxs-webp" select="ew:CreateWebP($newSrc-xxs)"/>
-                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
-                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
-                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
-                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
-                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
+                <xsl:variable name="newSrc-xxs-webp" select="ew:CreateWebP($newSrc-xxs,$bForceResize)"/>
+                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$bForceResize)"/>
+                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$bForceResize)"/>
+                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$bForceResize)"/>
+                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$bForceResize)"/>
+                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$bForceResize)"/>
 
 
                 <!--WebP Images-->
@@ -7448,7 +7597,7 @@
                 <!--JPG/PNG/GIF Images-->
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
-                  <xsl:with-param name="media" select="'(max-width: 575px)'"/>
+                  <xsl:with-param name="media" select="'(max-width: 574px)'"/>
                   <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
@@ -7482,6 +7631,11 @@
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <!--FALLBACK IMAGE TAG-->
+				  <xsl:variable name="imageSize">
+					  <xsl:if test="not(contains($newSrc,'awaiting-image-thumbnail.gif'))">
+						  <xsl:value-of select="ew:ImageSize($newSrc)"/>
+					  </xsl:if>
+				  </xsl:variable>
                 <img>
                   <!-- SRC -->
                   <xsl:choose>
@@ -7506,7 +7660,7 @@
                         <xsl:value-of select="$max-width"/>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:value-of select="substring-before($imageSize,'x')" />
+						  <xsl:value-of select="substring-before($imageSize,'x')" />
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:attribute>
@@ -8066,6 +8220,8 @@
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="showImage"/>
     <xsl:param name="class"/>
+	  <xsl:param name="width"/>
+	  <xsl:param name="height"/>
     <xsl:param name="forceResize"/>
     <xsl:variable name="VForceResize">
       <xsl:choose>
@@ -8147,13 +8303,27 @@
         <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
         <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
         <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-        <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
-          <xsl:if test="$imgId != ''">
-            <xsl:attribute name="id">
-              <xsl:value-of select="$imgId"/>
-            </xsl:attribute>
-          </xsl:if>
-        </img>
+		  <xsl:choose>
+			  <xsl:when test="$width or $height">
+				  <img src="{$displaySrc}" width="{$width}" height="{$height}" alt="{$alt}" class="detail photo">
+					  <xsl:if test="$imgId != ''">
+						  <xsl:attribute name="id">
+							  <xsl:value-of select="$imgId"/>
+						  </xsl:attribute>
+					  </xsl:if>
+				  </img>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
+					  <xsl:if test="$imgId != ''">
+						  <xsl:attribute name="id">
+							  <xsl:value-of select="$imgId"/>
+						  </xsl:attribute>
+					  </xsl:if>
+				  </img>
+			  </xsl:otherwise>
+		  </xsl:choose>
+        
       </xsl:when>
       <!--<xsl:otherwise>
         -->
@@ -9331,11 +9501,7 @@
 						<xsl:value-of select="$price"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:apply-templates select="$page" mode="formatPrice">
-							<xsl:with-param name="price">
-								<xsl:value-of select="$price"/>
-							</xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:value-of select="format-number($price,'###,###,##0.00')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 	</xsl:template>
@@ -10351,7 +10517,7 @@
     <xsl:variable name="first" select="substring-before($newlist, $seperator)" />
     <xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
     <xsl:if test="$first!=''">
-      <script type="{$scriptType}" src="{$first}{$bundleVersion}" cookie-consent="strictly-necessary">
+      <script type="{$scriptType}" src="{$first}{$bundleVersion}">
         <xsl:if test="$async!=''">
           <xsl:attribute name="async">async</xsl:attribute>
         </xsl:if>
@@ -10369,16 +10535,11 @@
     <xsl:param name="bundle-path"/>
     <xsl:call-template name="render-css-files">
       <xsl:with-param name="list" select="ew:BundleCSS($comma-separated-files,$bundle-path)"/>
-
-
       <xsl:with-param name="ie8mode">
-
         <xsl:if test="(contains($userAgent, 'MSIE 7.0') or contains($userAgent, 'MSIE 8.0') or contains($userAgent, 'MSIE 9.0'))">
           <xsl:text>1</xsl:text>
-
         </xsl:if>
       </xsl:with-param>
-
     </xsl:call-template>
   </xsl:template>
 
@@ -10401,7 +10562,10 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <link rel="stylesheet" type="text/css" href="{$first}{$bundleVersion}" />
+			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+				<noscript>
+					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+				</noscript>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>

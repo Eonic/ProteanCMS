@@ -58,10 +58,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
-      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
-      <Name>Protean.Tools.Csharp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Protean.Tools\Protean.Tools.vbproj">
       <Project>{76e7c871-9cec-4795-b6f2-66439dcd9367}</Project>
       <Name>Protean.Tools</Name>

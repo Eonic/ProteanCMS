@@ -19,6 +19,7 @@ $(document).ready(function () {
     positionSocialBookmarks();
     videoSizeAuto();
     navAddMoreToFit();
+ //   contentSwiper();
 
     $(window).resize(function () {
         $("nav-add-more-auto").css('width', 'auto');
@@ -117,7 +118,6 @@ $(window).resize(function () {
         }
     });
 });
-
 function PageContentActions() {
 
     if (typeof universalParallax === 'function') {
@@ -492,8 +492,11 @@ $(function () {
 ---------------------- Handle Eonic Xforms-------------------------
 */
 $.fn.prepareXform = function () {
-
-    //---- Hide feilds using Javascript
+    //---- Removes whitespace from textarea we cant do in xslt
+    $(this).find('textarea').each(function () {
+        $(this).val($(this).val().trim());
+    });
+    //---- Hide fields using Javascript
 
     $(this).find('input.jsHide').each(function () {
         $(this).parent().addClass('hidden');
@@ -1471,7 +1474,7 @@ function displaySuccessMessage() {
             }
         }
 
-        $('#xFrmAlertModal').modal();
+        $('#xFrmAlertModal').show();
     } else { alert(arguments[0]); }
 }
 
@@ -2880,3 +2883,4 @@ if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('
         }
     });
 }
+

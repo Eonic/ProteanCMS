@@ -2188,7 +2188,7 @@ RedoCheck:
                 Public Sub New(ByRef aWeb As Protean.Cms)
                     MyBase.New(aWeb)
 
-                    PerfMon.Log("AdminXforms", "New")
+                    aWeb.PerfMon.Log("AdminXforms", "New")
                     Try
                         myWeb = aWeb
                         goConfig = myWeb.moConfig
@@ -2327,7 +2327,7 @@ Check:
                 Public Sub UpdateSubscriptionPaymentMethod(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
 
                     Dim pseudoCart As New Protean.Cms.Cart(myWeb)
-                    Dim pseudoOrder As Protean.Cms.Cart.Order
+                    Dim pseudoOrder As Protean.Models.Order
 
                     Dim ewCmd As String = myWeb.moRequest("subCmd2")
                     Dim ContentDetailElmt As XmlElement = myWeb.moPageXml.CreateElement("ContentDetail")
@@ -2375,7 +2375,8 @@ processFlow:
 
                                     If oSubForm.valid Then
                                         ewCmd = "PaymentForm"
-                                        pseudoOrder = New Protean.Cms.Cart.Order(myWeb)
+                                        pseudoOrder = New Protean.Models.Order(myWeb.moPageXml)
+
                                         pseudoOrder.PaymentMethod = SelectedPaymentMethod
                                         Dim RandGen As New Random
 

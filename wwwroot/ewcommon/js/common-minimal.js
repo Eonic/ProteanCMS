@@ -10,6 +10,7 @@ jQuery.fn.exists = function () { return jQuery(this).length > 0; }
 $(document).ready(function () {
     cleanDatepicker();
     initialiseXforms();
+    contentSwiper();
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $('.content-scroller .cols').resize();
@@ -78,7 +79,109 @@ $(window).resize(function () {
         }
     });
 });
+function contentSwiper() {
+    $(".swiper").each(function () {
 
+        var padding = $(this).parent().find('.row span').css("padding-left");
+        if (padding != undefined) {
+            padding = padding.substring(0, padding.length - 2);
+        } else {
+            padding = 0;
+        }
+
+        var swiperId = $(this).data("id");
+        var slidestoShow = $(this).data("slidestoshow");
+        var defaultSlides = 1;
+        var xsSlides = $(this).data("xscol");
+        if (xsSlides === '') { xsSlides = defaultSlides } else { defaultSlides = xsSlides };
+        var smSlides = $(this).data("smcol");
+        if (smSlides === '') { smSlides = defaultSlides } else { defaultSlides = smSlides };
+        var mdSlides = $(this).data("mdcol");
+        if (mdSlides === '') { mdSlides = defaultSlides } else { defaultSlides = mdSlides };
+        var lgSlides = $(this).data("lgcol");
+        if (lgSlides === '') { lgSlides = defaultSlides } else { defaultSlides = lgSlides };
+        var xlSlides = $(this).data("xlcol");
+        if (xlSlides === '') { xlSlides = defaultSlides } else { defaultSlides = xlSlides };
+        var xxlSlides = $(this).data("xxlcol");
+        if (xxlSlides === '') { xxlSlides = defaultSlides };
+
+        // alert(swiperId + "default" + defaultSlides + "," + xxlSlides + "," + lgSlides + "," + mdSlides + "," + mdSlides + "," + smSlides + "," + xsSlides);
+
+
+        var lgHeight = $(this).data("lgHeight");
+        var spacebetween = parseInt(padding) * 2;
+        var spacebetweenlg = parseInt(padding) * 2;
+        //var spacebetweenxs = $(this).data("spacebetweenxs");
+        //var spacebetweenlg = $(this).data("spacebetweenlg");
+
+        var objAutoplay = $(this).data("autoplay");
+        var autoplaySpeed = $(this).data("autoplayspeed");
+        if (objAutoplay == false) {
+            objAutoplay = undefined
+        }
+        else {
+            objAutoplay = { delay: autoplaySpeed }
+        };
+
+        var equalHeight = $(this).data("height");
+        var vCssEase = ($(this).data("cssease") === undefined ? "ease" : $(this).data("cssease"));
+        var vSpeed = ($(this).data("speed") === undefined ? 300 : $(this).data("speed"));
+        var vDirection = ($(this).data("direction") === undefined ? 'horizontal' : $(this).data("direction"));
+        var vEffect = ($(this).data("effect") === undefined ? undefined : $(this).data("effect"));
+        var vFadeEffect = undefined;
+        if (vEffect === 'fade') {
+            vFadeEffect = { crossFade: true }
+        }
+        var breakpoint = 768;
+        var dots = $(this).data("dots");
+        if (dots == true) { dots = false };
+        const swiper = new Swiper(this, {
+            // Optional parameters
+            slidesPerView: xsSlides,
+            spaceBetween: spacebetween,
+            loop: true,
+            speed: vSpeed,
+            direction: vDirection,
+            effect: vEffect,
+            fadeEffect: vFadeEffect,
+            loopFillGroupWithBlank: true,
+            watchOverflow: true,
+            autoplay: objAutoplay,
+            stopOnLastSlide: false,
+            pagination: {
+                el: "#swiper-pagination-" + swiperId,
+                clickable: true,
+            },
+            navigation: {
+                nextEl: "#swiper-button-next-" + swiperId,
+                prevEl: "#swiper-button-prev-" + swiperId,
+            },
+            breakpoints: {
+                576: {
+                    slidesPerView: smSlides,
+                },
+                768: {
+                    slidesPerView: mdSlides,
+                },
+                992: {
+                    slidesPerView: lgSlides,
+                    spaceBetween: spacebetweenlg,
+                },
+                1200: {
+                    slidesPerView: xlSlides,
+                    spaceBetween: spacebetweenlg,
+                },
+                1400: {
+                    slidesPerView: xxlSlides,
+                    spaceBetween: spacebetweenlg,
+                },
+            },
+        });
+        $(this).addClass('swiper-loaded');
+
+    });
+
+}
 function PageContentActions() {
 
     if (typeof universalParallax === 'function') {
@@ -301,6 +404,10 @@ $(function () {
 ---------------------- Handle Eonic Xforms-------------------------
 */
 $.fn.prepareXform = function () {
+    //---- Removes whitespace from textarea we cant do in xslt
+    $(this).find('textarea').each(function () {
+        $(this).val($(this).val().trim());
+    });
 
     //---- Hide feilds using Javascript
 

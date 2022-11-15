@@ -67,7 +67,7 @@ Namespace Providers
                 End Enum
 
                 Public Function GetPaymentForm(ByRef myWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
-                    PerfMon.Log("PaymentProviders", "payPayPalExpress")
+                    myWeb.PerfMon.Log("PaymentProviders", "payPayPalExpress")
                     Dim sSql As String
 
                     Dim ppXform As xForm = New xForm(myWeb.msException)
@@ -487,7 +487,7 @@ Namespace Providers
                 End Function
 
                 Public Function getCountryISONum(ByRef sCountry As String) As String
-                    PerfMon.Log(mcModuleName, "getCountryISONum")
+                    myWeb.PerfMon.Log(mcModuleName, "getCountryISONum")
                     'Dim oDr As SqlDataReader
                     Dim sSql As String
                     Dim strReturn As String = ""

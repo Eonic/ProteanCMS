@@ -62,7 +62,7 @@ Partial Public Class Cms
             End Sub
 
             Public Sub GetResults(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
-                PerfMon.Log("Search", "New")
+                myWeb.PerfMon.Log("Search", "New")
                 Dim oSrch As Protean.Cms.Search
                 Try
                     oSrch = New Protean.Cms.Search(myWeb)
@@ -109,11 +109,11 @@ Partial Public Class Cms
         End Class
 
         Public Sub New(ByRef aWeb As Protean.Cms)
-            PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables
                 myWeb = aWeb
+                myWeb.PerfMon.Log("Search", "New")
                 moPageXml = myWeb.moPageXml
                 moConfig = myWeb.moConfig
 
@@ -153,7 +153,7 @@ Partial Public Class Cms
         End Sub
 
         Public Sub New(ByRef myAPi As Protean.API)
-            PerfMon.Log("Search", "New")
+            'myAPi.PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables
@@ -197,7 +197,7 @@ Partial Public Class Cms
 
 
         Public Overridable Sub apply()
-            PerfMon.Log("Search", "apply")
+            myWeb.PerfMon.Log("Search", "apply")
             Dim sXpath As String = ""
             Dim sSearch As String = myWeb.moRequest("searchString")
             Dim aNewSearchWords() As String = Nothing
@@ -281,7 +281,7 @@ Partial Public Class Cms
 #Region "Search Methods"
 
         Protected Function BuildFiltersFromRequest(ByRef XmlDoc As XmlDocument, ByRef currentRequest As System.Web.HttpRequest) As XmlElement
-            PerfMon.Log("Search", "BuildFiltersFromRequest")
+            myWeb.PerfMon.Log("Search", "BuildFiltersFromRequest")
             Dim processInfo As String = ""
 
             Dim filters As XmlElement
@@ -378,7 +378,7 @@ Partial Public Class Cms
 
 
         Sub IndexQuery(ByVal cQuery As String, Optional fuzzySearch As String = "on")
-            PerfMon.Log("Search", "IndexQuery")
+            myWeb.PerfMon.Log("Search", "IndexQuery")
             Dim processInfo As String = "Looking for : " & cQuery
             Try
 
@@ -400,7 +400,7 @@ Partial Public Class Cms
                 Dim pageStart As Integer = Math.Max(myWeb.GetRequestItemAsInteger("pageStart", 1), 1)
                 Dim pageSize As Integer = myWeb.GetRequestItemAsInteger("pageSize", _pagingDefaultSize)
                 Dim pageEnd As Integer
-
+                Dim totalResults As Long = 0
                 'allow paging as per config setting 
                 'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
                 If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
@@ -514,7 +514,7 @@ Partial Public Class Cms
                     ' Paging settings
                     ' Hits is so lightweight that we don't have to filter it beforehand
                     ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
-                    Dim totalResults As Long = results.TotalHits
+                    totalResults = results.TotalHits
 
 
                     If pageSize <= 0 Then
@@ -542,7 +542,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
 
-                    resultsXML.SetAttribute("totalResults", totalResults)
+
                     resultsXML.SetAttribute("pageSize", pageSize) 'Max Number of items per page
                     resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / pageSize))
 
@@ -717,11 +717,18 @@ Partial Public Class Cms
 
                                         moContextNode.AppendChild(result)
                                         resultsCount = resultsCount + 1
+                                    Else
+                                        processInfo = "this is a duplicate art id"
+                                        totalResults = totalResults - 1
                                     End If
+                                Else
+                                    processInfo = "this is a duplicate art id"
+                                    totalResults = totalResults - 1
                                 End If
                             Else
                                 ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
                                 processInfo = "not found in live page filter"
+                                totalResults = totalResults - 1
                             End If
                         Next
 
@@ -733,7 +740,7 @@ Partial Public Class Cms
                 Else
                     resultsXML.SetAttribute("Time", "0")
                 End If
-
+                resultsXML.SetAttribute("totalResults", totalResults)
                 resultsXML.SetAttribute("searchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
@@ -748,7 +755,7 @@ Partial Public Class Cms
         End Sub
 
         Sub IndexQuery(ByRef myAPI As Protean.API, ByVal cQuery As String, Optional HitsLimit As Integer = 300, Optional fuzzySearch As String = "on")
-            PerfMon.Log("Search", "IndexQuery")
+            ' myWeb.PerfMon.Log("Search", "IndexQuery")
             Dim processInfo As String = "Looking for : " & cQuery
             Try
                 If myWeb Is Nothing Then
@@ -1035,7 +1042,7 @@ Partial Public Class Cms
 
 
         Sub XPathQuery(ByVal sSearch As String, ByVal cContentType As String)
-            PerfMon.Log("Search", "XPathQuery")
+            myWeb.PerfMon.Log("Search", "XPathQuery")
             Dim sXpath As String = ""
             Dim sXpathRoot As String = ""
             Dim aSearchWords() As String
@@ -1157,7 +1164,7 @@ Partial Public Class Cms
         End Sub
 
         Sub RegExpQuery(ByVal sSearch As String, ByVal cContentType As String, Optional ByVal bUserQuery As Boolean = False)
-            PerfMon.Log("Search", "RegExpQuery")
+            myWeb.PerfMon.Log("Search", "RegExpQuery")
             Dim sXpath As String = ""
             Dim aSearchWords() As String
             Dim aNewSearchWords() As String = Nothing
@@ -1414,7 +1421,7 @@ Partial Public Class Cms
         End Sub
 
         Sub FullTextQuery(ByVal sSearch As String, ByVal cContentType As String, Optional ByVal bUserQuery As Boolean = False)
-            PerfMon.Log("Search", "FullTextQuery")
+            myWeb.PerfMon.Log("Search", "FullTextQuery")
             Dim sXpath As String = ""
             Dim aSearchWords() As String
             Dim aNewSearchWords() As String = Nothing
@@ -1619,7 +1626,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' <remarks></remarks>
         Protected Sub ContentByDateQuery(ByVal cContentTypes As String, Optional ByVal cUnit As String = "", Optional ByVal cValue As String = "", Optional ByVal cStartDate As String = "", Optional ByVal cEndDate As String = "", Optional ByVal cSqlColumnToCheck As String = "PUBLISH")
 
-            PerfMon.Log("Search", "LatestContentQuery")
+            myWeb.PerfMon.Log("Search", "LatestContentQuery")
 
             Dim dStart As Date
             Dim dEnd As Date
@@ -1759,7 +1766,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub SetSearchTrackingCookie()
-            PerfMon.Log("Search", "SetSearchTrackingCookie")
+            myWeb.PerfMon.Log("Search", "SetSearchTrackingCookie")
             Try
 
                 ' Only need a cookie if not logged in
@@ -1802,7 +1809,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function ParseKeywordsAndPhrases(ByVal searchString As String) As String()
-            PerfMon.Log("Search", "ParseKeywordsAndPhrases")
+            myWeb.PerfMon.Log("Search", "ParseKeywordsAndPhrases")
             Dim processInfo As String = "Processing: " & searchString
 
             Try
@@ -1876,7 +1883,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         End Function
 
         Public Function CleanSearchString(ByVal cSearchString As String, Optional ByVal cReservedWords As String = "a|an|for|with|the|and|if|then|or|from|where", Optional ByVal cPunctuation As String = ",-.&+:;""") As String
-            PerfMon.Log("Search", "CleanSearchString")
+            myWeb.PerfMon.Log("Search", "CleanSearchString")
             Try
                 ' General RegEx Object
                 Dim reGeneral As Regex = New Regex(RegexOptions.IgnoreCase)
@@ -1898,7 +1905,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         End Function
 
         Public Function GetContentXml(ByRef oContentElmt As XmlElement, ByVal nContentIds As String, Optional ByVal cSqlOrderClause As String = "type, cl.nDisplayOrder") As Integer
-            PerfMon.Log("Search", "GetContentXml")
+            myWeb.PerfMon.Log("Search", "GetContentXml")
             Dim sSql As String
             Dim sProcessInfo As String = "building the Content XML"
             Dim nResultCount As Integer = 0
@@ -1984,7 +1991,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' <remarks></remarks>
         Private Function BuildLuceneQuery(ByVal keywordsToSearch As String, ByVal filters As XmlElement, Optional ByVal bShowHiddenForUser As Boolean = False) As Lucene.Net.Search.Query
 
-            PerfMon.Log("Search", "BuildLuceneQuery")
+            myWeb.PerfMon.Log("Search", "BuildLuceneQuery")
             Dim processInfo As String = "Looking for : " & keywordsToSearch
 
             Dim fieldValue As String = ""
@@ -2206,7 +2213,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
         Private Sub BuildLuceneKeywordQuery(ByRef queryBuilder As StringBuilder, ByVal keywords As String(), Optional ByVal fieldName As String = "", Optional ByVal boostBase As Integer = 1, Optional ByVal includeFuzzySearch As Boolean = False)
 
-            PerfMon.Log("Search", "BuildLuceneKeywordQuery")
+            myWeb.PerfMon.Log("Search", "BuildLuceneKeywordQuery")
             Dim processInfo As String = ""
             Dim firstItem As Boolean = False
             '  Dim queryBuilder1 As New StringBuilder
@@ -2275,7 +2282,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
 
         Private Function SetSortFieldFromRequest(ByVal currentRequest As System.Web.HttpRequest) As Sort
-            PerfMon.Log("Search", "SetSortFieldFromRequest")
+            myWeb.PerfMon.Log("Search", "SetSortFieldFromRequest")
             Dim processInfo As String = ""
 
             Try
@@ -2322,6 +2329,9 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 ' If not, remove the last quote
                 ' e.g. from "My test" with this"
                 '      to   "My test" with this
+
+                keywords = keywords.Replace("AND", "and")
+
                 If IsOdd(Regex.Matches(keywords, """").Count) Then
                     ' remove the last quote
                     keywords = Tools.Text.ReplaceLastCharacter(keywords, """"c, " ")

@@ -118,6 +118,8 @@
     newItem = newItem + '<a href="{$appPath}?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file=' + file.name + '" data-toggle="modal" data-target="#modal-{$targetFeild}" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text></i> Pick Image</a>';
     newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span></div>';
     newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel">' + newItem + '</div></div>';
+	
+	var filename = file.name;	
   </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' and (Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly'] or Request/QueryString/Item[@name='pathOnly' and node()='true'])]" mode="newItemScript">
@@ -167,7 +169,7 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:text>var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r</xsl:text>
+     <xsl:text>var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r</xsl:text>
     <xsl:text disable-output-escaping="yes"><![CDATA[&]]></xsl:text>
     <xsl:text>0x3|0x8;return v.toString(16);});</xsl:text>
 
@@ -176,6 +178,8 @@
     newItem = newItem + '<div class="description"></div>';
     newItem = newItem + '<a onclick="passImgFileToForm(\'EditContent\',\'{$targetFeild}\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text></i> Pick Image</a>';
     newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel">' + newItem + '</div></div>';
+
+	  var filename = file.name;	
   </xsl:template>
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
@@ -183,6 +187,8 @@
       <!--newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\' + targetPath + \'/\' + file.name + \');" class="btn btn-xs btn-default" href="#">';-->
     newItem = newItem + '<a onclick="passDocToForm(\'EditContent\',\'cContentDocPath\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-default" href="#">';
     newItem = newItem + '<i class="fa fa-file-o fa-white"> </i> Pick</a></td></tr>';
+
+	  var filename = file.name;	 
   </xsl:template>
 
   <xsl:template match="folder" mode="FolderTree">

@@ -25,7 +25,7 @@ Partial Public Class Cms
 
         Public Sub New(ByRef aWeb As Protean.Cms)
             MyBase.New(aWeb.msException)
-            PerfMon.Log(mcModuleName, "New")
+            aWeb.PerfMon.Log(mcModuleName, "New")
             Try
 
                 myWeb = aWeb

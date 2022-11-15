@@ -40,7 +40,7 @@ Partial Public Class Cms
             End Enum
 
             Public Sub New(ByRef aWeb As Protean.Cms)
-                PerfMon.Log("Discount", "New")
+                aWeb.PerfMon.Log("Discount", "New")
                 Try
                     myWeb = aWeb
                     moConfig = myWeb.moConfig
@@ -73,7 +73,7 @@ Partial Public Class Cms
                     bIsQuoteOn = LCase(moConfig("Quote")) = "on"
 
                     mcModuleName = "Eonic.Discount"
-                    PerfMon.Log("Discount", "New-End")
+                    myWeb.PerfMon.Log("Discount", "New-End")
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                 End Try
@@ -81,9 +81,9 @@ Partial Public Class Cms
 
 
             Public Sub New(ByRef aCart As Protean.Cms.Cart)
-                PerfMon.Log("Discount", "New")
                 Try
                     myWeb = aCart.myWeb
+                    myWeb.PerfMon.Log("Discount", "New")
                     myCart = aCart
                     moConfig = myWeb.moConfig
                     moCartConfig = WebConfigurationManager.GetWebApplicationSection("protean/cart")
@@ -105,7 +105,7 @@ Partial Public Class Cms
                     End If
 
                     mcModuleName = "Eonic.Discount"
-                    PerfMon.Log("Discount", "New-End")
+                    myWeb.PerfMon.Log("Discount", "New-End")
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
@@ -115,7 +115,7 @@ Partial Public Class Cms
 
 #Region "Discount Application"
             Function CheckDiscounts(ByVal oDsCart As DataSet, ByVal oCartXML As XmlElement, ByVal bFullCart As Boolean, ByVal oNotesElmt As XmlElement) As Decimal
-                PerfMon.Log("Discount", "CheckDiscounts")
+                myWeb.PerfMon.Log("Discount", "CheckDiscounts")
                 If Not bIsCartOn And Not bIsQuoteOn Then Return 0
                 Dim oDsDiscounts As DataSet
                 'Dim cSQL As String
@@ -223,18 +223,10 @@ Partial Public Class Cms
                                 strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0))")
                             End If
 
-                            '   Else
-                            'strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '' AND  tblCartDiscountRules.nDiscountCodeType = 0) ")
-                            'If cPromoCodeUserEntered <> "" Then
-                            'strSQL.Append("OR (tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
-                            '            strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0)")
-                            ' End If
-                            'strSQL.Append(")")
-                            'End If
 
-                            PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
+                            myWeb.PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
                             oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
-                            PerfMon.Log("Discount", "CheckDiscounts - EndQuery")
+                            myWeb.PerfMon.Log("Discount", "CheckDiscounts - EndQuery")
                         End If
 
                         'TS: Add a union in here to add discount rule applied at an order level.
@@ -242,29 +234,82 @@ Partial Public Class Cms
                         'It is used for validation order total, minimum order value and  maximum order value.
                         'If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                         'if total crossed more or less than defined range then it will remove promocode for the user.
+
+
                         If oDsDiscounts IsNot Nothing Then
                             If oDsDiscounts.Tables("Discount").Rows.Count > 0 Then
 
                                 If cPromoCodeUserEntered <> "" Then
+                                    Dim nMinQuantity As Integer = CInt("0" + oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinQuantity"))
+                                    Dim dMinPrice As Double = CInt("0" + oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinPrice"))
+                                    Dim dMaxPrice As Double = 0
                                     Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                     Dim validateAddedDiscount As Boolean = True
                                     Dim totalAmount As Double = 0
+                                    Dim bApplyToTotal As Boolean = False
+                                    Dim docAdditionalXMl As XmlDocument = New XmlDocument()
+                                    Dim iCount As Int16 = 0
+                                    Dim iDiscount As Int16 = oDsDiscounts.Tables("Discount").Rows.Count
+                                    Dim drDiscount As DataRow
+                                    Dim nValidProductCount As Int16 = 0
+
+                                    docAdditionalXMl.LoadXml(additionalInfo)
+                                    'check promocode is for total amount or not
+                                    If (docAdditionalXMl.InnerXml.Contains("bApplyToOrder")) Then
+                                        If (docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
+                                            bApplyToTotal = False
+                                        Else
+                                            bApplyToTotal = Convert.ToBoolean(docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
+                                        End If
+                                    End If
+                                    'check if maximum price for individual is set
+                                    If (docAdditionalXMl.InnerXml.Contains("nDiscountMaxPrice")) Then
+                                        dMaxPrice = CDbl("0" & docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
+                                    End If
+
+
                                     If oDsCart.Tables("Item").Rows.Count > 0 Then
                                         For Each drItem As DataRow In oDsCart.Tables("Item").Rows
+
                                             If (drItem(15) = 0) Then
                                                 totalAmount = totalAmount + drItem(6)
+
+                                                If (dMaxPrice <> 0) Then
+                                                    If (drItem(6) >= dMinPrice And drItem(6) <= dMaxPrice) Then
+                                                        nValidProductCount = nValidProductCount + 1
+                                                    Else
+                                                        For iCount = 0 To iDiscount - 1 'looping inside discount row for valid items else remove it from the list
+                                                            If (iCount < iDiscount) Then
+                                                                drDiscount = oDsDiscounts.Tables("Discount").Rows(iCount)
+                                                                If (drDiscount(15) = drItem(0)) Then
+                                                                    oDsDiscounts.Tables("Discount").Rows.RemoveAt(iCount)
+                                                                    iDiscount = iDiscount - 1
+                                                                End If
+                                                            End If
+                                                        Next
+                                                    End If
+                                                End If
                                             End If
+
                                         Next
 
                                     End If
 
-                                    validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
-                                    If validateAddedDiscount = False Then
-                                        RemoveDiscountCode()
-                                        oDsDiscounts = Nothing
+                                    If (nValidProductCount < nMinQuantity) Then 'check quantity is valid for total items in cart
+                                        validateAddedDiscount = False
                                     End If
-                                End If
-                            Else
+
+
+                                    'validate discount if it is on total
+                                    If (bApplyToTotal) Then
+                                            validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
+                                        End If
+                                        If validateAddedDiscount = False Then
+                                            RemoveDiscountCode()
+                                            oDsDiscounts = Nothing
+                                        End If
+                                    End If
+                                Else
                                 Dim oItemElmt As XmlElement
                                 For Each oItemElmt In oCartXML.SelectNodes("Item")
                                     'later sites are dependant on these values
@@ -560,7 +605,7 @@ Partial Public Class Cms
             End Function
 
             Public Function Discount_ApplyToCart(ByRef oCartXML As XmlElement, ByVal oDiscountXml As XmlDocument) As Decimal
-                PerfMon.Log("Discount", "Discount_ApplyToCart")
+                myWeb.PerfMon.Log("Discount", "Discount_ApplyToCart")
                 Try
                     'for basic we need to loop through and apply the new price
                     'also link the discounts applied
@@ -603,7 +648,7 @@ Partial Public Class Cms
 
 
                             'now to add the discount items to the cart
-                            For Each oDiscountElmt In oDiscountXml.SelectNodes("Discounts/Item[@id=" & nId & "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3)]")
+                            For Each oDiscountElmt In oDiscountXml.SelectNodes("Discounts/Item[@id=" & nId & "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3) or (@nDiscountCat=5)]")
                                 oDiscountElmt.SetAttribute("AppliedToCart", 1)
                                 oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountElmt.CloneNode(True), True))
                             Next
@@ -686,7 +731,7 @@ Partial Public Class Cms
 #Region "Discount Rule Application"
 
             Private Sub Discount_Basic_Money(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer, ByRef cFreeShippingMethods As String, Optional ByRef strbFreeGiftBox As String = "")
-                PerfMon.Log("Discount", "Discount_Basic_Money")
+                myWeb.PerfMon.Log("Discount", "Discount_Basic_Money")
                 'this will work basic monetary discounts
                 Dim oItemLoop As XmlElement
                 Dim oDiscountLoop As XmlElement
@@ -849,7 +894,7 @@ Partial Public Class Cms
             End Sub
 
             Private Sub Discount_Break_Product(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer)
-                PerfMon.Log("Discount", "Discount_Break_Product")
+                myWeb.PerfMon.Log("Discount", "Discount_Break_Product")
                 'this will work basic monetary discounts
                 Dim oItemLoop As XmlElement
                 Dim oPriceElmt As XmlElement
@@ -977,7 +1022,7 @@ NoDiscount:
             End Sub
 
             Private Sub Discount_Basic_Percent(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer, ByRef cFreeShippingMethods As String)
-                PerfMon.Log("Discount", "Discount_Basic_Percent")
+                myWeb.PerfMon.Log("Discount", "Discount_Basic_Percent")
                 'this will work basic discount discounts
                 Dim oItemLoop As XmlElement
                 Dim oDiscountLoop As XmlElement
@@ -1043,7 +1088,7 @@ NoDiscount:
             End Sub
 
             Private Sub Discount_XForPriceY(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer)
-                PerfMon.Log("Discount", "Discount_XForPriceY")
+                myWeb.PerfMon.Log("Discount", "Discount_XForPriceY")
                 'this will work basic discount discounts
                 Dim oItemLoop As XmlElement
                 Dim oDiscountLoop As XmlElement
@@ -1122,7 +1167,7 @@ NoDiscount:
 
             Private Sub Discount_CheapestDiscount(ByRef oDiscXml As XmlDocument, ByRef nPriceCount As Integer)
 
-                PerfMon.Log("Discount", "Discount_CheapestFree")
+                myWeb.PerfMon.Log("Discount", "Discount_CheapestFree")
                 'this is going to be the wierdest one
                 'we will need to loop through discounts first, then the items
                 Dim oItemLoop As XmlElement = Nothing
@@ -1303,7 +1348,7 @@ NoDiscount:
             End Sub
 
             Private Sub Discount_Break_Group(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer)
-                PerfMon.Log("Discount", "Discount_Break_Group")
+                myWeb.PerfMon.Log("Discount", "Discount_Break_Group")
                 Try
                     Dim oDiscount As XmlElement
                     Dim nTotalItems As Integer
@@ -1442,8 +1487,12 @@ NoDiscount:
                 Dim oDiscountMessage As String = "The promo code you have provided is invalid for this transaction"
                 Dim minimumOrderTotal As Double = 0
                 Dim maximumOrderTotal As Double = 0
+                Dim dMaxPrice As Double = 0
+                Dim nDiscountQuantity As Integer = 0
+                Dim itemCost As Double = 0
                 Dim productGroups As Int32 = 0
-
+                Dim dMinPrice As Double = 0
+                Dim nCount As Integer = 0
                 Dim applyToTotal As Boolean = False
 
                 Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
@@ -1458,6 +1507,8 @@ NoDiscount:
                             docOrder.LoadXml(sXmlContent)
                             ' Dim OrderPaymentStatus As String = docOrder.SelectSingleNode("Order").Attributes("status").Value
                             Dim orderTotal As Double = docOrder.SelectSingleNode("Order").Attributes("total").Value
+                            'check for quantity
+                            Dim nItemCount As Integer = docOrder.SelectNodes("Order/Item").Count
 
                             If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
                                 '' call stored procedure else existing code.
@@ -1496,6 +1547,8 @@ NoDiscount:
                                 End If
 
                             Else
+
+
                                 Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                 doc.LoadXml(additionalInfo)
 
@@ -1505,6 +1558,9 @@ NoDiscount:
                                 If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
                                     maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
                                 End If
+                                If (doc.InnerXml.Contains("nDiscountMaxPrice")) Then
+                                    dMaxPrice = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
+                                End If
 
                                 If (doc.InnerXml.Contains("bApplyToOrder")) Then
                                     If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
@@ -1512,6 +1568,7 @@ NoDiscount:
                                     Else
                                         applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                                     End If
+
                                     If (maximumOrderTotal <> 0) Then
                                         If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
                                             oDsDiscounts.Clear()
@@ -1527,9 +1584,29 @@ NoDiscount:
                                                 Return oDiscountMessage
                                             End If
                                         End If
+
                                     End If
+                                    'check maximum item price value set or not
+                                    If (dMaxPrice <> 0) Then
+                                        'validate quantity of cart as individual item not total quantity of item purchased
+                                        nDiscountQuantity = CInt("0" & oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinQuantity"))
+                                        dMinPrice = CDbl("0" & oDsDiscounts.Tables("Discount").Rows(0)("nDiscountMinPrice"))
+
+                                        For Each item As XmlNode In docOrder.SelectNodes("Order/Item")
+                                            itemCost = item.Attributes("itemTotal").Value
+                                            If (itemCost >= dMinPrice And itemCost <= dMaxPrice) Then
+                                                nCount = nCount + 1
+                                            End If
+                                        Next
+                                        If (nCount < nDiscountQuantity) Then
+                                            oDsDiscounts.Clear()
+                                            oDsDiscounts = Nothing
+                                            Return oDiscountMessage
+                                        End If
+                                    End If
+
                                 End If
-                                oDsDiscounts.Clear()
+                                    oDsDiscounts.Clear()
                                 oDsDiscounts = Nothing
                             End If
                             'myCart.moCartXml
@@ -1585,13 +1662,14 @@ NoDiscount:
                 End Try
             End Function
 
-            Public Function ValidateDiscount(ByVal orderTotal As Double, ByVal additionalInfo As String) As Boolean
+            Public Function ValidateDiscount(ByVal dAmount As Double, ByVal additionalInfo As String) As Boolean
                 Dim cProcessInfo As String = "ValidateDiscount"
                 Try
                     Dim doc As New XmlDocument()
                     Dim applyToTotal As Boolean = False
                     Dim minimumOrderTotal As Double = 0
                     Dim maximumOrderTotal As Double = 0
+                    'Dim dMaxPrice As Double = 0
                     If (additionalInfo <> String.Empty) Then
 
 
@@ -1603,6 +1681,9 @@ NoDiscount:
                         If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
                             maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
                         End If
+                        'If (doc.InnerXml.Contains("nDiscountMaxPrice")) Then
+                        '    dMaxPrice = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
+                        'End If
 
                         If (doc.InnerXml.Contains("bApplyToOrder")) Then
                             If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
@@ -1611,18 +1692,24 @@ NoDiscount:
                                 applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                             End If
                             If (maximumOrderTotal <> 0) Then
-                                If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
-
+                                If Not (dAmount >= minimumOrderTotal And dAmount <= maximumOrderTotal) Then
                                     Return False
                                 End If
                             End If
                             If (applyToTotal) Then
                                 If (maximumOrderTotal <> 0) Then
-                                    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+                                    If Not (dAmount >= minimumOrderTotal And dAmount <= maximumOrderTotal) Then
                                         Return False
                                     End If
                                 End If
+                                'Else
+                                '    If (dMaxPrice <> 0) Then
+                                '        If Not (dAmount >= dMinPrice And dAmount <= dMaxPrice) Then
+                                '            Return False
+                                '        End If
+                                '    End If
                             End If
+
                         End If
                         Return True
 
@@ -1633,7 +1720,7 @@ NoDiscount:
             End Function
 
             Public Sub getAvailableDiscounts(ByRef oRootElmt As XmlElement)
-                PerfMon.Log("Discount", "getAvailableDiscounts")
+                myWeb.PerfMon.Log("Discount", "getAvailableDiscounts")
                 If Not bIsCartOn And Not bIsQuoteOn Then Exit Sub
                 'Gets the discounts applicable to the listed products, filtered by user
                 'and adds them under the relevant content. Will do this for both Brief and Detail
@@ -1725,13 +1812,13 @@ NoDiscount:
 
 
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startGetDataset")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startGetDataset")
 
                         Dim sSql As String = strSQL.ToString
                         Dim oXML As XmlElement = oRootElmt.OwnerDocument.CreateElement("DiscountsRoot")
 
                         Using oDS As DataSet = myWeb.moDbHelper.GetDataSet(sSql, "Discount", "Discounts")
-                            PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
+                            myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
                             If oDS Is Nothing Then
                                 Exit Sub
                             End If
@@ -1744,21 +1831,21 @@ NoDiscount:
                             Next
                             oDS.Tables("Discount").Columns("cAdditionalXML").ColumnMapping = MappingType.SimpleContent
 
-                            PerfMon.Log("Discount", "getAvailableDiscounts-startGetDatasetXml")
+                            myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startGetDatasetXml")
 
                             oXML.InnerXml = Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<")
                         End Using
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-endGetDatasetXml")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endGetDatasetXml")
 
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startIterateContentNodes")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startIterateContentNodes")
 
                         'NB : 19-01-2010 - this still runs many checks for non products
                         ' What does all this do? Nothing is updating the price until you buy it
                         ' It should be appending discounts to the content right? Then why isn't it
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startAddDiscountsToContent")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startAddDiscountsToContent")
                         Dim nStep As Long = 0
 
                         For Each oDiscountElmt In oXML.SelectNodes("Discounts/Discount[not(descendant-or-self::cPromotionalCode/node()!='') or not(descendant-or-self::cPromotionalCode)]")
@@ -1782,9 +1869,9 @@ NoDiscount:
                             End If
                         Next
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-endAddDiscountsToContent-" & nStep & " Contents with Discounts Added")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endAddDiscountsToContent-" & nStep & " Contents with Discounts Added")
 
-                        PerfMon.Log("Discount", "getAvailableDiscounts-startCalculateDiscounts")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startCalculateDiscounts")
                         'For Each oContentElmt In oRootElmt.SelectNodes("/Page/Contents/descendant-or-self::Content")
                         For Each oContentElmt In oRootElmt.SelectNodes("descendant-or-self::Content[Prices/Price[@currency='" & mcCurrency & "' and node()!=''] and Discount]")
 
@@ -1820,9 +1907,9 @@ NoDiscount:
 
                             Next
                         Next
-                        PerfMon.Log("Discount", "getAvailableDiscounts-endCalculateDiscounts")
+                        myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endCalculateDiscounts")
                     End If
-                    PerfMon.Log("Discount", "getAvailableDiscounts-endIterateContentNodes")
+                    myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endIterateContentNodes")
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "getAvailableDiscounts", ex, "", "", gbDebug)
@@ -1839,7 +1926,7 @@ NoDiscount:
             ''' <param name="PageElmt"></param>
             ''' <remarks></remarks>
             Public Overridable Sub getDiscountXML(ByRef PageElmt As XmlElement)
-                PerfMon.Log("Discount", "start-getDiscountXML")
+                myWeb.PerfMon.Log("Discount", "start-getDiscountXML")
                 If Not bIsCartOn And Not bIsQuoteOn Then Exit Sub
                 Try
                     Dim nDiscountID As Integer = 0
@@ -1865,7 +1952,7 @@ NoDiscount:
                         sSQL &= " AND dr.nDiscountKey = " & nDiscountID
                     End If
                     oDS = myWeb.moDbHelper.GetDataSet(sSQL, "Discount", "Discounts")
-                    PerfMon.Log("Discount", "getDiscountXML-gotDiscounts")
+                    myWeb.PerfMon.Log("Discount", "getDiscountXML-gotDiscounts")
                     Dim oDC As DataColumn
                     For Each oDC In oDS.Tables("Discount").Columns
                         oDC.ColumnMapping = MappingType.Attribute
@@ -1901,13 +1988,13 @@ NoDiscount:
                                 " da.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & ")"
                     oDS = New DataSet
                     oDS = myWeb.moDbHelper.GetDataSet(sSQL, "Content", "Contents")
-                    PerfMon.Log("Discount", "getDiscountXML-gotContent")
+                    myWeb.PerfMon.Log("Discount", "getDiscountXML-gotContent")
                     oDS.Tables(0).Columns("nDiscountId").ColumnMapping = MappingType.Attribute
                     'now to add them to discounts 
 
                     myWeb.moDbHelper.AddDataSetToContent(oDS, oContent, myWeb.mnPageId, True, , , , False)
 
-                    PerfMon.Log("Discount", "getDiscountXML-appendStart")
+                    myWeb.PerfMon.Log("Discount", "getDiscountXML-appendStart")
 
                     Dim oTmp As XmlElement
                     Dim oDisc As XmlElement
@@ -1925,9 +2012,9 @@ NoDiscount:
                         End If
                         appendCount = appendCount + 1
                     Next
-                    PerfMon.Log("Discount", "getDiscountXML appended " & appendCount & " Items")
+                    myWeb.PerfMon.Log("Discount", "getDiscountXML appended " & appendCount & " Items")
 
-                    PerfMon.Log("Discount", "end-getDiscountXML")
+                    myWeb.PerfMon.Log("Discount", "end-getDiscountXML")
                     PageElmt.AppendChild(oDiscounts)
 
                 Catch ex As Exception
@@ -1947,26 +2034,26 @@ NoDiscount:
                     Else
                         'myCart.moCartXml
                         If myCart.mnCartId > 0 Then
-                        sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
-                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
-                        Dim xmlNotes As XmlElement = Nothing
-                        Dim xmlDoc As New XmlDocument
+                            sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
+                            oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                            Dim xmlNotes As XmlElement = Nothing
+                            Dim xmlDoc As New XmlDocument
 
-                        For Each oRow In oDs.Tables("Order").Rows
-                            xmlDoc.LoadXml(oRow("cClientNotes"))
-                            xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
+                            For Each oRow In oDs.Tables("Order").Rows
+                                xmlDoc.LoadXml(oRow("cClientNotes"))
+                                xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
 
-                            oRow("cClientNotes") = Nothing
-                        Next
-                        myWeb.moDbHelper.updateDataset(oDs, "Order", True)
-                        oDs.Clear()
-                        oDs = Nothing
-                        If (xmlNotes IsNot Nothing) Then
-                            sPromoCode = xmlNotes.InnerText
+                                oRow("cClientNotes") = Nothing
+                            Next
+                            myWeb.moDbHelper.updateDataset(oDs, "Order", True)
+                            oDs.Clear()
+                            oDs = Nothing
+                            If (xmlNotes IsNot Nothing) Then
+                                sPromoCode = xmlNotes.InnerText
+                            End If
+
+                            UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
                         End If
-
-                        UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
-                    End If
                         Return ""
                     End If
                 Catch ex As Exception
@@ -2002,7 +2089,7 @@ NoDiscount:
             'to use for contentprices
 
             Function getProductPricesByXml_OLD(ByVal cXml As String) As Double
-                PerfMon.Log("Discount", "getProductPricesByXml")
+                myWeb.PerfMon.Log("Discount", "getProductPricesByXml")
                 Dim cGroupXPath As String = ""
                 Dim oProd As XmlNode = myWeb.moPageXml.CreateNode(XmlNodeType.Document, "", "product")
                 Dim oPrices As XmlNodeList
@@ -2060,7 +2147,7 @@ NoDiscount:
             End Function
 
             Function getProductPricesByXml(ByVal cXml As String) As Double
-                PerfMon.Log("Cart", "getProductPricesByXml")
+                myWeb.PerfMon.Log("Cart", "getProductPricesByXml")
                 Dim cGroupXPath As String = ""
                 Dim oProd As XmlNode = myWeb.moPageXml.CreateNode(XmlNodeType.Document, "", "product")
                 Dim oDefaultPrice As XmlNode
@@ -2118,7 +2205,7 @@ NoDiscount:
             Private Sub applyDiscountsToPriceXml(ByVal oContentElmt As XmlElement, ByVal oDiscountElmt As XmlElement)
 
                 Try
-                    'PerfMon.Log("Cart", "applyDiscountsToPriceXml")
+                    'myWeb.PerfMon.Log("Cart", "applyDiscountsToPriceXml")
 
                     Dim cGroups As String = mcGroups
                     If cGroups = "" Then cGroups &= "default,all,Standard,standard" Else cGroups &= ",default,all,Standard,standard"
@@ -2173,13 +2260,13 @@ NoDiscount:
 
 
             Function getGroupsByName() As String
-                PerfMon.Log("Discount", "getGroupsByName")
+                myWeb.PerfMon.Log("Discount", "getGroupsByName")
                 Dim cReturn As String = ""
                 Dim oDs As DataSet
                 Dim oDr As DataRow
                 Dim cProcessInfo As String = ""
                 Try
-                    PerfMon.Log("Discount", "getGroupsByName-start")
+                    myWeb.PerfMon.Log("Discount", "getGroupsByName-start")
                     If myWeb.mnUserId > 0 Then
                         oDs = myWeb.moDbHelper.GetDataSet("select * from tblDirectory g inner join tblDirectoryRelation r on g.nDirKey = r.nDirParentId where r.nDirChildId = " & myWeb.mnUserId, "Groups")
                         If oDs.Tables("Groups").Rows.Count > 0 Then
@@ -2189,7 +2276,7 @@ NoDiscount:
                             cReturn = Mid(cReturn, 2)
                         End If
                     End If
-                    PerfMon.Log("Discount", "getGroupsByName-end")
+                    myWeb.PerfMon.Log("Discount", "getGroupsByName-end")
                     Return cReturn
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug)

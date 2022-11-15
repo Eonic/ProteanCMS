@@ -22,6 +22,9 @@ Imports System.Security.Principal
 Imports System.Web.Configuration
 Imports Protean.Tools.DelegateWrappers
 Imports System
+Imports System.Text.RegularExpressions
+Imports System.Web.UI
+Imports System.Web
 
 Partial Public Class fsHelper
 
@@ -39,6 +42,7 @@ Partial Public Class fsHelper
     Public mcPopulateFilesNode As String = ""
     Public mcRoot As String = ""
     Shared msException As String
+    Public AdminJsonAPI As Protean.Cms.Admin.JSONActions
 
     Private _thumbnailPath As String = "/~ptn"
 
@@ -75,7 +79,7 @@ Partial Public Class fsHelper
     End Sub
 
     Public Shadows Sub open(ByVal oPageXml As XmlDocument)
-        PerfMon.Log("fsHelper", "open")
+        'PerfMon.Log("fsHelper", "open")
         Dim cProcessInfo As String = ""
         Try
             moPageXML = oPageXml
@@ -87,7 +91,7 @@ Partial Public Class fsHelper
 #End Region
 #Region "Initialisation"
     Public Sub initialiseVariables(ByVal nLib As LibraryType)
-        PerfMon.Log("fsHelper", "initialiseVariables")
+        'PerfMon.Log("fsHelper", "initialiseVariables")
         Dim cProcessInfo As String = ""
         Dim cStartFolder As String = ""
 
@@ -115,7 +119,7 @@ Partial Public Class fsHelper
 
     Public Sub initialiseVariables()
 
-        PerfMon.Log("fsHelper", "initialiseVariables")
+        'PerfMon.Log("fsHelper", "initialiseVariables")
         Dim cProcessInfo As String = ""
         Dim cStartFolder As String = ""
 
@@ -142,7 +146,7 @@ Partial Public Class fsHelper
 #End Region
 #Region "Public Methods"
     Public Function getConfigNode(ByVal cPath As String) As XmlElement
-        PerfMon.Log("fsHelper", "getConfigNode")
+        'PerfMon.Log("fsHelper", "getConfigNode")
         Dim cProcessInfo As String = ""
         Dim oConfigXml As XmlDataDocument = New XmlDataDocument
 
@@ -163,7 +167,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Shared Function checkLeadingSlash(ByVal filePath As String, Optional ByVal removeSlash As Boolean = False) As String
-        PerfMon.Log("fsHelper", "checkLeadingSlash")
+        'PerfMon.Log("fsHelper", "checkLeadingSlash")
         Try
 
             filePath = filePath.Replace("\", "/")
@@ -183,7 +187,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function checkCommonFilePath(ByVal localFilePath As String) As String
-        PerfMon.Log("fsHelper", "checkCommonFilePath")
+        'PerfMon.Log("fsHelper", "checkCommonFilePath")
         Dim cProcessInfo As String = ""
         Try
             localFilePath = checkLeadingSlash(localFilePath)
@@ -205,7 +209,7 @@ Partial Public Class fsHelper
 
     End Function
     Public Function setConfigNode(ByVal oInstance As XmlElement) As XmlElement
-        PerfMon.Log("fsHelper", "setConfigNode")
+        'PerfMon.Log("fsHelper", "setConfigNode")
         Dim cProcessInfo As String = ""
         Dim oConfigXml As XmlDataDocument = New XmlDataDocument
         Dim oConfigNode As XmlElement
@@ -225,7 +229,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function getImageXhtml(ByVal cPath As String) As String
-        PerfMon.Log("fsHelper", "getImageXhtml")
+        'PerfMon.Log("fsHelper", "getImageXhtml")
         Dim cProcessInfo As String = ""
         Try
             cPath = Replace(cPath, "\", "/")
@@ -251,7 +255,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function getDirectoryTreeXml(ByVal nLib As LibraryType, Optional ByVal populateFilesNode As String = "") As XmlElement
-        PerfMon.Log("fsHelper", "getDirectoryTreeXml")
+        'PerfMon.Log("fsHelper", "getDirectoryTreeXml")
         Dim tempStartFolder As String
         Dim TreeXml As XmlElement
         Dim aVirtualImageDirectories() As String = Split(goConfig("VirtualImageDirectories"), ",")
@@ -273,9 +277,9 @@ Partial Public Class fsHelper
 
             Dim nodeElem As XmlElement = XmlElement("folder", New DirectoryInfo(mcStartFolder).Name)
             nodeElem.SetAttribute("path", "\")
-            PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsStart")
+            'PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsStart")
             TreeXml = AddElements(nodeElem, mcStartFolder)
-            PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsEnd")
+            'PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsEnd")
             If nLib = LibraryType.Image Then
 
                 For Each VirtualImageDirectory In aVirtualImageDirectories
@@ -298,7 +302,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function CreateFolder(ByVal cFolderName As String, ByVal cFolderPath As String) As String
-        PerfMon.Log("fsHelper", "CreateFolder-Start", cFolderName)
+        'PerfMon.Log("fsHelper", "CreateFolder-Start", cFolderName)
         'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
         Dim dir As New DirectoryInfo(mcStartFolder & cFolderPath & "\")
         Try
@@ -309,7 +313,7 @@ Partial Public Class fsHelper
             End If
 
             Return "1"
-            PerfMon.Log("fsHelper", "CreateFolder-End", cFolderName)
+            'PerfMon.Log("fsHelper", "CreateFolder-End", cFolderName)
         Catch ex As Exception
             Return ex.Message
         End Try
@@ -324,7 +328,7 @@ Partial Public Class fsHelper
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function CreatePath(ByVal cFolderPath As String) As String
-        PerfMon.Log("fsHelper", "CreatePath", cFolderPath)
+        'PerfMon.Log("fsHelper", "CreatePath", cFolderPath)
         'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
         cFolderPath = Replace(cFolderPath, "\", "/")
         Dim aFolderNames() As String = cFolderPath.Split("/")
@@ -334,9 +338,6 @@ Partial Public Class fsHelper
 
             Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-
-
 
                 Dim startDir As String
                 If mcRoot = "../" Then
@@ -379,7 +380,7 @@ Partial Public Class fsHelper
                     End If
                 Next
 
-                PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
+                'PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
                 oImp.UndoImpersonation()
 
                 Return "1"
@@ -388,6 +389,7 @@ Partial Public Class fsHelper
                 Return "Server admin permissions are not configured"
             End If
 
+            'PerfMon.Log("fsHelper", "CreatePath - end")
 
         Catch ex As Exception
             Return ex.Message & " - " & tempFolder & "<br/>" & ex.StackTrace
@@ -443,7 +445,7 @@ Partial Public Class fsHelper
 
 
     Public Function DeleteFolder(ByVal cFolderName As String, ByVal cFolderPath As String) As String
-        PerfMon.Log("fsHelper", "DeleteFolder")
+        'PerfMon.Log("fsHelper", "DeleteFolder")
         'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
         Try
 
@@ -480,7 +482,7 @@ Partial Public Class fsHelper
 
 
     Public Function DeleteFolderContents(ByVal cFolderName As String, ByVal cFolderPath As String) As String
-        PerfMon.Log("fsHelper", "DeleteFolder")
+        'PerfMon.Log("fsHelper", "DeleteFolder")
         'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
         Try
 
@@ -554,7 +556,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function DeleteFile(ByVal cFolderPath As String, ByVal cFileName As String) As String
-        PerfMon.Log("fsHelper", "DeleteFile")
+        'PerfMon.Log("fsHelper", "DeleteFile")
         Try
             Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
@@ -577,7 +579,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function DeleteFile(ByVal cFullFilePath As String) As String
-        PerfMon.Log("fsHelper", "DeleteFile")
+        'PerfMon.Log("fsHelper", "DeleteFile")
         Try
             Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
@@ -602,7 +604,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function SaveFile(ByRef FileName As String, ByVal cFolderPath As String, ByVal FileData As Byte()) As String
-        PerfMon.Log("fsHelper", "SaveFile")
+        'PerfMon.Log("fsHelper", "SaveFile")
         Try
             'here we will fix any unsafe web charactors in the name
             FileName = Replace(FileName, " ", "-")
@@ -634,7 +636,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function SaveFile(ByRef postedFile As System.Web.HttpPostedFile, ByVal cFolderPath As String) As String
-        PerfMon.Log("fsHelper", "SaveFile")
+        'PerfMon.Log("fsHelper", "SaveFile")
         Try
             Dim filename As String = Right(postedFile.FileName, postedFile.FileName.Length - postedFile.FileName.LastIndexOf("\") - 1)
 
@@ -655,7 +657,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function SaveFile(ByVal httpURL As String, ByVal cFolderPath As String) As String
-        PerfMon.Log("fsHelper", "SaveFile")
+        'PerfMon.Log("fsHelper", "SaveFile")
         Dim response As System.Net.WebResponse = Nothing
         Dim remoteStream As Stream
         Dim readStream As StreamReader
@@ -733,7 +735,7 @@ Partial Public Class fsHelper
 
 
     Public Function CopyFile(ByVal FileName As String, ByVal cFolderSource As String, ByVal cFolderDestination As String, Optional ByVal bOverwrite As Boolean = False) As Boolean
-        PerfMon.Log("fsHelper", "SaveFile")
+        'PerfMon.Log("fsHelper", "CopyFile")
         Try
 
             'here we will fix any unsafe web charactors in the name
@@ -755,7 +757,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function MoveFile(ByVal FileName As String, ByVal cFolderSource As String, ByVal cFolderDestination As String, Optional ByVal bOverwrite As Boolean = False) As Boolean
-        PerfMon.Log("fsHelper", "SaveFile")
+        'PerfMon.Log("fsHelper", "MoveFile")
         Try
 
             Dim dir As New DirectoryInfo(goServer.MapPath("/" & mcRoot) & cFolderSource.Replace("/", "\"))
@@ -775,7 +777,7 @@ Partial Public Class fsHelper
     End Function
 
     Public Function GetFileStream(ByVal FilePath As String) As FileStream
-        PerfMon.Log("GetFileStream", "SaveFile")
+        'PerfMon.Log("GetFileStream", "SaveFile")
         Try
             Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
@@ -841,24 +843,51 @@ Partial Public Class fsHelper
 
     End Function
 
-    Public Function OptimiseImages(ByVal path As String, Optional ByRef nFileCount As Long = 0, Optional ByRef nSavings As Long = 0, ByVal Optional lossless As Boolean = True) As String
+    Public Function OptimiseImages(ByVal path As String, Optional ByRef nFileCount As Long = 0, Optional ByRef nSavings As Long = 0, ByVal Optional lossless As Boolean = True, ByVal Optional tinyAPIKey As String = "", ByVal Optional FolderPrefix As String = "") As String
         Try
             Dim thisDir As New DirectoryInfo(goServer.MapPath(path))
             Dim ofile As FileInfo
             Dim ofolder As DirectoryInfo
+            Dim newSavings As Long = 0
 
             Dim nLengthBefore As Long = 0
 
+            path = HttpUtility.UrlDecode(path)
+
             For Each ofolder In thisDir.GetDirectories()
-                OptimiseImages(path & "/" & ofolder.Name, nFileCount, nSavings, lossless)
+                OptimiseImages(path & "/" & ofolder.Name, nFileCount, nSavings, lossless, tinyAPIKey)
             Next
 
-            For Each ofile In thisDir.GetFiles
-                Dim oImgTool As New Protean.Tools.Image("")
-                nSavings = nSavings + oImgTool.CompressImage(ofile, lossless)
-                nFileCount = nFileCount + 1
-            Next
+            If thisDir.Name.StartsWith(FolderPrefix) Or FolderPrefix = "" Then
+                Dim LogFile As FileInfo = New FileInfo(goServer.MapPath(path) & "/optimiselog.txt")
+                If LogFile.Exists = False Or DateAndTime.DateDiff(DateInterval.Hour, LogFile.LastWriteTimeUtc(), Now()) > 24 Then
+                    Dim FileCountBefore = nFileCount
 
+                    For Each ofile In thisDir.GetFiles
+                        Dim oImgTool As New Protean.Tools.Image("")
+                        oImgTool.TinifyKey = tinyAPIKey
+                        newSavings = newSavings + oImgTool.CompressImage(ofile, lossless)
+                        nFileCount = nFileCount + 1
+                    Next
+
+                    Dim FilesProcessedCount As Long = nFileCount - FileCountBefore
+                    Dim LogText As String = "Last Optimised:" & Now().ToLongDateString & " Savings:" & newSavings & " FileCount:" & FilesProcessedCount & vbCrLf
+                    If LogFile.Exists Then
+                        Using fs As StreamWriter = File.AppendText(goServer.MapPath(path) & "/optimiselog.txt")
+                            fs.WriteLine(LogText)
+                            fs.Close()
+                        End Using
+                    Else
+                        Using fs As FileStream = File.Create(goServer.MapPath(path) & "/optimiselog.txt")
+                            Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(LogText & vbCrLf)
+                            fs.Write(info, 0, info.Length)
+                            fs.Close()
+                        End Using
+                    End If
+
+                End If
+            End If
+            nSavings = nSavings + newSavings
             Return nFileCount & " Files Updated " & nSavings / 1024 & " Kb have been saved"
 
         Catch ex As Exception
@@ -873,7 +902,7 @@ Partial Public Class fsHelper
 
 
             context.Response.AddHeader("Pragma", "no-cache")
-            context.Response.AddHeader("Cache-Control", "private, no-cache")
+            context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
             mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
             mcRoot = context.Server.MapPath("/")
@@ -907,7 +936,7 @@ Partial Public Class fsHelper
     End Sub
 
     Private Sub ReturnOptions(ByVal context As System.Web.HttpContext)
-        context.Response.AddHeader("Allow", "POST,PUT,OPTIONS")
+        context.Response.AddHeader("Allow", "POST, PUT, OPTIONS")
         context.Response.StatusCode = 200
     End Sub
 
@@ -928,7 +957,7 @@ Partial Public Class fsHelper
     ' Upload partial file
     Private Sub UploadPartialFile(ByVal fileName As String, ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
         If context.Request.Files.Count <> 1 Then
-            Throw New System.Web.HttpRequestValidationException("Attempt to upload chunked file containing more than one fragment per request")
+            Throw New System.Web.HttpRequestValidationException("Attempt To upload chunked file containing more than one fragment per request")
         End If
         Dim inputStream = context.Request.Files(0).InputStream
         Dim fullName = mcStartFolder & Path.GetFileName(fileName)
@@ -947,25 +976,43 @@ Partial Public Class fsHelper
         statuses.Add(New FilesStatus(New FileInfo(fullName)))
     End Sub
 
+    Public Function CleanfileName(ByVal cFilename As String) As String
+
+        Try
+
+            Dim cCleanfileName As String = Regex.Replace(cFilename, "\s+", "-")
+            cCleanfileName = Regex.Replace(cCleanfileName, "(\s+|\$|\,|\'|\£|\:|\*|&|\?|\/)", "")
+            cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None)
+            Return cCleanfileName
+
+        Catch ex As Exception
+            'RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+            Return ex.Message
+        End Try
+    End Function
+
     ' Upload entire file
     Private Sub UploadWholeFile(ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
 
+
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-                Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
+                'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
 
-                'Path.GetFileName(file.FileName).Replace(" ", "-")
+                Dim cfileName As String = CleanfileName(file.FileName)
+
+
 
                 'If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
                 '    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
                 '    Dim SizeInMB As Decimal = (CType(file.InputStream.Length, Decimal) / CDec(1024 * 1024))
                 '    If Not (SizeInMB > 4.0) Then
-                file.SaveAs(mcStartFolder & fileNameFixed)
+                file.SaveAs(mcStartFolder & cfileName)
 
-                If LCase(mcStartFolder & fileNameFixed).EndsWith(".jpg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".jpeg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".png") Then
-                    Dim eImg As New Protean.Tools.Image(mcStartFolder & fileNameFixed)
+                If LCase(mcStartFolder & cfileName).EndsWith(".jpg") Or LCase(mcStartFolder & cfileName).EndsWith(".jpeg") Or LCase(mcStartFolder & cfileName).EndsWith(".png") Then
+                    Dim eImg As New Protean.Tools.Image(mcStartFolder & cfileName)
                     Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
                     eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
                 End If
@@ -1015,7 +1062,7 @@ Partial Public Class fsHelper
 #End Region
 #Region "Private Methods"
     Private Function AddElements(ByVal startNode As XmlElement, ByVal Folder As String) As XmlElement
-        '  PerfMon.Log("fsHelper", "AddElements", Folder)
+        '  'PerfMon.Log("fsHelper", "AddElements", Folder)
         Try
             Dim dir As New DirectoryInfo(Folder)
             Dim subDirs As DirectoryInfo() = dir.GetDirectories()
@@ -1047,7 +1094,8 @@ Partial Public Class fsHelper
                         Dim cExt As String = LCase(fi.Extension)
                         Dim fileElem As XmlElement = XmlElement("file", fi.Name)
                         fileElem.Attributes.Append(XmlAttribute("Extension", cExt))
-                        PerfMon.Log("fsHelper", "AddElements-Addfile", fi.Name)
+                        fileElem.Attributes.Append(XmlAttribute("length", (CDbl(fi.Length) / 1000)))
+                        'PerfMon.Log("fsHelper", "AddElements-Addfile", fi.Name)
                         Select Case cExt
 
                             Case ".jpg", ".gif", ".jpeg", ".png", ".bmp"
@@ -1147,21 +1195,21 @@ Partial Public Class fsHelper
     End Function 'AddElements
 
     Private Function XmlAttribute(ByVal attributeName As String, ByVal attributeValue As String) As XmlAttribute
-        ' PerfMon.Log("fsHelper", "XmlAttribute", attributeName & " - " & attributeValue)
+        ' 'PerfMon.Log("fsHelper", "XmlAttribute", attributeName & " - " & attributeValue)
         Dim xmlAttrib As XmlAttribute = moPageXML.CreateAttribute(attributeName)
         xmlAttrib.Value = FilterXMLString(attributeValue)
         Return xmlAttrib
     End Function 'XmlAttribute
 
     Private Function XmlElement(ByVal elementName As String, ByVal elementValue As String) As XmlElement
-        ' PerfMon.Log("fsHelper", "XmlElement", elementName & " - " & elementValue)
+        ' 'PerfMon.Log("fsHelper", "XmlElement", elementName & " - " & elementValue)
         Dim oElmt As XmlElement = moPageXML.CreateElement(elementName)
         oElmt.Attributes.Append(XmlAttribute("name", FilterXMLString(elementValue)))
         Return oElmt
     End Function
 
     Private Function FilterXMLString(ByVal inputString As String) As String
-        'PerfMon.Log("fsHelper", "FilterXMLString")
+        ''PerfMon.Log("fsHelper", "FilterXMLString")
         Dim returnString As String = inputString
         If inputString.IndexOf("&") > 0 Then
             returnString = inputString.Replace("&", "&amp;")
@@ -1295,7 +1343,7 @@ Partial Public Class fsHelper
     ''' <returns></returns>
     ''' <remarks>Note that this may not work if you have nested virtual directories</remarks>
     Public Function GetFileListByTypeFromRelativePath(ByVal relativeFolderPath As String, ByVal libraryType As LibraryType, Optional ByVal includeSubfolders As Boolean = False) As List(Of String)
-        PerfMon.Log("fsHelper", "GetFileListByTypeFromRelativePath")
+        'PerfMon.Log("fsHelper", "GetFileListByTypeFromRelativePath")
 
         Dim fileList As New List(Of String)
 

@@ -759,7 +759,9 @@ ProcessFlow:
                                         End If
                                     End If
                                     oXfrm.addValue(locSelect, FilterValue)
-                                    oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by sonali on 12/7/22
+                                        oXfrm.addUserOptionsFromSqlDataReader(locSelect, oDr)
+                                    End Using
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
                                     myWeb.ClearPageCache()
 
@@ -793,7 +795,9 @@ ProcessFlow:
                                         End If
                                     End If
                                     oXfrm.addValue(locSelect, FilterValue)
-                                    oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by sonali on 12/7/22
+                                        oXfrm.addUserOptionsFromSqlDataReader(locSelect, oDr)
+                                    End Using
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
                                     myWeb.ClearPageCache()
 
@@ -982,8 +986,17 @@ ProcessFlow:
                                     'skip if already defined in Xform.
                                     myWeb.moSession("lastPage") = ""
                                 ElseIf myWeb.moSession("lastPage") <> "" Then
-                                    myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
-                                    myWeb.moSession("lastPage") = ""
+                                    If mcEwCmd = "EditPageSEO" Then
+                                        If Not (String.IsNullOrEmpty("" & myWeb.moRequest("pgid"))) Then
+                                            myWeb.msRedirectOnEnd = "/?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.moRequest("pgid")
+                                        Else
+                                            myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                            myWeb.moSession("lastPage") = ""
+                                        End If
+                                    Else
+                                        myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                        myWeb.moSession("lastPage") = ""
+                                    End If
                                 Else
                                     oPageDetail.RemoveAll()
                                     moAdXfm.valid = False
@@ -2078,6 +2091,43 @@ ProcessFlow:
 
                         End If
 
+                        'New case for SKU Parent Change functionality
+                    Case "ParentChange"
+                        If ButtonSubmitted(myWeb.moRequest, "updateParent") Then
+                            'code for saving results of 2nd form submission
+                            'get all id's from request
+                            Dim oldParentID As Long = myWeb.moRequest.QueryString("oldParentID")
+                            Dim childId As Long = myWeb.moRequest.QueryString("childId")
+                            Dim newParentID As Long = myWeb.moRequest.QueryString("newParId")
+                            myWeb.moDbHelper.ChangeParentRelation(oldParentID, newParentID, childId)
+
+                            'redirect to the parent content xform
+                            myWeb.moSession("ewCmd") = ""
+                            If myWeb.moRequest("redirect") = "normal" Then
+                                If mcEwCmd = "Normal" Or mcEwCmd = "NormalMail" Then
+                                    myWeb.msRedirectOnEnd = "?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.mnPageId 'myWeb.moSession("lastPage")
+                                Else
+                                    myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                End If
+                            Else
+                                myWeb.msRedirectOnEnd = myWeb.moRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & myWeb.moRequest.Form.Get("id") & IIf(myWeb.moRequest.QueryString("pgid") = "", "", "&pgid=" & myWeb.moRequest.QueryString("pgid"))
+                            End If
+                        Else
+                            'Process for related content
+                            Dim nRelParent As Long = CLng("0" & myWeb.moRequest("RelParent"))
+                            Dim redirect As String = ""
+                            If nRelParent = 0 Then
+                                nRelParent = CLng("0" & myWeb.moSession("mcRelParent"))
+                            Else
+                                redirect = "normal"
+                            End If
+                            oPageDetail.AppendChild(moAdXfm.xFrmFindParent(nRelParent, myWeb.moRequest.QueryString("childId"), myWeb.moRequest.QueryString("type"), oPageDetail, "nParentContentId", False, "tblcontentRelation", "nContentChildId", "nContentParentId", redirect))
+                            sAdminLayout = "ParentChange"
+                        End If
+                        If moAdXfm.valid Then
+
+                        End If
+
                     Case "LocateSearch"
                         'Process for related content
                         bLoadStructure = True
@@ -2225,6 +2275,12 @@ ProcessFlow:
                     Case "Reports"
                         ReportsProcess(oPageDetail, sAdminLayout)
 
+
+                    Case "FilterIndex"
+                        FilterIndex(oPageDetail, sAdminLayout)
+
+                    Case "ResetWebConfig"
+                        ResetWebConfig(oPageDetail, sAdminLayout)
                 End Select
 
                 SupplimentalProcess(sAdminLayout, oPageDetail)
@@ -2743,10 +2799,10 @@ AfterProcessFlow:
                             'NB: New (Web) Transform
                             Dim styleFile As String = CStr(myWeb.goServer.MapPath("/xsl/import/" & cXsltPath))
                             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
-                            PerfMon.Log("Admin", "FileImportProcess-startxsl")
+                            myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl")
                             oTransform.mbDebug = gbDebug
                             oTransform.ProcessDocument(oImportXml)
-                            PerfMon.Log("Admin", "FileImportProcess-endxsl")
+                            myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl")
                             'We display the results
                             Dim oPreviewElmt2 As XmlElement = moPageXML.CreateElement("PreviewImport")
                             If oTransform.HasError Then
@@ -3893,7 +3949,11 @@ AfterProcessFlow:
                 Select Case myWeb.moRequest("ewCmd2")
                     Case "delete"
                         myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Lookup, lookupId)
-
+                        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                            oPageDetail.InnerXml = ""
+                            lookupId = Nothing
+                            GoTo listItems
+                        End If
                         GoTo listItems
                     Case "hide"
                         sSql = "UPDATE dbo.tblLookup " _
@@ -3957,11 +4017,7 @@ listItems:
                                 lookupId = Nothing
                                 GoTo listItems
                             End If
-                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
-                                oPageDetail.InnerXml = ""
-                                lookupId = Nothing
-                                GoTo listItems
-                            End If
+
                         End If
 
                 End Select
@@ -3973,6 +4029,132 @@ listItems:
                 returnException(myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
+
+
+        Private Sub FilterIndex(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
+            Dim reportName As String = "Filter Indexes"
+            Dim contentId As Long = 0
+            Dim indexId As String = Nothing
+            Dim sSql As String
+            Dim SchemaNameForUpdate As String
+            Dim indexesDataset As DataSet
+
+
+            Try
+
+                If Not myWeb.moRequest("id") = Nothing Then
+                    indexId = myWeb.moRequest("id")
+                End If
+
+
+                Select Case myWeb.moRequest("ewCmd2")
+                    Case "delete"
+
+                        myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.indexkey, indexId)
+                        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "delete" Then
+                            oPageDetail.InnerXml = ""
+                            indexId = Nothing
+                            GoTo listItems
+                        End If
+                        GoTo listItems
+                    Case "update", "updateAllRules"
+
+                        If Not myWeb.moRequest("SchemaName") = Nothing Then
+
+                            SchemaNameForUpdate = myWeb.moRequest("SchemaName")
+                            sSql = "spScheduleToUpdateIndexTable"
+                            Dim arrParms As Hashtable = New Hashtable
+                            arrParms.Add("SchemaName", SchemaNameForUpdate)
+                            myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
+                            If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                oPageDetail.InnerXml = ""
+                                indexId = Nothing
+                                GoTo listItems
+                            End If
+                        End If
+                        GoTo listItems
+                        'Case "updateAllRules"
+
+                        '    SchemaNameForUpdate = "null"
+                        '    sSql = "spScheduleToUpdateIndexTable"
+                        '        Dim arrParms As Hashtable = New Hashtable
+                        '        arrParms.Add("SchemaName", SchemaNameForUpdate)
+                        '        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                        '        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                        '            oPageDetail.InnerXml = ""
+                        '            indexId = Nothing
+                        '            GoTo listItems
+                        '        End If
+
+                        '    GoTo listItems
+
+                    Case Else
+listItems:
+
+
+                        If indexId = Nothing Then
+                            'list Lookup Lists
+                            sSql = "select nContentIndexDefKey, CASE WHen nContentIndexDataType = 1 Then 'Int' when nContentIndexDataType=2 Then 'String' Else 'Date' End As nContentIndexDataType,
+cContentSchemaName, cDefinitionName, cContentValueXpath, Case When bBriefNotDetail=0 Then 'false' Else 'True' End As bBriefNotDetail, nKeywordGroupName
+from tblContentIndexDef"
+
+                            indexesDataset = myWeb.moDbHelper.GetDataSet(sSql, "indexkey", "indexkeys")
+
+                            myWeb.moDbHelper.addTableToDataSet(indexesDataset, "select distinct cContentSchemaName as Name from tblContentIndexDef", "SchemaName")
+
+                            'myWeb.moDbHelper.ReturnNullsEmpty(indexesDataset)
+
+                            If indexesDataset.Tables.Count > 0 Then
+
+                                indexesDataset.Tables(0).Columns("nContentIndexDefKey").ColumnMapping = MappingType.Attribute
+                                indexesDataset.Tables(1).Columns("Name").ColumnMapping = MappingType.Attribute
+
+                                ' lookupsDataset.Tables(0).Columns(2).ColumnMapping = MappingType.Attribute
+                                indexesDataset.Relations.Add("rel1",
+                                indexesDataset.Tables(1).Columns("Name"),
+                                indexesDataset.Tables(0).Columns("cContentSchemaName"), False)
+                                indexesDataset.Relations("rel1").Nested = True
+
+                                'lookupsDataset.Relations.Add("rel2", lookupsDataset.Tables(0).Columns("nLkpParent"), lookupsDataset.Tables(0).Columns("id"), False)
+                                'lookupsDataset.Relations("rel2").Nested = True
+                                indexesDataset.EnforceConstraints = False
+
+                            End If
+
+
+
+                            Dim reportElement As XmlElement = moPageXML.CreateElement("Content")
+                            reportElement.SetAttribute("name", reportName)
+                            reportElement.SetAttribute("type", "Report")
+                            reportElement.InnerXml = indexesDataset.GetXml()
+                            oPageDetail.AppendChild(reportElement)
+
+                        Else
+                            'lookupItem Xform
+                            'oPageDetail.AppendChild(moAdXfm.xFrmIndexes(CLng(indexId), myWeb.moRequest("SchemaName")))
+                            oPageDetail.AppendChild(moAdXfm.xFrmIndexes(CLng(indexId), myWeb.moRequest("SchemaName"), myWeb.moRequest("parentId")))
+
+                            If moAdXfm.valid Then
+                                oPageDetail.InnerXml = ""
+                                indexId = Nothing
+                                GoTo listItems
+                            End If
+
+                        End If
+
+                End Select
+
+
+                sAdminLayout = "FilterIndex"
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
+
+
 
         Private Sub ProductGroupsProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String, Optional ByVal nGroupID As Integer = 0)
             Dim sProcessInfo As String = ""
@@ -4679,7 +4861,7 @@ SP:
         Public Sub MemberCodesProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
 
             Dim cProcessInfo As String = ""
-            PerfMon.Log("Admin", "MemberCodesProcess")
+            myWeb.PerfMon.Log("Admin", "MemberCodesProcess")
 
             Try
 
@@ -4806,7 +4988,6 @@ SP:
                         myWeb.moDbHelper.GetReport(oPageDetail, moAdXfm.Instance.FirstChild)
                     End If
                 End If
-
                 If oPageDetail.InnerXml = "" Then
                     myWeb.moDbHelper.ListReports(oPageDetail)
                 End If
@@ -4817,9 +4998,65 @@ SP:
         End Sub
 
 
+        Private Sub ResetWebConfig(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
+
+            Try
+                Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
+                'Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
+                Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
+                If flag = "True" Then
+                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
+                Else
+                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
+                End If
+                myConfiguration.Save()
+
+                myWeb.moResponse.Redirect(myWeb.mcRequestDomain)
 
 
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
 
+        Private Sub ReIndexing(ByRef aWeb As Protean.Cms)
+            myWeb = aWeb
+            Dim sProcessInfo As String = ""
+            Dim SchemaNameForUpdate As String
+            Dim sSql As String
+            Dim IpAddress As String
+            Dim objServ As Services = New Services()
+
+            Dim mnUserId As Integer = myWeb.mnUserId
+            Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
+            Dim cSql As String
+            Dim oDS As DataSet
+            Dim lastLoginSpan As DateTime
+            Dim CurrentDateTime As DateTime = DateTime.Now
+
+            Try
+
+                cSql = "select top 1  dDateTime from tblActivityLog   where cActivityDetail='ReIndexing'  order by 1 desc"
+                oDS = myWeb.moDbHelper.GetDataSet(cSql, "Index", "IndexRules")
+                lastLoginSpan = oDS.Tables(0).Rows(0).ItemArray(0).ToString()
+                Dim hr As Int32 = CurrentDateTime.Subtract(lastLoginSpan).Hours
+                If (hr >= 1) Then
+                    IpAddress = objServ.GetIpAddress(myWeb.moRequest)
+                    SchemaNameForUpdate = "null"
+                    sSql = "spScheduleToUpdateIndexTable"
+                    Dim arrParms As Hashtable = New Hashtable
+                    arrParms.Add("SchemaName", SchemaNameForUpdate)
+                    myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+
+                    myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, mnUserId, 0, 0, 0, "ReIndexing", True)
+
+                End If
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
     End Class
 
 

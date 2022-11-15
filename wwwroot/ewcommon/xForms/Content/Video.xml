@@ -26,7 +26,7 @@
             <Local url="">
               <img/>
             </Local>
-            <YouTube code="" showSuggested="false" useHttps="false"/>
+            <YouTube code="" showSuggested="false" useHttps="true"/>
             <Vimeo code="" portrait="false" title="true" byline="false" autoplay="false" loop="false"  />
             <HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="" controls="controls" loop="" muted="" poster="" preload="">
               <img class="display" />
@@ -58,7 +58,7 @@
             <Local url="">
               <img/>
             </Local>
-            <YouTube code="" showSuggested="false" useHttps="false"/>
+            <YouTube code="" showSuggested="false" useHttps="true"/>
             <Vimeo code="" portrait="false" title="true" byline="false" autoplay="false" loop="false"/>
             <HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="autoplay" controls="controls" loop="" muted="" poster="" preload="">
               <img class="display" />
@@ -112,7 +112,6 @@
         <bind nodeset="YouTube">
           <bind id="cYouTubeCode" nodeset="@code" required="false()" type="string"/>
           <bind id="cYouTubeShowSuggested" nodeset="@showSuggested" required="false()" type="string"/>
-          <bind id="cYouTubeUseHttps" nodeset="@useHttps" required="false()" type="string"/>
         </bind>
         <bind nodeset="Vimeo">
           <bind id="cVimeoCode" nodeset="@code" required="false()" type="string"/>
@@ -157,7 +156,6 @@
         <bind nodeset="YouTube">
           <bind id="cYouTubeCode" nodeset="@code" required="false()" type="string"/>
           <bind id="cYouTubeShowSuggested" nodeset="@showSuggested" required="false()" type="string"/>
-          <bind id="cYouTubeUseHttps" nodeset="@useHttps" required="false()" type="string"/>
         </bind>
         <bind nodeset="Vimeo">
           <bind id="cVimeoCode" nodeset="@code" required="false()" type="string"/>
@@ -302,13 +300,13 @@
                   <value>true</value>
                 </item>
               </select>
-              <select bind="cYouTubeUseHttps" appearance="full">
+              <!--<select bind="cYouTubeUseHttps" appearance="full">
                 <label>Use HTTPS</label>
                 <item>
                   <label></label>
                   <value>true</value>
                 </item>
-              </select>
+              </select>-->
             </case>
 
             <!-- Vimeo-->

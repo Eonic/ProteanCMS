@@ -608,20 +608,23 @@ Public Class xForm
                 bIsValid = False
                 missedError = True
             End If
+            If isSubmitted() = True Then
+                If goRequest("g-recaptcha-response") <> "" Then
 
-            If goRequest("g-recaptcha-response") <> "" Then
+                    Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
+                    Dim recap As New Protean.Tools.RecaptchaV2.Recaptcha()
+                    Dim recapResult As Protean.Tools.RecaptchaV2.RecaptchaValidationResult = recap.Validate(goRequest("g-recaptcha-response"), moConfig("ReCaptchaKeySecret"))
 
-                Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-                Dim recap As New Protean.Tools.RecaptchaV2.Recaptcha()
-                Dim recapResult As Protean.Tools.RecaptchaV2.RecaptchaValidationResult = recap.Validate(goRequest("g-recaptcha-response"), moConfig("ReCaptchaKeySecret"))
+                    If recapResult.Succeeded Or goSession("recaptcha") = 1 Then
+                        cValidationError = ""
+                        bIsValid = True
+                        goSession("recaptcha") = 1
+                        missedError = False
+                    End If
 
-                If recapResult.Succeeded Then
-                    cValidationError = ""
-                    bIsValid = True
-                    missedError = False
                 End If
-
             End If
+
             ''' END HANDLING FOR GOOGLE ReCAPTCHA
             ''' 
 
@@ -2088,7 +2091,7 @@ Public Class xForm
                 oIptElmt.SetAttribute("end", CStr(oEnd))
             End If
             oIptElmt.SetAttribute("step", CStr(oStep))
-            If oStep <> "" Then
+            If Convert.ToString(oStep) <> "" Then
                 oIptElmt.SetAttribute("step", CStr(oStep))
             End If
             If sLabel <> "" Then

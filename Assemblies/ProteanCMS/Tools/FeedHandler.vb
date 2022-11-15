@@ -45,7 +45,7 @@ Public Class FeedHandler
 
 
     Public Sub New(ByVal cURL As String, ByVal cXSLPath As String, ByVal nPageId As Long, ByVal nSaveMode As Integer, Optional ByRef oResultRecorderElmt As XmlElement = Nothing, Optional ByVal cItemNodeName As String = "")
-        PerfMon.Log("FeedHandler", "New")
+        'PerfMon.Log("FeedHandler", "New")
         Try
             oDBH = New Cms.dbHelper("Data Source=" & oConfig("DatabaseServer") & "; " &
             "Initial Catalog=" & oConfig("DatabaseName") & "; " &
@@ -224,7 +224,16 @@ Public Class FeedHandler
                                 reader.ReadToFollowing(instanceNodeName)
                             Else
                                 If Not reader.EOF And reader.NodeType <> XmlNodeType.EndElement Then
-                                    origInstance = TryCast(XElement.ReadFrom(reader), XElement)
+                                    Try
+                                        origInstance = TryCast(XElement.ReadFrom(reader), XElement)
+                                    Catch ex As Exception
+                                        'reader.Read()
+                                        reader.ReadToFollowing(instanceNodeName)
+                                        ' reader.MoveToContent()
+
+                                        processInfo = "error at " & completeCount
+                                    End Try
+
                                     If Not IsNothing(origInstance) Then
                                         Dim oWriter As TextWriter = New StringWriter
                                         Dim xWriter As XmlWriter = XmlWriter.Create(oWriter, settings)

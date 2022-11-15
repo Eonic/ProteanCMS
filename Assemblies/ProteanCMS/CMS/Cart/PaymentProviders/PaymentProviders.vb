@@ -86,7 +86,7 @@ Partial Public Class Cms
 
             Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
-                PerfMon.Log("PaymentProviders", "New")
+                aWeb.PerfMon.Log("PaymentProviders", "New")
                 Dim cProcessInfo As String = ""
                 Try
                     myWeb = aWeb
@@ -122,7 +122,7 @@ Partial Public Class Cms
             'End Sub
 
             Public Overridable Function getPaymentMethods(ByRef oOptXform As xForm, ByRef oSelectElmt As XmlElement, ByVal nPaymentAmount As Double, ByRef cPaymentMethod As String) As Integer
-                PerfMon.Log("PaymentProviders", "getPaymentMethods")
+                myWeb.PerfMon.Log("PaymentProviders", "getPaymentMethods")
                 Dim cProcessInfo As String = "getPaymentMethods"
                 Dim oElmt As XmlElement
                 Dim bFirstRow As Boolean = True
@@ -225,7 +225,7 @@ Partial Public Class Cms
 
 
             Public Overridable Function getPaymentMethodButtons(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal nPaymentAmount As Double) As Integer
-                PerfMon.Log("PaymentProviders", "getPaymentMethods")
+                myWeb.PerfMon.Log("PaymentProviders", "getPaymentMethods")
                 Dim cProcessInfo As String = "getPaymentMethods"
                 Dim oElmt As XmlElement
                 Dim bFirstRow As Boolean = True
@@ -385,7 +385,7 @@ Partial Public Class Cms
 
 
             Function paySecPay(ByRef oRoot As XmlElement, ByVal sSubmitPath As String, Optional ByVal sProfile As String = "") As xForm
-                PerfMon.Log("PaymentProviders", "paySecPay")
+                myWeb.PerfMon.Log("PaymentProviders", "paySecPay")
                 Dim sSql As String
 
                 Dim ccXform As xForm
@@ -862,7 +862,7 @@ Partial Public Class Cms
             End Function
 
             Function paySecPayUkash(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "paySecPayUkash")
+                myWeb.PerfMon.Log("PaymentProviders", "paySecPayUkash")
 
                 Dim sSql As String
                 Dim ccXform As xForm
@@ -1093,7 +1093,7 @@ Partial Public Class Cms
 
             Function paySagePay(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
 
-                PerfMon.Log("PaymentProviders", "payProTx")
+                myWeb.PerfMon.Log("PaymentProviders", "payProTx")
 
                 Dim oRequest As HttpWebRequest
                 Dim oResponse As HttpWebResponse
@@ -1432,7 +1432,7 @@ Partial Public Class Cms
 
                 ' cReturnMethod - If the request is ST3DCARDQUERY and there is no enrollment, then we need to go straight on to submitting a AUTH or 3DSTAUTH request, hence the return method.
 
-                PerfMon.Log("PaymentProviders", "paySecureTrading")
+                myWeb.PerfMon.Log("PaymentProviders", "paySecureTrading")
 
                 Dim oRequestBlockXml As XmlElement
                 Dim oRequestXml As XmlElement
@@ -1878,7 +1878,7 @@ Partial Public Class Cms
             End Function
 
             Function paySecureTradingOld(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "paySecureTrading")
+                myWeb.PerfMon.Log("PaymentProviders", "paySecureTrading")
                 Dim oRequestBlockXml As XmlElement
                 Dim oRequestXml As XmlElement
                 Dim oCustXml As XmlElement
@@ -2103,7 +2103,7 @@ Partial Public Class Cms
             End Function
 
             Function payMetaCharge(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "payMetaCharge")
+                myWeb.PerfMon.Log("PaymentProviders", "payMetaCharge")
                 Dim oMChgRequest As HttpWebRequest
                 Dim oMChgResponse As HttpWebResponse
                 Dim oMChgStream As System.IO.Stream
@@ -2345,7 +2345,7 @@ Partial Public Class Cms
             End Function
 
             Function payAuthorizeNet(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "payMetaCharge")
+                myWeb.PerfMon.Log("PaymentProviders", "payMetaCharge")
                 Dim oRequest As HttpWebRequest
                 Dim oResponse As HttpWebResponse
                 Dim oStream As System.IO.Stream
@@ -2567,7 +2567,7 @@ Partial Public Class Cms
 
             Private Function getAutorizeNetOrder(ByRef oRoot As XmlElement) As String
 
-                PerfMon.Log("PaymentProviders", "getSecPayOrder")
+                myWeb.PerfMon.Log("PaymentProviders", "getSecPayOrder")
                 Dim sOrder As String
                 Dim cProcessInfo As String = "getSecPayOrder"
                 Dim oItem As XmlElement
@@ -2604,7 +2604,7 @@ Partial Public Class Cms
             End Function
 
             Function payWorldPay(ByRef oRoot As XmlElement, ByVal sSubmitPath As String, ByVal nPageId As Long) As xForm
-                PerfMon.Log("PaymentProviders", "payWorldPay")
+                myWeb.PerfMon.Log("PaymentProviders", "payWorldPay")
 
                 Dim sSql As String
 
@@ -2753,7 +2753,7 @@ Partial Public Class Cms
             End Function
 
             Function payNetBanx(ByRef oRoot As XmlElement, ByVal sSubmitPath As String, ByVal nPageId As Long) As xForm
-                PerfMon.Log("PaymentProviders", "payNetBanx")
+                myWeb.PerfMon.Log("PaymentProviders", "payNetBanx")
 
                 Dim sSql As String
 
@@ -2874,7 +2874,7 @@ Partial Public Class Cms
             End Function
 
             Function paySecureEmail(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "paySecureEmail")
+                myWeb.PerfMon.Log("PaymentProviders", "paySecureEmail")
                 Dim sSql As String
                 Dim ccXform As xForm
                 Dim sProcessInfo As String = ""
@@ -2963,7 +2963,7 @@ Partial Public Class Cms
             End Function
 
             Function payDirectDebitSecureEmail(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "payDirectDebitSecureEmail")
+                myWeb.PerfMon.Log("PaymentProviders", "payDirectDebitSecureEmail")
                 Dim sSql As String
                 Dim ddXform As New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
@@ -3162,7 +3162,7 @@ Partial Public Class Cms
             End Function
 
             Public Overridable Function payOnAccount(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "payOnAccount")
+                myWeb.PerfMon.Log("PaymentProviders", "payOnAccount")
                 Dim sSql As String
                 Dim ccXform As Protean.Cms.xForm = New xForm(myWeb)
                 Dim sProcessInfo As String = ""
@@ -3266,7 +3266,9 @@ Partial Public Class Cms
                         Next
                         modbHelper.updateDataset(oDs, "Order")
 
-                        savedPaymentId = savePayment(myWeb.mnUserId, "Pay On Account", mnCartId, "Pay on Account", oPayElmt, Now, False, 0) '0 amount paid as yet
+                        myWeb.moCart.ConfirmPayment(oRoot, ccXform.Instance, "", "Pay On Account", Decimal.ToDouble(mnPaymentAmount))
+
+                        ' savedPaymentId = savePayment(myWeb.mnUserId, "Pay On Account", mnCartId, "Pay on Account", oPayElmt, Now, False, 0) '0 amount paid as yet
                     Else
                         ccXform.valid = False
                     End If
@@ -3280,7 +3282,7 @@ Partial Public Class Cms
             End Function
 
             Function payByCash(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "payByCash")
+                myWeb.PerfMon.Log("PaymentProviders", "payByCash")
                 Dim sSql As String
                 Dim ccXform As xForm = New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
@@ -3399,7 +3401,7 @@ Partial Public Class Cms
 
 
             Public Overridable Function saveOrder(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "SaveOrder")
+                myWeb.PerfMon.Log("PaymentProviders", "SaveOrder")
                 Dim sSql As String
                 Dim ccXform As Protean.Cms.xForm = New xForm(myWeb)
                 Dim sProcessInfo As String = ""
@@ -3517,7 +3519,7 @@ Partial Public Class Cms
             End Function
 
             Function payPayPalExpress(ByRef oOrderElmt As XmlElement, ByVal sSubmitPath As String, Optional ByVal sProfile As String = "") As xForm
-                PerfMon.Log("PaymentProviders", "payPayPalExpress")
+                myWeb.PerfMon.Log("PaymentProviders", "payPayPalExpress")
                 Dim sSql As String
 
                 Dim ppXform As xForm = New xForm(myWeb.msException)
@@ -3995,7 +3997,7 @@ Partial Public Class Cms
             End Function
 
             Private Function fmtSecPayDate(ByVal sdate As String) As String
-                PerfMon.Log("PaymentProviders", "fmtSecPayDate")
+                myWeb.PerfMon.Log("PaymentProviders", "fmtSecPayDate")
                 Dim cProcessInfo As String = "fmtSecPayDate"
                 Dim strReturn As String = ""
                 Try
@@ -4010,7 +4012,7 @@ Partial Public Class Cms
             End Function
 
             Private Function fmtSecureTradingDate(ByVal sdate As String) As String
-                PerfMon.Log("PaymentProviders", "fmtSecureTradingDate")
+                myWeb.PerfMon.Log("PaymentProviders", "fmtSecureTradingDate")
                 Dim cProcessInfo As String = "fmtSecureTradingDate"
                 Dim strReturn As String = ""
                 Try
@@ -4026,7 +4028,7 @@ Partial Public Class Cms
 
             Private Function getSecPayOrder(ByRef oRoot As XmlElement) As String
 
-                PerfMon.Log("PaymentProviders", "getSecPayOrder")
+                myWeb.PerfMon.Log("PaymentProviders", "getSecPayOrder")
                 Dim sOrder As String
                 Dim cProcessInfo As String = "getSecPayOrder"
                 Dim oItem As XmlElement
@@ -4056,7 +4058,7 @@ Partial Public Class Cms
             End Function
 
             Private Function getWorldPayOrder(ByRef oRoot As XmlElement) As String
-                PerfMon.Log("PaymentProviders", "getWorldPayOrder")
+                myWeb.PerfMon.Log("PaymentProviders", "getWorldPayOrder")
                 Dim sOrder As String = ""
                 Dim oNodeList As XmlNodeList
                 Dim oNode As XmlElement
@@ -4072,7 +4074,7 @@ Partial Public Class Cms
             End Function
 
             Private Function getSecPayAddress(ByRef oRoot As XmlElement, ByRef sType As String) As String
-                PerfMon.Log("PaymentProviders", "getSecPayAddress")
+                myWeb.PerfMon.Log("PaymentProviders", "getSecPayAddress")
                 Dim oCartAdd As XmlElement
 
                 Dim sAddress As String
@@ -4154,7 +4156,7 @@ Partial Public Class Cms
             End Function
 
             Public Function getCountryISO2Code(ByRef sCountry As String) As String
-                PerfMon.Log("PaymentProviders", "getCountryISO2Code")
+                myWeb.PerfMon.Log("PaymentProviders", "getCountryISO2Code")
                 'Dim oDr As SqlDataReader
                 Dim sSql As String
                 Dim strReturn As String = ""
@@ -4180,7 +4182,7 @@ Partial Public Class Cms
             End Function
 
             Public Function getCountryISO3Code(ByRef sCountry As String) As String
-                PerfMon.Log("PaymentProviders", "getCountryISO2Code")
+                myWeb.PerfMon.Log("PaymentProviders", "getCountryISO2Code")
                 'Dim oDr As SqlDataReader
                 Dim sSql As String
                 Dim strReturn As String = ""
@@ -4206,7 +4208,7 @@ Partial Public Class Cms
             End Function
 
             Public Function FormatCreditCardNumber(ByVal sCCNumber As String) As Long
-                PerfMon.Log("PaymentProviders", "FormatCreditCardNumber")
+                myWeb.PerfMon.Log("PaymentProviders", "FormatCreditCardNumber")
                 Dim cResult As String = ""
                 Dim oRE As Regex = New Regex("\D")
                 cResult = oRE.Replace(sCCNumber, "")
@@ -4218,7 +4220,7 @@ Partial Public Class Cms
             'Need to move to payment.baseprovider.activities
             'Then we can remove this function from here.
             Function xfrmSecure3D(ByVal acs_url As String, ByVal MD As String, ByVal pa_req As String, ByVal callbackUrl As String) As xForm
-                PerfMon.Log("PaymentProviders", "xfrmSecure3D")
+                myWeb.PerfMon.Log("PaymentProviders", "xfrmSecure3D")
                 Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
@@ -4270,7 +4272,7 @@ Partial Public Class Cms
             End Function
 
             Function xfrmSecure3Dv2(ByVal acs_url As String, ByVal jwt As String, ByVal SongbirdURL As String, ByVal callbackUrl As String) As xForm
-                PerfMon.Log("PaymentProviders", "xfrmSecure3Dv2")
+                myWeb.PerfMon.Log("PaymentProviders", "xfrmSecure3Dv2")
                 Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
@@ -4314,7 +4316,7 @@ Partial Public Class Cms
             'We need to get rid off it once each payment provider is tested.
             'Moved to the payment.baseprovider.activities
             Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
-                PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
+                myWeb.PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                 Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
@@ -4358,7 +4360,7 @@ Partial Public Class Cms
 
 
             Function creditCardXform(ByRef oRoot As XmlElement, Optional ByVal formName As String = "creditCard", Optional ByVal action As String = "", Optional ByVal cardTypes As String = "MasterCard:Master Card,VISA:Visa,Delta:Delta,Solo:Solo,Switch:Switch", Optional ByVal bCV2 As Boolean = True, Optional ByVal sFormTitle As String = "Your Credit Card Details", Optional ByVal b3dSecure As Boolean = False, Optional ByVal cInstance As String = "", Optional ByVal bOverrideValidity As Boolean = False, Optional ByVal bSavePayment As Boolean = False) As xForm
-                PerfMon.Log("PaymentProviders", "creditCardXform")
+                myWeb.PerfMon.Log("PaymentProviders", "creditCardXform")
                 Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
@@ -4624,7 +4626,7 @@ Partial Public Class Cms
             End Function
 
             Function UkashXform(ByRef oRoot As XmlElement, Optional ByVal formName As String = "creditCard", Optional ByVal action As String = "", Optional ByVal sFormTitle As String = "Your Ukash Payment Details") As xForm
-                PerfMon.Log("PaymentProviders", "UkashXform")
+                myWeb.PerfMon.Log("PaymentProviders", "UkashXform")
                 Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
@@ -4803,7 +4805,7 @@ Partial Public Class Cms
 
             Function repeatProTx(ByVal nPaymentMethodID As Integer, ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As String
 
-                PerfMon.Log("PaymentProviders", "payProTx")
+                myWeb.PerfMon.Log("PaymentProviders", "payProTx")
 
                 Dim cSQL As String = " SELECT TOP 1 tblCartOrder.nCartOrderKey , tblCartPaymentMethod.*, tblAudit.dExpireDate, cPayMthdDetailXml  " &
                 " FROM tblCartPaymentMethod INNER JOIN tblCartOrder ON tblCartPaymentMethod.nPayMthdKey = tblCartOrder.nPayMthdId INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey " &
@@ -5150,7 +5152,7 @@ Partial Public Class Cms
 
             Function RepeatConfirmation(ByVal nPaymentId As Integer, ByRef oRoot As XmlElement, ByVal cAction As String, ByRef cRepeatPaymentError As String) As xForm
 
-                PerfMon.Log("PaymentProviders", "RepeatConfirmation")
+                myWeb.PerfMon.Log("PaymentProviders", "RepeatConfirmation")
                 Dim oXform As xForm = New xForm(myWeb)
                 Dim bReValidate As Boolean = False
 
@@ -5269,7 +5271,7 @@ Partial Public Class Cms
 
 
             Function payPremiumCredit(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
-                PerfMon.Log("PaymentProviders", "payPremiumCredit")
+                myWeb.PerfMon.Log("PaymentProviders", "payPremiumCredit")
                 Dim sSql As String
 
                 Dim ccXform As xForm = New xForm(myWeb.msException)
@@ -5590,7 +5592,7 @@ Partial Public Class Cms
             End Function
 
             Function getPremiumCreditPaymentMethods(ByRef oOptXform As xForm, ByRef oSelectElmt As XmlElement, ByVal nClientPremium As Double, ByRef cPaymentMethod As String) As Integer
-                PerfMon.Log("PaymentProviders", "getPremiumCreditPaymentMethods")
+                myWeb.PerfMon.Log("PaymentProviders", "getPremiumCreditPaymentMethods")
                 Dim cProcessInfo As String = "getPremiumCreditPaymentMethods"
                 Dim bFirstRow As Boolean = True
                 Dim nOptCount As Integer = 0

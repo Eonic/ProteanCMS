@@ -316,7 +316,7 @@ Public Class Messaging
                                 Optional ByVal cPickupHost As String = "",
                                 Optional ByVal cPickupLocation As String = ""
                             ) As Object
-        PerfMon.Log("Messaging", "emailer")
+        'PerfMon.Log("Messaging", "emailer")
         If cSeperator Is Nothing Then
             cSeperator = ","
         ElseIf cSeperator = "" Then
@@ -912,7 +912,7 @@ Public Class Messaging
                             Optional ByVal cPickupLocation As String = ""
                             ) As Object
 
-        PerfMon.Log("Messaging", "emailerMultiUsers")
+        'PerfMon.Log("Messaging", "emailerMultiUsers")
 
         Dim cProcessInfo As String = "emailerMultiUsers Initialise"
 
@@ -1047,7 +1047,7 @@ Public Class Messaging
                                     Optional ByVal cPickupLocation As String = ""
                                 ) As Object
 
-        PerfMon.Log("Messaging", "emailerWithXmlAttachment")
+        'PerfMon.Log("Messaging", "emailerWithXmlAttachment")
         Dim cProcessInfo As String = "emailerWithXmlAttachment Initialise"
 
         Dim oXml As XmlDocument = New XmlDocument
@@ -1061,13 +1061,13 @@ Public Class Messaging
         '
 
         Try
-            PerfMon.Log("Messaging", "emailerWithXmlAttachment - Get Xml")
+            'PerfMon.Log("Messaging", "emailerWithXmlAttachment - Get Xml")
             oXml.LoadXml(oBodyXML.OuterXml)
 
             If Not oXml Is Nothing Then
                 If XSLType.ToLower = "xml" Then
 
-                    PerfMon.Log("Messaging", "emailerWithXmlAttachment - Create Save Path")
+                    'PerfMon.Log("Messaging", "emailerWithXmlAttachment - Create Save Path")
 
                     Dim cSourceXmlPath As String = CStr(goConfig("XmlAttachmentPath"))
                     Dim cXmlPath As String = ""
@@ -1083,7 +1083,7 @@ Public Class Messaging
                     'Dim cXmlPath As String = goServer.MapPath("../") & "..\imports\Email.xml"
 
                     If cXmlPath <> "" Then
-                        PerfMon.Log("Messaging", "emailerWithXmlAttachment - Save Xml File")
+                        'PerfMon.Log("Messaging", "emailerWithXmlAttachment - Save Xml File")
 
                         If XSLPath <> "" Then
                             Dim sWriter As IO.TextWriter = New IO.StringWriter
@@ -1117,18 +1117,18 @@ Public Class Messaging
 
                         oXml.Save(cXmlPath)
 
-                        PerfMon.Log("Messaging", "emailerWithXmlAttachment - Add Attachment")
+                        'PerfMon.Log("Messaging", "emailerWithXmlAttachment - Add Attachment")
                         Dim oAtt As New Attachment(cXmlPath)
                         If Attachments Is Nothing Then
                             Attachments = New Collection
                         End If
                         Attachments.Add(oAtt)
-                        PerfMon.Log("Messaging", "emailerWithXmlAttachment - Delete Xml File")
+                        'PerfMon.Log("Messaging", "emailerWithXmlAttachment - Delete Xml File")
                         Dim fsh As Protean.fsHelper = New fsHelper
                         fsh.DeleteFile(cXmlPath)
                     End If
 
-                    PerfMon.Log("Messaging", "emailerWithXmlAttachment - Call Emailer")
+                    'PerfMon.Log("Messaging", "emailerWithXmlAttachment - Call Emailer")
                     cResults = emailer(
                                     oBodyXML,
                                     xsltPath,
@@ -1202,7 +1202,7 @@ Public Class Messaging
 
 
     Public Function SendQueuedMail(ByVal oMailn As Net.Mail.MailMessage, ByVal cHost As String, ByVal cPickupLocation As String) As String
-        PerfMon.Log("Messaging", "SendQueuedMail")
+        'PerfMon.Log("Messaging", "SendQueuedMail")
         Try
             If oMailn Is Nothing Then Return "No Email Supplied"
             Dim oSmtpn As New SmtpClient
@@ -1221,7 +1221,7 @@ Public Class Messaging
     End Function
 
     Function SendMailToList_Queued(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cGroups As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
-        PerfMon.Log("Messaging", "SendMailToList_Queued")
+        'PerfMon.Log("Messaging", "SendMailToList_Queued")
 
         Dim cProcessInfo As String = ""
 
@@ -1296,7 +1296,7 @@ Public Class Messaging
     End Function
 
     Function SendSingleMail_Queued(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
-        PerfMon.Log("Messaging", "SendSingleMail_Queued")
+        'PerfMon.Log("Messaging", "SendSingleMail_Queued")
         Try
             Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
 
@@ -1332,7 +1332,7 @@ Public Class Messaging
 
 
     Function SendSingleMail_Direct(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
-        PerfMon.Log("Messaging", "SendSingleMail_Queued")
+        'PerfMon.Log("Messaging", "SendSingleMail_Queued")
         Try
             If Protean.Tools.Text.IsEmail(cFromEmail.Trim()) And Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
                 Dim emailStructure As Hashtable
@@ -1462,7 +1462,7 @@ Public Class Messaging
         End Try
     End Function
     Public Function GetGroupEmails(ByVal groupIds As String) As UserEmailDictionary
-        PerfMon.Log("Messaging", "GetGroupEmails")
+        'PerfMon.Log("Messaging", "GetGroupEmails")
         'Retrieves a list of email addresses from the groups
         'checks them against opted out adress
         'adds them to a master list and checks duplicates
@@ -1533,7 +1533,7 @@ Public Class Messaging
 
 
     ''Public Sub courseReminder(ByRef oResultsXml As XmlElement, ByVal cUserName As String, ByVal cUserEmail As String, ByVal subject As String, ByVal sEmailTemplate As String, ByRef fForm As Collections.Specialized.NameValueCollection) 'As String
-    ''    PerfMon.Log("Messaging", "courseReminder")
+    ''    'PerfMon.Log("Messaging", "courseReminder")
     ''    ' This takes the candidate course results Report xml and sends email to all the users highlighted in the form.
 
     ''    Dim cProcessInfo As String = ""
@@ -1660,7 +1660,7 @@ Public Class POP3
     Public CRLF As String = vbCrLf '"\r\n"
 
     Sub ReadMail(ByVal cServer As String, ByVal cUser As String, ByVal cPassword As String)
-        PerfMon.Log("POP3", "ReadMail")
+        'PerfMon.Log("POP3", "ReadMail")
         Try
             Dim nNoEmails As Integer = Connect(cServer, cUser, cPassword)
 
@@ -1683,7 +1683,7 @@ Public Class POP3
 
 
     Private Function Connect(ByVal cServer As String, ByVal cUser As String, ByVal cPassword As String) As String
-        PerfMon.Log("POP3", "Connect")
+        'PerfMon.Log("POP3", "Connect")
 
         ' create server POP3 with port 110
         Server = New System.Net.Sockets.TcpClient(cServer, 110)
@@ -1721,7 +1721,7 @@ Public Class POP3
     End Function
 
     Private Function Retrieve(ByVal nMessageNo As Integer) As String
-        PerfMon.Log("POP3", "Retrieve")
+        'PerfMon.Log("POP3", "Retrieve")
 
         Dim szTemp As String
         Try
@@ -1752,7 +1752,7 @@ Public Class POP3
     End Function
 
     Private Function Disconnect() As Boolean
-        PerfMon.Log("POP3", "Disconnect")
+        'PerfMon.Log("POP3", "Disconnect")
         'Send QUIT command to close session from POP server
         Try
             Data = "QUIT " & CRLF
@@ -1769,7 +1769,7 @@ Public Class POP3
 
 
     Public Function CreateMailXML(ByVal cMessage As String, ByVal nId As Integer) As XmlDocument
-        PerfMon.Log("POP3", "CreateMailXML")
+        'PerfMon.Log("POP3", "CreateMailXML")
         Dim cCurrent As String = ""
         Try
             cMessage = Replace(cMessage, "+OK", "")
@@ -1831,7 +1831,7 @@ Public Class POP3
     End Function
 
     Function AddMailElement(ByVal oParent As XmlElement, ByVal oItemName As String, ByVal oItemValue As String) As Boolean
-        PerfMon.Log("POP3", "AddMailElement")
+        'PerfMon.Log("POP3", "AddMailElement")
         Try
             If oItemValue = "" Or oItemValue = "." Then Return True
             Dim oElmt As XmlElement = oParent.OwnerDocument.CreateElement(Trim(oItemName))
@@ -1844,7 +1844,7 @@ Public Class POP3
     End Function
 
     Function ConvertToMail(ByVal RawXML As XmlDocument) As XMLEmail
-        PerfMon.Log("POP3", "ConvertToMail")
+        'PerfMon.Log("POP3", "ConvertToMail")
         Try
             Dim oElmt As XmlElement
             oElmt = RawXML.DocumentElement.SelectSingleNode("To")
@@ -1894,7 +1894,7 @@ Public Class XMLEmail
     Dim oEmailXML As XmlDocument
 
     Public Sub New()
-        PerfMon.Log("XMLEmail", "New")
+        'PerfMon.Log("XMLEmail", "New")
         Try
             oEmailXML = New XmlDocument
             Dim oElmt As XmlElement = oEmailXML.CreateElement("Email")
@@ -1918,7 +1918,7 @@ Public Class XMLEmail
     End Sub
 
     Public Function AddAddress(ByVal AddType As ToType, ByVal cEmailAddress As String, Optional ByVal cDisplayName As String = "") As Boolean
-        PerfMon.Log("XMLEmail", "AddAddress")
+        'PerfMon.Log("XMLEmail", "AddAddress")
         Try
             Dim oAddElmt As XmlElement = oEmailXML.CreateElement("EmailAddress")
             Dim oEmailElmt As XmlElement = oEmailXML.CreateElement("Address")
@@ -1935,7 +1935,7 @@ Public Class XMLEmail
     End Function
 
     Public Function AddAddress(ByVal AddType As ToType, ByVal oAddress As Net.Mail.MailAddress) As Boolean
-        PerfMon.Log("XMLEmail", "AddAddress")
+        'PerfMon.Log("XMLEmail", "AddAddress")
         Try
             Dim oAddElmt As XmlElement = oEmailXML.CreateElement("EmailAddress")
             Dim oEmailElmt As XmlElement = oEmailXML.CreateElement("Address")
@@ -1952,7 +1952,7 @@ Public Class XMLEmail
     End Function
 
     Public Function RemoveAddress(ByVal AddType As ToType, ByVal cEmailAddress As String) As Boolean
-        PerfMon.Log("XMLEmail", "RemoveAddress")
+        'PerfMon.Log("XMLEmail", "RemoveAddress")
         Try
             Dim oMainElmt As XmlElement = oEmailXML.DocumentElement.SelectSingleNode(System.Enum.GetName(GetType(ToType), AddType))
             Dim oElmt As XmlElement
@@ -2004,7 +2004,7 @@ Public Class XMLEmail
     End Property
 
     Public Function ConvertTextAddress(ByVal cTextAddress As String) As Net.Mail.MailAddress
-        PerfMon.Log("XMLEmail", "ConvertTextAddress")
+        'PerfMon.Log("XMLEmail", "ConvertTextAddress")
         Try
             '"Barry Rushton" <barryr@eonic.co.uk>
             Dim cName As String = ""
