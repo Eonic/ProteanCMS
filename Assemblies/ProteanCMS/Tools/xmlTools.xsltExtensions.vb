@@ -1191,16 +1191,10 @@ Partial Public Module xmlTools
                                     Dim ptnImg As New Protean.Tools.Image("")
                                     ptnImg.TinifyKey = moConfig("TinifyKey")
                                     ptnImg.CompressImage(imgFile, False)
-
                                     oImage.Close()
                                     oImage = Nothing
 
-
-
-
                             End Select
-
-
                             'PerfMon.Log("xmlTools", "ResizeImage - End")
                             Return newFilepath
                         Else
