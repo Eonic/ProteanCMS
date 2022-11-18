@@ -3170,7 +3170,7 @@ processFlow:
                                 oCartElmt.SetAttribute("payableType", "deposit")
                             End If
 
-                            If nPayable = 0 Then
+                            If nPayable = 0 Or nPayable = CDbl(oCartElmt.GetAttribute("total")) Then
                                 oCartElmt.SetAttribute("payableType", "full")
                             End If
 

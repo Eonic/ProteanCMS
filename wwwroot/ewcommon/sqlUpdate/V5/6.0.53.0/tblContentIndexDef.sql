@@ -10,7 +10,8 @@ CREATE TABLE [dbo].[tblContentIndexDef](
 	[cDefinitionName] [nvarchar](50) NOT NULL,
 	[cContentValueXpath] [nvarchar](800) NOT NULL,
 	[bBriefNotDetail] [bit] NULL,
-	[nKeywordGroupName] [nvarchar](50) NULL
+	[nKeywordGroupName] [nvarchar](50) NULL,
+	nAuditId int NULL
 ) ON [PRIMARY]
 END
 
