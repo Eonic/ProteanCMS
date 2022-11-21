@@ -1663,9 +1663,12 @@ processFlow:
                     Case "Brief"
                         'Continue shopping
                         'go to the cart url
-                        Dim cPage As String = myWeb.moRequest("pgid")
-                        If cPage = "" Or cPage Is Nothing Then cPage = moPageXml.DocumentElement.GetAttribute("id")
-                        cPage = "?pgid=" & cPage
+                        Dim cPage As String = moCartConfig("ContinuePath")
+                        If Not LCase(moCartConfig("ContinuePath")) <> "" Then
+                            cPage = myWeb.moRequest("pgid")
+                            If cPage = "" Or cPage Is Nothing Then cPage = moPageXml.DocumentElement.GetAttribute("id")
+                            cPage = "?pgid=" & cPage
+                        End If
                         myWeb.moResponse.Redirect(mcSiteURL & cPage, False)
                         myWeb.moCtx.ApplicationInstance.CompleteRequest()
 

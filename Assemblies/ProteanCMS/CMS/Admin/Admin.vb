@@ -194,6 +194,10 @@ Partial Public Class Cms
                 If UBound(EwCmd) > 0 Then mcEwCmd2 = EwCmd(1)
                 If UBound(EwCmd) > 1 Then mcEwCmd3 = EwCmd(2)
 
+                If myWeb.moRequest("ewCmd2") <> "" Then
+                    mcEwCmd2 = myWeb.moRequest("ewCmd2")
+                End If
+
 
 
                 If Not moConfig("SecureMembershipAddress") = "" Then
