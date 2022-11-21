@@ -1231,7 +1231,6 @@
     <xsl:param name="text"/>
     <xsl:param name="name"/>
     <xsl:param name="class"/>
-
     <xsl:choose>
       <xsl:when test="/Page/Contents/Content[@name=$name]">
         <!-- Do we need to tie it down by Type? What about bespoke types?-->

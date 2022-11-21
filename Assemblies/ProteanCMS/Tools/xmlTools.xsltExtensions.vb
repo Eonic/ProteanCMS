@@ -23,7 +23,6 @@ Imports System.Collections.Generic
 Imports Imazen.WebP
 Imports System.Drawing
 Imports System.Data.SqlClient
-Imports Microsoft.SqlServer
 
 Partial Public Module xmlTools
 
@@ -1190,17 +1189,12 @@ Partial Public Module xmlTools
 
                                     Dim imgFile As New FileInfo(goServer.MapPath(newFilepath))
                                     Dim ptnImg As New Protean.Tools.Image("")
+                                    ptnImg.TinifyKey = moConfig("TinifyKey")
                                     ptnImg.CompressImage(imgFile, False)
-
                                     oImage.Close()
                                     oImage = Nothing
 
-
-
-
                             End Select
-
-
                             'PerfMon.Log("xmlTools", "ResizeImage - End")
                             Return newFilepath
                         Else
@@ -1233,6 +1227,7 @@ Partial Public Module xmlTools
 
         Public Function CreateWebP(ByVal cVirtualPath As String, ByVal forceCheck As Boolean) As String
             Dim cProcessInfo As String = ""
+
             Try
 
                 If cVirtualPath = "" Then
@@ -1260,11 +1255,11 @@ Partial Public Module xmlTools
                                 Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
                                     Dim encoder As New Imazen.WebP.SimpleEncoder
                                     encoder.Encode(bitMap, saveImageStream, WebPQuality)
+                                    encoder = Nothing
                                 End Using
                             End Using
                         End If
                     End If
-
                     Return webpFileName
                 End If
 
@@ -1276,6 +1271,7 @@ Partial Public Module xmlTools
                 Else
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
                 End If
+
             End Try
         End Function
 
