@@ -2253,6 +2253,7 @@ Public Class Cms
 
                 If moConfig("LimitFeed") <> "" Then
                     pageSize = moConfig("LimitFeed")
+                    pageNumber = 1
                 End If
 
                 If moRequest("pageSize") > 0 Then
