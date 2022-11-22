@@ -6138,7 +6138,12 @@
           <xsl:otherwise>
             <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
               <xsl:with-param name="sortBy" select="@sortBy"/>
-				<xsl:with-param name="crop" select="$cropSetting"/>
+			  <xsl:with-param name="crop" select="$cropSetting"/>
+				<xsl:with-param name="currentPageDetail">
+					<xsl:if test="@moduleType='ListHistoricEvents'">
+						<xsl:value-of select="true()"/>
+				    </xsl:if>
+				</xsl:with-param>
             </xsl:apply-templates>
           </xsl:otherwise>
         </xsl:choose>
@@ -6183,9 +6188,12 @@
   <xsl:template match="Content[@type='Event']" mode="displayBrief">
     <xsl:param name="sortBy"/>
 	  <xsl:param name="crop"/>
+	  <xsl:param name="currentPageDetail"/>
     <!-- articleBrief -->
     <xsl:variable name="parentURL">
-      <xsl:apply-templates select="." mode="getHref"/>
+		<xsl:apply-templates select="." mode="getHref">
+			<xsl:with-param name="currentPageDetail" select="$currentPageDetail"/>
+		</xsl:apply-templates>
     </xsl:variable>
 	  <xsl:variable name="cropSetting">
 		  <xsl:choose>
@@ -6197,6 +6205,7 @@
 			  </xsl:otherwise>
 		  </xsl:choose>
 	  </xsl:variable>
+
     <div class="listItem list-group-item vevent">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem list-group-item vevent'"/>
@@ -6335,7 +6344,7 @@
             <xsl:apply-templates select="." mode="displayThumbnail"/>
           </xsl:if>
           <div class="media-body">
-            <h4 class="media-heading">
+            <h4 class="media-heading">!!!
               <xsl:apply-templates select="." mode="getDisplayName"/>
             </h4>
             <xsl:if test="StartDate/node()!=''">
@@ -8058,7 +8067,7 @@
 		discount: 0,
 		index: 0,
 		item_brand: "<xsl:value-of select="Manufacturer/node()"/>",
-		price: <xsl:value-of select="@price"/>
+		price: <xsl:apply-templates  select="." mode="PriceNumberic"/>
 		}
 		<!--<xsl:if test="following-sibling()::Item">
 			  <xsl:text>,</xsl:text>

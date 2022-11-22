@@ -23,7 +23,6 @@ Imports System.Collections.Generic
 Imports Imazen.WebP
 Imports System.Drawing
 Imports System.Data.SqlClient
-Imports Microsoft.SqlServer
 
 Partial Public Module xmlTools
 
@@ -1190,17 +1189,12 @@ Partial Public Module xmlTools
 
                                     Dim imgFile As New FileInfo(goServer.MapPath(newFilepath))
                                     Dim ptnImg As New Protean.Tools.Image("")
+                                    ptnImg.TinifyKey = moConfig("TinifyKey")
                                     ptnImg.CompressImage(imgFile, False)
-
                                     oImage.Close()
                                     oImage = Nothing
 
-
-
-
                             End Select
-
-
                             'PerfMon.Log("xmlTools", "ResizeImage - End")
                             Return newFilepath
                         Else
@@ -1233,6 +1227,7 @@ Partial Public Module xmlTools
 
         Public Function CreateWebP(ByVal cVirtualPath As String, ByVal forceCheck As Boolean) As String
             Dim cProcessInfo As String = ""
+
             Try
 
                 If cVirtualPath = "" Then
@@ -1260,11 +1255,11 @@ Partial Public Module xmlTools
                                 Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
                                     Dim encoder As New Imazen.WebP.SimpleEncoder
                                     encoder.Encode(bitMap, saveImageStream, WebPQuality)
+                                    encoder = Nothing
                                 End Using
                             End Using
                         End If
                     End If
-
                     Return webpFileName
                 End If
 
@@ -1276,6 +1271,7 @@ Partial Public Module xmlTools
                 Else
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
                 End If
+
             End Try
         End Function
 
@@ -2016,7 +2012,7 @@ Partial Public Module xmlTools
 
         'End Function
 
-        Public Function BundleJS(ByVal CommaSeparatedFilenames As String, ByVal TargetFile As String) As Object
+        Public Function BundleJS(ByVal CommaSeparatedFilenames As String, ByVal TargetPath As String) As Object
 
             Dim sReturnString As String
 
@@ -2041,10 +2037,24 @@ Partial Public Module xmlTools
                     If Not myWeb.moRequest("reBundle") Is Nothing Then
                         bReset = True
                     End If
+                    Dim bAppVarExists As Boolean = False
+                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
+                        bAppVarExists = True
+                    End If
 
-                    If Not myWeb.moCtx.Application.Get(TargetFile) Is Nothing And bReset = False Then
+                    If bAppVarExists = False Then
+                        'check if the file exists.
+                        If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js") Then
+                            'regenerate the application variable from the files in the folder
+                            'we do not want to recreate all js everytime the application pool is reset anymore.
+                            myWeb.moCtx.Application.Set(TargetPath, "/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js")
+                            bAppVarExists = True
+                        End If
+                    End If
 
-                        sReturnString = myWeb.moCtx.Application.Get(TargetFile)
+                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing And bReset = False Then
+
+                        sReturnString = myWeb.moCtx.Application.Get(TargetPath)
 
                     Else
                         Dim appPath As String = myWeb.moRequest.ApplicationPath
@@ -2094,7 +2104,7 @@ Partial Public Module xmlTools
 
                         Dim CtxBase As New System.Web.HttpContextWrapper(myWeb.moCtx)
                         Dim BundlesCtx As New Optimization.BundleContext(CtxBase, Bundles, "~/" & myWeb.moConfig("ProjectPath") & "js//")
-                        Dim jsBundle As New BundleTransformer.Core.Bundles.CustomScriptBundle(TargetFile)
+                        Dim jsBundle As New BundleTransformer.Core.Bundles.CustomScriptBundle(TargetPath)
 
                         BundlesCtx.EnableInstrumentation = False
 
@@ -2113,25 +2123,27 @@ Partial Public Module xmlTools
 
                         Dim scriptFile As String
 
-                        scriptFile = TargetFile & "/script.js"
+                        scriptFile = TargetPath & "/script.js"
 
                         Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                         fsh.initialiseVariables(fsHelper.LibraryType.Scripts)
 
-                        Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetFile).GenerateBundleResponse(BundlesCtx)
+                        Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
                         Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
                         'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile.TrimStart("~")))
 
-                        scriptFile = fsh.SaveFile("script.js", TargetFile, info)
+                        scriptFile = fsh.SaveFile("script.js", TargetPath, info)
 
                         If scriptFile.StartsWith("ERROR: ") Then
                             myWeb.bPageCache = False
                         End If
 
-                        If scriptFile.StartsWith(TargetFile.TrimStart("~")) Then
+                        If scriptFile.StartsWith(TargetPath.TrimStart("~")) Then
                             'file has been saved successfully.
                             scriptFile = "/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile
-                            myWeb.moCtx.Application.Set(TargetFile, scriptFile)
+                            If VirtualFileExists(scriptFile) Then
+                                myWeb.moCtx.Application.Set(TargetPath, scriptFile)
+                            End If
                         Else
                             'we have a file save error we should try again next request.
                             myWeb.bPageCache = False
@@ -2156,7 +2168,7 @@ Partial Public Module xmlTools
 
             Catch ioex As IOException    'New changes on 9/12/21'
                 myWeb.bPageCache = False
-                sReturnString = TargetFile & "/script.js"
+                sReturnString = TargetPath & "/script.js"
                 '      Return ioex.StackTrace
                 Return sReturnString
 
@@ -2205,13 +2217,13 @@ Partial Public Module xmlTools
 
                     If bAppVarExists = False Then
                         'check if the file exists.
-                        If VirtualFileExists("/css" & TargetPath.Replace("~", "") & "/style.css") Then
+                        If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/style.css") Then
                             'regenerate the application variable from the files in the folder
                             'we do not want to recreate all css everytime the application pool is reset anymore.
                             Dim sReturnStringNew As String = ""
                             Dim myFile As String
                             For Each myFile In IO.Directory.GetFiles(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "")), "*.css")
-                                sReturnStringNew = sReturnStringNew & "/css" & TargetPath.Replace("~", "") & "/" & Path.GetFileName(myFile) & ","
+                                sReturnStringNew = sReturnStringNew & "/" & myWeb.moConfig("ProjectPath") & "css" & TargetPath.Replace("~", "") & "/" & Path.GetFileName(myFile) & ","
                             Next
                             myWeb.moCtx.Application.Set(TargetPath, sReturnStringNew.Trim(","))
                             bAppVarExists = True

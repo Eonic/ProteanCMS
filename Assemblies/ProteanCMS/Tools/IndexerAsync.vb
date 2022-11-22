@@ -417,7 +417,7 @@ Public Class IndexerAsync
 
             bIsError = True
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -728,6 +728,8 @@ Public Class IndexerAsync
                 cPageHtml = Replace(cPageHtml, "<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.1//EN"" ""http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"">", "")
                 cPageHtml = Replace(cPageHtml, " xmlns=""http://www.w3.org/1999/xhtml""", "")
 
+                Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
+
                 If cPageHtml = "" Then
                     'we have an error to handle
                     If Not myWeb.msException Is Nothing Then
@@ -759,7 +761,6 @@ Public Class IndexerAsync
                             If Not (oElmtURL.GetAttribute("url").StartsWith("http")) Then
                                 IndexPage(oElmtURL.GetAttribute("url"), oPageXml.DocumentElement, "Page", myWeb.msException)
 
-                                Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
                                 oPageElmt.SetAttribute("url", oElmtURL.GetAttribute("url"))
                                 oInfoElmt.AppendChild(oPageElmt)
 
@@ -782,6 +783,7 @@ Public Class IndexerAsync
                     If Not InStr(cRules, "NOFOLLOW") > 0 Then
                         'Now let index the content of the pages
                         'Only index content where this is the parent page, so we don't index for multiple locations.
+                        Dim itemContentCount As Long = 0
                         Dim oElmt As XmlElement
                         Dim oContentElmts As XmlNodeList = myWeb.moPageXml.SelectNodes("/Page/Contents/Content[@type!='FormattedText' and @type!='PlainText' and @type!='MetaData' and @type!='Image' and @type!='xform' and @type!='report' and @type!='xformQuiz' and @type!='Module' and @parId=/Page/@id]")
                         For Each oElmt In oContentElmts
@@ -829,7 +831,7 @@ Public Class IndexerAsync
                                         If Not oElmt.GetAttribute("type") = "Document" Then
                                             oElmtRules = oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']")
                                             cRules = ""
-                                            Dim sPageUrl As String
+                                            Dim sPageUrl As String = ""
                                             If Not oElmtURL Is Nothing Then
                                                 sPageUrl = oElmtURL.GetAttribute("url")
                                             End If
@@ -846,12 +848,15 @@ Public Class IndexerAsync
 
                                                 IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), myWeb.msException)
 
-                                                Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
-                                                oPageElmt.SetAttribute("url", sPageUrl)
-                                                oInfoElmt.AppendChild(oPageElmt)
+                                                Dim oContentElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"))
+                                                oContentElmt.SetAttribute("artId", myWeb.mnArtId)
+                                                oContentElmt.SetAttribute("url", sPageUrl)
+
+                                                oPageElmt.AppendChild(oContentElmt)
 
                                                 nIndexed += 1
                                                 nContentsIndexed += 1
+                                                itemContentCount += 1
                                             Else
                                                 nContentSkipped += 1
                                             End If
@@ -867,7 +872,7 @@ Public Class IndexerAsync
                                                         Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText), myWeb.msException)
                                                         IndexPage(myWeb.mnPageId, "<h1>" & oElmt.GetAttribute("name") & "</h1>" & fileAsText, oDocElmt.InnerText, myWeb.msException, oElmt.GetAttribute("name"), "Download", myWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
 
-                                                        Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
+                                                        Dim oFileElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("file")
                                                         oPageElmt.SetAttribute("file", oDocElmt.InnerText)
                                                         oInfoElmt.AppendChild(oPageElmt)
 
@@ -883,7 +888,7 @@ Public Class IndexerAsync
                                         oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"))
                                         oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"))
                                         oPageErrElmt.InnerText = ex.Message
-                                        oInfoElmt.AppendChild(oPageErrElmt)
+                                        oPageElmt.AppendChild(oPageErrElmt)
                                         nContentSkipped += 1
                                         cProcessInfo = cPageHtml
                                     End Try
@@ -892,7 +897,7 @@ Public Class IndexerAsync
 
                             End If
                         Next
-
+                        oPageElmt.SetAttribute("contentCount", itemContentCount)
                     End If
 
                     If bIsError Then
@@ -904,10 +909,10 @@ Public Class IndexerAsync
 
                     Interlocked.Decrement(nPagesRemaining)
 
-                    If oInfoElmt.GetAttribute("indexCount") Then
+                    If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
                         oInfoElmt.SetAttribute("indexCount", nIndexed)
                     End If
-                    If oInfoElmt.GetAttribute("pagesIndexed") Then
+                    If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
                         oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
                     End If
                     If oInfoElmt.GetAttribute("pagesRemaining") IsNot Nothing Then
