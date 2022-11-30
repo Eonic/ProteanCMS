@@ -1716,7 +1716,7 @@ Public Class Cms
 
                         sProcessInfo = "Check Admin Mode"
 
-                    If LCase(moConfig("ActionsBeforeAddBulk")) = "on" Then
+                    If LCase(moConfig("ActionsBeforeAddBulk")) <> "on" Then
                         CommonActions()
                     End If
 
