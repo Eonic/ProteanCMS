@@ -1717,9 +1717,10 @@ Public Class Cms
                         sProcessInfo = "Check Admin Mode"
 
                     If LCase(moConfig("ActionsBeforeAddBulk")) <> "on" Then
-                        CommonActions()
+                        ContentActions()
                     End If
 
+                    CommonActions()
 
                     'TS commented out so Century can perform searches in admin mode
                     '  If Not (mbAdminMode) Then
