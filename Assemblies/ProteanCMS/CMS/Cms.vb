@@ -1694,73 +1694,78 @@ Public Class Cms
                         RefreshUserXML()
                     End If
 
-                    'TS-Moved to after add bulk related contetn to enable filters to be processed.
+                    'TS-Moved to after add bulk related content to enable filters to be processed.
                     'not sure if this is before for a reason. I cannot seem to think of one.
-                    'ContentActions()
+                    'required for related images on contentgrabber for practitioner so added config setting
+                    If LCase(moConfig("ActionsBeforeAddBulk")) = "on" Then
+                        ContentActions()
+                    End If
 
 
                     If LCase(moConfig("FinalAddBulk")) = "on" Then
 
-                        Dim cShowRelatedBriefDepth As String = moConfig("ShowRelatedBriefDepth") & ""
-                        Dim nMaxDepth As Integer = 1
-                        If Not (String.IsNullOrEmpty(cShowRelatedBriefDepth)) _
-                        AndAlso IsNumeric(cShowRelatedBriefDepth) Then
-                            nMaxDepth = CInt(cShowRelatedBriefDepth)
-                        End If
-                        moDbHelper.addBulkRelatedContent(moPageXml.DocumentElement.SelectSingleNode("Contents"), mdPageUpdateDate, nMaxDepth)
+                            Dim cShowRelatedBriefDepth As String = moConfig("ShowRelatedBriefDepth") & ""
+                            Dim nMaxDepth As Integer = 1
+                            If Not (String.IsNullOrEmpty(cShowRelatedBriefDepth)) _
+                            AndAlso IsNumeric(cShowRelatedBriefDepth) Then
+                                nMaxDepth = CInt(cShowRelatedBriefDepth)
+                            End If
+                            moDbHelper.addBulkRelatedContent(moPageXml.DocumentElement.SelectSingleNode("Contents"), mdPageUpdateDate, nMaxDepth)
 
+                        End If
+
+                        sProcessInfo = "Check Admin Mode"
+
+                    If LCase(moConfig("ActionsBeforeAddBulk")) = "on" Then
+                        CommonActions()
                     End If
 
-                    sProcessInfo = "Check Admin Mode"
-                    ContentActions()
-
-                    CommonActions()
 
                     'TS commented out so Century can perform searches in admin mode
                     '  If Not (mbAdminMode) Then
                     layoutCmd = LayoutActions()
-                    '  End If
+                        '  End If
 
-                    AddCart()
+                        AddCart()
 
-                    If gbQuote Then
-                        sProcessInfo = "Begin Quote"
-                        Dim oEq As Protean.Cms.Quote = New Protean.Cms.Quote(Me)
-                        oEq.apply()
-                        oEq.close()
-                        oEq = Nothing
-                        sProcessInfo = "End Quote"
+                        If gbQuote Then
+                            sProcessInfo = "Begin Quote"
+                            Dim oEq As Protean.Cms.Quote = New Protean.Cms.Quote(Me)
+                            oEq.apply()
+                            oEq.close()
+                            oEq = Nothing
+                            sProcessInfo = "End Quote"
+                        End If
+
+                        If LCase(moConfig("Search")) = "On" Then
+
+                            Dim oSearchNode As XmlElement = moPageXml.CreateElement("Search")
+                            oSearchNode.SetAttribute("mode", moConfig("SearchMode"))
+                            oSearchNode.SetAttribute("contentTypes", moConfig("SearchContentTypes"))
+                            moPageXml.DocumentElement.AppendChild(oSearchNode)
+
+                        End If
+
+                        If mbAdminMode Then
+                            Try
+                                If moRequest("ewCmd") = "" Then
+                                    ProcessReports()
+                                End If
+                            Catch
+                                'do nothing
+                            End Try
+
+                        Else
+                            ProcessReports()
+                        End If
+
+                        ' Process the Calendars
+                        ProcessCalendar()
+
+                        If gbVersionControl Then CheckContentVersions()
+
                     End If
-
-                    If LCase(moConfig("Search")) = "On" Then
-
-                        Dim oSearchNode As XmlElement = moPageXml.CreateElement("Search")
-                        oSearchNode.SetAttribute("mode", moConfig("SearchMode"))
-                        oSearchNode.SetAttribute("contentTypes", moConfig("SearchContentTypes"))
-                        moPageXml.DocumentElement.AppendChild(oSearchNode)
-
-                    End If
-
-                    If mbAdminMode Then
-                        Try
-                            If moRequest("ewCmd") = "" Then
-                                ProcessReports()
-                            End If
-                        Catch
-                            'do nothing
-                        End Try
-
-                    Else
-                        ProcessReports()
-                    End If
-
-                    ' Process the Calendars
-                    ProcessCalendar()
-
-                    If gbVersionControl Then CheckContentVersions()
-
-                End If
-                sProcessInfo = "CheckMultiParents"
+                    sProcessInfo = "CheckMultiParents"
                 Me.CheckMultiParents(moPageXml.DocumentElement, mnPageId)
 
                 ' ProcessContentForLanguage
@@ -2253,6 +2258,7 @@ Public Class Cms
 
                 If moConfig("LimitFeed") <> "" Then
                     pageSize = moConfig("LimitFeed")
+                    pageNumber = 1
                 End If
 
                 If moRequest("pageSize") > 0 Then

@@ -6319,7 +6319,7 @@ Partial Public Class Cms
                     Dim refundAmount As Decimal
                     Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
-                    Dim amount As String = ""
+                    Dim amount As Double
 
 
 
@@ -6336,13 +6336,13 @@ Partial Public Class Cms
                             ' Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
                             Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/*[1]")
                             If (xnInstance IsNot Nothing) Then
-                                amount = xnInstance.Attributes("AmountPaid").InnerText
+                                amount = CDbl("0" & xnInstance.Attributes("AmountPaid").InnerText)
                             End If
                         End If
 
                     End If
 
-                    refundAmount = Convert.ToDouble(amount)
+                    refundAmount = amount
 
                     MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement

@@ -2076,7 +2076,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                             Case "term"
 
                                 ' Clean up the search terms
-                                fieldValue = CleanUpLuceneSearchString(searchFilter.GetAttribute("value"))
+                                fieldValue = CleanUpLuceneSearchString(searchFilter.GetAttribute("value"), True)
                                 fieldTextTerms = ParseKeywordsAndPhrases(fieldValue)
 
                                 ' Field keyword search
