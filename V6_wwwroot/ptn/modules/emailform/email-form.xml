@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="EmailForm" box="" title="Enquiry form" process="xform" position="">
+					<Content moduleType="EmailForm" box="" title="Contact Form" process="xform" position="">
 						<model class="ewXform">
 							<instance>
 								<emailer xmlns="http://www.eonic.co.uk/ewcommon/Services">
@@ -67,10 +67,17 @@
 									</input>
 								</group>
 							</group>
-							<group>
-								<input bind="Email" class="required">
-									<label>Email</label>
-								</input>
+							<group class="row">
+								<group class="col-lg-6">
+									<input bind="Email" class="required">
+										<label>Email</label>
+									</input>
+								</group>
+								<group class="col-lg-6">
+									<input bind="Phone">
+										<label>Phone</label>
+									</input>
+								</group>
 							</group>
 							<group class="row">
 								<group class="col-lg-6">
@@ -79,8 +86,8 @@
 									</input>
 								</group>
 								<group class="col-lg-6">
-									<input bind="Phone" class="required">
-										<label>Phone</label>
+									<input bind="JobTitle">
+										<label>JobTitle</label>
 									</input>
 								</group>
 							</group>
