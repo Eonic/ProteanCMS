@@ -23,6 +23,7 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
+Imports Lucene.Net.Support
 
 Partial Public Class Cms
     Public Class Admin
@@ -192,6 +193,10 @@ Partial Public Class Cms
                 mcEwCmd = EwCmd(0)
                 If UBound(EwCmd) > 0 Then mcEwCmd2 = EwCmd(1)
                 If UBound(EwCmd) > 1 Then mcEwCmd3 = EwCmd(2)
+
+                If myWeb.moRequest("ewCmd2") <> "" Then
+                    mcEwCmd2 = myWeb.moRequest("ewCmd2")
+                End If
 
 
 
@@ -1967,6 +1972,10 @@ ProcessFlow:
                     Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersRefunded", "OrdersHistory", "OrdersAwaitingPayment", "OrdersSaved", "OrdersInProgress", "BulkCartAction"
 
                         OrderProcess(oPageDetail, sAdminLayout, "Order")
+                    Case "EventBookings"
+                        EventBookingProcess(oPageDetail, sAdminLayout)
+
+
                     Case "Quotes", "QuotesFailed", "QuotesDeposit", "QuotesHistory"
                         OrderProcess(oPageDetail, sAdminLayout, "Quote")
 
@@ -4976,14 +4985,72 @@ SP:
             End Try
         End Sub
 
+        Private Sub EventBookingProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
+
+            Try
+                'Case "cpdReportsPage"
+                Dim dateQuery As String = " and a.dExpireDate >= " & sqlDate(Now)
+                If mcEwCmd2 = "pastbookings" Then
+                    dateQuery = " and a.dExpireDate < " & sqlDate(Now)
+                End If
+
+
+                Dim sSql1 As String = "select nContentKey, cContentName, dExpireDate, cContentXmlBrief from tblContent c " &
+                "inner join tblAudit a On c.nAuditId = a.nAuditKey " &
+                "where cContentSchemaName = 'Event' " & dateQuery &
+                "order by a.dExpireDate desc"
+
+                'get a list of events with tickets sold in the future
+                Dim oEvtsDs As DataSet = myWeb.moDbHelper.GetDataSet(sSql1, "Event", "Events")
+                Dim sSql As String = "spTicketsSoldSummary"
+                myWeb.moDbHelper.addTableToDataSet(oEvtsDs, sSql, "Ticket")
+
+                If oEvtsDs.Tables(0).Rows.Count > 0 Then
+
+                    oEvtsDs.Tables(0).Columns(0).ColumnMapping = Data.MappingType.Attribute
+                    oEvtsDs.Tables(0).Columns(1).ColumnMapping = Data.MappingType.Attribute
+                    oEvtsDs.Tables(0).Columns(2).ColumnMapping = Data.MappingType.Attribute
+                    ' oEvtsDs.Tables(0).Columns("cContentXmlBrief").ColumnMapping = Data.MappingType.SimpleContent
+                    oEvtsDs.Relations.Add("rel01", oEvtsDs.Tables(0).Columns("nContentKey"), oEvtsDs.Tables(1).Columns("EventKey"), False)
+                    oEvtsDs.Relations("rel01").Nested = True
+
+
+                    Dim oXml As New XmlDocument
+                    oXml.LoadXml(oEvtsDs.GetXml())
+                    For Each oEvtElmt As XmlElement In oXml.DocumentElement.SelectNodes("Event/cContentXmlBrief")
+                        oEvtElmt.InnerXml = oEvtElmt.InnerText
+                    Next
+
+                    oPageDetail.AppendChild(moPageXML.ImportNode(oXml.DocumentElement, True))
+
+                    If myWeb.moRequest("EventId") <> "" Then
+
+                        Dim oTicketDs As DataSet = myWeb.moDbHelper.GetDataSet("select * from vw_TicketsSalesReport where EventKey = " & myWeb.moRequest("EventId"), "Ticket", "Tickets")
+
+                        Dim oXml2 As New XmlDocument
+                        oXml2.LoadXml(oTicketDs.GetXml())
+                        oXml2.DocumentElement.SetAttribute("EventId", myWeb.moRequest("EventId"))
+                        Dim oRpt As XmlElement = oPageDetail.OwnerDocument.CreateElement("Report")
+                        oRpt.AppendChild(moPageXML.ImportNode(oXml2.DocumentElement, True))
+                        oPageDetail.AppendChild(oRpt)
+
+                    End If
+                End If
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "EventBookingProcess", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
+
         Private Sub ReportsProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
             Dim sProcessInfo As String = ""
 
             Try
                 'Case "cpdReportsPage"
 
-                If myWeb.moRequest("ewCmd2") <> "" Then
-                    oPageDetail.AppendChild(moAdXfm.xFrmGetReport(myWeb.moRequest("ewCmd2")))
+                If mcEwCmd2 <> "" Then
+                    oPageDetail.AppendChild(moAdXfm.xFrmGetReport(mcEwCmd2))
                     If moAdXfm.valid Then
                         myWeb.moDbHelper.GetReport(oPageDetail, moAdXfm.Instance.FirstChild)
                     End If

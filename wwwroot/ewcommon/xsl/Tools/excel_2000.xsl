@@ -18,7 +18,7 @@
 			</head>
 			<body>
         <!-- Write each sheet -->
-				<xsl:for-each select="ContentDetail/report | ContentDetail/directory | Contents/Content/report | ContentDetail/Content/tblCodes | ContentDetail/Content/Report | ContentDetail/Content/GenericReport">
+				<xsl:for-each select="ContentDetail/report | ContentDetail/directory | Contents/Content/report | ContentDetail/Content/tblCodes | ContentDetail/Content/Report | ContentDetail/Content/GenericReport | ContentDetail/Report">
 					<table>
 						<xsl:choose>
 							<xsl:when test="user">
@@ -36,10 +36,10 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<!-- Write each row. -->
-								<xsl:apply-templates select="certificates/certificate[1] | companies/company[1] | activity/candidate[1] | activity/attempt[1] | PageReport/PageActivity[1] | company[1] | user[1] | role[1] | group[1] | directory/*[1] | course/quiz[1] |  diplomas/*[1] | Code[1] | *[parent::GenericReport][1]" mode="title"/>
+								<xsl:apply-templates select="Tickets/Ticket[1] |certificates/certificate[1] | companies/company[1] | activity/candidate[1] | activity/attempt[1] | PageReport/PageActivity[1] | company[1] | user[1] | role[1] | group[1] | directory/*[1] | course/quiz[1] |  diplomas/*[1] | Code[1] | *[parent::GenericReport][1]" mode="title"/>
 								<!-- Write each row. -->
 								<!--xsl:apply-templates select="user" mode="rows"/-->
-								<xsl:apply-templates select="certificates/certificate | companies/company | activity/candidate | activity/attempt | PageReport/descendant-or-self::PageActivity | company | user | role | group | directory/* | course/quiz |  diplomas/* | Code  | *[parent::GenericReport]" mode="rows"/>
+								<xsl:apply-templates select="Tickets/Ticket | certificates/certificate | companies/company | activity/candidate | activity/attempt | PageReport/descendant-or-self::PageActivity | company | user | role | group | directory/* | course/quiz |  diplomas/* | Code  | *[parent::GenericReport]" mode="rows"/>
 							</xsl:otherwise>
 						</xsl:choose>
 						<xsl:apply-templates select="." mode="reportTitles"/>

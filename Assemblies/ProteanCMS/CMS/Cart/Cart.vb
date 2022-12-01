@@ -1305,7 +1305,14 @@ processFlow:
                             End If
                         Next item
 
-                        myWeb.msRedirectOnEnd = mcPagePath & "cartCmd=" & cRedirectCommand & "&refSessionId=" & mcSessionId & cGoogleTrackingCode
+                        If mnCartId > 0 Then
+
+                            myWeb.msRedirectOnEnd = mcPagePath & "cartCmd=" & cRedirectCommand & "&refSessionId=" & mcSessionId & cGoogleTrackingCode
+                        Else
+
+                            mnProcessError = -1
+                            GetCart(oElmt)
+                        End If
 
                         ' myWeb.moResponse.Redirect(mcPagePath & "cartCmd=" & cRedirectCommand & "&refSessionId=" & mcSessionId & cGoogleTrackingCode)
                     Case "Archive"
@@ -1656,9 +1663,12 @@ processFlow:
                     Case "Brief"
                         'Continue shopping
                         'go to the cart url
-                        Dim cPage As String = myWeb.moRequest("pgid")
-                        If cPage = "" Or cPage Is Nothing Then cPage = moPageXml.DocumentElement.GetAttribute("id")
-                        cPage = "?pgid=" & cPage
+                        Dim cPage As String = moCartConfig("ContinuePath")
+                        If Not LCase(moCartConfig("ContinuePath")) <> "" Then
+                            cPage = myWeb.moRequest("pgid")
+                            If cPage = "" Or cPage Is Nothing Then cPage = moPageXml.DocumentElement.GetAttribute("id")
+                            cPage = "?pgid=" & cPage
+                        End If
                         myWeb.moResponse.Redirect(mcSiteURL & cPage, False)
                         myWeb.moCtx.ApplicationInstance.CompleteRequest()
 
@@ -1869,7 +1879,7 @@ processFlow:
                         Dim totalPaid As Double = oCartElmt.GetAttribute("paymentMade")
                         totalPaid = totalPaid + amountPaid
                         Dim outstandingAmount As Double = CDbl("0" + oCartElmt.GetAttribute("total")) - totalPaid
-                        oCartElmt.SetAttribute("paymentMade", totalPaid)
+                        oCartElmt.SetAttribute("paymentMade", amountPaid)
                         oCartElmt.SetAttribute("outstandingAmount", outstandingAmount)
                         oCartElmt.SetAttribute("payableAmount", outstandingAmount)
                         oCartElmt.SetAttribute("transStatus", "Settlement Paid")
@@ -3163,7 +3173,7 @@ processFlow:
                                 oCartElmt.SetAttribute("payableType", "deposit")
                             End If
 
-                            If nPayable = 0 Then
+                            If nPayable = 0 Or nPayable = CDbl(oCartElmt.GetAttribute("total")) Then
                                 oCartElmt.SetAttribute("payableType", "full")
                             End If
 
@@ -5593,6 +5603,7 @@ processFlow:
                                             newElmt = Nothing
                                             'Update the controls
                                             If Not blankControl Is Nothing Then
+                                                blankControl.SetAttribute("id", "ticket-form-" & totalAttendees)
                                                 oControlRoot.AppendChild(blankControl.CloneNode(True))
                                             End If
                                             newElmt = oControlRoot.LastChild

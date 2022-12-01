@@ -386,18 +386,7 @@
 			  <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
 		  </xsl:if>
 	   
-         <xsl:if test="$GoogleGA4MeasurementID!=''">
-			    <!-- GA4 Tag Manager -->
-				<script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-                    <script cookie-consent="tracking">
-                      window.dataLayer = window.dataLayer || [];
-                      function gtag(){dataLayer.push(arguments);}
-                      gtag('js', new Date());
-                      gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
-					  <xsl:apply-templates select="." mode="google-ga4-event"/>
-                </script>
-				<!-- End GA4 Tag Manager -->		 
-		 </xsl:if>
+
         <xsl:if test="$GoogleTagManagerID!=''">
 
 	
@@ -1264,6 +1253,7 @@
       
 	  
       </script>
+		
       <noscript>
         <img height="1" width="1" src="https://www.facebook.com/tr?id={Contents/Content[@name='fb-pixel_id']}&amp;ev=PageView&amp;noscript=1"/>
       </noscript>
@@ -1282,6 +1272,20 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
       </xsl:otherwise>
     </xsl:choose>
+
+	  <xsl:if test="$GoogleGA4MeasurementID!=''">
+		  <!-- GA4 Tag Manager -->
+		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+		  <script cookie-consent="tracking">
+			  window.dataLayer = window.dataLayer || [];
+			  function gtag(){dataLayer.push(arguments);}
+			  gtag('js', new Date());
+			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
+			  <xsl:apply-templates select="." mode="google-ga4-event"/>
+		  </script>
+		  <!-- End GA4 Tag Manager -->
+	  </xsl:if>
+	  
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
 
@@ -6846,17 +6850,17 @@
 		<xsl:param name="no-stretch" select="true()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
-  	<xsl:param name="max-width-xxs"/>
+  	    <xsl:param name="max-width-xxs"/>
 		<xsl:param name="max-height-xxs"/>
-  	<xsl:param name="max-width-xs"/>
+  	    <xsl:param name="max-width-xs"/>
 		<xsl:param name="max-height-xs"/>
-  	<xsl:param name="max-width-sm"/>
+  	    <xsl:param name="max-width-sm"/>
 		<xsl:param name="max-height-sm"/>
-  	<xsl:param name="max-width-md"/>
+  	    <xsl:param name="max-width-md"/>
 		<xsl:param name="max-height-md"/>
-  	<xsl:param name="max-width-lg"/>
+  	    <xsl:param name="max-width-lg"/>
 		<xsl:param name="max-height-lg"/>
-   	<xsl:param name="forceResize"/>
+   	    <xsl:param name="forceResize"/>
 		<xsl:param name="class"/>
 		<xsl:param name="style"/>
     <xsl:param name="imageUrl"/>
@@ -10562,10 +10566,18 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
-				<noscript>
+			<xsl:choose>
+				<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS'])">
 					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
-				</noscript>
+				</xsl:when>
+				<xsl:otherwise>
+					<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
+					<noscript>
+						<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+					</noscript>
+				</xsl:otherwise>
+			</xsl:choose>
+
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
