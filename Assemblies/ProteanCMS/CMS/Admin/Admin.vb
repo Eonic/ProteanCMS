@@ -194,6 +194,10 @@ Partial Public Class Cms
                 If UBound(EwCmd) > 0 Then mcEwCmd2 = EwCmd(1)
                 If UBound(EwCmd) > 1 Then mcEwCmd3 = EwCmd(2)
 
+                If myWeb.moRequest("ewCmd2") <> "" Then
+                    mcEwCmd2 = myWeb.moRequest("ewCmd2")
+                End If
+
 
 
                 If Not moConfig("SecureMembershipAddress") = "" Then
@@ -4986,31 +4990,52 @@ SP:
 
             Try
                 'Case "cpdReportsPage"
+                Dim dateQuery As String = " and a.dExpireDate >= " & sqlDate(Now)
+                If mcEwCmd2 = "pastbookings" Then
+                    dateQuery = " and a.dExpireDate < " & sqlDate(Now)
+                End If
+
+
+                Dim sSql1 As String = "select nContentKey, cContentName, dExpireDate, cContentXmlBrief from tblContent c " &
+                "inner join tblAudit a On c.nAuditId = a.nAuditKey " &
+                "where cContentSchemaName = 'Event' " & dateQuery &
+                "order by a.dExpireDate desc"
 
                 'get a list of events with tickets sold in the future
-                Dim oEvtsDs As DataSet = myWeb.moDbHelper.GetDataSet("select nContentKey, cContentName, cContentXmlBrief from tblContent where cContentSchemaName = 'Event'", "Event", "Events")
+                Dim oEvtsDs As DataSet = myWeb.moDbHelper.GetDataSet(sSql1, "Event", "Events")
                 Dim sSql As String = "spTicketsSoldSummary"
                 myWeb.moDbHelper.addTableToDataSet(oEvtsDs, sSql, "Ticket")
 
-                oEvtsDs.Tables(0).Columns(0).ColumnMapping = Data.MappingType.Attribute
-                oEvtsDs.Tables(0).Columns(1).ColumnMapping = Data.MappingType.Attribute
-                oEvtsDs.Tables(0).Columns("cContentXmlBrief").ColumnMapping = Data.MappingType.SimpleContent
-                oEvtsDs.Relations.Add("rel01", oEvtsDs.Tables(0).Columns("nContentKey"), oEvtsDs.Tables(1).Columns("EventKey"), False)
-                oEvtsDs.Relations("rel01").Nested = True
+                If oEvtsDs.Tables(0).Rows.Count > 0 Then
+
+                    oEvtsDs.Tables(0).Columns(0).ColumnMapping = Data.MappingType.Attribute
+                    oEvtsDs.Tables(0).Columns(1).ColumnMapping = Data.MappingType.Attribute
+                    oEvtsDs.Tables(0).Columns(2).ColumnMapping = Data.MappingType.Attribute
+                    ' oEvtsDs.Tables(0).Columns("cContentXmlBrief").ColumnMapping = Data.MappingType.SimpleContent
+                    oEvtsDs.Relations.Add("rel01", oEvtsDs.Tables(0).Columns("nContentKey"), oEvtsDs.Tables(1).Columns("EventKey"), False)
+                    oEvtsDs.Relations("rel01").Nested = True
 
 
-                Dim oXml As New XmlDocument
-                oXml.LoadXml(oEvtsDs.GetXml())
-                oPageDetail.AppendChild(moPageXML.ImportNode(oXml.DocumentElement, True))
+                    Dim oXml As New XmlDocument
+                    oXml.LoadXml(oEvtsDs.GetXml())
+                    For Each oEvtElmt As XmlElement In oXml.DocumentElement.SelectNodes("Event/cContentXmlBrief")
+                        oEvtElmt.InnerXml = oEvtElmt.InnerText
+                    Next
 
-                If myWeb.moRequest("ewCmd2") <> "" Then
-                    oPageDetail.AppendChild(moAdXfm.xFrmGetReport(myWeb.moRequest("ewCmd2")))
-                    If moAdXfm.valid Then
-                        myWeb.moDbHelper.GetReport(oPageDetail, moAdXfm.Instance.FirstChild)
+                    oPageDetail.AppendChild(moPageXML.ImportNode(oXml.DocumentElement, True))
+
+                    If myWeb.moRequest("EventId") <> "" Then
+
+                        Dim oTicketDs As DataSet = myWeb.moDbHelper.GetDataSet("select * from vw_TicketsSalesReport where EventKey = " & myWeb.moRequest("EventId"), "Ticket", "Tickets")
+
+                        Dim oXml2 As New XmlDocument
+                        oXml2.LoadXml(oTicketDs.GetXml())
+                        oXml2.DocumentElement.SetAttribute("EventId", myWeb.moRequest("EventId"))
+                        Dim oRpt As XmlElement = oPageDetail.OwnerDocument.CreateElement("Report")
+                        oRpt.AppendChild(moPageXML.ImportNode(oXml2.DocumentElement, True))
+                        oPageDetail.AppendChild(oRpt)
+
                     End If
-                End If
-                If oPageDetail.InnerXml = "" Then
-                    myWeb.moDbHelper.ListReports(oPageDetail)
                 End If
 
             Catch ex As Exception
@@ -5024,8 +5049,8 @@ SP:
             Try
                 'Case "cpdReportsPage"
 
-                If myWeb.moRequest("ewCmd2") <> "" Then
-                    oPageDetail.AppendChild(moAdXfm.xFrmGetReport(myWeb.moRequest("ewCmd2")))
+                If mcEwCmd2 <> "" Then
+                    oPageDetail.AppendChild(moAdXfm.xFrmGetReport(mcEwCmd2))
                     If moAdXfm.valid Then
                         myWeb.moDbHelper.GetReport(oPageDetail, moAdXfm.Instance.FirstChild)
                     End If

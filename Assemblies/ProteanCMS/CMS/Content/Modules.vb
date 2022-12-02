@@ -322,6 +322,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " and a.dExpireDate < GETDATE() and c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
                     ,,, nItemsPerPage,,,,, nCurrentPage,,, True)
 
+                    myWeb.bAllowExpired = True
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "ListHistoricEvents", ex, "", cProcessInfo, gbDebug)
