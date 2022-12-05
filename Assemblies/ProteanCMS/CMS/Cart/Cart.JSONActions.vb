@@ -946,27 +946,27 @@ Partial Public Class Cms
             ''' <param name="myApi"></param>
             ''' <param name="jObj"></param>
             ''' <returns></returns>
-            Public Function AddMissingOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            Public Function UpdateOrderWithPaymentResponse(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim josResult As String = ""
                     Dim bIsAuthorized As Boolean = False
                     Dim validGroup = IIf(jObj("validGroup") IsNot Nothing, CStr(jObj("validGroup")), "")
                     bIsAuthorized = ValidateAPICall(myWeb, validGroup)
 
-                    If bIsAuthorized = False Then Return "Error -Authorization Failed"
+                    'If bIsAuthorized = False Then Return "Error -Authorization Failed"
 
-
+                    'method name UpdateOrderWithPaymentResponse
                     Dim receiptID = jObj("AuthNumber")
                     Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
                     Dim strConsumerRef = ""
                     If cProviderName <> "" And receiptID <> 0 Then
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
-                        strConsumerRef = oPayProv.Activities.CompleteOrder(receiptID)
+                        strConsumerRef = oPayProv.Activities.UpdateOrderWithPaymentResponse(receiptID)
                         josResult = strConsumerRef
                     End If
                     Return josResult
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""))
                     Return "Error" 'ex.Message
                 End Try
 
