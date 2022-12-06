@@ -2923,10 +2923,10 @@ AfterProcessFlow:
 
             'old
             'Dim oElmt As XmlElement
-            Dim oElmt1 As XmlElement
-            Dim oElmt2 As XmlElement
-            Dim oElmt3 As XmlElement
-            Dim oElmt4 As XmlElement
+            'Dim oElmt1 As XmlElement
+            'Dim oElmt2 As XmlElement
+            'Dim oElmt3 As XmlElement
+            'Dim oElmt4 As XmlElement
 
             'Dim ewLastCmd As String
             Dim oPageElmt As XmlElement
