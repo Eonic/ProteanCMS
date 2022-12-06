@@ -7482,22 +7482,26 @@
         <xsl:value-of select="@id"/>
       </td>
       <td>
-        <xsl:value-of select="@statusId"/> - 	<xsl:choose>
-          <xsl:when test="@statusId='0'">New</xsl:when>
-          <xsl:when test="@statusId='1'">Items Added</xsl:when>
-          <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
-          <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
-          <xsl:when test="@statusId='4'">Confirmed</xsl:when>
-          <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="@statusId='6'">Completed</xsl:when>
-          <xsl:when test="@statusId='7'">Refunded</xsl:when>
-          <xsl:when test="@statusId='8'">Failed</xsl:when>
-          <xsl:when test="@statusId='9'">Shipped</xsl:when>
-          <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
-          <xsl:when test="@statusId='11'">Abandoned</xsl:when>
-          <xsl:when test="@statusId='12'">Deleted</xsl:when>
-          <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
-        </xsl:choose>
+		  <small>
+			  (<xsl:value-of select="@statusId"/>)
+		  </small>&#160;
+		  <xsl:choose>
+			  <xsl:when test="@statusId='0'">New</xsl:when>
+			  <xsl:when test="@statusId='1'">Items Added</xsl:when>
+			  <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
+			  <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
+			  <xsl:when test="@statusId='4'">Confirmed</xsl:when>
+			  <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
+			  <xsl:when test="@statusId='6'">Completed</xsl:when>
+			  <xsl:when test="@statusId='7'">Refunded</xsl:when>
+			  <xsl:when test="@statusId='8'">Failed</xsl:when>
+			  <xsl:when test="@statusId='9'">Shipped</xsl:when>
+			  <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
+			  <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+			  <xsl:when test="@statusId='12'">Deleted</xsl:when>
+			  <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
+			  <xsl:when test="@statusId='17'">In Progress</xsl:when>
+		  </xsl:choose>
       </td>
       <td>
         <xsl:choose>
@@ -7662,7 +7666,8 @@
                       <xsl:when test="@statusId='8'">Failed</xsl:when>
                       <xsl:when test="@statusId='9'">Shipped</xsl:when>
                       <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
-                      <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+                      <xsl:when test="@statusId='11'">Abandoned</xsl:when>					
+                        <xsl:when test="@statusId='17'">In Progress</xsl:when>
                     </xsl:choose>
                   </td>
                   <td>
@@ -7771,6 +7776,8 @@
               </xsl:when>
               <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
               <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+			
+          <xsl:when test="@statusId='17'">In Progress</xsl:when>
             </xsl:choose> Order<xsl:choose>
               <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
               <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
@@ -8531,6 +8538,8 @@
           <xsl:when test="$statusId='9'">Shipped</xsl:when>
           <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
           <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+		
+          <xsl:when test="@statusId='17'">In Progress</xsl:when>
         </xsl:choose> Quote<xsl:choose>
           <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
           <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>

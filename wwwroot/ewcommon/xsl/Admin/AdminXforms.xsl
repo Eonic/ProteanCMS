@@ -267,27 +267,12 @@
 				</xsl:attribute>
 				<xsl:text></xsl:text>
 				<xsl:apply-templates select="value/img" mode="jsNiceImage"/>
-				<xsl:text> </xsl:text>
+				<xsl:text></xsl:text>
 			</textarea>
-			<!--<script language="javascript" type="text/javascript">
-      document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value = '<xsl:apply-templates select="value/img" mode="jsNiceImage"/>';
-      -->
-			<!--<xsl:comment>
-        function OpenWindow_edit_<xsl:value-of select="$ref"/>(){
-        imgHtml = document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value
-        OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=ImageLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&ewCmd2=editImage&imgHtml=' + imgHtml + '&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','Gallery','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=650' );
-        };
-        function OpenWindow_pick_<xsl:value-of select="$ref"/>(){
-        OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=ImageLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','Gallery','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=650' );
-        };
-      </xsl:comment>-->
-			<!--
-    </script>-->
 			<xsl:choose>
 				<xsl:when test="value/img/@src!=''">
 					<span class="input-group-btn editpick">
-						<!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
-						<a class="btn btn-primary editImage">
+							<a class="btn btn-primary editImage">
 							<i class="fa fa-picture-o fa-white">
 								<xsl:text> </xsl:text>
 							</i><xsl:text> </xsl:text>Edit
@@ -296,8 +281,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<span class="input-group-btn editpick">
-						<!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-						<a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary">
+							<a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary">
 							<i class="fa fa-picture-o fa-white">
 								<xsl:text> </xsl:text>
 							</i><xsl:text> </xsl:text>Pick
@@ -308,7 +292,6 @@
 		</div>
 		<div class="previewImage" id="previewImage_{$ref}">
 			<span>
-				<!--<xsl:value-of select="value/img"/>-->
 				<xsl:apply-templates select="value/img" mode="jsNiceImageForm"/>
 				<xsl:text> </xsl:text>
 			</span>

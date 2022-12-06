@@ -1933,13 +1933,16 @@ Public Class Cms
                                 Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
                                 cContentDetailName = Protean.Tools.Text.CleanName(cContentDetailName, False, True)
                                 Dim RequestedContentName As String = ""
+                                Dim myQueryString As String = ""
+
+                                If mcOriginalURL.Contains("?") Then
+                                    myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"))
+                                    mcOriginalURL = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("?"))
+                                End If
+
                                 mcOriginalURL = mcOriginalURL.TrimEnd("?")
                                 If mcOriginalURL.Contains("-/") Then
                                     RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
-                                End If
-
-                                If RequestedContentName.Contains("?") Then
-                                    RequestedContentName = RequestedContentName.Substring(0, RequestedContentName.IndexOf("?"))
                                 End If
 
                                 If RequestedContentName <> cContentDetailName Then
@@ -1959,9 +1962,13 @@ Public Class Cms
                                         mbRedirectPerm = True
                                         Me.msRedirectOnEnd = PathBefore & cContentDetailName
                                     End If
+                                    If myQueryString <> "" Then
+                                        Me.msRedirectOnEnd = Me.msRedirectOnEnd & myQueryString
+                                    End If
                                 End If
                             End If
                         End If
+
 
                         Me.CheckMultiParents(oPageElmt, mnPageId)
                     Else
