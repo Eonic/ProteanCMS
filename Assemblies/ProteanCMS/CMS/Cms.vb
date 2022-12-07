@@ -637,7 +637,7 @@ Public Class Cms
                     If Not moRequest("pgid") = "" Then
 
                         'And we still need to check permissions
-                        mnPageId = CLng(moRequest("pgid"))
+                        mnPageId = CLng(Regex.Replace("0" & moRequest("pgid"), "[^\d]", ""))
                         'specified pgid takes priority
                         If Not mbAdminMode Then
                             newPageId = moDbHelper.checkPagePermission(mnPageId)

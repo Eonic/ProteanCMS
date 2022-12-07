@@ -410,7 +410,7 @@
 
   <!-- ## Module Layouts   ###########################################################################   -->
 
-  <xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @type='default']" mode="Layout">
+  <xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @layout='default']" mode="Layout">
     <xsl:param name="containerClass"/>
     <div id="template_1_Column" class="template template_1_Column">
       <xsl:apply-templates select="." mode="layoutHeader">
