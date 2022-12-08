@@ -241,7 +241,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.d
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.dll
@@ -254,6 +253,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.IO.Packa
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\TidyHTML5Managed.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Tinify.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\MySql.Data.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\JsonWebTokens.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.dll
@@ -266,8 +266,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Buffers.
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.xml
@@ -275,6 +273,8 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Newtonsoft.Json.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\MySql.Data.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Fonet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.xml

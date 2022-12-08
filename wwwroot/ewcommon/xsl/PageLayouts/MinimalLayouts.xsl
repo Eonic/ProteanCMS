@@ -6344,7 +6344,7 @@
             <xsl:apply-templates select="." mode="displayThumbnail"/>
           </xsl:if>
           <div class="media-body">
-            <h4 class="media-heading">!!!
+            <h4 class="media-heading">
               <xsl:apply-templates select="." mode="getDisplayName"/>
             </h4>
             <xsl:if test="StartDate/node()!=''">
