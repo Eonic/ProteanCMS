@@ -70,7 +70,7 @@ Public Module stdTools
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
         Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-        Dim moRequest As System.Web.HttpRequest
+        Dim moRequest As System.Web.HttpRequest = Nothing
 
         If Not System.Web.HttpContext.Current Is Nothing Then
             moRequest = System.Web.HttpContext.Current.Request

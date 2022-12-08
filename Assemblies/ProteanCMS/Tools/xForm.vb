@@ -579,14 +579,14 @@ Public Class xForm
         Dim bIsValid As Boolean = True
         Dim bIsThisBindValid As Boolean = True
         Dim oBindNode As XmlNode
-        Dim oBindElmt As XmlElement
+        Dim oBindElmt As XmlElement = Nothing
         Dim sAttribute As String
         Dim updateElmt As XmlElement
         'Dim sBind As String
         'Dim cNode As String
         'Dim cNsURI As String
         Dim sXpath As String
-        Dim sXpathNoAtt As String
+        Dim sXpathNoAtt As String = String.Empty
         Dim obj As Xml.XPath.XPathNodeIterator
         Dim objValue As Object
         Dim missedError As Boolean = False
@@ -602,7 +602,7 @@ Public Class xForm
 
             Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
 
-            ''' HANDLING FOR GOOGLE ReCAPTCHA
+            ' HANDLING FOR GOOGLE ReCAPTCHA
             If Not moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") Is Nothing Then
                 cValidationError = "<span class=""msg-1032"">Please confirm you are not a robot</span>"
                 bIsValid = False
@@ -625,8 +625,8 @@ Public Class xForm
                 End If
             End If
 
-            ''' END HANDLING FOR GOOGLE ReCAPTCHA
-            ''' 
+            ' END HANDLING FOR GOOGLE ReCAPTCHA
+
 
 
             'lets get all the binds but check that they don't occur in the instance
@@ -1958,8 +1958,8 @@ Public Class xForm
 
 
     Function addClientSideValidation(ByRef oInputNode As XmlElement, ByVal notEmpty As Boolean, ByVal notEmptyMessage As String) As XmlElement
-        Dim oIptElmt As XmlElement
-        Dim oLabelElmt As XmlElement
+        'Dim oIptElmt As XmlElement  'Never Used
+        'Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
         Try
             If notEmpty Then
@@ -1968,7 +1968,7 @@ Public Class xForm
             If notEmptyMessage <> "" Then
                 oInputNode.SetAttribute("data-fv-not-empty___message", notEmptyMessage)
             End If
-
+            Return oInputNode
         Catch ex As Exception
             returnException(msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             Return Nothing
@@ -2391,7 +2391,7 @@ Public Class xForm
             While oDr.Read
 
                 'hack for users to add full names
-                Dim oXml As XmlDataDocument = New XmlDataDocument
+                Dim oXml As XmlDocument = New XmlDocument  'Change XmlDataDocument to XmlDocument
                 If oDr.FieldCount > 2 Then
                     oXml.LoadXml(oDr("detail"))
                     If oXml.DocumentElement.Name = "User" Then
@@ -2608,7 +2608,7 @@ Public Class xForm
         Dim sServiceUrl As String
         Dim sSoapAction As String
         Dim sActionName As String
-        Dim SoapRequestXml As String
+        Dim SoapRequestXml As String = String.Empty
         Dim soapBody As String
         Dim sResponse As String
         Dim oSoapElmt As XmlElement

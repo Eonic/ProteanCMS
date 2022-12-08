@@ -1704,17 +1704,17 @@ Public Class Cms
 
                     If LCase(moConfig("FinalAddBulk")) = "on" Then
 
-                            Dim cShowRelatedBriefDepth As String = moConfig("ShowRelatedBriefDepth") & ""
-                            Dim nMaxDepth As Integer = 1
-                            If Not (String.IsNullOrEmpty(cShowRelatedBriefDepth)) _
-                            AndAlso IsNumeric(cShowRelatedBriefDepth) Then
-                                nMaxDepth = CInt(cShowRelatedBriefDepth)
-                            End If
-                            moDbHelper.addBulkRelatedContent(moPageXml.DocumentElement.SelectSingleNode("Contents"), mdPageUpdateDate, nMaxDepth)
-
+                        Dim cShowRelatedBriefDepth As String = moConfig("ShowRelatedBriefDepth") & ""
+                        Dim nMaxDepth As Integer = 1
+                        If Not (String.IsNullOrEmpty(cShowRelatedBriefDepth)) _
+                        AndAlso IsNumeric(cShowRelatedBriefDepth) Then
+                            nMaxDepth = CInt(cShowRelatedBriefDepth)
                         End If
+                        moDbHelper.addBulkRelatedContent(moPageXml.DocumentElement.SelectSingleNode("Contents"), mdPageUpdateDate, nMaxDepth)
 
-                        sProcessInfo = "Check Admin Mode"
+                    End If
+
+                    sProcessInfo = "Check Admin Mode"
 
                     If LCase(moConfig("ActionsBeforeAddBulk")) <> "on" Then
                         ContentActions()
@@ -1725,48 +1725,48 @@ Public Class Cms
                     'TS commented out so Century can perform searches in admin mode
                     '  If Not (mbAdminMode) Then
                     layoutCmd = LayoutActions()
-                        '  End If
+                    '  End If
 
-                        AddCart()
+                    AddCart()
 
-                        If gbQuote Then
-                            sProcessInfo = "Begin Quote"
-                            Dim oEq As Protean.Cms.Quote = New Protean.Cms.Quote(Me)
-                            oEq.apply()
-                            oEq.close()
-                            oEq = Nothing
-                            sProcessInfo = "End Quote"
-                        End If
+                    If gbQuote Then
+                        sProcessInfo = "Begin Quote"
+                        Dim oEq As Protean.Cms.Quote = New Protean.Cms.Quote(Me)
+                        oEq.apply()
+                        oEq.close()
+                        oEq = Nothing
+                        sProcessInfo = "End Quote"
+                    End If
 
-                        If LCase(moConfig("Search")) = "On" Then
+                    If LCase(moConfig("Search")) = "On" Then
 
-                            Dim oSearchNode As XmlElement = moPageXml.CreateElement("Search")
-                            oSearchNode.SetAttribute("mode", moConfig("SearchMode"))
-                            oSearchNode.SetAttribute("contentTypes", moConfig("SearchContentTypes"))
-                            moPageXml.DocumentElement.AppendChild(oSearchNode)
-
-                        End If
-
-                        If mbAdminMode Then
-                            Try
-                                If moRequest("ewCmd") = "" Then
-                                    ProcessReports()
-                                End If
-                            Catch
-                                'do nothing
-                            End Try
-
-                        Else
-                            ProcessReports()
-                        End If
-
-                        ' Process the Calendars
-                        ProcessCalendar()
-
-                        If gbVersionControl Then CheckContentVersions()
+                        Dim oSearchNode As XmlElement = moPageXml.CreateElement("Search")
+                        oSearchNode.SetAttribute("mode", moConfig("SearchMode"))
+                        oSearchNode.SetAttribute("contentTypes", moConfig("SearchContentTypes"))
+                        moPageXml.DocumentElement.AppendChild(oSearchNode)
 
                     End If
-                    sProcessInfo = "CheckMultiParents"
+
+                    If mbAdminMode Then
+                        Try
+                            If moRequest("ewCmd") = "" Then
+                                ProcessReports()
+                            End If
+                        Catch
+                            'do nothing
+                        End Try
+
+                    Else
+                        ProcessReports()
+                    End If
+
+                    ' Process the Calendars
+                    ProcessCalendar()
+
+                    If gbVersionControl Then CheckContentVersions()
+
+                End If
+                sProcessInfo = "CheckMultiParents"
                 Me.CheckMultiParents(moPageXml.DocumentElement, mnPageId)
 
                 ' ProcessContentForLanguage
@@ -1793,7 +1793,6 @@ Public Class Cms
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageXML", ex, sProcessInfo))
             Return Nothing
         End Try
-
     End Function
 
     Public Function BuildPageXML() As XmlDocument
@@ -4825,7 +4824,7 @@ Public Class Cms
         PerfMon.Log("Web", cFunctionDef)
 
         Dim oDs As Data.DataSet
-        Dim oElmt As XmlElement
+        Dim oElmt As XmlElement = Nothing
         Dim oClone As XmlElement = Nothing
         Dim nCloneId As Integer = 0
         Dim nCloneParentId As Integer = 0
@@ -5356,7 +5355,7 @@ Public Class Cms
                             newVerNode.SetAttribute("status", oMenuItem.GetAttribute("status"))
                             newVerNode.SetAttribute("access", oMenuItem.GetAttribute("access"))
                             newVerNode.SetAttribute("layout", oMenuItem.GetAttribute("layout"))
-                            Dim sInnerXml As String
+                            Dim sInnerXml As String = String.Empty
                             Dim infoElmt As XmlElement
                             For Each infoElmt In oMenuItem.SelectNodes("*[name()!='PageVersion' and name()!='MenuItem']")
                                 sInnerXml = sInnerXml & infoElmt.OuterXml
@@ -5826,7 +5825,7 @@ Public Class Cms
     End Sub
 
     Public Sub addPageDetailLinksToStructure(ByVal cContentTypes As String)
-        Dim cProcessInfo As String
+        Dim cProcessInfo As String = "addPageDetailLinksToStructure"
         Try
             Dim oMenuElmt As XmlElement = moPageXml.DocumentElement.SelectSingleNode("Menu")
             If oMenuElmt Is Nothing Then Exit Sub

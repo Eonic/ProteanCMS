@@ -493,6 +493,7 @@ Partial Public Class Cms
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug)
                 End Try
+                Return oParentElmt
             End Function
 
             Public Sub ListRenewalAlerts(ByRef oParentElmt As XmlElement, Optional ByVal bProcess As Boolean = False)
@@ -712,14 +713,14 @@ Partial Public Class Cms
                 Dim oelmt As XmlElement
 
                 Dim repeatPrice As Double
-                Dim repeatInterval As String
+                Dim repeatInterval As String = String.Empty
                 Dim repeatFrequency As Integer = 1
-                Dim interval As String
+                Dim interval As String = String.Empty
                 Dim length As Integer
                 Dim minimumTerm As Integer
                 Dim renewalTerm As Integer
-                Dim startDate As String
-                Dim delayStart As String
+                Dim startDate As String = String.Empty
+                Dim delayStart As String = String.Empty
                 Dim vatAmt As Double
 
                 Dim mbRoundup As Boolean = False
@@ -1878,7 +1879,7 @@ RedoCheck:
 
             Public Function RefreshSubscriptionOrder(ByVal SubXml As XmlElement, bEmailClient As Boolean, nCartId As Long) As String
                 'TS written to fix subscription orders that got created without sending emails
-                Dim cProcessInfo As String
+                Dim cProcessInfo As String = "RefreshSubscriptionOrder"
                 Try
 
                     Dim SubId As Long = CLng("0" & SubXml.GetAttribute("id"))
@@ -2327,11 +2328,11 @@ Check:
                 Public Sub UpdateSubscriptionPaymentMethod(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
 
                     Dim pseudoCart As New Protean.Cms.Cart(myWeb)
-                    Dim pseudoOrder As Protean.Models.Order
+                    Dim pseudoOrder As Protean.Models.Order = Nothing
 
                     Dim ewCmd As String = myWeb.moRequest("subCmd2")
                     Dim ContentDetailElmt As XmlElement = myWeb.moPageXml.CreateElement("ContentDetail")
-                    Dim SelectedPaymentMethod As String
+                    Dim SelectedPaymentMethod As String = String.Empty
                     Dim bPaymentMethodUpdated As Boolean = False
 
                     Try
@@ -2564,7 +2565,7 @@ processFlow:
                 Public Sub Subscribe(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
 
                     Dim listSubs As Boolean = True
-                    Dim sProcessInfo As String
+                    Dim sProcessInfo As String = "Subscribe"
                     Try
 
                         'First we check if free trail
@@ -2649,7 +2650,7 @@ processFlow:
 
                 Public Sub CheckUpgrade(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
 
-                    Dim sProcessInfo As String
+                    Dim sProcessInfo As String = "CheckUpgrade"
                     Try
 
                         'Check User Logged on

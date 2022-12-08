@@ -262,6 +262,7 @@ Partial Public Module xmlTools
             Return oElem
         Catch ex As Exception
             Err.Raise(8000, "Adding" & cNodeName, ex.Message)
+            Return Nothing
         End Try
     End Function
 
@@ -460,7 +461,7 @@ Public Class XmlHelper
                     ClassName = ClassName.Replace(".", "_") & sCompileVersion
                     If mbCompiled Then
 
-                        Dim assemblyInstance As [Assembly]
+                        Dim assemblyInstance As [Assembly] = Nothing
                         AssemblyPath = goServer.MapPath(compiledFolder) & ClassName & ".dll"
                         Dim CalledType As System.Type
 

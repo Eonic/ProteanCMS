@@ -116,6 +116,7 @@ namespace Protean.Tools
                             }
                             catch (Exception ex)
                             {
+                                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs("Encryption", "HashString", ex, ""));
                                 cResult = OriginalString;
                             }
 
@@ -299,7 +300,7 @@ namespace Protean.Tools
             {
                 bPlain = Convert.FromBase64CharArray(strData.ToCharArray(), 0, strData.Length);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 strResult = "Error. Input Data is not base64 encoded.";
                 return strResult;
@@ -332,7 +333,7 @@ namespace Protean.Tools
 
                 return strResult;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 strResult = "Error. Decryption Failed. Possibly due to incorrect Key or corrputed data";
                 return strResult;
@@ -365,7 +366,7 @@ namespace Protean.Tools
 
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 // //Error Performing Operations
@@ -563,14 +564,14 @@ namespace Protean.Tools
             }
 
 
-            protected virtual new void Dispose(bool disposing)
+            protected virtual void Dispose(bool disposing) //removed new keyword
             {
                 if (disposing)
                 {
                 }
             } // Dispose
 
-            public new void Dispose()
+            public void Dispose() //removed new keyword
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
@@ -947,7 +948,7 @@ namespace Protean.Tools
                 return new EncData(b);
             }
 
-            protected virtual new void Dispose(bool disposing)
+            protected virtual void Dispose(bool disposing) //removed new keyword
             {
                 if (disposing)
                 {
@@ -959,7 +960,7 @@ namespace Protean.Tools
             } // Dispose
 
 
-            public new void Dispose()
+            public void Dispose() //removed new keyword
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
@@ -979,7 +980,7 @@ namespace Protean.Tools
         {
             private RSACryptoServiceProvider _rsa;
             private string _KeyContainerName = "Encryption.AsymmetricEncryption.DefaultContainerName";
-            private bool _UseMachineKeystore = true;
+           // private bool _UseMachineKeystore = true; //never used
             private int _KeySize = 1024;
 
             private const string _ElementParent = "RSAKeyValue";
@@ -1929,7 +1930,7 @@ namespace Protean.Tools
 
                     return returnValue;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1959,7 +1960,7 @@ namespace Protean.Tools
 
                     return returnValue;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return "";
                 }

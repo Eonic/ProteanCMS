@@ -92,7 +92,7 @@ Public Class SoapClient
 
         Dim serviceResponseStream As StreamReader = Nothing
         Dim serviceResponseBody As String
-        Dim cProcessInfo As String '= "ReturnSoapResponse: " & serviceRequest.Address.ToString & " - " & serviceRequest.Method & " https:" & goRequest.ServerVariables("HTTPS")
+        'Dim cProcessInfo As String '= "ReturnSoapResponse: " & serviceRequest.Address.ToString & " - " & serviceRequest.Method & " https:" & goRequest.ServerVariables("HTTPS")
         Try
             Dim servResponse As WebResponse
             servResponse = serviceRequest.GetResponse

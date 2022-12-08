@@ -58,6 +58,7 @@ Public Class Monitor
         Return cResponse
     End Function
 
+    <Obsolete>
     Public Function GetMonitorSchedulerXml() As XmlElement
 
         Dim cProcessInfo As String = ""

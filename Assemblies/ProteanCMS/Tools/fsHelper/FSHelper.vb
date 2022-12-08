@@ -148,7 +148,7 @@ Partial Public Class fsHelper
     Public Function getConfigNode(ByVal cPath As String) As XmlElement
         'PerfMon.Log("fsHelper", "getConfigNode")
         Dim cProcessInfo As String = ""
-        Dim oConfigXml As XmlDataDocument = New XmlDataDocument
+        Dim oConfigXml As XmlDocument = New XmlDocument  'Change XmlDataDocument to XmlDocument
 
         Dim oConfigNode As XmlElement
 
@@ -211,7 +211,7 @@ Partial Public Class fsHelper
     Public Function setConfigNode(ByVal oInstance As XmlElement) As XmlElement
         'PerfMon.Log("fsHelper", "setConfigNode")
         Dim cProcessInfo As String = ""
-        Dim oConfigXml As XmlDataDocument = New XmlDataDocument
+        Dim oConfigXml As XmlDocument = New XmlDocument  'Change XmlDataDocument to XmlDocument
         Dim oConfigNode As XmlElement
 
         Try
@@ -662,7 +662,7 @@ Partial Public Class fsHelper
         Dim remoteStream As Stream
         Dim readStream As StreamReader
         Dim request As System.Net.WebRequest
-        Dim img As System.Drawing.Image
+        Dim img As System.Drawing.Image = Nothing
         Try
             httpURL = httpURL.Replace("\", "/")
             Dim filename As String = Right(httpURL, httpURL.Length - httpURL.LastIndexOf("/") - 1)

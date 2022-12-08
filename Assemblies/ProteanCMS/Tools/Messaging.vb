@@ -1414,7 +1414,7 @@ Public Class Messaging
             Return sEmailBody
 
         Catch ex As Exception
-
+            Return Nothing
         End Try
 
 
@@ -1458,7 +1458,7 @@ Public Class Messaging
             Return emailStructure
 
         Catch ex As Exception
-
+            Return Nothing
         End Try
     End Function
     Public Function GetGroupEmails(ByVal groupIds As String) As UserEmailDictionary

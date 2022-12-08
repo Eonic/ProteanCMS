@@ -177,7 +177,7 @@ namespace Protean.Tools
 
                 return oElmt.ChildNodes;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return oElmt.ChildNodes;
             }
@@ -185,7 +185,7 @@ namespace Protean.Tools
 
         public static string XmlToForm(string sString)
         {
-            string sProcessInfo = "";
+            string sProcessInfo = "XmlToForm";
             try
             {
                 sString = Strings.Replace(sString, "<", "&lt;");
@@ -194,7 +194,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
-                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "XmlToForm", ex, ""));
+                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, sProcessInfo, ex, ""));
                 return "";
             }
         }
@@ -202,7 +202,7 @@ namespace Protean.Tools
         public static XmlDocument htmlToXmlDoc(string shtml)
         {
             XmlDocument oXmlDoc = new XmlDocument();
-            string sProcessInfo = "";
+            string sProcessInfo = "htmlToXmlDoc";
 
             try
             {
@@ -216,7 +216,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
-                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "htmlToXmlDoc", ex, ""));
+                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, sProcessInfo, ex, ""));
                 return null;
             }
         }
@@ -635,7 +635,7 @@ namespace Protean.Tools
                         oReturnElement = oXmlLoadDocument.DocumentElement;
                         bSuccess = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         bSuccess = false;
                     }
@@ -740,7 +740,7 @@ namespace Protean.Tools
                             {
                                 returnElement.InnerXml = populateAsXml;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                             }
                     }
@@ -1347,6 +1347,7 @@ namespace Protean.Tools
                 }
                 catch (XmlException ex)
                 {
+                    OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetInnerXmlThenInnerText", ex, ""));
                     element.InnerText = value;
                 }
 
@@ -1543,7 +1544,7 @@ namespace Protean.Tools
 
         public class XmlSanitizingStream : System.IO.StreamReader
         {
-            public static event OnErrorEventHandler OnError;
+            //public static event OnErrorEventHandler OnError;
 
             public delegate void OnErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
 

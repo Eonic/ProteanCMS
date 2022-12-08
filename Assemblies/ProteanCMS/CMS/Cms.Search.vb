@@ -1442,7 +1442,7 @@ Partial Public Class Cms
             Dim cSearchWhereUSER As String = ""
             Dim cRegEx As String = ""
             Dim cRegExPattern As String = ""
-            Dim reMasterCheck As Regex
+            Dim reMasterCheck As Regex = Nothing
             Dim cSql As String = ""
             Dim aSearchTerms As Collection = New Collection
             Dim bFullMatch As Boolean = True

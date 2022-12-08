@@ -435,6 +435,8 @@ Partial Public Class Cms
             End Function
 
             Public Function AddProductOption(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim jsonString As String = String.Empty
+
                 Try
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
@@ -449,7 +451,7 @@ Partial Public Class Cms
 
                     CartXml = updateCartforJSON(CartXml)
 
-                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
                     jsonString = jsonString.Replace("""@", """_")
                     jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
@@ -457,6 +459,7 @@ Partial Public Class Cms
                 Catch ex As Exception
 
                 End Try
+                Return jsonString
             End Function
 
 
@@ -471,15 +474,18 @@ Partial Public Class Cms
                 Catch ex As Exception
 
                 End Try
+                Return "True"
             End Function
 
             Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim strMessage As String = String.Empty
                 Try
+
                     If myCart.mnProcessId > 4 Then
                         Return ""
                     Else
                         Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                        Dim strMessage As String = String.Empty
+
                         Dim jsonString As String = String.Empty
                         If Not (jObj("Code") Is Nothing) Then
                             strMessage = myCart.moDiscount.AddDiscountCode(jObj("Code"))
@@ -504,9 +510,11 @@ Partial Public Class Cms
                 Catch ex As Exception
 
                 End Try
+                Return strMessage
             End Function
 
             Public Function RemoveDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim jsonString As String = String.Empty
                 Try
                     If myCart.mnProcessId > 4 Then
                         Return ""
@@ -519,7 +527,7 @@ Partial Public Class Cms
                         myCart.close()
                         CartXml = updateCartforJSON(CartXml)
 
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
                         jsonString = jsonString.Replace("""@", """_")
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                         Return jsonString
@@ -527,7 +535,7 @@ Partial Public Class Cms
                 Catch ex As Exception
 
                 End Try
-
+                Return jsonString
             End Function
 
             Public Function UpdateCartProductPrice(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
@@ -901,6 +909,8 @@ Partial Public Class Cms
             ''' <param name="jObj"></param>
             ''' <returns></returns>
             Public Function RefundOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim josResult As String = String.Empty
+
                 Try
 
                     Dim bIsAuthorized As Boolean = False
@@ -925,7 +935,7 @@ Partial Public Class Cms
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
                         xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & cRefundPaymentReceipt & "</RefundPaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
-                        Dim josResult As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                        josResult = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
 
                         josResult = josResult.Replace("""@", """_")
                         josResult = josResult.Replace("#cdata-section", "cDataValue")
@@ -937,7 +947,7 @@ Partial Public Class Cms
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
                     Return "Error" 'ex.Message
                 End Try
-
+                Return josResult  'return all path
             End Function
 
             ''' <summary>

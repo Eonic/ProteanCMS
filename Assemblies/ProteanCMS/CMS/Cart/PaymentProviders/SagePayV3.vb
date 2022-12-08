@@ -171,7 +171,7 @@ Namespace Providers
 
                         sAPIVer = "3.00"
 
-                        Select Case oDictOpt("opperationMode")
+                        Select Case Convert.ToString(oDictOpt("opperationMode"))
                             Case "test", "true"
                                 sVSPUrl = "https://test.sagepay.com/gateway/service/vspdirect-register.vsp"
                                 sVSP3DSUrl = "https://test.sagepay.com/gateway/service/direct3dcallback.vsp"
@@ -592,7 +592,7 @@ Namespace Providers
 
 
 
-                Public Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
+                Public Overloads Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
                     ' Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                     '  Dim oSagePayV3Cfg As XmlNode
@@ -606,13 +606,13 @@ Namespace Providers
                         returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
-
+                    Return ""
                 End Function
 
                 Public Function CancelPayments(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
-                    Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
-                    Dim oSagePayV3Cfg As XmlNode
+                    Dim moPaymentCfg As String = WebConfigurationManager.GetWebApplicationSection("protean/payment")
+                    'Dim oSagePayV3Cfg As XmlNode
 
                     Try
 
@@ -622,7 +622,7 @@ Namespace Providers
                         returnException(myWeb.msException, mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
-
+                    Return ""
                 End Function
 
             End Class

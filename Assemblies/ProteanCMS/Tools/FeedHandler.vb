@@ -157,7 +157,7 @@ Public Class FeedHandler
     Public Function ImportStream() As String
 
         Dim instanceNodeName As String = FeedItemNode
-        Dim origInstance As XElement
+        Dim origInstance As XElement = Nothing
         Dim ProcessedQty As Long = 0
         Dim completeCount As Long = 0
         Dim failedCount As Long = 0

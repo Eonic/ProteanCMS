@@ -398,6 +398,8 @@ Public Class Services
             myWeb.Close()
             myWeb = Nothing
         End Try
+
+        Return sResult
     End Function
 
     <WebMethod()>

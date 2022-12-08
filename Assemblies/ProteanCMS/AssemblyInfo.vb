@@ -16,7 +16,6 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyProduct("ProteanCMS")>
 <Assembly: AssemblyCopyright("Copyright | Eonic Digital LLP.  2022")>
 <Assembly: AssemblyTrademark("ProteanCMS")>
-<Assembly: CLSCompliant(True)> 
 
 <Assembly: System.Runtime.InteropServices.ComVisible(False)> 
 

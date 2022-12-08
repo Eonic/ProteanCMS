@@ -1474,7 +1474,7 @@ NoDiscount:
 #Region "Content Procedures"
 
             Public Function AddDiscountCode(ByVal sCode As String) As String
-                Dim cProcessInfo As String
+                Dim cProcessInfo As String = "AddDiscountCode"
                 Dim sSql As String
                 Dim strSQL As New Text.StringBuilder
                 Dim oDs As DataSet
@@ -1606,7 +1606,7 @@ NoDiscount:
                                     End If
 
                                 End If
-                                    oDsDiscounts.Clear()
+                                oDsDiscounts.Clear()
                                 oDsDiscounts = Nothing
                             End If
                             'myCart.moCartXml
@@ -1657,9 +1657,11 @@ NoDiscount:
                             Return ""
                         End If
                     End If
+
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
+                Return sCode
             End Function
 
             Public Function ValidateDiscount(ByVal dAmount As Double, ByVal additionalInfo As String) As Boolean
@@ -2023,7 +2025,7 @@ NoDiscount:
             End Sub
 
             Public Function RemoveDiscountCode() As String
-                Dim cProcessInfo As String
+                Dim cProcessInfo As String = "RemoveDiscountCode"
                 Dim sSql As String
                 Dim oDs As DataSet
                 Dim oRow As DataRow
@@ -2059,12 +2061,14 @@ NoDiscount:
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
+                Return ""
             End Function
 
             'update packaging from giftbox to standard when removing promocode
             Public Sub UpdatePackagingforRemovePromoCode(ByVal CartId As Integer, ByVal sPromoCode As String)
                 Try
-                    Dim sSQL, sValidtoremove As String
+                    Dim sSQL As String = String.Empty
+                    Dim sValidtoremove As String = String.Empty
                     If (sPromoCode <> "") Then
                         sSQL = "select nDiscountKey from tblCartDiscountRules where cDiscountCode = '" & sPromoCode & "' and cAdditionalXML like '%<bFreeGiftBox>True</bFreeGiftBox>%'"
                         sValidtoremove = myWeb.moDbHelper.ExeProcessSqlScalar(sSQL)

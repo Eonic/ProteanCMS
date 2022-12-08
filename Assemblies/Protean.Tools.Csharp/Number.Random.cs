@@ -32,7 +32,7 @@ namespace Protean.Tools
         /// particular seed.
         /// </summary>
         /// <param name="seed">The seed for the generator.</param>
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public Random(uint seed)
         {
             mt[0] = seed;
@@ -45,7 +45,7 @@ namespace Protean.Tools
         /// particular initial key.
         /// </summary>
         /// <param name="initialKey">The initial key.</param>
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public Random(uint[] initialKey) : this(19650218U)
         {
             int i, j, k;
@@ -77,7 +77,7 @@ namespace Protean.Tools
         /// <summary>
         /// Generates a random number between 0 and System.UInt32.MaxValue.
         /// </summary>
-        [CLSCompliant(false)]
+        //[CLSCompliant(false)]
         public uint NextUInt32()
         {
             uint y;

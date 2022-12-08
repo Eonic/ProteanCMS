@@ -15,7 +15,7 @@ Namespace Providers
                 Dim cProcessInfo As String = "AddControl"
                 Try
                     Dim pageFilterSelect As XmlElement
-                    Dim pageFilterButtons As XmlElement
+                    'Dim pageFilterButtons As XmlElement
                     Dim sCotrolDisplayName As String = "Page Filter"
                     'Parent page id flag used to populate the root level pages or pages under current page.
                     Dim bParentPageId As Boolean = False
@@ -70,7 +70,7 @@ Namespace Providers
                     If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']") IsNot Nothing) Then
                         If (oXml.InnerText.Trim() <> String.Empty) Then
                             Dim sText As String
-                            Dim sValue As String
+                            'Dim sValue As String
                             Dim cnt As Integer
                             Dim aPages() As String = oXml.InnerText.Split(",")
                             If (aPages.Length <> 0) Then
@@ -118,6 +118,7 @@ Namespace Providers
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
                 End Try
+                Return cWhereSql
             End Function
 
             Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)

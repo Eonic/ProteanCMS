@@ -49,6 +49,8 @@ Partial Public Class Cms
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
                     Return ex.Message
                 End Try
+                Return ""
+
             End Function
 
 
