@@ -3157,9 +3157,9 @@ processFlow:
                                         mnProcessId = 6
                                     End If
                                     oCartElmt.SetAttribute("paymentMade", FormatNumber(CDbl(oRow("nAmountReceived")), 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
-                                        oCartElmt.SetAttribute("payableType", "settlement")
-                                    End If
+                                    oCartElmt.SetAttribute("payableType", "settlement")
                                 End If
+                            End If
 
                             ' Set the payableType 
                             If Not (IsNumeric(oRow("nAmountReceived"))) AndAlso nStatusId <> 10 Then
@@ -6816,6 +6816,7 @@ processFlow:
                             Next
                         End If
                         '
+                        AddProductOption(nItemID, myWeb.moRequest("OptionName_" & nProductId), myWeb.moRequest("OptionValue_" & nProductId))
                         If (myWeb.moRequest("OptionName_" & nProductId) IsNot Nothing) Then
                             AddProductOption(nItemID, myWeb.moRequest("OptionName_" & nProductId), myWeb.moRequest("OptionValue_" & nProductId))
                         End If
@@ -9417,6 +9418,60 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Function
 
+
+        'creating the duplicate order from old order
+        Public Function CreateDuplicateOrder(oldCartxml As XmlDocument, nOrderId As Integer, cMethodName As String) As String
+            Try
+                Dim strcFreeShippingMethods As String = "Success"
+                Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
+                GetCart(oCartListElmt, nOrderId)
+                'Insert code into tblcartOrder
+                Dim oInstance As XmlDataDocument = New XmlDataDocument
+                Dim oElmt As XmlElement
+
+                oInstance.AppendChild(oInstance.CreateElement("instance"))
+                oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)
+                addNewTextNode("cCurrency", oElmt, oCartListElmt.GetAttribute("currency"))
+                addNewTextNode("cCartSiteRef", oElmt, moCartConfig("OrderNoPrefix"))
+                addNewTextNode("cCartForiegnRef", oElmt)
+                addNewTextNode("nCartStatus", oElmt, oCartListElmt.GetAttribute("statusId"))
+                addNewTextNode("cCartSchemaName", oElmt, "Order")
+                addNewTextNode("cCartSessionId", oElmt, oCartListElmt.GetAttribute("session"))
+
+                addNewTextNode("nCartUserDirId", oElmt, "0")
+                addNewTextNode("nPayMthdId", oElmt, "0")
+                addNewTextNode("cPaymentRef", oElmt)
+                addNewTextNode("cCartXml", oElmt, oCartListElmt.OuterXml.ToString())
+                addNewTextNode("nShippingMethodId", oElmt, oCartListElmt.GetAttribute("shippingType"))
+                addNewTextNode("cShippingDesc", oElmt, oCartListElmt.GetAttribute("shippingDesc"))
+                addNewTextNode("nShippingCost", oElmt, oCartListElmt.GetAttribute("shippingCost"))
+                addNewTextNode("cClientNotes", oElmt, cOrderReference)
+                addNewTextNode("cSellerNotes", oElmt)
+                addNewTextNode("nTaxRate", oElmt, "0")
+                addNewTextNode("nGiftListId", oElmt, "-1")
+                addNewTextNode("nAuditId", oElmt)
+                'validate column exists then only
+                If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                    addNewTextNode("nReceiptType", oElmt, "0")
+                End If
+
+                mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
+                Dim nProductKey As Long = Convert.ToInt64(oCartListElmt.SelectSingleNode("/Item/@contentId").InnerText)
+
+                Dim nQuantity As Long = Convert.ToInt64(oCartListElmt.SelectSingleNode("/Item/@quantity").InnerText)
+                mnProcessId = 1
+
+                AddItem(nProductKey, nQuantity, Nothing, "",,, True,,)
+                Dim oeResponseElmt As XmlElement = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response")
+                Dim ReceiptId As String = (oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value).ToString()
+                Dim Amount As Double = Convert.ToDouble(oCartListElmt.GetAttribute("total"))
+
+                ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
+                Return strcFreeShippingMethods
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+            End Try
+        End Function
     End Class
 End Class
 
