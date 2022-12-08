@@ -586,7 +586,7 @@ Public Class xForm
         'Dim cNode As String
         'Dim cNsURI As String
         Dim sXpath As String
-        Dim sXpathNoAtt As String
+        Dim sXpathNoAtt As String = ""
         Dim obj As Xml.XPath.XPathNodeIterator
         Dim objValue As Object
         Dim missedError As Boolean = False
@@ -602,7 +602,7 @@ Public Class xForm
 
             Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
 
-            ''' HANDLING FOR GOOGLE ReCAPTCHA
+            ' HANDLING FOR GOOGLE ReCAPTCHA
             If Not moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") Is Nothing Then
                 cValidationError = "<span class=""msg-1032"">Please confirm you are not a robot</span>"
                 bIsValid = False
@@ -625,8 +625,8 @@ Public Class xForm
                 End If
             End If
 
-            ''' END HANDLING FOR GOOGLE ReCAPTCHA
-            ''' 
+            ' END HANDLING FOR GOOGLE ReCAPTCHA
+            ' 
 
 
             'lets get all the binds but check that they don't occur in the instance
@@ -1103,7 +1103,14 @@ Public Class xForm
                                                     ElseIf submittedValue = "" Then
                                                         oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     Else
-                                                        oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
+                                                        Try
+                                                            oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
+                                                        Catch
+                                                            oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
+                                                        End Try
+
+
+
                                                         oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     End If
                                                     oElmtTemp = Nothing
@@ -1951,8 +1958,8 @@ Public Class xForm
 
 
     Function addClientSideValidation(ByRef oInputNode As XmlElement, ByVal notEmpty As Boolean, ByVal notEmptyMessage As String) As XmlElement
-        Dim oIptElmt As XmlElement
-        Dim oLabelElmt As XmlElement
+        ' Dim oIptElmt As XmlElement
+        ' Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
         Try
             If notEmpty Then
@@ -2384,7 +2391,7 @@ Public Class xForm
             While oDr.Read
 
                 'hack for users to add full names
-                Dim oXml As XmlDataDocument = New XmlDataDocument
+                Dim oXml As XmlDocument = New XmlDocument
                 If oDr.FieldCount > 2 Then
                     oXml.LoadXml(oDr("detail"))
                     If oXml.DocumentElement.Name = "User" Then

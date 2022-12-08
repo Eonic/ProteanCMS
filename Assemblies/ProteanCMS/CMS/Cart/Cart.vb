@@ -7204,7 +7204,7 @@ processFlow:
                 ' sSql = "delete from tblCartOrder where nCartOrderKey =" & mnCartId
                 ' oDb.exeProcessSQL sSql, mcEwDataConn
 
-                sSql = "update tblCartOrder set nCartStatus = 11 where(nCartOrderKey = " & mnCartId & ")"
+                sSql = "update tblCartOrder set nCartStatus = 11 where nCartOrderKey = " & mnCartId
                 moDBHelper.ExeProcessSql(sSql)
                 mnTaxRate = moCartConfig("TaxRate")
 
