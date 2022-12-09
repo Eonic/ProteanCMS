@@ -6897,17 +6897,33 @@ processFlow:
                 If LCase(mmcOrderType) = LCase(mcItemOrderType) Then ' test for order?
                     For Each oItem1 In myWeb.moRequest.Form 'Loop for getting products/quants
                         'set defaults
+                        Dim cProductKey As String = ""
                         nProductKey = 0
                         nQuantity = 0
                         oOptions = Nothing
                         cReplacementName = ""
                         'begin
                         If InStr(oItem1, "qty_") = 1 Then 'check for getting productID and quantity (since there will only be one of these per item submitted)
+
                             If InStr(oItem1, "qty_deposit_") = 1 Then
-                                nProductKey = CLng(Replace(oItem1, "qty_deposit_", "")) 'Product key
+                                cProductKey = Replace(oItem1, "qty_deposit_", "")
+                                If IsNumeric(cProductKey) Then
+                                    nProductKey = CLng(cProductKey)
+                                Else
+                                    ' injection attempt don't add to cart
+                                    Return False
+                                    Exit Function
+                                End If
                                 mbDepositOnly = True
                             Else
-                                nProductKey = CLng(Replace(oItem1, "qty_", "")) 'Product key
+                                cProductKey = Replace(oItem1, "qty_", "")
+                                If IsNumeric(cProductKey) Then
+                                    nProductKey = CLng(cProductKey)
+                                Else
+                                    ' injection attempt don't add to cart
+                                    Return False
+                                    Exit Function
+                                End If
                             End If
 
                             cProcessInfo = oItem1.ToString & " = " & myWeb.moRequest.Form.Get(oItem1)
@@ -6940,11 +6956,14 @@ processFlow:
                                             If myWeb.moRequest.Form.Get("donationName") <> "" Then
                                                 CartItemName = myWeb.moRequest.Form.Get("donationName")
                                             End If
-
-                                            AddItem(nProductKey, nQuantity, oOptions, CartItemName, CDbl(myWeb.moRequest.Form.Get("donationAmount")))
+                                            If Not AddItem(nProductKey, nQuantity, oOptions, CartItemName, CDbl(myWeb.moRequest.Form.Get("donationAmount"))) Then
+                                                qtyAdded = 0
+                                            End If
                                         End If
                                     Else
-                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly)
+                                        If Not AddItem(nProductKey, nQuantity, oOptions, cReplacementName,,,,, mbDepositOnly) Then
+                                            qtyAdded = 0
+                                        End If
                                     End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
