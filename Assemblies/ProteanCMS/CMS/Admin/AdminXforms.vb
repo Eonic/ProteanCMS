@@ -7415,7 +7415,11 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditScheduleItem")
 
-                    MyBase.load("/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    If goConfig("cssFramework") = "bs5" Then
+                        MyBase.load("/admin/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    Else
+                        MyBase.load("/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    End If
 
                     If nID > 0 Then
                         MyBase.Instance.InnerXml = dbh.getObjectInstance(dbHelper.objectTypes.ScheduledItem, nID)
@@ -7429,7 +7433,13 @@ Partial Public Class Cms
                     'get files
                     Dim oXSLSelect As XmlElement = MyBase.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cXSLPath']")
                     If Not oXSLSelect Is Nothing Then
-                        FileList("/xsl/feeds/", oXSLSelect, ".xsl")
+                        If goConfig("cssFramework") = "bs5" Then
+
+                            FileList("/feeds/", oXSLSelect, ".xsl")
+                        Else
+
+                            FileList("/xsl/feeds/", oXSLSelect, ".xsl")
+                        End If
                     End If
                     'set siteid
                     Dim oSiteIDElmt As XmlElement = MyBase.Instance.SelectSingleNode("descendant-or-self::nWebsite")
@@ -7501,6 +7511,10 @@ Partial Public Class Cms
 
                     Dim cBasePath As String = goServer.MapPath("/" & cInitialFolder)
                     Dim cCommonPath As String = goServer.MapPath("/ewcommon" & cInitialFolder)
+
+                    If goConfig("cssFramework") = "bs5" Then
+                        cCommonPath = goServer.MapPath("/ptn" & cInitialFolder)
+                    End If
                     Dim dir As New DirectoryInfo(cBasePath)
 
                     If Not dir.Exists Then
@@ -7542,9 +7556,11 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditFeedItem")
 
-
-
-                    MyBase.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    If myWeb.moConfig("cssFramework") = "bs5" Then
+                        MyBase.load("/core/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    Else
+                        MyBase.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    End If
 
                     Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
 

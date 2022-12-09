@@ -10,7 +10,7 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.57.0"
+    Public Shared ewAssemblyVersion As String = "6.0.58.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -20,7 +20,7 @@ Public Class CustomActions
     Public Shared jsSwitcherV8AssemblyVersion As String = "3.17.4.0"
     Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.17.4.0"
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
-    Public Shared JsonAssemblyVersion As String = "13.0.0.0" '"8.0.1.19229""
+    Public Shared JsonAssemblyVersion As String = "13.0.2.27524" '"8.0.1.19229""
     Public Shared YUIAssemblyVersion As String = "1.9.23.0"
     Public Shared MicrosoftAjaxAssemblyVersion As String = "1.10.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
@@ -38,7 +38,7 @@ Public Class CustomActions
     Public Shared MagickNETCoreAssemblyVersion As String = "12.1.0.0"
 
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
-    Public Shared SharpZipLibAssemblyVersion As String = "1.3.3.11"
+    Public Shared SharpZipLibAssemblyVersion As String = "1.4.1.12"
     Public Shared SystemBuffersVersion As String = "4.0.3.0"
 
     <CustomAction()> _
