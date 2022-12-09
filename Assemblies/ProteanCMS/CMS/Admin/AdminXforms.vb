@@ -2415,7 +2415,10 @@ Partial Public Class Cms
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
                 End Try
+
+
             End Function
 
 
@@ -2425,9 +2428,9 @@ Partial Public Class Cms
                 Dim sImgPath As String = ""
                 Dim oContentType As XmlElement
                 Dim oModuleType As XmlElement
-                Dim oItem As XmlElement
-                Dim oOptElmt As XmlElement
-                Dim oDescElmt As XmlElement
+                'Dim oItem As XmlElement
+                'Dim oOptElmt As XmlElement   'never used
+                'Dim oDescElmt As XmlElement
 
                 Try
                     If filepath = "" Then filepath = "/"
@@ -2771,9 +2774,9 @@ Partial Public Class Cms
 
             Public Overridable Function xFrmEditContent(Optional ByVal id As Long = 0, Optional ByVal cContentSchemaName As String = "", Optional ByVal pgid As Long = 0, Optional ByVal cContentName As String = "", Optional ByVal bCopy As Boolean = False, Optional ByRef nReturnId As Integer = 0, Optional ByRef zcReturnSchema As String = "", Optional ByRef AlternateFormName As String = "", Optional ByVal nVersionId As Long = 0) As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim oGrp1Elmt As XmlElement
-                Dim oGrp2Elmt As XmlElement
-                Dim oSelElmt As XmlElement
+                'Dim oGrp1Elmt As XmlElement
+                'Dim oGrp2Elmt As XmlElement   'Never used
+                'Dim oSelElmt As XmlElement
                 Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
                 Dim bCascade As Boolean = False
                 Dim cProcessInfo As String = ""
@@ -3775,8 +3778,8 @@ Partial Public Class Cms
 
             Public Function xFrmMoveFile(ByVal cPath As String, ByVal cName As String, ByVal nType As fsHelper.LibraryType) As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim sValidResponse As String
-                Dim cProcessInfo As String = ""
+                Dim sValidResponse As String = String.Empty
+                Dim cProcessInfo As String = "xFrmMoveFile"
                 Try
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
@@ -4581,6 +4584,7 @@ Partial Public Class Cms
                         MyBase.addValues()
                         Return MyBase.moXformElmt
                     End If
+                    Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
@@ -9538,8 +9542,8 @@ Partial Public Class Cms
                                 _form.addBind(selectItem.Id(), "location[@id='" & locationid & "']", , , bind)
 
 
-                                Dim proceedingParent As XmlElement
-                                Dim oChoices As XmlElement
+                                Dim proceedingParent As XmlElement = Nothing
+                                Dim oChoices As XmlElement = Nothing
                                 ' Process the menu items
                                 ' For each menuitem, check if it's already in scope.
                                 ' If not add the option to the select.

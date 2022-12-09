@@ -8412,7 +8412,7 @@ Namespace PayPalAPI
         '''<remarks/>
         Y
 
-        '''<remarks/>
+        '<remarks/>
         'y
     End Enum
     

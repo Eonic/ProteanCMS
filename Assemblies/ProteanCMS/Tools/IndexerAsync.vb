@@ -128,6 +128,7 @@ Public Class IndexerAsync
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
+            Return Nothing
         End Try
     End Function
 
@@ -694,7 +695,7 @@ Public Class IndexerAsync
             Dim oPageXml As New XmlDocument
             Dim cRules As String = ""
             Dim oElmtRules As XmlElement
-            Dim oElmtURL As XmlElement
+            Dim oElmtURL As XmlElement = Nothing
 
             Dim cProcessInfo As String
             Dim cPageExtract As String = ""

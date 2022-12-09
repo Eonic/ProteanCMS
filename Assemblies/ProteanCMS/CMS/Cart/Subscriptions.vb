@@ -492,6 +492,7 @@ Partial Public Class Cms
                     Return oParentElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug)
+                    Return Nothing
                 End Try
             End Function
 
@@ -712,14 +713,14 @@ Partial Public Class Cms
                 Dim oelmt As XmlElement
 
                 Dim repeatPrice As Double
-                Dim repeatInterval As String
+                Dim repeatInterval As String = String.Empty
                 Dim repeatFrequency As Integer = 1
-                Dim interval As String
+                Dim interval As String = String.Empty
                 Dim length As Integer
                 Dim minimumTerm As Integer
                 Dim renewalTerm As Integer
-                Dim startDate As String
-                Dim delayStart As String
+                Dim startDate As String = String.Empty
+                Dim delayStart As String = String.Empty
                 Dim vatAmt As Double
 
                 Dim mbRoundup As Boolean = False
@@ -1878,7 +1879,7 @@ RedoCheck:
 
             Public Function RefreshSubscriptionOrder(ByVal SubXml As XmlElement, bEmailClient As Boolean, nCartId As Long) As String
                 'TS written to fix subscription orders that got created without sending emails
-                Dim cProcessInfo As String
+                Dim cProcessInfo As String = "RefreshSubscriptionOrder"
                 Try
 
                     Dim SubId As Long = CLng("0" & SubXml.GetAttribute("id"))

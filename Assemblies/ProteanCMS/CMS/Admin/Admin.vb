@@ -2456,7 +2456,7 @@ AfterProcessFlow:
             Dim oUserXml As XmlElement
             Dim oMenuElmt As XmlElement
             Dim deleteCmds As Hashtable = New Hashtable
-            Dim pagePermLevel As String
+            Dim pagePermLevel As String = String.Empty
 
             Try
 
@@ -3403,7 +3403,7 @@ AfterProcessFlow:
                             bShowTree = True
                         End If
                     Case "deleteFolder"
-                        Dim parentFolder
+                        'Dim parentFolder  'Never Used
                         oPageDetail.AppendChild(moAdXfm.xFrmDeleteFolder(sFolder, LibType))
                         If moAdXfm.valid = False Then
                             sAdminLayout = "AdminXForm"

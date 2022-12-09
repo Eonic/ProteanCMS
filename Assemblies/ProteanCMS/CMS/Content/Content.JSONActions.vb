@@ -30,10 +30,10 @@ Partial Public Class Cms
                 Try
                     Dim cProcessInfo As String = ""
                     Dim JsonResult As String = ""
-                    Dim twtKey As String
-                    Dim twtSecret As String
-                    Dim _accessToken As String
-                    Dim _accessTokenSecret As String
+                    'Dim twtKey As String
+                    'Dim twtSecret As String
+                    'Dim _accessToken As String
+                    'Dim _accessTokenSecret As String
                     'Dim twtSvc As New TwitterService(twtKey, twtSecret)
                     'twtSvc.AuthenticateWith(_accessToken, _accessTokenSecret)
                     'Dim uto As New ListTweetsOnUserTimelineOptions()
@@ -61,7 +61,7 @@ Partial Public Class Cms
                     Dim JsonResult As String = ""
                     Dim contentId As String = ""
                     Dim xpath As String = ""
-                    Dim value As String 'JSON convert to XML and save ensure the xml schemas match.
+                    'Dim value As String 'JSON convert to XML and save ensure the xml schemas match.
 
                     Return JsonResult
                 Catch ex As Exception
@@ -85,10 +85,10 @@ Partial Public Class Cms
             Public Function IsUnique(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     'first check the user is validated we do not want this open to non admin users.
-                    Dim cContentType As String
-                    Dim cTableName As String
-                    Dim xPath As String
-                    Dim DataField As String
+                    'Dim cContentType As String
+                    'Dim cTableName As String
+                    'Dim xPath As String
+                    'Dim DataField As String
 
 
                     Dim JsonResult As String = ""
