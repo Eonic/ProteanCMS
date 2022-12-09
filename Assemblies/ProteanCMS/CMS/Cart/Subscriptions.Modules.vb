@@ -26,11 +26,11 @@ Partial Public Class Cms
                 Public Sub UpdateSubscriptionPaymentMethod(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
 
                     Dim pseudoCart As New Protean.Cms.Cart(myWeb)
-                    Dim pseudoOrder As Protean.Models.Order
+                    Dim pseudoOrder As Protean.Models.Order = Nothing
 
                     Dim ewCmd As String = myWeb.moRequest("subCmd2")
                     Dim ContentDetailElmt As XmlElement = myWeb.moPageXml.CreateElement("ContentDetail")
-                    Dim SelectedPaymentMethod As String
+                    Dim SelectedPaymentMethod As String = String.Empty
                     Dim bPaymentMethodUpdated As Boolean = False
 
                     Try
@@ -263,7 +263,7 @@ processFlow:
                 Public Sub Subscribe(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
 
                     Dim listSubs As Boolean = True
-                    Dim sProcessInfo As String
+                    Dim sProcessInfo As String = "Subscribe"
                     Try
 
                         'First we check if free trail
@@ -348,7 +348,7 @@ processFlow:
 
                 Public Sub CheckUpgrade(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
 
-                    Dim sProcessInfo As String
+                    Dim sProcessInfo As String = "CheckUpgrade"
                     Try
 
                         'Check User Logged on

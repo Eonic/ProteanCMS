@@ -516,17 +516,6 @@ Public Class XmlHelper
                     End If
                 Catch ex As Exception
 
-                    'To be removed.
-                    'Dim reflection As ReflectionTypeLoadException = TryCast(ex, ReflectionTypeLoadException)
-                    'If reflection IsNot Nothing Then
-                    '    For Each expct As Exception In reflection.LoaderExceptions
-                    '        Using eventLog As New EventLog("Application")
-                    '            eventLog.WriteEntry(expct.Message)
-                    '            eventLog.WriteEntry(expct.InnerException.Message)
-                    '        End Using
-                    '    Next
-                    'End If
-
                     transformException = ex
                     returnException(myWeb.msException, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug)
                     bError = True

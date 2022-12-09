@@ -7763,11 +7763,6 @@ Public Class Cms
                 rendererOpts.Author = "ProteanCMS"
                 rendererOpts.EnablePrinting = True
                 rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
-                ' rendererOpts.Kerning = True
-                ' rendererOpts.EnableCopy = True
-
-                'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
 
                 Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
                 Dim subDirs As DirectoryInfo() = dir.GetDirectories()
@@ -7785,11 +7780,6 @@ Public Class Cms
                 oFoNet.Options = rendererOpts
                 oFoNet.Render(oTxtReader, ofileStream)
 
-                'oImp.UndoImpersonation()
-
-                'End If
-
-
                 'And then we stram out to the browser
 
                 moResponse.Buffer = True
@@ -7799,10 +7789,6 @@ Public Class Cms
                 strFileSize = ofileStream.Length
 
                 Dim Buffer() As Byte = ofileStream.ToArray
-                'oFileStream.Read(Buffer, 0, CInt(strFileSize))
-                'oFileStream.Close()
-
-                'downloadBytes = ofileStream.ToArray
 
                 ctx.Response.Clear()
                 'Const adTypeBinary = 1
