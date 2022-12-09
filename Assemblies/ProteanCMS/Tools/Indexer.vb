@@ -127,7 +127,9 @@ Public Class Indexer
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
+            Return Nothing
         End Try
+
     End Function
 
     Public Sub DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False)
@@ -138,8 +140,8 @@ Public Class Indexer
         Dim cPageXsl As String = "/xsl/search/cleanPage.xsl"
         Dim cExtractXsl As String = "/xsl/search/extract.xsl"
         Dim oPageXml As New XmlDocument
-        Dim oElmtRules As XmlElement
-        Dim oElmtURL As XmlElement
+        Dim oElmtRules As XmlElement = Nothing
+        Dim oElmtURL As XmlElement = Nothing
         Dim cRules As String = ""
         Dim nPagesSkipped As Long = 0
         Dim nContentSkipped As Long = 0
@@ -363,7 +365,7 @@ Public Class Indexer
                                                 oElmtRules = oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']")
                                                 cRules = ""
 
-                                                Dim sPageUrl As String
+                                                Dim sPageUrl As String = String.Empty
                                                 If Not oElmtURL Is Nothing Then
                                                     sPageUrl = oElmtURL.GetAttribute("url")
                                                 End If

@@ -44,11 +44,13 @@ Partial Public Class Cms
                     Dim cProcessInfo As String = ""
 
                     'does nothing yet
-
+                    Return Nothing
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
                     Return ex.Message
                 End Try
+
+
             End Function
 
 

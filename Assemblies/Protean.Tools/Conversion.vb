@@ -317,7 +317,7 @@ Public Class Conversion
         Dim failed As Int64 = 0
         Dim ResponseXml As New XmlDocument
         Dim cProcessInfo As String
-        Dim sr As StreamReader
+        Dim sr As StreamReader = Nothing
         ' Dim writeFilePath As String = Me.writePath & "debug.txt"
         ' Dim sw As New StreamWriter(File.Open(writeFilePath, FileMode.OpenOrCreate))
         Try
@@ -629,14 +629,17 @@ Public Class Conversion
 #End Region
 
     Public Function GetXML(filename As String) As String
+        Dim ds As New DataSet()
         Try
 
-            Dim ds As DataSet = Me.ReadExcelFile(filename)
+            ds = Me.ReadExcelFile(filename)
             Return ds.GetXml()
 
         Catch ex As Exception
             RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetXML", ex, ""))
+            Return Nothing
         End Try
+
     End Function
 
     Private Function ReadExcelFile(ByVal filename As String) As DataSet
@@ -665,54 +668,54 @@ Public Class Conversion
                     End If
 
                     For Each cell As Cell In rowcollection.ElementAt(0) 'rowcollection.ElementAt(sheetCount)
-                            Dim rowName As String = GetValueOfCell(spreadsheetDocument, cell)
-                            If rowName = String.Empty Then
-                                dt.Columns.Add("column" & colCount)
-                            Else
-                                dt.Columns.Add(rowName)
+                        Dim rowName As String = GetValueOfCell(spreadsheetDocument, cell)
+                        If rowName = String.Empty Then
+                            dt.Columns.Add("column" & colCount)
+                        Else
+                            dt.Columns.Add(rowName)
+                        End If
+                        colCount = colCount + 1
+                    Next
+                    'add some spare columns incase not all are titled.
+                    dt.Columns.Add("spare" & CStr(colCount + 1))
+                    dt.Columns.Add("spare" & CStr(colCount + 2))
+                    dt.Columns.Add("spare" & CStr(colCount + 3))
+                    dt.Columns.Add("spare" & CStr(colCount + 4))
+                    dt.Columns.Add("spare" & CStr(colCount + 5))
+
+                    For Each row As Row In rowcollection
+                        Dim temprow As DataRow = dt.NewRow()
+                        Dim columnIndex As Integer = 0
+                        For Each cell As Cell In row.Descendants(Of Cell)()
+                            Dim cellColumnIndex As Integer = GetColumnIndex(GetColumnName(cell.CellReference))
+                            If columnIndex < cellColumnIndex Then
+                                Do
+                                    Try
+                                        temprow(columnIndex) = String.Empty
+                                    Catch ex As Exception
+                                        cProcessInfo = "Not found " & columnIndex
+                                    End Try
+                                    columnIndex += 1
+                                Loop While columnIndex < cellColumnIndex
                             End If
-                            colCount = colCount + 1
+                            Dim cellVal As String = GetValueOfCell(spreadsheetDocument, cell)
+                            Try
+                                temprow(columnIndex) = cellVal
+                            Catch ex As Exception
+                                cProcessInfo = "Not found " & columnIndex
+                            End Try
+                            columnIndex += 1
                         Next
-                        'add some spare columns incase not all are titled.
-                        dt.Columns.Add("spare" & CStr(colCount + 1))
-                        dt.Columns.Add("spare" & CStr(colCount + 2))
-                        dt.Columns.Add("spare" & CStr(colCount + 3))
-                        dt.Columns.Add("spare" & CStr(colCount + 4))
-                        dt.Columns.Add("spare" & CStr(colCount + 5))
 
-                        For Each row As Row In rowcollection
-                            Dim temprow As DataRow = dt.NewRow()
-                            Dim columnIndex As Integer = 0
-                            For Each cell As Cell In row.Descendants(Of Cell)()
-                                Dim cellColumnIndex As Integer = GetColumnIndex(GetColumnName(cell.CellReference))
-                                If columnIndex < cellColumnIndex Then
-                                    Do
-                                        Try
-                                            temprow(columnIndex) = String.Empty
-                                        Catch ex As Exception
-                                            cProcessInfo = "Not found " & columnIndex
-                                        End Try
-                                        columnIndex += 1
-                                    Loop While columnIndex < cellColumnIndex
-                                End If
-                                Dim cellVal As String = GetValueOfCell(spreadsheetDocument, cell)
-                                Try
-                                    temprow(columnIndex) = cellVal
-                                Catch ex As Exception
-                                    cProcessInfo = "Not found " & columnIndex
-                                End Try
-                                columnIndex += 1
-                            Next
+                        dt.Rows.Add(temprow)
 
-                            dt.Rows.Add(temprow)
+                    Next
+                    ' Here remove header row
+                    dt.Rows.RemoveAt(0)
+                    ds.Tables.Add(dt)
 
-                        Next
-                        ' Here remove header row
-                        dt.Rows.RemoveAt(0)
-                        ds.Tables.Add(dt)
-
-                    End If
-                    sheetCount = sheetCount + 1
+                End If
+                sheetCount = sheetCount + 1
             Next
             'End Using
             spreadsheetDocument.Close()
@@ -720,7 +723,9 @@ Public Class Conversion
             Return ds
         Catch ex As Exception
             RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetXML", ex, ""))
+            Return Nothing
         End Try
+
     End Function
 
     Private Shared Function GetValueOfCell(ByVal spreadsheetdocument As SpreadsheetDocument, ByVal cell As Cell) As String
@@ -881,7 +886,7 @@ Public Class classFileLineReader
         Dim strLine As String = ""
         Dim strNextLine As String = ""
         Dim bytPeekChars(2) As Byte
-        Const cCR As Byte = 13
+        'Const cCR As Byte = 13
         Const cLf As Byte = 10
         Dim test As String = ""
 

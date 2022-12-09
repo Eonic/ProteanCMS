@@ -66,7 +66,7 @@ Namespace Providers
                     Fail = 2
                 End Enum
 
-                Public Function GetPaymentForm(ByRef myWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
+                Public Overloads Function GetPaymentForm(ByRef myWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
                     myWeb.PerfMon.Log("PaymentProviders", "payPayPalExpress")
                     Dim sSql As String
 
@@ -97,7 +97,7 @@ Namespace Providers
                     Dim oItemElmt As XmlElement
                     Dim oOptElmt As XmlElement
                     Dim host As String = "www.paypal.com"
-                    Dim mcCurrency As String
+                    Dim mcCurrency As String = String.Empty
 
                     Try
 
@@ -462,7 +462,7 @@ Namespace Providers
                     End Try
                 End Function
 
-                Public Function AddPaymentButton(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal configXml As XmlElement, ByVal nPaymentAmount As Double, ByVal submissionValue As String, ByVal refValue As String) As Boolean
+                Public Overloads Function AddPaymentButton(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal configXml As XmlElement, ByVal nPaymentAmount As Double, ByVal submissionValue As String, ByVal refValue As String) As Boolean
                     Try
 
                         Dim PaymentLabel As String = configXml.SelectSingleNode("description/@value").InnerText
@@ -513,11 +513,11 @@ Namespace Providers
                 End Function
 
 
-                Public Function CheckStatus(ByRef myWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
+                Public Overloads Function CheckStatus(ByRef myWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
 
-                    Dim oPayPalProCfg As XmlNode
-                    Dim nTransactionMode As TransactionMode
+                    'Dim oPayPalProCfg As XmlNode    'Never Used
+                    'Dim nTransactionMode As TransactionMode
 
                     Try
                         Return "not checked"
@@ -532,7 +532,7 @@ Namespace Providers
 
                 Public Function CancelPayments(ByRef myWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
-                    Dim oPayPalProCfg As XmlNode
+                    'Dim oPayPalProCfg As XmlNode  'Never Used
 
                     Try
 

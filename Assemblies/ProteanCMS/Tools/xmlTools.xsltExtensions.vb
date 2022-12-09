@@ -303,7 +303,7 @@ Partial Public Module xmlTools
                     End If
                 Loop
 
-                Dim returnStr As String
+                Dim returnStr As String = String.Empty
                 Dim i As Integer
                 For i = 0 To list.Count - 1
                     returnStr = CStr(returnStr) & CStr(list.Item(i)) & ","
@@ -1569,7 +1569,7 @@ Partial Public Module xmlTools
             Dim Query1 As String = ""
             Dim Query2 As String = ""
             Dim Query3 As String = ""
-            Dim sql As String
+            Dim sql As String = String.Empty
             Try
 
 
@@ -1690,10 +1690,10 @@ Partial Public Module xmlTools
 
                     Case "Library"
 
-                        Dim ProviderName As String
+                        Dim ProviderName As String = String.Empty
                         Dim calledType As Type
-                        Dim classPath As String = ""
-                        Dim methodName As String = ""
+                        Dim classPath As String = String.Empty
+                        Dim methodName As String = String.Empty
 
                         Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
                         Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
@@ -1775,7 +1775,7 @@ Partial Public Module xmlTools
                             oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
                         End Using
                     Case "availableIcons"
-                        Dim iconPath = "/ewcommon/icons/icons.xml"
+                        Dim iconPath As String = "/ewcommon/icons/icons.xml"
                         If myWeb.bs5 Then iconPath = "/ptn/core/icons/icons.xml"
 
                         If IO.File.Exists(goServer.MapPath(iconPath)) Then

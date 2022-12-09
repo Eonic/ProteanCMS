@@ -13,7 +13,7 @@ namespace Protean.Tools.Errors
         private string cInfo;
         private Hashtable oOtherSettings;
         private Exception oException;
-        private int nImportance;
+        private int nImportance = 0;
         public string ModuleName
         {
             get

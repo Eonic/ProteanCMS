@@ -1820,10 +1820,10 @@ processFlow:
                 moDBHelper.ExeProcessSql(sSql)
 
                 mnPaymentId = moDBHelper.savePayment(mnCartId, myWeb.mnUserId, "", "", Description, Nothing, DateTime.Now, False, amountPaid, "deduction")
-
+                Return Nothing
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug)
-
+                Return Nothing
             Finally
                 'oDr = Nothing
             End Try
@@ -1831,7 +1831,7 @@ processFlow:
 
 
         Public Function ConfirmPayment(ByRef oCartElmt As XmlElement, ByRef PaymentDetailXml As XmlElement, ByVal providerPaymentRef As String, ByVal providerName As String, ByVal amountPaid As Double)
-            Dim cProcessInfo As String = ""
+            Dim cProcessInfo As String = "ConfirmPayment"
             Try
                 Dim PayableType As String = oCartElmt.GetAttribute("payableType")
 
@@ -1895,10 +1895,10 @@ processFlow:
                 End Select
 
                 mnPaymentId = moDBHelper.savePayment(mnCartId, myWeb.mnUserId, providerName, providerPaymentRef, providerName, PaymentDetailXml, DateTime.Now, False, amountPaid, PayableType)
-
+                Return Nothing
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug)
-
+                Return Nothing
             Finally
                 'oDr = Nothing
             End Try
@@ -2713,7 +2713,7 @@ processFlow:
                     If Not String.IsNullOrEmpty(promocodeFromExternalRef) Then
                         oCartElmt.SetAttribute("promocodeFromExternalRef", promocodeFromExternalRef)
                     End If
-                    Dim additionalFields As String
+                    Dim additionalFields As String = String.Empty
                     If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
                         additionalFields = ", i.nDepositAmount as nDepositAmount"
                     End If
@@ -4136,7 +4136,7 @@ processFlow:
         End Sub
 
         Public Overridable Function usePreviousAddress(ByRef oCartElmt As XmlElement) As Boolean
-            Dim cProcessInfo As String
+            Dim cProcessInfo As String = "usePreviousAddress"
             Dim sSql As String
             Dim billingAddId As Long = 0
             Dim deliveryAddId As Long = 0
@@ -4452,7 +4452,7 @@ processFlow:
                         oXform.Instance.LastChild.InnerText = myWeb.moRequest("userAddType")
                     Else
                         ' Holy large where statement, Batman!  But how on earth else do we tell is a cart address is the same as a user address?
-                        Dim value As String
+                        Dim value As String = String.Empty
                         Dim contact As XmlElement = oXform.Instance.SelectSingleNode("tblCartContact")
                         cWhere = ""
                         If NodeState(contact, "cContactName", , , , , , value) <> NotInstantiated Then cWhere &= "  and cContactName='" & SqlFmt(value) & "' "
@@ -6453,7 +6453,7 @@ processFlow:
             '   user has started shopping so we need to initialise the cart and add it to the db
 
             Dim cProcessInfo As String = ""
-            Dim oInstance As XmlDataDocument = New XmlDataDocument
+            Dim oInstance As XmlDocument = New XmlDocument  'Change XmlDataDocument to XmlDocument
             Dim oElmt As XmlElement
 
             Try
@@ -6512,7 +6512,7 @@ processFlow:
             Dim sSql As String = ""
             Dim oDs As DataSet
             Dim oRow As DataRow
-            Dim cProcessInfo As String
+            Dim cProcessInfo As String = "SetPaymentMethod"
             Try
                 If mnCartId > 0 Then
                     'Update Seller Notes:
@@ -6523,9 +6523,10 @@ processFlow:
                     Next
                     myWeb.moDbHelper.updateDataset(oDs, "Order")
                 End If
-
+                Return Nothing
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "SetPaymentMethod", ex, "", cProcessInfo, gbDebug)
+                Return Nothing
             End Try
         End Function
 
@@ -6533,7 +6534,7 @@ processFlow:
             Dim sSql As String = ""
             Dim oDs As DataSet
             Dim oRow As DataRow
-            Dim cProcessInfo As String
+            Dim cProcessInfo As String = "SetClientNotes"
             Try
                 If mnCartId > 0 Then
                     'Update Seller Notes:
@@ -8983,7 +8984,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             Catch ex As Exception
 
                 returnException(myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, , "", gbDebug)
-
+                Return Nothing
             End Try
 
         End Function
@@ -9041,7 +9042,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "makeShippingOptionsXML", ex, , "", gbDebug)
-
+                Return Nothing
             End Try
 
         End Function
@@ -9052,9 +9053,10 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 ' cSqlUpdate = " update tblCartItem set nPrice=0.00, nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
                 cSqlUpdate = " update tblCartItem set nPrice=" & AmountToDiscount & ", nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
                 moDBHelper.ExeProcessSql(cSqlUpdate)
-
+                Return Nothing
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, , "", gbDebug)
+                Return Nothing
             End Try
         End Function
 
@@ -9063,9 +9065,10 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim cSqlUpdate As String
                 cSqlUpdate = " update tblCartItem set nDiscountValue=" & AmountToDiscount & " where  nitemid=0 and nCartOrderId = " & nCartOrderId
                 moDBHelper.ExeProcessSql(cSqlUpdate)
-
+                Return Nothing
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, , "", gbDebug)
+                Return Nothing
             End Try
         End Function
 
@@ -9096,11 +9099,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 'End If
                 'UpdatePackagingANdDeliveryType(mnCartId, nShipOptKey)
-
+                Return Nothing
             Catch ex As Exception
 
                 returnException(myWeb.msException, mcModuleName, "updateGCgetValidShippingOptionsDS", ex, , "", gbDebug)
-
+                Return Nothing
             End Try
         End Function
 
@@ -9109,7 +9112,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
             Try
                 Dim oelmt As XmlElement
-                Dim cSqlUpdate As String
+                'Dim cSqlUpdate As String
                 Dim oItemInstance As XmlDataDocument = New XmlDataDocument
                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
                 oelmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
@@ -9155,7 +9158,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
             Try
                 Dim oelmt As XmlElement
-                Dim cSqlUpdate As String
+                'Dim cSqlUpdate As String
                 Dim oItemInstance As XmlDataDocument = New XmlDataDocument
                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
                 oelmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
@@ -9198,7 +9201,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Sub
 
         Public Function AddClientNotes(ByVal sNotesText As String) As String
-            Dim cProcessInfo As String
+            Dim cProcessInfo As String = "AddClientNotes"
             Dim sSql As String
             Dim oDs As DataSet
             Dim oRow As DataRow
@@ -9236,12 +9239,14 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 End If
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
+                Return Nothing
             End Try
         End Function
 
         'check whether promocode is applier for delivery option
         Public Function CheckPromocodeAppliedForDelivery() As String
-            Dim sSql, sPromocode As String
+            Dim sSql As String = String.Empty  ' Assign empty value
+            Dim sPromocode As String = String.Empty
             Dim oDs As DataSet
             Dim doc As New XmlDocument()
             Dim oRow As DataRow
@@ -9278,12 +9283,14 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Return strcFreeShippingMethods
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+                Return Nothing
             End Try
         End Function
 
         Public Function updateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String
             Try
                 ''check if country is not default country
+                Dim DeliveryOption As String = ""
                 Dim quant As Long
                 Dim oItemList As New Hashtable
                 Dim weight As Double
@@ -9406,7 +9413,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                         total = total + (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
                     End If
                 Next
-                Dim DeliveryOption As String = ""
+
                 If country <> "" Then
                     cDestinationCountry = country
                     '' pass other parameters as well-
@@ -9441,8 +9448,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Return DeliveryOption
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "setDeliveryOptionByCountry", ex, "", "", gbDebug)
+                Return Nothing
             End Try
-
         End Function
 
 
@@ -9501,6 +9508,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Return strcFreeShippingMethods
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+                Return Nothing
             End Try
         End Function
     End Class
