@@ -9441,11 +9441,15 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 addNewTextNode("nCartUserDirId", oElmt, "0")
                 addNewTextNode("nPayMthdId", oElmt, "0")
                 addNewTextNode("cPaymentRef", oElmt)
-                addNewTextNode("cCartXml", oElmt, oCartListElmt.OuterXml.ToString())
+                addNewTextNode("cCartXml", oElmt, oCartListElmt.OuterXml())
                 addNewTextNode("nShippingMethodId", oElmt, oCartListElmt.GetAttribute("shippingType"))
                 addNewTextNode("cShippingDesc", oElmt, oCartListElmt.GetAttribute("shippingDesc"))
                 addNewTextNode("nShippingCost", oElmt, oCartListElmt.GetAttribute("shippingCost"))
-                addNewTextNode("cClientNotes", oElmt, cOrderReference)
+                If (oCartListElmt.SelectSingleNode("/Notes") IsNot Nothing) Then
+                    addNewTextNode("cClientNotes", oElmt, oCartListElmt.SelectSingleNode("/Notes").OuterXml())
+                Else
+                    addNewTextNode("cClientNotes", oElmt, "")
+                End If
                 addNewTextNode("cSellerNotes", oElmt)
                 addNewTextNode("nTaxRate", oElmt, "0")
                 addNewTextNode("nGiftListId", oElmt, "-1")
