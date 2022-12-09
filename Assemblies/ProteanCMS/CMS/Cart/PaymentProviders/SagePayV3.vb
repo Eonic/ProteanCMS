@@ -600,13 +600,13 @@ Namespace Providers
 
                     Try
 
-
+                        Return ""
 
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
-                    Return ""
+
                 End Function
 
                 Public Function CancelPayments(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
@@ -616,13 +616,13 @@ Namespace Providers
 
                     Try
 
-
+                        Return ""
 
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
-                    Return ""
+
                 End Function
 
             End Class

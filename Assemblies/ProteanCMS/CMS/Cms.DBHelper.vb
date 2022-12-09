@@ -11225,8 +11225,9 @@ ReturnMe:
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckIsParentPage", ex, ""))
+                Return Nothing
             End Try
-            Return returnValue
+
         End Function
 
         Public Function GetContacts(ByVal nSupplierId As Integer, ByVal nDirId As Integer) As DataTable
