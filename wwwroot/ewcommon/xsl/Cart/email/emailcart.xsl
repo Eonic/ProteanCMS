@@ -65,7 +65,9 @@
           </td>
           <td class="shipping amount" align="right">
             <font face="{$bodyFont}" size="2">
-              <xsl:value-of select="$currency"/>
+               <span class="currency">
+                <xsl:value-of select="$currencySymbol"/>
+              </span>
               <xsl:value-of select="format-number(@shippingCost,'0.00')"/>
             </font>
           </td>
@@ -91,7 +93,9 @@
           </td>
           <td class="subTotal amount" align="right">
             <font face="{$bodyFont}" size="2">
-              <xsl:value-of select="$currency"/>
+               <span class="currency">
+                <xsl:value-of select="$currencySymbol"/>
+              </span>
               <xsl:value-of select="format-number(@totalNet, '0.00')"/>
             </font>
           </td>
