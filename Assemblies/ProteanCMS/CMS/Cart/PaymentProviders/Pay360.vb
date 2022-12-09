@@ -138,7 +138,7 @@ Namespace Providers
                         'oPay360Cfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']")
                         oDictOpt = xmlTools.xmlToHashTable(oPay360Cfg, "value")
 
-                        Select Case oDictOpt("opperationMode").ToString()
+                        Select Case Convert.ToString(oDictOpt("opperationMode"))
                             Case "true"
                                 nTransactionMode = TransactionMode.Test
                             Case "false"
@@ -897,13 +897,13 @@ Namespace Providers
 
                     Try
 
-
+                        Return ""
 
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
-                    Return ""
+
                 End Function
 
             End Class

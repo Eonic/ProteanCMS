@@ -127,8 +127,9 @@ Public Class Indexer
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
+            Return ex.Message
         End Try
-        Return oXmlElmt.OuterXml
+
     End Function
 
     Public Sub DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False)

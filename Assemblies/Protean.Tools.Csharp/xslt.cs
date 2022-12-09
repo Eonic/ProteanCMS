@@ -187,7 +187,7 @@ namespace Protean.Tools.Xslt
         private object oXslTExtensionsObject; // Any Class we want to use for additional functionality
         private string cXslTExtensionsURN; // The Urn for the class
 
-        [Obsolete]
+       
         private XslTransform oClassicTransform; // Classic Transform Object
         private XslCompiledTransform oCompiledTransform; // Compiled Transform Object
         private XsltArgumentList XsltArgs; // Argurment List

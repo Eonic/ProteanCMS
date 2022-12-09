@@ -457,9 +457,8 @@ Partial Public Class Cms
                     Return jsonString
 
                 Catch ex As Exception
-
+                    Return ex.Message
                 End Try
-                Return jsonString
             End Function
 
 
@@ -472,9 +471,9 @@ Partial Public Class Cms
                     Return "True"
 
                 Catch ex As Exception
-
+                    Return ex.Message
                 End Try
-                Return "True"
+
             End Function
 
             Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
@@ -508,9 +507,8 @@ Partial Public Class Cms
                         Return strMessage
                     End If
                 Catch ex As Exception
-
+                    Return ex.Message
                 End Try
-                Return strMessage
             End Function
 
             Public Function RemoveDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
@@ -533,9 +531,8 @@ Partial Public Class Cms
                         Return jsonString
                     End If
                 Catch ex As Exception
-
+                    Return ex.Message
                 End Try
-                Return jsonString
             End Function
 
             Public Function UpdateCartProductPrice(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
@@ -942,12 +939,12 @@ Partial Public Class Cms
 
                         Return josResult
                     End If
-
+                    Return josResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
                     Return "Error" 'ex.Message
                 End Try
-                Return josResult  'return all path
+
             End Function
 
             ''' <summary>

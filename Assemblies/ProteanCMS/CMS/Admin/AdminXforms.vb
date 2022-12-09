@@ -2415,9 +2415,10 @@ Partial Public Class Cms
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
                 End Try
 
-                Return ManifestDoc
+
             End Function
 
 
@@ -4583,11 +4584,11 @@ Partial Public Class Cms
                         MyBase.addValues()
                         Return MyBase.moXformElmt
                     End If
+                    Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
-                Return MyBase.moXformElmt
             End Function
 
 

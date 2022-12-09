@@ -1660,8 +1660,9 @@ NoDiscount:
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
+                    Return ex.Message
                 End Try
-                Return sCode
+
             End Function
 
             Public Function ValidateDiscount(ByVal dAmount As Double, ByVal additionalInfo As String) As Boolean
@@ -2060,8 +2061,9 @@ NoDiscount:
                     End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
+                    Return ex.Message
                 End Try
-                Return ""
+
             End Function
 
             'update packaging from giftbox to standard when removing promocode

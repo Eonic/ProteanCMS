@@ -5,7 +5,7 @@ using System.Collections;
 namespace Protean.Tools.Errors
 {
 
-    //[CLSCompliant(true)]
+    [CLSCompliant(true)]
     public class ErrorEventArgs : System.EventArgs
     {
         private string cModuleName;

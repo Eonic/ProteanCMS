@@ -4626,11 +4626,12 @@ restart:
                         ExeProcessSql(sSql)
                     End If
                 Next
-
+                Return Nothing
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetContentPositions", ex, cProcessInfo))
+                Return ex.Message
             End Try
-            Return Nothing
+
         End Function
 
         Public Sub insertShippingLocation(ByVal nOptId As Long, ByVal nLocId As Long, Optional ByVal bPrimary As Boolean = True)

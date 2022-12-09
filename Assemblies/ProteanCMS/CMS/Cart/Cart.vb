@@ -9264,8 +9264,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Return strcFreeShippingMethods
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+                Return ex.Message
             End Try
-            Return strcFreeShippingMethods
         End Function
 
         Public Function updateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String

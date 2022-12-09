@@ -1793,6 +1793,7 @@ Public Class Cms
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageXML", ex, sProcessInfo))
             Return Nothing
         End Try
+
     End Function
 
     Public Function BuildPageXML() As XmlDocument
