@@ -9264,7 +9264,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Return strcFreeShippingMethods
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
-                Return ex.Message
+                Return Nothing
             End Try
         End Function
 

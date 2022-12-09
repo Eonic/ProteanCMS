@@ -117,7 +117,7 @@ Namespace Providers
                     Return cWhereSql
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
-                    Return ex.Message
+                    Return Nothing
                 End Try
 
             End Function

@@ -127,7 +127,7 @@ Public Class Indexer
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
-            Return ex.Message
+            Return Nothing
         End Try
 
     End Function

@@ -457,7 +457,7 @@ Partial Public Class Cms
                     Return jsonString
 
                 Catch ex As Exception
-                    Return ex.Message
+                    Return Nothing
                 End Try
             End Function
 
@@ -471,7 +471,7 @@ Partial Public Class Cms
                     Return "True"
 
                 Catch ex As Exception
-                    Return ex.Message
+                    Return Nothing
                 End Try
 
             End Function
@@ -507,7 +507,7 @@ Partial Public Class Cms
                         Return strMessage
                     End If
                 Catch ex As Exception
-                    Return ex.Message
+                    Return Nothing
                 End Try
             End Function
 
@@ -531,7 +531,7 @@ Partial Public Class Cms
                         Return jsonString
                     End If
                 Catch ex As Exception
-                    Return ex.Message
+                    Return Nothing
                 End Try
             End Function
 
@@ -559,9 +559,8 @@ Partial Public Class Cms
                     jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
 
-
                 Catch ex As Exception
-                    Return ex.Message
+                    Return Nothing
                 End Try
             End Function
 

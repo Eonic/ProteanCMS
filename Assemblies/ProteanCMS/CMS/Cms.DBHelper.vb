@@ -4629,7 +4629,7 @@ restart:
                 Return Nothing
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetContentPositions", ex, cProcessInfo))
-                Return ex.Message
+                Return Nothing
             End Try
 
         End Function

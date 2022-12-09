@@ -723,8 +723,9 @@ Public Class Conversion
             Return ds
         Catch ex As Exception
             RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetXML", ex, ""))
+            Return Nothing
         End Try
-        Return ds
+
     End Function
 
     Private Shared Function GetValueOfCell(ByVal spreadsheetdocument As SpreadsheetDocument, ByVal cell As Cell) As String

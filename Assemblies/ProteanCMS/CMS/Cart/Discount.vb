@@ -1660,7 +1660,7 @@ NoDiscount:
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
-                    Return ex.Message
+                    Return Nothing
                 End Try
 
             End Function
@@ -2061,7 +2061,7 @@ NoDiscount:
                     End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
-                    Return ex.Message
+                    Return Nothing
                 End Try
 
             End Function
