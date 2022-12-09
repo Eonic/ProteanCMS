@@ -370,6 +370,9 @@ Public Class IndexerAsync
             Catch ex2 As Exception
 
             End Try
+
+            Return Nothing
+
         Finally
             Try
 
@@ -377,6 +380,7 @@ Public Class IndexerAsync
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+
             End Try
         End Try
 

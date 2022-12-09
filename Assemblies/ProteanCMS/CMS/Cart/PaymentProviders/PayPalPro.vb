@@ -57,7 +57,7 @@ Namespace Providers
                 Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.PayPalPro.Activities"
-                Private myWeb As Protean.Cms
+                Shadows myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode
                 Private nTransactionMode As TransactionMode
 
@@ -899,7 +899,7 @@ Namespace Providers
                         End If
 
                         If err_msg <> "" Then
-                            ccXform.addNote(ccXform.moXformElmt, xForm.noteTypes.Alert, err_msg)
+                            ccXform.addNote(CType(ccXform.moXformElmt, XmlElement), xForm.noteTypes.Alert, err_msg)
                         End If
 
                         'Update Seller Notes:

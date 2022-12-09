@@ -150,7 +150,7 @@ Partial Public Class Cms
 
                     'intTest = xmlEventsToday.Count
                     For Each xmlEvent In xmlEventsToday
-                        xmlEventFlagInDay = addElement(xmlDay, "item")
+                        xmlEventFlagInDay = addElement(CType(xmlDay, XmlElement), "item")
                         'Dim xmlDayEvent As XmlElement = myWeb.moPageXml.CreateElement("item")
                         xmlEventFlagInDay.SetAttribute("contentid", xmlEvent.GetAttribute("id"))
                         xmlEventFlagInDay.SetAttribute("dateStart", xmlEvent.SelectSingleNode("StartDate").InnerText)

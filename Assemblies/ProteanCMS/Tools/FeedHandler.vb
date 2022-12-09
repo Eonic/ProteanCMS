@@ -332,6 +332,7 @@ Public Class FeedHandler
                 oDBH.updateActivity(logId, cFeedURL & "Error" & ex.Message)
             End If
             AddExternalError(ex)
+            Return Nothing
         End Try
     End Function
 

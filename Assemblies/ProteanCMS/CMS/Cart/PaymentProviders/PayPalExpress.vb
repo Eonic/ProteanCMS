@@ -56,7 +56,7 @@ Namespace Providers
                 Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.PayPalPro.Activities"
-                Private myWeb As Protean.Cms
+                Shadows myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode
                 Private nTransactionMode As TransactionMode
 

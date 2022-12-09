@@ -1969,6 +1969,8 @@ Public Class xForm
                 oInputNode.SetAttribute("data-fv-not-empty___message", notEmptyMessage)
             End If
 
+            Return oInputNode
+
         Catch ex As Exception
             returnException(msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             Return Nothing

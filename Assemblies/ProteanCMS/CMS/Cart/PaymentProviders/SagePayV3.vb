@@ -57,7 +57,7 @@ Namespace Providers
                 Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.SagePayV3.Activities"
-                Private myWeb As Protean.Cms
+                Shadows myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode
                 Private nTransactionMode As TransactionMode
 
@@ -350,22 +350,22 @@ Namespace Providers
                                     If productDescription.Length > 100 Then
                                         productDescription = productDescription.Substring(0, 100)
                                     End If
-                                    xmlTools.addNewTextNode("description", oItemRoot, productDescription)
+                                    xmlTools.addNewTextNode("description", CType(oItemRoot, XmlElement), productDescription)
                                     'If Not oItemElmt.SelectSingleNode("productDetail/StockCode") Is Nothing Then
                                     '    xmlTools.addNewTextNode("productSku", oItemRoot, oItemElmt.SelectSingleNode("productDetail/StockCode").InnerText)
                                     'End If
                                     'If Not oItemElmt.SelectSingleNode("productDetail/Manufacturer") Is Nothing Then
                                     '    xmlTools.addNewTextNode("productCode", oItemRoot, oItemElmt.SelectSingleNode("productDetail/Manufacturer").InnerText)
                                     'End If
-                                    xmlTools.addNewTextNode("quantity", oItemRoot, oItemElmt.GetAttribute("quantity"))
-                                    xmlTools.addNewTextNode("unitNetAmount", oItemRoot, oItemElmt.GetAttribute("price"))
-                                    xmlTools.addNewTextNode("unitTaxAmount", oItemRoot, unitTaxAmount.ToString)
-                                    xmlTools.addNewTextNode("unitGrossAmount", oItemRoot, unitGrossAmount.ToString)
-                                    xmlTools.addNewTextNode("totalGrossAmount", oItemRoot, totalGrossAmount.ToString)
+                                    xmlTools.addNewTextNode("quantity", CType(oItemRoot, XmlElement), oItemElmt.GetAttribute("quantity"))
+                                    xmlTools.addNewTextNode("unitNetAmount", CType(oItemRoot, XmlElement), oItemElmt.GetAttribute("price"))
+                                    xmlTools.addNewTextNode("unitTaxAmount", CType(oItemRoot, XmlElement), unitTaxAmount.ToString)
+                                    xmlTools.addNewTextNode("unitGrossAmount", CType(oItemRoot, XmlElement), unitGrossAmount.ToString)
+                                    xmlTools.addNewTextNode("totalGrossAmount", CType(oItemRoot, XmlElement), totalGrossAmount.ToString)
                                     oBasketRoot.AppendChild(oItemRoot)
                                 Next
 
-                                xmlTools.addNewTextNode("deliveryGrossAmount", oBasketRoot, oOrder.GetAttribute("shippingCost"))
+                                xmlTools.addNewTextNode("deliveryGrossAmount", CType(oBasketRoot, XmlElement), oOrder.GetAttribute("shippingCost"))
 
                                 cRequest = cRequest & "BasketXML=" & oBasketXml.OuterXml & "&"
 

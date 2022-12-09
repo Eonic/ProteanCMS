@@ -228,7 +228,7 @@ Partial Public Class Cms
 
 #End Region
 #Region "Enums"
-        Enum objectTypes
+        Shadows Enum objectTypes
             Content = 0
             ContentLocation = 1
             ContentRelation = 2

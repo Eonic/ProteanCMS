@@ -25,6 +25,7 @@ Imports System
 Imports System.Text.RegularExpressions
 Imports System.Web.UI
 Imports System.Web
+Imports Microsoft.Ajax.Utilities
 
 Partial Public Class fsHelper
 
@@ -720,6 +721,9 @@ Partial Public Class fsHelper
                     remoteStream.Close()
                     img.Dispose()
                 End If
+
+
+
             End If
 
 

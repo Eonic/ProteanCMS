@@ -3427,12 +3427,12 @@ processFlow:
             Dim cProcessInfo As String = ""
             Dim oDs As DataSet
             Dim sSql As String = "select cShipOptName as Name, cShipOptCarrier as Carrier, cShipOptTime as DeliveryTime from tblCartShippingMethods where nShipOptKey=" & nShippingId
-            Dim oXml As XmlDataDocument
+            Dim oXml As New XmlDocument
             Dim oShippingXml As XmlElement
 
             Try
                 oDs = moDBHelper.GetDataSet(sSql, "Shipping", "Cart")
-                oXml = New XmlDataDocument(oDs)
+                oXml.LoadXml(oDs.GetXml)
                 oDs.EnforceConstraints = False
                 oShippingXml = moPageXml.CreateElement("Cart")
                 oShippingXml.InnerXml = oXml.InnerXml
@@ -9460,7 +9460,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
                 GetCart(oCartListElmt, nOrderId)
                 'Insert code into tblcartOrder
-                Dim oInstance As XmlDataDocument = New XmlDataDocument
+                Dim oInstance As XmlDocument = New XmlDocument
                 Dim oElmt As XmlElement
 
                 oInstance.AppendChild(oInstance.CreateElement("instance"))

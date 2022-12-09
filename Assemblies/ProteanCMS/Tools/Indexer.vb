@@ -594,7 +594,7 @@ Public Class Indexer
             oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")
 
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -656,7 +656,7 @@ Public Class Indexer
 
             bIsError = True
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -698,7 +698,7 @@ Public Class Indexer
             End If
         Catch ex As Exception
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -750,7 +750,7 @@ Public Class Indexer
 
         Catch ex As Exception
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 

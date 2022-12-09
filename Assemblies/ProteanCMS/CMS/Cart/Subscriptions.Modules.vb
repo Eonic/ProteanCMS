@@ -46,7 +46,7 @@ processFlow:
                                 Dim buttonRef As String = oSubmitBtn.GetAttribute("ref")
 
                                 If bPaymentMethodUpdated Then
-                                    oSubForm.addNote(oSubForm.moXformElmt, Protean.xForm.noteTypes.Help, "Thank you, your payment method has been updated", True, "term4060")
+                                    oSubForm.addNote(CType(oSubForm.moXformElmt, XmlElement), Protean.xForm.noteTypes.Help, "Thank you, your payment method has been updated", True, "term4060")
                                 End If
 
                                 SelectedPaymentMethod = myWeb.moRequest("ewSubmit")
@@ -67,7 +67,7 @@ processFlow:
                                         dRenewalDate = oSub.SubscriptionEndDate(dRenewalDate, oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content"))
                                         If dRenewalDate < Now() Then
                                             oSubForm.valid = False
-                                            oSubForm.addNote(oSubForm.moXformElmt, Protean.xForm.noteTypes.Alert, "Your subscription has gone beyond the date it can be renewed you must get a new subscription.", True, "term4060")
+                                            oSubForm.addNote(CType(oSubForm.moXformElmt, XmlElement), Protean.xForm.noteTypes.Alert, "Your subscription has gone beyond the date it can be renewed you must get a new subscription.", True, "term4060")
 
                                         End If
                                     End If

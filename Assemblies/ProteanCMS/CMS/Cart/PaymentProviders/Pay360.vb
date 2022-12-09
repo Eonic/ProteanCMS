@@ -55,7 +55,7 @@ Namespace Providers
                 Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.Pay360.Activities"
-                Private myWeb As Protean.Cms
+                Shadows myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode
                 Private nTransactionMode As TransactionMode
 
@@ -521,14 +521,14 @@ Namespace Providers
 
                             End If
 
-                            ccXform.addNote(ccXform.moXformElmt, xForm.noteTypes.Alert, err_msg)
+                            ccXform.addNote(CType(ccXform.moXformElmt, XmlElement), xForm.noteTypes.Alert, err_msg)
 
 
 
                         Else
                             If ccXform.isSubmitted And ccXform.validationError = "" Then
                                 err_msg = "Unknown Error: Please call"
-                                ccXform.addNote(ccXform.moXformElmt, xForm.noteTypes.Alert, err_msg)
+                                ccXform.addNote(CType(ccXform.moXformElmt, XmlElement), xForm.noteTypes.Alert, err_msg)
                             Else
                                 err_msg = ccXform.validationError
                             End If
