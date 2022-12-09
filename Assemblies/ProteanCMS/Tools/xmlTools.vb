@@ -559,6 +559,7 @@ Public Class XmlHelper
                 transformException = ex
                 ' returnException(myWeb.msException, "Protean.XmlHelper.Transform", "CurrentDomain_AssemblyResolve", ex, msXslFile, Nothing, gbDebug)
                 bError = True
+                Return Nothing
             End Try
 
         End Function
