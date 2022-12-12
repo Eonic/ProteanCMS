@@ -486,8 +486,8 @@ Partial Public Class Cms
                     Dim results As Lucene.Net.Search.TopDocs
 
                     If LCase(myWeb.moConfig("SiteSearchDebug")) = "on" Then
-                        addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
-                        addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneQuery", searchQuery.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneLivePageFilter", livePages.ToString)
                     End If
 
                     If livePages Is Nothing Then
@@ -808,9 +808,9 @@ Partial Public Class Cms
                     Dim results As Lucene.Net.Search.TopDocs
 
                     If LCase(myAPI.moConfig("SiteSearchDebug")) = "on" Then
-                        addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneQuery", searchQuery.ToString)
                         If Not livePages Is Nothing Then
-                            addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+                            addElement(CType(resultsXML, XmlElement), "LuceneLivePageFilter", livePages.ToString)
                         End If
                     End If
 
@@ -1442,7 +1442,7 @@ Partial Public Class Cms
             Dim cSearchWhereUSER As String = ""
             Dim cRegEx As String = ""
             Dim cRegExPattern As String = ""
-            Dim reMasterCheck As Regex
+            Dim reMasterCheck As Regex = Nothing
             Dim cSql As String = ""
             Dim aSearchTerms As Collection = New Collection
             Dim bFullMatch As Boolean = True
@@ -2076,7 +2076,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                             Case "term"
 
                                 ' Clean up the search terms
-                                fieldValue = CleanUpLuceneSearchString(searchFilter.GetAttribute("value"))
+                                fieldValue = CleanUpLuceneSearchString(searchFilter.GetAttribute("value"), True)
                                 fieldTextTerms = ParseKeywordsAndPhrases(fieldValue)
 
                                 ' Field keyword search

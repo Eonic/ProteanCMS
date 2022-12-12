@@ -322,6 +322,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " and a.dExpireDate < GETDATE() and c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
                     ,,, nItemsPerPage,,,,, nCurrentPage,,, True)
 
+                    myWeb.bAllowExpired = True
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "ListHistoricEvents", ex, "", cProcessInfo, gbDebug)
@@ -340,7 +341,7 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
-                    Dim cnt As Int16
+                    'Dim cnt As Int16
                     Dim oFrmGroup As XmlElement
                     Dim filterForm As xForm = New xForm(myWeb)
 

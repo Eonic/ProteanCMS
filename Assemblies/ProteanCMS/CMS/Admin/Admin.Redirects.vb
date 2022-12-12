@@ -91,7 +91,7 @@ Partial Public Class Cms
                             Dim rulesXml As New XmlDocument
                             rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
                             Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: " & redirectType & "']")
-                            Dim oRule As XmlElement
+                            'Dim oRule As XmlElement
 
                             'For Each oRule In replacerNode.SelectNodes("add")
                             Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")

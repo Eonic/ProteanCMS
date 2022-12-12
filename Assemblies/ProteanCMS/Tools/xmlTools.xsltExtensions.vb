@@ -23,7 +23,6 @@ Imports System.Collections.Generic
 Imports Imazen.WebP
 Imports System.Drawing
 Imports System.Data.SqlClient
-Imports Microsoft.SqlServer
 
 Partial Public Module xmlTools
 
@@ -304,7 +303,7 @@ Partial Public Module xmlTools
                     End If
                 Loop
 
-                Dim returnStr As String
+                Dim returnStr As String = String.Empty
                 Dim i As Integer
                 For i = 0 To list.Count - 1
                     returnStr = CStr(returnStr) & CStr(list.Item(i)) & ","
@@ -1190,17 +1189,12 @@ Partial Public Module xmlTools
 
                                     Dim imgFile As New FileInfo(goServer.MapPath(newFilepath))
                                     Dim ptnImg As New Protean.Tools.Image("")
+                                    ptnImg.TinifyKey = moConfig("TinifyKey")
                                     ptnImg.CompressImage(imgFile, False)
-
                                     oImage.Close()
                                     oImage = Nothing
 
-
-
-
                             End Select
-
-
                             'PerfMon.Log("xmlTools", "ResizeImage - End")
                             Return newFilepath
                         Else
@@ -1233,6 +1227,7 @@ Partial Public Module xmlTools
 
         Public Function CreateWebP(ByVal cVirtualPath As String, ByVal forceCheck As Boolean) As String
             Dim cProcessInfo As String = ""
+
             Try
 
                 If cVirtualPath = "" Then
@@ -1260,11 +1255,11 @@ Partial Public Module xmlTools
                                 Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
                                     Dim encoder As New Imazen.WebP.SimpleEncoder
                                     encoder.Encode(bitMap, saveImageStream, WebPQuality)
+                                    encoder = Nothing
                                 End Using
                             End Using
                         End If
                     End If
-
                     Return webpFileName
                 End If
 
@@ -1276,6 +1271,7 @@ Partial Public Module xmlTools
                 Else
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
                 End If
+
             End Try
         End Function
 
@@ -1573,7 +1569,7 @@ Partial Public Module xmlTools
             Dim Query1 As String = ""
             Dim Query2 As String = ""
             Dim Query3 As String = ""
-            Dim sql As String
+            Dim sql As String = String.Empty
             Try
 
 
@@ -1694,10 +1690,10 @@ Partial Public Module xmlTools
 
                     Case "Library"
 
-                        Dim ProviderName As String
+                        Dim ProviderName As String = String.Empty
                         Dim calledType As Type
-                        Dim classPath As String = ""
-                        Dim methodName As String = ""
+                        Dim classPath As String = String.Empty
+                        Dim methodName As String = String.Empty
 
                         Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
                         Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
@@ -1779,7 +1775,7 @@ Partial Public Module xmlTools
                             oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
                         End Using
                     Case "availableIcons"
-                        Dim iconPath = "/ewcommon/icons/icons.xml"
+                        Dim iconPath As String = "/ewcommon/icons/icons.xml"
                         If myWeb.bs5 Then iconPath = "/ptn/core/icons/icons.xml"
 
                         If IO.File.Exists(goServer.MapPath(iconPath)) Then

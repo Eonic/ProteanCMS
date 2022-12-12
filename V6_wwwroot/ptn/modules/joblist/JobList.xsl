@@ -72,6 +72,75 @@
     </div>
   </xsl:template>
 
+	<!-- NewsArticle Module Swiper -->
+	<xsl:template match="Content[@type='Module' and @moduleType='VacanciesList' and @carousel='true']" mode="displayBrief">
+		<!-- Set Variables -->
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<xsl:variable name="contentList">
+			<xsl:apply-templates select="." mode="getContent">
+				<xsl:with-param name="contentType" select="$contentType" />
+				<xsl:with-param name="startPos" select="$startPos" />
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="totalCount">
+			<xsl:choose>
+				<xsl:when test="@display='related'">
+					<xsl:value-of select="count(Content[@type=$contentType])"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<!--responsive columns variables-->
+
+		<!--end responsive columns variables-->
+		<!-- Output Module -->
+		<div class="swiper-container VacancyList content-carousel ">
+			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
+				<div class="swiper-wrapper">
+					<xsl:apply-templates select="." mode="contentColumns">
+						<xsl:with-param name="carousel" select="@carousel"/>
+					</xsl:apply-templates>
+					<xsl:choose>
+						<xsl:when test="@linkArticle='true'">
+							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+								<xsl:with-param name="sortBy" select="@sortBy"/>
+								<xsl:with-param name="class" select="'swiper-slide'"/>
+							</xsl:apply-templates>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+								<xsl:with-param name="sortBy" select="@sortBy"/>
+								<xsl:with-param name="class" select="'swiper-slide'"/>
+
+								<xsl:with-param name="matchHeight" />
+							</xsl:apply-templates>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text> </xsl:text>
+				</div>
+			</div>
+			<xsl:if test="@carouselBullets='true'">
+				<div class="swiper-pagination" id="swiper-pagination-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
+			</xsl:if>
+
+			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="swiper-button-next" id="swiper-button-next-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="row">
+				<span>&#160;</span>
+			</div>
+		</div>
+	</xsl:template>
+
   <!-- Job Brief -->
   <xsl:template match="Content[@type='Job']" mode="displayBrief">
     <xsl:param name="sortBy"/>
@@ -179,7 +248,10 @@
     </div>
   </xsl:template>
 
-  <!-- Job Brief -->
+	
+
+
+	<!-- Job Brief -->
   <xsl:template match="Content[@type='Job']" mode="displayBriefLinked">
     <xsl:param name="sortBy"/>
     <!-- vacancyBrief -->

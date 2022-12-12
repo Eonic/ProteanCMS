@@ -244,8 +244,8 @@
   <!-- -->
   <xsl:template match="Page[@adminMode='true']" mode="adminPageHeader">
     <h1 class="page-header">
-      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
-      <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@name"/>
+      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][last()]/@icon}">&#160;</i>&#160;
+      <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][last()]/@name"/>
     </h1>
   </xsl:template>
 
@@ -7482,22 +7482,26 @@
         <xsl:value-of select="@id"/>
       </td>
       <td>
-        <xsl:value-of select="@statusId"/> - 	<xsl:choose>
-          <xsl:when test="@statusId='0'">New</xsl:when>
-          <xsl:when test="@statusId='1'">Items Added</xsl:when>
-          <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
-          <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
-          <xsl:when test="@statusId='4'">Confirmed</xsl:when>
-          <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="@statusId='6'">Completed</xsl:when>
-          <xsl:when test="@statusId='7'">Refunded</xsl:when>
-          <xsl:when test="@statusId='8'">Failed</xsl:when>
-          <xsl:when test="@statusId='9'">Shipped</xsl:when>
-          <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
-          <xsl:when test="@statusId='11'">Abandoned</xsl:when>
-          <xsl:when test="@statusId='12'">Deleted</xsl:when>
-          <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
-        </xsl:choose>
+		  <small>
+			  (<xsl:value-of select="@statusId"/>)
+		  </small>&#160;
+		  <xsl:choose>
+			  <xsl:when test="@statusId='0'">New</xsl:when>
+			  <xsl:when test="@statusId='1'">Items Added</xsl:when>
+			  <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
+			  <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
+			  <xsl:when test="@statusId='4'">Confirmed</xsl:when>
+			  <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
+			  <xsl:when test="@statusId='6'">Completed</xsl:when>
+			  <xsl:when test="@statusId='7'">Refunded</xsl:when>
+			  <xsl:when test="@statusId='8'">Failed</xsl:when>
+			  <xsl:when test="@statusId='9'">Shipped</xsl:when>
+			  <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
+			  <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+			  <xsl:when test="@statusId='12'">Deleted</xsl:when>
+			  <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
+			  <xsl:when test="@statusId='17'">In Progress</xsl:when>
+		  </xsl:choose>
       </td>
       <td>
         <xsl:choose>
@@ -7662,7 +7666,8 @@
                       <xsl:when test="@statusId='8'">Failed</xsl:when>
                       <xsl:when test="@statusId='9'">Shipped</xsl:when>
                       <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
-                      <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+                      <xsl:when test="@statusId='11'">Abandoned</xsl:when>					
+                        <xsl:when test="@statusId='17'">In Progress</xsl:when>
                     </xsl:choose>
                   </td>
                   <td>
@@ -7771,6 +7776,8 @@
               </xsl:when>
               <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
               <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+			
+          <xsl:when test="@statusId='17'">In Progress</xsl:when>
             </xsl:choose> Order<xsl:choose>
               <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
               <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
@@ -8531,6 +8538,8 @@
           <xsl:when test="$statusId='9'">Shipped</xsl:when>
           <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
           <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+		
+          <xsl:when test="@statusId='17'">In Progress</xsl:when>
         </xsl:choose> Quote<xsl:choose>
           <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
           <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
@@ -12445,12 +12454,23 @@
   <!-- ##################################################################################################### -->
 
   <xsl:template match="Page[@layout='CartReportsMain']" mode="Admin">
+	   <xsl:variable name="contextCmd">
+      <xsl:choose>
+        <xsl:when test="$page/@editContext!=''">
+          <xsl:value-of select="/Page/@editContext"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="/Page/@ewCmd"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <div class="row" id="tpltCartActivity">
       <div class="col-md-3 btn-group-vertical"  id="column1">
-        <a href="{$appPath}?ewCmd=CartDownload" class="btn btn-default">Order Download</a>
-        <a href="{$appPath}?ewCmd=CartReports" class="btn btn-default">Sales By Product</a>
-        <a href="{$appPath}?ewCmd=CartActivityDrilldown" class="btn btn-default">Sales By Page</a>
-        <a href="{$appPath}?ewCmd=CartActivityPeriod" class="btn btn-default">Sales By Period</a>
+		  <xsl:for-each select="AdminMenu/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem">
+		  <a href="{$appPath}?ewCmd={@cmd}" class="btn btn-default">
+			  <i class="fa {@icon}">&#160;</i> &#160;
+			  <xsl:value-of select="@name"/></a>
+		  </xsl:for-each>
       </div>
       <div class="col-md-9" id="column2">
         &#160;
@@ -12937,6 +12957,148 @@
       </ul>
     </xsl:if>
   </xsl:template>
+	
+	
+  <xsl:template match="Page[@layout='EventBookings']" mode="Admin">
+	  
+    <div class="row" id="tpltCartActivity">
+      <div class="col-md-3">
+		  <div class="list-group">
+        <xsl:apply-templates select="ContentDetail/Events/Event[Ticket]" mode="eventList"/>
+			  <xsl:choose>
+				  <xsl:when test="$page/@ewCmd2='pastbookings'">
+					  <a class="btn btn-default  btn-block" href="?ewCmd=EventBookings">Future Events</a>
+				  </xsl:when>
+				  <xsl:otherwise>
+	                <a class="btn btn-default  btn-block" href="?ewCmd=EventBookings.pastbookings">Past Events</a>
+				  </xsl:otherwise>
+			  </xsl:choose>
+
+		  </div>
+      </div>
+      <div class="col-md-9">
+<table class="table table-responsive">
+	<tr xmlns="http://www.w3.org/1999/xhtml">
+			<th>
+				OrderId
+			</th>
+	        <th>
+				Order Date
+			</th>
+	        <th>
+				Ticket Type
+			</th>
+    <th>
+				Name
+			</th>
+    <th>
+				Email
+			</th>
+    <th>
+				Quantity
+			</th>
+	    <th>
+				Price
+			</th>
+		    <th>
+				Amt Recieved
+			</th>
+            <th>
+				Last Payment
+			</th>	
+            <th>
+				Outstanding
+			</th>				<th>
+				<!--
+				<a href="" class="btn btn-success">Download in Excel</a>
+				-->
+				<a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-sm btn-primary" target="_new">
+					<i class="fa fa-th-list fa-white">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>
+					Excel Download
+				</a>
+			</th>			
+	</tr>
+            <xsl:apply-templates select="ContentDetail/Report/Tickets/Ticket" mode="TicketReport"/>
+    </table>
+      </div>
+    </div>
+  </xsl:template>
+	<xsl:template match="Ticket" mode="TicketReport">
+		<tr xmlns="http://www.w3.org/1999/xhtml">
+			<td>
+				<xsl:value-of select="OrderId/node()"/>
+			</td>
+			<td class="text-nowrap">
+				<xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+				<xsl:value-of select="dInsertDate/node()"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">true</xsl:with-param>
+              </xsl:call-template>
+			</td>
+			<td>
+				<xsl:value-of select="TicketName/node()"/>
+			</td>
+			<td>
+				<xsl:value-of select="CustomerName/node()"/>
+			</td>
+			<td>
+				<xsl:value-of select="Email/node()"/>
+			</td>
+			<td>
+				<xsl:value-of select="Quantity/node()"/>
+			</td>
+			<td>
+				<xsl:value-of select="format-number(Price/node(),'0.00')"/>
+			</td>	
+			<td>
+				<xsl:value-of select="format-number(nAmountReceived/node(),'0.00')"/>
+			</td>	
+			<td>
+				
+				<xsl:value-of select="format-number(nLastPaymentMade/node(),'0.00')"/>
+			</td>	
+			<td>
+				<xsl:value-of select="format-number(BalanceDue/node(),'0.00')"/>
+			</td>			
+		<td>
+		<a href="?ewCmd=Orders&amp;ewCmd2=Display&amp;id={OrderId/node()}" class="btn btn-xs btn-primary"><i class="fa fa-eye"> </i> view order
+				</a>
+			<xsl:if test="BalanceDue &gt; 0">
+			<a href="?ewCmd=Orders&amp;ewCmd2=RequestSettlement&amp;id={OrderId/node()}" target="_new" class="btn btn-xs btn-warning">
+				<i class="fa fa-envelope"> </i> Send Settlement Request
+			</a>
+			</xsl:if>
+		</td>
+	</tr>
+		
+			</xsl:template>
+	<xsl:template match="Event" mode="eventList">
+			<a class="btn btn-default btn-block" href="?ewCmd=EventBookings.{$page/@ewCmd2}&amp;EventId={@nContentKey}">
+				<xsl:attribute name="class">
+					<xsl:choose>
+						<xsl:when test="@nContentKey=/Page/ContentDetail/Tickets/@EventId">
+							btn btn-primary btn-block
+						</xsl:when>
+						<xsl:otherwise>
+							btn btn-default btn-block
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				<small>
+		<xsl:value-of select="cContentXmlBrief/Content/StartDate/node()"/><br/><xsl:value-of select="cContentXmlBrief/Content/Headline/node()"/></small>
+			<br/>
+			
+		<xsl:for-each select="Ticket">
+			<small>
+		    <xsl:value-of select="TicketName/node()"/> - <xsl:value-of select="TotalTicketsSold/node()"/> </small><br/>
+		</xsl:for-each>
+				</a>
+	
+	</xsl:template>
 
   <xsl:template match="Report[@cGrouping='Group']" mode="CartReportDrilldown">
     <table border="1">

@@ -350,6 +350,7 @@ Public Class FTPHelper
     ''' </summary>
     ''' <param name="directorypath">Indicates the ftp directory path.</param>
     ''' <param name="FtpListOption">Options that dictate how a list is performed ans what information is gathered.</param>
+
     Public Function GetLinks(ByVal directorypath As String,
                              Optional ByVal FtpListOption As FtpListOption =
                              FtpListOption.AllFiles) As FtpListItem()

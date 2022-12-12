@@ -228,7 +228,7 @@ Partial Public Class Cms
 
 #End Region
 #Region "Enums"
-        Enum objectTypes
+        Shadows Enum objectTypes
             Content = 0
             ContentLocation = 1
             ContentRelation = 2
@@ -2514,7 +2514,7 @@ Partial Public Class Cms
 
             'EonicWeb Specific Function for updating DB Entities, manages creation and updating of Audit table
 
-            Dim oXml As XmlDataDocument
+            Dim oXml As XmlDocument  'Change XmlDataDocument to XmlDocument
             Dim oElmt As XmlElement = Nothing
             Dim oElmt2 As XmlElement
             Dim nAuditId As Long
@@ -2529,7 +2529,7 @@ Partial Public Class Cms
 
                 'if we have not been given an instance we'll create one, this makes it easy to update the audit table by just supplying an id
                 If oInstance Is Nothing Then
-                    oXml = New XmlDataDocument
+                    oXml = New XmlDocument  'Change XmlDataDocument to XmlDocument
                     oElmt = oXml.CreateElement("instance")
                     oXml.AppendChild(oElmt)
                     oTableNode = oXml.CreateElement(getTable(ObjectType))
@@ -4626,9 +4626,10 @@ restart:
                         ExeProcessSql(sSql)
                     End If
                 Next
-
+                Return Nothing
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetContentPositions", ex, cProcessInfo))
+                Return Nothing
             End Try
 
         End Function
@@ -7691,7 +7692,7 @@ restart:
                                     For Each relContId In oRelation.GetAttribute("relatedContentId").Split(",")
                                         If IsNumeric(relContId) Then
                                             If LCase(oRelation.GetAttribute("direction")) = "child" Then
-                                                insertContentRelation(Convert.ToInt32(relContId), savedId, True, oRelation.GetAttribute("type"), True)
+                                                insertContentRelation(Convert.ToInt32(relContId), savedId, False, oRelation.GetAttribute("type"), True)
                                             Else
                                                 insertContentRelation(savedId, Convert.ToInt32(relContId), True, oRelation.GetAttribute("type"), True)
                                             End If
@@ -8009,7 +8010,7 @@ restart:
             PerfMonLog("Web", "GetContentDetailXml")
             Dim oRoot As XmlElement
             Dim oNode As XmlNode
-            Dim oElmt As XmlElement
+            Dim oElmt As XmlElement = Nothing
             Dim retElmt As XmlElement = Nothing
             Dim sContent As String
             Dim sSql As String
@@ -9279,7 +9280,7 @@ restart:
 
         Public Function insertProductGroupRelation(ByVal nProductId As Integer, ByVal sGroupIds As String) As String
             PerfMonLog("DBHelper", "insertProductGroupRelation")
-            Dim cProcessInfo As String
+            Dim cProcessInfo As String = "insertProductGroupRelation"
             Try
                 Dim oGroupArr() As String = Split(sGroupIds.Trim(","), ",")
                 Dim cCount As Integer
@@ -9685,6 +9686,7 @@ restart:
                 Return oActivityElement.FirstChild
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ViewMailHistory", ex, cSQL))
+                Return Nothing
             End Try
         End Function
 
@@ -10310,7 +10312,7 @@ ReturnMe:
             Dim oRow As DataRow
             Dim column As DataColumn
             Dim oDs As New DataSet
-            Dim oDataAdpt As SqlDataAdapter
+            Dim oDataAdpt As SqlDataAdapter = Nothing
             Try
                 If oConn.State = ConnectionState.Closed Then oConn.Open()
 
@@ -10872,7 +10874,7 @@ ReturnMe:
             Dim sSql As String = ""
             Dim oDs As DataSet
             Dim oRow As DataRow
-            Dim cProcessInfo As String
+            Dim cProcessInfo As String = "UpdateSellerNotes"
             Try
 
                 'Update Seller Notes:
@@ -10896,7 +10898,7 @@ ReturnMe:
             Dim sSql As String = ""
             Dim oDs As DataSet
             Dim oRow As DataRow
-            Dim cProcessInfo As String
+            Dim cProcessInfo As String = "SetClientNotes"
             Try
 
                 'Update Seller Notes:
@@ -11224,7 +11226,9 @@ ReturnMe:
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckIsParentPage", ex, ""))
+                Return Nothing
             End Try
+
         End Function
 
         Public Function GetContacts(ByVal nSupplierId As Integer, ByVal nDirId As Integer) As DataTable

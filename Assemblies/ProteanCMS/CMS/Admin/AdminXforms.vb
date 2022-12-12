@@ -2415,7 +2415,10 @@ Partial Public Class Cms
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
                 End Try
+
+
             End Function
 
 
@@ -2425,9 +2428,9 @@ Partial Public Class Cms
                 Dim sImgPath As String = ""
                 Dim oContentType As XmlElement
                 Dim oModuleType As XmlElement
-                Dim oItem As XmlElement
-                Dim oOptElmt As XmlElement
-                Dim oDescElmt As XmlElement
+                'Dim oItem As XmlElement
+                'Dim oOptElmt As XmlElement   'never used
+                'Dim oDescElmt As XmlElement
 
                 Try
                     If filepath = "" Then filepath = "/"
@@ -2771,9 +2774,9 @@ Partial Public Class Cms
 
             Public Overridable Function xFrmEditContent(Optional ByVal id As Long = 0, Optional ByVal cContentSchemaName As String = "", Optional ByVal pgid As Long = 0, Optional ByVal cContentName As String = "", Optional ByVal bCopy As Boolean = False, Optional ByRef nReturnId As Integer = 0, Optional ByRef zcReturnSchema As String = "", Optional ByRef AlternateFormName As String = "", Optional ByVal nVersionId As Long = 0) As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim oGrp1Elmt As XmlElement
-                Dim oGrp2Elmt As XmlElement
-                Dim oSelElmt As XmlElement
+                'Dim oGrp1Elmt As XmlElement
+                'Dim oGrp2Elmt As XmlElement   'Never used
+                'Dim oSelElmt As XmlElement
                 Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
                 Dim bCascade As Boolean = False
                 Dim cProcessInfo As String = ""
@@ -3775,8 +3778,8 @@ Partial Public Class Cms
 
             Public Function xFrmMoveFile(ByVal cPath As String, ByVal cName As String, ByVal nType As fsHelper.LibraryType) As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim sValidResponse As String
-                Dim cProcessInfo As String = ""
+                Dim sValidResponse As String = String.Empty
+                Dim cProcessInfo As String = "xFrmMoveFile"
                 Try
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
@@ -4581,6 +4584,7 @@ Partial Public Class Cms
                         MyBase.addValues()
                         Return MyBase.moXformElmt
                     End If
+                    Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
@@ -6319,7 +6323,7 @@ Partial Public Class Cms
                     Dim refundAmount As Decimal
                     Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
-                    Dim amount As String = ""
+                    Dim amount As Double
 
 
 
@@ -6336,13 +6340,13 @@ Partial Public Class Cms
                             ' Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
                             Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/*[1]")
                             If (xnInstance IsNot Nothing) Then
-                                amount = xnInstance.Attributes("AmountPaid").InnerText
+                                amount = CDbl("0" & xnInstance.Attributes("AmountPaid").InnerText)
                             End If
                         End If
 
                     End If
 
-                    refundAmount = Convert.ToDouble(amount)
+                    refundAmount = amount
 
                     MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement
@@ -7412,7 +7416,11 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditScheduleItem")
 
-                    MyBase.load("/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    If goConfig("cssFramework") = "bs5" Then
+                        MyBase.load("/admin/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    Else
+                        MyBase.load("/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    End If
 
                     If nID > 0 Then
                         MyBase.Instance.InnerXml = dbh.getObjectInstance(dbHelper.objectTypes.ScheduledItem, nID)
@@ -7426,7 +7434,13 @@ Partial Public Class Cms
                     'get files
                     Dim oXSLSelect As XmlElement = MyBase.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cXSLPath']")
                     If Not oXSLSelect Is Nothing Then
-                        FileList("/xsl/feeds/", oXSLSelect, ".xsl")
+                        If goConfig("cssFramework") = "bs5" Then
+
+                            FileList("/feeds/", oXSLSelect, ".xsl")
+                        Else
+
+                            FileList("/xsl/feeds/", oXSLSelect, ".xsl")
+                        End If
                     End If
                     'set siteid
                     Dim oSiteIDElmt As XmlElement = MyBase.Instance.SelectSingleNode("descendant-or-self::nWebsite")
@@ -7498,6 +7512,10 @@ Partial Public Class Cms
 
                     Dim cBasePath As String = goServer.MapPath("/" & cInitialFolder)
                     Dim cCommonPath As String = goServer.MapPath("/ewcommon" & cInitialFolder)
+
+                    If goConfig("cssFramework") = "bs5" Then
+                        cCommonPath = goServer.MapPath("/ptn" & cInitialFolder)
+                    End If
                     Dim dir As New DirectoryInfo(cBasePath)
 
                     If Not dir.Exists Then
@@ -7539,9 +7557,11 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditFeedItem")
 
-
-
-                    MyBase.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    If myWeb.moConfig("cssFramework") = "bs5" Then
+                        MyBase.load("/core/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    Else
+                        MyBase.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    End If
 
                     Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
 
@@ -9522,8 +9542,8 @@ Partial Public Class Cms
                                 _form.addBind(selectItem.Id(), "location[@id='" & locationid & "']", , , bind)
 
 
-                                Dim proceedingParent As XmlElement
-                                Dim oChoices As XmlElement
+                                Dim proceedingParent As XmlElement = Nothing
+                                Dim oChoices As XmlElement = Nothing
                                 ' Process the menu items
                                 ' For each menuitem, check if it's already in scope.
                                 ' If not add the option to the select.

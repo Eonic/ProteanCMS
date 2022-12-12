@@ -157,7 +157,7 @@ Public Class FeedHandler
     Public Function ImportStream() As String
 
         Dim instanceNodeName As String = FeedItemNode
-        Dim origInstance As XElement
+        Dim origInstance As XElement = Nothing
         Dim ProcessedQty As Long = 0
         Dim completeCount As Long = 0
         Dim failedCount As Long = 0
@@ -332,6 +332,7 @@ Public Class FeedHandler
                 oDBH.updateActivity(logId, cFeedURL & "Error" & ex.Message)
             End If
             AddExternalError(ex)
+            Return Nothing
         End Try
     End Function
 
@@ -511,6 +512,7 @@ Public Class FeedHandler
                     Me.AddExternalMessage("Adding Item", cId)
                     _counters("add").Add()
                     Dim oAdmXFrm As New Cms.Admin.AdminXforms(oDBH.myWeb.msException)
+                    oAdmXFrm.myWeb = oDBH.myWeb
                     oAdmXFrm.xFrmFeedItem(, oInstanceElmt, nHostPageID, cFeedURL)
 
                 ElseIf nContentKey > 0 And UpdateExistingItems Then
@@ -524,6 +526,7 @@ Public Class FeedHandler
                     If oNewElmt.SelectSingleNode("//nContentPrimaryId") IsNot Nothing Then oNewElmt.SelectSingleNode("//nContentPrimaryId").InnerText = "0"
                     If oNewElmt.SelectSingleNode("//nAuditId") IsNot Nothing Then oNewElmt.SelectSingleNode("//nAuditId").ParentNode.RemoveChild(oNewElmt.SelectSingleNode("//nAuditId"))
                     Dim oAdmXFrm As New Cms.Admin.AdminXforms(oDBH.myWeb.msException)
+                    oAdmXFrm.myWeb = oDBH.myWeb
                     Dim oXfrm As XmlElement = oAdmXFrm.xFrmFeedItem(nContentKey, oNewElmt, 0, cFeedURL)
 
                     If oXfrm.GetAttribute("itemupdated") = "true" Then

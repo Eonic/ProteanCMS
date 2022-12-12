@@ -63,9 +63,9 @@
 
 
 
-  <xsl:template match="Content[@type='Module' and @moduleType='Image']" mode="moduleTitle">
+  <!--<xsl:template match="Content[@type='Module' and @moduleType='Image']" mode="moduleTitle">
     <xsl:value-of select="@title"/>
-  </xsl:template>
+  </xsl:template>-->
 
   <xsl:template match="Content[@moduleType='Image']" mode="displayBrief">
     <xsl:param name="maxWidth"/>
