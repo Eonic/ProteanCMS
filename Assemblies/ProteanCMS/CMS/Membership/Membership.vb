@@ -579,7 +579,7 @@ Partial Public Class Cms
                                 twApi.twitterConsumerKey = moConfig("OauthTwitterId")
                                 twApi.twitterConsumerSecret = moConfig("OauthTwitterKey")
                                 'Get twitter user
-                                Dim twUsers As List(Of Protean.Integration.Directory.Twitter.User)
+                                'Dim twUsers As List(Of Protean.Integration.Directory.Twitter.User)   'Never used
 
 
                         End Select

@@ -1769,7 +1769,7 @@ DoOptions:
 
     Public Function CleanName(ByVal cName As String, Optional ByVal bLeaveAmp As Boolean = False) As String
 
-        Protean.Tools.Text.CleanName(cName, bLeaveAmp, False)
+        Return Protean.Tools.Text.CleanName(cName, bLeaveAmp, False)
 
     End Function
 
@@ -2225,7 +2225,7 @@ DoOptions:
             Dim oFsh As fsHelper
 
             Dim DatabaseName As String = goConfig("DatabaseName")
-            Dim DatabaseFilename As String
+            Dim DatabaseFilename As String = String.Empty
             Dim DatabaseFilepath As String = goServer.MapPath("/") & "..\data"
 
             Try

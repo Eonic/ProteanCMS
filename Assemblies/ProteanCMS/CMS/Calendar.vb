@@ -150,7 +150,7 @@ Partial Public Class Cms
 
                     'intTest = xmlEventsToday.Count
                     For Each xmlEvent In xmlEventsToday
-                        xmlEventFlagInDay = addElement(xmlDay, "item")
+                        xmlEventFlagInDay = addElement(CType(xmlDay, XmlElement), "item")
                         'Dim xmlDayEvent As XmlElement = myWeb.moPageXml.CreateElement("item")
                         xmlEventFlagInDay.SetAttribute("contentid", xmlEvent.GetAttribute("id"))
                         xmlEventFlagInDay.SetAttribute("dateStart", xmlEvent.SelectSingleNode("StartDate").InnerText)
@@ -173,8 +173,9 @@ Partial Public Class Cms
 
         Private Function dateToString(dInput As Date) As String
             Dim cProcessInfo As String = ""
+            Dim strResult As New Text.StringBuilder
             Try
-                Dim strResult As New Text.StringBuilder
+
                 strResult.Append(dInput.Year.ToString)
                 strResult.Append(addLeadingZero(dInput.Month.ToString))
                 strResult.Append(addLeadingZero(dInput.Day.ToString))
@@ -183,6 +184,7 @@ Partial Public Class Cms
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "dateToString", ex, cProcessInfo))
+                Return Nothing
             End Try
 
         End Function
@@ -238,16 +240,17 @@ Partial Public Class Cms
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addLeadingZero", ex, cProcessInfo))
+                Return Nothing
             End Try
 
         End Function
 
 
         Private Function getDateXpath(dCurrent As Date, sContentType As String) As String
-
-            Dim cProcessInfo As String = ""
+            Dim strXpath As New Text.StringBuilder
+            Dim cProcessInfo As String = "getDateXpath"
             Try
-                Dim strXpath As New Text.StringBuilder
+
                 strXpath.Append("/Page/Contents/Content[@type='" & sContentType & "'")
                 strXpath.Append(" and ")
                 strXpath.Append("number(translate(StartDate, '-', '')) <= " & dateToString(dCurrent))
@@ -261,6 +264,7 @@ Partial Public Class Cms
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDateXpath", ex, cProcessInfo))
+                Return Nothing
             End Try
 
         End Function

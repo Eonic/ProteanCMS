@@ -12,7 +12,7 @@ namespace Protean.Models
     {
         private XmlElement OrderElmt;
         public System.Collections.Specialized.NameValueCollection moConfig;
-        private System.Web.HttpServerUtility moServer;
+       // private System.Web.HttpServerUtility moServer;  //never used
 
         private double nFirstPayment;
         private double nRepeatPayment;
@@ -22,16 +22,16 @@ namespace Protean.Models
         private DateTime dStartDate;
 
         private string sPaymentMethod;
-        private string sTransactionRef;
+        private string sTransactionRef = string.Empty;
         private string sDescription;
 
-        private string sGivenName;
-        private string sBillingAddress1;
-        private string sBillingAddress2;
-        private string sBillingTown;
-        private string sBillingCounty;
-        private string sBillingPostcode;
-        private string sEmail;
+        //private string sGivenName;
+        //private string sBillingAddress1;  //never used all strings
+        //private string sBillingAddress2;
+        //private string sBillingTown;
+        //private string sBillingCounty;
+        //private string sBillingPostcode;
+        //private string sEmail;
 
         public XmlDocument moPageXml;
 
