@@ -6819,6 +6819,7 @@ processFlow:
                                 Next
                             End If
                             '
+
                             If (myWeb.moRequest("OptionName_" & nProductId) IsNot Nothing) Then
                                 AddProductOption(nItemID, myWeb.moRequest("OptionName_" & nProductId), myWeb.moRequest("OptionValue_" & nProductId))
                             End If
@@ -9436,6 +9437,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 'Insert code into tblcartOrder
                 Dim oInstance As XmlDataDocument = New XmlDataDocument
                 Dim oElmt As XmlElement
+                Dim oeResponseElmt As XmlElement = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response")
+                Dim ReceiptId As String = (oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value).ToString()
+                Dim Amount As Double = Convert.ToDouble(oCartListElmt.GetAttribute("total"))
+                Dim nItemID As Integer = 0 'ID of the cart item record
+                Dim oDs As DataSet
 
                 oInstance.AppendChild(oInstance.CreateElement("instance"))
                 oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)
@@ -9449,7 +9455,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 addNewTextNode("nCartUserDirId", oElmt, "0")
                 addNewTextNode("nPayMthdId", oElmt, "0")
                 addNewTextNode("cPaymentRef", oElmt)
-                addNewTextNode("cCartXml", oElmt, oCartListElmt.OuterXml())
+                addNewTextNode("cCartXml", oElmt, oCartListElmt.SelectSingleNode("/Order").OuterXml)
                 addNewTextNode("nShippingMethodId", oElmt, oCartListElmt.GetAttribute("shippingType"))
                 addNewTextNode("cShippingDesc", oElmt, oCartListElmt.GetAttribute("shippingDesc"))
                 addNewTextNode("nShippingCost", oElmt, oCartListElmt.GetAttribute("shippingCost"))
@@ -9468,17 +9474,30 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 End If
 
                 mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
-                Dim nProductKey As Long = Convert.ToInt64(oCartListElmt.SelectSingleNode("/Item/@contentId").InnerText)
 
-                Dim nQuantity As Long = Convert.ToInt64(oCartListElmt.SelectSingleNode("/Item/@quantity").InnerText)
                 mnProcessId = 1
+                Dim oItem As XmlNode
+                If (oCartListElmt.SelectSingleNode("/Item") IsNot Nothing) Then
+                    For Each oItem In (oCartListElmt.SelectNodes("Item"))
 
-                AddItem(nProductKey, nQuantity, Nothing, "",,, True,,)
-                Dim oeResponseElmt As XmlElement = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response")
-                Dim ReceiptId As String = (oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value).ToString()
-                Dim Amount As Double = Convert.ToDouble(oCartListElmt.GetAttribute("total"))
+                        Dim nProductKey As Long = Convert.ToInt64(oItem.Attributes("contentId").InnerText)
 
-                ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
+                        Dim nQuantity As Long = Convert.ToInt64(oItem.Attributes("quantity").InnerText)
+                        AddItem(nProductKey, nQuantity, Nothing, "",,, True,,)
+
+                        Dim sSql As String = "Select nCartItemKey from tblCartItem c where nCartOrderId=" & mnCartId & " and (select count(*) from tblCartItem where nParentId=c.nCartItemKey and nCartOrderId=" & mnCartId & " )=0"
+
+                        oDs = myWeb.moDbHelper.GetDataSet(sSql.ToString, "tblCartOrder", "Discounts")
+                        If oDs.Tables("tblCartOrder").Rows.Count > 0 Then
+                            nItemID = Convert.ToInt32(oDs.Tables("tblCartOrder").Rows(0)("nCartItemKey"))
+                        End If
+                        Dim cOptionName As String = oItem.SelectSingleNode("/Item/Item/Name").InnerText
+                        Dim nOptionCost As Double = oItem.SelectSingleNode("/Item/Item/@price").InnerText
+                        AddProductOption(nItemID, cOptionName, nOptionCost)
+                    Next
+                    ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
+                End If
+
                 Return strcFreeShippingMethods
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
