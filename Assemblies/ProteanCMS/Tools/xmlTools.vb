@@ -262,6 +262,7 @@ Partial Public Module xmlTools
             Return oElem
         Catch ex As Exception
             Err.Raise(8000, "Adding" & cNodeName, ex.Message)
+            Return Nothing
         End Try
     End Function
 
@@ -460,7 +461,7 @@ Public Class XmlHelper
                     ClassName = ClassName.Replace(".", "_") & sCompileVersion
                     If mbCompiled Then
 
-                        Dim assemblyInstance As [Assembly]
+                        Dim assemblyInstance As [Assembly] = Nothing
                         AssemblyPath = goServer.MapPath(compiledFolder) & ClassName & ".dll"
                         Dim CalledType As System.Type
 
@@ -515,17 +516,6 @@ Public Class XmlHelper
                     End If
                 Catch ex As Exception
 
-                    'To be removed.
-                    'Dim reflection As ReflectionTypeLoadException = TryCast(ex, ReflectionTypeLoadException)
-                    'If reflection IsNot Nothing Then
-                    '    For Each expct As Exception In reflection.LoaderExceptions
-                    '        Using eventLog As New EventLog("Application")
-                    '            eventLog.WriteEntry(expct.Message)
-                    '            eventLog.WriteEntry(expct.InnerException.Message)
-                    '        End Using
-                    '    Next
-                    'End If
-
                     transformException = ex
                     returnException(myWeb.msException, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug)
                     bError = True
@@ -558,6 +548,7 @@ Public Class XmlHelper
                 transformException = ex
                 ' returnException(myWeb.msException, "Protean.XmlHelper.Transform", "CurrentDomain_AssemblyResolve", ex, msXslFile, Nothing, gbDebug)
                 bError = True
+                Return Nothing
             End Try
 
         End Function

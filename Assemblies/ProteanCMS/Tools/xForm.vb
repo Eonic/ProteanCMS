@@ -579,7 +579,7 @@ Public Class xForm
         Dim bIsValid As Boolean = True
         Dim bIsThisBindValid As Boolean = True
         Dim oBindNode As XmlNode
-        Dim oBindElmt As XmlElement
+        Dim oBindElmt As XmlElement = Nothing
         Dim sAttribute As String
         Dim updateElmt As XmlElement
         'Dim sBind As String
@@ -1969,6 +1969,8 @@ Public Class xForm
                 oInputNode.SetAttribute("data-fv-not-empty___message", notEmptyMessage)
             End If
 
+            Return oInputNode
+
         Catch ex As Exception
             returnException(msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             Return Nothing
@@ -2608,7 +2610,7 @@ Public Class xForm
         Dim sServiceUrl As String
         Dim sSoapAction As String
         Dim sActionName As String
-        Dim SoapRequestXml As String
+        Dim SoapRequestXml As String = String.Empty
         Dim soapBody As String
         Dim sResponse As String
         Dim oSoapElmt As XmlElement

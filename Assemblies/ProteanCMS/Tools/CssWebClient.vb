@@ -137,7 +137,7 @@ Public Class CssWebClient
     ''' <remarks>Currently should not risk setting the maxRules to the limit, as the regex may not find all selectors according to specification</remarks>
     Private Sub ComputeCSS(ByVal css As String, ByVal maxRules As Integer)
         Dim matches As MatchCollection = Regex.Matches(css, "\}\n\.|\}\.|,\.|,\n\.") 'this regex expression will search for ',.' OR '}.' OR '}[linefeed].'
-        Dim cProcessInfo As String
+        Dim cProcessInfo As String = "ComputeCSS"
         Try
             If matches.Count > maxRules Then
                 If Not matches.Item(maxRules).Value = "}." Then
