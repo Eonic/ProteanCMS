@@ -335,10 +335,6 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Try
                     'current contentfilter id
 
-
-
-
-
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
                     'Dim cnt As Int16
@@ -346,7 +342,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     Dim filterForm As xForm = New xForm(myWeb)
 
                     filterForm.NewFrm(formName)
-                    filterForm.submission(formName, "", "POST", "return form_check(this);")
+                    filterForm.submission(formName, "", "POST", "")
 
                     If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
                         If (Convert.ToString(myWeb.moRequest.Form("Submit")).ToLower.Contains("clear filters")) Then
@@ -404,13 +400,13 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     Dim whereSQL As String = ""
 
-                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "ShowExperiences")
+                    'filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "ShowExperiences")
                     'filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
                     filterForm.addValues()
 
-                    If (filterForm.isSubmitted) Then
+                    ' If (filterForm.isSubmitted) Then
 
-                        filterForm.updateInstanceFromRequest()
+                    filterForm.updateInstanceFromRequest()
                         filterForm.validate()
 
                         If (filterForm.valid) Then
@@ -463,7 +459,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             Next
 
                         End If
-                    End If
+                    ' End If
 
 
 

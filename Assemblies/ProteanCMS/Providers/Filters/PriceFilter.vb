@@ -62,7 +62,7 @@ Namespace Providers
                             If (aPrice.Length <> 0) Then
                                 For cnt = 0 To aPrice.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().InnerText
-                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
+                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", " filter-applied", "", oXml.InnerText)
                                 Next
 
                             Else
