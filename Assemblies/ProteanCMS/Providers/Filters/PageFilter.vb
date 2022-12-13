@@ -77,13 +77,14 @@ Namespace Providers
                                 For cnt = 0 To aPages.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().InnerText
                                     'sValue = oFormGroup
-                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "btn filter-applied", "fa-xmark")
                                 Next
 
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
+                                'oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
+                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-xmark")
                             End If
                         End If
                     End If
