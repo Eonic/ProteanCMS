@@ -13,8 +13,7 @@ Imports System
 Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
 Imports System.Collections.Generic
-
-
+Imports System.Windows
 
 Partial Public Class Cms
 
@@ -588,7 +587,7 @@ Partial Public Class Cms
 
                     If myWeb.mnUserId > 0 And mnEwUserId = 0 Then mnEwUserId = myWeb.mnUserId
                     'MEMB - eEDIT
-                    If myWeb.goApp("bFullCartOption") = True Then
+                    If myWeb.moCtx.Application("bFullCartOption") = True Then
                         bFullCartOption = True
                     Else
                         bFullCartOption = False

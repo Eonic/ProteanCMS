@@ -9247,7 +9247,7 @@
 					Date/Time
 				</th>
 				<xsl:for-each select="Item[last()]/cActivityXml/descendant-or-self::*">
-					<xsl:if test="count(*)=0 or local-name()='Attachements'">
+					<xsl:if test="count(*)=0 or local-name()='Attachements' or local-name()='Attachments'">
 						<th>
 							<xsl:value-of select="local-name()"/>
 						</th>
@@ -9284,9 +9284,9 @@
 		</td>
 	</xsl:template>
 
-	<xsl:template match="Attachements" mode ="Report_ColsValues">
+	<xsl:template match="Attachements | Attachments" mode ="Report_ColsValues">
 		<td>
-			<xsl:for-each select="Attachement ">
+			<xsl:for-each select="Attachement | Attachments ">
 				<xsl:value-of select="Content/@name"/>
 			</xsl:for-each>
 		</td>
