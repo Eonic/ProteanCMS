@@ -33,7 +33,7 @@ Public Class Indexer
     Dim mcIndexCopyFolder As String = ""
     Dim oIndexWriter As IndexWriter 'Lucene class
 
-    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate 'impersonate for access
+    Dim moImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate 'impersonate for access
     Dim bNewIndex As Boolean = False 'if we need a new index or just add to one
     Dim bIsError As Boolean = False
     Dim dStartTime As Date
@@ -630,10 +630,16 @@ Public Class Indexer
         'PerfMon.Log("Indexer", "StartIndex")
         Dim cProcessInfo As String = ""
         Try
-            oImp = New Protean.Tools.Security.Impersonate 'for access
-            If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+            If moConfig("AdminAcct") <> "" Then
+                moImp = New Protean.Tools.Security.Impersonate 'for access
+                If moImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                    Err.Raise(108, , "Indexer did not authenticate with system credentials")
+                End If
+
+            End If
+
                 EmptyFolder(mcIndexWriteFolder)
-                If gbDebug Then
+                    If gbDebug Then
                     EmptyFolder(mcIndexCopyFolder)
                 End If
 
@@ -646,10 +652,8 @@ Public Class Indexer
 
                 oIndexWriter = New IndexWriter(indexDir, New StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT), bCreate, maxLen) 'create the index writer
 
-            Else
-                Err.Raise(108, , "Indexer did not validate")
 
-            End If
+
         Catch ex As Exception
             cExError &= ex.StackTrace.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
@@ -1024,7 +1028,10 @@ Public Class Indexer
             oIndexWriter.Dispose()
             EmptyFolder(mcIndexReadFolder)
             CopyFolderContents(mcIndexWriteFolder, mcIndexReadFolder)
-            oImp.UndoImpersonation()
+            If moConfig("AdminAcct") <> "" Then
+                moImp.UndoImpersonation()
+                moImp = Nothing
+            End If
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)

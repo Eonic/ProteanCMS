@@ -345,9 +345,8 @@ Public Class Setup
             Case "NewDB"
                 buildDatabase(True)
             Case "RestoreZip"
-                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                Dim oDB As New Protean.Tools.Database
 
+                Dim oDB As New Protean.Tools.Database
                 oDB.DatabaseServer = goConfig("DatabaseServer")
                 oDB.DatabaseUser = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
                 oDB.DatabasePassword = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
@@ -578,7 +577,12 @@ Recheck:
                             AddResponse(oFsh.OptimiseImages(folderPath, 0, 0, False, goConfig("TinifyKey"), folderPrefix))
                             cStep = 1
                         End If
-
+                    Case "RunTests"
+                        If goRequest("ewCmd2") = "Do" Then
+                            Dim oTests As New Protean.Tests()
+                            AddResponse(oTests.runTests())
+                            cStep = 1
+                        End If
                     Case "ImportContent"
                         If goRequest("ewCmd2") = "Do" Then
                             Dim oIC As New ContentImport(Me)
@@ -653,6 +657,7 @@ Recheck:
                 oElmt5 = appendMenuItem(oElmt2, "Import V3 Data", "ImportV3", , , "fa-level-up")
 
                 oElmt6 = appendMenuItem(oElmt1, "Maintenance", "Maintenance", , , "fa-wrench")
+                oElmt10 = appendMenuItem(oElmt6, "Run Tests", "RunTests", , , "fa-check-square-o")
                 oElmt7 = appendMenuItem(oElmt6, "Update Database Schema", "UpgradeDB", , , "fa-level-up")
                 oElmt8 = appendMenuItem(oElmt6, "Clean Audit Table", "CleanAudit", , , "fa-eraser")
                 oElmt9 = appendMenuItem(oElmt6, "Import Content", "ImportContent", , , "fa-arrow-circle-right")
@@ -2183,10 +2188,16 @@ DoOptions:
 
                 MyBase.addSubmit(oFrmElmt, "", "Backup Database")
 
-                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
+                Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                If goConfig("AdminAcct") <> "" Then
+                    oImp = New Protean.Tools.Security.Impersonate
+                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
+                    Else
+                        MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
+                    End If
+                End If
 
-                    MyBase.Instance.InnerXml = "<backup name=""" & DatabaseName & """ filename=""" & DatabaseFilename & """ filepath=""" & DatabaseFilepath & """/>"
+                MyBase.Instance.InnerXml = "<backup name=""" & DatabaseName & """ filename=""" & DatabaseFilename & """ filepath=""" & DatabaseFilepath & """/>"
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
@@ -2204,10 +2215,11 @@ DoOptions:
 
                         End If
                     End If
-                    oImp.UndoImpersonation()
 
-                Else
-                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
+
+                If goConfig("AdminAcct") <> "" Then
+                    oImp.UndoImpersonation()
+                    oImp = Nothing
                 End If
 
                 MyBase.addValues()

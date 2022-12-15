@@ -1366,8 +1366,6 @@ Public Class Cms
                                     End If
 
                                     Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
-
-
                                     If moConfig("XslTimeout") <> "" Then
                                         oTransform.TimeOut = moConfig("XslTimeout")
                                     End If
@@ -1396,25 +1394,21 @@ Public Class Cms
                                             gnResponseCode = 500
                                             moResponse.Write(textWriter.ToString())
                                         End If
+
                                     ElseIf moResponseType = pageResponseType.pdf Then
                                         mcContentType = "application/pdf"
                                         'Next we transform using into FO.Net Xml
 
-                                        '  If moTransform Is Nothing Then
+
                                         Dim styleFile2 As String = CType(goServer.MapPath(mcEwSiteXsl), String)
                                         PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                                         oTransform = New Protean.XmlHelper.Transform(Me, styleFile2, False)
-                                        ' End If
-
-                                        msException = ""
-
-
                                         oTransform.mbDebug = gbDebug
 
+                                        msException = ""
                                         icPageWriter = New IO.StringWriter
 
                                         oTransform.ProcessTimed(moPageXml, icPageWriter)
-
 
                                         Dim foNetXml As String = icPageWriter.ToString
 
@@ -1438,9 +1432,6 @@ Public Class Cms
                                             rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
                                             ' rendererOpts.Kerning = True
                                             ' rendererOpts.EnableCopy = True
-
-                                            'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                                            'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
 
                                             Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
 
@@ -1510,9 +1501,10 @@ Public Class Cms
                                         oTransform.ProcessTimed(moPageXml, moResponse)
                                         PerfMon.Log("Web", "GetPageHTML-endxsl")
                                     End If
-
+                                    PerfMon.Log("Web", "GetPageHTML-endxsl")
+                                    oTransform.Close()
+                                    oTransform = Nothing
                                 End If
-
 
                                 'moResponse.SuppressContent = False
                                 If gnResponseCode <> 200 Then
@@ -1521,10 +1513,6 @@ Public Class Cms
                                     moResponse.TrySkipIisCustomErrors = True
                                     moResponse.StatusCode = gnResponseCode
                                 End If
-
-                                PerfMon.Log("Web", "GetPageHTML-endxsl")
-                                '  oTransform.Close()
-                                'oTransform = Nothing
 
                                 'we don't need this anymore.
                                 If Not ibIndexMode Then
@@ -7544,12 +7532,14 @@ Public Class Cms
                                 Dim fso As FileInfo = New FileInfo(strFilePath)
 
                                 If fso.Exists Then
-                                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                                    If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                                    Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                                    If moConfig("AdminAcct") <> "" Then
+                                        oImp = New Protean.Tools.Security.Impersonate
+                                        oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup"))
 
+                                    End If
 
-
-                                        Dim oFileStream As FileStream = New FileStream(strFilePath, FileMode.Open)
+                                    Dim oFileStream As FileStream = New FileStream(strFilePath, FileMode.Open)
                                         strFileSize = oFileStream.Length
 
                                         Dim Buffer(CInt(strFileSize)) As Byte
@@ -7573,7 +7563,7 @@ Public Class Cms
                                         objStream = Nothing
 
                                         oImp.UndoImpersonation()
-
+                                        oImp = Nothing
                                         'Activity Log
                                         If mnUserId <> "0" And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
                                             'NB: 30-03-2010 New check to add in the ArtId (original line is the 2nd, with ArtId hardcoded as 0?)
@@ -7584,7 +7574,11 @@ Public Class Cms
                                             End If
                                         End If
 
+                                    If moConfig("AdminAcct") <> "" Then
+                                        oImp.UndoImpersonation()
+                                        oImp = Nothing
                                     End If
+
 
                                 Else
                                     '------------------------------------------ 26-08-2008
@@ -8519,10 +8513,10 @@ Public Class Cms
 
         '  Try unloading appdomain
         Try
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+            ' Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             ' If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-
             ' AppDomain.Unload(AppDomain.CurrentDomain)
+            ' don't forget to undo and set oImp to nothing
             Return True
             'System.Web.HttpRuntime.UnloadAppDomain()
             ' Else
@@ -8605,39 +8599,41 @@ Public Class Cms
 
             PerfMon.Log(mcModuleName, "Create Path - Start")
             Dim sError As String = oFS.CreatePath(filepath)
+            oFS = Nothing
             PerfMon.Log(mcModuleName, "Create Path - End")
 
             If sError = "1" Then
-                PerfMon.Log(mcModuleName, "Impersonation - Start")
-                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-
+                Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                If moConfig("AdminAcct") <> "" Then
+                    PerfMon.Log(mcModuleName, "Impersonation - Start")
+                    oImp = New Protean.Tools.Security.Impersonate
+                    oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup"))
                     PerfMon.Log(mcModuleName, "Impersonation - End")
-                    PerfMon.Log(mcModuleName, "SavePage - start file write")
-                    If Alphaleonis.Win32.Filesystem.Directory.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & mcPageCacheFolder & filepath) Then
-                        If Not Alphaleonis.Win32.Filesystem.File.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath) Then
-                            Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+                End If
 
-                        Else
-                            cProcessInfo &= "<Error>File Locked: " & filepath & " - " & sError & "</Error>" & vbCrLf
-                            sError = cProcessInfo
-                        End If
+                If Alphaleonis.Win32.Filesystem.Directory.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & mcPageCacheFolder & filepath) Then
+                    If Not Alphaleonis.Win32.Filesystem.File.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath) Then
+                        PerfMon.Log(mcModuleName, "SavePage - start file write")
+                        Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+                        PerfMon.Log(mcModuleName, "SavePage - end file write")
                     Else
-                        cProcessInfo &= "<Error>Directory Not Exists: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                        cProcessInfo &= "<Error>File Locked: " & filepath & " - " & sError & "</Error>" & vbCrLf
                         sError = cProcessInfo
                     End If
-                    PerfMon.Log(mcModuleName, "SavePage - end file write")
                 Else
-                    cProcessInfo &= "<Error>Create File: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                    cProcessInfo &= "<Error>Directory Not Exists: " & filepath & " - " & sError & "</Error>" & vbCrLf
                     sError = cProcessInfo
                 End If
-                oImp.UndoImpersonation()
-                oImp = Nothing
+
+                If moConfig("AdminAcct") <> "" Then
+                    oImp.UndoImpersonation()
+                    oImp = Nothing
+                End If
+
             Else
                 cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
                 sError = cProcessInfo
             End If
-            oFS = Nothing
             If sError <> "1" Then
                 Throw New System.Exception("An Error writing the page.")
             End If

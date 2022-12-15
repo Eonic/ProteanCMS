@@ -24,6 +24,7 @@ Imports Protean.Tools
 Imports System
 Imports System.Reflection
 Imports Lucene.Net.Support
+Imports System.ServiceModel.Channels
 
 Partial Public Class Cms
     Public Class Admin
@@ -530,44 +531,46 @@ ProcessFlow:
                     Case "RewriteRules"
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                        Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                        If moConfig("AdminAcct") <> "" Then
+                            oImp = New Protean.Tools.Security.Impersonate
+                            If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                            End If
+                        End If
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
+                        Dim rewriteXml As New XmlDocument
+                        rewriteXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                        Dim defaultXml As New XmlDocument
+                        defaultXml.Load(myWeb.goServer.MapPath("/ewcommon/setup/rootfiles/RewriteRules_config.xml"))
 
-                            Dim rewriteXml As New XmlDocument
-                            rewriteXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
-
-                            Dim defaultXml As New XmlDocument
-                            defaultXml.Load(myWeb.goServer.MapPath("/ewcommon/setup/rootfiles/RewriteRules_config.xml"))
-                            Dim oRule As XmlElement
-                            For Each oRule In rewriteXml.DocumentElement.SelectNodes("rule")
-                                Dim rulename As String = oRule.GetAttribute("name")
-                                Try
-                                    Dim defaultRule As XmlElement = defaultXml.SelectSingleNode("descendant-or-self::rule[@name=" & xPathEscapeQuote(rulename) & "]")
-                                    If defaultRule Is Nothing Then
-                                        oRule.SetAttribute("matchDefault", "create")
+                        Dim oRule As XmlElement
+                        For Each oRule In rewriteXml.DocumentElement.SelectNodes("rule")
+                            Dim rulename As String = oRule.GetAttribute("name")
+                            Try
+                                Dim defaultRule As XmlElement = defaultXml.SelectSingleNode("descendant-or-self::rule[@name=" & xPathEscapeQuote(rulename) & "]")
+                                If defaultRule Is Nothing Then
+                                    oRule.SetAttribute("matchDefault", "create")
+                                Else
+                                    If oRule.OuterXml = defaultRule.OuterXml Then
+                                        oRule.SetAttribute("matchDefault", "true")
                                     Else
-                                        If oRule.OuterXml = defaultRule.OuterXml Then
-                                            oRule.SetAttribute("matchDefault", "true")
-                                        Else
-                                            oRule.SetAttribute("matchDefault", "reset")
-                                        End If
+                                        oRule.SetAttribute("matchDefault", "reset")
                                     End If
-                                Catch ex As Exception
-                                    oRule.SetAttribute("matchDefault", ex.Message)
-                                End Try
+                                End If
+                            Catch ex As Exception
+                                oRule.SetAttribute("matchDefault", ex.Message)
+                            End Try
+                        Next
+                        Dim rulesElmt As XmlElement = moPageXML.CreateElement("RewriteRules")
+                        rulesElmt.InnerXml = rewriteXml.DocumentElement.OuterXml
+                        oPageDetail.AppendChild(rulesElmt)
 
-
-
-
-                            Next
-                            Dim rulesElmt As XmlElement = moPageXML.CreateElement("RewriteRules")
-                            rulesElmt.InnerXml = rewriteXml.DocumentElement.OuterXml
-                            oPageDetail.AppendChild(rulesElmt)
-
+                        If moConfig("AdminAcct") <> "" Then
+                            oImp.UndoImpersonation()
+                            oImp = Nothing
                         End If
 
                         sAdminLayout = "RewriteRules"
@@ -4318,46 +4321,53 @@ from tblContentIndexDef"
 
 
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
+                        Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                        If myWeb.moConfig("AdminAcct") <> "" Then
+                            oImp = New Protean.Tools.Security.Impersonate
+                            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
+                            End If
+                        End If
 
-                            Dim content As String
+                        Dim content As String
 
-                            'check not read only
-                            Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeLessFile))
-                            oFileInfo.IsReadOnly = False
+                        'check not read only
+                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeLessFile))
+                        oFileInfo.IsReadOnly = False
 
-                            Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeLessFile))
-                                content = reader.ReadToEnd()
-                                reader.Close()
-                            End Using
+                        Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeLessFile))
+                            content = reader.ReadToEnd()
+                            reader.Close()
+                        End Using
 
-                            Dim oElmt As XmlElement
-                            For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
-                                Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
-                                Dim searchText As String = "(?<=@" & variableName & ":).*(?=;)"
-                                Dim replaceText As String = oElmt.GetAttribute("value").Trim
+                        Dim oElmt As XmlElement
+                        For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
+                            Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
+                            Dim searchText As String = "(?<=@" & variableName & ":).*(?=;)"
+                            Dim replaceText As String = oElmt.GetAttribute("value").Trim
 
-                                'handle image files in CSS
-                                If LCase(replaceText).EndsWith(".gif") Or LCase(replaceText).EndsWith(".png") Or LCase(replaceText).EndsWith(".jpg") Then
-                                    replaceText = " '" & replaceText & "'"
-                                Else
-                                    replaceText = " " & replaceText
-                                End If
+                            'handle image files in CSS
+                            If LCase(replaceText).EndsWith(".gif") Or LCase(replaceText).EndsWith(".png") Or LCase(replaceText).EndsWith(".jpg") Then
+                                replaceText = " '" & replaceText & "'"
+                            Else
+                                replaceText = " " & replaceText
+                            End If
 
-                                content = Regex.Replace(content, searchText, replaceText)
-                            Next
+                            content = Regex.Replace(content, searchText, replaceText)
+                        Next
 
-                            Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeLessFile))
-                                writer.Write(content)
-                                writer.Close()
-                            End Using
+                        Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeLessFile))
+                            writer.Write(content)
+                            writer.Close()
+                        End Using
 
+                        If myWeb.moConfig("AdminAcct") <> "" Then
                             oImp.UndoImpersonation()
+                            oImp = Nothing
                         End If
                     End If
 
                 End If
+
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "updateLessVariables", ex, "", cProcessInfo, gbDebug)
@@ -4379,10 +4389,14 @@ from tblContentIndexDef"
 
 
 
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
+                    Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                    If myWeb.moConfig("AdminAcct") <> "" Then
+                        oImp = New Protean.Tools.Security.Impersonate
+                        If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
+                        End If
+                    End If
 
-                        Dim content As String
+                    Dim content As String
 
                         'check not read only
                         Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
@@ -4408,8 +4422,9 @@ from tblContentIndexDef"
                             writer.Write(content)
                             writer.Close()
                         End Using
-
+                    If myWeb.moConfig("AdminAcct") <> "" Then
                         oImp.UndoImpersonation()
+                        oImp = Nothing
                     End If
                 End If
 
