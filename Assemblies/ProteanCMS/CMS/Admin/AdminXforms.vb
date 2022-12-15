@@ -6396,9 +6396,6 @@ Partial Public Class Cms
                                 oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                                 For Each oRow In oDs.Tables("Order").Rows
                                     If (IsRefund IsNot Nothing) Then
-
-                                        moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
-
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
                                     Else
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And Error is: " & IsRefund & "'"
@@ -6406,9 +6403,11 @@ Partial Public Class Cms
                                 Next
                                 myWeb.moDbHelper.updateDataset(oDs, "Order")
 
+                                If (IsRefund IsNot Nothing) Then
+                                    moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
+                                End If
                             End If
                         End If
-
                     End If
                     MyBase.addValues()
                     Return MyBase.moXformElmt

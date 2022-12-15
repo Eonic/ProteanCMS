@@ -30,85 +30,6 @@ Public Class Tests
 
     End Sub
 
-    Public Function runTests() As String
-        Dim TestCount As Integer = 0
-        Dim TestResult As String = ""
-        Try
-            Dim testResponse As String = ""
-
-            testResponse = TestImpersonation()
-            If Not testResponse.StartsWith("Impersonation") Then
-                TestResult &= "<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>"
-            Else
-                TestResult &= "<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>"
-            End If
-            TestCount = TestCount + 1
-
-
-            testResponse = TestEmailSend()
-            If testResponse <> "Message Sent" Then
-                TestResult &= "<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>"
-            Else
-                TestResult &= "<p><i class=""fa fa-check text-success"">&#160;</i>Email Sent</p>"
-            End If
-            TestCount = TestCount + 1
-
-            testResponse = TestCreateFolder()
-            If Not testResponse.StartsWith("Folder Created") Then
-                TestResult &= "<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>"
-            Else
-                TestResult &= "<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>"
-            End If
-            TestCount = TestCount + 1
-
-
-            testResponse = TestWriteFile()
-            If Not testResponse.StartsWith("File Written") Then
-                TestResult &= "<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>"
-            Else
-                TestResult &= "<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>"
-            End If
-            TestCount = TestCount + 1
-
-            testResponse = TestWriteFileAlphaFS()
-            If Not testResponse.StartsWith("File Written") Then
-                TestResult &= "<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>"
-            Else
-                TestResult &= "<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>"
-            End If
-            TestCount = TestCount + 1
-
-            testResponse = TestDeleteFile()
-            If Not testResponse.StartsWith("File Deleted") Then
-                TestResult &= "<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>"
-            Else
-                TestResult &= "<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>"
-            End If
-            TestCount = TestCount + 1
-
-
-            testResponse = TestDeleteFolder()
-            If Not testResponse.StartsWith("Folder Deleted") Then
-                TestResult &= "<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>"
-            Else
-                TestResult &= "<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>"
-            End If
-            TestCount = TestCount + 1
-
-            '6 test the ability to update config settins
-            '7 test the ability to write to the index folder location
-
-            '9 database integrety tests
-
-            TestResult &= "<h1> " & CStr(TestCount) & " Tests Complete</h1>"
-
-            Return TestResult
-
-        Catch ex As Exception
-
-        End Try
-    End Function
-
     Public Function TestEmailSend() As String
         Try
             Dim errMsg As String = ""
@@ -144,6 +65,7 @@ Public Class Tests
             Dim oEw As Protean.Cms = New Protean.Cms
             oEw.InitializeVariables()
             Dim filepath As String = "/ewCache/"
+            Dim filename As String = "FS-TEST.html"
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
             If oEw.moConfig("AdminAcct") <> "" Then
                 oImp = New Protean.Tools.Security.Impersonate
@@ -153,9 +75,9 @@ Public Class Tests
                 End If
             End If
 
-            oEw.moFSHelper.SaveFile("FS-TEST.html", oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, System.Text.Encoding.Unicode.GetBytes(htmltotest))
+            oEw.moFSHelper.SaveFile(filename, oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, System.Text.Encoding.Unicode.GetBytes(htmltotest))
 
-            Return "File Written Using SaveFile :" & filepath
+            Return "File Written Using SaveFile :" & filepath & filename
 
             If oEw.moConfig("AdminAcct") <> "" Then
                 oImp.UndoImpersonation()
@@ -166,7 +88,6 @@ Public Class Tests
             Return ex.Message
         End Try
     End Function
-
 
     Public Function TestDeleteFile() As String
         Try
@@ -200,9 +121,6 @@ Public Class Tests
                 Return response
             End If
 
-
-
-
         Catch ex As Exception
             Return ex.Message
         End Try
@@ -210,7 +128,6 @@ Public Class Tests
 
     Public Function TestImpersonation() As String
         Try
-
 
             Dim oEw As Protean.Cms = New Protean.Cms
             oEw.InitializeVariables()
@@ -304,6 +221,27 @@ Public Class Tests
 
         Catch ex As Exception
             Return ex.Message
+        End Try
+    End Function
+
+    Public Function TestHtmlTidy() As String
+        Try
+
+
+            Dim htmltotest As String = "<h1>HTMLTidy is Tidying</H1>"
+
+            Dim sResponse As String = Protean.Tools.Text.tidyXhtmlFrag(htmltotest, True, True, "")
+
+            If sResponse.StartsWith("<h1>HTMLTidy is Tidying</h1>") Then
+                sResponse = "HTML Tidy is working"
+            End If
+
+            Return sResponse
+
+
+
+        Catch ex As Exception
+            Return ex.Message & "<br/>If server is 64 bit and failed to load tidy.dll reference and broke functionality. Get dll from below link with the version you want http://binaries.html-tidy.org/ Please fllow steps- Put tidyX86.dll, tidyX64.dll and tidy.dll in C:\Windows\System32 and it will start working."
         End Try
     End Function
 
