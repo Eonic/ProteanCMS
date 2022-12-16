@@ -52,7 +52,12 @@ Namespace Providers
                             priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
                         End If
 
-                        oXform.addOptionsFromSqlDataReader(priceFilterRange, oDr, "name", "value")
+                        While oDr.Read
+                            Dim name As String = aWeb.moCart.mcCurrency + Convert.ToString(oDr("minPrice")) + "-" + aWeb.moCart.mcCurrency + Convert.ToString(oDr("maxPrice")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
+                            Dim value As String = Convert.ToString(oDr("minPrice")) + "-" + Convert.ToString(oDr("maxPrice"))
+
+                            oXform.addOption(priceFilterRange, name, value, True)
+                        End While
                     End Using
                     If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
                         If (oXml.InnerText.Trim() <> String.Empty) Then
@@ -61,13 +66,13 @@ Namespace Providers
                             Dim aPrice() As String = oXml.InnerText.Split(",")
                             If (aPrice.Length <> 0) Then
                                 For cnt = 0 To aPrice.Length - 1
-                                    sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().InnerText
+                                    sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().FirstChild().InnerText
                                     oXform.addSubmit(oFromGroup, sText, sText, "submit", " filter-applied", "", oXml.InnerText)
                                 Next
 
                             Else
 
-                                sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
+                                sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
                                 oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
                             End If
                         End If

@@ -9512,8 +9512,10 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                         Dim nQuantity As Long = Convert.ToInt64(oItem.Attributes("quantity").InnerText)
                         AddItem(nProductKey, nQuantity, Nothing, "",,, True,,)
+                    Next
+                End If
 
-                        ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
+                ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
                 Return strcFreeShippingMethods
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)

@@ -76,7 +76,7 @@ Namespace Providers
                             Dim aPages() As String = oXml.InnerText.Split(",")
                             If (aPages.Length <> 0) Then
                                 For cnt = 0 To aPages.Length - 1
-                                    sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().InnerText
+                                    sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().FirstChild().InnerText
 
                                     oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "filter-applied", "fa-xmark")
 
@@ -84,7 +84,7 @@ Namespace Providers
 
                             Else
 
-                                sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
+                                sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
                                 'oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
                                 oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-xmark")
                             End If
