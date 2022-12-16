@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xForm" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>xform</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
+		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cFileLocation" nodeset="@contentFile" required="false()" type="string"/>
+    </bind>
+		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
+		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
+		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
+		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
+	</model>
+	
+	<group ref="EditContent">
+		<label>Edit xForm</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+
+					<alert>WARNING! Updating forms is an advanced task. Please contact your web-support rep for assistance.</alert>
+					<input bind="cModuleTitle" class="long">
+						<label>Title</label>
+					</input>
+					<input bind="cFileLocation" class="long">
+						<label>File Location</label>
+					</input>
+	
+				
+					<group>
+						<label>Sent Message</label>
+						<relatedContent search="find add" type="FormattedText" relationType="" maxRelationNo="1" direction="1way">
+							<label>Formatted Text</label>
+						</relatedContent>
+					</group>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+				
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
+					<!-- These hidden fields and bindings are required for the component-->
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="cModuleType" class="hidden">
+						<label>ModuleType</label>
+					</input>
+					<!-- end of hidden fields -->
+
+
+
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				</group>
+
+			</group>
+		</group>
+	</group>
+
+
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save xForm</label>
+		</submit>
+	</group>
+	
+</Content>
