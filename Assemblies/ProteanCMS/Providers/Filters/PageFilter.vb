@@ -61,9 +61,10 @@ Namespace Providers
 
                         'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                         While oDr.Read
-                            Dim name As String = Convert.ToString(oDr("cStructName")) + " " + Convert.ToString(oDr("ProductCount"))
+                            Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
                             Dim value As String = Convert.ToString(oDr("nStructKey"))
-                            oXform.addOption(pageFilterSelect, name, value)
+
+                            oXform.addOption(pageFilterSelect, name, value, True)
                         End While
 
                     End Using
@@ -76,8 +77,9 @@ Namespace Providers
                             If (aPages.Length <> 0) Then
                                 For cnt = 0 To aPages.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().InnerText
-                                    'sValue = oFormGroup
-                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "btn filter-applied", "fa-xmark")
+
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "filter-applied", "fa-xmark")
+
                                 Next
 
                             Else
