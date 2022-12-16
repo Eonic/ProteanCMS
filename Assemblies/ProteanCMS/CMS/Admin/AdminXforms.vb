@@ -42,6 +42,7 @@ Partial Public Class Cms
             Public goConfig As System.Collections.Specialized.NameValueCollection ' = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Public mbAdminMode As Boolean = False
             Public moRequest As System.Web.HttpRequest
+            Public moImp As Protean.Tools.Security.Impersonate = Nothing
 
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
             Shadows Event OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs)
@@ -51,6 +52,32 @@ Partial Public Class Cms
             End Sub
 
             'Public myWeb As Protean.Cms
+            Private Function startImp() As Boolean
+                Try
+                    If goConfig("AdminAcct") <> "" Then
+                        moImp = New Protean.Tools.Security.Impersonate
+                        Return moImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup"))
+                    Else
+                        Return Nothing
+                    End If
+
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Function
+
+            Private Sub endImp()
+                Try
+                    If goConfig("AdminAcct") <> "" Then
+                        moImp.UndoImpersonation()
+                        moImp = Nothing
+                    End If
+
+                Catch ex As Exception
+
+                End Try
+            End Sub
+
 
             Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
@@ -641,14 +668,14 @@ Partial Public Class Cms
 
                     Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
                     Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
 
-                        MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                    startImp()
 
-                        'code here to replace any missing nodes
-                        'all of the required config settings
-                        Dim aSettingValues() As String = Split("DatabaseType,DatabaseName,DatabaseAuth,DatabaseUsername,DatabasePassword,MailServer,RootPageId,BaseUrl,SiteXsl,ImageRootPath,DocRootPath,MediaRootPath,Membership,MailingList,NonAuthenticatedUsersGroupId,AuthenticatedUsersGroupId,RegisterBehaviour,RegisterRedirectPageId,Cart,Quote,Debug,CompiledTransform,SiteAdminName,SiteAdminEmail,ContentSearch,SiteSearch,SiteSearchPath,Subscriptions,ActivityLogging,IPLogging,GoogleContentTypes,ShowRelatedBriefContentTypes,ShowRelatedBriefDepth,VersionControl,LegacyRedirect,PageURLFormat,AllowContentDetailAccess", ",")
+                    MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+
+                    'code here to replace any missing nodes
+                    'all of the required config settings
+                    Dim aSettingValues() As String = Split("DatabaseType,DatabaseName,DatabaseAuth,DatabaseUsername,DatabasePassword,MailServer,RootPageId,BaseUrl,SiteXsl,ImageRootPath,DocRootPath,MediaRootPath,Membership,MailingList,NonAuthenticatedUsersGroupId,AuthenticatedUsersGroupId,RegisterBehaviour,RegisterRedirectPageId,Cart,Quote,Debug,CompiledTransform,SiteAdminName,SiteAdminEmail,ContentSearch,SiteSearch,SiteSearchPath,Subscriptions,ActivityLogging,IPLogging,GoogleContentTypes,ShowRelatedBriefContentTypes,ShowRelatedBriefDepth,VersionControl,LegacyRedirect,PageURLFormat,AllowContentDetailAccess", ",")
 
                         Dim i As Long
                         Dim oElmt As XmlElement
@@ -679,8 +706,8 @@ Partial Public Class Cms
                             End If
                         End If
 
-                        oImp.UndoImpersonation()
-                    End If
+                    endImp()
+
                     MyBase.addValues()
                     Return MyBase.moXformElmt
 
@@ -714,13 +741,11 @@ Partial Public Class Cms
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        startImp()
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
-
-                            Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
+                        Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
                             Dim oCgfSectName As String = oTemplateInstance.FirstChild.Name
                             Dim oCgfSectPath As String = "protean/" & oCgfSectName
@@ -796,8 +821,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -831,14 +855,12 @@ Partial Public Class Cms
                     Else
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                        startImp()
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
-
-                            Dim rewriteXml As New XmlDocument
+                        Dim rewriteXml As New XmlDocument
 
                             rewriteXml.Load(goServer.MapPath("/rewriteMaps.config"))
 
@@ -1006,10 +1028,7 @@ Partial Public Class Cms
                                 'clear this if we are loading the first form
                                 goSession("oTempInstance") = Nothing
                             End If
-
-
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -1044,13 +1063,12 @@ Partial Public Class Cms
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        startImp()
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
+                        Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
                             Dim oCgfSectName As String = "protean/" & oTemplateInstance.FirstChild.Name
                             Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
@@ -1177,8 +1195,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -1225,10 +1242,8 @@ Partial Public Class Cms
                         Dim oWebCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
                         Dim oThemeCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/theme")
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                            MyBase.Instance.InnerXml = oWebCgfSect.SectionInformation.GetRawXml & oThemeCgfSect.SectionInformation.GetRawXml
+                        startImp()
+                        MyBase.Instance.InnerXml = oWebCgfSect.SectionInformation.GetRawXml & oThemeCgfSect.SectionInformation.GetRawXml
 
                             Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
@@ -1288,8 +1303,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                     End If
 
 
@@ -5920,11 +5934,9 @@ Partial Public Class Cms
                     Else
                         'remove hyphens
                         cProviderType = Replace(cProviderType, "-", "")
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                            'replace the instance if it exists in the web.config
-                            If Not oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']") Is Nothing Then
+                        startImp()
+                        'replace the instance if it exists in the web.config
+                        If Not oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']") Is Nothing Then
                                 MyBase.Instance.InnerXml = oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']").OuterXml
                             End If
 
@@ -5957,8 +5969,7 @@ Partial Public Class Cms
                                     End If
                                 End If
                             End If
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                     End If
                     MyBase.addValues()
                     Return MyBase.moXformElmt
@@ -5995,10 +6006,8 @@ Partial Public Class Cms
 
                     'remove hyphens
                     cProviderType = Replace(cProviderType, "-", "")
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                        If MyBase.isSubmitted Then
+                    startImp()
+                    If MyBase.isSubmitted Then
                             MyBase.updateInstanceFromRequest()
                             MyBase.validate()
                             If MyBase.valid Then
@@ -6020,8 +6029,7 @@ Partial Public Class Cms
                                 fsHelper = Nothing
 
                             End If
-                        End If
-                        oImp.UndoImpersonation()
+                        endImp()
 
                     End If
 
@@ -6388,9 +6396,6 @@ Partial Public Class Cms
                                 oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                                 For Each oRow In oDs.Tables("Order").Rows
                                     If (IsRefund IsNot Nothing) Then
-
-                                        moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
-
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
                                     Else
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And Error is: " & IsRefund & "'"
@@ -6398,9 +6403,11 @@ Partial Public Class Cms
                                 Next
                                 myWeb.moDbHelper.updateDataset(oDs, "Order")
 
+                                If (IsRefund IsNot Nothing) Then
+                                    moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
+                                End If
                             End If
                         End If
-
                     End If
                     MyBase.addValues()
                     Return MyBase.moXformElmt
@@ -8041,10 +8048,8 @@ Partial Public Class Cms
                     Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                     Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/cart")
 
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                        MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                    startImp()
+                    MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
 
                         'code here to replace any missing nodes
                         'all of the required config settings
@@ -8079,8 +8084,8 @@ Partial Public Class Cms
                             End If
                         End If
 
-                        oImp.UndoImpersonation()
-                    End If
+                    endImp()
+
                     MyBase.addValues()
                     Return MyBase.moXformElmt
 

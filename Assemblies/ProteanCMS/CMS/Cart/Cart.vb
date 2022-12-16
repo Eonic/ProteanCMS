@@ -13,8 +13,7 @@ Imports System
 Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
 Imports System.Collections.Generic
-
-
+Imports System.Windows
 
 Partial Public Class Cms
 
@@ -588,7 +587,7 @@ Partial Public Class Cms
 
                     If myWeb.mnUserId > 0 And mnEwUserId = 0 Then mnEwUserId = myWeb.mnUserId
                     'MEMB - eEDIT
-                    If myWeb.goApp("bFullCartOption") = True Then
+                    If myWeb.moCtx.Application("bFullCartOption") = True Then
                         bFullCartOption = True
                     Else
                         bFullCartOption = False
@@ -6820,6 +6819,7 @@ processFlow:
                                 Next
                             End If
                             '
+
                             If (myWeb.moRequest("OptionName_" & nProductId) IsNot Nothing) Then
                                 AddProductOption(nItemID, myWeb.moRequest("OptionName_" & nProductId), myWeb.moRequest("OptionValue_" & nProductId))
                             End If
@@ -9513,19 +9513,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                         Dim nQuantity As Long = Convert.ToInt64(oItem.Attributes("quantity").InnerText)
                         AddItem(nProductKey, nQuantity, Nothing, "",,, True,,)
 
-                        Dim sSql As String = "Select nCartItemKey from tblCartItem c where nCartOrderId=" & mnCartId & " and (select count(*) from tblCartItem where nParentId=c.nCartItemKey and nCartOrderId=" & mnCartId & " )=0"
-
-                        oDs = myWeb.moDbHelper.GetDataSet(sSql.ToString, "tblCartOrder", "Discounts")
-                        If oDs.Tables("tblCartOrder").Rows.Count > 0 Then
-                            nItemID = Convert.ToInt32(oDs.Tables("tblCartOrder").Rows(0)("nCartItemKey"))
-                        End If
-                        Dim cOptionName As String = oItem.SelectSingleNode("/Item/Item/Name").InnerText
-                        Dim nOptionCost As Double = oItem.SelectSingleNode("/Item/Item/@price").InnerText
-                        AddProductOption(nItemID, cOptionName, nOptionCost)
-                    Next
-                    ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
-                End If
-
+                        ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
                 Return strcFreeShippingMethods
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)

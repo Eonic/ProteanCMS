@@ -27,7 +27,7 @@ Public Class ewTidyTest : Implements IHttpHandler, IRequiresSessionState
                 Dim gcProjectPath = ""
                 Try
 
-                    Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & ptn.goServer.MapPath("/" & gcProjectPath) & filepath & "\test.html", htmltotest, System.Text.Encoding.UTF8)
+                    '    Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & ptn.goServer.MapPath("/" & gcProjectPath) & filepath & "\test.html", htmltotest, System.Text.Encoding.UTF8)
 
                     context.Response.Write("file created<br/>")
                     context.Response.Write("<a href=""/ewCache/FSTest/Test.html"">Load File</a><br/>")

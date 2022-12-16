@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.58.19</AssemblyVersion>
+    <AssemblyVersion>6.0.58.64</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -434,7 +434,8 @@
     <Compile Include="CMS\Cart\PaymentProviders\SkipPayment.vb" />
     <Compile Include="CMS\Cart\Subscriptions.Modules.vb" />
     <Compile Include="CMS\Content\Contact.vb" />
-    <Compile Include="ExternalSynchronisation.vb" />
+    <Compile Include="Setup\Tests.vb" />
+    <Compile Include="Tools\ExternalSynchronisation.vb" />
     <Compile Include="Providers\Filter.BaseProvider.vb" />
     <Compile Include="Providers\Filters\OfferFilter.vb" />
     <Compile Include="Providers\Filters\PageFilter.vb" />
@@ -458,7 +459,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Setup.vb" />
+    <Compile Include="Setup\Setup.vb" />
     <Compile Include="Tools\Startup.vb" />
     <Compile Include="Tools\Configuration.vb" />
     <Compile Include="Tools\CSVHelper.vb" />
@@ -568,7 +569,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="eonic.snk" />
-    <None Include="EonicWeb Release Notes.docx" />
     <None Include="My Project\DataSources\System.Xml.XmlElement.datasource" />
     <None Include="My Project\DataSources\System.Xml.XmlNode.datasource" />
     <None Include="My Project\Settings.settings">
@@ -810,7 +810,6 @@
     <Content Include="bin\icsharpcode.sharpziplib.dll" />
     <Content Include="bin\icsharpcode.sharpziplib.pdb" />
     <Content Include="DebugReadme.txt" />
-    <Content Include="ReleaseNotes.txt" />
     <None Include="Service References\proteancms.com\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.vb</LastGenOutput>

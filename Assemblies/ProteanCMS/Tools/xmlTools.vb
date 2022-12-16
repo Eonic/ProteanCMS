@@ -1053,26 +1053,29 @@ Public Class XmlHelper
             Dim sProcessInfo As String = "ClearXSLTassemblyCache"
             Try
 
-                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
+                Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                If myWeb.moConfig("AdminAcct") = "" Then
+                    oImp = New Protean.Tools.Security.Impersonate
+                    oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup"))
+                End If
 
-                    Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
+                Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
                     sProcessInfo = "clearing " & cWorkingDirectory
                     Dim di As New IO.DirectoryInfo(cWorkingDirectory)
                     Dim fi As IO.FileInfo
 
-                    For Each fi In di.EnumerateFiles
-                        Try
-                            Dim fso As New fsHelper()
-                            fso.DeleteFile(fi.FullName)
-                        Catch ex2 As Exception
-                            ' returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
-                        End Try
-                    Next
+                For Each fi In di.EnumerateFiles
+                    Try
+                        Dim fso As New fsHelper()
+                        fso.DeleteFile(fi.FullName)
+                    Catch ex2 As Exception
+                        ' returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
+                    End Try
+                Next
 
+                If myWeb.moConfig("AdminAcct") = "" Then
                     oImp.UndoImpersonation()
                 End If
-
 
                 'reset config to on
                 Protean.Config.UpdateConfigValue(myWeb, "protean/web", "CompliedTransform", "on")

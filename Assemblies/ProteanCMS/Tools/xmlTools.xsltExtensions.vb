@@ -2241,11 +2241,16 @@ Partial Public Module xmlTools
                         End If
 
                     Else
+                        Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                        If myWeb.moConfig("AdminAcct") <> "" Then
+                            oImp = New Protean.Tools.Security.Impersonate
+                            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
+                                sReturnString = "Admin Account logon Failure"
+                                Exit Try
+                            End If
+                        End If
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
-
-                            Dim appPath As String = myWeb.moRequest.ApplicationPath
+                        Dim appPath As String = myWeb.moRequest.ApplicationPath
                             If appPath.EndsWith("ewcommon") Then
                                 CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../")
                             End If
@@ -2330,12 +2335,12 @@ Partial Public Module xmlTools
 
                             oCssWebClient = Nothing
                             fsh = Nothing
+
+                        If myWeb.moConfig("AdminAcct") <> "" Then
                             If Not IsNothing(oImp) Then
                                 oImp.UndoImpersonation()
                                 oImp = Nothing
                             End If
-                        Else
-                            sReturnString = "Admin Account logon Failure"
                         End If
                     End If
                 End If
