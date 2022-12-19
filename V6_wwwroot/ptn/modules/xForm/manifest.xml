@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+
+	<ModuleTypes>
+		<ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
+			<Module type="xForm" formPath="xForm" icon="far fa-file" name="xForm"></Module>
+		</ModuleGroup>
+	</ModuleTypes>
+</PageLayouts>
