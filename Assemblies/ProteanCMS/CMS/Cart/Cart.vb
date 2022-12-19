@@ -7186,31 +7186,34 @@ processFlow:
             Dim cUniqueLink As String = ""
             Dim cProcessInfo As String = ""
             Try
+                If moDBHelper.checkTableColumnExists("tblCart", "nAmountReceived") Then
+                    ' If the cPaymentType is deposit then we need to make a link, otherwise we need to get the paymentReceived details.
+                    If cPaymentType = "deposit" Then
+                        ' Get the unique link from the cart
+                        cUniqueLink = ", cSettlementID='" & oRoot.GetAttribute("settlementID") & "' "
+                    Else
+                        ' Get the amount received so far
 
-                ' If the cPaymentType is deposit then we need to make a link, otherwise we need to get the paymentReceived details.
-                If cPaymentType = "deposit" Then
-                    ' Get the unique link from the cart
-                    cUniqueLink = ", cSettlementID='" & oRoot.GetAttribute("settlementID") & "' "
-                Else
-                    ' Get the amount received so far
-                    sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
-                    Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
-                        If oDr.HasRows Then
-                            While oDr.Read
-                                nAmountReceived = CDbl("0" & oDr("nAmountReceived"))
-                                cUniqueLink = ", cSettlementID='OLD_" & oDr("cSettlementID") & "' "
-                            End While
-                        End If
-                    End Using
+                        sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
+                        Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            If oDr.HasRows Then
+                                While oDr.Read
+                                    nAmountReceived = CDbl("0" & oDr("nAmountReceived"))
+                                    cUniqueLink = ", cSettlementID='OLD_" & oDr("cSettlementID") & "' "
+                                End While
+                            End If
+                        End Using
+                    End If
+
+                    nAmountReceived = nAmountReceived + nPaymentAmount
+
+                    sSql = "update tblCartOrder set nAmountReceived = " & nAmountReceived & ", nLastPaymentMade= " & nPaymentAmount & cUniqueLink & " where nCartOrderKey = " & mnCartId
+                    moDBHelper.ExeProcessSql(sSql)
+
                 End If
 
-                nAmountReceived = nAmountReceived + nPaymentAmount
-
-                sSql = "update tblCartOrder set nAmountReceived = " & nAmountReceived & ", nLastPaymentMade= " & nPaymentAmount & cUniqueLink & " where nCartOrderKey = " & mnCartId
-                moDBHelper.ExeProcessSql(sSql)
-
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateCartDeposit", ex, "", cProcessInfo, gbDebug)
             Finally
                 'oDr = Nothing
             End Try
