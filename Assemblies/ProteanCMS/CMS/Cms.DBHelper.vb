@@ -47,7 +47,7 @@ Partial Public Class Cms
 
         Private moCtx As System.Web.HttpContext
 
-        Private goApp As System.Web.HttpApplicationState
+        '  Private goApp As System.Web.HttpApplicationState
 
         Public goRequest As System.Web.HttpRequest
         Public goResponse As System.Web.HttpResponse
@@ -83,7 +83,7 @@ Partial Public Class Cms
                     moCtx = aWeb.moCtx
                 End If
                 'If Not (moCtx Is Nothing) Then
-                goApp = moCtx.Application
+                '  goApp = moCtx.Application
                 goRequest = moCtx.Request
                 goResponse = moCtx.Response
                 goSession = moCtx.Session
@@ -144,7 +144,7 @@ Partial Public Class Cms
                 End If
 
                 If Not moCtx Is Nothing Then
-                    goApp = moCtx.Application
+                    '  goApp = moCtx.Application
                     goRequest = moCtx.Request
                     goResponse = moCtx.Response
                     goSession = moCtx.Session
@@ -174,7 +174,7 @@ Partial Public Class Cms
                     moCtx = System.Web.HttpContext.Current
                 End If
 
-                goApp = moCtx.Application
+                ' goApp = moCtx.Application
                 goRequest = moCtx.Request
                 goResponse = moCtx.Response
                 goSession = moCtx.Session
@@ -858,7 +858,7 @@ Partial Public Class Cms
             Dim appcheckName As String = dbObjectName
             Try
                 If String.IsNullOrEmpty(dbObjectName) Then
-                    appcheckName = goApp("getdb-" & dbObjectName)
+                    appcheckName = moCtx.Application("getdb-" & dbObjectName)
                     If String.IsNullOrEmpty(appcheckName) Then
 
                         If MyBase.checkDBObjectExists("b" & dbObjectName) Then
@@ -868,7 +868,7 @@ Partial Public Class Cms
                         End If
 
                         'goApp.Lock()
-                        goApp("getdb-" & dbObjectName) = appcheckName
+                        moCtx.Application("getdb-" & dbObjectName) = appcheckName
                         'goApp.UnLock()
 
                     End If
@@ -6071,7 +6071,7 @@ restart:
                     sSql = "DELETE FROM dbo.tblXmlCache "
                     'clear from app level too
                     If Not myWeb Is Nothing Then
-                        myWeb.goApp("AdminStructureCache") = Nothing
+                        myWeb.moCtx.Application("AdminStructureCache") = Nothing
                     End If
                     MyBase.ExeProcessSql(sSql)
                 End If

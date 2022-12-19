@@ -173,7 +173,7 @@ Public Class Messaging
 
             Dim moDbhelper As New Protean.Cms.dbHelper(dbConn, 1)
             moDbhelper.moPageXml = RootElmt.OwnerDocument
-            Dim AttachmentsElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachements")
+            Dim AttachmentsElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachments")
             RootElmt.ParentNode.AppendChild(AttachmentsElmt)
             If Not (String.IsNullOrEmpty(ids)) Then
                 sSql = "select * from tblContent where nContentKey in (" & ids & ")"
@@ -181,7 +181,7 @@ Public Class Messaging
                 For Each dsRow In oDs.Tables("Item").Rows
                     strFilePath = moDbhelper.getContentFilePath(dsRow, xPath)
 
-                    Dim AttachmentElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachement")
+                    Dim AttachmentElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachment")
                     AttachmentsElmt.AppendChild(AttachmentElmt)
                     AttachmentElmt.AppendChild(moDbhelper.GetContentDetailXml(dsRow("nContentKey")))
                     AttachmentElmt.SetAttribute("file", strFilePath)

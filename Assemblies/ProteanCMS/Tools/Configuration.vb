@@ -49,9 +49,15 @@ Public Class Config
             'update config values
             Dim oCfg As System.Configuration.Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
             Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(configPath)
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
-                Dim oConfigDoc As New XmlDocument
+            Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+
+            If myWeb.moConfig("AdminAcct") <> "" Then
+                oImp = New Protean.Tools.Security.Impersonate
+                oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup"))
+            End If
+
+
+            Dim oConfigDoc As New XmlDocument
                 oConfigDoc.LoadXml(oCgfSect.SectionInformation.GetRawXml)
                 Dim oelmt As XmlElement
                 oelmt = oConfigDoc.DocumentElement.SelectSingleNode("add[@key='" & name & "']")
@@ -64,9 +70,15 @@ Public Class Config
                     oConfigDoc.DocumentElement.AppendChild(oelmt)
                 End If
                 oCgfSect.SectionInformation.RestartOnExternalChanges = False
-                oCgfSect.SectionInformation.SetRawXml(oConfigDoc.DocumentElement.OuterXml)
-                oCfg.Save()
+            oCgfSect.SectionInformation.SetRawXml(oConfigDoc.DocumentElement.OuterXml)
+
+            oCfg.Save()
+
+            If myWeb.moConfig("AdminAcct") <> "" Then
+                oImp.UndoImpersonation()
+                oImp = Nothing
             End If
+
             Return True
         Catch ex As Exception
             Return False
