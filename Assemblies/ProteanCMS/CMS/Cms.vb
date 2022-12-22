@@ -1593,7 +1593,7 @@ Public Class Cms
             End If
             PerfMon.Log("Web", "GetPageHTML-Final")
             PerfMon.Write()
-            moResponse.End()
+            'moResponse.End()
         End Try
 
     End Sub

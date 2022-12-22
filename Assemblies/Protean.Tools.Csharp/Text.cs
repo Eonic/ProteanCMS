@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Runtime.InteropServices;
 
 namespace Protean.Tools
 {
@@ -389,6 +390,43 @@ namespace Protean.Tools
                 return input;
             }
         }
+
+        public static string TruncateString(string input, long limit, string endWith)
+        {
+            try
+            {
+                string truncate = input;
+
+                if (input.Length > limit)
+                {
+
+                    // Truncate the string minus the ellipses (...) 
+                    long newLimit = limit - endWith.Length;
+                    truncate = input.Substring(0, (int)newLimit);
+
+                    // Set a default return value
+                    long index = limit;
+
+                    // Now find the last letter before a word boundary
+                    Regex oRe = new Regex(@"\w\b");
+                    MatchCollection oMatches = oRe.Matches(truncate);
+                    if (oMatches.Count > 2)
+                        // We have matches (more than the beginning and the end of the string at least), get the index of the last but one 
+                        index = oMatches[oMatches.Count - 2].Index + 1;
+
+
+                    //truncate = truncate.Substring(0, (int)index) + "...";
+                    truncate = truncate + endWith;
+                }
+
+                return truncate;
+            }
+            catch (Exception)
+            {
+                return input;
+            }
+        }
+
 
         /// <summary>
         /// String Based Coalesce - i.e. returns the first non Nothing, NUll And Empty string
