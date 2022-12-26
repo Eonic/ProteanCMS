@@ -330,6 +330,8 @@ Partial Public Class Cms
                                 Dim oDiscountMessage As XmlElement = oCartXML.OwnerDocument.CreateElement("DiscountMessage")
                                 oDiscountMessage.InnerXml = "<span class=""msg-1030"">The code you have provided is invalid for this transaction</span>"
                                 oCartXML.AppendChild(oDiscountMessage)
+                                'If promociode appiled and then it is inactive then also remove from cart also
+                                RemoveDiscountCode()
                             End If
                             Return 0
                         Else
