@@ -95,10 +95,15 @@ Namespace Providers
                 End Try
             End Sub
 
-            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement) As String
                 Dim cProcessInfo As String = "ApplyFilter"
                 Try
 
+                    'Get the filter type parent or child based on the value of the parentPageId attribute
+                    Dim bParentPageId As Boolean = False
+                    If (FilterConfig.Attributes("parentPageId").Value IsNot Nothing) Then
+                        bParentPageId = Convert.ToBoolean(Convert.ToInt32(FilterConfig.Attributes("parentPageId").Value))
+                    End If
 
                     Dim cPageIds As String = String.Empty
 
@@ -107,15 +112,20 @@ Namespace Providers
 
                     End If
 
+
+
                     If (cPageIds <> String.Empty) Then
 
-                        'aWeb.moSession("PageFilter") = cPageIds
+
 
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = " AND "
                         End If
-                        cWhereSql = " nStructId IN (" + cPageIds + ")"
-
+                        If (bParentPageId) Then
+                            cWhereSql = " nStructId IN (" + cPageIds + ")"
+                        Else
+                            cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId=" & cPageIds & ")"
+                        End If
                     End If
                     Return cWhereSql
                 Catch ex As Exception

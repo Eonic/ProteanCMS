@@ -67,13 +67,13 @@ Namespace Providers
                             If (aPrice.Length <> 0) Then
                                 For cnt = 0 To aPrice.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().FirstChild().InnerText
-                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPrice(cnt), " filter-applied", "", oXml.InnerText)
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), " filter-applied", "", oXml.InnerText)
                                 Next
 
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPrice(cnt), "filter-applied", "", oXml.InnerText)
+                                oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), "filter-applied", "", oXml.InnerText)
                             End If
                         End If
                     End If
@@ -83,7 +83,7 @@ Namespace Providers
             End Sub
 
 
-            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement) As String
                 Dim cProcessInfo As String = "ApplyFilter"
                 Try
 
