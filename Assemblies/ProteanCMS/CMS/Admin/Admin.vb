@@ -922,6 +922,7 @@ ProcessFlow:
                         bClearEditContext = False
 
                         oPageDetail.AppendChild(moAdXfm.xFrmEditContent(0, myWeb.moRequest("type"), CLng(myWeb.moRequest("pgid")), myWeb.moRequest("name"), , nAdditionId))
+
                         If moAdXfm.valid Then
                             sAdminLayout = ""
                             mcEwCmd = myWeb.moSession("ewCmd")
@@ -936,6 +937,30 @@ ProcessFlow:
 
                             oPageDetail.RemoveAll()
 
+                            'Update newly added review count - code added by nita
+                            If moConfig("UpdateNewAddedReviewFlag") <> "" Then
+                                If nContentId = 0 And myWeb.moSession("contentParId") > 0 And myWeb.moRequest("cContentReviewer") <> "" Then
+                                    Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
+                                    oTempInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, myWeb.moSession("contentParId"))
+                                    If oTempInstance.InnerXml <> "" Then
+                                        Dim oProduct As XmlElement = oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content")
+                                        If Not oProduct Is Nothing Then
+                                            If oProduct.GetAttribute("ratingCount") <> "" Then
+                                                Dim RatingCount As String = oProduct.GetAttribute("ratingCount")
+                                                Dim FinalCount As String = RatingCount + 1
+                                                oProduct.SetAttribute("ratingCount", FinalCount)
+                                                myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, oTempInstance)
+                                                'Dim sSql As String = "Update tblContent set cContentXmlBrief= '" + oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content").OuterXml.Replace("'", "''").Replace("  ", "") + "'  where nContentKey=" + Convert.ToInt32(myWeb.moSession("contentParId"))
+                                                'myWeb.moDbHelper.ExeProcessSql(sSql)
+                                            End If
+
+                                        End If
+
+                                    End If
+                                    myWeb.moSession("contentParId") = Nothing
+                                End If
+                            End If
+
                             If myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""
@@ -948,7 +973,6 @@ ProcessFlow:
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
-
 
 
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
@@ -966,6 +990,8 @@ ProcessFlow:
                         If Not (IsNumeric(cVersionKey)) Then cVersionKey = "0"
                         nContentId = 0
                         oPageDetail.AppendChild(moAdXfm.xFrmEditContent(myWeb.moRequest("id"), "", CLng(myWeb.moRequest("pgid")), , , nContentId, , , CLng(cVersionKey)))
+                        'Update newly added review count
+                        myWeb.moSession("contentParId") = myWeb.moSession("mcRelParent")
 
                         If moAdXfm.valid Then
                             bAdminMode = False
@@ -1020,6 +1046,8 @@ ProcessFlow:
                             sAdminLayout = "AdminXForm"
 
                         End If
+
+
 
                     Case "PublishContent"
 

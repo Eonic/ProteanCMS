@@ -85,6 +85,7 @@ Namespace Providers
 
             Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement) As String
                 Dim cProcessInfo As String = "ApplyFilter"
+                Dim cPriceCond As String = ""
                 Try
 
                     Dim priceRange() As String
@@ -96,16 +97,22 @@ Namespace Providers
                     End If
 
                     If (cSelectedPrice <> String.Empty) Then
-
-                        priceRange = cSelectedPrice.Split("-")
-
+                        Dim cPriceLst As String() = cSelectedPrice.Split(New Char() {","c})
+                        For Each cSchema As String In cPriceLst
+                            priceRange = cSchema.Split("-")
+                            If cPriceCond <> "" Then
+                                cPriceCond = cPriceCond + " or  ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1))
+                            Else
+                                cPriceCond = cPriceCond + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1))
+                            End If
+                        Next
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = cWhereSql + " AND "
                         End If
 
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
-                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" + cDefinitionName + "'"
-                        cWhereSql = cWhereSql + " And ci.nNumberValue between " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
+                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "'"
+                        cWhereSql = cWhereSql + " And (ci.nNumberValue between " + cPriceCond + "))"
 
 
                     End If
