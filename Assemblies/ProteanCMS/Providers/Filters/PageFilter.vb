@@ -78,7 +78,7 @@ Namespace Providers
                                 For cnt = 0 To aPages.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().FirstChild().InnerText
 
-                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "filter-applied", "fa-xmark")
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "filter-applied", "fa-times")
 
                                 Next
 
@@ -86,7 +86,7 @@ Namespace Providers
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
                                 'oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
-                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-xmark")
+                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-times")
                             End If
                         End If
                     End If
@@ -124,7 +124,7 @@ Namespace Providers
                         If (bParentPageId) Then
                             cWhereSql = " nStructId IN (" + cPageIds + ")"
                         Else
-                            cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId=" & cPageIds & ")"
+                            cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & cPageIds & "))"
                         End If
                     End If
                     Return cWhereSql
