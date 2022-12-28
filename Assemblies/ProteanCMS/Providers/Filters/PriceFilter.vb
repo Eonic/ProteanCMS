@@ -101,9 +101,9 @@ Namespace Providers
                         For Each cSchema As String In cPriceLst
                             priceRange = cSchema.Split("-")
                             If cPriceCond <> "" Then
-                                cPriceCond = cPriceCond + " or  ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1))
+                                cPriceCond = cPriceCond + " or ( ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
                             Else
-                                cPriceCond = cPriceCond + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1))
+                                cPriceCond = cPriceCond + "( ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
                             End If
                         Next
                         If (cWhereSql <> String.Empty) Then
@@ -112,7 +112,7 @@ Namespace Providers
 
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
                         cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "'"
-                        cWhereSql = cWhereSql + " And (ci.nNumberValue between " + cPriceCond + "))"
+                        cWhereSql = cWhereSql + cPriceCond + ")"
 
 
                     End If
