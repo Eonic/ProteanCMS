@@ -27,6 +27,10 @@
 				//wRunner plugin initialization in jQuery
 				$('.WeightSlider').wRunner({
 				type: 'range',
+				rangeValue: {
+					 minValue: $("#From").val(),
+					maxValue: $("#To").val(),
+                 },
 				})
 				
 				
