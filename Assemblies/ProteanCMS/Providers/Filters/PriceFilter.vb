@@ -67,13 +67,13 @@ Namespace Providers
                             If (aPrice.Length <> 0) Then
                                 For cnt = 0 To aPrice.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().FirstChild().InnerText
-                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPrice(cnt), " filter-applied", "", oXml.InnerText)
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), " filter-applied", "fa-times")
                                 Next
 
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPrice(cnt), "filter-applied", "", oXml.InnerText)
+                                oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), "filter-applied", "fa-times")
                             End If
                         End If
                     End If
@@ -83,7 +83,7 @@ Namespace Providers
             End Sub
 
 
-            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement) As String
                 Dim cProcessInfo As String = "ApplyFilter"
                 Dim cPriceCond As String = ""
                 Try
@@ -97,22 +97,24 @@ Namespace Providers
                     End If
 
                     If (cSelectedPrice <> String.Empty) Then
-                        Dim cPriceLst As String() = cSelectedPrice.Split(New Char() {","c})
-                        For Each cSchema As String In cPriceLst
-                            priceRange = cSchema.Split("-")
-                            If cPriceCond <> "" Then
-                                cPriceCond = cPriceCond + " or  ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1))
-                            Else
-                                cPriceCond = cPriceCond + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1))
-                            End If
-                        Next
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = cWhereSql + " AND "
                         End If
 
+                        Dim cPriceLst As String() = cSelectedPrice.Split(New Char() {","c})
+                        For Each cSchema As String In cPriceLst
+                            priceRange = cSchema.Split("-")
+                            If cPriceCond <> "" Then
+                                cPriceCond = cPriceCond + " or ( ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
+                            Else
+                                cPriceCond = cPriceCond + " ( ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
+                            End If
+
+                        Next
+                        cPriceCond = cPriceCond + ")"
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
-                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "'"
-                        cWhereSql = cWhereSql + " And (ci.nNumberValue between " + cPriceCond + "))"
+                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "' AND ("
+                        cWhereSql = cWhereSql + cPriceCond + ")"
 
 
                     End If

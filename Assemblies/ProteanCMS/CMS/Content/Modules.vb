@@ -447,13 +447,14 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                                     Dim o As Object = Activator.CreateInstance(calledType)
 
-                                    Dim args(3) As Object
-                                    args(0) = myWeb
+                                Dim args(4) As Object
+                                args(0) = myWeb
                                     args(1) = whereSQL
                                     args(2) = filterForm
-                                    args(3) = oFrmGroup
+                                args(3) = oFrmGroup
+                                args(4) = oFilterElmt
 
-                                    whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
+                                whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
                                 End If
 
                             Next
