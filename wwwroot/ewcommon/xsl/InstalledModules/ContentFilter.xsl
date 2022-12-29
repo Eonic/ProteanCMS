@@ -8,7 +8,43 @@
 		</xsl:choose>
 	
 	</xsl:template>
-	
 
+	<xsl:template match="Content[@type='Module' and @contentType='ContentFilter']" mode="contentJS">
+
+		<link rel="stylesheet" href="/ewthemes/Intotheblue2019/js/WrunnerRangeSlider/css/wrunner-default-theme.css" />
+		<script src="/ewthemes/Intotheblue2019/js/WrunnerRangeSlider/js/wrunner-native.js" >
+			<xsl:text> </xsl:text>
+		</script>
+		<script src="/ewthemes/Intotheblue2019/js/WrunnerRangeSlider/js/wrunner-jquery.js" >
+			<xsl:text> </xsl:text>
+		</script>
+		<script>
+			
+			
+			$(document).ready(function () {
+					
+				
+				//wRunner plugin initialization in jQuery
+				$('.WeightSlider').wRunner({
+				type: 'range',
+				})
+				
+				
+				
+			});
+			$('.WeightSlider').click(function(){
+			var sWeight=$('.WeightSlider')[0].innerText;
+			if(sWeight!=undefined){
+				if(sWeight!=''){
+					var aWeight = sWeight.split("\n");
+					$("#From").val(aWeight[0]);
+					$("#To").val(aWeight[1]);
+					 document.getElementById("ContentFilter").submit();
+				}
+			}
+			})
+		</script>
+		
+	</xsl:template>
 
 </xsl:stylesheet>
