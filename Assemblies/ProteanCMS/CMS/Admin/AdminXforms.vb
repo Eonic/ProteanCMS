@@ -9259,6 +9259,7 @@ Partial Public Class Cms
                     Dim cDefinitionName As String = ""
                     Dim cContentValueXpath As String = ""
                     Dim bBriefNotDetail As String = ""
+                    Dim bProductRefForSKU As String = ""
 
                     Dim sSqlcheck As String = ""
                     Dim lookupsSingleDataset As DataSet
@@ -9274,6 +9275,7 @@ Partial Public Class Cms
                             cDefinitionName = lookupsSingleDataset.Tables(0).Rows(0)("cDefinitionName").ToString
                             cContentValueXpath = lookupsSingleDataset.Tables(0).Rows(0)("cContentValueXpath").ToString
                             bBriefNotDetail = lookupsSingleDataset.Tables(0).Rows(0)("bBriefNotDetail").ToString
+                            bProductRefForSKU = lookupsSingleDataset.Tables(0).Rows(0)("bProductRefForSKU").ToString
 
                         End If
                     End If
@@ -9281,9 +9283,9 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditProductGroup")
                     If indexId > 0 Then
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & bBriefNotDetail & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" & bProductRefForSKU & "</bProductRefForSKU></tblContentIndexDef>"
                     Else
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" & "0" & "</bProductRefForSKU> </tblContentIndexDef>"
                     End If
 
                     If indexId > 0 Then
@@ -9320,10 +9322,16 @@ Partial Public Class Cms
                     MyBase.addInput(oGrp1Elmt, "cContentValueXpath", True, "XPath")
                     MyBase.addBind("cContentValueXpath", "tblContentIndexDef/cContentValueXpath", "true()")
 
-                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bProductRefForSKU", True, "Parent Ref", ApperanceTypes.Minimal)
                     MyBase.addOption(oSelElmt, "Yes", "1")
                     MyBase.addOption(oSelElmt, "No", "0",)
-                    MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
+                    MyBase.addBind("bProductRefForSKU", "tblContentIndexDef/bProductRefForSKU", "false()")
+
+
+                    'oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
+                    'MyBase.addOption(oSelElmt, "Yes", "1")
+                    'MyBase.addOption(oSelElmt, "No", "0",)
+                    'MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
 
                     MyBase.addInput(oGrp1Elmt, "nKeywordGroupName", True, "nKeywordGroupName", "hidden")
                     MyBase.addBind("nKeywordGroupName", "tblContentIndexDef/nKeywordGroupName")

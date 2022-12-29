@@ -4070,7 +4070,7 @@ listItems:
                             GoTo listItems
                         End If
                         GoTo listItems
-                    Case "update", "updateAllRules"
+                    Case "updateAllRules"
 
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
 
@@ -4087,20 +4087,37 @@ listItems:
                             End If
                         End If
                         GoTo listItems
-                        'Case "updateAllRules"
+                    Case "update"
 
-                        '    SchemaNameForUpdate = "null"
-                        '    sSql = "spScheduleToUpdateIndexTable"
-                        '        Dim arrParms As Hashtable = New Hashtable
-                        '        arrParms.Add("SchemaName", SchemaNameForUpdate)
-                        '        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
-                        '        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
-                        '            oPageDetail.InnerXml = ""
-                        '            indexId = Nothing
-                        '            GoTo listItems
-                        '        End If
+                        If Not myWeb.moRequest("SchemaName") = Nothing Then
+                            SchemaNameForUpdate = myWeb.moRequest("SchemaName")
+                            If Not moConfig("FilterIndexITBCust") = "" Then
+                                sSql = "spUpdateFilterIndex"
+                                Dim arrParms As Hashtable = New Hashtable
+                                arrParms.Add("SchemaName", SchemaNameForUpdate)
+                                arrParms.Add("IndexId", indexId)
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
+                                If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                    oPageDetail.InnerXml = ""
+                                    indexId = Nothing
+                                    GoTo listItems
+                                End If
+                            Else
 
-                        '    GoTo listItems
+                                sSql = "spScheduleToUpdateIndexTable"
+                                Dim arrParms As Hashtable = New Hashtable
+                                arrParms.Add("SchemaName", SchemaNameForUpdate)
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
+                                If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                    oPageDetail.InnerXml = ""
+                                    indexId = Nothing
+                                    GoTo listItems
+                                End If
+                            End If
+                        End If
+                        GoTo listItems
 
                     Case Else
 listItems:
@@ -4109,7 +4126,7 @@ listItems:
                         If indexId = Nothing Then
                             'list Lookup Lists
                             sSql = "select nContentIndexDefKey, CASE WHen nContentIndexDataType = 1 Then 'Int' when nContentIndexDataType=2 Then 'String' Else 'Date' End As nContentIndexDataType,
-cContentSchemaName, cDefinitionName, cContentValueXpath, Case When bBriefNotDetail=0 Then 'false' Else 'True' End As bBriefNotDetail, nKeywordGroupName
+     cContentSchemaName, cDefinitionName, cContentValueXpath, Case When bBriefNotDetail=0 Then 'false' Else 'True' End As bBriefNotDetail, nKeywordGroupName
 from tblContentIndexDef"
 
                             indexesDataset = myWeb.moDbHelper.GetDataSet(sSql, "indexkey", "indexkeys")
@@ -4122,7 +4139,7 @@ from tblContentIndexDef"
 
                                 indexesDataset.Tables(0).Columns("nContentIndexDefKey").ColumnMapping = MappingType.Attribute
                                 indexesDataset.Tables(1).Columns("Name").ColumnMapping = MappingType.Attribute
-
+                                indexesDataset.Tables(0).Columns("cDefinitionName").ColumnMapping = MappingType.Attribute
                                 ' lookupsDataset.Tables(0).Columns(2).ColumnMapping = MappingType.Attribute
                                 indexesDataset.Relations.Add("rel1",
                                 indexesDataset.Tables(1).Columns("Name"),
@@ -4398,30 +4415,30 @@ from tblContentIndexDef"
 
                     Dim content As String
 
-                        'check not read only
-                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
-                        oFileInfo.IsReadOnly = False
+                    'check not read only
+                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
+                    oFileInfo.IsReadOnly = False
 
-                        Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeXslFile))
-                            content = reader.ReadToEnd()
-                            reader.Close()
-                        End Using
+                    Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeXslFile))
+                        content = reader.ReadToEnd()
+                        reader.Close()
+                    End Using
 
-                        Dim oElmt As XmlElement
-                        For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
-                            Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
+                    Dim oElmt As XmlElement
+                    For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
+                        Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
 
-                            Dim searchText As String = "(?<=<xsl:variable name=""" & variableName & """>).*(?=</xsl:variable>)"
+                        Dim searchText As String = "(?<=<xsl:variable name=""" & variableName & """>).*(?=</xsl:variable>)"
 
-                            Dim replaceText As String = oElmt.GetAttribute("value").Trim
+                        Dim replaceText As String = oElmt.GetAttribute("value").Trim
 
-                            content = Regex.Replace(content, searchText, replaceText)
-                        Next
+                        content = Regex.Replace(content, searchText, replaceText)
+                    Next
 
-                        Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeXslFile))
-                            writer.Write(content)
-                            writer.Close()
-                        End Using
+                    Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeXslFile))
+                        writer.Write(content)
+                        writer.Close()
+                    End Using
                     If myWeb.moConfig("AdminAcct") <> "" Then
                         oImp.UndoImpersonation()
                         oImp = Nothing
