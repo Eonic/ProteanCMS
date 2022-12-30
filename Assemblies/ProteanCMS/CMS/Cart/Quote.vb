@@ -46,7 +46,7 @@ Partial Public Class Cms
         End Sub
 
         Private Overloads Sub InitializeVariables()
-            PerfMon.Log("Quote", "InitializeVariables")
+            'PerfMon.Log("Quote", "InitializeVariables")
             'Author:        Trevor Spink
             'Copyright:     Eonic Ltd 2006
             'Date:          2006-10-04
@@ -55,7 +55,7 @@ Partial Public Class Cms
             '   sets the global variables and initialises the current cart
             moCartConfig = WebConfigurationManager.GetWebApplicationSection("protean/quote")
             Dim sSql As String
-            Dim oDr As SqlDataReader
+            'Dim oDr As SqlDataReader
             mcOrderType = "Quote"
             cOrderReference = ""
             mcModuleName = "Eonic.Quote"
@@ -103,7 +103,7 @@ Partial Public Class Cms
                 End If
                 If myWeb.mnUserId > 0 And mnEwUserId = 0 Then mnEwUserId = myWeb.mnUserId
                 'MEMB - eEDIT
-                If myWeb.goApp("bFullCartOption") = True Then
+                If myWeb.moCtx.Application("bFullCartOption") = True Then
                     bFullCartOption = True
                 Else
                     bFullCartOption = False
@@ -150,20 +150,20 @@ Partial Public Class Cms
                     '   cart exists
                     sSql = "select * from tblCartOrder where (nCartStatus < 7 or nCartStatus = 10) and nCartOrderKey = " & mnCartId & " and not(cCartSessionId like 'OLD_%')"
 
-                    oDr = moDBHelper.getDataReader(sSql)
-                    If oDr.HasRows Then
-                        While oDr.Read
-                            mnGiftListId = oDr("nGiftListId")
-                            mnTaxRate = CDbl("0" & oDr("nTaxRate"))
-                            mnProcessId = CLng("0" & oDr("nCartStatus"))
-                        End While
-                    Else
-                        ' Cart no longer exists - a quit command has probably been issued.  Clear the session
-                        mnCartId = 0
-                        mnProcessId = 0
-                        mcCartCmd = ""
-                    End If
-                    oDr.Close()
+                    Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                        If oDr.HasRows Then
+                            While oDr.Read
+                                mnGiftListId = oDr("nGiftListId")
+                                mnTaxRate = CDbl("0" & oDr("nTaxRate"))
+                                mnProcessId = CLng("0" & oDr("nCartStatus"))
+                            End While
+                        Else
+                            ' Cart no longer exists - a quit command has probably been issued.  Clear the session
+                            mnCartId = 0
+                            mnProcessId = 0
+                            mcCartCmd = ""
+                        End If
+                    End Using
                     If mnCartId = 0 Then
                         EndSession()
                     End If
@@ -180,38 +180,39 @@ Partial Public Class Cms
                         Else
                             sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='cart' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "' and DATEDIFF(hh,a.dInsertDate,GETDATE())<24"
                         End If
-                        oDr = moDBHelper.getDataReader(sSql)
-                        If oDr.HasRows Then
-                            While oDr.Read
-                                mnGiftListId = oDr("nGiftListId")
-                                mnCartId = oDr("nCartOrderKey") ' get cart id
-                                mnProcessId = oDr("nCartStatus") ' get cart status
-                                mnTaxRate = oDr("nTaxRate")
-                                If Not (myWeb.moRequest("settlementRef") Is Nothing) Then
+                        Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            If oDr.HasRows Then
+                                While oDr.Read
+                                    mnGiftListId = oDr("nGiftListId")
+                                    mnCartId = oDr("nCartOrderKey") ' get cart id
+                                    mnProcessId = oDr("nCartStatus") ' get cart status
+                                    mnTaxRate = oDr("nTaxRate")
+                                    If Not (myWeb.moRequest("settlementRef") Is Nothing) Then
 
-                                    ' Set eh commands for a settlement
-                                    mcSubmitText = "Go To Checkout"
-                                    mnProcessId = 5
+                                        ' Set eh commands for a settlement
+                                        mcSubmitText = "Go To Checkout"
+                                        mnProcessId = 5
 
-                                    ' If a cart has been found, we need to update the session ID in it.
-                                    If oDr("cCartSessionId") <> mcSessionId Then
-                                        moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
+                                        ' If a cart has been found, we need to update the session ID in it.
+                                        If oDr("cCartSessionId") <> mcSessionId Then
+                                            moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" & mcSessionId & "' where nCartOrderKey = " & mnCartId)
+                                        End If
+
+                                        ' Reactivate the order in the database
+                                        moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+
                                     End If
-
-                                    ' Reactivate the order in the database
-                                    moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
-
-                                End If
-                                If mnProcessId > 5 Then
-                                    ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
-                                    EndSession()
-                                    mnCartId = 0
-                                    mnProcessId = 0
-                                    mcCartCmd = ""
-                                End If
-                            End While
-                            oDr.Close()
-                        End If
+                                    If mnProcessId > 5 Then
+                                        ' Cart has passed a status of "Succeeded" - we can't do anything to this cart. Clear the session.
+                                        EndSession()
+                                        mnCartId = 0
+                                        mnProcessId = 0
+                                        mcCartCmd = ""
+                                    End If
+                                End While
+                                oDr.Close()
+                            End If
+                        End Using
                     End If
 
                 End If
@@ -220,12 +221,12 @@ Partial Public Class Cms
                 returnException(myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug)
                 'close()
             Finally
-                oDr = Nothing
+                'oDr = Nothing
             End Try
         End Sub
 
         Public Shadows Sub close()
-            PerfMon.Log("Quote", "close")
+            'PerfMon.Log("Quote", "close")
             Dim cProcessInfo As String = ""
             Try
                 PersistVariables()
@@ -237,7 +238,7 @@ Partial Public Class Cms
         End Sub
 
         Public Overrides Sub PersistVariables()
-            PerfMon.Log("Quote", "PersistVariables")
+            'PerfMon.Log("Quote", "PersistVariables")
             'Author:        Trevor Spink
             'Copyright:     Eonic Ltd 2003
             'Date:          2003-02-01
@@ -281,7 +282,7 @@ Partial Public Class Cms
         End Sub
 
         Overrides Sub checkButtons()
-            PerfMon.Log("Quote", "checkButtons")
+            'PerfMon.Log("Quote", "checkButtons")
             Dim cProcessInfo As String = ""
             Try
                 'legacy button handling looking at button values rather than names, should not be required soon
@@ -355,7 +356,7 @@ Partial Public Class Cms
         End Sub
 
         Public Overrides Sub apply()
-            PerfMon.Log("Quote", "apply")
+            'PerfMon.Log("Quote", "apply")
             '   this function is the main function.
 
             Dim oCartXML As XmlDocument = moPageXml
@@ -763,7 +764,7 @@ processFlow:
 
 
         Overrides Sub emailReceipts(ByRef oCartElmt As XmlElement)
-            PerfMon.Log("Quote", "emailReceipts")
+            'PerfMon.Log("Quote", "emailReceipts")
             Dim sMessageResponse As String
             Dim cProcessInfo As String = ""
             Dim oElmtTemp As XmlElement = oCartElmt.OwnerDocument.CreateElement("Temp")
@@ -794,7 +795,7 @@ processFlow:
         End Sub
 
         Public Overrides Sub EndSession()
-            PerfMon.Log("Quote", "EndSession")
+            'PerfMon.Log("Quote", "EndSession")
             Dim sProcessInfo As String = ""
             Dim sSql As String
             Dim cProcessInfo As String = ""
@@ -812,7 +813,7 @@ processFlow:
         End Sub
 
         Public Function QuoteToOrder() As Boolean
-            PerfMon.Log("Quote", "QuoteToOrder")
+            'PerfMon.Log("Quote", "QuoteToOrder")
             Dim cProcessInfo As String = "Quote to Order"
             Try
                 Dim nCurrentCart As Integer = myWeb.moSession("CartId")
@@ -958,7 +959,7 @@ processFlow:
         End Function
 
         Public Overrides Sub MakeCurrent(ByVal nOrderID As Integer)
-            PerfMon.Log("Quote", "MakeCurrent")
+            'PerfMon.Log("Quote", "MakeCurrent")
             'procedure to make a selected historical
             'order or quote into the currently active one
 
@@ -969,12 +970,14 @@ processFlow:
             Try
 
                 If myWeb.mnUserId = 0 Then Exit Sub
-                Dim oDre As SqlDataReader = moDBHelper.getDataReader("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " & nOrderID)
-                Do While oDre.Read
-                    nCheckUser = oDre.GetValue(0)
-                    If Not oDre.IsDBNull(1) Then cNotes = oDre.GetValue(1)
-                Loop
-                oDre.Close()
+                'Dim oDre As SqlDataReader = moDBHelper.getDataReader("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " & nOrderID)
+                Using oDre As SqlDataReader = moDBHelper.getDataReaderDisposable("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " & nOrderID)  'Done by nita on 6/7/22
+                    Do While oDre.Read
+                        nCheckUser = oDre.GetValue(0)
+                        If Not oDre.IsDBNull(1) Then cNotes = oDre.GetValue(1)
+                    Loop
+                    oDre.Close()
+                End Using
                 If Not nCheckUser = mnEwUserId Then
                     Exit Sub 'else we carry on
                 End If
@@ -1061,7 +1064,7 @@ processFlow:
         End Sub
 
         Public Sub SaveQuote()
-            PerfMon.Log("Quote", "SaveQuote")
+            'PerfMon.Log("Quote", "SaveQuote")
             '   set the cart status to 7
 
             Dim sSql As String

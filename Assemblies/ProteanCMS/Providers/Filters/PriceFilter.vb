@@ -6,112 +6,116 @@ Imports Protean.Cms
 Imports Protean.xForm
 
 Namespace Providers
-    Namespace Filter
+
+    Namespace Filters
 
         Public Class PriceFilter
 
-
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+                Dim cProcessInfo As String = "AddControl"
                 Try
-                    Dim pageFilterRange As XmlElement
-                    Dim oDr As SqlDataReader
+                    Dim sSql As String = "spGetPriceRange"
+                    Dim arrParams As New Hashtable
+                    Dim sCotrolDisplayName As String = "Price Filter"
+                    Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PriceFilter")
 
-                    Dim sSql As String = "spGetPagesByParentPageId"
-                    oDr = aWeb.moDbHelper.getDataReader(sSql, CommandType.StoredProcedure)
-                    'Adding controls to the form like dropdown, radiobuttons
-                    oXform.addRange(oFromGroup, "PriceFilter", True, "Price Range", 10, 30, 1)
+                    If (aWeb.moRequest.Form("PriceFilter") IsNot Nothing) Then
+                        oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PriceFilter"))
 
-                Catch ex As Exception
+                    End If
 
-                End Try
-            End Sub
+                    oXform.Instance.AppendChild(oXml)
 
-
-            Public Sub ApplyFilter(ByRef aWeb As Cms, ByRef nPageId As Integer, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
-                Try
+                    ' Adding a binding to the form bindings
+                    oXform.addBind("PriceFilter", "PriceFilter", "false()", "string", oXform.model)
 
 
-                    Dim cWhereSql As String = String.Empty
-                    Dim cPageIds As String = String.Empty
+                    Dim nMinPrice As Double = Convert.ToDouble(FilterConfig.Attributes("fromPrice").Value)
+                    Dim nMaxPrice As Double = Convert.ToDouble(FilterConfig.Attributes("toPrice").Value)
+                    Dim nStep As Integer = Convert.ToDouble(FilterConfig.Attributes("step").Value)
+                    Dim priceFilterRange As XmlElement
                     Dim cnt As Integer
 
-                    If (oXform.Instance.SelectNodes("PageFilter") IsNot Nothing) Then
-                        cPageIds = oXform.Instance.SelectNodes("PageFilter")(0).InnerText
-                        If (aWeb.moSession("PageIds") Is Nothing) Then
-                            aWeb.moSession("PageIds") = cPageIds
+                    If (FilterConfig.Attributes("name") IsNot Nothing) Then
+                        sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
+                    End If
+
+                    arrParams.Add("MinPrice", nMinPrice)
+                    arrParams.Add("MaxPrice", nMaxPrice)
+                    arrParams.Add("Step", nStep)
+                    Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
+                        'Adding controls to the form like dropdown, radiobuttons
+                        If (oXml.InnerText <> String.Empty) Then
+                            priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox filter-selected", ApperanceTypes.Full)
                         Else
-                            aWeb.moSession("PageIds") = cPageIds
-                            cPageIds = aWeb.moSession("PageIds")
+                            priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
                         End If
 
-                    End If
+                        oXform.addOptionsFromSqlDataReader(priceFilterRange, oDr, "name", "value")
+                    End Using
+                    If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
+                        If (oXml.InnerText.Trim() <> String.Empty) Then
+                            Dim sText As String
 
-                    If (cPageIds <> String.Empty) Then
+                            Dim aPrice() As String = oXml.InnerText.Split(",")
+                            If (aPrice.Length <> 0) Then
+                                For cnt = 0 To aPrice.Length - 1
+                                    sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().InnerText
+                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
+                                Next
 
-                        If (cWhereSql = String.Empty) Then
-                            cWhereSql = cWhereSql + cPageIds.ToString() + ","
-                        End If
-                        'call sp and return xml data
-                        If (cWhereSql <> String.Empty) Then
-                            cWhereSql = cWhereSql.Substring(0, cWhereSql.Length - 1)
-                            cWhereSql = " nStructId IN (" + cWhereSql + ")"
-                            aWeb.GetPageContentFromSelect(cWhereSql,,,,,,,,,,, "Product")
-                        End If
+                            Else
 
-                        Dim aPageId() As String = cPageIds.Split(",")
-                        For cnt = 0 To aPageId.Length - 1 Step 1
-                            If (aPageId(cnt) <> String.Empty) Then
-
-                                ' oXform.addRepeat(oFromGroup, aPageId(cnt), "search-filter", aPageId(cnt))
-                                oXform.addSubmit(oFromGroup, "removePage", aPageId(cnt), "submit", "", aPageId(cnt))
-
+                                sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
+                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
                             End If
-                        Next
-
+                        End If
                     End If
-
                 Catch ex As Exception
-
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
             End Sub
 
-            Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
+
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+                Dim cProcessInfo As String = "ApplyFilter"
                 Try
-                    Dim cnt As Integer
-                    Dim cntPages As Integer = 0
-                    Dim cPageIds As String = String.Empty
-                    If (aWeb.moSession("PageIds") IsNot Nothing) Then
-                        cPageIds = aWeb.moSession("PageIds")
-                        cPageIds = cPageIds.Replace(cPageId, "")
 
-                        Dim aPageId() As String = cPageIds.Split(",")
-                        For cnt = 0 To aPageId.Length - 1 Step 1
-                            If (aPageId(cnt) <> String.Empty) Then
-                                If aPageId(cnt) <> "" Then
-                                    cPageIds = cPageIds + aPageId(cnt) + ","
-                                End If
-                            End If
-                        Next
-                        aWeb.moSession("PageIds") = Left(cPageIds, cPageIds.Length - 1)
+                    Dim priceRange() As String
+                    Dim cDefinitionName As String = "Price"
+                    Dim cSelectedPrice As String = String.Empty
+                    If (oXform.Instance.SelectNodes("PriceFilter") IsNot Nothing) Then
+                        cSelectedPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter").InnerText)
+
+                    End If
+
+                    If (cSelectedPrice <> String.Empty) Then
+
+                        priceRange = cSelectedPrice.Split("-")
+
+                        If (cWhereSql <> String.Empty) Then
+                            cWhereSql = cWhereSql + " AND "
+                        End If
+
+                        cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
+                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" + cDefinitionName + "'"
+                        cWhereSql = cWhereSql + " And ci.nNumberValue between " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
+
+
                     End If
 
                 Catch ex As Exception
-
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
-            End Sub
-            'Public Function RemovePageFromFilter(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-            '    Try
-            '        If (myA.moSession("PageIds") IsNot Nothing) Then
+                Return cWhereSql
+            End Function
 
-            '            aWeb.moSession.Remove("PageIds")
-            '        End If
-            '    Catch ex As Exception
 
-            '    End Try
-            'End Function
+
 
         End Class
-        ' End Class
+
     End Namespace
 End Namespace
 

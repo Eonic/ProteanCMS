@@ -57,7 +57,7 @@ Namespace Providers
                 Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.PayPalPro.Activities"
-                Private myWeb As Protean.Cms
+                Shadows myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode
                 Private nTransactionMode As TransactionMode
 
@@ -82,8 +82,8 @@ Namespace Providers
                     End Try
                 End Function
 
-                Public Function GetPaymentForm(ByRef oWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
-                    PerfMon.Log("Protean.Providers.payment.PayPalPro", "GetPaymentForm")
+                Public Overloads Function GetPaymentForm(ByRef oWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
+                    myWeb.PerfMon.Log("Protean.Providers.payment.PayPalPro", "GetPaymentForm")
                     Dim sSql As String
 
                     Dim ccXform As xForm
@@ -94,7 +94,7 @@ Namespace Providers
                     Dim err_msg As String = ""
                     Dim err_msg_log As String = ""
                     Dim sProcessInfo As String = ""
-                    Dim cResponse As String
+                    Dim cResponse As String = String.Empty
 
                     Dim oDictOpt As Hashtable = New Hashtable
 
@@ -899,7 +899,7 @@ Namespace Providers
                         End If
 
                         If err_msg <> "" Then
-                            ccXform.addNote(ccXform.moXformElmt, xForm.noteTypes.Alert, err_msg)
+                            ccXform.addNote(CType(ccXform.moXformElmt, XmlElement), xForm.noteTypes.Alert, err_msg)
                         End If
 
                         'Update Seller Notes:
@@ -936,8 +936,8 @@ Namespace Providers
                     End Try
                 End Function
 
-                Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
-                    PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
+                Overloads Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
+                    myWeb.PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                     Dim moCartConfig As System.Collections.Specialized.NameValueCollection = myWeb.moCart.moCartConfig
                     Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                     Dim oFrmInstance As XmlElement
@@ -981,7 +981,7 @@ Namespace Providers
                 End Function
 
                 Function xfrmSecure3DReturn(ByVal acs_url As String) As xForm
-                    PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
+                    myWeb.PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                     Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                     Dim oFrmInstance As XmlElement
                     Dim oFrmGroup As XmlElement
@@ -1010,25 +1010,23 @@ Namespace Providers
                 End Function
 
                 Public Function getCountryISONum(ByRef sCountry As String) As String
-                    PerfMon.Log(mcModuleName, "getCountryISONum")
-                    Dim oDr As SqlDataReader
+                    myWeb.PerfMon.Log(mcModuleName, "getCountryISONum")
+                    'Dim oDr As SqlDataReader
                     Dim sSql As String
                     Dim strReturn As String = ""
                     Dim cProcessInfo As String = "getCountryISONum"
                     Try
 
                         sSql = "select cLocationISOnum from tblCartShippingLocations where cLocationNameFull Like '" & sCountry & "' or cLocationNameShort Like '" & sCountry & "'"
-                        oDr = myWeb.moDbHelper.getDataReader(sSql)
-                        If oDr.HasRows Then
-                            While oDr.Read
-                                strReturn = oDr("cLocationISOnum")
-                            End While
-                        Else
-                            strReturn = ""
-                        End If
-
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            If oDr.HasRows Then
+                                While oDr.Read
+                                    strReturn = oDr("cLocationISOnum")
+                                End While
+                            Else
+                                strReturn = ""
+                            End If
+                        End Using
                         Return strReturn
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "getCountryISOnum", ex, "", cProcessInfo, gbDebug)
@@ -1037,7 +1035,7 @@ Namespace Providers
                 End Function
 
 
-                Public Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
+                Public Overloads Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
 
                     Dim oPayPalProCfg As XmlNode
@@ -1268,7 +1266,7 @@ Namespace Providers
 
                 End Function
 
-                Public Function AddPaymentButton(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal configXml As XmlElement, ByVal nPaymentAmount As Double, ByVal submissionValue As String, ByVal refValue As String) As Boolean
+                Public Overloads Function AddPaymentButton(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal configXml As XmlElement, ByVal nPaymentAmount As Double, ByVal submissionValue As String, ByVal refValue As String) As Boolean
 
                     Dim PaymentLabel As String = configXml.SelectSingleNode("description/@value").InnerText
                     'allow html in description node...
@@ -1289,7 +1287,7 @@ Namespace Providers
                 End Function
 
 
-                Public Function GetMethodDetail(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderId As Long) As String
+                Public Overloads Function GetMethodDetail(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderId As Long) As String
                     Dim cProcessInfo As String = ""
                     Try
 

@@ -3,10 +3,10 @@
 ' $Library:     eonic.adminXforms
 ' $Revision:    3.1  
 ' $Date:        2006-03-02
-' $Author:      Trevor Spink (trevor@eonic.co.uk)
-' &Website:     www.eonic.co.uk
+' $Author:      Trevor Spink (trevor@eonic.com)
+' &Website:     eonic.com
 ' &Licence:     All Rights Reserved.
-' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+' $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 '***********************************************************************
 
 Option Strict Off
@@ -42,20 +42,47 @@ Partial Public Class Cms
             Public goConfig As System.Collections.Specialized.NameValueCollection ' = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Public mbAdminMode As Boolean = False
             Public moRequest As System.Web.HttpRequest
+            Public moImp As Protean.Tools.Security.Impersonate = Nothing
 
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
-            Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Shadows Event OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs)
 
-            Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
-                returnException(myWeb.msException, mcModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
+            Private Sub _OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
+                returnException(myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug)
             End Sub
 
             'Public myWeb As Protean.Cms
+            Private Function startImp() As Boolean
+                Try
+                    If goConfig("AdminAcct") <> "" Then
+                        moImp = New Protean.Tools.Security.Impersonate
+                        Return moImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup"))
+                    Else
+                        Return Nothing
+                    End If
+
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Function
+
+            Private Sub endImp()
+                Try
+                    If goConfig("AdminAcct") <> "" Then
+                        moImp.UndoImpersonation()
+                        moImp = Nothing
+                    End If
+
+                Catch ex As Exception
+
+                End Try
+            End Sub
+
 
             Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
 
-                PerfMon.Log("AdminXforms", "New")
+                myWeb.PerfMon.Log("AdminXforms", "New")
                 Try
                     myWeb = aWeb
                     goConfig = myWeb.moConfig
@@ -641,14 +668,14 @@ Partial Public Class Cms
 
                     Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
                     Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
 
-                        MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                    startImp()
 
-                        'code here to replace any missing nodes
-                        'all of the required config settings
-                        Dim aSettingValues() As String = Split("DatabaseType,DatabaseName,DatabaseAuth,DatabaseUsername,DatabasePassword,MailServer,RootPageId,BaseUrl,SiteXsl,ImageRootPath,DocRootPath,MediaRootPath,Membership,MailingList,NonAuthenticatedUsersGroupId,AuthenticatedUsersGroupId,RegisterBehaviour,RegisterRedirectPageId,Cart,Quote,Debug,CompiledTransform,SiteAdminName,SiteAdminEmail,ContentSearch,SiteSearch,SiteSearchPath,Subscriptions,ActivityLogging,IPLogging,GoogleContentTypes,ShowRelatedBriefContentTypes,ShowRelatedBriefDepth,VersionControl,LegacyRedirect,PageURLFormat,AllowContentDetailAccess", ",")
+                    MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+
+                    'code here to replace any missing nodes
+                    'all of the required config settings
+                    Dim aSettingValues() As String = Split("DatabaseType,DatabaseName,DatabaseAuth,DatabaseUsername,DatabasePassword,MailServer,RootPageId,BaseUrl,SiteXsl,ImageRootPath,DocRootPath,MediaRootPath,Membership,MailingList,NonAuthenticatedUsersGroupId,AuthenticatedUsersGroupId,RegisterBehaviour,RegisterRedirectPageId,Cart,Quote,Debug,CompiledTransform,SiteAdminName,SiteAdminEmail,ContentSearch,SiteSearch,SiteSearchPath,Subscriptions,ActivityLogging,IPLogging,GoogleContentTypes,ShowRelatedBriefContentTypes,ShowRelatedBriefDepth,VersionControl,LegacyRedirect,PageURLFormat,AllowContentDetailAccess", ",")
 
                         Dim i As Long
                         Dim oElmt As XmlElement
@@ -679,8 +706,8 @@ Partial Public Class Cms
                             End If
                         End If
 
-                        oImp.UndoImpersonation()
-                    End If
+                    endImp()
+
                     MyBase.addValues()
                     Return MyBase.moXformElmt
 
@@ -696,6 +723,10 @@ Partial Public Class Cms
                 Dim oFsh As fsHelper
                 Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
                 Try
+                    If myWeb.mcEWCommonFolder = "/ptn" Then
+                        xFormPath = "/admin/xforms/config/" & ConfigType & ".xml"
+                    End If
+
                     oFsh = New fsHelper
                     oFsh.open(moPageXML)
 
@@ -710,13 +741,11 @@ Partial Public Class Cms
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        startImp()
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
-
-                            Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
+                        Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
                             Dim oCgfSectName As String = oTemplateInstance.FirstChild.Name
                             Dim oCgfSectPath As String = "protean/" & oCgfSectName
@@ -792,8 +821,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -827,14 +855,12 @@ Partial Public Class Cms
                     Else
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                        startImp()
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
-
-                            Dim rewriteXml As New XmlDocument
+                        Dim rewriteXml As New XmlDocument
 
                             rewriteXml.Load(goServer.MapPath("/rewriteMaps.config"))
 
@@ -1002,10 +1028,7 @@ Partial Public Class Cms
                                 'clear this if we are loading the first form
                                 goSession("oTempInstance") = Nothing
                             End If
-
-
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -1040,13 +1063,12 @@ Partial Public Class Cms
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        startImp()
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
+                        Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
                             Dim oCgfSectName As String = "protean/" & oTemplateInstance.FirstChild.Name
                             Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
@@ -1173,8 +1195,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -1221,10 +1242,8 @@ Partial Public Class Cms
                         Dim oWebCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
                         Dim oThemeCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/theme")
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                            MyBase.Instance.InnerXml = oWebCgfSect.SectionInformation.GetRawXml & oThemeCgfSect.SectionInformation.GetRawXml
+                        startImp()
+                        MyBase.Instance.InnerXml = oWebCgfSect.SectionInformation.GetRawXml & oThemeCgfSect.SectionInformation.GetRawXml
 
                             Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
@@ -1284,8 +1303,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                     End If
 
 
@@ -1353,7 +1371,9 @@ Partial Public Class Cms
                 Try
 
                     cXmlFilePath = "/xforms/page/" & cFormName & ".xml"
-
+                    If goConfig("cssFramework") = "bs5" Then
+                        cXmlFilePath = "/admin" & cXmlFilePath
+                    End If
                     If Not MyBase.load(cXmlFilePath, myWeb.maCommonFolders) Then
                         'If not a custom page is loaded, pull in the standard elements
                         MyBase.NewFrm("EditPage")
@@ -1424,17 +1444,17 @@ Partial Public Class Cms
                     If pgid > 0 Then
                         If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
                             Dim oContent As XmlNode
-                            Dim oDr As SqlDataReader
+                            'Dim oDr As SqlDataReader
 
                             'For Each oContent In MyBase.Instance.SelectNodes("tblContentStructure/RelatedContent/tblContent")
                             Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
-                            oDr = moDbHelper.getDataReader(sSql)
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                            'nRContentId = 0
-                            While oDr.Read
-                                nRContentId = oDr(0)
-                            End While
-                            oDr.Close()
+                                'nRContentId = 0
+                                While oDr.Read
+                                    nRContentId = oDr(0)
+                                End While
+                            End Using
 
                             If nRContentId > 0 Then
                                 oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent")
@@ -1494,21 +1514,21 @@ Partial Public Class Cms
                     End If
 
 
-                    ' Account for the clone node 
-                    If gbClone Then
+                    ' Account for the clone node ' TS removed because added in to page xform on a per site basis if required see wanner.
+                    'If gbClone Then
 
-                        ' Check for the instance of Clone
-                        If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
-                        End If
+                    '    ' Check for the instance of Clone
+                    '    If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/nCloneStructId") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        addElement(MyBase.Instance.SelectSingleNode("tblContentStructure"), "nCloneStructId")
+                    '    End If
 
-                        ' Check for the binding of clone
-                        If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
-                            Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
-                            MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
-                            MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
-                        End If
-                    End If
+                    '    ' Check for the binding of clone
+                    '    If Tools.Xml.NodeState(MyBase.model, "//bind[contains(@nodeset,'nCloneStructId'])") = Tools.Xml.XmlNodeState.NotInstantiated Then
+                    '        Dim oGroup As XmlElement = MyBase.moXformElmt.SelectSingleNode("group")
+                    '        MyBase.addInput(oGroup, "nCloneStructId", True, "Clone Page", "clonepage")
+                    '        MyBase.addBind("nCloneStructId", "tblContentStructure/nCloneStructId", "false()")
+                    '    End If
+                    'End If
 
                     cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                     If MyBase.isSubmitted Then
@@ -1559,34 +1579,32 @@ Partial Public Class Cms
                             If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
                                 If pgid > 0 Then
                                     Dim oContent As XmlNode
-                                    Dim oDr As SqlDataReader
+                                    'Dim oDr As SqlDataReader
 
                                     oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
                                     Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
-                                    oDr = moDbHelper.getDataReader(sSql)
+                                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
 
-                                    Dim oInstance As XmlDocument = New XmlDocument
-                                    oInstance.AppendChild(oInstance.CreateElement("Instance"))
-                                    oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
+                                        Dim oInstance As XmlDocument = New XmlDocument
+                                        oInstance.AppendChild(oInstance.CreateElement("Instance"))
+                                        oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
 
-                                    nRContentId = 0
-                                    While oDr.Read
-                                        nRContentId = oDr(0)
-                                    End While
-                                    oDr.Close()
+                                        nRContentId = 0
+                                        While oDr.Read
+                                            nRContentId = oDr(0)
+                                        End While
 
-
-                                    If nRContentId > 0 Then
-                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
-                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                        moDbHelper.setContentLocation(pgid, nRContentId)
-                                    Else
-                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
-                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                        moDbHelper.setContentLocation(pgid, nRContentId)
-                                    End If
-
+                                        If nRContentId > 0 Then
+                                            nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
+                                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                            moDbHelper.setContentLocation(pgid, nRContentId)
+                                        Else
+                                            nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
+                                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                            moDbHelper.setContentLocation(pgid, nRContentId)
+                                        End If
+                                    End Using
                                 End If
                             End If
                         End If
@@ -1664,6 +1682,7 @@ Partial Public Class Cms
                     MyBase.addOption(oSelElmt, "Same content with multiple locations", 2)
                     MyBase.addOption(oSelElmt, "Same content with multiple primary locations", 3)
                     MyBase.addOption(oSelElmt, "Create copies of the content", 1)
+                    MyBase.addOption(oSelElmt, "Force copies of the content", 4)
                     MyBase.addBind("nCopyContent", "tblContentStructure/@nCopyContent", "true()")
 
                     MyBase.addInput(oFrmElmt, "cStructName", True, "Page Name")
@@ -1974,37 +1993,42 @@ Partial Public Class Cms
 
                     oSelElmt = MyBase.addSelect1(oFrmElmt, "cStructLayout", True, "", "PickByImage", xForm.ApperanceTypes.Full)
                     MyBase.addBind("cStructLayout", "tblContentStructure/cStructLayout", "true()")
+                    If goConfig("cssFramework") <> "bs5" Then
+                        Try
+                            'if this file exists then add the bespoke templates
+                            oXformDoc.Load(goServer.MapPath(myWeb.moConfig("ProjectPath") & "/xsl") & "/LayoutManifest.xml")
+                            sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
 
-                    Try
-                        'if this file exists then add the bespoke templates
-                        oXformDoc.Load(goServer.MapPath(myWeb.moConfig("ProjectPath") & "/xsl") & "/LayoutManifest.xml")
-                        sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
-
-                        For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
-                            Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelElmt, oChoices.GetAttribute("name"))
-                            For Each oItem In oChoices.SelectNodes("Layout")
-                                oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"))
-                                'lets add an image tag
-                                oDescElmt = moPageXML.CreateElement("img")
-                                oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
-                                oOptElmt.AppendChild(oDescElmt)
-
-                                'lets insert a description html tag
-                                If oItem.InnerXml <> "" Then
-                                    oDescElmt = moPageXML.CreateElement("div")
-                                    oDescElmt.SetAttribute("class", "description")
-                                    oDescElmt.InnerXml = oItem.InnerXml
+                            For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
+                                Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelElmt, oChoices.GetAttribute("name"))
+                                For Each oItem In oChoices.SelectNodes("Layout")
+                                    oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("name"))
+                                    'lets add an image tag
+                                    oDescElmt = moPageXML.CreateElement("img")
+                                    oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
                                     oOptElmt.AppendChild(oDescElmt)
-                                End If
+
+                                    'lets insert a description html tag
+                                    If oItem.InnerXml <> "" Then
+                                        oDescElmt = moPageXML.CreateElement("div")
+                                        oDescElmt.SetAttribute("class", "description")
+                                        oDescElmt.InnerXml = oItem.InnerXml
+                                        oOptElmt.AppendChild(oDescElmt)
+                                    End If
+                                Next
                             Next
-                        Next
-                    Catch
-                        'do nothing
-                    End Try
+                        Catch
+                            'do nothing
+                        End Try
+                    End If
 
                     'Lets load in the available common templates from XML file
                     Try
-                        oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
+                        If goConfig("cssFramework") = "bs5" Then
+                            oXformDoc = GetSiteManifest()
+                        Else
+                            oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
+                        End If
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                     Catch ex As Exception
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/" & gcProjectPath & "ewcommon/xsl/pageLayouts/LayoutManifest.xml could not be found. - " & ex.Message)
@@ -2032,7 +2056,7 @@ Partial Public Class Cms
                     Next
 
                     Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-                    If oConfig("cart") = "on" Then
+                    If oConfig("cart") = "on" And goConfig("cssFramework") <> "bs5" Then
                         Try
                             oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/cart") & "/LayoutManifest.xml")
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
@@ -2061,7 +2085,7 @@ Partial Public Class Cms
                         Next
                     End If
 
-                    If oConfig("membership") = "on" Then
+                    If oConfig("membership") = "on" And goConfig("cssFramework") <> "bs5" Then
                         Try
                             oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/membership") & "/LayoutManifest.xml")
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
@@ -2235,9 +2259,15 @@ Partial Public Class Cms
                 Dim oXformDoc As XmlDocument = New XmlDocument
                 Try
 
-                    If moRequest("cModuleBox") <> "" Then
+                    If moRequest("cModuleBox") <> "" Or moRequest("cModuleType") <> "" Then
+                        ' case for when the content form is being submitted
+                        If goConfig("cssFramework") = "bs5" Then
+                            Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
+                            xFrmEditContent(0, ModulePath, pgid, moRequest("cPosition"))
+                        Else
+                            xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
+                        End If
 
-                        xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
 
                         Return MyBase.moXformElmt
                     Else
@@ -2250,35 +2280,9 @@ Partial Public Class Cms
                         MyBase.addInput(oFrmElmt, "cPosition", True, "Position", "hidden")
                         MyBase.addBind("cPosition", "Module/@position", "true()")
 
-
-                        '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
-
                         oSelElmt = MyBase.addSelect1(oFrmElmt, "cModuleType", True, "", "PickByImage", xForm.ApperanceTypes.Full)
 
-                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
-                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
-                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
-                        If myWeb.moConfig("Search") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Search", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("Membership") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Membership", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("Cart") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Cart", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("Quote") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Quote", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("MailingList") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-                        If myWeb.moConfig("Subscriptions") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
-                        End If
-
+                        GetModuleOptions(oSelElmt)
 
                         If MyBase.isSubmitted Or goRequest.Form("ewsubmit.x") <> "" Or goRequest.Form("cModuleType") <> "" Then
                             MyBase.updateInstanceFromRequest()
@@ -2286,7 +2290,14 @@ Partial Public Class Cms
                             If MyBase.valid Then
                                 'Do nothing
                                 'or redirect to content form
-                                xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
+                                '
+                                If goConfig("cssFramework") = "bs5" Then
+                                    Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
+                                    xFrmEditContent(0, ModulePath, pgid, moRequest("cPosition"))
+
+                                Else
+                                    xFrmEditContent(0, "Module/" & moRequest("cModuleType"), pgid, moRequest("cPosition"))
+                                End If
                             End If
                         End If
 
@@ -2300,7 +2311,404 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Protected Sub EnumberateManifestOptions(ByRef oSelectElmt As XmlElement, ByVal filepath As String, ByVal groupName As String, ByVal optionName As String, ByVal bIgnoreIfNotFound As Boolean)
+            Protected Function GetContentFormPath(ByVal SchemaName As String) As String
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim oManifest As XmlDocument = GetSiteManifest()
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::ContentType[@type='" & SchemaName & "']")
+                    If thisModule Is Nothing Then
+                        Return SchemaName
+                    Else
+                        Return thisModule.GetAttribute("formPath")
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            Protected Function GetFilterFormPath(ByVal SchemaName As String) As String
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim oManifest As XmlDocument = GetSiteManifest(goConfig("cssFramework"))
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Filter[@type='" & SchemaName & "']")
+                    If thisModule Is Nothing Then
+                        Return SchemaName
+                    Else
+                        Return thisModule.GetAttribute("formPath")
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            Protected Function GetModuleFormPath(ByVal SchemaName As String) As String
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim oManifest As XmlDocument = GetSiteManifest()
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Module[@type='" & SchemaName & "']")
+                    If thisModule Is Nothing Then
+                        Return SchemaName
+                    Else
+                        Return thisModule.GetAttribute("formPath")
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
+            Public Function GetSiteManifest(Optional sFramework As String = "bs5") As XmlDocument
+                Dim cProcessInfo As String = ""
+
+                Dim ManifestDoc As XmlDocument = Nothing
+                Try
+                    Select Case sFramework
+                        Case "bs5"
+
+                            Dim PathPrefix = "ptn\"
+
+                            EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "core\modules", "manifest.xml")
+                            Dim rootFolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                            Dim fld As DirectoryInfo
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "manifest.xml")
+
+                            Next
+                            If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                                EnumberateManifest(ManifestDoc, myWeb.moConfig("ClientCommonFolder") & "\xsl", "manifest.xml")
+                            End If
+
+                            'new local modules
+                            rootFolder = New DirectoryInfo(myWeb.goServer.MapPath("/" & gcProjectPath & "/modules"))
+                            If rootFolder.Exists Then
+                                For Each fld In rootFolder.GetDirectories
+                                    EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "\modules\" & fld.Name, "manifest.xml")
+                                Next
+                            End If
+
+                            EnumberateManifest(ManifestDoc, "/xsl", "manifest.xml")
+
+                            If myWeb.moConfig("Search") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\search", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Membership") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\membership", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Cart") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\cart", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Quote") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\quote", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("MailingList") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\mailer", "manifest.xml")
+                            End If
+                            If myWeb.moConfig("Subscriptions") = "on" Then
+                                EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "manifest.xml")
+                            End If
+                        Case Else
+
+
+                            Dim PathPrefix = "ewcommon\"
+                            EnumberateManifest(ManifestDoc, "/" & gcProjectPath & PathPrefix & "xsl/PageLayouts", "LayoutManifest.xml")
+                            If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                                EnumberateManifest(ManifestDoc, myWeb.moConfig("ClientCommonFolder") & "\xsl", "layoutManifest.xml")
+                            End If
+                            EnumberateManifest(ManifestDoc, "/xsl", "layoutManifest.xml")
+
+                    End Select
+
+
+                    Return ManifestDoc
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+
+
+            End Function
+
+
+            Sub EnumberateManifest(ByRef ManifestDoc As XmlDocument, ByVal filepath As String, Optional ByVal manifestFilename As String = "LayoutManifest.xml")
+
+                Dim cProcessInfo As String = ""
+                Dim sImgPath As String = ""
+                Dim oContentType As XmlElement
+                Dim oModuleType As XmlElement
+                'Dim oItem As XmlElement
+                'Dim oOptElmt As XmlElement   'never used
+                'Dim oDescElmt As XmlElement
+
+                Try
+                    If filepath = "" Then filepath = "/"
+                    filepath = filepath.Replace("\", "/")
+
+
+                    If IO.File.Exists(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename) Then
+                        'if this file exists then add the bespoke templates
+
+                        If ManifestDoc Is Nothing Then
+                            ManifestDoc = New XmlDocument
+                            ManifestDoc.Load(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename)
+                            For Each oContentType In ManifestDoc.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType")
+                                Dim formPath = oContentType.GetAttribute("formPath")
+                                ' If formPath.contains("/") Then
+                                '  formPath = formPath.Split("/")(1)
+                                'End If
+                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+                            Next
+                            For Each oModuleType In ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module")
+                                Dim formPath = oModuleType.GetAttribute("formPath")
+                                '  If formPath.contains("/") Then
+                                '  formPath = formPath.Split("/")(1)
+                                'End If
+                                oModuleType.SetAttribute("formPath", filepath.Replace("\", "/") & "/" & formPath)
+                            Next
+
+                        Else
+                            Dim ManifestTemp As New XmlDocument
+                            ManifestTemp.Load(myWeb.goServer.MapPath(filepath) & "/" & manifestFilename)
+
+                            'step through contentTypes to add to ManifestDoc
+
+                            For Each oContentType In ManifestTemp.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType")
+                                'build the xformPath
+                                Dim formPath = oContentType.GetAttribute("formPath")
+                                '  If formPath.contains("/") Then
+                                '  formPath = formPath.Split("/")(1)
+                                'End If
+                                oContentType.SetAttribute("formPath", filepath & "/" & formPath)
+
+                                Dim contentTypeGroupName As String = oContentType.SelectSingleNode("parent::ContentTypeGroup/@name").InnerText()
+                                Dim contentTypeGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" & contentTypeGroupName & "']")
+                                If contentTypeGroup Is Nothing Then
+                                    Dim oContentTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes")
+                                    oContentTypes.AppendChild(oContentTypes.OwnerDocument.ImportNode(oContentType.SelectSingleNode("parent::ContentTypeGroup"), True))
+                                Else
+                                    Dim ContentTypeName = oContentType.GetAttribute("name")
+                                    If contentTypeGroup.SelectSingleNode("ContentType[@name='" & ContentTypeName & "']") Is Nothing Then
+                                        contentTypeGroup.AppendChild(contentTypeGroup.OwnerDocument.ImportNode(oContentType, True))
+                                    Else
+                                        contentTypeGroup.ReplaceChild(contentTypeGroup.OwnerDocument.ImportNode(oContentType, True), contentTypeGroup.SelectSingleNode("ContentType[@name='" & ContentTypeName & "']"))
+                                    End If
+                                End If
+                            Next
+
+                            'step through moduleTypes to add to ManifestDoc
+                            For Each oModuleType In ManifestTemp.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module")
+                                Dim formPath = oModuleType.GetAttribute("formPath")
+                                '  If formPath.contains("/") Then
+                                ' formPath = formPath.Split("/")(1)
+                                ' End If
+                                oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
+                                Dim moduleGroupName As String = oModuleType.SelectSingleNode("parent::ModuleGroup/@name").InnerText()
+                                Dim moduleGroup As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ModuleTypes/ModuleGroup[@name='" & moduleGroupName & "']")
+                                If moduleGroup Is Nothing Then
+                                    Dim oModuleTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/ModuleTypes")
+                                    oModuleTypes.AppendChild(oModuleTypes.OwnerDocument.ImportNode(oModuleType.SelectSingleNode("parent::ModuleGroup"), True))
+                                Else
+                                    Dim ModuleTypeName = oModuleType.GetAttribute("name")
+                                    If moduleGroup.SelectSingleNode("Module[@name='" & ModuleTypeName & "']") Is Nothing Then
+                                        moduleGroup.AppendChild(moduleGroup.OwnerDocument.ImportNode(oModuleType.CloneNode(True), True))
+                                    Else
+                                        moduleGroup.ReplaceChild(moduleGroup.OwnerDocument.ImportNode(oModuleType, True), moduleGroup.SelectSingleNode("Module[@name='" & ModuleTypeName & "']"))
+
+                                    End If
+                                End If
+                            Next
+
+                            'step through filterTypes to add to ManifestDoc
+                            For Each oModuleType In ManifestTemp.SelectNodes("/PageLayouts/FilterTypes/Filter")
+                                Dim formPath = oModuleType.GetAttribute("formPath")
+                                Dim FilterTypeName = oModuleType.GetAttribute("type")
+                                ' oModuleType.SetAttribute("formPath", filepath & "/" & formPath)
+
+                                Dim filterTypes As XmlElement = ManifestDoc.SelectSingleNode("/PageLayouts/FilterTypes")
+                                If filterTypes.SelectSingleNode("Module[@name='" & FilterTypeName & "']") Is Nothing Then
+                                    filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(True), True))
+                                Else
+                                    filterTypes.ReplaceChild(filterTypes.OwnerDocument.ImportNode(oModuleType, True), filterTypes.SelectSingleNode("Filter[@name='" & FilterTypeName & "']"))
+                                End If
+                            Next
+
+                        End If
+                    Else
+                        'do nothing
+                    End If
+
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug)
+                End Try
+
+            End Sub
+            Protected Sub GetContentOptions(ByRef oSelElmt As XmlElement)
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim PathPrefix = "ewcommon/xsl/"
+                    If goConfig("cssFramework") = "bs5" Then
+                        PathPrefix = "ptn\"
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "core\modules", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                        Dim fld As DirectoryInfo
+                        For Each fld In rootFolder.GetDirectories
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+
+                        Next
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+
+                        'new local modules
+                        rootFolder = New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & "/modules"))
+                        If rootFolder.Exists Then
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ContentTypes/ContentTypeGroup", "ContentType", True, "manifest.xml")
+                            Next
+                        End If
+
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ContentTypes/ContentTypeGroup", "ContentType", False)
+
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ContentTypes/ContentTypeGroup", "ContentType", False, "manifest.xml")
+                        End If
+                    Else
+                        ' EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        '  MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "Click the image to select Module Type")
+
+                        ' EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        '  If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                        '  EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '  EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
+                        '  If myWeb.moConfig("Search") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Search", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Membership") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Membership", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Cart") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Cart", "ModuleTypes/ModuleGroup", "Module", False)
+                        ' End If
+                        '   If myWeb.moConfig("Quote") = "on" Then
+                        '  EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Quote", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '    If myWeb.moConfig("MailingList") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Mailer", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                        '   If myWeb.moConfig("Subscriptions") = "on" Then
+                        '   EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
+                        'End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Sub
+
+            Protected Sub GetModuleOptions(ByRef oSelElmt As XmlElement)
+                Dim cProcessInfo As String = ""
+                Try
+                    Dim PathPrefix = "ewcommon/xsl/"
+                    If goConfig("cssFramework") = "bs5" Then
+                        PathPrefix = "ptn\"
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "core\modules", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & PathPrefix & "modules"))
+                        Dim fld As DirectoryInfo
+                        For Each fld In rootFolder.GetDirectories
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+                        Next
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "\xsl", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+
+                        'new local modules
+                        rootFolder = New DirectoryInfo(goServer.MapPath("/" & gcProjectPath & "/modules"))
+                        If rootFolder.Exists Then
+                            For Each fld In rootFolder.GetDirectories
+                                EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "\modules\" & fld.Name, "ModuleTypes/ModuleGroup", "Module", True, "manifest.xml")
+                            Next
+                        End If
+
+                        'legacy local modules
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
+
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\search", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\membership", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\cart", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\quote", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\mailer", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "features\subscriptions", "ModuleTypes/ModuleGroup", "Module", False, "manifest.xml")
+                        End If
+                    Else
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+
+                        If myWeb.moConfig("ClientCommonFolder") <> "" Then
+                            EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
+                        If myWeb.moConfig("Search") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Search", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Membership") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Membership", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Cart") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Cart", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Quote") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Quote", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("MailingList") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Mailer", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                        If myWeb.moConfig("Subscriptions") = "on" Then
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & PathPrefix & "Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
+                        End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Sub
+
+
+            Protected Sub EnumberateManifestOptions(ByRef oSelectElmt As XmlElement, ByVal filepath As String, ByVal groupName As String, ByVal optionName As String, ByVal bIgnoreIfNotFound As Boolean, Optional ByVal manifestFilename As String = "LayoutManifest.xml")
 
                 Dim oXformDoc As XmlDocument = New XmlDocument
                 Dim cProcessInfo As String = ""
@@ -2313,23 +2721,42 @@ Partial Public Class Cms
                 Try
                     If filepath = "" Then filepath = "/"
 
-                    Try
+
+
+                    If IO.File.Exists(goServer.MapPath(filepath) & "/" & manifestFilename) Then
                         'if this file exists then add the bespoke templates
-                        oXformDoc.Load(goServer.MapPath(filepath) & "/LayoutManifest.xml")
+                        oXformDoc.Load(goServer.MapPath(filepath) & "/" & manifestFilename)
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                         For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/" & groupName)
                             If oChoices.GetAttribute("targetCssFramework") = "" Or (Not (myWeb.moConfig("cssFramework") Is Nothing) And oChoices.GetAttribute("targetCssFramework").Contains("" & myWeb.moConfig("cssFramework"))) Then
-                                Dim oChoicesElmt As XmlElement = MyBase.addChoices(oSelectElmt, oChoices.GetAttribute("name"))
+                                'do we have a choices element?
+                                Dim oChoicesElmt As XmlElement = oSelectElmt.SelectSingleNode("choices[label/node()='" & oChoices.GetAttribute("name") & "']")
+                                If oChoicesElmt Is Nothing Then
+                                    oChoicesElmt = MyBase.addChoices(oSelectElmt, oChoices.GetAttribute("name"))
+                                End If
+
                                 If oChoices.GetAttribute("icon") <> "" Then
                                     Dim labelElmt As XmlElement = oChoicesElmt.SelectSingleNode("label")
                                     labelElmt.SetAttribute("icon", oChoices.GetAttribute("icon"))
                                 End If
                                 For Each oItem In oChoices.SelectNodes(optionName)
                                     If oItem.GetAttribute("targetCssFramework") = "" Or (Not (myWeb.moConfig("cssFramework") Is Nothing) And oItem.GetAttribute("targetCssFramework").Contains("" & myWeb.moConfig("cssFramework"))) Then
-                                        oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), oItem.GetAttribute("type"))
+                                        Dim FormPath As String = oItem.GetAttribute("type")
+                                        oOptElmt = MyBase.addOption(oChoicesElmt, Replace(oItem.GetAttribute("name"), "_", " "), FormPath)
                                         'lets add an image tag
+                                        ' If oItem.GetAttribute("type") = "LibraryImage" Then
+                                        '  oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
+                                        'End If
+
+                                        oOptElmt.SetAttribute("type", oItem.GetAttribute("type"))
+                                        If oItem.GetAttribute("formPath") <> "" Then
+                                            oOptElmt.SetAttribute("formPath", oItem.GetAttribute("formPath"))
+                                        End If
                                         oDescElmt = moPageXML.CreateElement("img")
                                         oDescElmt.SetAttribute("src", sImgPath & "/" & oItem.GetAttribute("name") & ".gif")
+                                        If oItem.GetAttribute("icon") <> "" Then
+                                            oDescElmt.SetAttribute("icon", oItem.GetAttribute("icon"))
+                                        End If
                                         oOptElmt.AppendChild(oDescElmt)
                                         'lets insert a description html tag
                                         If oItem.InnerXml <> "" Then
@@ -2343,11 +2770,13 @@ Partial Public Class Cms
                             End If
 
                         Next
-                    Catch ex As Exception
+                    Else
                         If Not bIgnoreIfNotFound Then
-                            MyBase.addNote(oSelectElmt.ParentNode, xForm.noteTypes.Alert, filepath & " could not be found. - " & ex.Message)
+                            MyBase.addNote(oSelectElmt.ParentNode, xForm.noteTypes.Alert, filepath & " could not be found.")
                         End If
-                    End Try
+                    End If
+
+
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug)
                 End Try
@@ -2359,9 +2788,9 @@ Partial Public Class Cms
 
             Public Overridable Function xFrmEditContent(Optional ByVal id As Long = 0, Optional ByVal cContentSchemaName As String = "", Optional ByVal pgid As Long = 0, Optional ByVal cContentName As String = "", Optional ByVal bCopy As Boolean = False, Optional ByRef nReturnId As Integer = 0, Optional ByRef zcReturnSchema As String = "", Optional ByRef AlternateFormName As String = "", Optional ByVal nVersionId As Long = 0) As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim oGrp1Elmt As XmlElement
-                Dim oGrp2Elmt As XmlElement
-                Dim oSelElmt As XmlElement
+                'Dim oGrp1Elmt As XmlElement
+                'Dim oGrp2Elmt As XmlElement   'Never used
+                'Dim oSelElmt As XmlElement
                 Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
                 Dim bCascade As Boolean = False
                 Dim cProcessInfo As String = ""
@@ -2434,7 +2863,8 @@ Partial Public Class Cms
                                 oTempInstance.AppendChild(prodCatElmt)
                             End If
                         End If
-
+                    Else
+                        cModuleType = moRequest("cModuleType")
                     End If
 
                     If Not goSession("oContentInstance") Is Nothing Then
@@ -2452,55 +2882,49 @@ Partial Public Class Cms
 
                     ''''''' if contentSchemeaName starts with "filter|" then modify the path...
 
-                    Dim cXformName As String = cContentSchemaName
-                    If AlternateFormName <> "" Then cXformName = AlternateFormName
-                    If cModuleType <> "" Then cXformName = cXformName & "/" & cModuleType
-                    If cFilterType <> "" Then cXformName = cXformName & "/" & cFilterType
+                    Dim cXformPath As String = cContentSchemaName
 
-                    If Not MyBase.load("/xforms/content/" & cXformName & ".xml", myWeb.maCommonFolders) Then
+                    If AlternateFormName <> "" Then cXformPath = AlternateFormName
+
+                    If cModuleType <> "" Then
+                        If goConfig("cssFramework") = "bs5" Then
+                            cXformPath = GetModuleFormPath(cModuleType)
+                        Else
+                            If Not cXformPath.EndsWith("/" & cModuleType) Then
+                                cXformPath = cXformPath & "/" & cModuleType
+                            End If
+
+                        End If
+                    Else
+                        If goConfig("cssFramework") = "bs5" Then
+                            cXformPath = GetContentFormPath(cContentSchemaName)
+                        End If
+                    End If
+                    If moRequest("filter") = "true" Then
+                        cXformPath = GetFilterFormPath(cContentSchemaName)
+                    End If
+
+
+                    If goConfig("cssFramework") = "bs5" Then
+                        If cXformPath.StartsWith("/") Then
+                            cXformPath = cXformPath
+                        Else
+                            cXformPath = "/modules/" & cXformPath
+                        End If
+                    Else
+                        cXformPath = "/xforms/content/" & cXformPath
+                    End If
+
+                    If Not MyBase.load(cXformPath & ".xml", myWeb.maCommonFolders) Then
                         ' load a default content xform if no alternative.
-                        cProcessInfo = "/xforms/content/" & cXformName & ".xml - Not Found"
+                        cProcessInfo = cXformPath & ".xml - Not Found"
 
                         MyBase.NewFrm("EditContent")
-
                         MyBase.submission("EditContent", "", "post", "form_check(this)")
 
                         oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "EditContent", "2Col", "Edit Content")
-                        MyBase.addNote("EditContent", xForm.noteTypes.Alert, "We do not have an XForm for this type of content - this is the default form")
+                        MyBase.addNote("EditContent", xForm.noteTypes.Alert, "We do not have an XForm for this type of content: " & cXformPath)
 
-                        MyBase.addInput(oFrmElmt, "nContentKey", True, "ContentId", "hidden")
-                        MyBase.addBind("nStructParId", "tblContent/nContentKey", "true()")
-
-                        MyBase.addInput(oFrmElmt, "cContentSchemaName", True, "cContentSchemaName", "hidden")
-                        MyBase.addBind("cContentSchemaName", "tblContent/cContentSchemaName", "true()")
-
-                        oGrp1Elmt = MyBase.addGroup(oFrmElmt, "Settings", "", "Content Settings")
-                        oGrp2Elmt = MyBase.addGroup(oFrmElmt, "Content", "", "Full XML")
-
-                        MyBase.addInput(oGrp1Elmt, "cContentName", True, "Page Name")
-                        MyBase.addBind("cContentName", "tblContent/cContentName", "true()")
-
-                        MyBase.addTextArea(oGrp2Elmt, "cContentXmlBrief", True, "Content Brief", "TextAreaBrief")
-                        MyBase.addBind("cContentXmlBrief", "tblContent/cContentXmlBrief", "false()")
-
-                        MyBase.addTextArea(oGrp2Elmt, "cContentXmlDetail", True, "Content Detail", "TextAreaDetail")
-                        MyBase.addBind("cContentXmlDetail", "tblContent/cContentXmlDetail", "false()")
-
-                        MyBase.addInput(oGrp1Elmt, "dPublishDate", True, "Publish Date", "calendar short")
-                        MyBase.addBind("dPublishDate", "tblContentStructure/dPublishDate", "false()")
-
-                        MyBase.addInput(oGrp1Elmt, "dExpireDate", True, "Expire Date", "calendar short")
-                        MyBase.addBind("dExpireDate", "tblContentStructure/dExpireDate", "false()")
-
-                        oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nStatus", True, "Status", "", ApperanceTypes.Minimal)
-                        MyBase.addOption(oSelElmt, "Live", 1)
-                        MyBase.addOption(oSelElmt, "Hidden", 0)
-                        MyBase.addBind("nStatus", "tblContentStructure/nStatus", "true()")
-
-                        MyBase.addInput(oGrp1Elmt, "cDescription", True, "Change Notes")
-                        MyBase.addBind("cDescription", "tblContentStructure/cDescription", "false()")
-
-                        MyBase.addSubmit(oFrmElmt, "", "Save Content")
                     End If
 
                     If id > 0 Then
@@ -2517,16 +2941,16 @@ Partial Public Class Cms
                                     Else
                                         sSql = "Select nContentChildId from tblContentRelation where nContentParentId = " & id & " AND cRelationType = '" & NonTableInstanceElements.GetAttribute("type") & "'"
                                     End If
-                                    Dim oRead As SqlDataReader = moDbHelper.getDataReader(sSql)
-                                    Dim CSV As String = ""
-                                    While oRead.Read()
-                                        If CSV <> "" Then
-                                            CSV = CSV & ","
-                                        End If
-                                        CSV = CSV & CStr(oRead.GetInt32(0))
-                                    End While
-                                    NonTableInstanceElements.SetAttribute("relatedContentId", CSV)
-
+                                    Using oRead As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                        Dim CSV As String = ""
+                                        While oRead.Read()
+                                            If CSV <> "" Then
+                                                CSV = CSV & ","
+                                            End If
+                                            CSV = CSV & CStr(oRead.GetInt32(0))
+                                        End While
+                                        NonTableInstanceElements.SetAttribute("relatedContentId", CSV)
+                                    End Using
                                 End If
                                 Dim newNode As XmlNode = oTempInstance.OwnerDocument.ImportNode(NonTableInstanceElements, True)
                                 oTempInstance.AppendChild(newNode)
@@ -2577,7 +3001,7 @@ Partial Public Class Cms
                             MyBase.Instance = goSession("oContentInstance")
                         End If
 
-                        If cContentName <> "" Then
+                        If cContentName <> "" And Not MyBase.Instance.FirstChild Is Nothing Then
                             MyBase.Instance.SelectSingleNode("tblContent/cContentName").InnerText() = cContentName
                             MyBase.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText() = Protean.Tools.Xml.XmlDate(Now())
                         End If
@@ -2590,7 +3014,9 @@ Partial Public Class Cms
                                 oElmt.ParentNode.RemoveChild(oElmt)
                             Next
                         Else
-                            addNewTextNode("bCascade", MyBase.Instance.SelectSingleNode("tblContent"), "", True, False)
+                            If Not MyBase.Instance.FirstChild Is Nothing Then
+                                addNewTextNode("bCascade", MyBase.Instance.SelectSingleNode("tblContent"), "", True, False)
+                            End If
                         End If
 
                     End If
@@ -2620,10 +3046,6 @@ Partial Public Class Cms
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
-
-
-
-
 
                         If MyBase.valid Then
 
@@ -2678,14 +3100,6 @@ Partial Public Class Cms
                                 If moRequest("productOldUrl") IsNot Nothing Then
                                     strOldurl = moRequest("productOldUrl").ToString()
                                 End If
-
-
-
-
-
-
-
-
 
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
@@ -2785,8 +3199,6 @@ Partial Public Class Cms
                                 End If
 
                             End If
-
-
 
                             goSession("mnContentRelationParent") = Nothing
                             goSession("mcRelRedirectString") = Nothing
@@ -2979,7 +3391,7 @@ Partial Public Class Cms
                             'ok, we need to check through all the things that would require a save first, 
                             'save, then do the action
                             '###############################-SAVE IF NEEDED-########################
-                            If myItem.startswith("Relate") Or myItem.startswith("ewSubmitClone_Relate") Then
+                            If myItem.startswith("Relate") Or myItem.startswith("ewSubmitClone_Relate") Or myItem.startswith("Filter") Then
                                 'if it has no id then its a new piece of content
                                 'we need to check and save
                                 ' If nParId = 0 Then
@@ -3061,6 +3473,32 @@ Partial Public Class Cms
                                     goSession("mcRelParent") = nParId
                                     bResult = True
                                     Exit For
+                                ElseIf myItem.contains("FilterEdit") Then
+                                    Dim cContentType As String = relateCmdArr(1)
+                                    nRelId = relateCmdArr(2)
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & IIf(goRequest.QueryString("pgid") = "", "", "&pgid=" & goRequest.QueryString("pgid"))
+                                    goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&type=" & cContentType & "&id=" & nRelId & "&filter=true"
+                                    bResult = True
+                                    Exit For
+                                ElseIf myItem.contains("FilterAdd") Then
+
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString & "&filter=true"
+
+                                    Dim cContentType As String = relateCmdArr(1)
+                                    If (relateCmdArr.Length > 3) Then
+                                        goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=AddContent&type=" & cContentType & "&name=New+" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & "&relationType=" & relateCmdArr(3) & pgidQueryString & "&filter=true"
+                                    Else
+                                        goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=AddContent&type=" & cContentType & "&name=New+" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & pgidQueryString & "&filter=true"
+                                    End If
+                                    goSession("mcRelAction") = "Add"
+                                    goSession("mcRelParent") = nParId
+                                    bResult = True
+                                    Exit For
+                                ElseIf myItem.contains("FilterRemove") Then
+                                    nRelId = relateCmdArr(2)
+                                    myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Content, nRelId)
+                                    bResult = True
+                                    Exit For
                                 ElseIf myItem.contains("RelateFind") Then
                                     goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString
                                     Dim cContentType As String = relateCmdArr(1)
@@ -3069,6 +3507,17 @@ Partial Public Class Cms
                                     Else
                                         goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=RelateSearch&type=" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & pgidQueryString
                                     End If
+                                    goSession("mcRelAction") = "Find"
+                                    goSession("mcRelParent") = nParId
+                                    bResult = True
+                                    Exit For
+                                    ' New condition for sku parent change functionality
+                                ElseIf myItem.contains("RelateParentChange") Then
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString
+                                    Dim cContentType As String = relateCmdArr(1)
+
+                                    goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=ParentChange&type=" & cContentType & "&direction=" & relateCmdArr(4) & "&RelType=" & relateCmdArr(4) & "&childId=" & relateCmdArr(2) & "&oldParentID=" & nParId & pgidQueryString
+
                                     goSession("mcRelAction") = "Find"
                                     goSession("mcRelParent") = nParId
                                     bResult = True
@@ -3179,7 +3628,7 @@ Partial Public Class Cms
                         bulkContentSchemaName = Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
                     bulkContentSchemaName = bulkContentSchemaName.Trim(" ").Trim(",").Trim(" ")
-                    MyBase.addSubmit(oFrmElmt, "", "Delete Products", , "principle btn-danger", "fa-trash-o")
+                    MyBase.addSubmit(oFrmElmt, "", "Delete", , "principle btn-danger", "fa-trash-o")
 
                     MyBase.Instance.InnerXml = "<delete/>"
 
@@ -3217,7 +3666,7 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim sValidResponse As String
                 Dim cProcessInfo As String = ""
-
+                Dim oinputElmt As XmlElement
                 Try
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
@@ -3227,7 +3676,8 @@ Partial Public Class Cms
 
                     MyBase.submission("DeleteFolder", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Delete Content")
-
+                    oinputElmt = MyBase.addInput(oFrmElmt, "cFolderName", False, "FolderName", "hidden")
+                    xmlTools.addNewTextNode("value", oinputElmt, cPath)
                     If cPath = "" Or cPath = "\" Or cPath = "/" Then
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "You cannot delete the root folder", , "alert-danger")
                     Else
@@ -3247,7 +3697,7 @@ Partial Public Class Cms
 
                             Dim oFs As fsHelper = New fsHelper
                             oFs.initialiseVariables(nType)
-                            sValidResponse = oFs.DeleteFolder(goRequest("cFolderName"), cPath)
+                            sValidResponse = oFs.DeleteFolder("", cPath)
 
                             ' fsh.DeleteFolder()
                             ' cPath = Left(cPath, InStrRev(cPath, "\") - 1)
@@ -3291,18 +3741,18 @@ Partial Public Class Cms
                     oFsh.initialiseVariables(nType)
                     Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
-                    Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr.HasRows Then
-                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                        Do While odr.Read
-                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                        Loop
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                        If oDr.HasRows Then
+                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                            Do While oDr.Read
+                                contentFound = contentFound + "<li><a href=""?artid=" & oDr("nContentKey") & """ target=""_new"">" & oDr("cContentSchemaName") & " - " & oDr("cContentName") & "</a></li>"
+                            Loop
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
-                    Else
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
-                    End If
-                    odr = Nothing
+                        Else
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        End If
+                    End Using
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this file? - """ & cPath & "\" & cName & """", , "alert-danger")
 
@@ -3342,8 +3792,8 @@ Partial Public Class Cms
 
             Public Function xFrmMoveFile(ByVal cPath As String, ByVal cName As String, ByVal nType As fsHelper.LibraryType) As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim sValidResponse As String
-                Dim cProcessInfo As String = ""
+                Dim sValidResponse As String = String.Empty
+                Dim cProcessInfo As String = "xFrmMoveFile"
                 Try
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
@@ -3364,28 +3814,28 @@ Partial Public Class Cms
                     End If
 
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
-                    Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr Is Nothing Then
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
-                    Else
-
-                        If odr.HasRows Then
-                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                            Dim artIds As String = ""
-                            Do While odr.Read
-                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                                artIds = odr("nContentKey") & ","
-                            Loop
-                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
-
-                            Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
-                            MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
-                            MyBase.addOption(oSelUpd, "No", "0")
-                        Else
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                        If oDr Is Nothing Then
                             MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        Else
+
+                            If oDr.HasRows Then
+                                Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                                Dim artIds As String = ""
+                                Do While oDr.Read
+                                    contentFound = contentFound + "<li><a href=""?artid=" & oDr("nContentKey") & """ target=""_new"">" & oDr("cContentSchemaName") & " - " & oDr("cContentName") & "</a></li>"
+                                    artIds = oDr("nContentKey") & ","
+                                Loop
+                                MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+
+                                Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
+                                MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
+                                MyBase.addOption(oSelUpd, "No", "0")
+                            Else
+                                MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                            End If
                         End If
-                    End If
-                    odr = Nothing
+                    End Using
 
                     Dim oSelElmt As XmlElement = MyBase.addSelect1(oFrmElmt, "destPath", False, "Move To")
                     MyBase.addOptionsFoldersFromDirectory(oSelElmt, "/" & oFsh.mcRoot)
@@ -3497,7 +3947,7 @@ Partial Public Class Cms
 
                     MyBase.submission("AddFolder", "/?ewcmd=" & myWeb.moRequest("ewcmd") & "&ewCmd2=" & myWeb.moRequest("ewCmd2") & "&pathonly=" & myWeb.moRequest("pathonly") & "&targetForm=" & myWeb.moRequest("targetForm") & "&targetField=" & myWeb.moRequest("targetField"), "post", "")
 
-                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "", "Please enter the folder name")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "New Folder", "ptn-admin-form", "Please enter the folder name")
                     MyBase.addInput(oFrmElmt, "fld", True, "Path", "readonly")
                     MyBase.addBind("fld", "folder/@path", "false() ")
 
@@ -3513,13 +3963,16 @@ Partial Public Class Cms
                         MyBase.validate()
                         If MyBase.valid Then
 
+                            Dim FolderName As String = goRequest("cFolderName")
+
                             Dim oFs As fsHelper = New fsHelper
                             oFs.initialiseVariables(nType)
-                            sValidResponse = oFs.CreateFolder(HtmlDecode(goRequest("cFolderName")), cPath)
+                            sValidResponse = oFs.CreateFolder(HtmlDecode(FolderName), cPath)
 
                             If IsNumeric(sValidResponse) Then
                                 valid = True
-                                cPath &= "\" & goRequest("cFolderName")
+                                cPath &= "\" & FolderName.Replace(" ", "-")
+                                cPath = cPath.Replace("\\", "\")
                             Else
                                 valid = False
                                 MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, sValidResponse)
@@ -3888,7 +4341,7 @@ Partial Public Class Cms
                 Dim oElmt2 As XmlElement
                 Dim oElmt3 As XmlElement
                 Dim sSql As String
-                Dim oDr As SqlDataReader
+                'Dim oDr As SqlDataReader
                 Dim cProcessInfo As String = ""
                 Dim sType As String = "Group"
 
@@ -3901,49 +4354,47 @@ Partial Public Class Cms
                     oElmt = moPageXML.CreateElement("sType")
                     oElmt.SetAttribute("id", dirId)
                     If dirId <> 0 Then
-                        oDr = moDbHelper.getDataReader("SELECT * FROM tblDirectory where nDirKey = " & dirId)
-                        While oDr.Read
-                            oElmt.SetAttribute("name", oDr("cDirName"))
-                            If oDr("cDirXml") <> "" Then
-                                oElmt.InnerXml = oDr("cDirXml")
-                            Else
-                                oElmt.InnerXml = Instance.SelectSingleNode("*").InnerXml
-                            End If
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        'oDr = moDbHelper.getDataReader("SELECT * FROM tblDirectory where nDirKey = " & dirId)
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable("SELECT * FROM tblDirectory where nDirKey = " & dirId)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                oElmt.SetAttribute("name", oDr("cDirName"))
+                                If oDr("cDirXml") <> "" Then
+                                    oElmt.InnerXml = oDr("cDirXml")
+                                Else
+                                    oElmt.InnerXml = Instance.SelectSingleNode("*").InnerXml
+                                End If
+                            End While
+                        End Using
 
                         'get item parents
                         sSql = "SELECT d.* FROM tblDirectory d " &
                         "inner join tblDirectoryRelation r on r.nDirParentId = d.nDirKey " &
                         "where r.nDirChildId = " & dirId
 
-                        oDr = moDbHelper.getDataReader(sSql)
-                        While oDr.Read
-                            oElmt2 = moPageXML.CreateElement(oDr("cDirSchema"))
-                            oElmt2.SetAttribute("id", oDr("nDirKey"))
-                            oElmt2.SetAttribute("name", oDr("cDirName"))
-                            oElmt2.SetAttribute("relType", "child")
-                            MyBase.Instance.AppendChild(oElmt2)
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                oElmt2 = moPageXML.CreateElement(oDr("cDirSchema"))
+                                oElmt2.SetAttribute("id", oDr("nDirKey"))
+                                oElmt2.SetAttribute("name", oDr("cDirName"))
+                                oElmt2.SetAttribute("relType", "child")
+                                MyBase.Instance.AppendChild(oElmt2)
+                            End While
+                        End Using
 
                         'get item Children
                         sSql = "SELECT d.* FROM tblDirectory d " &
                         "inner join tblDirectoryRelation r on r.nDirChildId = d.nDirKey " &
                         "where r.nDirParentId = " & dirId
 
-                        oDr = moDbHelper.getDataReader(sSql)
-                        While oDr.Read
-                            oElmt3 = moPageXML.CreateElement(oDr("cDirSchema"))
-                            oElmt3.SetAttribute("id", oDr("nDirKey"))
-                            oElmt3.SetAttribute("name", oDr("cDirName"))
-                            oElmt3.SetAttribute("relType", "parent")
-                            MyBase.Instance.AppendChild(oElmt3)
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                oElmt3 = moPageXML.CreateElement(oDr("cDirSchema"))
+                                oElmt3.SetAttribute("id", oDr("nDirKey"))
+                                oElmt3.SetAttribute("name", oDr("cDirName"))
+                                oElmt3.SetAttribute("relType", "parent")
+                                MyBase.Instance.AppendChild(oElmt3)
+                            End While
+                        End Using
 
                     End If
 
@@ -3957,8 +4408,9 @@ Partial Public Class Cms
                     'Lets get all other groups
                     oElmt3 = MyBase.addSelect1(oFrmElmt, sType & "CopyTo", False, "Copy " & sType & " Members To", "scroll_10", xForm.ApperanceTypes.Minimal)
                     sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d where d.cDirSchema='" & sType & "' and d.nDirKey<>" & dirId & " order by cDirName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReader(sSql), "name", "value")
-
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value")
+                    End Using
                     MyBase.addSubmit(oFrmElmt, "", "Copy " & sType)
 
                     If MyBase.isSubmitted Then
@@ -3968,19 +4420,18 @@ Partial Public Class Cms
 
                             'select all child relations so child objects don't get deleted
                             sSql = "select nRelKey, nDirChildId from tblDirectoryRelation where nDirParentId = " & dirId
-                            oDr = moDbHelper.getDataReader(sSql)
-                            'Loop through 1 behind so we can trigger sync on last one.
-                            Dim previousId As Long = 0
-                            While oDr.Read
-                                If Not previousId = 0 Then
-                                    moDbHelper.maintainDirectoryRelation(moRequest("GroupCopyTo"), previousId, False,, True,,, False)
-                                End If
-                                previousId = oDr(1)
-                            End While
-                            moDbHelper.maintainDirectoryRelation(moRequest("GroupCopyTo"), previousId, False,, True,,, True)
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                'Loop through 1 behind so we can trigger sync on last one.
+                                Dim previousId As Long = 0
+                                While oDr.Read
+                                    If Not previousId = 0 Then
+                                        moDbHelper.maintainDirectoryRelation(moRequest("GroupCopyTo"), previousId, False,, True,,, False)
+                                    End If
+                                    previousId = oDr(1)
+                                End While
+                                moDbHelper.maintainDirectoryRelation(moRequest("GroupCopyTo"), previousId, False,, True,,, True)
 
-                            oDr.Close()
-                            oDr = Nothing
+                            End Using
 
                         Else
                             MyBase.addValues()
@@ -4147,6 +4598,7 @@ Partial Public Class Cms
                         MyBase.addValues()
                         Return MyBase.moXformElmt
                     End If
+                    Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
@@ -4162,7 +4614,7 @@ Partial Public Class Cms
                 Dim oElmt2 As XmlElement
                 Dim oElmt3 As XmlElement
                 Dim sSql As String
-                Dim oDr As SqlDataReader
+                'Dim oDr As SqlDataReader
                 Dim cProcessInfo As String = ""
 
 
@@ -4176,49 +4628,47 @@ Partial Public Class Cms
                     oElmt = moPageXML.CreateElement("sType")
                     oElmt.SetAttribute("id", dirId)
                     If dirId <> 0 Then
-                        oDr = moDbHelper.getDataReader("SELECT * FROM tblDirectory where nDirKey = " & dirId)
-                        While oDr.Read
-                            oElmt.SetAttribute("name", oDr("cDirName"))
-                            If oDr("cDirXml") <> "" Then
-                                oElmt.InnerXml = oDr("cDirXml")
-                            Else
-                                oElmt.InnerXml = Instance.SelectSingleNode("*").InnerXml
-                            End If
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        'oDr = moDbHelper.getDataReader("SELECT * FROM tblDirectory where nDirKey = " & dirId)
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable("SELECT * FROM tblDirectory where nDirKey = " & dirId)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                oElmt.SetAttribute("name", oDr("cDirName"))
+                                If oDr("cDirXml") <> "" Then
+                                    oElmt.InnerXml = oDr("cDirXml")
+                                Else
+                                    oElmt.InnerXml = Instance.SelectSingleNode("*").InnerXml
+                                End If
+                            End While
+                        End Using
 
                         'get item parents
                         sSql = "SELECT d.* FROM tblDirectory d " &
                         "inner join tblDirectoryRelation r on r.nDirParentId = d.nDirKey " &
                         "where r.nDirChildId = " & dirId
 
-                        oDr = moDbHelper.getDataReader(sSql)
-                        While oDr.Read
-                            oElmt2 = moPageXML.CreateElement(oDr("cDirSchema"))
-                            oElmt2.SetAttribute("id", oDr("nDirKey"))
-                            oElmt2.SetAttribute("name", oDr("cDirName"))
-                            oElmt2.SetAttribute("relType", "child")
-                            MyBase.Instance.AppendChild(oElmt2)
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                oElmt2 = moPageXML.CreateElement(oDr("cDirSchema"))
+                                oElmt2.SetAttribute("id", oDr("nDirKey"))
+                                oElmt2.SetAttribute("name", oDr("cDirName"))
+                                oElmt2.SetAttribute("relType", "child")
+                                MyBase.Instance.AppendChild(oElmt2)
+                            End While
+                        End Using
 
                         'get item Children
                         sSql = "SELECT d.* FROM tblDirectory d " &
                         "inner join tblDirectoryRelation r on r.nDirChildId = d.nDirKey " &
                         "where r.nDirParentId = " & dirId
 
-                        oDr = moDbHelper.getDataReader(sSql)
-                        While oDr.Read
-                            oElmt3 = moPageXML.CreateElement(oDr("cDirSchema"))
-                            oElmt3.SetAttribute("id", oDr("nDirKey"))
-                            oElmt3.SetAttribute("name", oDr("cDirName"))
-                            oElmt3.SetAttribute("relType", "parent")
-                            MyBase.Instance.AppendChild(oElmt3)
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                oElmt3 = moPageXML.CreateElement(oDr("cDirSchema"))
+                                oElmt3.SetAttribute("id", oDr("nDirKey"))
+                                oElmt3.SetAttribute("name", oDr("cDirName"))
+                                oElmt3.SetAttribute("relType", "parent")
+                                MyBase.Instance.AppendChild(oElmt3)
+                            End While
+                        End Using
 
                     End If
 
@@ -4286,8 +4736,9 @@ Partial Public Class Cms
                             "left outer join tblDirectoryRelation dr on d.nDirKey = dr.nDirParentId and dr.nDirChildId = " & dirId &
                             "WHERE d.cDirSchema = 'Department' AND company.cDirSchema = 'Company' AND dept.cDirSchema = 'Department' " &
                             "AND dept.nDirKey = " & dirId & " and d.nDirKey<>" & dirId & " order by d.cDirName"
-
-                            MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReader(sSql), "name", "value")
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value")
+                            End Using
 
                         Case "Company"
 
@@ -4301,8 +4752,10 @@ Partial Public Class Cms
                             'Lets get all other companies
                             oElmt3 = MyBase.addSelect1(oFrmElmt, "TransCompanyId", False, "Select Departments", "scroll_10", xForm.ApperanceTypes.Minimal)
                             sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d where d.cDirSchema='Company' and d.nDirKey<>" & dirId & " order by cDirName"
-                            MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReader(sSql), "name", "value")
 
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value")
+                            End Using
                         Case Else '"Group", "Role"
 
                             oElmt2 = MyBase.addSelect1(oFrmElmt, "Options", False, "What do you want to do with this " & sType & "s members?", "", xForm.ApperanceTypes.Full)
@@ -4312,8 +4765,9 @@ Partial Public Class Cms
                             'Lets get all other groups
                             oElmt3 = MyBase.addSelect1(oFrmElmt, sType & "s", False, "Select Alternative " & sType, "scroll_10", xForm.ApperanceTypes.Minimal)
                             sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d where d.cDirSchema='" & sType & "' and d.nDirKey<>" & dirId & " order by cDirName"
-                            MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReader(sSql), "name", "value")
-
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value")
+                            End Using
                             'Case "Role"
 
                             '    oElmt2 = MyBase.addSelect1(oFrmElmt, "Options", False, "What do you want to do with this " & sType & "s users?", "", xForm.ApperanceTypes.Full)
@@ -4365,12 +4819,12 @@ Partial Public Class Cms
                                             sSql = "select r.nRelKey from tblDirectoryRelation r where r.nDirParentId = " & dirId &
                                             " inner join tblDirectory d on r.nDirChildId = d.nDirKey " &
                                             " where d.cDirSchema = 'User' "
-                                            oDr = moDbHelper.getDataReader(sSql)
-                                            While oDr.Read
-                                                moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
-                                            End While
-                                            oDr.Close()
-                                            oDr = Nothing
+                                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                                While oDr.Read
+                                                    moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
+                                                End While
+                                                oDr.Close()
+                                            End Using
 
                                             'Delete Company Directory Relations, Company Permissions and Company
                                             moDbHelper.DeleteObject(dbHelper.objectTypes.Directory, dirId)
@@ -4403,12 +4857,11 @@ Partial Public Class Cms
                                         Case "Remove"
                                             'remove all child relations so child objects don't get deleted
                                             sSql = "select nRelKey from tblDirectoryRelation where nDirParentId = " & dirId
-                                            oDr = moDbHelper.getDataReader(sSql)
-                                            While oDr.Read
-                                                moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
-                                            End While
-                                            oDr.Close()
-                                            oDr = Nothing
+                                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                                While oDr.Read
+                                                    moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
+                                                End While
+                                            End Using
 
                                             'Delete Department Directory Relations, Department Permissions and Department
                                             moDbHelper.DeleteObject(dbHelper.objectTypes.Directory, dirId)
@@ -4422,25 +4875,23 @@ Partial Public Class Cms
                                         Case "Transfer"
                                             'remove all child relations so child objects don't get deleted
                                             sSql = "select nRelKey, nDirChildId from tblDirectoryRelation where nDirParentId = " & dirId
-                                            oDr = moDbHelper.getDataReader(sSql)
-                                            While oDr.Read
-                                                moDbHelper.saveDirectoryRelations(oDr(1), goRequest("Groups"))
-                                                moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
-                                            End While
-                                            oDr.Close()
-                                            oDr = Nothing
+                                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                                While oDr.Read
+                                                    moDbHelper.saveDirectoryRelations(oDr(1), goRequest("Groups"))
+                                                    moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
+                                                End While
+                                            End Using
 
                                             moDbHelper.DeleteObject(dbHelper.objectTypes.Directory, dirId)
 
                                         Case "Remove"
                                             'remove all child relations so child objects don't get deleted
                                             sSql = "select nRelKey from tblDirectoryRelation where nDirParentId = " & dirId
-                                            oDr = moDbHelper.getDataReader(sSql)
-                                            While oDr.Read
-                                                moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
-                                            End While
-                                            oDr.Close()
-                                            oDr = Nothing
+                                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                                While oDr.Read
+                                                    moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
+                                                End While
+                                            End Using
 
                                             moDbHelper.DeleteObject(dbHelper.objectTypes.Directory, dirId)
                                         Case Else
@@ -4452,25 +4903,23 @@ Partial Public Class Cms
 
                                             'remove all child relations so child objects don't get deleted
                                             sSql = "select nRelKey, nDirChildId from tblDirectoryRelation where nDirParentId = " & dirId
-                                            oDr = moDbHelper.getDataReader(sSql)
-                                            While oDr.Read
-                                                moDbHelper.saveDirectoryRelations(oDr(1), goRequest("Roles"))
-                                                moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
-                                            End While
-                                            oDr.Close()
-                                            oDr = Nothing
+                                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                                While oDr.Read
+                                                    moDbHelper.saveDirectoryRelations(oDr(1), goRequest("Roles"))
+                                                    moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
+                                                End While
+                                            End Using
 
                                             moDbHelper.DeleteObject(dbHelper.objectTypes.Directory, dirId)
 
                                         Case "Remove"
                                             'remove all child relations so child objects don't get deleted
                                             sSql = "select nRelKey from tblDirectoryRelation where nDirParentId = " & dirId
-                                            oDr = moDbHelper.getDataReader(sSql)
-                                            While oDr.Read
-                                                moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
-                                            End While
-                                            oDr.Close()
-                                            oDr = Nothing
+                                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                                While oDr.Read
+                                                    moDbHelper.DeleteObject(dbHelper.objectTypes.DirectoryRelation, oDr(0))
+                                                End While
+                                            End Using
 
                                             moDbHelper.DeleteObject(dbHelper.objectTypes.Directory, dirId)
                                         Case Else
@@ -4499,7 +4948,7 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim oElmt As XmlElement
 
-                Dim oDr As SqlDataReader
+                'Dim oDr As SqlDataReader
                 Dim cProcessInfo As String = ""
 
 
@@ -4513,12 +4962,12 @@ Partial Public Class Cms
                     oElmt = moPageXML.CreateElement("sType")
                     oElmt.SetAttribute("id", id)
                     If id <> 0 Then
-                        oDr = moDbHelper.getDataReader("SELECT tblCartShippingMethods.* FROM tblCartShippingMethods WHERE nShipOptKey = " & id)
-                        While oDr.Read
-                            oElmt.SetAttribute("name", oDr("cShipOptName"))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        'oDr = moDbHelper.getDataReader("SELECT tblCartShippingMethods.* FROM tblCartShippingMethods WHERE nShipOptKey = " & id)
+                        Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable("SELECT tblCartShippingMethods.* FROM tblCartShippingMethods WHERE nShipOptKey = " & id)  'Done by nita on 6/7/22
+                            While oDR.Read
+                                oElmt.SetAttribute("name", oDR("cShipOptName"))
+                            End While
+                        End Using
                     End If
 
                     MyBase.Instance.AppendChild(oElmt)
@@ -4559,7 +5008,7 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim oElmt As XmlElement
 
-                Dim oDr As SqlDataReader
+                'Dim oDr As SqlDataReader
                 Dim cProcessInfo As String = ""
 
 
@@ -4573,12 +5022,12 @@ Partial Public Class Cms
                     oElmt = moPageXML.CreateElement("sType")
                     oElmt.SetAttribute("id", id)
                     If id <> 0 Then
-                        oDr = moDbHelper.getDataReader("SELECT tblCartCarrier.* FROM tblCartCarrier WHERE nCarrierKey = " & id)
-                        While oDr.Read
-                            oElmt.SetAttribute("name", oDr("cCarrierName"))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        'oDr = moDbHelper.getDataReader("SELECT tblCartCarrier.* FROM tblCartCarrier WHERE nCarrierKey = " & id)
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable("SELECT tblCartCarrier.* FROM tblCartCarrier WHERE nCarrierKey = " & id)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                oElmt.SetAttribute("name", oDr("cCarrierName"))
+                            End While
+                        End Using
                     End If
 
                     MyBase.Instance.AppendChild(oElmt)
@@ -4619,7 +5068,7 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim oElmt As XmlElement
 
-                Dim oDr As SqlDataReader
+                'Dim oDr As SqlDataReader
                 Dim cProcessInfo As String = ""
 
 
@@ -4633,12 +5082,12 @@ Partial Public Class Cms
                     oElmt = moPageXML.CreateElement("sType")
                     oElmt.SetAttribute("id", id)
                     If id <> 0 Then
-                        oDr = moDbHelper.getDataReader("SELECT cLocationNameFull FROM tblCartShippingLocations WHERE nLocationKey = " & id)
-                        While oDr.Read
-                            oElmt.SetAttribute("name", oDr(0))
-                        End While
-                        oDr.Close()
-                        oDr = Nothing
+                        'oDr = moDbHelper.getDataReader("SELECT cLocationNameFull FROM tblCartShippingLocations WHERE nLocationKey = " & id)
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable("SELECT cLocationNameFull FROM tblCartShippingLocations WHERE nLocationKey = " & id)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                oElmt.SetAttribute("name", oDr(0))
+                            End While
+                        End Using
                     End If
 
                     MyBase.Instance.AppendChild(oElmt)
@@ -4718,10 +5167,10 @@ Partial Public Class Cms
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditPermissions", "PermissionButtons", "Set Selected Group Permissions")
                     'MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "AllowSelected", "Allow Selected", "", "PermissionButton icon-right", "fa-arrow-right")
-                    MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButton icon-right", "fa-arrow-right")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-primary", "fa-arrow-left")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "Remove All - Open Access", "", "PermissionButton btn-danger", "fa-times")
+                    MyBase.addSubmit(oFrmGrp2, "AllowSelected", "Allow Selected", "", "PermissionButton btn-allow", "fa-arrow-right")
+                    MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButton btn-deny", "fa-arrow-right")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove", "fa-arrow-left")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "Clear All Permissions - Open", "", "PermissionButton btn-clear-all", "fa-times")
 
                     MyBase.addNote(oFrmGrp2, xForm.noteTypes.Hint, "Allowing one group impicitly denies all others, only use deny permissions to further filter members of allowed groups")
 
@@ -4756,7 +5205,9 @@ Partial Public Class Cms
                         sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " &
                         "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " & id & " " &
                         "where d.cDirSchema='" & SqlFmt(cSchema) & "' and p.nPermKey is null order by d.cDirName"
-                        MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReader(sSql), "name", "value")
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                        End Using
                     Next
 
 
@@ -4771,8 +5222,10 @@ Partial Public Class Cms
                     "inner join tblDirectory d on d.nDirKey = p.nDirId " &
                     "where p.nStructId=" & id & " and p.nAccessLevel = 2" &
                     " order by d.cDirSchema"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReader(sSql), "name", "value")
 
                     oElmt4 = MyBase.addSelect(oFrmGrp3, "Items", False, "Denied", "scroll_10", xForm.ApperanceTypes.Minimal)
                     sSql = "SELECT p.nDirId as value, '['+ d.cDirSchema + '] ' + d.cDirName as name from tblDirectoryPermission p " &
@@ -4781,8 +5234,10 @@ Partial Public Class Cms
                     " order by d.cDirSchema"
 
                     MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReader(sSql), "name", "value")
 
                     MyBase.Instance.InnerXml = "<permissions/>"
 
@@ -4856,10 +5311,10 @@ Partial Public Class Cms
                     MyBase.addOption(oElmt2, "Full", "9")
 
                     ' Add All does nothing, probably is not good for this screen either.
-                    'MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "< Remove All", "", "PermissionButtons")
+                    'MyBase.addSubmit(oFrmGrp2, "AddAll", "Add All", "", "PermissionButtons btn-all")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButton btn-remove")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveAll", "Clear All", "", "PermissionButtons btn-clear-all")
 
 
                     ' Save the permissions on submission
@@ -4891,7 +5346,9 @@ Partial Public Class Cms
                             sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " &
                             "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " & id & " " &
                             "where d.cDirSchema='" & SqlFmt(cSchema) & "' and p.nPermKey is null order by d.cDirName"
-                            MyBase.addOptionsFromSqlDataReader(oElmt, moDbHelper.getDataReader(sSql), "name", "value")
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt, oDr, "name", "value")
+                            End Using
                         End If
                     Next
 
@@ -4910,7 +5367,10 @@ Partial Public Class Cms
                             "inner join tblDirectory d on d.nDirKey = p.nDirId " &
                             "where p.nStructId=" & id & " and d.cDirSchema = '" & SqlFmt(cSchema) & "' " &
                             "order by d.cDirSchema"
-                            MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReader(sSql), "name", "value")
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                            End Using
+
 
                         End If
                     Next
@@ -4963,9 +5423,9 @@ Partial Public Class Cms
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditPermissions", "PermissionButtons", "Buttons")
 
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "Finish", "Finish Editing", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons btn-add")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons btn-remove")
+                    MyBase.addSubmit(oFrmGrp2, "Finish", "Finish Editing", "", "PermissionButtons btmn-finish")
 
                     Select Case MyBase.getSubmitted
 
@@ -4988,15 +5448,19 @@ Partial Public Class Cms
 
                     sSql = "execute getUsersCompanyDepartments @userId=" & UserId & ", @adminUserId=" & myWeb.mnUserId
 
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt1, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt1, moDbHelper.getDataReader(sSql), "name", "value")
 
                     oElmt2 = MyBase.addSelect(oFrmGrp1, "Groups", False, "Groups", "scroll_10", xForm.ApperanceTypes.Minimal)
 
                     sSql = "execute getUsersCompanyGroups @userId=" & UserId & ", @adminUserId=" & myWeb.mnUserId
 
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReader(sSql), "name", "value")
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "PermittedObjects", "", "User is Member of...")
                     MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
@@ -5006,8 +5470,10 @@ Partial Public Class Cms
                     sSql = "SELECT d.nDirKey as value, '['+ d.cDirSchema + '] ' + d.cDirName as name from tblDirectory d " &
                      "inner join tblDirectoryRelation dr on dr.nDirParentId = d.nDirKey and dr.nDirChildId = " & UserId & " " &
                      "where d.cDirSchema='Group' or d.cDirSchema='Department'  order by d.cDirName"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReader(sSql), "name", "value")
 
                     MyBase.Instance.InnerXml = "<memberships/>"
 
@@ -5080,9 +5546,9 @@ Partial Public Class Cms
 
 
                     ' Add submit buttons (group specified by issue 1362)
-                    MyBase.addSubmit(oFrmButtons, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmButtons, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmButtons, "Finish", "Finish Editing", "", "principle PermissionButtons")
+                    MyBase.addSubmit(oFrmButtons, "AddSelected", "Add Selected", "", "PermissionButtons btn-add")
+                    MyBase.addSubmit(oFrmButtons, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
+                    MyBase.addSubmit(oFrmButtons, "Finish", "Finish Editing", "", "principle PermissionButtons btn-finish")
 
                     'lets add / remove before we populate
                     Select Case MyBase.getSubmitted
@@ -5132,11 +5598,13 @@ Partial Public Class Cms
                             End If
                         End If
                         If Not String.IsNullOrEmpty(sSql) Then
-                            If aChildTypes(i) = "User" Then
-                                addUserOptionsFromSqlDataReader(oElmt1, moDbHelper.getDataReader(sSql), "name", "value")
-                            Else
-                                addOptionsFromSqlDataReader(oElmt1, moDbHelper.getDataReader(sSql), "name", "value")
-                            End If
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                                If aChildTypes(i) = "User" Then
+                                    addUserOptionsFromSqlDataReader(oElmt1, oDr, "name", "value")
+                                Else
+                                    addOptionsFromSqlDataReader(oElmt1, oDr, "name", "value")
+                                End If
+                            End Using
                         End If
 
                     Next
@@ -5155,8 +5623,11 @@ Partial Public Class Cms
                         End If
                     Next
                     sSql = sSql & "and (a.nStatus =1 or a.nStatus = -1) order by d.cDirName"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        addUserOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    addUserOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReader(sSql), "name", "value")
+
 
                     If MyBase.getSubmitted = "Finish" Then MyBase.valid = True
 
@@ -5455,18 +5926,17 @@ Partial Public Class Cms
 
                     'Replace Spaces with hypens
                     cProviderType = Replace(cProviderType, " ", "-")
-
-                    If Not MyBase.load("/xforms/PaymentProvider/" & cProviderType & ".xml", myWeb.maCommonFolders) Then
+                    Dim formPath = "/xforms/PaymentProvider/"
+                    If bs5 Then formPath = "/features/cart/PaymentProvider/"
+                    If Not MyBase.load(formPath & cProviderType & ".xml", myWeb.maCommonFolders) Then
                         'show xform load error message
 
                     Else
                         'remove hyphens
                         cProviderType = Replace(cProviderType, "-", "")
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                            'replace the instance if it exists in the web.config
-                            If Not oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']") Is Nothing Then
+                        startImp()
+                        'replace the instance if it exists in the web.config
+                        If Not oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']") Is Nothing Then
                                 MyBase.Instance.InnerXml = oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']").OuterXml
                             End If
 
@@ -5499,8 +5969,7 @@ Partial Public Class Cms
                                     End If
                                 End If
                             End If
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                     End If
                     MyBase.addValues()
                     Return MyBase.moXformElmt
@@ -5537,10 +6006,8 @@ Partial Public Class Cms
 
                     'remove hyphens
                     cProviderType = Replace(cProviderType, "-", "")
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                        If MyBase.isSubmitted Then
+                    startImp()
+                    If MyBase.isSubmitted Then
                             MyBase.updateInstanceFromRequest()
                             MyBase.validate()
                             If MyBase.valid Then
@@ -5562,8 +6029,7 @@ Partial Public Class Cms
                                 fsHelper = Nothing
 
                             End If
-                        End If
-                        oImp.UndoImpersonation()
+                        endImp()
 
                     End If
 
@@ -5631,9 +6097,11 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 7 ' Refunded
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, "Refunded", 7)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 8 ' Failed
                             MyBase.addOption(oSelElmt, "Abandoned", 11)
                             MyBase.addOption(oSelElmt, "Delete", 12)
@@ -5645,6 +6113,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Deposit Paid", 10)
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 13 'Awaiting Payment
                             MyBase.addOption(oSelElmt, "Awaiting Payment", 13)
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
@@ -5656,6 +6125,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
+                            MyBase.addOption(oSelElmt, "Delete", 12)
 
                     End Select
                     MyBase.addBind("nStatus", "tblCartOrder/nCartStatus", "true()")
@@ -5683,8 +6153,11 @@ Partial Public Class Cms
                             Dim oCarrierElmt As XmlElement = MyBase.addGroup(oCase3, "Carrier", "inline", cSchemaName & " Carrier")
 
                             Dim CarrierSelect As XmlElement = MyBase.addSelect1(oCarrierElmt, "nCarrierId", True, "Carrier")
-                            Dim oDr As SqlDataReader = moDbHelper.getDataReader("select cCarrierName as name, nCarrierKey as value from tblCartCarrier")
-                            MyBase.addOptionsFromSqlDataReader(CarrierSelect, oDr)
+                            'Dim oDr As SqlDataReader = moDbHelper.getDataReader("select cCarrierName as name, nCarrierKey as value from tblCartCarrier")
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable("select cCarrierName as name, nCarrierKey as value from tblCartCarrier")  'Done by nita on 6/7/22
+                                MyBase.addOptionsFromSqlDataReader(CarrierSelect, oDr)
+                            End Using
+
                             MyBase.addBind("nCarrierId", "tblCartOrderDelivery/nCarrierId", validationOn)
 
                             MyBase.addInput(oCarrierElmt, "cCarrierRef", True, "Carrier Reference")
@@ -5858,7 +6331,7 @@ Partial Public Class Cms
                     Dim refundAmount As Decimal
                     Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
-                    Dim amount As String = ""
+                    Dim amount As Double
 
 
 
@@ -5875,13 +6348,13 @@ Partial Public Class Cms
                             ' Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
                             Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/*[1]")
                             If (xnInstance IsNot Nothing) Then
-                                amount = xnInstance.Attributes("AmountPaid").InnerText
+                                amount = CDbl("0" & xnInstance.Attributes("AmountPaid").InnerText)
                             End If
                         End If
 
                     End If
 
-                    refundAmount = Convert.ToDouble(amount)
+                    refundAmount = amount
 
                     MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement
@@ -5923,9 +6396,6 @@ Partial Public Class Cms
                                 oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                                 For Each oRow In oDs.Tables("Order").Rows
                                     If (IsRefund IsNot Nothing) Then
-
-                                        moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
-
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
                                     Else
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And Error is: " & IsRefund & "'"
@@ -5933,9 +6403,11 @@ Partial Public Class Cms
                                 Next
                                 myWeb.moDbHelper.updateDataset(oDs, "Order")
 
+                                If (IsRefund IsNot Nothing) Then
+                                    moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
+                                End If
                             End If
                         End If
-
                     End If
                     MyBase.addValues()
                     Return MyBase.moXformElmt
@@ -6037,16 +6509,135 @@ Partial Public Class Cms
                             Dim bIncRelated As Boolean = IIf(MyBase.Instance.SelectSingleNode("nIncludeRelated").InnerText = "1", True, False)
 
                             Dim sSQL As String = "Select " & cSelectField & " From " & cTableName & " WHERE " & cFilterField & " = " & nParId
-                            Dim oDre As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                            Dim cTmp As String = ""
-                            Do While oDre.Read
-                                cTmp &= oDre(0) & ","
-                            Loop
-                            oDre.Close()
-                            If Not cTmp = "" Then cTmp = Left(cTmp, Len(cTmp) - 1)
+                            Using oDre As SqlDataReader = moDbHelper.getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                                Dim cTmp As String = ""
+                                Do While oDre.Read
+                                    cTmp &= oDre(0) & ","
+                                Loop
 
-                            oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, nParId, IIf(bIgnoreParID, 0, nParId), cTmp.Split(","), bIncRelated))
+                                If Not cTmp = "" Then cTmp = Left(cTmp, Len(cTmp) - 1)
+                                oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, nParId, IIf(bIgnoreParID, 0, nParId), cTmp.Split(","), bIncRelated))
 
+                            End Using
+                        End If
+
+                    Else
+                        MyBase.Instance.InnerXml = "<nParentContentId>" & nParentID & "</nParentContentId>" &
+                          "<cSchemaName>" & cContentType & "</cSchemaName>" &
+                          "<cSection>0</cSection>" &
+                          "<nSearchChildren>1</nSearchChildren>" &
+                          "<cParentContentName>" & cParentContentName & "</cParentContentName>" &
+                          "<redirect>" & redirect & "</redirect><cSearch/>"
+                        MyBase.addValues()
+                    End If
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            'New xForm for return product for change 
+            Public Function xFrmFindParent(ByVal nParentID As String, ByVal childId As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
+                Dim oFrmElmt As XmlElement
+                Dim oSelElmt1 As XmlElement
+                Dim oSelElmt2 As XmlElement
+                Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
+                Dim bCascade As Boolean = False
+                Dim cProcessInfo As String = ""
+
+                Try
+                    Dim cParentContentName As String = convertEntitiesToCodes(moDbHelper.getNameByKey(dbHelper.objectTypes.Content, nParentID))
+
+                    MyBase.NewFrm("FindRelatedContent")
+                    MyBase.Instance.InnerXml = "<nParentContentId>" & nParentID & "</nParentContentId>" &
+                          "<cSchemaName>" & cContentType & "</cSchemaName>" &
+                        "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" & cParentContentName & "</cParentContentName><redirect>" & redirect & "</redirect><cSearch/>"
+
+                    'MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
+                    MyBase.submission("AddRelated", "", "post", "form_check(this)")
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "SearchRelated", , "Search For " & cContentType)
+
+                    'Definitions
+                    If redirect <> "" Then
+                        MyBase.addInput(oFrmElmt, "redirect", True, "redirect", "hidden")
+                        MyBase.addBind("redirect", "redirect")
+                    End If
+                    MyBase.addInput(oFrmElmt, "nParentContentId", True, "nParentContentId", "hidden")
+                    MyBase.addBind("nParentContentId", "nParentContentId")
+
+                    MyBase.addInput(oFrmElmt, "cSchemaName", True, "cSchemaName", "hidden")
+                    MyBase.addBind("cSchemaName", "cSchemaName")
+
+                    'What we are searching for
+                    MyBase.addInput(oFrmElmt, "cSearch", True, "Search Text")
+                    MyBase.addBind("cSearch", "cSearch", "false()")
+
+                    'Pages
+                    oSelElmt1 = MyBase.addSelect1(oFrmElmt, "cSection", False, "Page", , ApperanceTypes.Minimal)
+                    MyBase.addOption(oSelElmt1, "All", 0)
+                    MyBase.addOption(oSelElmt1, "All Orphan " & cContentType & "s", -1)
+                    Dim cSQL As String
+                    cSQL = "SELECT tblContentStructure.* FROM tblContentStructure ORDER BY nStructOrder"
+                    Dim oDS As New DataSet
+                    oDS = moDbHelper.GetDataSet(cSQL, "Menu", "Struct")
+                    oDS.Relations.Add("RelMenu", oDS.Tables("Menu").Columns("nStructKey"), oDS.Tables("Menu").Columns("nStructParID"), False)
+                    oDS.Relations("RelMenu").Nested = True
+                    Dim oMenuXml As New XmlDocument
+                    oMenuXml.InnerXml = oDS.GetXml
+                    Dim oMenuElmt As XmlElement
+                    For Each oMenuElmt In oMenuXml.SelectNodes("descendant-or-self::Menu")
+                        Dim oTmpNode As XmlElement = oMenuElmt
+                        Dim cNameString As String = ""
+                        Do Until oTmpNode.ParentNode.Name = "Struct"
+                            cNameString &= "-"
+                            oTmpNode = oTmpNode.ParentNode
+                        Loop
+                        cNameString &= oMenuElmt.SelectSingleNode("cStructName").InnerText
+                        MyBase.addOption(oSelElmt1, cNameString, oMenuElmt.SelectSingleNode("nStructKey").InnerText)
+                    Next
+                    MyBase.addBind("cSection", "cSection", "true()")
+                    'Search sub pages
+                    oSelElmt2 = MyBase.addSelect(oFrmElmt, "nSearchChildren", True, "&#160;", "", ApperanceTypes.Full)
+                    MyBase.addOption(oSelElmt2, "Search all sub-pages", 1)
+                    MyBase.addBind("nSearchChildren", "nSearchChildren", "false()")
+
+                    If cContentType.Contains("Product") And cContentType.Contains("SKU") Then
+                        oSelElmt2 = MyBase.addSelect(oFrmElmt, "nIncludeRelated", True, "&#160;", "", ApperanceTypes.Full)
+                        MyBase.addOption(oSelElmt2, "Include Related Sku's", 1)
+                        MyBase.addBind("nIncludeRelated", "nIncludeRelated", "false()")
+                    End If
+
+                    'search button
+                    MyBase.addSubmit(oFrmElmt, "Search", "Search", "ewSubmit")
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.addValues()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            'Dim nPar As Integer = goRequest.QueryString("GroupId")
+                            If Not IsNumeric(nParId) Then
+                                Dim oParElmt As XmlElement = MyBase.Instance.SelectSingleNode(nParId)
+                                If Not oParElmt Is Nothing Then nParId = oParElmt.InnerText
+                            End If
+                            Dim nRoot As Integer = MyBase.Instance.SelectSingleNode("cSection").InnerText
+                            Dim bChilds As Boolean = IIf(MyBase.Instance.SelectSingleNode("nSearchChildren").InnerText = "1", True, False)
+                            Dim cExpression As String = MyBase.Instance.SelectSingleNode("cSearch").InnerText
+                            Dim bIncRelated As Boolean = IIf(MyBase.Instance.SelectSingleNode("nIncludeRelated").InnerText = "1", True, False)
+
+                            Dim sSQL As String = "Select " & cSelectField & " From " & cTableName & " WHERE " & cFilterField & " = " & nParId
+                            Using oDre As SqlDataReader = moDbHelper.getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                                Dim cTmp As String = ""
+                                Do While oDre.Read
+                                    cTmp &= oDre(0) & ","
+                                Loop
+
+                                If Not cTmp = "" Then cTmp = Left(cTmp, Len(cTmp) - 1)
+                                oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, nParId, IIf(bIgnoreParID, 0, nParId), cTmp.Split(","), bIncRelated))
+
+                            End Using
                         End If
 
                     Else
@@ -6212,8 +6803,8 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditRelations", "RelationButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
@@ -6230,7 +6821,10 @@ Partial Public Class Cms
                     " FROM tblCartDiscountProdCatRelations" &
                     " WHERE (nProductCatId = tblCartProductCategories.nCatKey) AND (nDiscountId = " & id & "))) IS NULL)" &
                     " ORDER BY cCatName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReader(sSql), "name", "value")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
+
 
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All items with permissions to access page")
@@ -6241,8 +6835,9 @@ Partial Public Class Cms
                     sSql = "SELECT tblCartDiscountProdCatRelations.nDiscountProdCatRelationKey as value, tblCartProductCategories.cCatName as name" &
                     " FROM tblCartDiscountProdCatRelations INNER JOIN tblCartProductCategories ON tblCartDiscountProdCatRelations.nProductCatId = tblCartProductCategories.nCatKey" &
                     " WHERE (tblCartDiscountProdCatRelations.nDiscountId = " & id & ") ORDER BY tblCartProductCategories.cCatName"
-
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReader(sSql), "name", "value")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
                     MyBase.Instance.InnerXml = "<relations/>"
 
@@ -6285,11 +6880,11 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected >", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Add Selected", "", "PermissionButtons btn-add")
                     If bDeny Then
-                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected >", "", "PermissionButtons")
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButtons btn-deny")
                     End If
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
@@ -6312,7 +6907,10 @@ Partial Public Class Cms
                     " FROM tblCartDiscountDirRelations" &
                     " WHERE (nDiscountId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
                     "ORDER BY cDirName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReader(sSql), "name", "value")
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
+
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All items with permissions to access page")
                     MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
@@ -6324,8 +6922,10 @@ Partial Public Class Cms
                     " FROM tblCartDiscountDirRelations LEFT OUTER JOIN" &
                     "  tblDirectory ON tblCartDiscountDirRelations.nDirId = tblDirectory.nDirKey" &
                     " WHERE (tblCartDiscountDirRelations.ndiscountid = " & id & ")" & cDenyFilter & " ORDER BY cDirName"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReader(sSql), "name", "value")
 
                     If bDeny Then
 
@@ -6336,8 +6936,10 @@ Partial Public Class Cms
                     " FROM tblCartDiscountDirRelations LEFT OUTER JOIN" &
                     "  tblDirectory ON tblCartDiscountDirRelations.nDirId = tblDirectory.nDirKey" &
                     " WHERE (tblCartDiscountDirRelations.ndiscountid = " & id & ") and nPermLevel = 0 ORDER BY cDirName"
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value")
+                        End Using
 
-                        MyBase.addOptionsFromSqlDataReader(oElmt5, moDbHelper.getDataReader(sSql), "name", "value")
                     End If
 
                     MyBase.Instance.InnerXml = "<Dirs/>"
@@ -6381,11 +6983,11 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Allow Selected >", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Allow Selected", "", "PermissionButtons btn-allow")
                     If bDeny Then
-                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected >", "", "PermissionButtons")
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "PermissionButtons btn-deny")
                     End If
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "< Remove Selected", "", "PermissionButtons")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
@@ -6418,8 +7020,10 @@ Partial Public Class Cms
                     " FROM tblCartShippingPermission" &
                     " WHERE (nShippingMethodId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
                     "ORDER BY cDirName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReader(sSql), "name", "value")
 
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
                     oElmt2 = MyBase.addSelect(oFrmGrp1, "Roles", False, "User Roles", "scroll_10", xForm.ApperanceTypes.Minimal)
 
                     sSql = "SELECT nDirKey as value, cDirName as name FROM tblDirectory WHERE (cDirSchema = N'Role') AND" &
@@ -6427,8 +7031,10 @@ Partial Public Class Cms
                     " FROM tblCartShippingPermission" &
                     " WHERE (nShippingMethodId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
                     "ORDER BY cDirName"
-                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReader(sSql), "name", "value")
 
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
 
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All Groups with permissions for Shipping Method")
@@ -6443,8 +7049,9 @@ Partial Public Class Cms
                     " tblDirectory ON tblCartShippingPermission.nDirId = tblDirectory.nDirKey" &
                     " WHERE (tblCartShippingPermission.nShippingMethodId = " & id & ")" & cDenyFilter & " ORDER BY cDirName"
 
-                    MyBase.addOptionsFromSqlDataReader(oElmt4, moDbHelper.getDataReader(sSql), "name", "value")
-
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
                     If bDeny Then
 
                         oElmt5 = MyBase.addSelect(oFrmGrp3, "Items", False, "Denied", "scroll_10", xForm.ApperanceTypes.Minimal)
@@ -6454,8 +7061,10 @@ Partial Public Class Cms
                         " FROM tblCartShippingPermission LEFT OUTER JOIN" &
                         "  tblDirectory ON tblCartShippingPermission.nDirId = tblDirectory.nDirKey" &
                         " WHERE (tblCartShippingPermission.nShippingMethodId = " & id & ") and nPermLevel = 0 ORDER BY cDirName"
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value")
+                        End Using
 
-                        MyBase.addOptionsFromSqlDataReader(oElmt5, moDbHelper.getDataReader(sSql), "name", "value")
                     End If
 
                     MyBase.Instance.InnerXml = "<Dirs/>"
@@ -6478,6 +7087,7 @@ Partial Public Class Cms
 
                     If id > 0 Then
                         MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartContact, id)
+
                     End If
 
                     ' Add the countries list to the form
@@ -6756,10 +7366,11 @@ Partial Public Class Cms
 
                     Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "OptIn", True, "Addresses", "block scroll", ApperanceTypes.Full)
                     Dim cSQL As String = "SELECT EmailAddress FROM tblOptOutAddresses ORDER BY EmailAddress"
-                    Dim oDre As SqlDataReader = moDbHelper.getDataReader(cSQL)
-                    Do While oDre.Read
-                        MyBase.addOption(oSelElmt, oDre(0), oDre(0))
-                    Loop
+                    Using oDre As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                        Do While oDre.Read
+                            MyBase.addOption(oSelElmt, oDre(0), oDre(0))
+                        Loop
+                    End Using
                     MyBase.addBind("OptIn", "OptIn")
                     MyBase.addSubmit(oFrmElmt, "RemoveOptOut", "Remove from List")
 
@@ -6812,7 +7423,11 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditScheduleItem")
 
-                    MyBase.load("/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    If goConfig("cssFramework") = "bs5" Then
+                        MyBase.load("/admin/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    Else
+                        MyBase.load("/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    End If
 
                     If nID > 0 Then
                         MyBase.Instance.InnerXml = dbh.getObjectInstance(dbHelper.objectTypes.ScheduledItem, nID)
@@ -6826,7 +7441,13 @@ Partial Public Class Cms
                     'get files
                     Dim oXSLSelect As XmlElement = MyBase.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cXSLPath']")
                     If Not oXSLSelect Is Nothing Then
-                        FileList("/xsl/feeds/", oXSLSelect, ".xsl")
+                        If goConfig("cssFramework") = "bs5" Then
+
+                            FileList("/feeds/", oXSLSelect, ".xsl")
+                        Else
+
+                            FileList("/xsl/feeds/", oXSLSelect, ".xsl")
+                        End If
                     End If
                     'set siteid
                     Dim oSiteIDElmt As XmlElement = MyBase.Instance.SelectSingleNode("descendant-or-self::nWebsite")
@@ -6898,6 +7519,10 @@ Partial Public Class Cms
 
                     Dim cBasePath As String = goServer.MapPath("/" & cInitialFolder)
                     Dim cCommonPath As String = goServer.MapPath("/ewcommon" & cInitialFolder)
+
+                    If goConfig("cssFramework") = "bs5" Then
+                        cCommonPath = goServer.MapPath("/ptn" & cInitialFolder)
+                    End If
                     Dim dir As New DirectoryInfo(cBasePath)
 
                     If Not dir.Exists Then
@@ -6939,9 +7564,11 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditFeedItem")
 
-
-
-                    MyBase.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    If myWeb.moConfig("cssFramework") = "bs5" Then
+                        MyBase.load("/core/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    Else
+                        MyBase.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    End If
 
                     Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
 
@@ -7150,7 +7777,7 @@ Partial Public Class Cms
                     MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
                     Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
                     MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
-
+                    MyBase.addValue(oSelElmt, "yes")
 
                     MyBase.addNote(oFrmElmt, noteTypes.Hint, "Renew Subscription", True, "renew-sub")
 
@@ -7174,8 +7801,63 @@ Partial Public Class Cms
                             End If
 
                             Return MyBase.moXformElmt
-                            End If
                         End If
+                    End If
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
+            Public Function xFrmResendSubscription(ByVal nOrderId As String) As XmlElement
+                Dim cProcessInfo As String = ""
+                Try
+
+                    Dim nSubscriptionId As String = moDbHelper.ExeProcessSqlScalar("select nSubId from tblSubscriptionRenewal where nOrderId = " & nOrderId)
+
+                    Dim oSub As New Cart.Subscriptions(myWeb)
+
+                    MyBase.NewFrm("RenewSubscription")
+                    MyBase.submission("RenewSubscription", "", "post")
+                    Dim oFrmElmt As XmlElement
+
+                    oSub.GetSubscriptionDetail(MyBase.Instance, nSubscriptionId)
+                    Dim SubXml = MyBase.Instance.FirstChild
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "RenewSubscription")
+
+                    MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
+                    MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
+                    Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
+                    MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
+                    MyBase.addValue(oSelElmt, "yes")
+
+                    MyBase.addNote(oFrmElmt, noteTypes.Hint, "Resend Subscription", True, "resend-sub")
+
+                    MyBase.addSubmit(oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left")
+                    MyBase.addSubmit(oFrmElmt, "Confirm", "Confirm Refresh and Resend", "Confirm", "btn-success principle", "fa-repeat")
+
+                    If Me.isSubmitted Then
+                        If MyBase.getSubmitted = "Back" Then
+                            Return MyBase.moXformElmt
+                            myWeb.msRedirectOnEnd = "/?ewCmd=ResendSubscription"
+                        ElseIf MyBase.getSubmitted = "Confirm" Then
+                            Dim bEmailClient As Boolean = False
+                            If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
+                            Dim RenewResponse As String
+                            RenewResponse = oSub.RefreshSubscriptionOrder(MyBase.Instance.FirstChild, bEmailClient, nOrderId)
+                            If RenewResponse = "Success" Then
+                                MyBase.valid = True
+                            Else
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Resend Failed")
+                                MyBase.valid = False
+                            End If
+
+                            Return MyBase.moXformElmt
+                        End If
+                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
@@ -7366,10 +8048,8 @@ Partial Public Class Cms
                     Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                     Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/cart")
 
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                        MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                    startImp()
+                    MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
 
                         'code here to replace any missing nodes
                         'all of the required config settings
@@ -7404,8 +8084,8 @@ Partial Public Class Cms
                             End If
                         End If
 
-                        oImp.UndoImpersonation()
-                    End If
+                    endImp()
+
                     MyBase.addValues()
                     Return MyBase.moXformElmt
 
@@ -7712,25 +8392,27 @@ Partial Public Class Cms
 
                     ' Lets get the content types if we have more than 1
 
-                    Dim oDR As SqlDataReader
+                    'Dim oDR As SqlDataReader
                     Dim cSQL As String = "SELECT tblContent.cContentSchemaName" &
                     " FROM tblCartItem LEFT OUTER JOIN" &
                     " tblContent ON tblCartItem.nItemId = tblContent.nContentKey" &
                     " GROUP BY tblContent.cContentSchemaName" &
                     " ORDER BY tblContent.cContentSchemaName"
-                    oDR = myWeb.moDbHelper.getDataReader(cSQL)
+                    Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
 
-                    If oDR.VisibleFieldCount > 1 Then
+                        If oDR.VisibleFieldCount > 1 Then
 
-                        oSel1 = MyBase.addSelect1(oGrp0Elmt, "bSplit", True, "Group By Product Type")
-                        MyBase.addOption(oSel1, "Yes", "1")
-                        MyBase.addOption(oSel1, "No", "0")
+                            oSel1 = MyBase.addSelect1(oGrp0Elmt, "bSplit", True, "Group By Product Type")
+                            MyBase.addOption(oSel1, "Yes", "1")
+                            MyBase.addOption(oSel1, "No", "0")
 
-                        oSel1 = MyBase.addSelect1(oGrp0Elmt, "cProductType", True, "Select Product Type")
-                        MyBase.addOption(oSel1, "All", "")
-                        MyBase.addOptionsFromSqlDataReader(oSel1, oDR, "cContentSchemaName", "cContentSchemaName")
+                            oSel1 = MyBase.addSelect1(oGrp0Elmt, "cProductType", True, "Select Product Type")
+                            MyBase.addOption(oSel1, "All", "")
+                            MyBase.addOptionsFromSqlDataReader(oSel1, oDR, "cContentSchemaName", "cContentSchemaName")
 
-                    End If
+                        End If
+                    End Using
+
 
                     'Gets full list of products
 
@@ -7739,26 +8421,26 @@ Partial Public Class Cms
                     " tblContent ON tblCartItem.nItemId = tblContent.nContentKey" &
                     " GROUP BY tblContent.cContentName, tblContent.nContentKey" &
                     " ORDER BY tblContent.cContentName"
-                    oDR = myWeb.moDbHelper.getDataReader(cSQL)
+                    Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
 
+                        oSel1 = MyBase.addSelect1(oGrp0Elmt, "nProductId", True, "Single Product")
+                        MyBase.addOption(oSel1, "All", "0")
+                        MyBase.addOptionsFromSqlDataReader(oSel1, oDR, "cContentName", "nContentKey")
 
-                    oSel1 = MyBase.addSelect1(oGrp0Elmt, "nProductId", True, "Single Product")
-                    MyBase.addOption(oSel1, "All", "0")
-                    MyBase.addOptionsFromSqlDataReader(oSel1, oDR, "cContentName", "nContentKey")
+                        MyBase.addSubmit(oGrp0Elmt, "Results", "See Results", "Results")
 
-                    MyBase.addSubmit(oGrp0Elmt, "Results", "See Results", "Results")
+                        MyBase.addBind("dBegin", "Criteria/dBegin", "true()")
+                        MyBase.addBind("dEnd", "Criteria/dEnd", "true()")
+                        MyBase.addBind("bSplit", "Criteria/bSplit", , "number")
+                        MyBase.addBind("cProductType", "Criteria/cProductType", , "string")
+                        MyBase.addBind("nProductId", "Criteria/nProductId", , "number")
+                        MyBase.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", , "string")
+                        MyBase.addBind("nOrderStatus", "Criteria/nOrderStatus", , "string")
+                        If LCase(myWeb.moConfig("Quote")) = "on" Then
+                            MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
+                        End If
 
-                    MyBase.addBind("dBegin", "Criteria/dBegin", "true()")
-                    MyBase.addBind("dEnd", "Criteria/dEnd", "true()")
-                    MyBase.addBind("bSplit", "Criteria/bSplit", , "number")
-                    MyBase.addBind("cProductType", "Criteria/cProductType", , "string")
-                    MyBase.addBind("nProductId", "Criteria/nProductId", , "number")
-                    MyBase.addBind("cCurrencySymbol", "Criteria/cCurrencySymbol", , "string")
-                    MyBase.addBind("nOrderStatus", "Criteria/nOrderStatus", , "string")
-                    If LCase(myWeb.moConfig("Quote")) = "on" Then
-                        MyBase.addBind("cOrderType", "Criteria/cOrderType", "true()", "string")
-                    End If
-
+                    End Using
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
@@ -7967,9 +8649,9 @@ Partial Public Class Cms
                     Dim cSQL As String = "SELECT cDirName, nDirKey FROM tblDirectory "
                     cSQL &= " WHERE (NOT (cDirSchema = 'User')) AND (NOT (cDirSchema = N'Role'))"
                     cSQL &= " ORDER BY cDirName"
-                    Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                    MyBase.addOptionsFromSqlDataReader(oSel, oDR, "cDirName", "nDirKey")
-
+                    Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                        MyBase.addOptionsFromSqlDataReader(oSel, oDR, "cDirName", "nDirKey")
+                    End Using
                     MyBase.addBind("dFrom", "Criteria/dFrom", "true()")
                     MyBase.addBind("dTo", "Criteria/dTo", "true()")
                     MyBase.addBind("cGroups", "Criteria/cGroups")
@@ -8024,8 +8706,9 @@ Partial Public Class Cms
                         cSQL = "SELECT cDirName + ' [' + cDirSchema + ': ' + CAST(nDirKey As nvarchar) + ']' AS DirName, nDirKey FROM tblDirectory "
                         cSQL &= " WHERE NOT(cDirSchema IN ('Role','User'))"
                         cSQL &= " ORDER BY cDirSchema, cDirName"
-                        Dim oDR As SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
-                        MyBase.addOptionsFromSqlDataReader(oElmt, oDR, "DirName", "nDirKey")
+                        Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt, oDR, "DirName", "nDirKey")
+                        End Using
                     End If
 
                     ' Handle Submission
@@ -8094,7 +8777,9 @@ Partial Public Class Cms
 
                     ' Build the form
                     MyBase.NewFrm("MemberCodes")
-                    MyBase.load("/xforms/directory/" & cFormName & ".xml", myWeb.maCommonFolders)
+                    Dim formPath = "/xforms/directory/"
+                    If bs5 Then formPath = "/admin/xforms/directory/"
+                    MyBase.load(formPath & cFormName & ".xml", myWeb.maCommonFolders)
 
                     MyBase.Instance.SelectSingleNode("tblCodes/nCodeType").InnerText = Cms.dbHelper.CodeType.Membership
 
@@ -8425,8 +9110,10 @@ Partial Public Class Cms
 
                     'Replace Spaces with hypens
                     cReportName = Replace(cReportName, " ", "-")
+                    Dim reportsFolder As String = "/xforms/Reports/"
+                    If bs5 Then reportsFolder = "/admin/xforms/reports/"
 
-                    If Not MyBase.load("/xforms/Reports/" & cReportName & ".xml", myWeb.maCommonFolders) Then
+                    If Not MyBase.load(reportsFolder & cReportName & ".xml", myWeb.maCommonFolders) Then
                         'show xform load error message
                     End If
 
@@ -8454,12 +9141,31 @@ Partial Public Class Cms
                 Dim oGrp1Elmt As XmlElement
                 Dim cProcessInfo As String = ""
 
+
                 Try
 
                     Dim parentOptions As String = "" & myWeb.moConfig("LookupParentOptions")
 
                     Dim oDict As New Dictionary(Of String, String)
                     Dim s As String
+
+                    ' Append data for particular lookup id when edit, change by nita on 18Apr22
+                    Dim cLkpKey As String = ""
+                    Dim cLkpValue As String = ""
+                    Dim sSqlcheck As String = ""
+                    Dim lookupsSingleDataset As DataSet
+
+                    If nLookupId > 0 Then
+                        sSqlcheck = "select nLkpId as id, * from tblLookup " _
+                                            & "WHERE nLkpId = " & nLookupId
+                        lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "Lookup", "Lookups")
+                        If lookupsSingleDataset.Tables.Count > 0 Then
+
+                            cLkpKey = lookupsSingleDataset.Tables(0).Rows(0)("cLkpKey").ToString
+                            cLkpValue = lookupsSingleDataset.Tables(0).Rows(0)("cLkpValue").ToString
+
+                        End If
+                    End If
 
                     If parentOptions <> "" Then
                         For Each s In Split(parentOptions, ";")
@@ -8469,7 +9175,12 @@ Partial Public Class Cms
                     End If
 
                     MyBase.NewFrm("EditProductGroup")
-                    MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey/><cLkpValue/><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    If nLookupId > 0 Then
+                        MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey>" & cLkpKey & "</cLkpKey><cLkpValue>" & cLkpValue & "</cLkpValue><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    Else
+                        MyBase.Instance.InnerXml = "<tblLookup><nLkpID/><cLkpKey/><cLkpValue/><cLkpCategory>" & Category & "</cLkpCategory><nLkpParent>" & ParentId & "</nLkpParent><nAuditId/></tblLookup>"
+                    End If
+
                     If nLookupId > 0 Then
                         'MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Lookup, nLookupId)
                         Category = MyBase.Instance.SelectSingleNode("tblLookup/cLkpCategory").InnerText
@@ -8489,8 +9200,9 @@ Partial Public Class Cms
                             Dim SelectElmt As XmlElement = MyBase.addSelect1(oGrp1Elmt, "nLkpParent", True, oDict(Category), ApperanceTypes.Minimal)
                             MyBase.addBind("nLkpParent", "tblLookup/nLkpParent")
                             Dim sSql As String = "select nLkpId as value, cLkpKey as name from tblLookup where cLkpCategory like '" & oDict(Category) & "'"
-                            Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sSql)
-                            MyBase.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                                MyBase.addOptionsFromSqlDataReader(SelectElmt, oDr)
+                            End Using
                         End If
                     End If
 
@@ -8526,6 +9238,120 @@ Partial Public Class Cms
                     Return Nothing
                 End Try
             End Function
+
+
+            'method for indexes to create add new indexes UI
+            Public Function xFrmIndexes(ByVal indexId As Integer, Optional ByVal SchemaName As String = "", Optional ByVal ParentId As String = "") As XmlElement
+                Dim oFrmElmt As XmlElement
+                Dim oGrp1Elmt As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim oSelElmt As XmlElement
+
+                Try
+
+
+                    Dim oDict As New Dictionary(Of String, String)
+                    'Dim oDr As SqlDataReader
+
+                    ' Append data for particular lookup id when edit, change by nita on 18Apr22
+                    Dim nContentIndexDataType As String = ""
+                    Dim cContentSchemaName As String = ""
+                    Dim cDefinitionName As String = ""
+                    Dim cContentValueXpath As String = ""
+                    Dim bBriefNotDetail As String = ""
+
+                    Dim sSqlcheck As String = ""
+                    Dim lookupsSingleDataset As DataSet
+
+                    If indexId > 0 Then
+                        sSqlcheck = "select nContentIndexDefKey as id,nContentIndexDataType,RTRIM(LTRIM(cContentSchemaName)) AS cContentSchemaName, * from tblContentIndexDef " _
+                                            & "WHERE nContentIndexDefKey = " & indexId
+                        lookupsSingleDataset = myWeb.moDbHelper.GetDataSet(sSqlcheck, "indexkey", "indexkeys")
+                        If lookupsSingleDataset.Tables.Count > 0 Then
+
+                            nContentIndexDataType = lookupsSingleDataset.Tables(0).Rows(0)("nContentIndexDataType").ToString
+                            cContentSchemaName = lookupsSingleDataset.Tables(0).Rows(0)("cContentSchemaName").ToString
+                            cDefinitionName = lookupsSingleDataset.Tables(0).Rows(0)("cDefinitionName").ToString
+                            cContentValueXpath = lookupsSingleDataset.Tables(0).Rows(0)("cContentValueXpath").ToString
+                            bBriefNotDetail = lookupsSingleDataset.Tables(0).Rows(0)("bBriefNotDetail").ToString
+
+                        End If
+                    End If
+
+
+                    MyBase.NewFrm("EditProductGroup")
+                    If indexId > 0 Then
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                    Else
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                    End If
+
+                    If indexId > 0 Then
+                        'MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Lookup, nLookupId)
+                        SchemaName = MyBase.Instance.SelectSingleNode("tblContentIndexDef/cContentSchemaName").InnerText
+                    End If
+                    MyBase.submission("EditIndexes", "", "post", "form_check(this)")
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "indexkey")
+                    MyBase.addNote("pgheader", noteTypes.Help, IIf(indexId > 0, "Edit ", "Add ") & "indexkey")
+                    oGrp1Elmt = MyBase.addGroup(oFrmElmt, "indexkey", "1col", "Details")
+
+                    'Definitions
+                    MyBase.addInput(oGrp1Elmt, "nContentIndexDefKey", True, "nContentIndexDefKey", "hidden")
+                    MyBase.addBind("nContentIndexDefKey", "tblContentIndexDef/nContentIndexDefKey")
+
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nContentIndexDataType", True, "Data Type", ApperanceTypes.Minimal)
+                    MyBase.addOption(oSelElmt, "Int", "1")
+                    MyBase.addOption(oSelElmt, "String", "2")
+                    MyBase.addOption(oSelElmt, "Date", "3")
+                    MyBase.addBind("nContentIndexDataType", "tblContentIndexDef/nContentIndexDataType", "true()")
+
+                    Dim sSql As String = "select distinct cContentSchemaName from tblContent"
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)
+                        'Adding controls to the form like dropdown, radiobuttons
+                        oSelElmt = MyBase.addSelect1(oGrp1Elmt, "cContentSchemaName", True, "Schema Name", ApperanceTypes.Minimal)
+                        MyBase.addOptionsFromSqlDataReader(oSelElmt, oDr, "cContentSchemaName", "cContentSchemaName")
+                    End Using
+                    MyBase.addBind("cContentSchemaName", "tblContentIndexDef/cContentSchemaName", "true()")
+
+                    MyBase.addInput(oGrp1Elmt, "cDefinitionName", True, "Index Rule")
+                    MyBase.addBind("cDefinitionName", "tblContentIndexDef/cDefinitionName", "true()")
+
+                    MyBase.addInput(oGrp1Elmt, "cContentValueXpath", True, "XPath")
+                    MyBase.addBind("cContentValueXpath", "tblContentIndexDef/cContentValueXpath", "true()")
+
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
+                    MyBase.addOption(oSelElmt, "Yes", "1")
+                    MyBase.addOption(oSelElmt, "No", "0",)
+                    MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
+
+                    MyBase.addInput(oGrp1Elmt, "nKeywordGroupName", True, "nKeywordGroupName", "hidden")
+                    MyBase.addBind("nKeywordGroupName", "tblContentIndexDef/nKeywordGroupName")
+
+                    MyBase.addInput(oGrp1Elmt, "nAuditId", True, "nAuditId", "hidden")
+                    MyBase.addBind("nAuditId", "tblContentIndexDef/nAuditId")
+
+                    'search button
+
+                    MyBase.addSubmit(oFrmElmt, "EditIndexes", "Save Indexes", "SaveIndexes")
+
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.addValues()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.indexkey, MyBase.Instance, IIf(indexId > 0, indexId, -1))
+                        End If
+                    End If
+                    MyBase.addValues()
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmIndexes", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
 
             Public Function xFrmEditTemplate() As XmlElement
                 Dim cProcessInfo As String = ""
@@ -8614,7 +9440,7 @@ Partial Public Class Cms
 #End Region
 #Region " Initialisation"
                 Public Sub New(ByVal ContentId As Long, ByRef Form As xForm)
-                    PerfMon.Log(mcModuleName, "New")
+                    '  myWeb.PerfMon.Log(mcModuleName, "New")
                     Try
                         ' Set variables
                         _contentId = ContentId
@@ -8629,7 +9455,7 @@ Partial Public Class Cms
 #End Region
 #Region " Public Methods"
                 Public Sub Refresh()
-                    PerfMon.Log(mcModuleName, "Refresh")
+                    ' myWeb.PerfMon.Log(mcModuleName, "Refresh")
                     Try
                         _selects = _form.RootGroup.SelectNodes(_selectsXPath)
                     Catch ex As Exception
@@ -8637,7 +9463,7 @@ Partial Public Class Cms
                     End Try
                 End Sub
                 Public Function IsActive() As Boolean
-                    PerfMon.Log(mcModuleName, "IsActive")
+                    'myWeb.PerfMon.Log(mcModuleName, "IsActive")
                     Try
                         Return (_selects.Count > 0)
                     Catch ex As Exception
@@ -8646,7 +9472,7 @@ Partial Public Class Cms
                     End Try
                 End Function
                 Public Sub ProcessSelects()
-                    PerfMon.Log(mcModuleName, "ProcessSelects")
+                    ' myWeb.PerfMon.Log(mcModuleName, "ProcessSelects")
 
                     Dim menuId As Long
                     Dim bind As XmlElement
@@ -8721,8 +9547,8 @@ Partial Public Class Cms
                                 _form.addBind(selectItem.Id(), "location[@id='" & locationid & "']", , , bind)
 
 
-                                Dim proceedingParent As XmlElement
-                                Dim oChoices As XmlElement
+                                Dim proceedingParent As XmlElement = Nothing
+                                Dim oChoices As XmlElement = Nothing
                                 ' Process the menu items
                                 ' For each menuitem, check if it's already in scope.
                                 ' If not add the option to the select.
@@ -8770,12 +9596,15 @@ Partial Public Class Cms
                                                 ' Add the checkbox
                                                 _form.addOption(oChoices, menuName, menuId)
                                             Else
+                                                ' If oParentNode IsNot Nothing Then
                                                 If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
                                                     Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
                                                         menuName = oParentNode.GetAttribute("name") & " / " & menuName
                                                         oParentNode = oParentNode.ParentNode
+                                                        If oParentNode Is Nothing Then Exit Do
                                                     Loop
                                                 End If
+                                                ' End If
                                             End If
                                             ' Add the checkbox
                                             _form.addOption(_selectItem, menuName, menuId)
@@ -8803,9 +9632,9 @@ Partial Public Class Cms
                     End Try
                 End Sub
 
-                '                            oContentLocations.ProcessRequest(nReturnId)
+
                 Public Sub ProcessRequest(ByVal ContentId As Long)
-                    PerfMon.Log(mcModuleName, "ProcessRequest")
+                    ' myWeb.PerfMon.Log(mcModuleName, "ProcessRequest")
 
                     Dim InclusionList As String = ""
                     Dim ScopeList As String = ""
@@ -8820,25 +9649,18 @@ Partial Public Class Cms
 
                                 ' The inner text will be a comma separated list, we need to add this to the inclusion list.
                                 If Not (String.IsNullOrEmpty(location.InnerText)) Then
-
                                     If Not (String.IsNullOrEmpty(InclusionList)) Then
                                         InclusionList &= ","
                                     End If
-
                                     InclusionList &= location.InnerText
-
                                 End If
-
                             Next
 
-
                             ' Convert the Scope to a CSV
-                            ScopeList = hashtableToCSV(Me._locationsScope, Dimension.Key)
-
+                            ScopeList = Dictionary.hashtableToCSV(Me._locationsScope, Dictionary.Dimension.Key)
 
                             ' manage the locations
                             _form.moDbHelper.updateLocationsWithScope(ContentId, InclusionList, ScopeList)
-
 
                         End If
 
@@ -8869,11 +9691,9 @@ Partial Public Class Cms
 #End Region
 #Region " Initialisation"
                     Public Sub New(ByRef selectItem As XmlElement)
-                        PerfMon.Log(mcModuleName, "New")
                         Try
                             _rootMode = RootModes.Exclude
                             Item = selectItem
-
                         Catch ex As Exception
                             '  returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                         End Try
@@ -8942,8 +9762,6 @@ Partial Public Class Cms
 #End Region
 #Region " Private Methods"
                     Private Function getPropertyFromClass(ByRef propertyName As String) As String
-
-                        PerfMon.Log(mcModuleName, "getPropertyFromClass")
                         Try
 
                             Dim pattern As String = "^.*\s" & propertyName & "-([\S]*)\s.*$"
@@ -9017,10 +9835,10 @@ Partial Public Class Cms
                             Next
 
                             regradeUser.AppendChild(MyBase.Instance.SelectSingleNode("RegradeUser/emailer"))
-                                MyBase.LoadInstance(existingInstance)
-                                myWeb.moSession(InstanceSessionName) = MyBase.Instance
-                                Else
-                                MyBase.LoadInstance(myWeb.moSession("tempInstance"))
+                            MyBase.LoadInstance(existingInstance)
+                            myWeb.moSession(InstanceSessionName) = MyBase.Instance
+                        Else
+                            MyBase.LoadInstance(myWeb.moSession("tempInstance"))
                         End If
                     End If
 
@@ -9136,6 +9954,9 @@ Partial Public Class Cms
                             oMsg.emailer(MyBase.Instance.SelectSingleNode("emailer/oBodyXML"), MyBase.Instance.SelectSingleNode("emailer/xsltPath").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromName").InnerText, MyBase.Instance.SelectSingleNode("emailer/fromEmail").InnerText, EmailTo, MyBase.Instance.SelectSingleNode("emailer/SubjectLine").InnerText)
                             myWeb.moSession(InstanceSessionName) = Nothing
                             myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Email, mnUserId, 0, 0, nOrderId, "Payment Reminder Sent - " & Now().ToString())
+
+                            Dim oFrmElmt As XmlElement = MyBase.moXformElmt
+                            MyBase.addNote(oFrmElmt, noteTypes.Alert, "Message Sent.")
 
                         End If
                     ElseIf MyBase.isTriggered Then

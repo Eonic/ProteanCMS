@@ -33,7 +33,7 @@ Public Class Indexer
     Dim mcIndexCopyFolder As String = ""
     Dim oIndexWriter As IndexWriter 'Lucene class
 
-    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate 'impersonate for access
+    Dim moImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate 'impersonate for access
     Dim bNewIndex As Boolean = False 'if we need a new index or just add to one
     Dim bIsError As Boolean = False
     Dim dStartTime As Date
@@ -51,7 +51,7 @@ Public Class Indexer
 
 
     Public Sub New(ByRef aWeb As Protean.Cms)
-        PerfMon.Log("Indexer", "New")
+        'PerfMon.Log("Indexer", "New")
         mcModuleName = "Eonic.Search.Indexer"
         Dim cProcessInfo As String = ""
         myWeb = aWeb
@@ -127,19 +127,21 @@ Public Class Indexer
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
+            Return Nothing
         End Try
+
     End Function
 
     Public Sub DoIndex(Optional ByVal nPage As Integer = 0, Optional ByRef bResult As Boolean = False)
-        PerfMon.Log("Indexer", "DoIndex")
+        'PerfMon.Log("Indexer", "DoIndex")
         Dim cProcessInfo As String = ""
         Dim cPageHtml As String = ""
         Dim cPageExtract As String = ""
         Dim cPageXsl As String = "/xsl/search/cleanPage.xsl"
         Dim cExtractXsl As String = "/xsl/search/extract.xsl"
         Dim oPageXml As New XmlDocument
-        Dim oElmtRules As XmlElement
-        Dim oElmtURL As XmlElement
+        Dim oElmtRules As XmlElement = Nothing
+        Dim oElmtURL As XmlElement = Nothing
         Dim cRules As String = ""
         Dim nPagesSkipped As Long = 0
         Dim nContentSkipped As Long = 0
@@ -309,7 +311,7 @@ Public Class Indexer
                             Dim oPageErrElmt As XmlElement = oIndexInfo.CreateElement("errorInfo")
                             oPageErrElmt.SetAttribute("pgid", xWeb.mnPageId)
                             oPageErrElmt.SetAttribute("type", "Page")
-                            oPageErrElmt.InnerText = ex.Message
+                            oPageErrElmt.InnerText = ex.Message & ex.StackTrace
                             oInfoElmt.AppendChild(oPageErrElmt)
                             nPagesSkipped += 1
                         End Try
@@ -363,7 +365,7 @@ Public Class Indexer
                                                 oElmtRules = oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']")
                                                 cRules = ""
 
-                                                Dim sPageUrl As String
+                                                Dim sPageUrl As String = String.Empty
                                                 If Not oElmtURL Is Nothing Then
                                                     sPageUrl = oElmtURL.GetAttribute("url")
                                                 End If
@@ -404,13 +406,27 @@ Public Class Indexer
                                                                 If DocName = "" Then
                                                                     DocName = xFilePath.Name
                                                                 End If
-
+                                                                If DocName = "" Then
+                                                                    DocName = oElmt.SelectSingleNode("Title").InnerText()
+                                                                End If
+                                                                If DocName = "" Then
+                                                                    DocName = "Document for Download"
+                                                                End If
                                                                 Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText))
-                                                                IndexPage(xWeb.mnPageId, "<h1>" & DocName & "</h1>" & fileAsText, oDocElmt.InnerText, DocName, "Download", xWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
 
                                                                 Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
+                                                                oPageElmt.SetAttribute("name", DocName)
                                                                 oPageElmt.SetAttribute("file", oDocElmt.InnerText)
+                                                                oPageElmt.SetAttribute("publish", oElmt.GetAttribute("publish"))
+                                                                oPageElmt.SetAttribute("updated", oElmt.GetAttribute("update"))
                                                                 oInfoElmt.AppendChild(oPageElmt)
+
+                                                                Dim dPublish As Date = IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing)
+                                                                Dim dUpdate As Date = IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing)
+
+                                                                IndexPage(xWeb.mnPageId, "<h1>" & DocName & "</h1>" & fileAsText, oDocElmt.InnerText, DocName, "Download", xWeb.mnArtId, cPageExtract, dPublish, dUpdate)
+
+
 
                                                                 nIndexed += 1
                                                                 nDocumentsIndexed += 1
@@ -578,7 +594,7 @@ Public Class Indexer
             oIndexInfo.Save(mcIndexWriteFolder & "/indexInfo.xml")
 
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -611,13 +627,19 @@ Public Class Indexer
     End Sub
 
     Private Sub StartIndex()
-        PerfMon.Log("Indexer", "StartIndex")
+        'PerfMon.Log("Indexer", "StartIndex")
         Dim cProcessInfo As String = ""
         Try
-            oImp = New Protean.Tools.Security.Impersonate 'for access
-            If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+            If moConfig("AdminAcct") <> "" Then
+                moImp = New Protean.Tools.Security.Impersonate 'for access
+                If moImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                    Err.Raise(108, , "Indexer did not authenticate with system credentials")
+                End If
+
+            End If
+
                 EmptyFolder(mcIndexWriteFolder)
-                If gbDebug Then
+                    If gbDebug Then
                     EmptyFolder(mcIndexCopyFolder)
                 End If
 
@@ -630,17 +652,15 @@ Public Class Indexer
 
                 oIndexWriter = New IndexWriter(indexDir, New StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT), bCreate, maxLen) 'create the index writer
 
-            Else
-                Err.Raise(108, , "Indexer did not validate")
 
-            End If
+
         Catch ex As Exception
             cExError &= ex.StackTrace.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
 
             bIsError = True
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -649,7 +669,7 @@ Public Class Indexer
     End Sub
 
     Private Sub EmptyFolder(ByVal cDirectory As String)
-        PerfMon.Log("Indexer", "EmptyFolder")
+        'PerfMon.Log("Indexer", "EmptyFolder")
         Dim cProcessInfo As String = ""
         Try
             If bNewIndex Then
@@ -682,7 +702,7 @@ Public Class Indexer
             End If
         Catch ex As Exception
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -695,7 +715,7 @@ Public Class Indexer
     Private Sub IndexPage(ByVal url As String, ByVal pageXml As XmlElement, Optional ByVal pageType As String = "Page")
 
         Dim methodName As String = "IndexPage(String,XmlElement,[String])"
-        PerfMon.Log("Indexer", methodName)
+        'PerfMon.Log("Indexer", methodName)
 
         Dim processInfo As String = url
 
@@ -734,7 +754,7 @@ Public Class Indexer
 
         Catch ex As Exception
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -875,7 +895,7 @@ Public Class Indexer
     End Sub
 
     Private Sub IndexPage(ByVal nPageId As Integer, ByVal cPageText As String, ByVal cURL As String, ByVal cPageTitle As String, Optional ByVal cContentType As String = "Page", Optional ByVal nContentId As Long = 0, Optional ByVal cAbstract As String = "", Optional ByVal dPublish As Date = Nothing, Optional ByVal dUpdate As Date = Nothing)
-        PerfMon.Log("Indexer", "IndexPage")
+        'PerfMon.Log("Indexer", "IndexPage")
         Dim cProcessInfo As String = cURL
 
         Try
@@ -925,7 +945,7 @@ Public Class Indexer
     End Sub
 
     Private Sub SavePage(ByVal cUrl As String, ByVal cBody As String)
-        PerfMon.Log("Indexer", "IndexPage")
+        'PerfMon.Log("Indexer", "SavePage")
         Dim cProcessInfo As String = ""
         Dim filename As String = ""
         Dim filepath As String = ""
@@ -1001,14 +1021,17 @@ Public Class Indexer
     End Sub
 
     Private Sub StopIndex()
-        PerfMon.Log("Indexer", "StopIndex")
+        'PerfMon.Log("Indexer", "StopIndex")
         Dim cProcessInfo As String = ""
         Try
             oIndexWriter.Optimize()
             oIndexWriter.Dispose()
             EmptyFolder(mcIndexReadFolder)
             CopyFolderContents(mcIndexWriteFolder, mcIndexReadFolder)
-            oImp.UndoImpersonation()
+            If moConfig("AdminAcct") <> "" Then
+                moImp.UndoImpersonation()
+                moImp = Nothing
+            End If
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)
@@ -1017,7 +1040,7 @@ Public Class Indexer
     End Sub
 
     Private Function GetFileText(ByVal cPath As String, Optional ByVal cOtherText As String = "") As String
-        PerfMon.Log("Indexer", "GetFileText")
+        'PerfMon.Log("Indexer", "GetFileText")
         Dim cProcessInfo As String = ""
         Try
             Dim oFile As New FileDoc(cPath)
@@ -1030,7 +1053,7 @@ Public Class Indexer
     End Function
 
     Private Sub CopyFolderContents(ByVal cLocation As String, ByVal cDestination As String)
-        PerfMon.Log("Indexer", "CopyFolderContents")
+        'PerfMon.Log("Indexer", "CopyFolderContents")
         Dim cProcessInfo As String = ""
         Try
             Dim oDI As New IO.DirectoryInfo(mcIndexWriteFolder)

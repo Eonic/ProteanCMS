@@ -79,7 +79,7 @@ Public Class Base
 
     'Application Level Properties   
     Public moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-    Public goApp As System.Web.HttpApplicationState
+    '  Public goApp As System.Web.HttpApplicationState
     Public goCache As System.Web.Caching.Cache
     Public goServer As System.Web.HttpServerUtility
     Public goLangConfig As XmlElement = WebConfigurationManager.GetWebApplicationSection("protean/languages")
@@ -90,6 +90,8 @@ Public Class Base
 
     Public mbPreview As Boolean = False
     Public mbPreviewHidden As Boolean = False
+
+    Public PerfMon As PerfLog
 
 #End Region
 
@@ -111,13 +113,14 @@ Public Class Base
                 moCtx = Context
             End If
 
-            goApp = moCtx.Application
+            ' goApp = moCtx.Application
             moRequest = moCtx.Request
             moResponse = moCtx.Response
             moSession = moCtx.Session
             goServer = moCtx.Server
             goCache = moCtx.Cache
 
+            PerfMon = New PerfLog("")
             PerfMon.Log("Base", "New")
 
             EnumberateFeatures()
@@ -190,4 +193,7 @@ Public Class Base
         Me.disposedValue = True
     End Sub
 
+    Protected Overrides Sub Finalize()
+        MyBase.Finalize()
+    End Sub
 End Class

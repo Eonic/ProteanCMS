@@ -1,0 +1,24 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/ProteanCMS/v16
+/.vs/ProteanCMS/v17
+/.vs/ProteanCMS-V6/v16
+/.vs/ProteanCMS-V6/v17
+/.vs/ProteanCMSInstaller/v16
+/.vs/ProteanCMSInstaller/v17
+/wwwroot/images
+/Assemblies/Protean.Tools/bin
+/Assemblies/Protean.Tools/obj
+/Assemblies/Protean.Tools.Csharp/bin
+/Assemblies/Protean.Tools.Csharp/obj
+/Assemblies/Protean.Tools.Csharp/bin
+/Assemblies/Protean.Tools.UnitTests/bin
+/Assemblies/Protean.Tools.UnitTests/obj
+/Assemblies/ProteanCMS/bin
+/Assemblies/ProteanCMS/obj
+/wwwroot/ewcommon/bin
+/wwwroot/bin
+/V6_wwwroot/bin
+

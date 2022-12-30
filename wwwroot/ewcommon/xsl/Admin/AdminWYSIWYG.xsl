@@ -1231,7 +1231,6 @@
     <xsl:param name="text"/>
     <xsl:param name="name"/>
     <xsl:param name="class"/>
-
     <xsl:choose>
       <xsl:when test="/Page/Contents/Content[@name=$name]">
         <!-- Do we need to tie it down by Type? What about bespoke types?-->
@@ -2427,7 +2426,7 @@
             </xsl:if>
 
             <xsl:choose>
-              <xsl:when test="parent::*[name()='Content']">
+              <xsl:when test="parent::*[name()='Content' and @display='related']">
                 <xsl:variable name="parId" select="parent::*[name()='Content']/@id"/>
                 <li class="divider">&#160;</li>
                 <li class="updown">

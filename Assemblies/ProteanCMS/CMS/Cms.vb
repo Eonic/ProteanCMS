@@ -11,8 +11,6 @@ Imports System.Net
 Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
 
-
-
 Public Class Cms
     Inherits Base
     Implements IDisposable
@@ -63,6 +61,7 @@ Public Class Cms
 
     ' Clone Page Info
     Public mnClonePageId As Integer = 0
+    Public mnClonePageVersionId As Integer = 0
     Public mbIsClonePage As Boolean = False
     Public mnCloneContextPageId As Integer = 0
 
@@ -95,6 +94,8 @@ Public Class Cms
     Public Shared gnTopLevel As Integer = 0
     Public Shared gnNonAuthUsers As Integer = 0
     Public Shared gnAuthUsers As Integer = 0
+    Public Shared bs3 As Boolean = False
+    Public Shared bs5 As Boolean = False
 
     Public Shared gbClone As Boolean = False
     Public Shared gbMemberCodes As Boolean = False
@@ -128,6 +129,8 @@ Public Class Cms
     Public mbSuppressLastPageOverrides As Boolean = False
     Public mbIgnorePath As Boolean = False
     Public gcLang As String = "en-gb"
+    Public mcRequestDomain As String = ""
+    Public bAllowExpired As Boolean = False
 
     Private mcLOCALEwSiteXsl As String = ""
 
@@ -343,21 +346,22 @@ Public Class Cms
             'oElmt.InnerText = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
             'oResponseElmt.AppendChild(oElmt)
             ''End URI
-            Dim oDr As System.Data.SqlClient.SqlDataReader
+            'Dim oDr As System.Data.SqlClient.SqlDataReader
             oElmt = oRXML.CreateElement("DBVersion")
             Try
 
                 Dim sResult As String = ""
                 sSql = "select * from tblSchemaVersion"
-                oDr = moDbHelper.getDataReader(sSql)
-                If oDr.HasRows Then
-                    While oDr.Read
-                        sResult = oDr(1) & "." & oDr(2) & "." & oDr(3) & "." & oDr(4)
-                    End While
-                Else
-                    sResult = "nodata"
-                End If
-                oElmt.InnerText = sResult
+                Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            sResult = oDr(1) & "." & oDr(2) & "." & oDr(3) & "." & oDr(4)
+                        End While
+                    Else
+                        sResult = "nodata"
+                    End If
+                    oElmt.InnerText = sResult
+                End Using
             Catch ex As Exception
                 If moConfig("VersionNumber") = "" Then
                     oElmt.InnerText = "Pre V4 or no ProteanCMS"
@@ -371,39 +375,39 @@ Public Class Cms
             'Get Page Count
 
             sSql = "select count(cs.nStructKey) from tblContentStructure cs inner join tblAudit a on a.nAuditKey = cs.nAuditId where nStatus = 1 and (cUrl = null or cUrl = '')"
-            oDr = moDbHelper.getDataReader(sSql)
-            If oDr.HasRows Then
-                While oDr.Read
-                    oResponseElmt.SetAttribute("activePageCount", oDr(0))
-                End While
-            End If
-
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                If oDr.HasRows Then
+                    While oDr.Read
+                        oResponseElmt.SetAttribute("activePageCount", oDr(0))
+                    End While
+                End If
+            End Using
             sSql = "select count(nStructKey) from tblContentStructure where cUrl = null or cUrl = ''"
-            oDr = moDbHelper.getDataReader(sSql)
-            If oDr.HasRows Then
-                While oDr.Read
-                    oResponseElmt.SetAttribute("totalPageCount", oDr(0))
-                End While
-            End If
-
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                If oDr.HasRows Then
+                    While oDr.Read
+                        oResponseElmt.SetAttribute("totalPageCount", oDr(0))
+                    End While
+                End If
+            End Using
             sSql = "select count(nStructKey) from tblContentStructure"
-            oDr = moDbHelper.getDataReader(sSql)
-            If oDr.HasRows Then
-                While oDr.Read
-                    oResponseElmt.SetAttribute("totalPageRedirects", oDr(0) - CInt("0" & oResponseElmt.GetAttribute("totalPageCount")))
-                End While
-            End If
-
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                If oDr.HasRows Then
+                    While oDr.Read
+                        oResponseElmt.SetAttribute("totalPageRedirects", oDr(0) - CInt("0" & oResponseElmt.GetAttribute("totalPageCount")))
+                    End While
+                End If
+            End Using
 
             'Get Content Count
             sSql = "select count(nContentKey) from tblContent"
-            oDr = moDbHelper.getDataReader(sSql)
-            If oDr.HasRows Then
-                While oDr.Read
-                    oResponseElmt.SetAttribute("contentCount", oDr(0))
-                End While
-            End If
-            oDr = Nothing
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                If oDr.HasRows Then
+                    While oDr.Read
+                        oResponseElmt.SetAttribute("contentCount", oDr(0))
+                    End While
+                End If
+            End Using
 
             'Start DotNetversion
             oElmt = oRXML.CreateElement("DotNetVersion")
@@ -448,7 +452,9 @@ Public Class Cms
             'Start LatestDBVersion
             oElmt = oRXML.CreateElement("LatestDBVersion")
             Dim LatestDBVersion As XmlTextReader
-            LatestDBVersion = New XmlTextReader(goServer.MapPath("/ewcommon/sqlUpdate/DatabaseUpgrade.xml"))
+            Dim dbUpgradeFile As String = "/ewcommon/sqlUpdate/DatabaseUpgrade.xml"
+            If bs5 Then dbUpgradeFile = "/ptn/update/sql/databaseupgrade.xml"
+            LatestDBVersion = New XmlTextReader(goServer.MapPath(dbUpgradeFile))
             LatestDBVersion.WhitespaceHandling = WhitespaceHandling.None
             'Disable whitespace so that it doesn't have to read over whitespaces
             LatestDBVersion.Read()
@@ -522,13 +528,11 @@ Public Class Cms
             End If
             If moDbHelper.DatabaseName = "" Then
                 'redirect to setup
-                If moConfig("cssFramework") = "bs5" Then
-                    msRedirectOnEnd = "ptn-common/setup/default.ashx"
+                If bs5 Then
+                    msRedirectOnEnd = "ptn/setup/default.ashx"
                 Else
                     msRedirectOnEnd = "ewcommon/setup/default.ashx"
                 End If
-
-
             Else
 
                 If Not moSession Is Nothing Then
@@ -538,23 +542,23 @@ Public Class Cms
                     End If
                 End If
                 'Get system page ID's for application level
-                If goApp("PageNotFoundId") Is Nothing Then
-                    goApp("PageNotFoundId") = moDbHelper.getPageIdFromPath(NotFoundPagePath, False, False)
+                If moCtx.Application("PageNotFoundId") Is Nothing Then
+                    moCtx.Application("PageNotFoundId") = moDbHelper.getPageIdFromPath(NotFoundPagePath, False, False)
                 End If
-                If goApp("PageAccessDeniedId") Is Nothing Then
-                    goApp("PageAccessDeniedId") = moDbHelper.getPageIdFromPath(AccessDeniedPagePath, False, False)
+                If moCtx.Application("PageAccessDeniedId") Is Nothing Then
+                    moCtx.Application("PageAccessDeniedId") = moDbHelper.getPageIdFromPath(AccessDeniedPagePath, False, False)
                 End If
-                If goApp("PageLoginRequiredId") Is Nothing Then
-                    goApp("PageLoginRequiredId") = moDbHelper.getPageIdFromPath(LoginRequiredPagePath, False, False)
+                If moCtx.Application("PageLoginRequiredId") Is Nothing Then
+                    moCtx.Application("PageLoginRequiredId") = moDbHelper.getPageIdFromPath(LoginRequiredPagePath, False, False)
                 End If
-                If goApp("PageErrorId") Is Nothing Then
-                    goApp("PageErrorId") = moDbHelper.getPageIdFromPath(ProteanErrorPagePath, False, False)
+                If moCtx.Application("PageErrorId") Is Nothing Then
+                    moCtx.Application("PageErrorId") = moDbHelper.getPageIdFromPath(ProteanErrorPagePath, False, False)
                 End If
 
-                gnPageNotFoundId = goApp("PageNotFoundId")
-                gnPageAccessDeniedId = goApp("PageAccessDeniedId")
-                gnPageLoginRequiredId = goApp("PageLoginRequiredId")
-                gnPageErrorId = goApp("PageErrorId")
+                gnPageNotFoundId = moCtx.Application("PageNotFoundId")
+                gnPageAccessDeniedId = moCtx.Application("PageAccessDeniedId")
+                gnPageLoginRequiredId = moCtx.Application("PageLoginRequiredId")
+                gnPageErrorId = moCtx.Application("PageErrorId")
 
                 mcPagePath = CStr(moRequest("path") & "")
                 mcPagePath = mcPagePath.Replace("//", "/")
@@ -631,7 +635,7 @@ Public Class Cms
                     If Not moRequest("pgid") = "" Then
 
                         'And we still need to check permissions
-                        mnPageId = CLng(moRequest("pgid"))
+                        mnPageId = CLng(Regex.Replace("0" & moRequest("pgid"), "[^\d]", ""))
                         'specified pgid takes priority
                         If Not mbAdminMode Then
                             newPageId = moDbHelper.checkPagePermission(mnPageId)
@@ -711,6 +715,7 @@ Public Class Cms
 
                 If mnArtId < 1 Then
                     If Not moRequest("artid") = "" Then
+
                         mnArtId = Me.GetRequestItemAsInteger("artid", 0)
                     End If
                 End If
@@ -739,7 +744,9 @@ Public Class Cms
     End Sub
 
     Public Sub Close()
-        PerfMon.Log("Base", "Close")
+        If Not moCtx Is Nothing Then
+            PerfMon.Log("Base", "Close")
+        End If
         Dim sProcessInfo As String = ""
         Try
 
@@ -750,12 +757,8 @@ Public Class Cms
                 oMembershipProv.Activities.SetUserId(Me)
             End If
 
-            If Not moDbHelper Is Nothing Then
-                'moDbHelper.Close()
-                moDbHelper = Nothing
-            End If
 
-            goApp = Nothing
+            ' goApp = Nothing
             moRequest = Nothing
             'we need this for redirect
             'moResponse = Nothing
@@ -770,6 +773,13 @@ Public Class Cms
             If gbCart And Not moCart Is Nothing Then
                 moCart.close()
                 moCart = Nothing
+            End If
+            'moCart.close() requires db connection
+            If Not moDbHelper Is Nothing Then
+                'moDbHelper.Close()
+                'TS added in to ensure connections are closed
+                moDbHelper.CloseConnection(True)
+                moDbHelper = Nothing
             End If
 
             'Dim nMemDif As Integer = Process.GetCurrentProcess.PrivateMemorySize64
@@ -905,7 +915,10 @@ Public Class Cms
             If moConfig("ShowRelatedBriefDepth") <> "" Then
                 gnShowRelatedBriefDepth = moConfig("ShowRelatedBriefDepth")
             End If
-
+            If moConfig("cssFramework") = "bs5" Then
+                bs5 = True
+                mcEWCommonFolder = "/ptn"
+            End If
 
         Catch ex As Exception
             'returnException("GlobalObjects", "open", ex, "", sProcessInfo, gbDebug)
@@ -977,11 +990,13 @@ Public Class Cms
                     Else
                         mcEwSiteXsl = "/ewcommon/xsl/admin/AdminPopups.xsl"
                     End If
+                    If bs5 Then mcEwSiteXsl = "/ptn/admin/admin-popups.xsl"
                     mbPopupMode = True
                     mbAdminMode = True
                     moResponseType = pageResponseType.popup
                 Case "ajaxadmin"
                     mcEwSiteXsl = "/ewcommon/xsl/admin/ajaxAdmin.xsl"
+                    If bs5 Then mcEwSiteXsl = "/ptn/admin/admin-ajax.xsl"
                     moResponseType = pageResponseType.ajaxadmin
                    ' oEw.GetAjaxHTML("MenuNode")
                 Case "mail", "email"
@@ -990,6 +1005,7 @@ Public Class Cms
                         gcEwSiteXsl = moMailConfig("MailingXsl")
                     Else
                         gcEwSiteXsl = "/ewcommon/xsl/Mailer/mailerStandard.xsl"
+                        If bs5 Then mcEwSiteXsl = "/ptn/features/mailer/mailer-core.xsl"
                     End If
                     mnMailMenuId = moMailConfig("RootPageId")
                     mcContentType = "text/html"
@@ -1003,6 +1019,11 @@ Public Class Cms
                         If gnResponseCode = 200 And moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
+
+                        If moRequest("perfmon") = "on" And moRequest.QueryString.Count() = 1 Then
+                            bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
+                        End If
+
                         If Not moRequest("reBundle") Is Nothing Then
                             bPageCache = True
                         End If
@@ -1038,6 +1059,8 @@ Public Class Cms
                 gcEwBaseUrl = moConfig("BaseUrl")
             End If
 
+            mcRequestDomain = IIf(mbIsUsingHTTPS, "https://", "http://") & moRequest.ServerVariables("SERVER_NAME")
+
             ' Language sites.
             ' If LanguageStyleSheets is on, then we look for the xsl with the language as a suffix
             ' If it exists, we load that in as the stylesheet.
@@ -1061,6 +1084,13 @@ Public Class Cms
             If Not String.IsNullOrEmpty(gcProjectPath) Then commonfolders.Add(gcProjectPath)
             If Not String.IsNullOrEmpty(mcClientCommonFolder) Then commonfolders.Add(mcClientCommonFolder)
             If Not String.IsNullOrEmpty(mcEWCommonFolder) Then commonfolders.Add(mcEWCommonFolder)
+
+            If bs5 Then
+                commonfolders.Add("/ptn/features/")
+                commonfolders.Add("/ptn/core/")
+            End If
+
+
 
             maCommonFolders = commonfolders.ToArray(GetType(String))
 
@@ -1110,7 +1140,7 @@ Public Class Cms
 
 
     Public Overridable Sub GetPageHTML()
-        PerfMon.Log("Web", "GetPageHTML")
+        PerfMon.Log("Web", "GetPageHTML - start")
         Dim sProcessInfo As String = ""
         Dim sCachePath As String = ""
         Dim sServeFile As String = ""
@@ -1336,8 +1366,6 @@ Public Class Cms
                                     End If
 
                                     Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
-
-                                    PerfMon.Log("Web", "GetPageHTML-startxsl")
                                     If moConfig("XslTimeout") <> "" Then
                                         oTransform.TimeOut = moConfig("XslTimeout")
                                     End If
@@ -1346,13 +1374,18 @@ Public Class Cms
                                     If bPageCache Then
 
                                         Dim textWriter As New StringWriterWithEncoding(System.Text.Encoding.UTF8)
-
+                                        PerfMon.Log("Web", "GetPageHTML-startxsl")
                                         oTransform.ProcessTimed(moPageXml, textWriter)
+                                        PerfMon.Log("Web", "GetPageHTML-endxsl")
+
                                         'save the page
                                         If Not oTransform.bError Then
                                             If bPageCache Then
-                                                SavePage(sCachePath, textWriter.ToString())
-                                                sServeFile = mcPageCacheFolder & sCachePath
+                                                Dim pagestring As String = textWriter.ToString()
+                                                moResponse.Write(pagestring)
+                                                moResponse.Flush()
+                                                SavePage(sCachePath, pagestring)
+                                                'sServeFile = mcPageCacheFolder & sCachePath
                                             Else
                                                 moResponse.Write(textWriter.ToString())
                                             End If
@@ -1361,25 +1394,21 @@ Public Class Cms
                                             gnResponseCode = 500
                                             moResponse.Write(textWriter.ToString())
                                         End If
+
                                     ElseIf moResponseType = pageResponseType.pdf Then
                                         mcContentType = "application/pdf"
                                         'Next we transform using into FO.Net Xml
 
-                                        '  If moTransform Is Nothing Then
+
                                         Dim styleFile2 As String = CType(goServer.MapPath(mcEwSiteXsl), String)
                                         PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                                         oTransform = New Protean.XmlHelper.Transform(Me, styleFile2, False)
-                                        ' End If
-
-                                        msException = ""
-
-
                                         oTransform.mbDebug = gbDebug
 
+                                        msException = ""
                                         icPageWriter = New IO.StringWriter
 
                                         oTransform.ProcessTimed(moPageXml, icPageWriter)
-
 
                                         Dim foNetXml As String = icPageWriter.ToString
 
@@ -1403,9 +1432,6 @@ Public Class Cms
                                             rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
                                             ' rendererOpts.Kerning = True
                                             ' rendererOpts.EnableCopy = True
-
-                                            'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                                            'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
 
                                             Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
 
@@ -1470,11 +1496,15 @@ Public Class Cms
                                         End If
                                     Else
                                         moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
+                                        PerfMon.Log("Web", "GetPageHTML-startxsl")
+
                                         oTransform.ProcessTimed(moPageXml, moResponse)
+                                        PerfMon.Log("Web", "GetPageHTML-endxsl")
                                     End If
-
+                                    PerfMon.Log("Web", "GetPageHTML-endxsl")
+                                    oTransform.Close()
+                                    oTransform = Nothing
                                 End If
-
 
                                 'moResponse.SuppressContent = False
                                 If gnResponseCode <> 200 Then
@@ -1484,14 +1514,9 @@ Public Class Cms
                                     moResponse.StatusCode = gnResponseCode
                                 End If
 
-                                PerfMon.Log("Web", "GetPageHTML-endxsl")
-                                '  oTransform.Close()
-                                'oTransform = Nothing
-
                                 'we don't need this anymore.
                                 If Not ibIndexMode Then
                                     If msRedirectOnEnd = "" Then
-                                        PerfMon.Write()
                                         moPageXml = Nothing
                                         If sServeFile = "" Then
                                             Close()
@@ -1521,6 +1546,7 @@ Public Class Cms
                         End If
                         Dim filelen As Int16 = goServer.MapPath("/" & gcProjectPath).Length + sServeFile.Length
                         moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate))
+                        PerfMon.Log("Web", "GetPageHTML - serve cached file")
                         If filelen > 260 Then
                             moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/" & gcProjectPath) & sServeFile))
                         Else
@@ -1532,6 +1558,10 @@ Public Class Cms
 
             End Select
 
+            If Not moSession Is Nothing Then
+                'clears the recaptcha flag for the session
+                moSession("recaptcha") = Nothing
+            End If
 
         Catch ex As Exception
             If mcEwSiteXsl <> moConfig("SiteXsl") Then mcEwSiteXsl = moConfig("SiteXsl")
@@ -1540,6 +1570,7 @@ Public Class Cms
             moResponse.Write(msException)
             Me.Finalize()
         Finally
+            ''  moDbHelper.CloseConnection(True)
             If msRedirectOnEnd <> "" Then
                 If Not msRedirectOnEnd.StartsWith("http") Then
                     msRedirectOnEnd = msRedirectOnEnd.Replace("//", "/")
@@ -1560,6 +1591,9 @@ Public Class Cms
                     RestartAppPool()
                 End If
             End If
+            PerfMon.Log("Web", "GetPageHTML-Final")
+            PerfMon.Write()
+            moResponse.End()
         End Try
 
     End Sub
@@ -1603,7 +1637,8 @@ Public Class Cms
                                     mnPageId = gnPageNotFoundId
                                     moPageXml = New XmlDocument()
                                     BuildPageXML()
-                                    moResponse.StatusCode = 404
+                                    '  moResponse.StatusCode = 404
+                                    gnResponseCode = 404
 
                                 End If
                             End If
@@ -1615,8 +1650,8 @@ Public Class Cms
                                     mnPageId = gnPageNotFoundId
                                     moPageXml = New XmlDocument()
                                     BuildPageXML()
-                                    moResponse.StatusCode = 404
-
+                                    'moResponse.StatusCode = 404
+                                    gnResponseCode = 404
                                 End If
 
                             End If
@@ -1645,8 +1680,13 @@ Public Class Cms
                         RefreshUserXML()
                     End If
 
-                    sProcessInfo = "Check Admin Mode"
-                    ContentActions()
+                    'TS-Moved to after add bulk related content to enable filters to be processed.
+                    'not sure if this is before for a reason. I cannot seem to think of one.
+                    'required for related images on contentgrabber for practitioner so added config setting
+                    If LCase(moConfig("ActionsBeforeAddBulk")) = "on" Then
+                        ContentActions()
+                    End If
+
 
                     If LCase(moConfig("FinalAddBulk")) = "on" Then
 
@@ -1660,8 +1700,13 @@ Public Class Cms
 
                     End If
 
-                    CommonActions()
+                    sProcessInfo = "Check Admin Mode"
 
+                    If LCase(moConfig("ActionsBeforeAddBulk")) <> "on" Then
+                        ContentActions()
+                    End If
+
+                    CommonActions()
 
                     'TS commented out so Century can perform searches in admin mode
                     '  If Not (mbAdminMode) Then
@@ -1874,39 +1919,42 @@ Public Class Cms
                                 Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
                                 cContentDetailName = Protean.Tools.Text.CleanName(cContentDetailName, False, True)
                                 Dim RequestedContentName As String = ""
+                                Dim myQueryString As String = ""
+
+                                If mcOriginalURL.Contains("?") Then
+                                    myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"))
+                                    mcOriginalURL = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("?"))
+                                End If
+
+                                mcOriginalURL = mcOriginalURL.TrimEnd("?")
                                 If mcOriginalURL.Contains("-/") Then
                                     RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
                                 End If
 
-                                If RequestedContentName.Contains("?") Then
-                                    RequestedContentName = RequestedContentName.Substring(0, RequestedContentName.IndexOf("?"))
-                                    'myQueryString = RequestedContentName.Substring(mcOriginalURL.LastIndexOf("?"))
-                                End If
-
                                 If RequestedContentName <> cContentDetailName Then
-
                                     'Change to redirect to correct URL, automatic redirects for content name changes
-
                                     If RequestedContentName = "" Then
                                         If mcOriginalURL.EndsWith("-/") Then
+                                            mbRedirectPerm = True
                                             Me.msRedirectOnEnd = mcOriginalURL & cContentDetailName
                                         Else
                                             Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("/Item"))
+                                            mbRedirectPerm = True
                                             Me.msRedirectOnEnd = PathBefore & "/" & mnArtId & "-/" & cContentDetailName
                                         End If
 
                                     Else
                                         Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length)
+                                        mbRedirectPerm = True
                                         Me.msRedirectOnEnd = PathBefore & cContentDetailName
                                     End If
-
-
-                                    '  mnPageId = gnPageNotFoundId
-                                    '  oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
-                                    '  mnProteanCMSError = 1005
+                                    If myQueryString <> "" Then
+                                        Me.msRedirectOnEnd = Me.msRedirectOnEnd & myQueryString
+                                    End If
                                 End If
                             End If
                         End If
+
 
                         Me.CheckMultiParents(oPageElmt, mnPageId)
                     Else
@@ -1928,7 +1976,7 @@ Public Class Cms
                     ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
                     ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                     If gbClone _
-                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
+                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
                         ' If the current page is a cloned page
                         oPageElmt.SetAttribute("clone", "true")
                     End If
@@ -2204,6 +2252,7 @@ Public Class Cms
 
                 If moConfig("LimitFeed") <> "" Then
                     pageSize = moConfig("LimitFeed")
+                    pageNumber = 1
                 End If
 
                 If moRequest("pageSize") > 0 Then
@@ -2232,9 +2281,13 @@ Public Class Cms
 
                 'NB put the parId code here?
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Contents/Content")
-
-                    If CLng("0" & oElmt.GetAttribute("parId")) > 0 Then
-                        processInfo = "Cleaning parId for: " & oElmt.OuterXml
+                    processInfo = "Cleaning parId for: " & oElmt.OuterXml
+                    Dim parId = oElmt.GetAttribute("parId")
+                    If parId.contains(",") Then
+                        parId = oElmt.GetAttribute("parId").Split(",")(1)
+                    End If
+                    If CLng("0" & parId) > 0 Then
+                        ' processInfo = "Cleaning parId for: " & oElmt.OuterXml
                         Dim primaryParId As Long = 0
 
                         If InStr(oElmt.GetAttribute("parId"), ",") > 0 Then
@@ -2378,7 +2431,7 @@ Public Class Cms
                 Dim styleFile As String = CStr(goServer.MapPath(mcEwSiteXsl))
 
                 If moRequest("recompile") <> "" Then
-                    goApp.Item(styleFile) = Nothing
+                    moCtx.Application.Item(styleFile) = Nothing
                 End If
 
                 Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform)
@@ -2858,7 +2911,7 @@ Public Class Cms
         Dim sEmail As String = ""
         Dim cValidationError As String = ""
 
-        Dim oDr As SqlDataReader
+        'Dim oDr As SqlDataReader
 
         Dim bUseUserId As Boolean = False
         Dim bUseCookies As Boolean = False
@@ -3113,16 +3166,16 @@ Public Class Cms
                     Dim oCResNode As XmlElement = moPageXml.CreateElement("Results")
                     'Do we need to check the table exists?
                     sSql = "SELECT DISTINCT " & sPollItemField & " AS PollOption, Count(" & sPollItemField & ") AS ResultsCount FROM " & sTable & " WHERE nActivityType=" & dbHelper.ActivityType.SubmitVote & " AND " & sPollField & " = '" & sPollId & "' GROUP BY " & sPollItemField
-                    oDr = moDbHelper.getDataReader(sSql)
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
 
-                    While oDr.Read
-                        Dim oResNode As XmlElement = moPageXml.CreateElement("PollResult")
-                        oResNode.SetAttribute("entryId", oDr(0))
-                        oResNode.SetAttribute("votes", oDr(1))
-                        oCResNode.AppendChild(oResNode)
-                    End While
-                    oDr.Close()
-                    oDr = Nothing
+                        While oDr.Read
+                            Dim oResNode As XmlElement = moPageXml.CreateElement("PollResult")
+                            oResNode.SetAttribute("entryId", oDr(0))
+                            oResNode.SetAttribute("votes", oDr(1))
+                            oCResNode.AppendChild(oResNode)
+                        End While
+                        oDr.Close()
+                    End Using
 
                     ocNode.AppendChild(oCResNode)
                 End If
@@ -3307,12 +3360,15 @@ Public Class Cms
             If cContentIdsForRelatedCount <> "" Then
                 cContentIdsForRelatedCount = cContentIdsForRelatedCount.Remove(cContentIdsForRelatedCount.Length - 1)
                 Dim sSql As String = "select Distinct COUNT(nContentParentid) as count, nContentChildid from tblContentRelation where nContentChildId in (" & cContentIdsForRelatedCount & ")  group by nContentChildid"
-                Dim oDr As SqlDataReader = moDbHelper.getDataReader(sSql)
-                Do While oDr.Read
-                    For Each ocNode In moPageXml.SelectNodes("/Page/Contents/descendant-or-self::Content[@id='" & oDr("nContentChildId") & "']")
-                        ocNode.SetAttribute("relatedCount", oDr("count"))
-                    Next
-                Loop
+                'Dim oDr As SqlDataReader = moDbHelper.getDataReader(sSql)
+                Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) ' Done by sonali on 13/7/2022
+
+                    Do While oDr.Read
+                        For Each ocNode In moPageXml.SelectNodes("/Page/Contents/descendant-or-self::Content[@id='" & oDr("nContentChildId") & "']")
+                            ocNode.SetAttribute("relatedCount", oDr("count"))
+                        Next
+                    Loop
+                End Using
             End If
 
 
@@ -3579,7 +3635,7 @@ Public Class Cms
     ''' <param name="distinct"></param>
     ''' <param name="cShowSpecificContentTypes"></param>
     ''' 
-    Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False, Optional cShowSpecificContentTypes As String = "")
+    Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False, Optional cShowSpecificContentTypes As String = "", Optional ignoreActiveAndDate As Boolean = False)
         PerfMon.Log("Web", "GetPageContentFromSelect")
         Dim oRoot As XmlElement
         Dim sSql As String
@@ -3623,7 +3679,7 @@ Public Class Cms
             sSql &= "FROM tblContent AS c INNER JOIN "
             sSql &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
             sSql &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
-            'sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "
+            'sSql &= "INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId "   'uncomment by nita because resolving table not found error
 
             ' GCF - sql replaced by the above - 24/06/2011
             ' replaced JOIN to tblContentLocation with  LEFT OUTER JOIN
@@ -3672,9 +3728,10 @@ Public Class Cms
                 If sPrimarySql <> "" Then sMembershipSql = " and " & sMembershipSql
             End If
 
-            'show only live content that is within date, unless we are in admin mode.
-            sFilterSql = GetStandardFilterSQLForContent((sPrimarySql <> "" Or sMembershipSql <> ""))
-
+            If ignoreActiveAndDate = False Then
+                'show only live content that is within date, unless we are in admin mode.
+                sFilterSql = GetStandardFilterSQLForContent((sPrimarySql <> "" Or sMembershipSql <> ""))
+            End If
 
             ' add "and" if clause before
             If sPrimarySql <> "" Or sMembershipSql <> "" Or sFilterSql <> "" Then sWhereSql = " and " & sWhereSql
@@ -4453,7 +4510,7 @@ Public Class Cms
                 root = moPageXml.CreateElement("Settings")
 
                 'Please never add any setting here you do not want to be publicly accessible.
-                Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
+                Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
                 s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
@@ -4536,9 +4593,11 @@ Public Class Cms
             If mnUserId <> 0 Then
                 oUserXml = moPageXml.SelectSingleNode("/Page/User")
                 If oUserXml Is Nothing Then
-                    moPageXml.DocumentElement.AppendChild(Me.GetUserXML(mnUserId))
+
+                    moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(GetUserXML(mnUserId), True))
+                    'moPageXml.DocumentElement.AppendChild(GetUserXML(mnUserId))
                 Else
-                    moPageXml.DocumentElement.ReplaceChild(Me.GetUserXML(mnUserId), oUserXml)
+                    moPageXml.DocumentElement.ReplaceChild(GetUserXML(mnUserId), oUserXml)
                 End If
             End If
         Catch ex As Exception
@@ -4559,7 +4618,7 @@ Public Class Cms
     Public Overridable Function GetStructureXML(Optional ByVal nUserId As Long = 0, Optional ByVal nRootId As Long = 0, Optional ByVal nCloneContextId As Long = 0) As XmlElement
 
         Dim cFunctionDef As String = "GetStructureXML([Long], [Long], [Long])"
-        Protean.PerfMon.Log("Web", cFunctionDef)
+        PerfMon.Log("Web", cFunctionDef)
 
         Try
 
@@ -4585,7 +4644,7 @@ Public Class Cms
     Public Overridable Function GetStructureXML(ByVal cMenuId As String, Optional ByVal nUserId As Long = 0, Optional ByVal nRootId As Long = 0, Optional ByVal bLockRoot As Boolean = False, Optional ByVal nCloneContextId As Long = 0) As XmlElement
 
         Dim cFunctionDef As String = "GetStructureXML(String, [Long], [Long], [Boolean], [Long])"
-        Protean.PerfMon.Log("Web", cFunctionDef)
+        PerfMon.Log("Web", cFunctionDef)
 
         Try
 
@@ -4604,7 +4663,7 @@ Public Class Cms
                                            ) As XmlElement
 
         Dim cFunctionDef As String = "GetStructureXML(String, [Long], [Long], [Boolean], [Long])"
-        Protean.PerfMon.Log("Web", cFunctionDef)
+        PerfMon.Log("Web", cFunctionDef)
 
         Dim sSql As String
         Dim oDs As DataSet
@@ -4685,7 +4744,7 @@ Public Class Cms
 
 
                 sProcessInfo = "GetStructureXML-dsToXml"
-                Protean.PerfMon.Log("Web", sProcessInfo)
+                PerfMon.Log("Web", sProcessInfo)
 
                 'TS added lines to avoid whitespace issues
                 Dim oXml As New XmlDocument
@@ -4749,10 +4808,10 @@ Public Class Cms
                                             ByVal cRootNodeName As String
                                             ) As XmlElement
         Dim cFunctionDef As String = "GetStructureXML(Long,Long,Long,String,Boolean,Boolean,Boolean,Boolean,Boolean,String,String)"
-        Protean.PerfMon.Log("Web", cFunctionDef)
+        PerfMon.Log("Web", cFunctionDef)
 
         Dim oDs As Data.DataSet
-        Dim oElmt As XmlElement
+        Dim oElmt As XmlElement = Nothing
         Dim oClone As XmlElement = Nothing
         Dim nCloneId As Integer = 0
         Dim nCloneParentId As Integer = 0
@@ -4829,7 +4888,7 @@ Public Class Cms
             ' OR if site caching is turned on and membership is off, then save a single site structure for all users (i.e. don;t use session)
             If bUseCache Then
                 sProcessInfo = "GetStructureXML-CheckCaching"
-                Protean.PerfMon.Log("Web", sProcessInfo)
+                PerfMon.Log("Web", sProcessInfo)
 
                 If moSession("cacheMode") <> "" Then
                     cCacheMode = moSession("cacheMode")
@@ -4851,7 +4910,7 @@ Public Class Cms
                     Dim oCache As XmlElement = moPageXml.CreateElement(cRootNodeName)
 
                     If mbAdminMode And cCacheType = "Menu/MenuItem" Then
-                        oCache.InnerXml = goApp("AdminStructureCache")
+                        oCache.InnerXml = moCtx.Application("AdminStructureCache")
                     Else
 
 
@@ -4860,18 +4919,18 @@ Public Class Cms
                             cacheSearchCriteria &= " AND cCacheSessionID = '" & moSession.SessionID & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12"
                         End If
                         sProcessInfo = "GetStructureXML-SelectFromCache"
-                        Protean.PerfMon.Log("Web", sProcessInfo)
+                        PerfMon.Log("Web", sProcessInfo)
                         ' Get the cached structure - returns empty string if no structure found.
                         sSql = "SELECT TOP 1 cCacheStructure FROM dbo.tblXmlCache " _
                                     & cacheSearchCriteria
 
                         sProcessInfo = "GetStructureXML-getCachefromDB-Start"
-                        Protean.PerfMon.Log("Web", sProcessInfo)
+                        PerfMon.Log("Web", sProcessInfo)
 
                         moDbHelper.AddXMLValueToNode(sSql, oCache)
 
                         sProcessInfo = "GetStructureXML-getCachefromDB-End"
-                        Protean.PerfMon.Log("Web", sProcessInfo)
+                        PerfMon.Log("Web", sProcessInfo)
 
 
                     End If
@@ -4920,7 +4979,7 @@ Public Class Cms
                 sSql = "EXEC getContentStructure_v2 @userId=" & nUserId & ", @bAdminMode=" & CInt(mbAdminMode) & ", @dateNow=" & Protean.sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=1"
 
                 sProcessInfo = "GetStructureXML-getContentStrcuture"
-                Protean.PerfMon.Log("Web", sProcessInfo)
+                PerfMon.Log("Web", sProcessInfo)
 
                 If bIncludeExpiredAndHidden Then sSql += ",@bShowAll=1"
 
@@ -4937,7 +4996,7 @@ Public Class Cms
                     End If
 
                     sProcessInfo = "GetStructureXML-getPageVersions"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
 
                     moDbHelper.addTableToDataSet(oDs, sSql, "PageVersion")
                     oDs.Relations.Add("rel02", oDs.Tables(0).Columns("id"), oDs.Tables(1).Columns("vParId"), False)
@@ -5008,7 +5067,7 @@ Public Class Cms
                     oElmt = moPageXml.CreateElement(cRootNodeName)
 
                     sProcessInfo = "GetStructureXML-dsToXml"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
 
                     'TS added lines to avoid whitespace issues
                     Dim oXml As New XmlDocument
@@ -5024,7 +5083,7 @@ Public Class Cms
                     ''Rename the VersionMenuNodes
                     'If mbAdminMode And Features.ContainsKey("PageVersions") Then
                     '    sProcessInfo = "GetStructureXML-RenameVersions"
-                    '    Protean.PerfMon.Log("Web", sProcessInfo)
+                    '    PerfMon.Log("Web", sProcessInfo)
                     '    Dim oVersionMenuItems As XmlNodeList = oElmt.SelectNodes(cRootNodeName & "/" & cMenuItemNodeName & "[@vParId!='']")
                     '    For Each oVerMenuItem As XmlElement In oVersionMenuItems
                     '        Tools.Xml.renameNode(oVerMenuItem, "PageVersion")
@@ -5039,7 +5098,7 @@ Public Class Cms
                     ' The genuine root node will be node with a parId of 0 (possibly also including System Pages)
 
                     sProcessInfo = "GetStructureXML-CleanOrphans"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
 
                     Dim oRootMenuItems As XmlNodeList = oElmt.SelectNodes(cRootNodeName & "/" & cMenuItemNodeName & "[@parId!=0]")
                     For Each oRootMenuItem As XmlNode In oRootMenuItems
@@ -5055,7 +5114,7 @@ Public Class Cms
                     ' If a clonecontextnode has been passed, then we need to get that for now
 
                     sProcessInfo = "GetStructureXML-GetIndicativeRootId"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
 
                     If nCloneContextId > 0 Then
                         nTempRootId = nCloneContextId
@@ -5072,7 +5131,7 @@ Public Class Cms
                     ' Note - we only want to find cloned nodes under the root id in question
                     If gbClone Then
 
-                        Protean.PerfMon.Log("Web", "GetStructureXML-cloneNodes")
+                        PerfMon.Log("Web", "GetStructureXML-cloneNodes")
                         Dim cNodeSnapshot As New Hashtable()
 
                         ' GET CLONE SNAPSHOT
@@ -5080,9 +5139,11 @@ Public Class Cms
                         For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName & "[@id='" & nTempRootId & "']/descendant-or-self::" & cMenuItemNodeName & "[@clone and not(@clone=0)]")
                             ' Go and get the cloned node
                             nCloneId = oMenuItem.GetAttribute("clone")
-                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", , , , oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                            If Not (Tools.Xml.NodeState(oElmt, "descendant-or-self::" & cMenuItemNodeName & "[@id='" & nCloneId & "']", oClone) = Tools.Xml.XmlNodeState.NotInstantiated) Then
+                                If Not oClone Is Nothing Then
+                                    If Not (cNodeSnapshot.ContainsKey(nCloneId)) Then cNodeSnapshot.Add(nCloneId, oClone.InnerXml)
+                                End If
 
-                                If Not (cNodeSnapshot.ContainsKey(nCloneId)) Then cNodeSnapshot.Add(nCloneId, oClone.InnerXml)
                             End If
                         Next
 
@@ -5110,7 +5171,7 @@ Public Class Cms
                     ' PROPOGATE THE PERMISSIONS AND PRUNE
                     ' ===================================
                     sProcessInfo = "GetStructureXML-TidyMenunode"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
+                    PerfMon.Log("Web", sProcessInfo)
                     Me.TidyMenunode(oElmt.FirstChild, "OPEN", "", bPruneEvenIfInAdminMode Or Not (mbAdminMode), nUserId, cMenuItemNodeName, cRootNodeName)
 
                     For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName & " | descendant-or-self::PageVersion")
@@ -5160,7 +5221,7 @@ Public Class Cms
                         ' LOCK THE ROOT
                         '===============
                         sProcessInfo = "GetStructureXML-lockRoot"
-                        Protean.PerfMon.Log("Web", sProcessInfo)
+                        PerfMon.Log("Web", sProcessInfo)
                         Dim oMenuFirstChild As XmlElement = oElmt.FirstChild
                         oMenuFirstChild.SetAttribute("Locked", True)
                     End If
@@ -5178,14 +5239,15 @@ Public Class Cms
                 ' Only if caching is on, user is logged on, and not in AdminMode.
                 If bUseCache And cCacheMode = "on" Then
                     sProcessInfo = "GetStructureXML-addCacheToStructure"
-                    Protean.PerfMon.Log("Web", sProcessInfo)
-                    'If Not moRequest("reBundle") Is Nothing Then
-                    '    moDbHelper.clearStructureCacheAll()
-                    'End If
+                    PerfMon.Log("Web", sProcessInfo)
+                    'ts this was commented out I have restored 04/11/2022 please leave not to say why commented next time
+                    If Not moRequest("reBundle") Is Nothing Then
+                        moDbHelper.clearStructureCacheAll()
+                    End If
                     'only cache if MenuItem / Menu
                     If cMenuItemNodeName = "MenuItem" And cRootNodeName = "Menu" Then
                         If mbAdminMode Then
-                            goApp("AdminStructureCache") = oElmt.InnerXml
+                            moCtx.Application("AdminStructureCache") = oElmt.InnerXml
                         Else
                             moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
                         End If
@@ -5193,7 +5255,6 @@ Public Class Cms
                         moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
 
                     End If
-
 
 
                     'sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
@@ -5206,7 +5267,6 @@ Public Class Cms
                     'moDbHelper.ExeProcessSql(sSql)
 
                 End If
-
             End If
 
             'Now we need to do some page dependant processing
@@ -5214,20 +5274,14 @@ Public Class Cms
             ' MENU TIDY: XML TIDY
             ' ===================================
             sProcessInfo = "GetStructureXML-txt2xml"
-            Protean.PerfMon.Log("Web", sProcessInfo)
-
+            PerfMon.Log("Web", sProcessInfo)
             Dim sUrl As String
             Dim cPageName As String
             Dim cCloneParent As String
             Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
             Dim oPageVerElmts As XmlElement
 
-            Dim DomainURL As String = moRequest.ServerVariables("HTTP_HOST")
-            If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
-                DomainURL = "https://" & DomainURL
-            Else
-                DomainURL = "http://" & DomainURL
-            End If
+            Dim DomainURL As String = mcRequestDomain
 
             For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName)
                 Dim urlPrefix As String = ""
@@ -5285,7 +5339,7 @@ Public Class Cms
                             newVerNode.SetAttribute("status", oMenuItem.GetAttribute("status"))
                             newVerNode.SetAttribute("access", oMenuItem.GetAttribute("access"))
                             newVerNode.SetAttribute("layout", oMenuItem.GetAttribute("layout"))
-                            Dim sInnerXml As String
+                            Dim sInnerXml As String = String.Empty
                             Dim infoElmt As XmlElement
                             For Each infoElmt In oMenuItem.SelectNodes("*[name()!='PageVersion' and name()!='MenuItem']")
                                 sInnerXml = sInnerXml & infoElmt.OuterXml
@@ -5312,6 +5366,10 @@ Public Class Cms
                             oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"))
                             oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("verDesc"))
                             oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"))
+
+
+
+
                             For Each oPageVerElmts In verNode.SelectNodes("*")
                                 Dim nodeName As String = oPageVerElmts.Name
                                 If Not oMenuItem.SelectSingleNode(nodeName) Is Nothing Then
@@ -5348,6 +5406,7 @@ Public Class Cms
                                 oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"))
                                 oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("desc"))
                                 oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"))
+
                                 For Each oPageVerElmts In verNode.SelectNodes("*")
                                     Dim nodeName As String = oPageVerElmts.Name
                                     If Not oMenuItem.SelectSingleNode(nodeName) Is Nothing Then
@@ -5418,6 +5477,9 @@ Public Class Cms
 
                     If sUrl = "/" Then
                         sUrl = DomainURL
+                        If moRequest.ServerVariables("SERVER_PORT") <> "80" And moRequest.ServerVariables("SERVER_PORT") <> "443" Then
+                            sUrl = sUrl & ":" & moRequest.ServerVariables("SERVER_PORT")
+                        End If
                     End If
                     If moConfig("LowerCaseUrl") = "on" Then
                         sUrl = sUrl.ToLower()
@@ -5428,6 +5490,56 @@ Public Class Cms
                         And moConfig("UsePageIdsForURLs") <> "on" _
                         Then sUrl = sUrl & "?pgid=" & oMenuItem.GetAttribute("id")
 
+
+
+                    If moConfig("LowerCaseUrl") = "on" Then
+                        sUrl = sUrl.ToLower()
+                    End If
+
+                    oMenuItem.SetAttribute("url", sUrl)
+
+                    ' If oMenuItem.GetAttribute("id") = "609" Then
+                    ' mbIgnorePath = mbIgnorePath
+                    ' If
+
+                    If Not mbIgnorePath Then
+                        If moRequest.QueryString.Count > 0 Then
+                            If Not moRequest("path") Is Nothing Then
+                                'If this matches the path requested then change the pageId
+                                If (sUrl <> String.Empty) Then
+                                    Dim PathToMatch As String = Replace(sUrl, DomainURL, "").ToLower()
+                                    Dim PathToMatch2 As String = "/" & Me.gcLang & PathToMatch
+                                    Dim PathToTest As String = moRequest("path").ToLower().TrimEnd("/")
+                                    If PathToMatch = PathToTest Or PathToMatch2 = PathToTest Then
+                                        If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
+                                            'case for if newsletter has same page name as menu item
+                                            If Features.ContainsKey("PageVersions") Then
+                                                'catch for page version
+                                                If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                                    mnPageId = oMenuItem.GetAttribute("id")
+                                                End If
+                                            Else
+                                                mnPageId = oMenuItem.GetAttribute("id")
+                                            End If
+
+                                            If mnUserId <> 0 Or mbAdminMode <> True Then
+                                                'case for personalisation and admin TS 14/02/2021
+                                                mnPageId = oMenuItem.GetAttribute("id")
+                                            End If
+                                            ' If oMenuItem.GetAttribute("verType") = "3" Then
+                                            mnClonePageVersionId = mnPageId
+                                            'this is used in clone mode to determine the page content in GetPageContent.
+                                            '  End If
+                                            oMenuItem.SetAttribute("requestedPage", "1")
+                                        End If
+
+                                    End If
+                                End If
+                            End If
+                        End If
+                    End If
+                    'set the URL for each language pageversion so we can link between
+
                     ' Address the context of the page
                     If gbClone Then
                         cCloneParent = oMenuItem.GetAttribute("cloneparent")
@@ -5436,39 +5548,7 @@ Public Class Cms
                             sUrl += "context=" + cCloneParent
                         End If
                     End If
-                    If moConfig("LowerCaseUrl") = "on" Then
-                        sUrl = sUrl.ToLower()
-                    End If
 
-                    oMenuItem.SetAttribute("url", sUrl)
-
-                    'If this matches the path requested then change the pageId
-                    If Not mbIgnorePath Then
-                        If moRequest.QueryString.Count > 0 Then
-                            If Not moRequest("path") Is Nothing Then
-                                If Replace(sUrl, DomainURL, "") = moRequest("path") Or Replace(sUrl, DomainURL, "") & "/" = moRequest("path") Then
-                                    If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
-                                        'case for if newsletter has same page name as menu item
-                                        If Features.ContainsKey("PageVersions") Then
-                                            'catch for page version
-                                            If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
-                                                mnPageId = oMenuItem.GetAttribute("id")
-                                            End If
-                                        Else
-                                            mnPageId = oMenuItem.GetAttribute("id")
-                                        End If
-
-                                        If mnUserId <> 0 Or mbAdminMode <> True Then
-                                            'case for personalisation and admin TS 14/02/2021
-                                            mnPageId = oMenuItem.GetAttribute("id")
-                                        End If
-                                    End If
-
-                                End If
-                            End If
-                        End If
-                    End If
-                    'set the URL for each language pageversion so we can link between
                     Dim parPvElmt As XmlElement
 
                     For Each pvElmt In oMenuItem.SelectNodes("PageVersion")
@@ -5546,7 +5626,7 @@ Public Class Cms
             ' GET THE ROOT NODE
             ' ==================
             ' get the Menu from the site root.
-            Protean.PerfMon.Log("Web", "GetStructureXML-rootnode")
+            PerfMon.Log("Web", "GetStructureXML-rootnode")
             If nRootId > 0 Then
                 Dim cCloneModifier As String = ""
                 If nCloneContextId > 0 Then
@@ -5580,7 +5660,7 @@ Public Class Cms
             ' ===================================
             If bAddMenuToPageXML AndAlso Not moPageXml.DocumentElement Is Nothing Then
                 sProcessInfo = "GetStructureXML-addMenuToPageXML"
-                Protean.PerfMon.Log("Web", sProcessInfo)
+                PerfMon.Log("Web", sProcessInfo)
                 ' Check if there's already a menu node.
                 If moPageXml.SelectSingleNode("/Page/" & cRootNodeName) Is Nothing Then
                     ' No menu node - add it to the pagexml
@@ -5592,7 +5672,7 @@ Public Class Cms
             End If
 
             sProcessInfo = "GetStructureXML-End"
-            Protean.PerfMon.Log("Web", sProcessInfo)
+            PerfMon.Log("Web", sProcessInfo)
 
             Return oElmt
 
@@ -5617,18 +5697,18 @@ Public Class Cms
                 " group by nStructId"
 
 
-            Dim oDR As Data.SqlClient.SqlDataReader = moDbHelper.getDataReader(cSQL)
-            Do While oDR.Read
-                oElmt = oMenu.SelectSingleNode("descendant::MenuItem[@id='" & oDR("nStructId") & "']")
-                If Not oElmt Is Nothing Then
-                    Dim newElmt As XmlElement = moPageXml.CreateElement("ContentCount")
-                    newElmt.SetAttribute("type", Trim(SchemaType))
-                    newElmt.SetAttribute("count", oDR("count"))
-                    oElmt.AppendChild(newElmt)
-                End If
+            Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                Do While oDR.Read
+                    oElmt = oMenu.SelectSingleNode("descendant::MenuItem[@id='" & oDR("nStructId") & "']")
+                    If Not oElmt Is Nothing Then
+                        Dim newElmt As XmlElement = moPageXml.CreateElement("ContentCount")
+                        newElmt.SetAttribute("type", Trim(SchemaType))
+                        newElmt.SetAttribute("count", oDR("count"))
+                        oElmt.AppendChild(newElmt)
+                    End If
 
-            Loop
-
+                Loop
+            End Using
         Catch ex As Exception
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddContentCount", ex, ""))
         End Try
@@ -5729,7 +5809,7 @@ Public Class Cms
     End Sub
 
     Public Sub addPageDetailLinksToStructure(ByVal cContentTypes As String)
-        Dim cProcessInfo As String
+        Dim cProcessInfo As String = "addPageDetailLinksToStructure"
         Try
             Dim oMenuElmt As XmlElement = moPageXml.DocumentElement.SelectSingleNode("Menu")
             If oMenuElmt Is Nothing Then Exit Sub
@@ -5765,59 +5845,59 @@ Public Class Cms
             " (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(mdDate) & " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" & cContentTypes & ")) "
 
 
-            Dim oDR As Data.SqlClient.SqlDataReader = moDbHelper.getDataReader(cSQL)
+            Using oDR As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
 
-            Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+                Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
 
-            Do While oDR.Read
-                Dim cURL As String = ""
-                Dim oContElmt As XmlElement = moPageXml.CreateElement("MenuItem")
+                Do While oDR.Read
+                    Dim cURL As String = ""
+                    Dim oContElmt As XmlElement = moPageXml.CreateElement("MenuItem")
 
-                Select Case moConfig("DetailPathType")
-                    Case "ContentType/ContentName"
-                        Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
-                        Dim thisPrefix As String = ""
-                        Dim thisContentType As String = ""
-                        Dim i As Integer
-                        For i = 0 To prefixs.Length - 1
-                            thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
-                            thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-                            If thisContentType = oDR(5).ToString() Then
-                                cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
-                                If moConfig("DetailPathTrailingSlash") = "on" Then
-                                    cURL = cURL + "/"
+                    Select Case moConfig("DetailPathType")
+                        Case "ContentType/ContentName"
+                            Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
+                            Dim thisPrefix As String = ""
+                            Dim thisContentType As String = ""
+                            Dim i As Integer
+                            For i = 0 To prefixs.Length - 1
+                                thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                If thisContentType = oDR(5).ToString() Then
+                                    cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                                    If moConfig("DetailPathTrailingSlash") = "on" Then
+                                        cURL = cURL + "/"
+                                    End If
+                                    If moConfig("LowerCaseUrl") = "on" Then
+                                        cURL = cURL.ToLower()
+                                    End If
                                 End If
-                                If moConfig("LowerCaseUrl") = "on" Then
-                                    cURL = cURL.ToLower()
-                                End If
+                            Next
+                        Case Else
+                            If pageDict.ContainsKey(oDR(2)) Then
+                                cURL = pageDict.Item(oDR(2))
+                                'If moConfig("LegacyRedirect") = "on" Then
+                                cURL &= "/" & oDR(0).ToString & "-/" & Tools.Text.CleanName(oDR(1).ToString, False, True)
+                                ' Else
+                                '     cURL &= "/Item" & oDR(0).ToString
+                                ' End If
+                            Else
+                                cProcessInfo = "orphan Content"
                             End If
-                        Next
-                    Case Else
-                        If pageDict.ContainsKey(oDR(2)) Then
-                            cURL = pageDict.Item(oDR(2))
-                            'If moConfig("LegacyRedirect") = "on" Then
-                            cURL &= "/" & oDR(0).ToString & "-/" & Tools.Text.CleanName(oDR(1).ToString, False, True)
-                            ' Else
-                            '     cURL &= "/Item" & oDR(0).ToString
-                            ' End If
-                        Else
-                            cProcessInfo = "orphan Content"
-                        End If
-                End Select
-                If moConfig("LowerCaseUrl") = "on" Then
-                    cURL = cURL.ToLower()
-                End If
-                If cURL <> "" Then
-                    oContElmt.SetAttribute("url", cURL)
-                    oContElmt.SetAttribute("name", oDR(1).ToString)
-                    oContElmt.SetAttribute("publish", Protean.Tools.Xml.XmlDate(oDR(3).ToString, False))
-                    oContElmt.SetAttribute("update", Protean.Tools.Xml.XmlDate(oDR(4).ToString, False))
-                    oMenuElmt.AppendChild(oContElmt)
-                End If
+                    End Select
+                    If moConfig("LowerCaseUrl") = "on" Then
+                        cURL = cURL.ToLower()
+                    End If
+                    If cURL <> "" Then
+                        oContElmt.SetAttribute("url", cURL)
+                        oContElmt.SetAttribute("name", oDR(1).ToString)
+                        oContElmt.SetAttribute("publish", Protean.Tools.Xml.XmlDate(oDR(3).ToString, False))
+                        oContElmt.SetAttribute("update", Protean.Tools.Xml.XmlDate(oDR(4).ToString, False))
+                        oMenuElmt.AppendChild(oContElmt)
+                    End If
 
-            Loop
-            oDR.Close()
-            oDR = Nothing
+                Loop
+                oDR.Close()
+            End Using
 
         Catch ex As Exception
             'returnException(msException, mcModuleName, "addPageDetailLinksToStructure", ex, gcEwSiteXsl, "", gbDebug)
@@ -5872,35 +5952,76 @@ Public Class Cms
                     ElseIf mnCloneContextPageId > 0 Then
                         ' Is this a child of a clone page
                         cXPathModifier = " and @cloneparent='" & Me.mnCloneContextPageId.ToString & "'"
+
+                    ElseIf mnClonePageVersionId > 0 Then
+
+                        cXPathModifier = " and @requestedPage='1'"
+                        'Page Version of a cloned page.
+
                     Else
                         ' this is not a cloned page, make sure we don't accidentally look for the cloned pages.
-                        cXPathModifier = " and ((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0))"
+
+                        'this version works on clone language variations but wrong menu
+                        cXPathModifier = " and (((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0)) or (starts-with(@url,'" & mcPageLanguageUrlPrefix & mcPagePath & "') or starts-with(@url,'" & mcRequestDomain & mcPageLanguageUrlPrefix.Replace(mcRequestDomain, "") & mcPagePath & "')))"
+
+                        'cXPathModifier = " and (((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0)) and contains(@url,'" & mcPageLanguageUrlPrefix & mcPagePath & "'))"
                     End If
+
+
+
                 End If
 
                 ' Check for blocked content
 
 
                 gcBlockContentType = moDbHelper.GetPageBlockedContent(mnPageId)
+                Dim parentXpath As String = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]"
 
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
-                'step through the tree from home to our current page
-                For Each oElmt In oPageElmt.SelectNodes("/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]")
-                    Dim nPageId As Long = oElmt.GetAttribute("id")
-                    GetPageContentXml(nPageId)
-                    nPageId = Nothing
-                    IsInTree = True
-                Next
 
-                If mbPreview And IsInTree = False Then
-                    GetPageContentXml(mnPageId)
-                End If
 
-                If Features.ContainsKey("PageVersions") Then
-                    If IsInTree = False And mbAdminMode = True Then
+
+                'this is for load more steppers - we do not want any other content other than the one on the list
+                'the page url looks like
+                ' /ourpage/?singleContentType=Product&startPos=10&rows=10
+
+                If moRequest("singleContentType") <> "" Then
+                    'sql for content on page and permissions etc
+                    Dim sFilterSql As String = GetStandardFilterSQLForContent()
+                    sFilterSql = sFilterSql & " and nstructid=" & mnPageId
+                    Dim cSort As String = "|ASC_cl.nDisplayOrder"
+                    Select Case moRequest("sortby")
+                        Case "name"
+                            cSort = "|ASC_c.cContentName"
+                        Case Else
+                            cSort = "|ASC_cl.nDisplayOrder"
+                    End Select
+                    GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType") & cSort, sFilterSql)
+                Else
+                    'step through the tree from home to our current page
+                    For Each oElmt In oPageElmt.SelectNodes(parentXpath)
+                        oElmt.SetAttribute("active", "1")
+                        Dim nPageId As Long = oElmt.GetAttribute("id")
+                        GetPageContentXml(nPageId)
+                        nPageId = Nothing
+                        IsInTree = True
+                    Next
+
+                    If mbPreview And IsInTree = False Then
+                        GetPageContentXml(mnPageId)
+                    End If
+
+                    If Features.ContainsKey("PageVersions") Then
+                        If IsInTree = False And mbAdminMode = True Then
+                            GetPageContentXml(mnPageId)
+                        End If
+                    End If
+                    If mnPageId = gnPageNotFoundId Then
                         GetPageContentXml(mnPageId)
                     End If
                 End If
+
+
             Else
                 'if we are on a system page we only want the content on that page not parents.
                 GetPageContentXml(mnPageId)
@@ -6786,6 +6907,12 @@ Public Class Cms
                 If mnArtId > 0 Then
                     sProcessInfo = "loading content" & mnArtId
 
+                    'I don't like this but need a quick solution
+                    If Not moPageXml.SelectSingleNode("Page/Contents/Content[@action='Protean.Cms+Content+Modules.ListHistoricEvents']") Is Nothing Then
+                        bAllowExpired = True
+                    End If
+
+
                     sFilterSql &= GetStandardFilterSQLForContent()
 
                     oRoot = moPageXml.CreateElement("ContentDetail")
@@ -6813,9 +6940,7 @@ Public Class Cms
                         sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
                         sSql &= "where c.nContentPrimaryId = " & mnArtId & " and nContentVersionKey=" & nVersionId & " "
                     End If
-
                     oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail")
-
                     oDs.Tables(0).Columns("id").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("ref").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("name").ColumnMapping = Data.MappingType.Attribute
@@ -6824,7 +6949,6 @@ Public Class Cms
                     oDs.Tables(0).Columns("expire").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("update").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
-
                     If nVersionId > 0 Then
                         oDs.Tables(0).Columns("verid").ColumnMapping = Data.MappingType.Attribute
                         oDs.Tables(0).Columns("verno").ColumnMapping = Data.MappingType.Attribute
@@ -6832,7 +6956,6 @@ Public Class Cms
                     If bContLoc Then
                         oDs.Tables(0).Columns("locations").ColumnMapping = Data.MappingType.Attribute
                     End If
-
                     oDs.Tables(0).Columns("owner").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("status").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("content").ColumnMapping = Data.MappingType.SimpleContent
@@ -6841,7 +6964,6 @@ Public Class Cms
 
 
                     If oDs.Tables(0).Rows.Count > 0 Then
-
                         oRoot.InnerXml = Replace(oDs.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
                         For Each oNode In oRoot.SelectNodes("/ContentDetail/Content")
                             oElmt = oNode
@@ -6865,7 +6987,6 @@ Public Class Cms
                                 oComment = Nothing
                                 bLoadAsXml = False
                             End Try
-
                             If bLoadAsXml Then
 
                                 ' Successfully converted to XML.
@@ -6880,12 +7001,9 @@ Public Class Cms
                                                 oElmt.SetAttribute(oAttr.Name, oAttr.InnerText)
                                             End If
                                         Next
-
                                         oElmt.InnerXml = oFirst.InnerXml
                                     End If
                                 End If
-
-
 
                                 moDbHelper.addRelatedContent(oNode, mnArtId, mbAdminMode)
                                 If moConfig("ShowOwnerOnDetail") <> "" Then
@@ -6898,7 +7016,6 @@ Public Class Cms
                                     End If
                                 End If
                             End If
-
                         Next
 
                         'If gbCart Or gbQuote Then
@@ -6906,18 +7023,14 @@ Public Class Cms
                         'End If
 
                         Dim contentElmt As XmlElement = oRoot.SelectSingleNode("/ContentDetail/Content")
-
                         If nVersionId > 0 Then
                             contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId, moConfig("SharedKey")))
                         End If
-
-
                         AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
-
                         If Not oPageElmt Is Nothing Then
                             Dim oContentDetail As XmlElement = contentElmt
                             If Not (oContentDetail Is Nothing) _
-                        AndAlso oContentDetail.InnerXml.Trim() <> "" Then
+        AndAlso oContentDetail.InnerXml.Trim() <> "" Then
                                 ' If we can find a content detail Content node, 
                                 ' AND it contains some InnerXml, then YAY.
                                 oPageElmt.AppendChild(oRoot.FirstChild)
@@ -6934,7 +7047,6 @@ Public Class Cms
                             Dim SafeURLName As String = Protean.Tools.Text.CleanName(contentElmt.GetAttribute("name"), False, True)
                             Dim myOrigURL As String
                             Dim myQueryString As String = ""
-
                             If mcOriginalURL.Contains("?") Then
                                 myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"))
                                 myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"))
@@ -6957,7 +7069,6 @@ Public Class Cms
                         If ProductTypes.Contains(contentElmt.GetAttribute("type")) And Not moCart Is Nothing Then
                             Try
                                 Dim oShippingElmt As XmlElement = moPageXml.CreateElement("ShippingCosts")
-
                                 Dim cDestinationCountry As String = moCart.moCartConfig("DefaultDeliveryCountry")
                                 Dim nPrice As Double = 0
                                 If Not contentElmt.SelectSingleNode("Prices/Price[@type='sale']") Is Nothing Then
@@ -6975,7 +7086,6 @@ Public Class Cms
                                 End If
                                 ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                 Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight)
-
                                 oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
                                 contentElmt.AppendChild(oShippingElmt)
                             Catch ex As Exception
@@ -6984,7 +7094,6 @@ Public Class Cms
                         End If
 
                         Return moContentDetail
-
                     Else
                         sProcessInfo = "no content to add - we redirect"
                         'this content is not found either page not found or re-direct home.
@@ -6993,6 +7102,7 @@ Public Class Cms
                             If gnPageNotFoundId > 1 Then
                                 ' msRedirectOnEnd = "/System+Pages/Page+Not+Found"
                                 mnPageId = gnPageNotFoundId
+                                mnArtId = 0
                                 moPageXml = New XmlDocument()
                                 BuildPageXML()
                                 moResponse.StatusCode = 404
@@ -7000,7 +7110,11 @@ Public Class Cms
                                 msRedirectOnEnd = moConfig("BaseUrl")
                                 moResponse.StatusCode = 404
                             End If
+                            '    End If
+                            '            Return Nothing
                         End If
+                        ' Else
+                        'Just a page no detail requested
                         Return Nothing
                     End If
                 Else
@@ -7009,16 +7123,16 @@ Public Class Cms
                 End If
 
             Else
-                sProcessInfo = "content exists adding content"
-                oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail")
-                oRoot.AppendChild(moContentDetail)
-                If Not oPageElmt Is Nothing Then
-                    oPageElmt.AppendChild(oRoot)
-                End If
-                AddGroupsToContent(oRoot)
-                retElmt = moContentDetail
-                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, mnUserId, Me.SessionID, Now, mnArtId, 0, "")
-                Return moContentDetail
+            sProcessInfo = "content exists adding content"
+            oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail")
+            oRoot.AppendChild(moContentDetail)
+            If Not oPageElmt Is Nothing Then
+                oPageElmt.AppendChild(oRoot)
+            End If
+            AddGroupsToContent(oRoot)
+            retElmt = moContentDetail
+            moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, mnUserId, Me.SessionID, Now, mnArtId, 0, "")
+            Return moContentDetail
             End If
 
             sSql = Nothing
@@ -7028,7 +7142,6 @@ Public Class Cms
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentDetailXml", ex, sProcessInfo))
             Return Nothing
         End Try
-
     End Function
 
 
@@ -7052,16 +7165,10 @@ Public Class Cms
             If moContentDetail Is Nothing Then
                 If mnArtId > 0 Then
                     sProcessInfo = "loading content" & mnArtId
-
                     sFilterSql &= GetStandardFilterSQLForContent()
-
-
                     oRoot = moPageXml.CreateElement("ContentDetail")
                     sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status " &
                     "from tblContent c inner join tblAudit a on c.nAuditId = a.nAuditKey  where c.nContentKey = " & mnArtId & sFilterSql
-
-
-
                     oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail")
                     oDs.Tables(0).Columns("id").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("ref").ColumnMapping = Data.MappingType.Attribute
@@ -7079,7 +7186,6 @@ Public Class Cms
                     For Each oNode In oRoot.SelectNodes("/ContentDetail/Content")
                         oElmt = oNode
                         sContent = oElmt.InnerText
-
                         If IsDate(oElmt.GetAttribute("update")) Then mdPageUpdateDate = CDate(oElmt.GetAttribute("update"))
 
                         '  Try to convert the InnerText to InnerXml
@@ -7205,8 +7311,10 @@ Public Class Cms
                 End If
 
                 sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate = 0 or a.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " )"
-                sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate = 0 or a.dExpireDate " & ExpireLogic & Protean.Tools.Database.SqlDate(mdDate) & " )"
 
+                If Not bAllowExpired Then
+                    sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate = 0 or a.dExpireDate " & ExpireLogic & Protean.Tools.Database.SqlDate(mdDate) & " )"
+                End If
 
                 ' sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " )"
                 ' sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate " & ExpireLogic & Protean.Tools.Database.SqlDate(mdDate) & " )"
@@ -7424,12 +7532,14 @@ Public Class Cms
                                 Dim fso As FileInfo = New FileInfo(strFilePath)
 
                                 If fso.Exists Then
-                                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                                    If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                                    Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                                    If moConfig("AdminAcct") <> "" Then
+                                        oImp = New Protean.Tools.Security.Impersonate
+                                        oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup"))
 
+                                    End If
 
-
-                                        Dim oFileStream As FileStream = New FileStream(strFilePath, FileMode.Open)
+                                    Dim oFileStream As FileStream = New FileStream(strFilePath, FileMode.Open)
                                         strFileSize = oFileStream.Length
 
                                         Dim Buffer(CInt(strFileSize)) As Byte
@@ -7453,7 +7563,7 @@ Public Class Cms
                                         objStream = Nothing
 
                                         oImp.UndoImpersonation()
-
+                                        oImp = Nothing
                                         'Activity Log
                                         If mnUserId <> "0" And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
                                             'NB: 30-03-2010 New check to add in the ArtId (original line is the 2nd, with ArtId hardcoded as 0?)
@@ -7464,7 +7574,11 @@ Public Class Cms
                                             End If
                                         End If
 
+                                    If moConfig("AdminAcct") <> "" Then
+                                        oImp.UndoImpersonation()
+                                        oImp = Nothing
                                     End If
+
 
                                 Else
                                     '------------------------------------------ 26-08-2008
@@ -7480,7 +7594,7 @@ Public Class Cms
                                         moDbHelper.CommitLogToDB(dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, Now, mnPageId, 0, "ERROR NOT FOUND:" & strFileName)
                                     End If
 
-                                    If goApp("PageNotFoundId") <> RootPageId Then
+                                    If moCtx.Application("PageNotFoundId") <> RootPageId Then
                                         moCtx.ApplicationInstance.CompleteRequest()
                                         Redirect404(NotFoundPagePath)
                                     Else
@@ -7617,11 +7731,6 @@ Public Class Cms
                 rendererOpts.Author = "ProteanCMS"
                 rendererOpts.EnablePrinting = True
                 rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
-                ' rendererOpts.Kerning = True
-                ' rendererOpts.EnableCopy = True
-
-                'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
 
                 Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
                 Dim subDirs As DirectoryInfo() = dir.GetDirectories()
@@ -7639,11 +7748,6 @@ Public Class Cms
                 oFoNet.Options = rendererOpts
                 oFoNet.Render(oTxtReader, ofileStream)
 
-                'oImp.UndoImpersonation()
-
-                'End If
-
-
                 'And then we stram out to the browser
 
                 moResponse.Buffer = True
@@ -7653,10 +7757,6 @@ Public Class Cms
                 strFileSize = ofileStream.Length
 
                 Dim Buffer() As Byte = ofileStream.ToArray
-                'oFileStream.Read(Buffer, 0, CInt(strFileSize))
-                'oFileStream.Close()
-
-                'downloadBytes = ofileStream.ToArray
 
                 ctx.Response.Clear()
                 'Const adTypeBinary = 1
@@ -8008,7 +8108,7 @@ Public Class Cms
                     httpPrefix = "https://"
                 End If
 
-                For Each oElmt In goLangConfig.ChildNodes
+                For Each oElmt In goLangConfig.SelectNodes("Language")
                     Select Case LCase(oElmt.GetAttribute("identMethod"))
                         Case "domain"
                             If oElmt.GetAttribute("identifier") = moRequest.ServerVariables("HTTP_HOST") Then
@@ -8053,7 +8153,7 @@ Public Class Cms
 
             End If
         Catch ex As Exception
-
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetRequestLanguage", ex, ""))
         End Try
 
     End Sub
@@ -8413,10 +8513,10 @@ Public Class Cms
 
         '  Try unloading appdomain
         Try
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+            ' Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             ' If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-
             ' AppDomain.Unload(AppDomain.CurrentDomain)
+            ' don't forget to undo and set oImp to nothing
             Return True
             'System.Web.HttpRuntime.UnloadAppDomain()
             ' Else
@@ -8437,7 +8537,6 @@ Public Class Cms
     End Function
 
     Public Sub SavePage(ByVal cUrl As String, ByVal cBody As String)
-        PerfMon.Log("Indexer", "IndexPage")
         Dim cProcessInfo As String = ""
         Dim filename As String = ""
         Dim filepath As String = ""
@@ -8477,7 +8576,7 @@ Public Class Cms
             End If
 
             cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename
-
+            PerfMon.Log(mcModuleName, "SavePage", cProcessInfo)
             Dim cleanfilename As String = goServer.UrlDecode(filename)
 
             'Limit the file length to 255
@@ -8497,37 +8596,55 @@ Public Class Cms
             ' End If
 
             If filepath = "" Then filepath = "/"
+
+            PerfMon.Log(mcModuleName, "Create Path - Start")
             Dim sError As String = oFS.CreatePath(filepath)
+            oFS = Nothing
+            PerfMon.Log(mcModuleName, "Create Path - End")
 
             If sError = "1" Then
+                Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                If moConfig("AdminAcct") <> "" Then
+                    PerfMon.Log(mcModuleName, "Impersonation - Start")
+                    oImp = New Protean.Tools.Security.Impersonate
+                    oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup"))
+                    PerfMon.Log(mcModuleName, "Impersonation - End")
+                End If
 
-                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-
-
-                    Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
-
-                    '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
-
-                    'Else
-                    '   cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
-                    '  Err.Raise(1001, "File not saved", cProcessInfo)
-                    '   End If
+                If Alphaleonis.Win32.Filesystem.Directory.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & mcPageCacheFolder & filepath) Then
+                    If Not Alphaleonis.Win32.Filesystem.File.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath) Then
+                        PerfMon.Log(mcModuleName, "SavePage - start file write")
+                        Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+                        PerfMon.Log(mcModuleName, "SavePage - end file write")
+                    Else
+                        cProcessInfo &= "<Error>File Locked: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                        sError = cProcessInfo
+                    End If
                 Else
-                    cProcessInfo &= "<Error>Create File: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                    cProcessInfo &= "<Error>Directory Not Exists: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                    sError = cProcessInfo
+                End If
+
+                If moConfig("AdminAcct") <> "" Then
+                    oImp.UndoImpersonation()
+                    oImp = Nothing
                 End If
 
             Else
                 cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                sError = cProcessInfo
             End If
-
-            oFS = Nothing
-
+            If sError <> "1" Then
+                Throw New System.Exception("An Error writing the page.")
+            End If
+            PerfMon.Log("Web", "SavePage - End")
         Catch ex As Exception
             'if saving of a page fails we are not that bothered.
             'cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
-            returnException(msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
+            AddExceptionToEventLog(ex, cProcessInfo)
+            'returnException(msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
             'bIsError = True
+            'PerfMon.Log("Web", "SavePage - error")
         End Try
     End Sub
 
@@ -8548,7 +8665,7 @@ Public Class Cms
     ''' <returns></returns>
     Public Function CheckProductStatus(ByVal nArtId As String) As String
         Try
-            Dim oDr As System.Data.SqlClient.SqlDataReader
+            'Dim oDr As System.Data.SqlClient.SqlDataReader
             Dim sSQL As String = "DECLARE @List VARCHAR(8000)
 
 SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
@@ -8562,18 +8679,18 @@ from tblcontent C
             If moDbHelper Is Nothing Then
                 moDbHelper = GetDbHelper()
             End If
-            oDr = moDbHelper.getDataReader(sSQL)
-            If Not oDr Is Nothing Then
-                If oDr.HasRows Then
-                    While oDr.Read
-                        Return oDr(0).ToString()
-                    End While
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSQL)  'Done by nita on 6/7/22
+                If Not oDr Is Nothing Then
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            Return oDr(0).ToString()
+                        End While
 
+                    End If
+                Else
+                    Return ""
                 End If
-            Else
-                Return ""
-            End If
-
+            End Using
         Catch ex As Exception
             Return ""
         End Try
@@ -8591,6 +8708,7 @@ from tblcontent C
 #End Region
 
     Protected Overrides Sub Finalize()
+
         MyBase.Finalize()
     End Sub
 End Class

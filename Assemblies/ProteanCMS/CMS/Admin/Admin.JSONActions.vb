@@ -5,7 +5,7 @@ Imports System.Xml
 Imports System.Collections
 Imports System.Web.Configuration
 Imports System.Configuration
-
+Imports Alphaleonis.Win32.Filesystem
 
 Partial Public Class Cms
 
@@ -53,21 +53,47 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Function QueryValue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+
+
+            Public Function DeleteObject(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim ObjType As String = ""  'Just declare at top
+                Dim result As Long
+                Dim ObjId As String = ""
                 Try
 
+                    If ValidateAPICall(myWeb, "Administrator") Then
+
+                        If inputJson("objType") IsNot Nothing Then
+                            ObjType = inputJson("ObjType").ToObject(Of String)()
+                        End If
+
+                        If inputJson("objId") IsNot Nothing Then
+                            ObjId = inputJson("objId").ToObject(Of String)()
+                        End If
+                        result = myWeb.moDbHelper.DeleteObject(ObjType, ObjId, False)
+
+                    End If
+                    Return "[{""Key"":""" & ObjId & """,""Value"":""" & result & """}]"
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function QueryValue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim count As String = "0"
                     Dim bIsAuthorized As Boolean = False
                     bIsAuthorized = ValidateAPICall(myWeb, "Administrator")
                     If bIsAuthorized Then
-                        Dim count As String = "0"
+
                         Dim sSql = myApi.moConfig(myApi.moRequest("query"))
 
                         Dim result = myWeb.moDbHelper.GetDataValue(sSql, System.Data.CommandType.StoredProcedure)
                         count = If(result Is Nothing, "", Convert.ToString(result))
 
-                        Return "[{""Key"":""" & myApi.moRequest("query") & """,""Value"":""" & count & """}]"
                     End If
-
+                    Return "[{""Key"":""" & myApi.moRequest("query") & """,""Value"":""" & count & """}]"
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""))
@@ -355,6 +381,10 @@ Partial Public Class Cms
                 If inputJson("pageType") IsNot Nothing Then
                     sType = inputJson("pageType").ToObject(Of String)()
                 End If
+
+                If inputJson("pageurl") IsNot Nothing Then
+                    hiddenOldUrl = inputJson("pageurl").ToObject(Of String)()
+                End If
                 Try
                     If myApi.mbAdminMode Then
                         JsonResult = moAdminRedirect.RedirectPage(redirectType, oldUrl, newUrl, hiddenOldUrl, isParentPage, sType, pageId)
@@ -366,6 +396,83 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
             End Function
+
+            Public Function ReIndexingAPI(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim sString As String
+                Try
+                    Dim objservices As Services = New Services()
+
+                    If objservices.CheckUserIP() Then
+                        Dim bIsAuthorized As Boolean = False
+                        bIsAuthorized = ValidateAPICall(myWeb, "Administrator")
+                        If bIsAuthorized Then
+                            Dim objAdmin As Admin = New Admin()
+                            objAdmin.ReIndexing(myWeb)
+                            sString = "success"
+                        Else
+                            sString = "Invalid authentication"
+                        End If
+
+                    Else
+                        sString = "No access to this IPAddress"
+                    End If
+                    Return sString
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "IsParentPage", ex, ""))
+                    Return ex.Message
+                End Try
+
+            End Function
+
+            Public Function CleanfileName(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim Filename As String = String.Empty
+                Dim fsHelper As New fsHelper()
+
+                Try
+                    If myApi.mbAdminMode Then
+
+                        If myApi.moRequest.QueryString("Filename") IsNot Nothing Then
+                            Filename = myApi.moRequest.QueryString("Filename")
+                        End If
+                        If Filename <> String.Empty Then
+                            JsonResult = fsHelper.CleanfileName(Filename)
+                        End If
+
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function CompressImage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = "0"
+                Dim Filename As String = String.Empty
+                Dim fsHelper As New fsHelper()
+                Dim TinyAPIKey As String = goConfig("TinifyKey")
+                Try
+                    If myApi.mbAdminMode Then
+
+                        If myApi.moRequest.QueryString("Filename") IsNot Nothing Then
+                            Dim oImgTool As New Protean.Tools.Image("")
+                            oImgTool.TinifyKey = TinyAPIKey
+                            Dim oFile As IO.FileInfo = New IO.FileInfo(myApi.goServer.MapPath(myApi.moRequest.QueryString("Filename")))
+                            JsonResult = "reduction:'" & (oImgTool.CompressImage(oFile, True) / 1000) & "'"
+                            oFile.Refresh()
+                            JsonResult = JsonResult & ",new_size:'" & (oFile.Length / 1000) & "'"
+                        End If
+
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+
         End Class
 #End Region
 

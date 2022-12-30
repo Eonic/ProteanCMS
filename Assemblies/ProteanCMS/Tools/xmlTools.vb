@@ -262,6 +262,7 @@ Partial Public Module xmlTools
             Return oElem
         Catch ex As Exception
             Err.Raise(8000, "Adding" & cNodeName, ex.Message)
+            Return Nothing
         End Try
     End Function
 
@@ -460,7 +461,7 @@ Public Class XmlHelper
                     ClassName = ClassName.Replace(".", "_") & sCompileVersion
                     If mbCompiled Then
 
-                        Dim assemblyInstance As [Assembly]
+                        Dim assemblyInstance As [Assembly] = Nothing
                         AssemblyPath = goServer.MapPath(compiledFolder) & ClassName & ".dll"
                         Dim CalledType As System.Type
 
@@ -515,17 +516,6 @@ Public Class XmlHelper
                     End If
                 Catch ex As Exception
 
-                    'To be removed.
-                    'Dim reflection As ReflectionTypeLoadException = TryCast(ex, ReflectionTypeLoadException)
-                    'If reflection IsNot Nothing Then
-                    '    For Each expct As Exception In reflection.LoaderExceptions
-                    '        Using eventLog As New EventLog("Application")
-                    '            eventLog.WriteEntry(expct.Message)
-                    '            eventLog.WriteEntry(expct.InnerException.Message)
-                    '        End Using
-                    '    Next
-                    'End If
-
                     transformException = ex
                     returnException(myWeb.msException, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug)
                     bError = True
@@ -536,18 +526,31 @@ Public Class XmlHelper
         Private Function CurrentDomain_AssemblyResolve(ByVal sender As Object, ByVal args As ResolveEventArgs) As Assembly
             Dim assembly, objExecutingAssemblies As Assembly
             Dim strTempAsmbPath As String = ""
-            objExecutingAssemblies = args.RequestingAssembly
-            Dim arrReferencedAssmbNames As AssemblyName() = objExecutingAssemblies.GetReferencedAssemblies()
+            Try
+                objExecutingAssemblies = args.RequestingAssembly
+                If Not objExecutingAssemblies = Nothing Then
 
-            For Each strAssmbName As AssemblyName In arrReferencedAssmbNames
-                If strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) = args.Name.Substring(0, args.Name.IndexOf(",")) Then
-                    strTempAsmbPath = goServer.MapPath(compiledFolder) & "\" + args.Name.Substring(0, args.Name.IndexOf(",")) & ".dll"
-                    Exit For
+                    Dim arrReferencedAssmbNames As AssemblyName() = objExecutingAssemblies.GetReferencedAssemblies()
+
+                    For Each strAssmbName As AssemblyName In arrReferencedAssmbNames
+                        If strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) = args.Name.Substring(0, args.Name.IndexOf(",")) Then
+                            strTempAsmbPath = goServer.MapPath(compiledFolder) & "\" + args.Name.Substring(0, args.Name.IndexOf(",")) & ".dll"
+                            Exit For
+                        End If
+                    Next
+
+                    assembly = Assembly.LoadFrom(strTempAsmbPath)
+                    Return assembly
+                Else
+                    Return Nothing
                 End If
-            Next
+            Catch ex As Exception
+                transformException = ex
+                ' returnException(myWeb.msException, "Protean.XmlHelper.Transform", "CurrentDomain_AssemblyResolve", ex, msXslFile, Nothing, gbDebug)
+                bError = True
+                Return Nothing
+            End Try
 
-            assembly = Assembly.LoadFrom(strTempAsmbPath)
-            Return assembly
         End Function
 
         Public Property XSLFile() As String
@@ -1050,26 +1053,29 @@ Public Class XmlHelper
             Dim sProcessInfo As String = "ClearXSLTassemblyCache"
             Try
 
-                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
+                Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                If myWeb.moConfig("AdminAcct") = "" Then
+                    oImp = New Protean.Tools.Security.Impersonate
+                    oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup"))
+                End If
 
-                    Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
+                Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
                     sProcessInfo = "clearing " & cWorkingDirectory
                     Dim di As New IO.DirectoryInfo(cWorkingDirectory)
                     Dim fi As IO.FileInfo
 
-                    For Each fi In di.EnumerateFiles
-                        Try
-                            Dim fso As New fsHelper()
-                            fso.DeleteFile(fi.FullName)
-                        Catch ex2 As Exception
-                            ' returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
-                        End Try
-                    Next
+                For Each fi In di.EnumerateFiles
+                    Try
+                        Dim fso As New fsHelper()
+                        fso.DeleteFile(fi.FullName)
+                    Catch ex2 As Exception
+                        ' returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
+                    End Try
+                Next
 
+                If myWeb.moConfig("AdminAcct") = "" Then
                     oImp.UndoImpersonation()
                 End If
-
 
                 'reset config to on
                 Protean.Config.UpdateConfigValue(myWeb, "protean/web", "CompliedTransform", "on")

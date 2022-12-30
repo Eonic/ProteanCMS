@@ -50,7 +50,9 @@
       </xsl:for-each>
       <xsl:if test="@shippingCost &gt; 0">
         <tr>
-          <td colspan="4">&#160;</td>
+          <td colspan="3">
+			  <xsl:value-of select="@shippingDesc"/>
+		  </td>
           <td class="shipping heading" align="right">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
@@ -63,7 +65,9 @@
           </td>
           <td class="shipping amount" align="right">
             <font face="{$bodyFont}" size="2">
-              <xsl:value-of select="$currency"/>
+               <span class="currency">
+                <xsl:value-of select="$currencySymbol"/>
+              </span>
               <xsl:value-of select="format-number(@shippingCost,'0.00')"/>
             </font>
           </td>
@@ -71,7 +75,7 @@
       </xsl:if>
       <xsl:if test="@vatRate &gt; 0">
         <tr>
-          <td colspan="4">
+          <td colspan="3">
             <!--xsl:attribute name="rowspan">
 									<xsl:call-template name="calcRows">
 										<xsl:with-param name="r1"><xsl:choose><xsl:when test="@vatRate &gt; 0">1</xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>	</xsl:with-param>
@@ -89,7 +93,9 @@
           </td>
           <td class="subTotal amount" align="right">
             <font face="{$bodyFont}" size="2">
-              <xsl:value-of select="$currency"/>
+               <span class="currency">
+                <xsl:value-of select="$currencySymbol"/>
+              </span>
               <xsl:value-of select="format-number(@totalNet, '0.00')"/>
             </font>
           </td>
@@ -134,8 +140,8 @@
           <td class="total heading" align="right">
             <font face="{$bodyFont}" size="2">
               <xsl:choose>
-                <xsl:when test="@transStatus">Deposit Paid</xsl:when>
-                <xsl:when test="@payableType='settlement' and not(@transStatus)">Payment Received</xsl:when>
+                <xsl:when test="@transStatus">Deposit Paid:</xsl:when>
+                <xsl:when test="@payableType='settlement'">Payment Received:</xsl:when>
               </xsl:choose>
             </font>
           </td>
@@ -168,12 +174,6 @@
       </xsl:if>
     </table>
 
-	  <xsl:if test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">
-		  <br/>
-		  <a href="{$siteURL}?cartCmd=Settlement&amp;SettlementRef={@settlementID}">
-			 >> CLICK HERE TO PAY YOUR BALANCE 10 DAYS BEFORE YOUR EVENT
-		  </a><br/>
-	  </xsl:if>
     <xsl:if test="/Page/Contents/Content[@name='cartMessage']">
       <div class="cartMessage">
         <xsl:copy-of select="/Page/Contents/Content[@name='cartMessage']/node()"/>

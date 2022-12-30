@@ -19,13 +19,13 @@ Partial Public Class Cms
         Public myWeb As Protean.Cms
         Private mcModuleName As String = "Web.xForm"
 #End Region
-        Public Sub New(sException)
+        Public Sub New(ByRef sException As String)
             MyBase.New(sException)
         End Sub
 
         Public Sub New(ByRef aWeb As Protean.Cms)
             MyBase.New(aWeb.msException)
-            PerfMon.Log(mcModuleName, "New")
+            aWeb.PerfMon.Log(mcModuleName, "New")
             Try
 
                 myWeb = aWeb

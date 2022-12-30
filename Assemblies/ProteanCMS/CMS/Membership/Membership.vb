@@ -94,7 +94,7 @@ Partial Public Class Cms
         End Function
 
         Public Function CheckPasswordHistory(ByVal AccountID As Integer, ByVal cPassword As String) As Boolean
-            Dim odr As SqlDataReader
+            'Dim odr As SqlDataReader
             Dim valid As Boolean = True
             Try
 
@@ -124,16 +124,16 @@ Partial Public Class Cms
                 Dim sSql2 As String = "select cActivityDetail as password, dDatetime from tblActivityLog where nActivityType=" & dbHelper.ActivityType.HistoricPassword & " and nUserDirId = " & AccountID _
                 & " Order By dDateTime Desc"
 
-                odr = myWeb.moDbHelper.getDataReader(sSql2)
-                While odr.Read
-                    If nHistoricPasswordCount > 0 And cPassword = odr("password") Then
-                        valid = False
-                    End If
-                    nHistoricPasswordCount = nHistoricPasswordCount - 1
-                End While
+                Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql2)  'Done by nita on 6/7/22
+                    While oDr.Read
+                        If nHistoricPasswordCount > 0 And cPassword = oDr("password") Then
+                            valid = False
+                        End If
+                        nHistoricPasswordCount = nHistoricPasswordCount - 1
+                    End While
 
-                Return valid
-
+                    Return valid
+                End Using
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckPasswordHistory", ex, ""))
                 Return False
@@ -579,7 +579,7 @@ Partial Public Class Cms
                                 twApi.twitterConsumerKey = moConfig("OauthTwitterId")
                                 twApi.twitterConsumerSecret = moConfig("OauthTwitterKey")
                                 'Get twitter user
-                                Dim twUsers As List(Of Protean.Integration.Directory.Twitter.User)
+                                'Dim twUsers As List(Of Protean.Integration.Directory.Twitter.User)   'Never used
 
 
                         End Select

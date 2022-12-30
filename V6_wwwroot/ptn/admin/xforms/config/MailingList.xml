@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Content type="xform" name="WebSettings">
+   <model>
+     <instance>
+       <mailinglist>
+         <add key="MessagingProvider" value="" />
+         <add key="RootPageId" value="" />
+         <add key="MailingXsl" value="/ewcommon/xsl/mailmanager/standard.xsl" />
+         <add key="SenderEmail" value="" />
+         <add key="SenderName" value="" />
+         <add key="ReplyEmail" value="" />
+         <add key="MessagingProvider" value="CampaignMonitor"/>
+         <add key="SenderEmail" value=""/>
+         <add key="SenderName" value=""/>
+         <add key="ApiKey" value="5fa4fdbe9d1ca52d8b86b64f9fd15194"/>
+         <add key="ClientID" value=""/>
+         <add key="CMUsername" value=""/>
+         <add key="CMP" value="" />
+       </mailinglist>
+    </instance>
+    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+     
+     <bind id="MessagingProvider" nodeset="mailinglist/add[@key='MessagingProvider']/@value" required="true()" type="string" />
+     <bind id="RootPageId" nodeset="mailinglist/add[@key='RootPageId']/@value" required="false()" type="string" />
+     <bind id="MailingXsl" nodeset="mailinglist/add[@key='MailingXsl']/@value" required="true()" type="string" />
+     <bind id="SenderEmail" nodeset="mailinglist/add[@key='SenderEmail']/@value" required="true()" type="string" />
+     <bind id="SenderName" nodeset="mailinglist/add[@key='SenderName']/@value" required="true()" type="string" />
+     <bind id="ApiKey" nodeset="mailinglist/add[@key='ApiKey']/@value" required="true()" type="string" />
+     <bind id="ClientID" nodeset="mailinglist/add[@key='ClientID']/@value" required="true()" type="string" />
+     <bind id="SenderName" nodeset="mailinglist/add[@key='SenderName']/@value" required="true()" type="string" />
+     <bind id="SenderEmail" nodeset="mailinglist/add[@key='SenderEmail']/@value" required="true()" type="email" />
+     <bind id="ReplyEmail" nodeset="mailinglist/add[@key='ReplyEmail']/@value" required="true()" type="email" />
+     <bind id="CMUsername" nodeset="mailinglist/add[@key='CMUsername']/@value" required="true()" type="string" />
+     <bind id="CMP" nodeset="mailinglist/add[@key='CMP']/@value" required="false()" type="string" />
+   </model>
+   <group ref="WebSettings">
+    <label>Mailing List Settings</label>
+    <alert>Changes you make to this form risk making this site non-functional.</alert>
+    <group>
+      <select1 bind="MessagingProvider" appearance="full" class="required">
+        <label>Select Messaging Provider</label>
+        <item>
+          <label>EonicMailer - mailer.eonic.co.uk</label>
+          <value>CampaignMonitor</value>
+          <toggle case="cDisplay_1" event="DOMActivate"/>
+        </item>
+        <item>
+          <label>Other</label>
+          <value></value>
+          <toggle case="cDisplay_2" event="DOMActivate"/>
+        </item>
+      </select1>
+      <input bind="RootPageId">
+        <label>RootPageId</label>
+        <hint>This will get created automatically</hint>
+      </input>
+      <input bind="MailingXsl">
+        <label>MailingXsl</label>
+      </input>
+      <input bind="SenderEmail">
+        <label>SenderEmail</label>
+      </input>
+      <input bind="SenderName">
+        <label>SenderName</label>
+      </input>
+      <input bind="ReplyEmail">
+        <label>ReplyEmail</label>
+      </input>
+      <switch class="disable">
+        <case id="cDisplay_1">
+          <input bind="ApiKey" class="readonly">
+            <label>Api Key</label>
+            <value />
+          </input>
+          <input bind="ClientID">
+            <label>Client ID</label>
+            <value />
+          </input>
+          <input bind="CMUsername">
+            <label>Username</label>
+            <value />
+          </input>
+          <input bind="CMP">
+            <label>Password</label>
+            <value />
+          </input>
+        </case>
+        <case id="cDisplay_2"/>
+      </switch>
+     </group>
+    <submit submission="" ref="submit" class="principle">
+      <label>Save MailingList Settings</label>
+    </submit>
+  </group>
+</Content>

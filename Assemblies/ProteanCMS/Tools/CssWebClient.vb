@@ -67,7 +67,7 @@ Public Class CssWebClient
                 'check for fullpath
                 Dim origServiceUrl As String = Serviceurl
 
-                PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "start-" & Serviceurl)
+                'PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "start-" & Serviceurl)
 
                 If goRequest.ServerVariables("SERVER_NAME") = "localhost" And goRequest.ServerVariables("SERVER_PORT") <> "80" Then
                     Serviceurl = ":" & goRequest.ServerVariables("SERVER_PORT") & Serviceurl
@@ -82,10 +82,12 @@ Public Class CssWebClient
                     End If
                 End If
 
+                cProcessInfo = Serviceurl
+
                 httpHandlerRequest = WebRequest.Create(Serviceurl)
                 Dim serviceRequest As HttpWebRequest = httpHandlerRequest
                 Dim response As HttpWebResponse = CType(serviceRequest.GetResponse(), HttpWebResponse)
-                PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "end-" & Serviceurl)
+                ' PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "end-" & Serviceurl)
                 Dim strResponse As String
                 Using receiveStream As Stream = response.GetResponseStream()
                     Using readStream As New StreamReader(receiveStream, Encoding.UTF8)
@@ -102,7 +104,8 @@ Public Class CssWebClient
             ComputeCSS(fullCss, cssSplit)
         Catch ex As Exception
             cProcessInfo = ex.Message
-            returnException(msException, mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
+            'WE DO NOT !!!!! want this to return an html exception becuase it will throw a loop.
+            'returnException(msException, mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -134,7 +137,7 @@ Public Class CssWebClient
     ''' <remarks>Currently should not risk setting the maxRules to the limit, as the regex may not find all selectors according to specification</remarks>
     Private Sub ComputeCSS(ByVal css As String, ByVal maxRules As Integer)
         Dim matches As MatchCollection = Regex.Matches(css, "\}\n\.|\}\.|,\.|,\n\.") 'this regex expression will search for ',.' OR '}.' OR '}[linefeed].'
-        Dim cProcessInfo As String
+        Dim cProcessInfo As String = "ComputeCSS"
         Try
             If matches.Count > maxRules Then
                 If Not matches.Item(maxRules).Value = "}." Then

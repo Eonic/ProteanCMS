@@ -80,10 +80,11 @@
       <Module type="NewsList" name="News Articles List">List of News Articles</Module>
       <Module type="NewsListDateMenu" name="News Date Menu">Menu which filters news articles by dates</Module>
       <Module type="EventList" name="Event List">List of Events</Module>
+		<Module type="ListHistoricEvents" name="Historic Event List">List of Historic Events</Module>
       <Module type="TrainingCourseList" name="Training Course List">Training Course List</Module>
       <Module type="ProductList" name="Product List">List of Products</Module>
       <Module type="ProductGallery" name="Product Gallery">Gallery of Products</Module>
-      <Module type="ProductFilter" name="Product Filter">Product Filtering</Module>
+      <Module type="ContentFilter" name="Content Filter">Content Filtering</Module>
 
       <!-- Pants, needs more dev -->
       <!--<Module type="TagCloud" name="Tag Cloud">Tag Cloud</Module>-->
@@ -102,6 +103,7 @@
       <Module type="FAQList" name="FAQ List">List of Frequently Asked Questions</Module>
       <Module type="RecipeList" name="Recipe List">List of Recipes</Module>
       <Module type="RecipeGrid" name="Recipe Grid">Grid of Recipes</Module>
+		<Module type="ReviewList" name="Review List">List of reviews</Module>
       <Module type="TicketList" name="Ticket List">List of Tickets</Module>
     </ModuleGroup>
     <ModuleGroup name="Image Galleries" icon="fa-picture-o">
@@ -163,7 +165,7 @@
     </ModuleGroup>
   </ModuleTypes>
   <FilterTypes>
-    <Filter type="pageFilter" name="Page Filter">Page Filter</Filter>
-    <Filter type="dateFilter" name="Date Filter">Date Filter</Filter>
+	  <Filter type="PageFilter" formPath="Filter/PageFilter" name="Page Filter" >Page Filter</Filter>
+	  <Filter type="PriceFilter" formPath="Filter/PriceFilter" name="Price Filter" >Price Filter</Filter>
   </FilterTypes>
 </PageLayouts>

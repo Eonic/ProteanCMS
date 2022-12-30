@@ -674,11 +674,11 @@ if (rediectElement) {
 }
 $(".endLable").addClass("hidden");
 $('.scolling-pane').on('scroll', function () {
-
+    
     var searchObj = $("#SearchURLText").val();
-
-    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-
+   
+    if ($(this).scrollTop() + $(this).innerHeight() >= ($(this)[0].scrollHeight-1)) {
+      
         var totalCount = $("#totalUrlCount").val();
         var loadCount = $(".parentDivOfRedirect").length;
         if (totalCount != loadCount) {
@@ -701,13 +701,15 @@ $('.scolling-pane').on('scroll', function () {
 });
 
 
-$(document).on("click", ".btnSaveProduct", function (event) {
 
+$(document).on("click", ".btnSaveProduct", function (event) {
+   
     var newContentPath = $("#cContentPath").val();
     editProduct.UrlPathOnChange(newContentPath);
 
 
 });
+
 
 //Insights
 const insightsSectionElement = document.querySelector("#insights-section");

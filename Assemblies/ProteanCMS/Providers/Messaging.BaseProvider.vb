@@ -195,6 +195,7 @@ Namespace Providers
 
                                 Dim cMailingXsl As String = moMailConfig("MailingXsl")
                                 If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
+                                If myWeb.moConfig("cssFramework") = "bs5" Then cMailingXsl = "/features/mailer/mailer-core.xsl"
                                 Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
@@ -259,11 +260,12 @@ Namespace Providers
 
 
                         Dim cSQL As String = "SELECT nDirKey, cDirName  FROM tblDirectory WHERE (cDirSchema = 'Group') ORDER BY cDirName"
-                        Dim oDre As SqlDataReader = moDbHelper.getDataReader(cSQL)
-                        Dim oSelElmt As XmlElement = MyBase.addSelect(oCol2, "cGroups", True, "Select Groups to send to", "required multiline", ApperanceTypes.Full)
-                        Do While oDre.Read
-                            MyBase.addOption(oSelElmt, oDre(1), oDre(0))
-                        Loop
+                        Using oDre As SqlDataReader = moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                            Dim oSelElmt As XmlElement = MyBase.addSelect(oCol2, "cGroups", True, "Select Groups to send to", "required multiline", ApperanceTypes.Full)
+                            Do While oDre.Read
+                                MyBase.addOption(oSelElmt, oDre(1), oDre(0))
+                            Loop
+                        End Using
                         MyBase.addBind("cGroups", "cGroups", "true()")
 
                         oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Send", "", "")
@@ -294,6 +296,7 @@ Namespace Providers
                                 'get the email addresses for these groups
                                 Dim cMailingXsl As String = moMailConfig("MailingXsl")
                                 If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
+                                If myWeb.moConfig("cssFramework") = "bs5" Then cMailingXsl = "/features/mailer/mailer-core.xsl"
                                 Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
@@ -411,6 +414,7 @@ Namespace Providers
 
                         Dim cMailingXsl As String = moMailConfig("MailingXsl")
                         If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
+                        If myWeb.moConfig("cssFramework") = "bs5" Then cMailingXsl = "/features/mailer/mailer-core.xsl"
                         Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                         cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
@@ -719,7 +723,7 @@ ProcessFlow:
 
 
                 Public Sub maintainUserInGroup(ByVal nUserId As Long, ByVal nGroupId As Long, ByVal remove As Boolean, Optional ByVal cUserEmail As String = Nothing, Optional ByVal cGroupName As String = Nothing, Optional isLast As Boolean = False)
-                    PerfMon.Log("Messaging", "maintainUserInGroup")
+                    'PerfMon.Log("Messaging", "maintainUserInGroup")
                     Try
                         'do nothing this is a placeholder
 
@@ -738,7 +742,7 @@ ProcessFlow:
                 End Sub
 
                 Overloads Function SendMailToList_Queued(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cGroups As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
-                    PerfMon.Log("Messaging", "SendMailToList_Queued")
+                    'PerfMon.Log("Messaging", "SendMailToList_Queued")
 
                     Dim cProcessInfo As String = ""
 
@@ -813,7 +817,7 @@ ProcessFlow:
                 End Function
 
                 Public Overloads Function SendQueuedMail(ByVal oMailn As Net.Mail.MailMessage, ByVal cHost As String, ByVal cPickupLocation As String) As String
-                    PerfMon.Log("Messaging", "SendQueuedMail")
+                    'PerfMon.Log("Messaging", "SendQueuedMail")
                     Try
                         If oMailn Is Nothing Then Return "No Email Supplied"
                         Dim oSmtpn As New SmtpClient
@@ -832,7 +836,7 @@ ProcessFlow:
                 End Function
 
                 Public Function AddToList(ListId As String, Name As String, Email As String, values As IDictionary) As Boolean
-                    PerfMon.Log("Activities", "AddToList")
+                    'PerfMon.Log("Activities", "AddToList")
                     Try
                         'do nothing this is a placeholder
                         Return Nothing
@@ -843,7 +847,7 @@ ProcessFlow:
                 End Function
 
                 Public Function RemoveFromList(ListId As String, Email As String) As Boolean
-                    PerfMon.Log("Activities", "RemoveFromList")
+                    'PerfMon.Log("Activities", "RemoveFromList")
                     Try
                         'do nothing this is a placeholder
                         Return Nothing

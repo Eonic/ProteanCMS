@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content position="" moduleType="EmbeddedHtml" box="" title="" link="" linkType="internal" linkText="Read more">
+						<div class="embeddedHtml">
+						</div>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+			<bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
+			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+
+			<bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
+			<bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
+			<bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string" />
+		</bind>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+		<!--<ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>-->
+		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	</model>
+	<group ref="EditContent">
+		<label>Embedded HTML</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<alert>WARNING! You embed code at your own risk, this will not be supported, you risk breaking the layout of the page.</alert>
+
+					<div>
+						<ul>
+							<li>
+								Ensure all script tags contain an entity encoded space i.e.
+								&lt;script&gt;&amp;#160;&lt;/script&gt;
+							</li>
+							<li>
+								Ensure all '&amp;' signs in urls are replaced with &amp;amp; <b>everytime you save</b>
+							</li>
+							<li>Ensure async/defer attributes are defined with quotation marks: async="async"</li>
+							<li>And ensure all HTML is strictly well formed as XHTML. i.e. all tags are correctly closed, either like this &lt;tag&gt;stuff&lt;/tag&gt; or this &lt;tag stuff='stuff'/&gt;</li>
+						</ul>
+					</div>
+					<input bind="cModuleTitle" class="long">
+						<label>Title or Name</label>
+					</input>
+					<textarea bind="cContentBody" class="code-mirror xml" rows="15" cols="70">
+					</textarea>
+
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Footer Links</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+				<group>
+					<select bind="bLinkBox" appearance="full" class="multiline bs-only">
+						<item>
+							<label>Link entire box</label>
+							<value>true</value>
+						</item>
+						<help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
+					</select>
+				</group>
+			</group>
+
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+				<group>
+					<input bind="maxWidth" class="col-lg-6">
+						<label>Max Width</label>
+						<value></value>
+						<help class="inline">Add a value ending either px or %.</help>
+					</input>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-tachometer-alt"> </i>
+					<span class="space"> </span>
+					<span>Animate</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
+					<!-- These hidden fields and bindings are required for the component-->
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="cModuleType" class="hidden">
+						<label>ModuleType</label>
+					</input>
+					<!-- end of hidden fields -->
+
+
+
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				</group>
+
+			</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Code</label>
+		</submit>
+	</group>
+</Content>

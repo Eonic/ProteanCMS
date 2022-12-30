@@ -62,7 +62,7 @@ Partial Public Class Cms
             End Sub
 
             Public Sub GetResults(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
-                PerfMon.Log("Search", "New")
+                myWeb.PerfMon.Log("Search", "New")
                 Dim oSrch As Protean.Cms.Search
                 Try
                     oSrch = New Protean.Cms.Search(myWeb)
@@ -109,11 +109,11 @@ Partial Public Class Cms
         End Class
 
         Public Sub New(ByRef aWeb As Protean.Cms)
-            PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables
                 myWeb = aWeb
+                myWeb.PerfMon.Log("Search", "New")
                 moPageXml = myWeb.moPageXml
                 moConfig = myWeb.moConfig
 
@@ -153,7 +153,7 @@ Partial Public Class Cms
         End Sub
 
         Public Sub New(ByRef myAPi As Protean.API)
-            PerfMon.Log("Search", "New")
+            'myAPi.PerfMon.Log("Search", "New")
             Try
 
                 ' Set the global variables
@@ -197,7 +197,7 @@ Partial Public Class Cms
 
 
         Public Overridable Sub apply()
-            PerfMon.Log("Search", "apply")
+            myWeb.PerfMon.Log("Search", "apply")
             Dim sXpath As String = ""
             Dim sSearch As String = myWeb.moRequest("searchString")
             Dim aNewSearchWords() As String = Nothing
@@ -281,7 +281,7 @@ Partial Public Class Cms
 #Region "Search Methods"
 
         Protected Function BuildFiltersFromRequest(ByRef XmlDoc As XmlDocument, ByRef currentRequest As System.Web.HttpRequest) As XmlElement
-            PerfMon.Log("Search", "BuildFiltersFromRequest")
+            myWeb.PerfMon.Log("Search", "BuildFiltersFromRequest")
             Dim processInfo As String = ""
 
             Dim filters As XmlElement
@@ -378,7 +378,7 @@ Partial Public Class Cms
 
 
         Sub IndexQuery(ByVal cQuery As String, Optional fuzzySearch As String = "on")
-            PerfMon.Log("Search", "IndexQuery")
+            myWeb.PerfMon.Log("Search", "IndexQuery")
             Dim processInfo As String = "Looking for : " & cQuery
             Try
 
@@ -400,7 +400,7 @@ Partial Public Class Cms
                 Dim pageStart As Integer = Math.Max(myWeb.GetRequestItemAsInteger("pageStart", 1), 1)
                 Dim pageSize As Integer = myWeb.GetRequestItemAsInteger("pageSize", _pagingDefaultSize)
                 Dim pageEnd As Integer
-
+                Dim totalResults As Long = 0
                 'allow paging as per config setting 
                 'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
                 If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
@@ -486,8 +486,8 @@ Partial Public Class Cms
                     Dim results As Lucene.Net.Search.TopDocs
 
                     If LCase(myWeb.moConfig("SiteSearchDebug")) = "on" Then
-                        addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
-                        addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneQuery", searchQuery.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneLivePageFilter", livePages.ToString)
                     End If
 
                     If livePages Is Nothing Then
@@ -514,7 +514,7 @@ Partial Public Class Cms
                     ' Paging settings
                     ' Hits is so lightweight that we don't have to filter it beforehand
                     ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
-                    Dim totalResults As Long = results.TotalHits
+                    totalResults = results.TotalHits
 
 
                     If pageSize <= 0 Then
@@ -542,7 +542,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
 
-                    resultsXML.SetAttribute("totalResults", totalResults)
+
                     resultsXML.SetAttribute("pageSize", pageSize) 'Max Number of items per page
                     resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / pageSize))
 
@@ -717,11 +717,18 @@ Partial Public Class Cms
 
                                         moContextNode.AppendChild(result)
                                         resultsCount = resultsCount + 1
+                                    Else
+                                        processInfo = "this is a duplicate art id"
+                                        totalResults = totalResults - 1
                                     End If
+                                Else
+                                    processInfo = "this is a duplicate art id"
+                                    totalResults = totalResults - 1
                                 End If
                             Else
                                 ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
                                 processInfo = "not found in live page filter"
+                                totalResults = totalResults - 1
                             End If
                         Next
 
@@ -733,7 +740,7 @@ Partial Public Class Cms
                 Else
                     resultsXML.SetAttribute("Time", "0")
                 End If
-
+                resultsXML.SetAttribute("totalResults", totalResults)
                 resultsXML.SetAttribute("searchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
@@ -748,7 +755,7 @@ Partial Public Class Cms
         End Sub
 
         Sub IndexQuery(ByRef myAPI As Protean.API, ByVal cQuery As String, Optional HitsLimit As Integer = 300, Optional fuzzySearch As String = "on")
-            PerfMon.Log("Search", "IndexQuery")
+            ' myWeb.PerfMon.Log("Search", "IndexQuery")
             Dim processInfo As String = "Looking for : " & cQuery
             Try
                 If myWeb Is Nothing Then
@@ -801,9 +808,9 @@ Partial Public Class Cms
                     Dim results As Lucene.Net.Search.TopDocs
 
                     If LCase(myAPI.moConfig("SiteSearchDebug")) = "on" Then
-                        addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneQuery", searchQuery.ToString)
                         If Not livePages Is Nothing Then
-                            addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+                            addElement(CType(resultsXML, XmlElement), "LuceneLivePageFilter", livePages.ToString)
                         End If
                     End If
 
@@ -1035,7 +1042,7 @@ Partial Public Class Cms
 
 
         Sub XPathQuery(ByVal sSearch As String, ByVal cContentType As String)
-            PerfMon.Log("Search", "XPathQuery")
+            myWeb.PerfMon.Log("Search", "XPathQuery")
             Dim sXpath As String = ""
             Dim sXpathRoot As String = ""
             Dim aSearchWords() As String
@@ -1115,40 +1122,40 @@ Partial Public Class Cms
                         " FROM tblContent WHERE" &
                         "  (CAST(cContentXmlBrief as xml).exist('" & sXpath & "') = 1 or CAST(cContentXmlDetail as xml).exist('" & sXpath & "') = 1)" &
                         IIf(cContentType = "", "", " AND (cContentSchemaName = '" & SqlFmt(cContentType) & "')")
-                    Dim oDr As SqlDataReader
-                    oDr = myWeb.moDbHelper.getDataReader(cSQL)
-                    Dim nResultCount As Integer
-                    Dim cResultIDsCSV As String = ""
-                    While oDr.Read
-                        'If checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
+                    'Dim oDr As SqlDataReader
+                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                        Dim nResultCount As Integer
+                        Dim cResultIDsCSV As String = ""
+                        While oDr.Read
+                            'If checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
 
 
-                        cResultIDsCSV &= oDr("nContentKey") & ","
+                            cResultIDsCSV &= oDr("nContentKey") & ","
 
 
-                    End While
-                    oDr.Close()
-                    If cResultIDsCSV = "" Then cResultIDsCSV = "0"
-                    nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                        End While
+                        oDr.Close()
 
-                    ' Log the search
-                    If _logSearches Then
-                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Search, myWeb.mnUserId, 0, 0, nResultCount, sSearch)
-                    End If
+                        If cResultIDsCSV = "" Then cResultIDsCSV = "0"
+                        nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
 
-                    Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
+                        ' Log the search
+                        If _logSearches Then
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Search, myWeb.mnUserId, 0, 0, nResultCount, sSearch)
+                        End If
 
-                    oResXML.SetAttribute("SearchString", sSearch)
-                    oResXML.SetAttribute("type", "SearchHeader")
-                    oResXML.SetAttribute("searchType", "XPATH")
-                    oResXML.SetAttribute("Hits", nResultCount)
-                    oResXML.SetAttribute("Time", Now.Subtract(dtStart).TotalMilliseconds)
-                    oResXML.SetAttribute("DebugSQL", cSQL)
+                        Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
 
-                    moContextNode.AppendChild(oResXML)
+                        oResXML.SetAttribute("SearchString", sSearch)
+                        oResXML.SetAttribute("type", "SearchHeader")
+                        oResXML.SetAttribute("searchType", "XPATH")
+                        oResXML.SetAttribute("Hits", nResultCount)
+                        oResXML.SetAttribute("Time", Now.Subtract(dtStart).TotalMilliseconds)
+                        oResXML.SetAttribute("DebugSQL", cSQL)
 
+                        moContextNode.AppendChild(oResXML)
 
-
+                    End Using
 
                 End If
             Catch ex As Exception
@@ -1157,7 +1164,7 @@ Partial Public Class Cms
         End Sub
 
         Sub RegExpQuery(ByVal sSearch As String, ByVal cContentType As String, Optional ByVal bUserQuery As Boolean = False)
-            PerfMon.Log("Search", "RegExpQuery")
+            myWeb.PerfMon.Log("Search", "RegExpQuery")
             Dim sXpath As String = ""
             Dim aSearchWords() As String
             Dim aNewSearchWords() As String = Nothing
@@ -1278,7 +1285,7 @@ Partial Public Class Cms
 
 
                 If cRegExPattern <> "" Or bUserQuery Then
-                    Dim oDr As SqlClient.SqlDataReader
+                    ' Dim oDr As SqlClient.SqlDataReader
 
                     ' Create a Reg Exp to strip out any tags
                     ' Pattern: "<", optionally followed by "/", followed by one or more occurences of any character that isn't ">", followed by ">"
@@ -1299,31 +1306,32 @@ Partial Public Class Cms
 
                     Dim cResultIDsCSV As String = ""
                     If Not bUserQuery Then
-                        oDr = myWeb.moDbHelper.getDataReader(cSql)
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
 
-                        Dim ppppp As Integer = 0
-                        While oDr.Read
-                            Debug.WriteLine("Search loop " & ppppp)
-                            ppppp += 1
-                            'If moDbHelper.checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
+                            Dim ppppp As Integer = 0
+                            While oDr.Read
+                                Debug.WriteLine("Search loop " & ppppp)
+                                ppppp += 1
+                                'If moDbHelper.checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
 
-                            Dim cNewLineLessBrief As String = oDr("cContentXmlBrief")
-                            Dim cNewLineLessDetail As String = oDr("cContentXmlDetail")
-                            If cNewLineLessBrief <> Nothing Then cNewLineLessBrief = Replace(cNewLineLessBrief, Chr(10), "")
-                            If cNewLineLessBrief <> Nothing Then cNewLineLessBrief = Replace(cNewLineLessBrief, Chr(13), "")
-                            If cNewLineLessDetail <> Nothing Then cNewLineLessDetail = Replace(cNewLineLessDetail, Chr(10), "")
-                            If cNewLineLessDetail <> Nothing Then cNewLineLessDetail = Replace(cNewLineLessDetail, Chr(13), "")
+                                Dim cNewLineLessBrief As String = oDr("cContentXmlBrief")
+                                Dim cNewLineLessDetail As String = oDr("cContentXmlDetail")
+                                If cNewLineLessBrief <> Nothing Then cNewLineLessBrief = Replace(cNewLineLessBrief, Chr(10), "")
+                                If cNewLineLessBrief <> Nothing Then cNewLineLessBrief = Replace(cNewLineLessBrief, Chr(13), "")
+                                If cNewLineLessDetail <> Nothing Then cNewLineLessDetail = Replace(cNewLineLessDetail, Chr(10), "")
+                                If cNewLineLessDetail <> Nothing Then cNewLineLessDetail = Replace(cNewLineLessDetail, Chr(13), "")
 
-                            If (reMasterCheck.IsMatch(cNewLineLessBrief) Or reMasterCheck.IsMatch(cNewLineLessDetail)) Then
-                                'If (reMasterCheck.IsMatch(oDr("cContentXmlBrief")) Or reMasterCheck.IsMatch(oDr("cContentXmlDetail"))) Then
-                                'If reMasterCheck.IsMatch(oDr("cContentXmlDetail")) Then
-                                cResultIDsCSV &= oDr("nContentKey") & ","
-                            End If
+                                If (reMasterCheck.IsMatch(cNewLineLessBrief) Or reMasterCheck.IsMatch(cNewLineLessDetail)) Then
+                                    'If (reMasterCheck.IsMatch(oDr("cContentXmlBrief")) Or reMasterCheck.IsMatch(oDr("cContentXmlDetail"))) Then
+                                    'If reMasterCheck.IsMatch(oDr("cContentXmlDetail")) Then
+                                    cResultIDsCSV &= oDr("nContentKey") & ","
+                                End If
 
-                        End While
-                        oDr.Close()
-                        If cResultIDsCSV = "" Then cResultIDsCSV = "0"
-                        nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                            End While
+                            oDr.Close()
+                            If cResultIDsCSV = "" Then cResultIDsCSV = "0"
+                            nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                        End Using
                     Else
                         If myWeb.mnUserId = 0 Then Exit Sub
 
@@ -1372,21 +1380,22 @@ Partial Public Class Cms
 
 
                         cSql &= " ORDER BY cDirName"
-                        oDr = myWeb.moDbHelper.getDataReader(cSql)
-                        While oDr.Read
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
+                            While oDr.Read
 
-                            Dim oContent As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
-                            oContent.SetAttribute("id", oDr("nDirKey"))
-                            oContent.SetAttribute("type", "User")
-                            oContent.SetAttribute("name", oDr("cDirName"))
-                            oContent.InnerXml = oDr("cDirXml")
-                            If reMasterCheck.IsMatch(oContent.OuterXml) Then
-                                nResultCount += 1
-                                oContent.FirstChild.AppendChild(oContent.OwnerDocument.ImportNode(myWeb.moDbHelper.GetUserContactsXml(oDr("nDirKey")).CloneNode(True), True))
-                                moContextNode.AppendChild(oContent)
-                            End If
-                        End While
-                        oDr.Close()
+                                Dim oContent As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
+                                oContent.SetAttribute("id", oDr("nDirKey"))
+                                oContent.SetAttribute("type", "User")
+                                oContent.SetAttribute("name", oDr("cDirName"))
+                                oContent.InnerXml = oDr("cDirXml")
+                                If reMasterCheck.IsMatch(oContent.OuterXml) Then
+                                    nResultCount += 1
+                                    oContent.FirstChild.AppendChild(oContent.OwnerDocument.ImportNode(myWeb.moDbHelper.GetUserContactsXml(oDr("nDirKey")).CloneNode(True), True))
+                                    moContextNode.AppendChild(oContent)
+                                End If
+                            End While
+                            oDr.Close()
+                        End Using
                     End If
 
                     ' Log the search
@@ -1412,7 +1421,7 @@ Partial Public Class Cms
         End Sub
 
         Sub FullTextQuery(ByVal sSearch As String, ByVal cContentType As String, Optional ByVal bUserQuery As Boolean = False)
-            PerfMon.Log("Search", "FullTextQuery")
+            myWeb.PerfMon.Log("Search", "FullTextQuery")
             Dim sXpath As String = ""
             Dim aSearchWords() As String
             Dim aNewSearchWords() As String = Nothing
@@ -1433,7 +1442,7 @@ Partial Public Class Cms
             Dim cSearchWhereUSER As String = ""
             Dim cRegEx As String = ""
             Dim cRegExPattern As String = ""
-            Dim reMasterCheck As Regex
+            Dim reMasterCheck As Regex = Nothing
             Dim cSql As String = ""
             Dim aSearchTerms As Collection = New Collection
             Dim bFullMatch As Boolean = True
@@ -1488,7 +1497,7 @@ Partial Public Class Cms
                 End If
 
                 If cSearchWhereCONTENT <> "" Or bUserQuery Then
-                    Dim oDr As SqlClient.SqlDataReader
+                    'Dim oDr As SqlClient.SqlDataReader
 
                     cSql = "SELECT distinct  parentContent.nContentKey, Cast(parentContent.cContentXmlBrief as NVarchar(Max)) as cContentXmlBrief,  Cast(parentContent.cContentXmlDetail as NVarchar(Max)) as cContentXmlDetail, parentContent.nContentPrimaryId, parentContent.cContentName, parentContent.cContentSchemaName " _
                         & " FROM tblContentRelation r  
@@ -1498,22 +1507,23 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                     Dim cResultIDsCSV As String = ""
                     If Not bUserQuery Then
-                        oDr = myWeb.moDbHelper.getDataReader(cSql)
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
 
-                        Dim ppppp As Integer = 0
-                        While oDr.Read
-                            'Debug.WriteLine("Search loop " & ppppp)
-                            'ppppp += 1
+                            Dim ppppp As Integer = 0
+                            While oDr.Read
+                                'Debug.WriteLine("Search loop " & ppppp)
+                                'ppppp += 1
 
-                            Dim cNewLineLessBrief As String = oDr("cContentXmlBrief")
-                            Dim cNewLineLessDetail As String = oDr("cContentXmlDetail")
+                                Dim cNewLineLessBrief As String = oDr("cContentXmlBrief")
+                                Dim cNewLineLessDetail As String = oDr("cContentXmlDetail")
 
-                            cResultIDsCSV &= oDr("nContentKey") & ","
+                                cResultIDsCSV &= oDr("nContentKey") & ","
 
-                        End While
-                        oDr.Close()
-                        If cResultIDsCSV = "" Then cResultIDsCSV = "0"
-                        nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                            End While
+                            oDr.Close()
+                            If cResultIDsCSV = "" Then cResultIDsCSV = "0"
+                            nResultCount = GetContentXml(moContextNode, cResultIDsCSV)
+                        End Using
                     Else
                         If myWeb.mnUserId = 0 Then Exit Sub
 
@@ -1562,21 +1572,22 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
 
                         cSql &= " ORDER BY cDirName"
-                        oDr = myWeb.moDbHelper.getDataReader(cSql)
-                        While oDr.Read
+                        Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
+                            While oDr.Read
 
-                            Dim oContent As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
-                            oContent.SetAttribute("id", oDr("nDirKey"))
-                            oContent.SetAttribute("type", "User")
-                            oContent.SetAttribute("name", oDr("cDirName"))
-                            oContent.InnerXml = oDr("cDirXml")
-                            If reMasterCheck.IsMatch(oContent.OuterXml) Then
-                                nResultCount += 1
-                                oContent.FirstChild.AppendChild(oContent.OwnerDocument.ImportNode(myWeb.moDbHelper.GetUserContactsXml(oDr("nDirKey")).CloneNode(True), True))
-                                moContextNode.AppendChild(oContent)
-                            End If
-                        End While
-                        oDr.Close()
+                                Dim oContent As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
+                                oContent.SetAttribute("id", oDr("nDirKey"))
+                                oContent.SetAttribute("type", "User")
+                                oContent.SetAttribute("name", oDr("cDirName"))
+                                oContent.InnerXml = oDr("cDirXml")
+                                If reMasterCheck.IsMatch(oContent.OuterXml) Then
+                                    nResultCount += 1
+                                    oContent.FirstChild.AppendChild(oContent.OwnerDocument.ImportNode(myWeb.moDbHelper.GetUserContactsXml(oDr("nDirKey")).CloneNode(True), True))
+                                    moContextNode.AppendChild(oContent)
+                                End If
+                            End While
+                            oDr.Close()
+                        End Using
                     End If
 
                     ' Log the search
@@ -1615,7 +1626,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' <remarks></remarks>
         Protected Sub ContentByDateQuery(ByVal cContentTypes As String, Optional ByVal cUnit As String = "", Optional ByVal cValue As String = "", Optional ByVal cStartDate As String = "", Optional ByVal cEndDate As String = "", Optional ByVal cSqlColumnToCheck As String = "PUBLISH")
 
-            PerfMon.Log("Search", "LatestContentQuery")
+            myWeb.PerfMon.Log("Search", "LatestContentQuery")
 
             Dim dStart As Date
             Dim dEnd As Date
@@ -1681,7 +1692,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 If dStart <> DateTime.MinValue And dEnd <> DateTime.MinValue Then
 
                     Dim cResultIDsCSV As String = ""
-                    Dim oDr As Data.SqlClient.SqlDataReader
+                    'Dim oDr As Data.SqlClient.SqlDataReader
 
                     ' Set the column to search by
                     Select Case UCase(cSqlColumnToCheck)
@@ -1709,12 +1720,12 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                         & " FROM tblContent sc INNER JOIN tblAudit sa ON sc.nAuditId = sa.nAuditKey" _
                         & " WHERE (" & cSqlDateRange & ")" & IIf(cContentTypes = "", "", " AND (sc.cContentSchemaName IN (" & cContentTypes & "))")
 
-                    oDr = myWeb.moDbHelper.getDataReader(cSql)
-                    While oDr.Read
-                        cResultIDsCSV &= oDr("nContentKey") & ","
-                    End While
-                    oDr.Close()
-
+                    Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(cSql)  'Done by nita on 6/7/22
+                        While oDr.Read
+                            cResultIDsCSV &= oDr("nContentKey") & ","
+                        End While
+                        oDr.Close()
+                    End Using
 
                     If cResultIDsCSV <> "" Then
                         ' Add the content
@@ -1755,7 +1766,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' </summary>
         ''' <remarks></remarks>
         Private Sub SetSearchTrackingCookie()
-            PerfMon.Log("Search", "SetSearchTrackingCookie")
+            myWeb.PerfMon.Log("Search", "SetSearchTrackingCookie")
             Try
 
                 ' Only need a cookie if not logged in
@@ -1765,22 +1776,23 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     ' therefore let's store The Activity Key + a hash of the date and time and session id
 
                     ' Get the last search for this session
-                    Dim lastSearch As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT TOP 1 nActivityKey,dDatetime,cSessionId FROM tblActivityLog WHERE cSessionId = " & Tools.Database.SqlString(myWeb.moSession.SessionID) & " ORDER BY 1 DESC")
-                    If lastSearch.Read Then
+                    'Dim lastSearch As SqlDataReader = myWeb.moDbHelper.getDataReader("SELECT TOP 1 nActivityKey,dDatetime,cSessionId FROM tblActivityLog WHERE cSessionId = " & Tools.Database.SqlString(myWeb.moSession.SessionID) & " ORDER BY 1 DESC")
+                    Using lastSearch As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable("SELECT TOP 1 nActivityKey,dDatetime,cSessionId FROM tblActivityLog WHERE cSessionId = " & Tools.Database.SqlString(myWeb.moSession.SessionID) & " ORDER BY 1 DESC")  'Done by nita on 6/7/22
+                        If lastSearch.Read Then
 
-                        Dim cookieValue As String
-                        cookieValue = lastSearch(0).ToString & "|"
-                        cookieValue &= Tools.Text.AscString(Tools.Encryption.HashString(Format(lastSearch(1).ToString, "s") & lastSearch(2).ToString, Tools.Hash.Provider.Md5, False), "|")
+                            Dim cookieValue As String
+                            cookieValue = lastSearch(0).ToString & "|"
+                            cookieValue &= Tools.Text.AscString(Tools.Encryption.HashString(Format(lastSearch(1).ToString, "s") & lastSearch(2).ToString, Tools.Encryption.Hash.Provider.Md5, False), "|")
 
-                        Dim trackingCookie As New System.Web.HttpCookie("search", cookieValue)
-                        trackingCookie.Expires = Now.AddDays(2)
+                            Dim trackingCookie As New System.Web.HttpCookie("search", cookieValue)
+                            trackingCookie.Expires = Now.AddDays(2)
 
-                        myWeb.moResponse.Cookies.Remove("search")
-                        myWeb.moResponse.Cookies.Add(trackingCookie)
+                            myWeb.moResponse.Cookies.Remove("search")
+                            myWeb.moResponse.Cookies.Add(trackingCookie)
 
-                    End If
-                    lastSearch.Close()
-                    lastSearch = Nothing
+                        End If
+                        lastSearch.Close()
+                    End Using
                 End If
 
 
@@ -1797,7 +1809,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function ParseKeywordsAndPhrases(ByVal searchString As String) As String()
-            PerfMon.Log("Search", "ParseKeywordsAndPhrases")
+            myWeb.PerfMon.Log("Search", "ParseKeywordsAndPhrases")
             Dim processInfo As String = "Processing: " & searchString
 
             Try
@@ -1871,7 +1883,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         End Function
 
         Public Function CleanSearchString(ByVal cSearchString As String, Optional ByVal cReservedWords As String = "a|an|for|with|the|and|if|then|or|from|where", Optional ByVal cPunctuation As String = ",-.&+:;""") As String
-            PerfMon.Log("Search", "CleanSearchString")
+            myWeb.PerfMon.Log("Search", "CleanSearchString")
             Try
                 ' General RegEx Object
                 Dim reGeneral As Regex = New Regex(RegexOptions.IgnoreCase)
@@ -1893,7 +1905,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         End Function
 
         Public Function GetContentXml(ByRef oContentElmt As XmlElement, ByVal nContentIds As String, Optional ByVal cSqlOrderClause As String = "type, cl.nDisplayOrder") As Integer
-            PerfMon.Log("Search", "GetContentXml")
+            myWeb.PerfMon.Log("Search", "GetContentXml")
             Dim sSql As String
             Dim sProcessInfo As String = "building the Content XML"
             Dim nResultCount As Integer = 0
@@ -1979,7 +1991,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' <remarks></remarks>
         Private Function BuildLuceneQuery(ByVal keywordsToSearch As String, ByVal filters As XmlElement, Optional ByVal bShowHiddenForUser As Boolean = False) As Lucene.Net.Search.Query
 
-            PerfMon.Log("Search", "BuildLuceneQuery")
+            myWeb.PerfMon.Log("Search", "BuildLuceneQuery")
             Dim processInfo As String = "Looking for : " & keywordsToSearch
 
             Dim fieldValue As String = ""
@@ -2064,7 +2076,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                             Case "term"
 
                                 ' Clean up the search terms
-                                fieldValue = CleanUpLuceneSearchString(searchFilter.GetAttribute("value"))
+                                fieldValue = CleanUpLuceneSearchString(searchFilter.GetAttribute("value"), True)
                                 fieldTextTerms = ParseKeywordsAndPhrases(fieldValue)
 
                                 ' Field keyword search
@@ -2201,7 +2213,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
         Private Sub BuildLuceneKeywordQuery(ByRef queryBuilder As StringBuilder, ByVal keywords As String(), Optional ByVal fieldName As String = "", Optional ByVal boostBase As Integer = 1, Optional ByVal includeFuzzySearch As Boolean = False)
 
-            PerfMon.Log("Search", "BuildLuceneKeywordQuery")
+            myWeb.PerfMon.Log("Search", "BuildLuceneKeywordQuery")
             Dim processInfo As String = ""
             Dim firstItem As Boolean = False
             '  Dim queryBuilder1 As New StringBuilder
@@ -2270,7 +2282,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
 
         Private Function SetSortFieldFromRequest(ByVal currentRequest As System.Web.HttpRequest) As Sort
-            PerfMon.Log("Search", "SetSortFieldFromRequest")
+            myWeb.PerfMon.Log("Search", "SetSortFieldFromRequest")
             Dim processInfo As String = ""
 
             Try
@@ -2317,6 +2329,9 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 ' If not, remove the last quote
                 ' e.g. from "My test" with this"
                 '      to   "My test" with this
+
+                keywords = keywords.Replace("AND", "and")
+
                 If IsOdd(Regex.Matches(keywords, """").Count) Then
                     ' remove the last quote
                     keywords = Tools.Text.ReplaceLastCharacter(keywords, """"c, " ")

@@ -4,6 +4,9 @@
 var obj = null;
 var oQueryParams = {};
 
+// Simple .exists() function - $(selector).exists(); - return true or false
+jQuery.fn.exists = function () { return jQuery(this).length > 0; }
+
 /* MAIN PAGE READY METHOD or All site, All pages - Keep Smart! */
 $(document).ready(function () {
     oQueryParams = $.getURLParams();
@@ -16,6 +19,7 @@ $(document).ready(function () {
     positionSocialBookmarks();
     videoSizeAuto();
     navAddMoreToFit();
+ //   contentSwiper();
 
     $(window).resize(function () {
         $("nav-add-more-auto").css('width', 'auto');
@@ -114,7 +118,6 @@ $(window).resize(function () {
         }
     });
 });
-
 function PageContentActions() {
 
     if (typeof universalParallax === 'function') {
@@ -406,8 +409,7 @@ function initialiseProductSKUs() {
 /*  ==  EXTEND JQUERY  ============================================================================  */
 /*  ===============================================================================================  */
 
-// Simple .exists() function - $(selector).exists(); - return true or false
-jQuery.fn.exists = function () { return jQuery(this).length > 0; }
+
 
 // EXTENTION TO GET ALL URL PARAMS IN AN OBJECT
 $.extend({
@@ -490,8 +492,11 @@ $(function () {
 ---------------------- Handle Eonic Xforms-------------------------
 */
 $.fn.prepareXform = function () {
-
-    //---- Hide feilds using Javascript
+    //---- Removes whitespace from textarea we cant do in xslt
+    $(this).find('textarea').each(function () {
+        $(this).val($(this).val().trim());
+    });
+    //---- Hide fields using Javascript
 
     $(this).find('input.jsHide').each(function () {
         $(this).parent().addClass('hidden');
@@ -760,22 +765,23 @@ function cleanDatepicker() {
 function showDependant(dependant, allDependants) {
 
     // Hide unwanted Dependants
-    $("." + allDependants).addClass('hidden');
 
-    // Make required inactive to avoid JS validation
-    $("." + allDependants).find('.required').each(function () {
-        $(this).removeClass('required');
-        $(this).addClass('reqinactive');
-    })
+        $("." + allDependants).addClass('hidden');
 
-    // Make all now hidden fields inactive so values are lost when submitted.
-    $("." + allDependants).find(":input").not(':submit').each(function () {
-        var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName + '~inactive';
-        //    alert("hide as " + tempFieldName);
-        $(this).attr('name', tempFieldName);
-        //   $(this).attr('id', $(this).attr('id') + '~inactive');
-    });
+        // Make required inactive to avoid JS validation
+        $("." + allDependants).find('.required').each(function () {
+            $(this).removeClass('required');
+            $(this).addClass('reqinactive');
+        })
+
+        // Make all now hidden fields inactive so values are lost when submitted.
+        $("." + allDependants).find(":input").not(':submit').each(function () {
+            var fieldName = $(this).attr('name');
+            var tempFieldName = fieldName + '~inactive';
+            //    alert("hide as " + tempFieldName);
+            $(this).attr('name', tempFieldName);
+            //   $(this).attr('id', $(this).attr('id') + '~inactive');
+        });
 
     // Show wanted Dependants
     $("#" + dependant).removeClass('hidden');
@@ -802,6 +808,112 @@ function showDependant(dependant, allDependants) {
     $("#" + dependant).prepareXform();
     $("#" + dependant).trigger('bespokeXform');
 }
+
+function hideAllDependants(thisId, allDependants) {
+    
+    // Hide unwanted Dependants
+    //if (donothide != true) {
+        $("." + allDependants).addClass('hidden');
+
+        // Make required inactive to avoid JS validation
+        $("." + allDependants).find('.required').each(function () {
+            $(this).removeClass('required');
+            $(this).addClass('reqinactive');
+        })
+
+        // Make all now hidden fields inactive so values are lost when submitted.
+        $("." + allDependants).find(":input").not(':submit').each(function () {
+            var fieldName = $(this).attr('name');
+            var tempFieldName = fieldName + '~inactive';
+            //    alert("hide as " + tempFieldName);
+            $(this).attr('name', tempFieldName);
+            //   $(this).attr('id', $(this).attr('id') + '~inactive');
+        });
+    //}
+}
+
+function hideCase(thisId) {
+    // Show wanted Dependants
+    $("#" + thisId).addClass('hidden');
+
+    // Find all inactive required fields and make required again for JS Validation
+    $("#" + thisId).find('.reqinactive').each(function () {
+        $(this).removeClass('required');
+        $(this).addClass('reqinactive');
+    });
+}
+
+function showCase(thisId) {
+    // Show wanted Dependants
+    $("#" + thisId).removeClass('hidden');
+
+    // Find all inactive required fields and make required again for JS Validation
+    $("#" + thisId).find('.reqinactive').each(function () {
+        $(this).removeClass('reqinactive');
+        $(this).addClass('required');
+    });
+
+    // Find all inactive inputs, and re-activate,
+    $("#" + thisId).find(":input").not(':submit').each(function () {
+        var fieldName = $(this).attr('name');
+        var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('name', tempFieldName);
+
+        var fieldId = $(this).attr('id');
+        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('id', tempFieldId);
+        //  alert("enable " + tempFieldName);
+        //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
+    });
+
+    $("#" + thisId).prepareXform();
+    $("#" + thisId).trigger('bespokeXform');
+}
+
+function showHideDependant(bindVar) {
+
+    //get this list of service chkbxs under bindVar
+    var servicesObjs = $("[name='" + bindVar + "']");
+    var serviceIds = [];
+    $.each(servicesObjs, function (key, value) { //get Ids of the services
+        serviceIds.push(value.id);
+    });
+
+    //get Ids of the services checked
+    var servcsSelected = [];
+    $.each(serviceIds, function (key, value) { 
+        if ($('#' + value).is(":checked")) {
+            servcsSelected.push(value);
+        }
+    });
+    
+    //get cases/Qs for all services checked
+    var QsForServcChckd = [];
+    var QsForServcChckdDpdnt = [];
+    $.each(servcsSelected, function (key, value) {
+        QsForServcChckd = ($('#' + value).data('showhide').split(','));
+        for (var i = 0; i < QsForServcChckd.length; i++) {
+            if (jQuery.inArray(QsForServcChckd[i] + '-dependant', QsForServcChckdDpdnt) == -1) { //check for duplicate
+                QsForServcChckdDpdnt.push(QsForServcChckd[i] + '-dependant');
+            }
+        }
+    });
+    
+    //hide all cases/Qs
+    var QArray = [];
+    $('.' + bindVar + '-dependant').each(function () {
+        QArray.push(this.id);
+    });
+    $.each(QArray, function (key, value) {
+        hideCase(value);
+    });
+
+    //show all cases/Qs for services selected
+    $.each(QsForServcChckdDpdnt, function (key, value) {
+        showCase(value);
+    });
+}
+
 
 /*  USED IN ALL EW:xFORMS - To re-enable radio button functionality when renaming a radio button */
 function psuedoRadioButtonControl(sBindName, sBindToName, sBindToValue) {
@@ -1362,7 +1474,7 @@ function displaySuccessMessage() {
             }
         }
 
-        $('#xFrmAlertModal').modal();
+        $('#xFrmAlertModal').show();
     } else { alert(arguments[0]); }
 }
 
@@ -2771,3 +2883,4 @@ if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('
         }
     });
 }
+

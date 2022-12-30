@@ -55,7 +55,7 @@ namespace Protean.Tools
                 nWholeNo += nCarry;
                 return System.Convert.ToDecimal(nWholeNo + "." + nDecimal);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
             }
@@ -70,7 +70,7 @@ namespace Protean.Tools
                 else
                     return Value;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Min;
             }
@@ -85,7 +85,7 @@ namespace Protean.Tools
                 else
                     return defaultInteger;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return defaultInteger;
             }
@@ -103,7 +103,7 @@ namespace Protean.Tools
                     isNumber = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
@@ -142,7 +142,7 @@ namespace Protean.Tools
             {
                 return System.Text.RegularExpressions.Regex.IsMatch(input, @"^(-|\+)?\d+(\.\d+)?$");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

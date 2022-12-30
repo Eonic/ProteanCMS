@@ -173,20 +173,26 @@
           </select1>
           <select bind="Screens" appearance="full" class="multiline bs-only">
             <label>Hide from Screens</label>
+			  <help class="inline">
+				  <p>Extra Small - Under 768px</p>
+				  <p>Small - 768px Or Over</p>
+				  <p>Medium - 992px Or Over</p>
+				  <p>Large - 1200px Or Over</p>
+			  </help>
             <item>
-              <label>Extra small (phones) under 768px</label>
+              <label>Extra Small (Phones)</label>
               <value>xs</value>
             </item>
             <item>
-              <label>Small (tablets) 768px or over</label>
+              <label>Small (Tablets)</label>
               <value>sm</value>
             </item>
             <item>
-              <label>Medium (desktops) 992px or over </label>
+              <label>Medium (Laptops)</label>
               <value>md</value>
             </item>
             <item>
-              <label>Large (desktops) 1200px or over </label>
+              <label>Large (Desktops)</label>
               <value>lg</value>
             </item>
           </select>

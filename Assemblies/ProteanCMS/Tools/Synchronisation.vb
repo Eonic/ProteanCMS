@@ -87,31 +87,32 @@ Partial Public Class Cms
                     ' & "WHERE " & _myWeb.GetStandardFilterSQLForContent(False)
 
 
-                    Dim fRefContentData As SqlDataReader = _myWeb.moDbHelper.getDataReader(frefContentQuery)
-                    Do While fRefContentData.Read
-                        ' Foreign Ref follows the format <FILE PATH> e.g. /images/myimage.jpg
+                    'Dim fRefContentData As SqlDataReader = _myWeb.moDbHelper.getDataReader(frefContentQuery)
+                    Using fRefContentData As SqlDataReader = _myWeb.moDbHelper.getDataReaderDisposable(frefContentQuery)  'Done by nita on 6/7/22
+                        Do While fRefContentData.Read
+                            ' Foreign Ref follows the format <FILE PATH> e.g. /images/myimage.jpg
 
-                        Dim pathFromFref As String = fRefContentData(1).ToString
+                            Dim pathFromFref As String = fRefContentData(1).ToString
 
 
-                        ' Now work out if it's related content or if it's not related
-                        ' Not this assumes that Foreign Refs are unique, which they should be!
-                        If IsDBNull(fRefContentData(2)) Then
-                            cProcessInfo = "problem adding:" & pathFromFref
-                            If Not currentUnrelatedContent.ContainsKey(pathFromFref) Then
-                                currentUnrelatedContent.Add(pathFromFref, fRefContentData(0).ToString)
+                            ' Now work out if it's related content or if it's not related
+                            ' Not this assumes that Foreign Refs are unique, which they should be!
+                            If IsDBNull(fRefContentData(2)) Then
+                                cProcessInfo = "problem adding:" & pathFromFref
+                                If Not currentUnrelatedContent.ContainsKey(pathFromFref) Then
+                                    currentUnrelatedContent.Add(pathFromFref, fRefContentData(0).ToString)
+                                End If
+                            Else
+                                If Not currentRelatedContent.ContainsKey(pathFromFref) Then
+                                    currentRelatedContent.Add(pathFromFref, fRefContentData(0).ToString)
+                                End If
                             End If
-                        Else
-                            If Not currentRelatedContent.ContainsKey(pathFromFref) Then
-                                currentRelatedContent.Add(pathFromFref, fRefContentData(0).ToString)
-                            End If
-                        End If
 
-                    Loop
+                        Loop
 
-                    cProcessInfo = ""
-                    fRefContentData.Close()
-
+                        cProcessInfo = ""
+                        fRefContentData.Close()
+                    End Using
                     ' =====================================================================
                     '   Build a list of files to add
                     '   i.e. those that are in the folder but have no content in this scope
@@ -182,10 +183,10 @@ Partial Public Class Cms
                     If Not String.IsNullOrEmpty(xslPath) Then
 
                         Dim transformer As New Protean.XmlHelper.Transform(_myWeb, _myWeb.goServer.MapPath(xslPath), False)
-                        PerfMon.Log("Admin", "FileSyncTransform-startxsl")
+                        _myWeb.PerfMon.Log("Admin", "FileSyncTransform-startxsl")
                         transformer.mbDebug = gbDebug
                         transformer.ProcessDocument(importXmlDocument)
-                        PerfMon.Log("Admin", "FileSyncTransform-endxsl")
+                        _myWeb.PerfMon.Log("Admin", "FileSyncTransform-endxsl")
                         transformer = Nothing
 
                         If importXmlDocument.SelectNodes("/Instances/Instance").Count > 0 Then

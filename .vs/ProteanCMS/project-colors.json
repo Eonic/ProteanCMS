@@ -16,14 +16,14 @@
       "DisplayName": "ProteanCMS",
       "ColorIndex": 1
     },
-    "76e7c871-9cec-4795-b6f2-66439dcd9367": {
-      "ProjectGuid": "76e7c871-9cec-4795-b6f2-66439dcd9367",
-      "DisplayName": "Protean.Tools",
-      "ColorIndex": 2
-    },
     "12af6171-9aab-4c4d-a83b-85fe18a334c1": {
       "ProjectGuid": "12af6171-9aab-4c4d-a83b-85fe18a334c1",
       "DisplayName": "Protean.Tools.Csharp",
+      "ColorIndex": 2
+    },
+    "76e7c871-9cec-4795-b6f2-66439dcd9367": {
+      "ProjectGuid": "76e7c871-9cec-4795-b6f2-66439dcd9367",
+      "DisplayName": "Protean.Tools",
       "ColorIndex": 3
     }
   },

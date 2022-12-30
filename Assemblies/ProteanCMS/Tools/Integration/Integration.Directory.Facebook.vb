@@ -135,6 +135,7 @@ Namespace Integration.Directory
                 Return currentUser
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
+                Return Nothing
             End Try
         End Function
 

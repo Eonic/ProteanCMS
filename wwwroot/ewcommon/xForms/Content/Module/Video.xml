@@ -10,11 +10,11 @@
         <cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content position="" moduleType="Video" box="" title="" link="" linkType="internal" linkText="Read more" videoType="HTML5" size="Auto" ratio="FourThree" width="" height="">
+					<Content position="" moduleType="Video" box="" title="" link="" linkType="internal" linkText="Watch more" videoType="HTML5" size="Auto" ratio="SixteenNine" width="" height="">
 						<Local url="">
 							<img/>
 						</Local>
-						<YouTube code="" showSuggested="false" useHttps="false"/>
+            <YouTube code="" showSuggested="false" useHttps="true"/>
 						<Vimeo code="" portrait="false" title="true" byline="false" autoplay="false" loop="false"/>
             <HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="" controls="controls" loop="" muted="" poster="" preload="none">
               <img class="display" />
@@ -53,7 +53,6 @@
 			<bind nodeset="YouTube">
 				<bind id="cYouTubeCode" nodeset="@code" required="false()" type="string"/>
 				<bind id="cYouTubeShowSuggested" nodeset="@showSuggested" required="false()" type="string"/>
-				<bind id="cYouTubeUseHttps" nodeset="@useHttps" required="false()" type="string"/>
 			</bind>
 			<bind nodeset="Vimeo">
 				<bind id="cVimeoCode" nodeset="@code" required="false()" type="string"/>
@@ -106,125 +105,126 @@
 					<label>Title or Name</label>
 				</input>
 			</group>
-			<group>
-				<label>Source</label>
-				<select1 bind="cVideoType" appearance="full">
-					<item>
-            <label>HTML5</label>
-            <value>HTML5</value>
-            <toggle case="cTypeHTML5" event="DOMActivate"/>
-          </item>
-          <item>
-            <label>YouTube</label>
-            <value>YouTube</value>
-            <toggle case="cTypeYouTube" event="DOMActivate"/>
-          </item>
-					<item>
-						<label>Vimeo</label>
-						<value>Vimeo</value>
-						<toggle case="cTypeVimeo" event="DOMActivate"/>
-					</item>
-          <item>
-            <label>Legacy FLV player</label>
-            <value>Local</value>
-            <toggle case="cTypeLocal" event="DOMActivate"/>
-          </item>
-				</select1>
-				<switch class="disable">
-					<!-- Local -->
-					<case id="cTypeLocal">
-						<input bind="cLocalUrl" class="pickMedia">
-							<label>URL</label>
-						</input>
-						<input bind="cLocalImage" class="pickImage">
-							<label>Alternative image</label>
-							<help class="inline">
-								<p>
-									This image will be displayed before the video is played.
-								</p>
-							</help>
-						</input>
-					</case>
+        <group>
+          <label>Source</label>
+            <select1 bind="cVideoType" appearance="full">
+              <item>
+                <label>HTML5</label>
+                <value>HTML5</value>
+                <toggle case="cTypeHTML5" event="DOMActivate"/>
+              </item>
+              <item>
+                <label>YouTube</label>
+                <value>YouTube</value>
+                <toggle case="cTypeYouTube" event="DOMActivate"/>
+              </item>
+              <item>
+                <label>Vimeo</label>
+                <value>Vimeo</value>
+                <toggle case="cTypeVimeo" event="DOMActivate"/>
+              </item>
+              <item>
+                <label>Legacy FLV player</label>
+                <value>Local</value>
+                <toggle case="cTypeLocal" event="DOMActivate"/>
+              </item>
+            </select1>
 
-					<!-- YouTube -->
-					<case id="cTypeYouTube">
-						<input bind="cYouTubeCode">
-							<label>Video code</label>
-							<help>
-								<p>
-									The video code is a 11 character alphanumeric code - you can find it by
-									clicking the "Share" button under a YouTube video and looking
-									at the last 11 characters of "Link to this video" address (shown below).
-								</p>
-								<p>
-									<img src="/ewcommon/images/admin/help/video/youtube.png" alt="" width="504" height="62"/>
-								</p>
-							</help>
-						</input>
-						<select bind="cYouTubeShowSuggested" appearance="full">
-							<label>Show suggested videos when the video finishes</label>
-							<item>
-								<label></label>
-								<value>true</value>
-							</item>
-						</select>
-						<select bind="cYouTubeUseHttps" appearance="full">
-							<label>Use HTTPS</label>
-							<item>
-								<label></label>
-								<value>true</value>
-							</item>
-						</select>
-					</case>
-					
-					<!-- Vimeo-->
-					<case id="cTypeVimeo">
-						<input bind="cVimeoCode">
-							<label>Video code</label>
-							<help>
-								<p>
-									The video code is an 8 number numeric code - you can find it by
-									looking for the last 8 numbers in the address of your Vimeo video
-									(e.g. vimeo.com/<b>12345678</b>).
-								</p>
-							</help>
-						</input>
-						<select bind="cVimeoTitle" appearance="full">
-							<label>Show title</label>
-							<item>
-								<label></label>
-								<value>true</value>
-							</item>
-						</select>
-						<select bind="cVimeoByline" appearance="full">
-							<label>Show byline</label>
-							<item>
-								<label></label>
-								<value>true</value>
-							</item>
-						</select>
-						<select bind="cVimeoPortrait" appearance="full">
-							<label>Show portrait</label>
-							<item>
-								<label></label>
-								<value>true</value>
-							</item>
-						</select>
-						<select bind="cVimeoAutoplay" appearance="full">
-							<label>Autoplay</label>
-							<item>
-								<label></label>
-								<value>true</value>
-							</item>
-						</select>
-						<select bind="cVimeoLoop" appearance="full">
-							<label>Loop</label>
-							<item>
-								<label></label>
-								<value>true</value>
-							</item>
-						</select>						
-					</case>
+          <switch class="disable">
+            <!-- Local -->
+            <case id="cTypeLocal">
+              <input bind="cLocalUrl" class="pickMedia">
+                <label>URL</label>
+              </input>
+              <input bind="cLocalImage" class="pickImage">
+                <label>Alternative image</label>
+                <help class="inline">
+                  <p>
+                    This image will be displayed before the video is played.
+                  </p>
+                </help>
+              </input>
+            </case>
+
+            <!-- YouTube -->
+            <case id="cTypeYouTube">
+              <input bind="cYouTubeCode">
+                <label>Video code</label>
+                <help>
+                  <p>
+                    The video code is a 11 character alphanumeric code - you can find it by
+                    clicking the "Share" button under a YouTube video and looking
+                    at the last 11 characters of "Link to this video" address (shown below).
+                  </p>
+                  <p>
+                    <img src="/ewcommon/images/admin/help/video/youtube.png" alt="" width="504" height="62"/>
+                  </p>
+                </help>
+              </input>
+              <select bind="cYouTubeShowSuggested" appearance="full">
+                <label>Show suggested videos when the video finishes</label>
+                <item>
+                  <label></label>
+                  <value>true</value>
+                </item>
+              </select>
+              <!--<select bind="cYouTubeUseHttps" appearance="full">
+                <label>Use HTTPS</label>
+                <item>
+                  <label></label>
+                  <value>true</value>
+                </item>
+              </select>-->
+            </case>
+
+            <!-- Vimeo-->
+            <case id="cTypeVimeo">
+              <input bind="cVimeoCode">
+                <label>Video code</label>
+                <help>
+                  <p>
+                    The video code is an 8 number numeric code - you can find it by
+                    looking for the last 8 numbers in the address of your Vimeo video
+                    (e.g. vimeo.com/<b>12345678</b>).
+                  </p>
+                </help>
+              </input>
+              <select bind="cVimeoTitle" appearance="full">
+                <label>Show title</label>
+                <item>
+                  <label></label>
+                  <value>true</value>
+                </item>
+              </select>
+              <select bind="cVimeoByline" appearance="full">
+                <label>Show byline</label>
+                <item>
+                  <label></label>
+                  <value>true</value>
+                </item>
+              </select>
+              <select bind="cVimeoPortrait" appearance="full">
+                <label>Show portrait</label>
+                <item>
+                  <label></label>
+                  <value>true</value>
+                </item>
+              </select>
+              <select bind="cVimeoAutoplay" appearance="full">
+                <label>Autoplay</label>
+                <item>
+                  <label></label>
+                  <value>true</value>
+                </item>
+              </select>
+              <select bind="cVimeoLoop" appearance="full">
+                <label>Loop</label>
+                <item>
+                  <label></label>
+                  <value>true</value>
+                </item>
+              </select>
+            </case>
 
           <!--HTML5-->
           <case id="cTypeHTML5">
@@ -371,7 +371,7 @@
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Video Module</label>
+			<label>Save Video</label>
 		</submit>
 	</group>
 </Content>

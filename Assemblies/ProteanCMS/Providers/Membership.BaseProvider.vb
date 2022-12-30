@@ -153,7 +153,7 @@ Namespace Providers
                     MyBase.New(aWeb)
                 End Sub
 
-                Public Overridable Function xFrmUserLogon(Optional ByVal FormName As String = "UserLogon") As XmlElement
+                Public Overrides Function xFrmUserLogon(Optional ByVal FormName As String = "UserLogon") As XmlElement 'Just replace Overridable to Overrides
 
                     ' Called to get XML for the User Logon.
 
@@ -178,11 +178,13 @@ Namespace Providers
 BuildForm:
                         MyBase.submission("UserLogon", "", "post", "form_check(this)")
 
-                        oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "UserDetails", "", "Please fill in your login details below.")
+                        oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "UserDetails", "", "Login to ProteanCMS")
 
-                        MyBase.addInput(oFrmElmt, "cUserName", True, "Username")
+                        Dim userIpt As XmlElement = MyBase.addInput(oFrmElmt, "cUserName", True, "Username")
+                        MyBase.addClientSideValidation(userIpt, True, "Please enter Username")
                         MyBase.addBind("cUserName", "user/username", "true()")
-                        MyBase.addSecret(oFrmElmt, "cPassword", True, "Password")
+                        Dim pwdIpt As XmlElement = MyBase.addSecret(oFrmElmt, "cPassword", True, "Password")
+                        MyBase.addClientSideValidation(pwdIpt, True, "Please enter Password")
                         MyBase.addBind("cPassword", "user/password", "true()")
 
                         MyBase.addSubmit(oFrmElmt, "ewSubmit", "Login")
@@ -290,7 +292,7 @@ Check:
                     End Try
                 End Function
 
-                Public Overridable Function xFrmPasswordReminder() As XmlElement
+                Public Overrides Function xFrmPasswordReminder() As XmlElement  'Just replace Overridable to Overrides
                     Dim oFrmElmt As XmlElement
                     Dim sValidResponse As String
                     Dim cProcessInfo As String = ""
@@ -370,7 +372,7 @@ Check:
                     End Try
                 End Function
 
-                Public Function xFrmActivateAccount() As XmlElement
+                Public Overrides Function xFrmActivateAccount() As XmlElement
                     Dim oFrmElmt As XmlElement
 
                     'Dim sValidResponse As String
@@ -629,7 +631,7 @@ Check:
                     End Try
                 End Function
 
-                Public Function xFrmConfirmPassword(ByVal AccountHash As String) As XmlElement
+                Public Overrides Function xFrmConfirmPassword(ByVal AccountHash As String) As XmlElement
                     Try
                         Dim oMembership As New Protean.Cms.Membership(myWeb)
                         Dim SubmittedUserId As Integer = CInt("0" + goRequest("id"))
@@ -644,7 +646,7 @@ Check:
                     End Try
                 End Function
 
-                Public Function xFrmConfirmPassword(ByVal nUserId As Long) As XmlElement
+                Public Overrides Function xFrmConfirmPassword(ByVal nUserId As Long) As XmlElement
                     Try
                         Dim moPolicy As XmlElement
                         Dim passwordClass As String = "required"
@@ -754,7 +756,7 @@ Check:
                     End Try
                 End Function
 
-                Public Overridable Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
+                Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
 
                     Dim oGrpElmt As XmlElement
                     Dim cProcessInfo As String = ""
@@ -771,9 +773,12 @@ Check:
 
                         ' ok lets load in an xform from the file location.
                         If FormXML = "" Then
-                            If Not MyBase.load("/xforms/directory/" & cXformName & ".xml", myWeb.maCommonFolders) Then
+                            Dim formPath As String = "/xforms/directory/" & cXformName & ".xml"
+                            If myWeb.moConfig("cssFramework") = "bs5" Then
+                                formPath = "/admin" & formPath
+                            End If
+                            If Not MyBase.load(formPath, myWeb.maCommonFolders) Then
                                 ' load a default content xform if no alternative.
-
                             End If
                         Else
                             MyBase.NewFrm(cXformName)
@@ -1002,19 +1007,19 @@ Check:
                 ''' <param name="cGroupNodeListXPath">The XPath from the xform instance to the group nodes.</param>
                 ''' <remarks>Group nodes membership is indicated by a boolean attribute "isMember"</remarks>
                 Public Sub maintainMembershipsFromXForm(ByVal nUserId As Integer, Optional ByVal cGroupNodeListXPath As String = "groups/group", Optional ByVal Email As String = Nothing, Optional addOnly As Boolean = False)
-                    PerfMon.Log(mcModuleName, "maintainMembershipsFromXForm", "start")
+                    myWeb.PerfMon.Log(mcModuleName, "maintainMembershipsFromXForm", "start")
                     Dim sSql As String = ""
-                    Dim oDr As SqlDataReader
+                    'Dim oDr As SqlDataReader
                     Dim userMembershipIds As New List(Of Integer)
 
                     Try
                         'get the users current memberships
                         sSql = "select * from tblDirectoryRelation where nDirChildId  = " & nUserId
-                        oDr = moDbHelper.getDataReader(sSql)
-                        While oDr.Read
-                            userMembershipIds.Add(oDr("nDirParentId"))
-                        End While
-
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            While oDr.Read
+                                userMembershipIds.Add(oDr("nDirParentId"))
+                            End While
+                        End Using
                         For Each oElmt As XmlElement In MyBase.Instance.SelectNodes(cGroupNodeListXPath)
                             'TS isLast forces an update everytime this loops not possible to tell if this will be the last time
                             Dim bIsLast As Boolean = True
@@ -1036,7 +1041,7 @@ Check:
                         Next
 
 
-                        PerfMon.Log(mcModuleName, "maintainMembershipsFromXForm", "end")
+                        myWeb.PerfMon.Log(mcModuleName, "maintainMembershipsFromXForm", "end")
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "maintainMembershipsFromXForm", ex, "", "", gbDebug)
                     End Try
@@ -1221,7 +1226,7 @@ Check:
                 End Sub
 
                 Public Sub maintainUserInGroup(ByVal nUserId As Long, ByVal nGroupId As Long, ByVal remove As Boolean, Optional ByVal cUserEmail As String = Nothing, Optional ByVal cGroupName As String = Nothing)
-                    PerfMon.Log("Messaging", "maintainUserInGroup")
+                    myWeb.PerfMon.Log("Messaging", "maintainUserInGroup")
                     Try
 
                         'do nothing this is a placeholder
@@ -1284,7 +1289,7 @@ Check:
 
 
                 Public Overridable Function GetUserId(ByRef myWeb As Protean.Base) As String
-                    PerfMon.Log("Web", "getUserId")
+                    myWeb.PerfMon.Log(mcModuleName, "getUserId")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
                     Dim cLogonCmd As String = ""
@@ -1388,7 +1393,7 @@ Check:
 
                             End If
                         End If
-
+                        myWeb.PerfMon.Log(mcModuleName, "getUserId-end")
                         Return mnUserId
 
                     Catch ex As Exception
@@ -1398,7 +1403,7 @@ Check:
                 End Function
 
                 Public Overridable Sub SetUserId(ByRef myWeb As Protean.Cms)
-                    PerfMon.Log("Web", "getUserId")
+                    myWeb.PerfMon.Log("Web", "getUserId")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
                     Dim cLogonCmd As String = ""
@@ -1425,7 +1430,7 @@ Check:
                 End Sub
 
                 Public Overridable Function GetUserXML(ByRef myWeb As Protean.Cms, Optional ByVal nUserId As Long = 0) As XmlElement
-                    PerfMon.Log("Web", "GetUserXML")
+                    myWeb.PerfMon.Log("Web", "GetUserXML")
                     Dim sProcessInfo As String = ""
                     Dim mnUserId As Integer = myWeb.mnUserId
                     Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
@@ -1442,7 +1447,7 @@ Check:
                 End Function
 
                 Public Overridable Function MembershipProcess(ByRef myWeb As Protean.Cms) As String
-                    PerfMon.Log("Web", "MembershipProcess")
+                    myWeb.PerfMon.Log("Web", "MembershipProcess")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
                     Dim cLogonCmd As String = ""
@@ -1766,7 +1771,7 @@ Check:
                 End Function
 
                 Public Overridable Function MembershipV4LayoutProcess(ByRef myWeb As Protean.Cms, adXfm As Object) As String
-                    PerfMon.Log("Web", "MembershipProcess")
+                    myWeb.PerfMon.Log("Web", "MembershipProcess")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
                     Dim cLogonCmd As String = ""
@@ -2046,7 +2051,7 @@ Check:
 
                 Public Overridable Function AlternativeAuthentication(ByRef myWeb As Protean.Cms) As Boolean
 
-                    PerfMon.Log("Web", "AlternativeAuthentication")
+                    myWeb.PerfMon.Log("Web", "AlternativeAuthentication")
 
 
                     Dim cProcessInfo As String = ""
@@ -2107,7 +2112,7 @@ Check:
 
                                     End If
 
-                                    ElseIf IsNumeric(cDecrypted) AndAlso CInt(cDecrypted) > 0 Then
+                                ElseIf IsNumeric(cDecrypted) AndAlso CInt(cDecrypted) > 0 Then
 
                                     ' Authentication is by way of user ID
                                     cProcessInfo = "User ID Authentication: " & cDecrypted
@@ -2131,7 +2136,7 @@ Check:
                 End Function
 
                 Public Overridable Sub LogOffProcess(ByRef myWeb As Protean.Cms)
-                    PerfMon.Log("Web", "LogOffProcess")
+                    myWeb.PerfMon.Log("Web", "LogOffProcess")
                     Dim cProcessInfo As String = ""
 
                     Dim mnUserId As Integer = myWeb.mnUserId
@@ -2189,7 +2194,7 @@ Check:
                 End Sub
 
                 Public Overridable Function UserEditProcess(ByRef myWeb As Protean.Cms) As String
-                    PerfMon.Log("Web", "UserEditProcess")
+                    myWeb.PerfMon.Log("Web", "UserEditProcess")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
                     Try
@@ -2204,7 +2209,7 @@ Check:
                 End Function
 
                 Public Overridable Function ResetUserAcct(ByRef myWeb As Protean.Cms, ByVal nUserId As Integer) As String
-                    PerfMon.Log("Web", "ResetUserAcct")
+                    myWeb.PerfMon.Log("Web", "ResetUserAcct")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
                     Try

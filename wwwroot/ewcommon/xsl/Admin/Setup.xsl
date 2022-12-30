@@ -575,6 +575,44 @@
       </div>
     </div>
   </xsl:template>
+
+
+	<xsl:template match="Page[@ewCmd='RunTests']" mode="SetupBody">
+		<div id="mainLayout">
+			<div class="adminTemplate" id="template_1_Column">
+				<div id="header">
+					<h1>Run Tests</h1>
+				</div>
+				<div class="content">
+					<xsl:choose>
+						<xsl:when test="/Page/@Step=1">
+							<h3>Running</h3>
+							<xsl:call-template name="ProgressResponses"/>
+						</xsl:when>
+						<xsl:when test="/Page/@Step=2">
+							<h3>Error</h3>
+							An error occured.
+							<xsl:call-template name="ProgressResponses"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<p>
+								Test various features of the ProteanCMS Platform. <br/><br/><br/>
+								<strong>Are you sure you wish to continue?</strong>
+							</p>
+							<a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+								<i class="fa fa-times">&#160;</i>&#160;
+								Cancel
+							</a>
+							&#160;&#160;&#160;
+							<a href="/ewcommon/setup/default.ashx?ewCmd=RunTests&amp;ewCmd2=Do"  class="btn btn-danger">
+								<i class="fa fa-warning">&#160;</i>&#160;Run Tests
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
 	
 	<xsl:template match="Page[@ewCmd='ShipLoc']" mode="SetupBody">
 		<div id="mainLayout">
@@ -662,18 +700,40 @@
               <xsl:call-template name="ProgressResponses"/>
             </xsl:when>
             <xsl:otherwise>
-              <p>
-                Doing this will optimise all the images in the images folder. <br/>
+            
+			  <form action="/ewcommon/setup/default.ashx?ewCmd=OptimiseImages&amp;ewCmd2=Do" method="post" class="panel panel-primary">
+				  <div class="panel-heading">
+					  <h3 class="panel-title">Optimise Images</h3>
+				  </div>
+				  <div class="form-group panel-body">
+					  <div>
+						    <p>
+                Proceeding will optimise all the images in the specified folder. <br/>
                 <strong>Are you sure you wish to continue?</strong><br/>
               </p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-danger">
-                <i class="fa fa-times">&#160;</i>&#160;
-                Cancel
-              </a>
-              &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=OptimiseImages&amp;ewCmd2=Do" class="btn btn-success">
-                <i class="fa fa-eraser">&#160;</i>&#160;Optimise Images
-              </a>
+					  </div>
+					  <div class="form-group">
+						  <label for="folderPath">Start Folder Path</label>
+						  <input type="text" class="form-control" id="folderPath" name="folderPath" value="/images"/>
+                    </div>
+					  <div class="checkbox">
+						  <label>
+							  <input name="resizedonly" type="checkbox"/> Dynamically resized Images only
+                          </label>
+					  </div>
+                 
+				</div>
+				  <div class="panel-footer">
+					  <a href="/ewcommon/setup/default.ashx" class="btn btn-danger">
+						  <i class="fa fa-times">&#160;</i>&#160;
+						  Cancel
+					  </a>
+					   <button type="submit" class="btn btn-success principle">
+                    <i class="fa fa-eraser">&#160;</i>&#160;Optimise Images
+                  </button>
+				  </div>
+			  </form>				
+				&#160;&#160;&#160;
             </xsl:otherwise>
           </xsl:choose>
         </div>

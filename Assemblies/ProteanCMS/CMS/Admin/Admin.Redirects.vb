@@ -28,7 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "false") As String
 
                 Try
 
@@ -53,7 +53,7 @@ Partial Public Class Cms
                         Next
                     Else
                         'Add redirect
-                        If isParentPage = "False" Then
+                        If isParentPage.ToLower() = "false" Then
                             Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
                             Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
                             If Not redirectSectionXmlNode Is Nothing Then
@@ -91,7 +91,7 @@ Partial Public Class Cms
                             Dim rulesXml As New XmlDocument
                             rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
                             Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: " & redirectType & "']")
-                            Dim oRule As XmlElement
+                            'Dim oRule As XmlElement
 
                             'For Each oRule In replacerNode.SelectNodes("add")
                             Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
@@ -152,6 +152,8 @@ Partial Public Class Cms
                                 myWeb.moSession("loadCount") = props.ChildNodes.Count
 
                             End If
+                            'Add Value To Session first time When load 50 records. changed by nita on 29march22
+                            myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
                         Else
                             If (pageloadCount = 0) Then
 
@@ -439,7 +441,7 @@ Partial Public Class Cms
                         Dim arr() As String
                         arr = sUrl.Split("?"c)
                         sUrl = arr(0)
-                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
+                        ' sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
                     End If
 
                     Select Case sType
@@ -471,6 +473,11 @@ Partial Public Class Cms
                                 Dim url As String = myWeb.GetContentUrl(nPageId)
                                 sOldUrl = sUrl & url & "/" & sOldUrl
                                 sNewUrl = sUrl & url & "/" & sNewUrl
+
+                            End If
+                            If myWeb.moConfig("TrailingSlash") IsNot Nothing And (myWeb.moConfig("TrailingSlash") = "on") Then
+                                sOldUrl = sOldUrl & "/"
+                                sNewUrl = sNewUrl & "/"
                             End If
                             'End If
                     End Select

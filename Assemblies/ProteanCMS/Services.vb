@@ -9,6 +9,7 @@ Imports Microsoft.VisualBasic
 Imports System.Net
 Imports System.IO
 Imports System.Collections.Generic
+Imports System.Data.SqlClient
 
 <WebService(Namespace:="http://www.eonic.co.uk/ewcommon/Services")>
 <WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)>
@@ -392,11 +393,13 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Search, 0, 0, 0, ex.ToString)
+            Return Nothing
         Finally
 
             myWeb.Close()
             myWeb = Nothing
         End Try
+
     End Function
 
     <WebMethod()>
@@ -722,17 +725,18 @@ Public Class Services
 
             oElmt = oRXML.CreateElement("DBVersion")
             Try
-                Dim oDr As System.Data.SqlClient.SqlDataReader
+                'Dim oDr As System.Data.SqlClient.SqlDataReader
                 Dim sResult As String = ""
                 sSql = "select * from tblSchemaVersion"
-                oDr = myWeb.moDbHelper.getDataReader(sSql)
-                If oDr.HasRows Then
-                    While oDr.Read
-                        sResult = oDr(1) & "." & oDr(2) & "." & oDr(3) & "." & oDr(4)
-                    End While
-                Else
-                    sResult = "nodata"
-                End If
+                Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                    If oDr.HasRows Then
+                        While oDr.Read
+                            sResult = oDr(1) & "." & oDr(2) & "." & oDr(3) & "." & oDr(4)
+                        End While
+                    Else
+                        sResult = "nodata"
+                    End If
+                End Using
                 oElmt.InnerText = sResult
             Catch ex As Exception
                 If moConfig("VersionNumber") = "" Then

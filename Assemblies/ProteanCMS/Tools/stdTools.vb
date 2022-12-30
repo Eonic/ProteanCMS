@@ -20,8 +20,6 @@ Public Module stdTools
     Public goServer As System.Web.HttpServerUtility = System.Web.HttpContext.Current.Server
     Public goApp As System.Web.HttpApplicationState = System.Web.HttpContext.Current.Application
 
-    Public PerfMon As New PerfLog("")
-
     ' Public msException As String = "" 'TODO !-!IMPORTANT!-! WHEN ERROR EVENTS ARE ESTABLISHED THIS SHOULD BE MOVED INSIDE WEB!!!!!
     Public mbDBError As Boolean = False
 
@@ -72,6 +70,12 @@ Public Module stdTools
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
         Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
+        Dim moRequest As System.Web.HttpRequest = Nothing
+
+        If Not System.Web.HttpContext.Current Is Nothing Then
+            moRequest = System.Web.HttpContext.Current.Request
+        End If
+
 
         'Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
         sProcessInfo = "Getting Host"
@@ -99,7 +103,11 @@ Public Module stdTools
 
                 oExceptionXml.LoadXml("<Page layout=""Error""><Contents/></Page>")
                 'oExceptionXml.DocumentElement.SetAttribute("baseUrl", "http://" & moRequest.ServerVariables("HTTP_HOST"))
-                oExceptionXml.DocumentElement.SetAttribute("baseUrl", "http://" & cHost)
+                Dim mbIsUsingHTTPS As Boolean = False
+                If Not moRequest Is Nothing Then
+                    mbIsUsingHTTPS = (moRequest.ServerVariables("HTTPS") = "on")
+                End If
+                oExceptionXml.DocumentElement.SetAttribute("baseUrl", IIf(mbIsUsingHTTPS, "https://", "http://") & cHost)
                 oElmt = oExceptionXml.CreateElement("Content")
                 oElmt.SetAttribute("type", "Formatted Text")
                 oElmt.SetAttribute("name", "column1")
@@ -426,28 +434,33 @@ Public Module stdTools
         AddExceptionToEventLog(oException, cFurtherInfo)
     End Sub
 
-    Friend Sub AddExceptionToEventLog(ByVal oCurrentException As Exception, ByVal cCurrentInfo As String, Optional ByVal oOriginalError As Exception = Nothing, Optional ByVal cOriginalInfo As String = "")
+    Public Sub AddExceptionToEventLog(ByVal oCurrentException As Exception, ByVal cCurrentInfo As String, Optional ByVal oOriginalError As Exception = Nothing, Optional ByVal cOriginalInfo As String = "")
         'writes an event to the even log under the heading "EonicWebV4.1"
+        Dim thisError As String
+        Dim LogName As String = "ProteanCMS"
+        Dim cSource As String = "ProteanCMS Site"
+        Dim cMessage As String = "Site: unknown" & vbNewLine & vbNewLine
         Try
             Dim oEventLog As System.Diagnostics.EventLog = Nothing
             Dim oELs() As System.Diagnostics.EventLog = System.Diagnostics.EventLog.GetEventLogs
             Dim i As Integer = 0
             For i = 0 To oELs.Length - 1
-                If oELs(i).Log = "ProteanCMS" Then
+                If oELs(i).Log = LogName Then
                     oEventLog = oELs(i)
                     Exit For
                 End If
             Next
-            If oEventLog Is Nothing Then Exit Sub
-            Dim cSource As String = "ProteanCMS Site"
 
-            oEventLog.Source = cSource
+            If Not System.Web.HttpContext.Current Is Nothing Then
+                cSource = System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST")
+                cMessage = "Site: " & System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST") & vbNewLine & vbNewLine
+            End If
 
-            Dim cMessage As String = ""
+            If oEventLog Is Nothing Then
+                oEventLog = New EventLog(LogName, Environment.MachineName, cSource)
+            End If
+
             'The Current Error
-
-            cMessage = "Site: " & System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST") & vbNewLine & vbNewLine
-
             If Not oCurrentException Is Nothing Then
                 cMessage &= vbNewLine & "Current Error: " & vbNewLine
                 cMessage &= "Info:" & cCurrentInfo & vbNewLine
@@ -468,13 +481,21 @@ Public Module stdTools
                 cMessage &= "Full Exception:" & oOriginalError.ToString & vbNewLine
             End If
 
-
-
+            If Not EventLog.SourceExists(cSource) Then
+                EventLog.CreateEventSource(LogName, cSource)
+            End If
+            oEventLog.Source = cSource
             oEventLog.WriteEntry(cMessage, EventLogEntryType.Error)
             oEventLog = Nothing
 
         Catch ex As Exception
             'cant do diddly but cry 
+            Try
+                System.IO.File.WriteAllText("F:\HostingSpaces\ProteanError.txt", cMessage)
+            Catch ex2 As Exception
+                thisError = ex2.Message
+            End Try
+            thisError = ex.Message
         End Try
     End Sub
 
@@ -601,7 +622,7 @@ Public Module stdTools
 
 
     Public Function SqlFmt(ByVal sText As String) As Object
-        'PerfMon.Log("stdTools", "SqlFmt")
+        ''PerfMon.Log("stdTools", "SqlFmt")
         SqlFmt = Replace(sText, "'", "''")
 
     End Function
@@ -618,7 +639,7 @@ Public Module stdTools
     End Function
 
     Public Function niceDate(ByVal dDate As Object) As String
-        PerfMon.Log("stdTools", "niceDate")
+        ''PerfMon
         Dim sdate As String
 
         If IsDate(dDate) Then
@@ -636,7 +657,7 @@ Public Module stdTools
 
 #Region "SQL DATE TIME FUNCTIONS"
     'Public Function sqlDate(ByVal dDate As Object) As String
-    '    'PerfMon.Log("stdTools", "sqlDate")
+    '    ''PerfMon.Log("stdTools", "sqlDate")
 
     '    If IsDate(dDate) Then
     '        sqlDate = "'" & Format(dDate, "dd MMMM yyyy") & "'"
@@ -660,7 +681,7 @@ Public Module stdTools
     'End Function
 
     'Public Function sqlDateTime(ByVal dDate As Object, ByVal stime As Object) As String
-    '    PerfMon.Log("stdTools", "sqlDateTime")
+    '    'PerfMon.Log("stdTools", "sqlDateTime")
 
     '    If IsDate(dDate) Then
     '        sqlDateTime = "'" & Format(dDate, "dd MMMM yyyy") & " " & stime & "'"
@@ -693,7 +714,7 @@ Public Module stdTools
 #Region "XML DATE TIME FUNCTIONS"
 
     'Public Function xmlDate(ByVal dDate As Object) As String
-    '    PerfMon.Log("stdTools", "xmlDate")
+    '    'PerfMon.Log("stdTools", "xmlDate")
     '    Dim sDay As String
     '    Dim sMonth As String
 
@@ -713,7 +734,7 @@ Public Module stdTools
     'End Function
 
     'Public Function xmlDateTime(ByVal dDate As Object) As String
-    '    PerfMon.Log("stdTools", "xmlDateTime")
+    '    'PerfMon.Log("stdTools", "xmlDateTime")
     '    Dim sDay As String
     '    Dim sMonth As String
 
@@ -741,11 +762,11 @@ Public Module stdTools
     End Function
 #End Region
 
-  
+
 
 
     Public Function ButtonSubmitted(ByRef mroRequest As System.Web.HttpRequest, ByVal cButtonName As String) As Boolean
-        '  PerfMon.Log("stdTools", "ButtonSubmitted")
+        '  'PerfMon.Log("stdTools", "ButtonSubmitted")
         Dim bSubmitted As Boolean = False
 
         Dim cNameX As String = cButtonName + ".x"
@@ -758,7 +779,7 @@ Public Module stdTools
 
 
     Public Function UrlResponseToHashTable(ByVal sResponse As String, Optional ByVal sFieldSeperator As String = "&", Optional ByVal sValueSeperator As String = "=", Optional ByVal bURLDecodeValue As Boolean = True) As Hashtable
-        PerfMon.Log("stdTools", "UrlResponseToHashTable")
+        'PerfMon.Log("stdTools", "UrlResponseToHashTable")
         Try
 
             Dim aResponse As String() = Split(sResponse, sFieldSeperator)
@@ -799,7 +820,7 @@ Public Module stdTools
 
 
     Public Function GenerateMD5Hash(ByVal SourceText As String) As String
-        PerfMon.Log("stdTools", "GenerateMD5Hash")
+        'PerfMon.Log("stdTools", "GenerateMD5Hash")
         'This generates a PHP compatible MD5 Hex string for the source value.
 
         Dim md5 As MD5 = MD5CryptoServiceProvider.Create
@@ -827,7 +848,7 @@ Public Module stdTools
 
                 If WebConfigurationManager.AppSettings("PublicKey.Modulus") = "" Then
                     'at the moment this writes a new file that needs to be included in web.config
-                    asym.GenerateNewKeyset(pubkey, privkey)
+                    asym.GenerateNewKeySet(pubkey, privkey)
                     pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
                     privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
                 Else
@@ -899,14 +920,14 @@ Public Module stdTools
     End Function
 
     Public Function EncryptStringOLD(ByVal SourceText As String) As String
-        PerfMon.Log("stdTools", "EncryptString")
+        'PerfMon.Log("stdTools", "EncryptString")
         Dim asym As New Tools.Encryption.Asymmetric
         Dim pubkey As New Tools.Encryption.Asymmetric.PublicKey
         Dim privkey As New Tools.Encryption.Asymmetric.PrivateKey
 
         If WebConfigurationManager.AppSettings("PublicKey.Modulus") = "" Then
             'at the moment this writes a new file that needs to be included in web.config
-            asym.GenerateNewKeyset(pubkey, privkey)
+            asym.GenerateNewKeySet(pubkey, privkey)
             pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
             privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
         Else
@@ -924,7 +945,7 @@ Public Module stdTools
     End Function
 
     Public Function DecryptStringOLD(ByVal encryptedText As String) As String
-        PerfMon.Log("stdTools", "DecryptString")
+        'PerfMon.Log("stdTools", "DecryptString")
         Try
             Dim asym As New Tools.Encryption.Asymmetric
             Dim pubkey As New Tools.Encryption.Asymmetric.PublicKey
@@ -957,7 +978,7 @@ Public Module stdTools
     End Enum
 
     Public Function Round(ByVal nNumber As Object, Optional ByVal nDecimalPlaces As Integer = 2, Optional ByVal nSplitNo As Integer = 5, Optional ByVal bForceRoundup As Boolean = True, Optional ByVal bForceRoundDown As Boolean = False) As Decimal
-        'PerfMon.Log("stdTools", "RoundUp")
+        ''PerfMon.Log("stdTools", "RoundUp")
         Try
             Dim RetVal As Decimal
             If bForceRoundup Then
@@ -978,7 +999,7 @@ Public Module stdTools
     End Function
 
     Public Function RoundUp(ByVal nNumber As Object, Optional ByVal nDecimalPlaces As Integer = 2, Optional ByVal nSplitNo As Integer = 5) As Decimal
-        PerfMon.Log("stdTools", "RoundUp")
+        'PerfMon.Log("stdTools", "RoundUp")
         Try
             'get the dross over with
             If Not IsNumeric(nNumber) Then Return 0
@@ -1113,16 +1134,16 @@ Public Module stdTools
     Public Function strongPassword(ByVal password As String) As Boolean
         Dim pwdRegEx As String = ""
 
-        Dim moPolicy As xmlElement
+        Dim moPolicy As XmlElement
 
         moPolicy = WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy")
 
-        pwdRegEx = "(?=^.{" & moPolicy.FirstChild.SelectSingleNode("minLength").InnerText & _
-            "," & moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText & "}$)" & _
-            "(?=(?:.*?\d){" & moPolicy.FirstChild.SelectSingleNode("numsLength").InnerText & "})" & _
-            "(?=.*[a-z])" & _
-            "(?=(?:.*?[A-Z]){" & moPolicy.FirstChild.SelectSingleNode("upperLength").InnerText & "})" & _
-            "(?=(?:.*?[" & moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText & "]){" & moPolicy.FirstChild.SelectSingleNode("specialLength").InnerText & "})" & _
+        pwdRegEx = "(?=^.{" & moPolicy.FirstChild.SelectSingleNode("minLength").InnerText &
+            "," & moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText & "}$)" &
+            "(?=(?:.*?\d){" & moPolicy.FirstChild.SelectSingleNode("numsLength").InnerText & "})" &
+            "(?=.*[a-z])" &
+            "(?=(?:.*?[A-Z]){" & moPolicy.FirstChild.SelectSingleNode("upperLength").InnerText & "})" &
+            "(?=(?:.*?[" & moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText & "]){" & moPolicy.FirstChild.SelectSingleNode("specialLength").InnerText & "})" &
             "(?!.*\s)[0-9a-zA-Z" & moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText & "]*$"
 
         ' Validate the e-mail address
@@ -1132,7 +1153,7 @@ Public Module stdTools
     End Function
 
     'Sub SetDefaultSortColumn(ByRef moPageXml As XmlDocument, ByVal nSortColumn As Long, Optional ByVal nSortDirection As SortDirection = SortDirection.Ascending)
-    '    PerfMon.Log("stdTools", "SetDefaultSortColumn")
+    '    'PerfMon.Log("stdTools", "SetDefaultSortColumn")
     '    Try
     '        Dim oElmt As XmlElement
     '        If moPageXml.SelectSingleNode("/Page/Request/QueryString/Item[@name='sortCol']") Is Nothing Then
@@ -1182,12 +1203,12 @@ Public Module stdTools
 
 #Region "Deprecated"
 
-    <Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")> _
+    <Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")>
     Public Function is_valid_email(ByRef str_Renamed As String) As Boolean
         Return Tools.Text.IsEmail(str_Renamed)
     End Function
 
-    <Obsolete("This method is deprecated, use Protean.Tools.Text.SimpleRegexFind instead")> _
+    '<Obsolete("This method is deprecated, use Protean.Tools.Text.SimpleRegexFind instead")> _
     Public Function SimpleRegexFind(ByVal cSearchString As String, ByVal cRegexPattern As String, Optional ByVal nReturnGroup As Integer = 0, Optional ByVal oRegexOptions As RegexOptions = RegexOptions.None) As String
         Return Protean.Tools.Text.SimpleRegexFind(cSearchString, cRegexPattern, nReturnGroup, oRegexOptions)
     End Function

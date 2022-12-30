@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Eonic Digital LLP.")]
 [assembly: AssemblyProduct("ProteanCMS")]
-[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2021")]
+[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,6 +33,8 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("6.0.52.50")]
-[assembly: AssemblyFileVersion("6.0.52.49")]
+[assembly: AssemblyVersion("6.0.58.20")]
+[assembly: AssemblyFileVersion("6.0.58.20")]
 
+
+[assembly: AssemblyInformationalVersion("0.0.0.84")]
