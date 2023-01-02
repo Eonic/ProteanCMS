@@ -6002,6 +6002,13 @@ Public Class Cms
                     For Each oElmt In oPageElmt.SelectNodes(parentXpath)
                         oElmt.SetAttribute("active", "1")
                         Dim nPageId As Long = oElmt.GetAttribute("id")
+                        'Add one new condition for location sub pages to not get all products first time
+                        If oElmt.SelectSingleNode("MenuItem/DisplayName/@exclude") IsNot Nothing Then
+                            Dim SubMenuLocation As String = oElmt.SelectSingleNode("MenuItem/DisplayName/@exclude").Value
+                            If SubMenuLocation = "false" Then
+                                moSession("Submenu") = "Yes"
+                            End If
+                        End If
                         GetPageContentXml(nPageId)
                         nPageId = Nothing
                         IsInTree = True
@@ -6055,6 +6062,7 @@ Public Class Cms
         Dim sProcessInfo As String = "Getting the content from page " & nPageId
         Dim sSql As String = ""
         Dim sFilterSql As String = ""
+        Dim sWhereSql As String = ""
         Dim sSql2 As String = ""
         Dim oRoot As XmlElement
         Try
@@ -6076,6 +6084,11 @@ Public Class Cms
                 sFilterSql &= " and CL.bCascade = 1 and CL.bPrimary = 1 "
             Else
                 'we are pulling in located and native items but not cascaded
+            End If
+
+            'Add new extra condition for location sub or any other sub to get only subpage titles without whole product data.
+            If moSession("Submenu") = "Yes" And nCurrentPageId = mnPageId Then
+                sWhereSql &= " and c.cContentSchemaName <> 'Product' "
             End If
 
             ' Check if the page is a cloned page
@@ -6100,13 +6113,13 @@ Public Class Cms
                     " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
                     " where( CL.nStructId = " & nPageId
 
-            sSql = sSql & sFilterSql & ") order by type, cl.nDisplayOrder"
+            sSql = sSql & sFilterSql & sWhereSql & ") order by type, cl.nDisplayOrder"
 
             Dim oDs As DataSet = New DataSet
             oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents")
             PerfMon.Log("Web", "AddDataSetToContent - For Page ", sSql)
             moDbHelper.AddDataSetToContent(oDs, oRoot, nCurrentPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
-
+            moSession("Submenu") = Nothing
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
             'End If
@@ -7123,16 +7136,16 @@ Public Class Cms
                 End If
 
             Else
-            sProcessInfo = "content exists adding content"
-            oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail")
-            oRoot.AppendChild(moContentDetail)
-            If Not oPageElmt Is Nothing Then
-                oPageElmt.AppendChild(oRoot)
-            End If
-            AddGroupsToContent(oRoot)
-            retElmt = moContentDetail
-            moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, mnUserId, Me.SessionID, Now, mnArtId, 0, "")
-            Return moContentDetail
+                sProcessInfo = "content exists adding content"
+                oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail")
+                oRoot.AppendChild(moContentDetail)
+                If Not oPageElmt Is Nothing Then
+                    oPageElmt.AppendChild(oRoot)
+                End If
+                AddGroupsToContent(oRoot)
+                retElmt = moContentDetail
+                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, mnUserId, Me.SessionID, Now, mnArtId, 0, "")
+                Return moContentDetail
             End If
 
             sSql = Nothing
@@ -7540,39 +7553,39 @@ Public Class Cms
                                     End If
 
                                     Dim oFileStream As FileStream = New FileStream(strFilePath, FileMode.Open)
-                                        strFileSize = oFileStream.Length
+                                    strFileSize = oFileStream.Length
 
-                                        Dim Buffer(CInt(strFileSize)) As Byte
-                                        oFileStream.Read(Buffer, 0, CInt(strFileSize))
-                                        oFileStream.Close()
+                                    Dim Buffer(CInt(strFileSize)) As Byte
+                                    oFileStream.Read(Buffer, 0, CInt(strFileSize))
+                                    oFileStream.Close()
 
-                                        ctx.Response.Clear()
-                                        'Const adTypeBinary = 1
-                                        ctx.Response.AddHeader("Connection", "keep-alive")
-                                        If ctx.Request.QueryString("mode") = "open" Then
-                                            ctx.Response.AddHeader("Content-Disposition", "filename=" & strFileName)
+                                    ctx.Response.Clear()
+                                    'Const adTypeBinary = 1
+                                    ctx.Response.AddHeader("Connection", "keep-alive")
+                                    If ctx.Request.QueryString("mode") = "open" Then
+                                        ctx.Response.AddHeader("Content-Disposition", "filename=" & strFileName)
+                                    Else
+                                        ctx.Response.AddHeader("Content-Disposition", "attachment; filename=" & strFileName)
+                                    End If
+                                    ctx.Response.AddHeader("Content-Length", strFileSize + 1)
+                                    ctx.Response.Charset = "UTF-8"
+                                    ctx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType(FileExt)
+                                    ctx.Response.BinaryWrite(Buffer)
+                                    ctx.Response.Flush()
+
+                                    objStream = Nothing
+
+                                    oImp.UndoImpersonation()
+                                    oImp = Nothing
+                                    'Activity Log
+                                    If mnUserId <> "0" And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
+                                        'NB: 30-03-2010 New check to add in the ArtId (original line is the 2nd, with ArtId hardcoded as 0?)
+                                        If Not moRequest("docId") Is Nothing Then
+                                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, Now, mnPageId, moRequest("docId"), strFileName)
                                         Else
-                                            ctx.Response.AddHeader("Content-Disposition", "attachment; filename=" & strFileName)
+                                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, Now, mnPageId, 0, strFileName)
                                         End If
-                                        ctx.Response.AddHeader("Content-Length", strFileSize + 1)
-                                        ctx.Response.Charset = "UTF-8"
-                                        ctx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType(FileExt)
-                                        ctx.Response.BinaryWrite(Buffer)
-                                        ctx.Response.Flush()
-
-                                        objStream = Nothing
-
-                                        oImp.UndoImpersonation()
-                                        oImp = Nothing
-                                        'Activity Log
-                                        If mnUserId <> "0" And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
-                                            'NB: 30-03-2010 New check to add in the ArtId (original line is the 2nd, with ArtId hardcoded as 0?)
-                                            If Not moRequest("docId") Is Nothing Then
-                                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, Now, mnPageId, moRequest("docId"), strFileName)
-                                            Else
-                                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, Now, mnPageId, 0, strFileName)
-                                            End If
-                                        End If
+                                    End If
 
                                     If moConfig("AdminAcct") <> "" Then
                                         oImp.UndoImpersonation()
