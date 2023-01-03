@@ -51,7 +51,7 @@ Public Class Config
             Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(configPath)
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
 
-            If myWeb.moConfig("AdminAcct") <> "" Then
+            If myWeb.impersonationMode Then
                 oImp = New Protean.Tools.Security.Impersonate
                 oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup"))
             End If
@@ -74,7 +74,7 @@ Public Class Config
 
             oCfg.Save()
 
-            If myWeb.moConfig("AdminAcct") <> "" Then
+            If myWeb.impersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
             End If

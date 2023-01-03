@@ -51,33 +51,6 @@ Partial Public Class Cms
                 returnException(myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug)
             End Sub
 
-            'Public myWeb As Protean.Cms
-            Private Function startImp() As Boolean
-                Try
-                    If goConfig("AdminAcct") <> "" Then
-                        moImp = New Protean.Tools.Security.Impersonate
-                        Return moImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup"))
-                    Else
-                        Return Nothing
-                    End If
-
-                Catch ex As Exception
-                    Return False
-                End Try
-            End Function
-
-            Private Sub endImp()
-                Try
-                    If goConfig("AdminAcct") <> "" Then
-                        moImp.UndoImpersonation()
-                        moImp = Nothing
-                    End If
-
-                Catch ex As Exception
-
-                End Try
-            End Sub
-
 
             Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
@@ -99,6 +72,35 @@ Partial Public Class Cms
             Public Sub New(ByRef sException As String)
                 MyBase.New(sException)
             End Sub
+
+            'Public myWeb As Protean.Cms
+            Private Function startImp() As Boolean
+                Try
+                    If myWeb.impersonationMode Then
+                        moImp = New Protean.Tools.Security.Impersonate
+                        Return moImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup"))
+                    Else
+                        Return Nothing
+                    End If
+
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Function
+
+            Private Sub endImp()
+                Try
+                    If myWeb.impersonationMode Then
+                        moImp.UndoImpersonation()
+                        moImp = Nothing
+                    End If
+
+                Catch ex As Exception
+
+                End Try
+            End Sub
+
+
 
             Public Shadows Sub open(ByVal oPageXml As XmlDocument)
                 Dim cProcessInfo As String = ""

@@ -532,7 +532,7 @@ ProcessFlow:
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                         Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                        If moConfig("AdminAcct") <> "" Then
+                        If myWeb.impersonationMode Then
                             oImp = New Protean.Tools.Security.Impersonate
                             If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
                             End If
@@ -568,7 +568,7 @@ ProcessFlow:
                         rulesElmt.InnerXml = rewriteXml.DocumentElement.OuterXml
                         oPageDetail.AppendChild(rulesElmt)
 
-                        If moConfig("AdminAcct") <> "" Then
+                        If myWeb.impersonationMode Then
                             oImp.UndoImpersonation()
                             oImp = Nothing
                         End If
@@ -4322,7 +4322,7 @@ from tblContentIndexDef"
 
 
                         Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                        If myWeb.moConfig("AdminAcct") <> "" Then
+                        If myWeb.impersonationMode Then
                             oImp = New Protean.Tools.Security.Impersonate
                             If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
                             End If
@@ -4360,7 +4360,7 @@ from tblContentIndexDef"
                             writer.Close()
                         End Using
 
-                        If myWeb.moConfig("AdminAcct") <> "" Then
+                        If myWeb.impersonationMode Then
                             oImp.UndoImpersonation()
                             oImp = Nothing
                         End If
@@ -4390,7 +4390,7 @@ from tblContentIndexDef"
 
 
                     Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                    If myWeb.moConfig("AdminAcct") <> "" Then
+                    If myWeb.impersonationMode Then
                         oImp = New Protean.Tools.Security.Impersonate
                         If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
                         End If
@@ -4422,7 +4422,7 @@ from tblContentIndexDef"
                             writer.Write(content)
                             writer.Close()
                         End Using
-                    If myWeb.moConfig("AdminAcct") <> "" Then
+                    If myWeb.impersonationMode Then
                         oImp.UndoImpersonation()
                         oImp = Nothing
                     End If

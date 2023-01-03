@@ -177,6 +177,8 @@ Public Class Cms
     Private Const LoginRequiredPagePath As String = "/System-Pages/Login-Required"
     Private Const ProteanErrorPagePath As String = "/System-Pages/Protean-Error"
 
+    Public impersonationMode = False
+
 #End Region
 #Region "Enums"
     Enum pageResponseType
@@ -541,199 +543,204 @@ Public Class Cms
                         moDbHelper.gbAdminMode = mbAdminMode
                     End If
                 End If
+
+                If moConfig("AdminAcct") <> "" And moConfig("AdminGroup") <> "AzureWebApp" Then
+                    impersonationMode = True
+                End If
+
                 'Get system page ID's for application level
                 If moCtx.Application("PageNotFoundId") Is Nothing Then
-                    moCtx.Application("PageNotFoundId") = moDbHelper.getPageIdFromPath(NotFoundPagePath, False, False)
-                End If
-                If moCtx.Application("PageAccessDeniedId") Is Nothing Then
-                    moCtx.Application("PageAccessDeniedId") = moDbHelper.getPageIdFromPath(AccessDeniedPagePath, False, False)
-                End If
-                If moCtx.Application("PageLoginRequiredId") Is Nothing Then
-                    moCtx.Application("PageLoginRequiredId") = moDbHelper.getPageIdFromPath(LoginRequiredPagePath, False, False)
-                End If
-                If moCtx.Application("PageErrorId") Is Nothing Then
-                    moCtx.Application("PageErrorId") = moDbHelper.getPageIdFromPath(ProteanErrorPagePath, False, False)
-                End If
-
-                gnPageNotFoundId = moCtx.Application("PageNotFoundId")
-                gnPageAccessDeniedId = moCtx.Application("PageAccessDeniedId")
-                gnPageLoginRequiredId = moCtx.Application("PageLoginRequiredId")
-                gnPageErrorId = moCtx.Application("PageErrorId")
-
-                mcPagePath = CStr(moRequest("path") & "")
-                mcPagePath = mcPagePath.Replace("//", "/")
-
-                InitialiseJSEngine()
-
-                'Get the User ID
-                'if we access base via soap the session is not available
-                If Not moSession Is Nothing Then
-                    Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
-                    mnUserId = oMembershipProv.Activities.GetUserId(Me)
-                End If
-                'We need the userId placed into dbhelper.
-                moDbHelper.mnUserId = mnUserId
-
-                'Initialise the cart
-                If gbCart Or gbQuote Then
-                    InitialiseCart()
-                    'moCart = New Cart(Me)
-                    If Not moCart Is Nothing Then
-                        moDiscount = New Cart.Discount(Me)
-                        moDiscount.mcCurrency = moCart.mcCurrency
+                        moCtx.Application("PageNotFoundId") = moDbHelper.getPageIdFromPath(NotFoundPagePath, False, False)
                     End If
-                End If
+                    If moCtx.Application("PageAccessDeniedId") Is Nothing Then
+                        moCtx.Application("PageAccessDeniedId") = moDbHelper.getPageIdFromPath(AccessDeniedPagePath, False, False)
+                    End If
+                    If moCtx.Application("PageLoginRequiredId") Is Nothing Then
+                        moCtx.Application("PageLoginRequiredId") = moDbHelper.getPageIdFromPath(LoginRequiredPagePath, False, False)
+                    End If
+                    If moCtx.Application("PageErrorId") Is Nothing Then
+                        moCtx.Application("PageErrorId") = moDbHelper.getPageIdFromPath(ProteanErrorPagePath, False, False)
+                    End If
 
+                    gnPageNotFoundId = moCtx.Application("PageNotFoundId")
+                    gnPageAccessDeniedId = moCtx.Application("PageAccessDeniedId")
+                    gnPageLoginRequiredId = moCtx.Application("PageLoginRequiredId")
+                    gnPageErrorId = moCtx.Application("PageErrorId")
 
-                ' Facility to allow the generation bespoke errors.
-                If Not (moRequest("ewerror") Is Nothing) Then
-                    'If moRequest("ewerror") <> "nodebug" Then gbDebug = True Else gbDebug = False
-                    Throw New Exception(LCase("errortest:" & moRequest("ewerror")))
-                End If
+                    mcPagePath = CStr(moRequest("path") & "")
+                    mcPagePath = mcPagePath.Replace("//", "/")
 
+                    InitialiseJSEngine()
 
-                'Logon Redirect Facility
-                'once you are logged on this becomes the root 
-                ' If in Admin, always defer to the AdminRootPageId
-                '    unless you are logging off, then you are going to the user site.
-                ' If not Admin, then check if we're logged in
-                If mbAdminMode Then
-                    ' Admin mode
-                    Dim ewCmd As String
-                    If moSession("ewCmd") = "PreviewOn" And LCase(moRequest("ewCmd")) = "logoff" Then
-                        'case to cater for logoff in preview mode
-                        ewCmd = "PreviewOn"
-                    Else
-                        ewCmd = IIf(moRequest("ewCmd") = "", moSession("ewCmd"), moRequest("ewCmd"))
+                    'Get the User ID
+                    'if we access base via soap the session is not available
+                    If Not moSession Is Nothing Then
+                        Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
+                        mnUserId = oMembershipProv.Activities.GetUserId(Me)
+                    End If
+                    'We need the userId placed into dbhelper.
+                    moDbHelper.mnUserId = mnUserId
+
+                    'Initialise the cart
+                    If gbCart Or gbQuote Then
+                        InitialiseCart()
+                        'moCart = New Cart(Me)
+                        If Not moCart Is Nothing Then
+                            moDiscount = New Cart.Discount(Me)
+                            moDiscount.mcCurrency = moCart.mcCurrency
+                        End If
                     End If
 
 
-                    If CLng("0" & moConfig("AdminRootPageId")) > 0 And LCase(ewCmd) <> "logoff" Then
-                        rootPageIdFromConfig = moConfig("AdminRootPageId")
-
-                    ElseIf CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 AndAlso mnUserId > 0 AndAlso Not moDbHelper.checkUserRole("Administrator") Then
-                        ' This is to accomodate users in admin who have admin rights revoked and therefore must 
-                        ' be sent back to the user site, but also are logged in, thus they need to go to the authenticatedpageroot if it exists.
-                        rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
+                    ' Facility to allow the generation bespoke errors.
+                    If Not (moRequest("ewerror") Is Nothing) Then
+                        'If moRequest("ewerror") <> "nodebug" Then gbDebug = True Else gbDebug = False
+                        Throw New Exception(LCase("errortest:" & moRequest("ewerror")))
                     End If
-                Else
-                    ' Not admin mode
-                    If mnUserId > 0 And CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 Then
-                        rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
-                    End If
-                End If
-
-                ' Convert the root ID
-                If Tools.Number.IsStringNumeric(rootPageIdFromConfig) Then RootPageId = Convert.ToInt32(rootPageIdFromConfig)
 
 
-                Me.GetRequestLanguage()
-
-                Dim newPageId As Long = 0
-
-                If mnPageId < 1 Then
-                    If Not moRequest("pgid") = "" Then
-
-                        'And we still need to check permissions
-                        mnPageId = CLng(Regex.Replace("0" & moRequest("pgid"), "[^\d]", ""))
-                        'specified pgid takes priority
-                        If Not mbAdminMode Then
-                            newPageId = moDbHelper.checkPagePermission(mnPageId)
+                    'Logon Redirect Facility
+                    'once you are logged on this becomes the root 
+                    ' If in Admin, always defer to the AdminRootPageId
+                    '    unless you are logging off, then you are going to the user site.
+                    ' If not Admin, then check if we're logged in
+                    If mbAdminMode Then
+                        ' Admin mode
+                        Dim ewCmd As String
+                        If moSession("ewCmd") = "PreviewOn" And LCase(moRequest("ewCmd")) = "logoff" Then
+                            'case to cater for logoff in preview mode
+                            ewCmd = "PreviewOn"
                         Else
-                            If Not moDbHelper.checkPageExist(mnPageId) Then
-                                'And we still need to check it exists
-                                newPageId = gnPageNotFoundId
-                                gnResponseCode = 404
-                            End If
+                            ewCmd = IIf(moRequest("ewCmd") = "", moSession("ewCmd"), moRequest("ewCmd"))
+                        End If
+
+
+                        If CLng("0" & moConfig("AdminRootPageId")) > 0 And LCase(ewCmd) <> "logoff" Then
+                            rootPageIdFromConfig = moConfig("AdminRootPageId")
+
+                        ElseIf CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 AndAlso mnUserId > 0 AndAlso Not moDbHelper.checkUserRole("Administrator") Then
+                            ' This is to accomodate users in admin who have admin rights revoked and therefore must 
+                            ' be sent back to the user site, but also are logged in, thus they need to go to the authenticatedpageroot if it exists.
+                            rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
                         End If
                     Else
-                        ' Check for a redirect path
-                        If legacyRedirection() Then Exit Sub
+                        ' Not admin mode
+                        If mnUserId > 0 And CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 Then
+                            rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
+                        End If
+                    End If
 
-                        If Not (moRequest("path") = "" Or mcPagePath = "/") Then
-                            'then pathname
-                            moDbHelper.getPageAndArticleIdFromPath(mnPageId, mnArtId, mcPagePath)
-                            ' mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
+                    ' Convert the root ID
+                    If Tools.Number.IsStringNumeric(rootPageIdFromConfig) Then RootPageId = Convert.ToInt32(rootPageIdFromConfig)
+
+
+                    Me.GetRequestLanguage()
+
+                    Dim newPageId As Long = 0
+
+                    If mnPageId < 1 Then
+                        If Not moRequest("pgid") = "" Then
+
+                            'And we still need to check permissions
+                            mnPageId = CLng(Regex.Replace("0" & moRequest("pgid"), "[^\d]", ""))
+                            'specified pgid takes priority
                             If Not mbAdminMode Then
                                 newPageId = moDbHelper.checkPagePermission(mnPageId)
+                            Else
+                                If Not moDbHelper.checkPageExist(mnPageId) Then
+                                    'And we still need to check it exists
+                                    newPageId = gnPageNotFoundId
+                                    gnResponseCode = 404
+                                End If
                             End If
                         Else
-                            'then root
-                            mnPageId = RootPageId
+                            ' Check for a redirect path
+                            If legacyRedirection() Then Exit Sub
+
+                            If Not (moRequest("path") = "" Or mcPagePath = "/") Then
+                                'then pathname
+                                moDbHelper.getPageAndArticleIdFromPath(mnPageId, mnArtId, mcPagePath)
+                                ' mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
+                                If Not mbAdminMode Then
+                                    newPageId = moDbHelper.checkPagePermission(mnPageId)
+                                End If
+                            Else
+                                'then root
+                                mnPageId = RootPageId
+                            End If
                         End If
                     End If
-                End If
 
-                'don't return anything but error in admi mode
-                If mcPagePath <> "" And mnPageId = RootPageId And mbAdminMode Then
-                    'TS Removed because not quite sure what is going on... 
-                    ' was causing a problem with editing locations.
-                    '    gnResponseCode = 404
-                End If
-
-                If newPageId > 0 And newPageId = gnPageLoginRequiredId And mnUserId = 0 Then
-                    'we should set an pageId to overide the logon redirect
-                    moSession("LogonRedirectId") = mnPageId
-
-                End If
-
-
-                If newPageId > 0 Then mnPageId = newPageId
-
-                ' Check for cloned pages, and clone contexts
-                If gbClone Then
-                    mnClonePageId = moDbHelper.getClonePageID(Me.mnPageId)
-                    If mnClonePageId > 0 Then mbIsClonePage = True
-                    cCloneContext = moRequest("context")
-                    If IsNumeric(cCloneContext) AndAlso Convert.ToInt32(cCloneContext) > 0 Then
-                        Me.mnCloneContextPageId = Convert.ToInt32(cCloneContext)
+                    'don't return anything but error in admi mode
+                    If mcPagePath <> "" And mnPageId = RootPageId And mbAdminMode Then
+                        'TS Removed because not quite sure what is going on... 
+                        ' was causing a problem with editing locations.
+                        '    gnResponseCode = 404
                     End If
-                End If
 
-                If Not mbAdminMode Then
+                    If newPageId > 0 And newPageId = gnPageLoginRequiredId And mnUserId = 0 Then
+                        'we should set an pageId to overide the logon redirect
+                        moSession("LogonRedirectId") = mnPageId
 
-                    If mnPageId = gnPageNotFoundId _
+                    End If
+
+
+                    If newPageId > 0 Then mnPageId = newPageId
+
+                    ' Check for cloned pages, and clone contexts
+                    If gbClone Then
+                        mnClonePageId = moDbHelper.getClonePageID(Me.mnPageId)
+                        If mnClonePageId > 0 Then mbIsClonePage = True
+                        cCloneContext = moRequest("context")
+                        If IsNumeric(cCloneContext) AndAlso Convert.ToInt32(cCloneContext) > 0 Then
+                            Me.mnCloneContextPageId = Convert.ToInt32(cCloneContext)
+                        End If
+                    End If
+
+                    If Not mbAdminMode Then
+
+                        If mnPageId = gnPageNotFoundId _
                         Or mnPageId = gnPageAccessDeniedId _
                         Or mnPageId = gnPageLoginRequiredId _
                         Or mnPageId = gnPageErrorId Then
-                        If RootPageId <> mnPageId Then
-                            mbSystemPage = True
+                            If RootPageId <> mnPageId Then
+                                mbSystemPage = True
 
-                            If mnPageId = gnPageAccessDeniedId Or mnPageId = gnPageLoginRequiredId Then
-                                'moResponse.StatusCode = 401
-                            End If
-                            If mnPageId = gnPageNotFoundId Then
-                                gnResponseCode = 404
-                            End If
-                            If mnPageId = gnPageErrorId Then
-                                gnResponseCode = 500
-                            End If
+                                If mnPageId = gnPageAccessDeniedId Or mnPageId = gnPageLoginRequiredId Then
+                                    'moResponse.StatusCode = 401
+                                End If
+                                If mnPageId = gnPageNotFoundId Then
+                                    gnResponseCode = 404
+                                End If
+                                If mnPageId = gnPageErrorId Then
+                                    gnResponseCode = 500
+                                End If
 
+                            End If
+                        End If
+                    End If
+
+                    If mnArtId < 1 Then
+                        If Not moRequest("artid") = "" Then
+
+                            mnArtId = Me.GetRequestItemAsInteger("artid", 0)
+                        End If
+                    End If
+
+                    If ibIndexMode Then
+                        mbAdminMode = False
+                        mnUserId = 1
+                    End If
+
+                    ' Version Control: Set a permission state for this page.
+                    ' If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
+
+                    If Not moSession Is Nothing Then
+                        If gbVersionControl Then
+                            mnUserPagePermission = moDbHelper.getPagePermissionLevel(mnPageId)
                         End If
                     End If
                 End If
-
-                If mnArtId < 1 Then
-                    If Not moRequest("artid") = "" Then
-
-                        mnArtId = Me.GetRequestItemAsInteger("artid", 0)
-                    End If
-                End If
-
-                If ibIndexMode Then
-                    mbAdminMode = False
-                    mnUserId = 1
-                End If
-
-                ' Version Control: Set a permission state for this page.
-                ' If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
-
-                If Not moSession Is Nothing Then
-                    If gbVersionControl Then
-                        mnUserPagePermission = moDbHelper.getPagePermissionLevel(mnPageId)
-                    End If
-                End If
-            End If
 
         Catch ex As Exception
 
@@ -7533,7 +7540,7 @@ Public Class Cms
 
                                 If fso.Exists Then
                                     Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                                    If moConfig("AdminAcct") <> "" Then
+                                    If impersonationMode Then
                                         oImp = New Protean.Tools.Security.Impersonate
                                         oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup"))
 
@@ -7574,7 +7581,7 @@ Public Class Cms
                                             End If
                                         End If
 
-                                    If moConfig("AdminAcct") <> "" Then
+                                    If impersonationMode Then
                                         oImp.UndoImpersonation()
                                         oImp = Nothing
                                     End If
@@ -8604,7 +8611,7 @@ Public Class Cms
 
             If sError = "1" Then
                 Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                If moConfig("AdminAcct") <> "" Then
+                If impersonationMode Then
                     PerfMon.Log(mcModuleName, "Impersonation - Start")
                     oImp = New Protean.Tools.Security.Impersonate
                     oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup"))
@@ -8625,7 +8632,7 @@ Public Class Cms
                     sError = cProcessInfo
                 End If
 
-                If moConfig("AdminAcct") <> "" Then
+                If impersonationMode Then
                     oImp.UndoImpersonation()
                     oImp = Nothing
                 End If
@@ -8666,12 +8673,7 @@ Public Class Cms
     Public Function CheckProductStatus(ByVal nArtId As String) As String
         Try
             'Dim oDr As System.Data.SqlClient.SqlDataReader
-            Dim sSQL As String = "DECLARE @List VARCHAR(8000)
-
-SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
-from tblcontent C 
- inner join tblAudit A on C.nAuditId = A.nAuditKey 
- where A.nstatus=1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
+            Dim sSQL As String = "DECLARE @List VARCHAR(8000) SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR) from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey where A.nstatus=1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
             sSQL = sSQL & " SELECT @List "
 
             '"select  C.nContentKey from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey "
@@ -8685,7 +8687,8 @@ from tblcontent C
                         While oDr.Read
                             Return oDr(0).ToString()
                         End While
-
+                    Else
+                        Return ""
                     End If
                 Else
                     Return ""
