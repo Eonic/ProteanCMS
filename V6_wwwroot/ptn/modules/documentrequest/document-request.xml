@@ -10,7 +10,67 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content position="" moduleType="xForm" box="" title="" process="xform" contentFile="">
+					<Content position="" moduleType="documentdownloadxform" box="" title="Document Request" process="xform" contentFile="">
+						<model class="ewXform">
+							<instance>
+								<emailer xmlns="http://www.eonic.co.uk/ewcommon/Services">
+									<oBodyXML>
+										<Items id="DocumentRequest">
+											<Name />
+											<Email />
+											<Company />
+											<Country />
+											<AttachmentIds ids="" xpath="Content/Path" />
+										</Items>
+									</oBodyXML>
+									<xsltPath>/ptn/modules/documentrequest/RequestDocumentEmail.xsl</xsltPath>
+									<fromName></fromName>
+									<fromEmail></fromEmail>
+									<recipientEmail></recipientEmail>
+									<ccRecipient></ccRecipient>
+									<SubjectLine>Documents</SubjectLine>
+								</emailer>
+							</instance>
+							<submission method="post" action="/ptn/tools/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="DocumentRequest" event="return form_check(this);" />
+							<bind id="emailer" nodeset="emailer">
+								<bind id="oBodyXML" nodeset="oBodyXML/Items">
+									<bind id="Name" nodeset="Name" required="false()" type="string" />
+									<bind id="Company" nodeset="Company" required="false()" type="string" />
+									<bind id="Email" nodeset="Email" required="true()" type="email" />
+									<bind id="Country" nodeset="Country" required="true()" type="string" />
+									<bind nodeset="AttachmentIds">
+										<bind id="AttachmentIds" nodeset="@ids" required="false()" type="string" />
+									</bind>
+								</bind>
+								<bind id="Email" nodeset="fromEmail" required="false()" type="string" />
+								<bind id="Email" nodeset="recipientEmail" required="false()" type="string" />
+								<bind id="nOffice" nodeset="SubjectLine" required="true()" type="string" />
+							</bind>
+						</model>
+						<group>
+							<group class="inline">
+								<input bind="Name">
+									<label>Name</label>
+								</input>
+								<input bind="Email" class="required">
+									<label>Email</label>
+								</input>
+								<input bind="Company">
+									<label>Company</label>
+								</input>
+								<input bind="Country" class="required ">
+									<label>Country</label>
+								</input>
+							</group>
+							<select appearance="full" bind="AttachmentIds" class="relatedDocs">
+								<label>
+									<strong>Download:</strong>
+								</label>
+							</select>
+							<submit submission="DocRequest" bind="ewCmd" class="principle">
+								<label>Download</label>
+							</submit>
+						</group>
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
@@ -35,7 +95,7 @@
 			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
 			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
 			<bind id="cModuleTitleDisplay" nodeset="@displayTitle" required="false()" type="string"/>
-			<bind id="cFileLocation" nodeset="@contentFile" required="true()" type="string"/>
+			<bind id="cFileLocation" nodeset="@contentFile" required="false()" type="string"/>
 			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
 			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
 			<bind id="hideLabel" nodeset="@hideLabel" required="false()" type="string"/>
@@ -46,7 +106,7 @@
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
 	</model>
 	<group ref="EditContent">
-		<label>xForm Module</label>
+		<label>Document Download Module</label>
 		<group class="tabs">
 			<group>
 				<label>
@@ -59,9 +119,17 @@
 					<input bind="cModuleTitle" class="long">
 						<label>Title</label>
 					</input>
+					<textarea bind="cContentBody" rows="10" cols="100" class="xml"/>
+					<div>Or choose a filepath</div>
 					<input bind="cFileLocation" class="long">
 						<label>File Location</label>
 					</input>
+				</group>
+				<group>
+					<label>Related Documents</label>
+					<relatedContent type="Document" direction="2Way" search="find add" relationType="related">
+						<label>Document</label>
+					</relatedContent>
 				</group>
 				<group>
 					<label>Sent Message</label>
@@ -123,7 +191,7 @@
 	</group>
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save xForm</label>
+			<label>Save Document Request</label>
 		</submit>
 	</group>
 </Content>

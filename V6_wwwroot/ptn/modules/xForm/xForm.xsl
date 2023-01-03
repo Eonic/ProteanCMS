@@ -66,8 +66,53 @@
 				<xsl:apply-templates select="." mode="cleanXhtml"/>
 			</xsl:otherwise>
 		</xsl:choose>
-
+		<!-- THEN TRACKING CODE -->
+		<xsl:call-template name="LeadTracker"/>
 	</xsl:template>
 
+	<!-- Lead Tracker -->
+	<xsl:template name="LeadTracker">
+		<!-- OVERWRITE THIS TEMPLATE AND INSERT THE APPROPRIATE GOOGLE LEAD TRACKING JAVASCRIPT IF REQUIRED -->
+	</xsl:template>
 
+	<!-- Template to show an Xform when found in ContentDetail -->
+	<xsl:template match="Content[@type='Module' and (@moduleType='EmailForm' or @moduleType='xForm')]" mode="cleanXhtml">
+		<xsl:apply-templates select="." mode="xform"/>
+	</xsl:template>
+
+	<!-- X Form Module *** not finished *** PH-->
+	<xsl:template match="Content[@type='Module' and @moduleType='XForm']" mode="displayBrief">
+		<xsl:choose>
+			<xsl:when test="/Page/Contents/Content/@name = 'sentMessage' and /Page/Contents/Content[@type='Module' and @moduleType='EmailForm']/descendant::alert/node()='Message Sent'">
+				<xsl:apply-templates select="/" mode="mailformSentMessage"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="@box='false'">
+					<div class="EmailForm">
+						<xsl:if test="@formLayout='horizontal'">
+							<xsl:attribute name="class">EmailForm horizontalForm</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="@hideLabel='true'">
+							<xsl:attribute name="class">EmailForm hideLabel</xsl:attribute>
+						</xsl:if>
+					</div>
+				</xsl:if>
+				<xsl:apply-templates select="." mode="xform"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:if test="/Page/@adminMode">
+			<div id="sentMessage">
+				<xsl:apply-templates select="/Page" mode="inlinePopupSingle">
+					<xsl:with-param name="type">FormattedText</xsl:with-param>
+					<xsl:with-param name="text">Add Sent Message</xsl:with-param>
+					<xsl:with-param name="name">sentMessage</xsl:with-param>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="/Page/Contents/Content[@name = 'sentMessage' and (@type='FormattedText' or @type='Image')]" mode="displayBrief"/>
+			</div>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='xform']" mode="ContentDetail">
+		<xsl:apply-templates select="." mode="xform"/>
+	</xsl:template>
 </xsl:stylesheet>

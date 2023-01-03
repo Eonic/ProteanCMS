@@ -3,7 +3,7 @@
 
 	<ModuleTypes>
 		<ModuleGroup name="Advance Content" icon="fas fa-code">
-			<Module type="xForm" formPath="xForm" icon="far fa-file-code" name="xForm"></Module>
+			<Module type="documentdownloadxform" formPath="document-request" icon="far fa-file-code" name="Document Request"></Module>
 		</ModuleGroup>
 	</ModuleTypes>
 </PageLayouts>
