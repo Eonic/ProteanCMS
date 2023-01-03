@@ -500,7 +500,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.dll
@@ -514,7 +513,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Tinify.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\MySql.Data.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Fonet.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\JsonWebTokens.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\BouncyCastle.Crypto.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csharp.pdb
@@ -522,7 +520,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csh
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET.Core.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.xml
@@ -530,7 +527,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.x
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\MySql.Data.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Fonet.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.AssemblyReference.cache
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CoreCompileInputs.cache
@@ -606,3 +602,16 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbp
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.Native-Q8-x64.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-x64.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Buffers.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Memory.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Numerics.Vectors.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-x64.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Buffers.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Memory.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Numerics.Vectors.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Threading.Tasks.Extensions.xml
