@@ -1869,7 +1869,13 @@ Public Class Cms
                     'establish the artid
                     If Not moRequest.QueryString.Count = 0 Then
                         If moRequest("artid") <> "" Then
-                            mnArtId = moRequest("artid")
+
+                            Dim sArtId = Regex.Replace("0" & moRequest("artid"), "[^\d]", "")
+                            'check not too large for an int
+                            If Integer.TryParse(sArtId, 0) Then
+                                mnArtId = CInt(sArtId)
+                            End If
+
                         End If
                     End If
 
