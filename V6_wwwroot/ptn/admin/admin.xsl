@@ -2869,8 +2869,10 @@
     <div class="container-fluid" id="tpltRelatedSearch">
       <div class="row">
         <div class="col-lg-4 mb-3">
-          <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-        </div>
+			
+                    <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform-card"/>
+
+		</div>
         <div class="col-lg-8">
 
           <xsl:text> </xsl:text>
