@@ -641,106 +641,112 @@ Public Class Cms
                     If mnPageId < 1 Then
                         If Not moRequest("pgid") = "" Then
 
-                            'And we still need to check permissions
-                            mnPageId = CLng(Regex.Replace("0" & moRequest("pgid"), "[^\d]", ""))
-                            'specified pgid takes priority
+                        'And we still need to check permissions
+                        'strip any non numberic charactors
+                        Dim sPageId = Regex.Replace("0" & moRequest("pgid"), "[^\d]", "")
+                        'check not too large for an int
+                        If Integer.TryParse(sPageId, 0) Then
+                            mnPageId = CInt(sPageId)
+                        End If
+
+                        'specified pgid takes priority
+                        If Not mbAdminMode Then
+                            newPageId = moDbHelper.checkPagePermission(mnPageId)
+                        Else
+                            If Not moDbHelper.checkPageExist(mnPageId) Then
+                                'And we still need to check it exists
+                                newPageId = gnPageNotFoundId
+                                gnResponseCode = 404
+                            End If
+                        End If
+                    Else
+                        ' Check for a redirect path
+                        If legacyRedirection() Then Exit Sub
+
+                        If Not (moRequest("path") = "" Or mcPagePath = "/") Then
+                            'then pathname
+                            moDbHelper.getPageAndArticleIdFromPath(mnPageId, mnArtId, mcPagePath)
+                            ' mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
                             If Not mbAdminMode Then
                                 newPageId = moDbHelper.checkPagePermission(mnPageId)
-                            Else
-                                If Not moDbHelper.checkPageExist(mnPageId) Then
-                                    'And we still need to check it exists
-                                    newPageId = gnPageNotFoundId
-                                    gnResponseCode = 404
-                                End If
                             End If
                         Else
-                            ' Check for a redirect path
-                            If legacyRedirection() Then Exit Sub
-
-                            If Not (moRequest("path") = "" Or mcPagePath = "/") Then
-                                'then pathname
-                                moDbHelper.getPageAndArticleIdFromPath(mnPageId, mnArtId, mcPagePath)
-                                ' mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
-                                If Not mbAdminMode Then
-                                    newPageId = moDbHelper.checkPagePermission(mnPageId)
-                                End If
-                            Else
-                                'then root
-                                mnPageId = RootPageId
-                            End If
-                        End If
-                    End If
-
-                    'don't return anything but error in admi mode
-                    If mcPagePath <> "" And mnPageId = RootPageId And mbAdminMode Then
-                        'TS Removed because not quite sure what is going on... 
-                        ' was causing a problem with editing locations.
-                        '    gnResponseCode = 404
-                    End If
-
-                    If newPageId > 0 And newPageId = gnPageLoginRequiredId And mnUserId = 0 Then
-                        'we should set an pageId to overide the logon redirect
-                        moSession("LogonRedirectId") = mnPageId
-
-                    End If
-
-
-                    If newPageId > 0 Then mnPageId = newPageId
-
-                    ' Check for cloned pages, and clone contexts
-                    If gbClone Then
-                        mnClonePageId = moDbHelper.getClonePageID(Me.mnPageId)
-                        If mnClonePageId > 0 Then mbIsClonePage = True
-                        cCloneContext = moRequest("context")
-                        If IsNumeric(cCloneContext) AndAlso Convert.ToInt32(cCloneContext) > 0 Then
-                            Me.mnCloneContextPageId = Convert.ToInt32(cCloneContext)
-                        End If
-                    End If
-
-                    If Not mbAdminMode Then
-
-                        If mnPageId = gnPageNotFoundId _
-                        Or mnPageId = gnPageAccessDeniedId _
-                        Or mnPageId = gnPageLoginRequiredId _
-                        Or mnPageId = gnPageErrorId Then
-                            If RootPageId <> mnPageId Then
-                                mbSystemPage = True
-
-                                If mnPageId = gnPageAccessDeniedId Or mnPageId = gnPageLoginRequiredId Then
-                                    'moResponse.StatusCode = 401
-                                End If
-                                If mnPageId = gnPageNotFoundId Then
-                                    gnResponseCode = 404
-                                End If
-                                If mnPageId = gnPageErrorId Then
-                                    gnResponseCode = 500
-                                End If
-
-                            End If
-                        End If
-                    End If
-
-                    If mnArtId < 1 Then
-                        If Not moRequest("artid") = "" Then
-
-                            mnArtId = Me.GetRequestItemAsInteger("artid", 0)
-                        End If
-                    End If
-
-                    If ibIndexMode Then
-                        mbAdminMode = False
-                        mnUserId = 1
-                    End If
-
-                    ' Version Control: Set a permission state for this page.
-                    ' If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
-
-                    If Not moSession Is Nothing Then
-                        If gbVersionControl Then
-                            mnUserPagePermission = moDbHelper.getPagePermissionLevel(mnPageId)
+                            'then root
+                            mnPageId = RootPageId
                         End If
                     End If
                 End If
+
+                'don't return anything but error in admi mode
+                If mcPagePath <> "" And mnPageId = RootPageId And mbAdminMode Then
+                    'TS Removed because not quite sure what is going on... 
+                    ' was causing a problem with editing locations.
+                    '    gnResponseCode = 404
+                End If
+
+                If newPageId > 0 And newPageId = gnPageLoginRequiredId And mnUserId = 0 Then
+                    'we should set an pageId to overide the logon redirect
+                    moSession("LogonRedirectId") = mnPageId
+
+                End If
+
+
+                If newPageId > 0 Then mnPageId = newPageId
+
+                ' Check for cloned pages, and clone contexts
+                If gbClone Then
+                    mnClonePageId = moDbHelper.getClonePageID(Me.mnPageId)
+                    If mnClonePageId > 0 Then mbIsClonePage = True
+                    cCloneContext = moRequest("context")
+                    If IsNumeric(cCloneContext) AndAlso Convert.ToInt32(cCloneContext) > 0 Then
+                        Me.mnCloneContextPageId = Convert.ToInt32(cCloneContext)
+                    End If
+                End If
+
+                If Not mbAdminMode Then
+
+                    If mnPageId = gnPageNotFoundId _
+                        Or mnPageId = gnPageAccessDeniedId _
+                        Or mnPageId = gnPageLoginRequiredId _
+                        Or mnPageId = gnPageErrorId Then
+                        If RootPageId <> mnPageId Then
+                            mbSystemPage = True
+
+                            If mnPageId = gnPageAccessDeniedId Or mnPageId = gnPageLoginRequiredId Then
+                                'moResponse.StatusCode = 401
+                            End If
+                            If mnPageId = gnPageNotFoundId Then
+                                gnResponseCode = 404
+                            End If
+                            If mnPageId = gnPageErrorId Then
+                                gnResponseCode = 500
+                            End If
+
+                        End If
+                    End If
+                End If
+
+                If mnArtId < 1 Then
+                    If Not moRequest("artid") = "" Then
+
+                        mnArtId = Me.GetRequestItemAsInteger("artid", 0)
+                    End If
+                End If
+
+                If ibIndexMode Then
+                    mbAdminMode = False
+                    mnUserId = 1
+                End If
+
+                ' Version Control: Set a permission state for this page.
+                ' If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
+
+                If Not moSession Is Nothing Then
+                    If gbVersionControl Then
+                        mnUserPagePermission = moDbHelper.getPagePermissionLevel(mnPageId)
+                    End If
+                End If
+            End If
 
         Catch ex As Exception
 
@@ -1389,8 +1395,15 @@ Public Class Cms
                                         If Not oTransform.bError Then
                                             If bPageCache Then
                                                 Dim pagestring As String = textWriter.ToString()
+
+                                                If gnResponseCode <> 200 Then
+                                                    moResponse.TrySkipIisCustomErrors = True
+                                                    moResponse.StatusCode = gnResponseCode
+                                                End If
+
                                                 moResponse.Write(pagestring)
                                                 moResponse.Flush()
+                                                gnResponseCode = 200 'we don't want this to happen again on line 1930
                                                 SavePage(sCachePath, pagestring)
                                                 'sServeFile = mcPageCacheFolder & sCachePath
                                             Else
