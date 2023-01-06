@@ -340,7 +340,8 @@ where cl.nStructId = " & myWeb.mnPageId)
                     'Dim cnt As Int16
                     Dim oFrmGroup As XmlElement
                     Dim filterForm As xForm = New xForm(myWeb)
-
+                    Dim className As String = String.Empty
+                    Dim oAdditionalFilterInput As New Hashtable()
                     filterForm.NewFrm(formName)
                     filterForm.submission(formName, "", "POST", "")
 
@@ -351,11 +352,19 @@ where cl.nStructId = " & myWeb.mnPageId)
                     End If
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
 
+                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
+                        className = oFilterElmt.GetAttribute("className")
+                        If (myWeb.moRequest.Form(className) IsNot Nothing) Then
+                            oAdditionalFilterInput.Add(className, Convert.ToString(myWeb.moRequest.Form(className)))
+
+                        End If
+
+                    Next
 
                     For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
                         Dim calledType As Type
-                        Dim className As String = oFilterElmt.GetAttribute("className")
+                        className = oFilterElmt.GetAttribute("className")
                         Dim providerName As String = oFilterElmt.GetAttribute("providerName")
 
                         If className <> "" Then
@@ -391,6 +400,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             args(1) = oFilterElmt
                             args(2) = filterForm
                             args(3) = oFrmGroup
+                            'args(4) = oAdditionalFilterInput
 
                             calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                         End If
@@ -400,13 +410,13 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     Dim whereSQL As String = ""
 
-                    'filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "ShowExperiences")
+                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "hidden-sm hidden-md hidden-lg filter-xs-btn showexperiences")
                     'filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
                     filterForm.addValues()
 
-                    ' If (filterForm.isSubmitted) Then
+                    If (filterForm.isSubmitted) Then
 
-                    filterForm.updateInstanceFromRequest()
+                        filterForm.updateInstanceFromRequest()
                         filterForm.validate()
 
                         If (filterForm.valid) Then
@@ -416,7 +426,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
                                 Dim calledType As Type
-                                Dim className As String = oFilterElmt.GetAttribute("className")
+                                className = oFilterElmt.GetAttribute("className")
                                 Dim providerName As String = oFilterElmt.GetAttribute("providerName")
 
                                 If className <> "" Then
@@ -447,20 +457,20 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                                     Dim o As Object = Activator.CreateInstance(calledType)
 
-                                Dim args(4) As Object
-                                args(0) = myWeb
+                                    Dim args(4) As Object
+                                    args(0) = myWeb
                                     args(1) = whereSQL
                                     args(2) = filterForm
-                                args(3) = oFrmGroup
-                                args(4) = oFilterElmt
+                                    args(3) = oFrmGroup
+                                    args(4) = oFilterElmt
 
-                                whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
+                                    whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
                                 End If
 
                             Next
 
                         End If
-                    ' End If
+                    End If
 
 
 
