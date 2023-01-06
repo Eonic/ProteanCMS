@@ -38,5 +38,7 @@
   <xsl:import href="reviews/Reviews.xsl"/>
   <xsl:import href="galleryimagelist/GalleryImageList.xsl"/>
   <xsl:import href="galleryimagelist/LibraryImage.xsl"/>
-<xsl:import href="sociallinks/SocialLinks.xsl"/>
+  <xsl:import href="sociallinks/SocialLinks.xsl"/>
+  <xsl:import href="xform/xForm.xsl"/>
+  <xsl:import href="documentrequest/DocumentRequest.xsl"/>
 </xsl:stylesheet>

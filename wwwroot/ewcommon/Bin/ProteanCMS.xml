@@ -148,14 +148,6 @@ ProteanCMS
  <param name="jObj"></param>
  <returns></returns>
 </member>
-<member name="M:Protean.Cms.Cart.JSONActions.UpdateOrderWithPaymentResponse(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
- <summary>
- Add Missing order 
- </summary>
- <param name="myApi"></param>
- <param name="jObj"></param>
- <returns></returns>
-</member>
 <member name="M:Protean.Cms.Cart.JSONActions.ProcessNewPayment(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
  <summary>
  Process New payment

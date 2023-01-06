@@ -17,8 +17,6 @@ Public Class testEventLog : Implements IHttpHandler, IRequiresSessionState
             Protean.stdTools.AddExceptionToEventLog(ex, "Test")
         End Try
 
-
-
         oEw = Nothing
     End Sub
 
