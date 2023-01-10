@@ -820,7 +820,16 @@ ProcessFlow:
                                     'get a list of pages with this content on.
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
-                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
+                                        Dim nStart As Integer = 0
+                                        Dim nRows As Integer = 500
+
+                                        ' Set the paging variables, if provided.
+                                        If Not (myWeb.moRequest("startPos") Is Nothing) AndAlso IsNumeric(myWeb.moRequest("startPos")) Then nStart = CInt(myWeb.moRequest("startPos"))
+                                        If Not (myWeb.moRequest("rows") Is Nothing) AndAlso IsNumeric(myWeb.moRequest("rows")) Then nRows = CInt(myWeb.moRequest("rows"))
+
+                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, nStart, nRows, FilterSQL, "", oPageDetail)
+
+                                        ' myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                         Dim contentsNode = moPageXML.SelectSingleNode("/Page/Contents")
                                         If Not IsNothing(contentsNode) Then
                                             myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
