@@ -398,7 +398,7 @@ Partial Public Class Cms
                 Dim sProcessInfo As String = ""
                 Dim aResponse() As String
                 Dim oDictResp As Hashtable
-                Dim cResponse As String
+                Dim cResponse As String = String.Empty
 
                 Dim oDictOpt As Hashtable = New Hashtable
 
@@ -4364,15 +4364,15 @@ Partial Public Class Cms
                 Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
-                Dim sSql As String
-                Dim odr As SqlDataReader
+                'Dim sSql As String
+                'Dim odr As SqlDataReader
                 Dim bIsValid As Boolean = False
                 Dim aCardTypes() As String
                 Dim aCardTypes2() As String
                 Dim i As Integer
-                Dim nPayableAmount As Double
+                ' Dim nPayableAmount As Double
                 Dim cUniqueLink As String = ""
-                Dim nLinkNumber As Long
+                'Dim nLinkNumber As Long
                 Dim oRandom As Random = New Random
 
                 Dim sProcess As String
@@ -4530,7 +4530,7 @@ Partial Public Class Cms
                         End If
 
                         ' Check Expire / Issue Dates
-                        Dim oObjCheck As XmlElement
+                        Dim oObjCheck As XmlElement = Nothing
                         Dim oRe As Regex = New Regex("^(\d{2}) (\d{4})$")
                         Dim oMatch As Match
 

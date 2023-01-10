@@ -435,6 +435,8 @@ Partial Public Class Cms
             End Function
 
             Public Function AddProductOption(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim jsonString As String = String.Empty
+
                 Try
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
@@ -443,19 +445,19 @@ Partial Public Class Cms
                     'add product option
                     myCart.AddProductOption(jObj)
                     'myCart.UpdatePackagingANdDeliveryType()
-                    myCart.GetCart(CartXml.FirstChild)
-                    ''persist cart
+                    'myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
+                    '''persist cart
                     myCart.close()
 
-                    CartXml = updateCartforJSON(CartXml)
+                    'CartXml = updateCartforJSON(CartXml)
 
-                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    jsonString = jsonString.Replace("""@", """_")
-                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    'jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    'jsonString = jsonString.Replace("""@", """_")
+                    'jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
 
                 Catch ex As Exception
-
+                    Return Nothing
                 End Try
             End Function
 
@@ -469,17 +471,20 @@ Partial Public Class Cms
                     Return "True"
 
                 Catch ex As Exception
-
+                    Return Nothing
                 End Try
+
             End Function
 
             Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim strMessage As String = String.Empty
                 Try
+
                     If myCart.mnProcessId > 4 Then
                         Return ""
                     Else
                         Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                        Dim strMessage As String = String.Empty
+
                         Dim jsonString As String = String.Empty
                         If Not (jObj("Code") Is Nothing) Then
                             strMessage = myCart.moDiscount.AddDiscountCode(jObj("Code"))
@@ -502,11 +507,12 @@ Partial Public Class Cms
                         Return strMessage
                     End If
                 Catch ex As Exception
-
+                    Return Nothing
                 End Try
             End Function
 
             Public Function RemoveDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim jsonString As String = String.Empty
                 Try
                     If myCart.mnProcessId > 4 Then
                         Return ""
@@ -519,15 +525,14 @@ Partial Public Class Cms
                         myCart.close()
                         CartXml = updateCartforJSON(CartXml)
 
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
                         jsonString = jsonString.Replace("""@", """_")
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                         Return jsonString
                     End If
                 Catch ex As Exception
-
+                    Return Nothing
                 End Try
-
             End Function
 
             Public Function UpdateCartProductPrice(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
@@ -554,9 +559,8 @@ Partial Public Class Cms
                     jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
 
-
                 Catch ex As Exception
-                    Return ex.Message
+                    Return Nothing
                 End Try
             End Function
 
@@ -901,6 +905,8 @@ Partial Public Class Cms
             ''' <param name="jObj"></param>
             ''' <returns></returns>
             Public Function RefundOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim josResult As String = String.Empty
+
                 Try
 
                     Dim bIsAuthorized As Boolean = False
@@ -925,14 +931,14 @@ Partial Public Class Cms
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
                         xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & cRefundPaymentReceipt & "</RefundPaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
-                        Dim josResult As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                        josResult = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
 
                         josResult = josResult.Replace("""@", """_")
                         josResult = josResult.Replace("#cdata-section", "cDataValue")
 
                         Return josResult
                     End If
-
+                    Return josResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
                     Return "Error" 'ex.Message
@@ -940,7 +946,37 @@ Partial Public Class Cms
 
             End Function
 
+            ''' <summary>
+            ''' Add Missing order 
+            ''' </summary>
+            ''' <param name="myApi"></param>
+            ''' <param name="jObj"></param>
+            ''' <returns></returns>
+            Public Function UpdateOrderWithPaymentResponse(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim josResult As String = ""
+                    Dim bIsAuthorized As Boolean = False
+                    Dim validGroup = IIf(jObj("validGroup") IsNot Nothing, CStr(jObj("validGroup")), "")
+                    bIsAuthorized = ValidateAPICall(myWeb, validGroup)
 
+                    'If bIsAuthorized = False Then Return "Error -Authorization Failed"
+
+                    'method name UpdateOrderWithPaymentResponse
+                    Dim receiptID = jObj("AuthNumber")
+                    Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
+                    Dim strConsumerRef = ""
+                    If cProviderName <> "" And receiptID <> 0 Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
+                        strConsumerRef = oPayProv.Activities.UpdateOrderWithPaymentResponse(receiptID)
+                        josResult = strConsumerRef
+                    End If
+                    Return josResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""))
+                    Return "Error" 'ex.Message
+                End Try
+
+            End Function
 
             ''' <summary>
             ''' Process New payment

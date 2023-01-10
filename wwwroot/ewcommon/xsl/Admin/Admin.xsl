@@ -244,8 +244,8 @@
   <!-- -->
   <xsl:template match="Page[@adminMode='true']" mode="adminPageHeader">
     <h1 class="page-header">
-      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
-      <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@name"/>
+      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][last()]/@icon}">&#160;</i>&#160;
+      <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd][last()]/@name"/>
     </h1>
   </xsl:template>
 
@@ -938,20 +938,13 @@
   <!--   ################################################   breadcrumb   ##################################################   -->
   <!-- -->
   <xsl:template match="MenuItem" mode="adminBreadcrumbSt">
-    <xsl:variable name="url">
-      <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
-    </xsl:variable>
     <xsl:apply-templates select="." mode="adminMenuLinkSt"/>
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="adminBreadcrumbSt"/>
   </xsl:template>
 
   <xsl:template match="MenuItem" mode="adminBreadcrumbId">
     <xsl:param name="thispageid"/>
-    <xsl:variable name="url">
-      <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
-    </xsl:variable>
-    <xsl:apply-templates select="." mode="adminMenuLinkSt"/>
-    <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=$thispageid]]" mode="adminBreadcrumbSt"/>
+    <xsl:apply-templates select="descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id=$thispageid]]" mode="adminMenuLinkSt"/>
   </xsl:template>
 
   <!-- Generic Menu Link -->
@@ -1029,8 +1022,10 @@
           </ul>
         </xsl:for-each>
       </div>
-      <a href="" class="all-breadcrumb">see all locations</a>
-      <a href="" class="less-breadcrumb">hide locations</a>
+      <a href="" class="all-breadcrumb">
+		  <i class="fa fa-angle-down">&#160;</i>&#160;see all locations</a>
+      <a href="" class="less-breadcrumb">
+		  <i class="fa fa-angle-up">&#160;</i>&#160;hide locations</a>
     </div>
   </xsl:template>
 
@@ -4585,6 +4580,11 @@
             <xsl:with-param name="name">criticalPathCSS</xsl:with-param>
             <xsl:with-param name="type">PlainText</xsl:with-param>
           </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">Meta Refresh</xsl:with-param>
+				<xsl:with-param name="name">metaRefresh</xsl:with-param>
+				<xsl:with-param name="type">PlainText</xsl:with-param>
+			</xsl:call-template>
           <tr>
             <th colspan="3">Meta Tags - Hidden information for search engines.</th>
           </tr>
@@ -5207,7 +5207,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
+  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='AddModule'  or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
     <script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->
@@ -7482,22 +7482,26 @@
         <xsl:value-of select="@id"/>
       </td>
       <td>
-        <xsl:value-of select="@statusId"/> - 	<xsl:choose>
-          <xsl:when test="@statusId='0'">New</xsl:when>
-          <xsl:when test="@statusId='1'">Items Added</xsl:when>
-          <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
-          <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
-          <xsl:when test="@statusId='4'">Confirmed</xsl:when>
-          <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="@statusId='6'">Completed</xsl:when>
-          <xsl:when test="@statusId='7'">Refunded</xsl:when>
-          <xsl:when test="@statusId='8'">Failed</xsl:when>
-          <xsl:when test="@statusId='9'">Shipped</xsl:when>
-          <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
-          <xsl:when test="@statusId='11'">Abandoned</xsl:when>
-          <xsl:when test="@statusId='12'">Deleted</xsl:when>
-          <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
-        </xsl:choose>
+		  <small>
+			  (<xsl:value-of select="@statusId"/>)
+		  </small>&#160;
+		  <xsl:choose>
+			  <xsl:when test="@statusId='0'">New</xsl:when>
+			  <xsl:when test="@statusId='1'">Items Added</xsl:when>
+			  <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
+			  <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
+			  <xsl:when test="@statusId='4'">Confirmed</xsl:when>
+			  <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
+			  <xsl:when test="@statusId='6'">Completed</xsl:when>
+			  <xsl:when test="@statusId='7'">Refunded</xsl:when>
+			  <xsl:when test="@statusId='8'">Failed</xsl:when>
+			  <xsl:when test="@statusId='9'">Shipped</xsl:when>
+			  <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
+			  <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+			  <xsl:when test="@statusId='12'">Deleted</xsl:when>
+			  <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
+			  <xsl:when test="@statusId='17'">In Progress</xsl:when>
+		  </xsl:choose>
       </td>
       <td>
         <xsl:choose>
@@ -7662,7 +7666,8 @@
                       <xsl:when test="@statusId='8'">Failed</xsl:when>
                       <xsl:when test="@statusId='9'">Shipped</xsl:when>
                       <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
-                      <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+                      <xsl:when test="@statusId='11'">Abandoned</xsl:when>					
+                        <xsl:when test="@statusId='17'">In Progress</xsl:when>
                     </xsl:choose>
                   </td>
                   <td>
@@ -7771,6 +7776,8 @@
               </xsl:when>
               <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
               <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+			
+          <xsl:when test="@statusId='17'">In Progress</xsl:when>
             </xsl:choose> Order<xsl:choose>
               <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
               <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
@@ -8531,6 +8538,8 @@
           <xsl:when test="$statusId='9'">Shipped</xsl:when>
           <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
           <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+		
+          <xsl:when test="@statusId='17'">In Progress</xsl:when>
         </xsl:choose> Quote<xsl:choose>
           <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
           <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
@@ -9238,7 +9247,7 @@
 					Date/Time
 				</th>
 				<xsl:for-each select="Item[last()]/cActivityXml/descendant-or-self::*">
-					<xsl:if test="count(*)=0 or local-name()='Attachements'">
+					<xsl:if test="count(*)=0 or local-name()='Attachements' or local-name()='Attachments'">
 						<th>
 							<xsl:value-of select="local-name()"/>
 						</th>
@@ -9275,9 +9284,9 @@
 		</td>
 	</xsl:template>
 
-	<xsl:template match="Attachements" mode ="Report_ColsValues">
+	<xsl:template match="Attachements | Attachments" mode ="Report_ColsValues">
 		<td>
-			<xsl:for-each select="Attachement ">
+			<xsl:for-each select="Attachement | Attachments ">
 				<xsl:value-of select="Content/@name"/>
 			</xsl:for-each>
 		</td>
@@ -11683,7 +11692,7 @@
   <!-- -->
   <xsl:template match="Page[@layout='SiteIndex' or @ewCmd='SiteIndex']" mode="Admin">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">
@@ -11709,11 +11718,11 @@
                 <dd>
                   <xsl:value-of select="@pagesSkipped"/>
                 </dd>
-                <dt>Articles Indexed</dt>
+                <dt>Content Items Indexed</dt>
                 <dd>
                   <xsl:value-of select="@contentCount"/>
                 </dd>
-                <dt>Articles Skipped</dt>
+                <dt>Content Items Skipped</dt>
                 <dd>
                   <xsl:value-of select="@contentSkipped"/>
                 </dd>
@@ -11730,9 +11739,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-
-
+      <div class="col-md-8">
         <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
       </div>
     </div>
@@ -12445,12 +12452,23 @@
   <!-- ##################################################################################################### -->
 
   <xsl:template match="Page[@layout='CartReportsMain']" mode="Admin">
+	   <xsl:variable name="contextCmd">
+      <xsl:choose>
+        <xsl:when test="$page/@editContext!=''">
+          <xsl:value-of select="/Page/@editContext"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="/Page/@ewCmd"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <div class="row" id="tpltCartActivity">
       <div class="col-md-3 btn-group-vertical"  id="column1">
-        <a href="{$appPath}?ewCmd=CartDownload" class="btn btn-default">Order Download</a>
-        <a href="{$appPath}?ewCmd=CartReports" class="btn btn-default">Sales By Product</a>
-        <a href="{$appPath}?ewCmd=CartActivityDrilldown" class="btn btn-default">Sales By Page</a>
-        <a href="{$appPath}?ewCmd=CartActivityPeriod" class="btn btn-default">Sales By Period</a>
+		  <xsl:for-each select="AdminMenu/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem">
+		  <a href="{$appPath}?ewCmd={@cmd}" class="btn btn-default">
+			  <i class="fa {@icon}">&#160;</i> &#160;
+			  <xsl:value-of select="@name"/></a>
+		  </xsl:for-each>
       </div>
       <div class="col-md-9" id="column2">
         &#160;
@@ -12937,6 +12955,148 @@
       </ul>
     </xsl:if>
   </xsl:template>
+	
+	
+  <xsl:template match="Page[@layout='EventBookings']" mode="Admin">
+	  
+    <div class="row" id="tpltCartActivity">
+      <div class="col-md-3">
+		  <div class="list-group">
+        <xsl:apply-templates select="ContentDetail/Events/Event[Ticket]" mode="eventList"/>
+			  <xsl:choose>
+				  <xsl:when test="$page/@ewCmd2='pastbookings'">
+					  <a class="btn btn-default  btn-block" href="?ewCmd=EventBookings">Future Events</a>
+				  </xsl:when>
+				  <xsl:otherwise>
+	                <a class="btn btn-default  btn-block" href="?ewCmd=EventBookings.pastbookings">Past Events</a>
+				  </xsl:otherwise>
+			  </xsl:choose>
+
+		  </div>
+      </div>
+      <div class="col-md-9">
+<table class="table table-responsive">
+	<tr xmlns="http://www.w3.org/1999/xhtml">
+			<th>
+				OrderId
+			</th>
+	        <th>
+				Order Date
+			</th>
+	        <th>
+				Ticket Type
+			</th>
+    <th>
+				Name
+			</th>
+    <th>
+				Email
+			</th>
+    <th>
+				Quantity
+			</th>
+	    <th>
+				Price
+			</th>
+		    <th>
+				Amt Recieved
+			</th>
+            <th>
+				Last Payment
+			</th>	
+            <th>
+				Outstanding
+			</th>				<th>
+				<!--
+				<a href="" class="btn btn-success">Download in Excel</a>
+				-->
+				<a href="/ewcommon/tools/excel.ashx?{/Page/Request/ServerVariables/Item[@name='QUERY_STRING']/node()}" class="btn btn-sm btn-primary" target="_new">
+					<i class="fa fa-th-list fa-white">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>
+					Excel Download
+				</a>
+			</th>			
+	</tr>
+            <xsl:apply-templates select="ContentDetail/Report/Tickets/Ticket" mode="TicketReport"/>
+    </table>
+      </div>
+    </div>
+  </xsl:template>
+	<xsl:template match="Ticket" mode="TicketReport">
+		<tr xmlns="http://www.w3.org/1999/xhtml">
+			<td>
+				<xsl:value-of select="OrderId/node()"/>
+			</td>
+			<td class="text-nowrap">
+				<xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+				<xsl:value-of select="dInsertDate/node()"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">true</xsl:with-param>
+              </xsl:call-template>
+			</td>
+			<td>
+				<xsl:value-of select="TicketName/node()"/>
+			</td>
+			<td>
+				<xsl:value-of select="CustomerName/node()"/>
+			</td>
+			<td>
+				<xsl:value-of select="Email/node()"/>
+			</td>
+			<td>
+				<xsl:value-of select="Quantity/node()"/>
+			</td>
+			<td>
+				<xsl:value-of select="format-number(Price/node(),'0.00')"/>
+			</td>	
+			<td>
+				<xsl:value-of select="format-number(nAmountReceived/node(),'0.00')"/>
+			</td>	
+			<td>
+				
+				<xsl:value-of select="format-number(nLastPaymentMade/node(),'0.00')"/>
+			</td>	
+			<td>
+				<xsl:value-of select="format-number(BalanceDue/node(),'0.00')"/>
+			</td>			
+		<td>
+		<a href="?ewCmd=Orders&amp;ewCmd2=Display&amp;id={OrderId/node()}" class="btn btn-xs btn-primary"><i class="fa fa-eye"> </i> view order
+				</a>
+			<xsl:if test="BalanceDue &gt; 0">
+			<a href="?ewCmd=Orders&amp;ewCmd2=RequestSettlement&amp;id={OrderId/node()}" target="_new" class="btn btn-xs btn-warning">
+				<i class="fa fa-envelope"> </i> Send Settlement Request
+			</a>
+			</xsl:if>
+		</td>
+	</tr>
+		
+			</xsl:template>
+	<xsl:template match="Event" mode="eventList">
+			<a class="btn btn-default btn-block" href="?ewCmd=EventBookings.{$page/@ewCmd2}&amp;EventId={@nContentKey}">
+				<xsl:attribute name="class">
+					<xsl:choose>
+						<xsl:when test="@nContentKey=/Page/ContentDetail/Tickets/@EventId">
+							btn btn-primary btn-block
+						</xsl:when>
+						<xsl:otherwise>
+							btn btn-default btn-block
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+				<small>
+		<xsl:value-of select="cContentXmlBrief/Content/StartDate/node()"/><br/><xsl:value-of select="cContentXmlBrief/Content/Headline/node()"/></small>
+			<br/>
+			
+		<xsl:for-each select="Ticket">
+			<small>
+		    <xsl:value-of select="TicketName/node()"/> - <xsl:value-of select="TotalTicketsSold/node()"/> </small><br/>
+		</xsl:for-each>
+				</a>
+	
+	</xsl:template>
 
   <xsl:template match="Report[@cGrouping='Group']" mode="CartReportDrilldown">
     <table border="1">
@@ -13727,7 +13887,7 @@
 				<xsl:value-of select="cContentSchemaName/node()"/>
 			</td>
 			<td colspan="2">
-				<xsl:value-of select="cDefinitionName/node()"/>
+				<xsl:value-of select="@cDefinitionName"/>
 			</td>
 			<td colspan="2">
 				<xsl:value-of select="cContentValueXpath/node()"/>
@@ -13746,7 +13906,7 @@
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Edit
 				</a>
-				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;DefName={@cDefinitionName}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
 					<i class="fa fa-recycle fa-white">
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Re-Index

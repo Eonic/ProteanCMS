@@ -267,27 +267,12 @@
 				</xsl:attribute>
 				<xsl:text></xsl:text>
 				<xsl:apply-templates select="value/img" mode="jsNiceImage"/>
-				<xsl:text> </xsl:text>
+				<xsl:text></xsl:text>
 			</textarea>
-			<!--<script language="javascript" type="text/javascript">
-      document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value = '<xsl:apply-templates select="value/img" mode="jsNiceImage"/>';
-      -->
-			<!--<xsl:comment>
-        function OpenWindow_edit_<xsl:value-of select="$ref"/>(){
-        imgHtml = document.forms['<xsl:value-of select="ancestor::Content/model/submission/@id"/>'].elements['<xsl:value-of select="$ref"/>'].value
-        OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=ImageLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&ewCmd2=editImage&imgHtml=' + imgHtml + '&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','Gallery','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=650' );
-        };
-        function OpenWindow_pick_<xsl:value-of select="$ref"/>(){
-        OpenWindow('/ewcommon/admin/popup.ashx?ewCmd=ImageLib<![CDATA[&]]>targetForm=<xsl:value-of select="ancestor::Content/model/submission/@id"/><![CDATA[&]]>targetField=<xsl:value-of select="$ref"/><![CDATA[&]]>targetClass=<xsl:value-of select="value/*/@class"/>','Gallery','toolbar=yes,scrollbars=1,resize=yes,location=yes,menubar=yes,width=800,height=650' );
-        };
-      </xsl:comment>-->
-			<!--
-    </script>-->
 			<xsl:choose>
 				<xsl:when test="value/img/@src!=''">
 					<span class="input-group-btn editpick">
-						<!--<a href="#" onclick="OpenWindow_edit_{$ref}('');return false;" title="edit an image from the image library" class="btn btn-primary">-->
-						<a class="btn btn-primary editImage">
+							<a class="btn btn-primary editImage">
 							<i class="fa fa-picture-o fa-white">
 								<xsl:text> </xsl:text>
 							</i><xsl:text> </xsl:text>Edit
@@ -296,8 +281,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<span class="input-group-btn editpick">
-						<!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-						<a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary">
+							<a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary">
 							<i class="fa fa-picture-o fa-white">
 								<xsl:text> </xsl:text>
 							</i><xsl:text> </xsl:text>Pick
@@ -308,7 +292,6 @@
 		</div>
 		<div class="previewImage" id="previewImage_{$ref}">
 			<span>
-				<!--<xsl:value-of select="value/img"/>-->
 				<xsl:apply-templates select="value/img" mode="jsNiceImageForm"/>
 				<xsl:text> </xsl:text>
 			</span>
@@ -788,14 +771,13 @@
 		"a[href|target|title|style|class|onmouseover|onmouseout|onclick|id|name],"
 		+ "img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style],"
 		+ "table[cellspacing|cellpadding|border|height|width|style|class],"
-		+ "p[align|style|class],"
-		+ "span[class],"
+		+ "p[align|style|class|id],"
 		+ "form[action|method|name|style|class],object[*],param[*],embed[*],"
 		+ "input[type|value|name|style|class|src|alt|border|size],"
 		+ "textarea[type|value|name|style|class|src|alt|border|size|cols|rows],"
 		+ "td/th[colspan|rowspan|align|valign|style|class],"
-		+ "h1[style|class],h2[style|class],h3[style|class],h4[style|class],h5[style|class],h6[style|class],"
-		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class],span[style|class],"
+		+ "h1[style|class|id],h2[style|class|id],h3[style|class|id],h4[style|class|id],h5[style|class|id],h6[style|class|id],"
+		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class|id],span[style|class|id],"
 		+ "thead[style|class],tbody[style|class],tr[class],dd[style|class],dl[style|class],dt[style|class],"
 		+ "sup,sub,pre,address,strong,b,em,i[class],u,s,hr,blockquote,br,"
 		+ "cite[class|id|title],code[class|title],samp,iframe[width|height|src|frameborder|allowfullscreen]"

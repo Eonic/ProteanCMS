@@ -382,20 +382,11 @@
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
-   
+	<xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
+			  <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
+		  </xsl:if>
 	   
-         <xsl:if test="$GoogleGA4MeasurementID!=''">
-			    <!-- GA4 Tag Manager -->
-				<script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-                    <script cookie-consent="tracking">
-                      window.dataLayer = window.dataLayer || [];
-                      function gtag(){dataLayer.push(arguments);}
-                      gtag('js', new Date());
-                      gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
-					  <xsl:apply-templates select="." mode="google-ga4-event"/>
-                </script>
-				<!-- End GA4 Tag Manager -->		 
-		 </xsl:if>
+
         <xsl:if test="$GoogleTagManagerID!=''">
 
 	
@@ -825,11 +816,6 @@
           <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
-		  
-		  <xsl:if test="//Content[@carousel='swiper']">
-			  <script src="/ewcommon/js/jquery/swiper/swiper-bundle.min.js">/* */</script>
-			  <!-- !!! MIN VERSION CAUSES ERROR -->
-		  </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery' or @moduleType='Carousel'] and not(/Page/@adminMode)">
           <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
         </xsl:if>
@@ -1267,12 +1253,13 @@
       
 	  
       </script>
+		
       <noscript>
         <img height="1" width="1" src="https://www.facebook.com/tr?id={Contents/Content[@name='fb-pixel_id']}&amp;ev=PageView&amp;noscript=1"/>
       </noscript>
       <!-- End Facebook Pixel Code -->
     </xsl:if>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
+
 
     <xsl:apply-templates select="." mode="JSONLD"/>
 
@@ -1285,6 +1272,20 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
       </xsl:otherwise>
     </xsl:choose>
+
+	  <xsl:if test="$GoogleGA4MeasurementID!=''">
+		  <!-- GA4 Tag Manager -->
+		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
+		  <script cookie-consent="tracking">
+			  window.dataLayer = window.dataLayer || [];
+			  function gtag(){dataLayer.push(arguments);}
+			  gtag('js', new Date());
+			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
+			  <xsl:apply-templates select="." mode="google-ga4-event"/>
+		  </script>
+		  <!-- End GA4 Tag Manager -->
+	  </xsl:if>
+	  
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
 
@@ -1294,6 +1295,8 @@
 
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
+	  
+	<xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
   </xsl:template>
 
@@ -5344,6 +5347,12 @@
         <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
         <xsl:text>://</xsl:text>
         <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+		  <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='off'">
+			  <xsl:if test="$page/Request/ServerVariables/Item[@name='SERVER_PORT']!='80'">
+				  <xsl:text>:</xsl:text>
+				  <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_PORT']/node()"/>
+			  </xsl:if>			  
+		  </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$thisPageUrl"/>
@@ -6841,17 +6850,17 @@
 		<xsl:param name="no-stretch" select="true()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
-  	<xsl:param name="max-width-xxs"/>
+  	    <xsl:param name="max-width-xxs"/>
 		<xsl:param name="max-height-xxs"/>
-  	<xsl:param name="max-width-xs"/>
+  	    <xsl:param name="max-width-xs"/>
 		<xsl:param name="max-height-xs"/>
-  	<xsl:param name="max-width-sm"/>
+  	    <xsl:param name="max-width-sm"/>
 		<xsl:param name="max-height-sm"/>
-  	<xsl:param name="max-width-md"/>
+  	    <xsl:param name="max-width-md"/>
 		<xsl:param name="max-height-md"/>
-  	<xsl:param name="max-width-lg"/>
+  	    <xsl:param name="max-width-lg"/>
 		<xsl:param name="max-height-lg"/>
-   	<xsl:param name="forceResize"/>
+   	    <xsl:param name="forceResize"/>
 		<xsl:param name="class"/>
 		<xsl:param name="style"/>
     <xsl:param name="imageUrl"/>
@@ -6872,6 +6881,16 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:apply-templates select="." mode="getThCrop"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+	  <xsl:variable name="bForceResize">
+        <xsl:choose>
+          <xsl:when test="$forceResize">
+            <xsl:value-of select="true()"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="false()"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -7198,17 +7217,17 @@
 						<xsl:variable name="image">
 							<picture>
 
-								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc)"/>
-								<xsl:variable name="newSrc-xxs-x2-webp" select="ew:CreateWebP($newSrc-xxs-x2)"/>
-								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
-								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2)"/>
-								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
-								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2)"/>
-								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
-								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2)"/>
-								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
-								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2)"/>
-								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
+								<xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$bForceResize)"/>
+								<xsl:variable name="newSrc-xxs-x2-webp" select="ew:CreateWebP($newSrc-xxs-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$bForceResize)"/>
+								<xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$bForceResize)"/>
+								<xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$bForceResize)"/>
+								<xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$bForceResize)"/>
+								<xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$bForceResize)"/>
+								<xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$bForceResize)"/>
+								<xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$bForceResize)"/>
 
 
 								<!--WebP Images-->
@@ -7313,6 +7332,7 @@
 									</xsl:choose>
 									<!-- Width -->
 									<xsl:attribute name="width">
+										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-width"/>
@@ -7324,6 +7344,7 @@
 									</xsl:attribute>
 									<!-- Height -->
 									<xsl:attribute name="height">
+										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-height"/>
@@ -7533,12 +7554,12 @@
             <xsl:variable name="image">
               <picture>
 
-                <xsl:variable name="newSrc-xxs-webp" select="ew:CreateWebP($newSrc-xxs)"/>
-                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs)"/>
-                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm)"/>
-                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md)"/>
-                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
-                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
+                <xsl:variable name="newSrc-xxs-webp" select="ew:CreateWebP($newSrc-xxs,$bForceResize)"/>
+                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$bForceResize)"/>
+                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$bForceResize)"/>
+                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$bForceResize)"/>
+                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$bForceResize)"/>
+                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$bForceResize)"/>
 
 
                 <!--WebP Images-->
@@ -9484,11 +9505,7 @@
 						<xsl:value-of select="$price"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:apply-templates select="$page" mode="formatPrice">
-							<xsl:with-param name="price">
-								<xsl:value-of select="$price"/>
-							</xsl:with-param>
-						</xsl:apply-templates>
+						<xsl:value-of select="format-number($price,'###,###,##0.00')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 	</xsl:template>
@@ -10522,16 +10539,11 @@
     <xsl:param name="bundle-path"/>
     <xsl:call-template name="render-css-files">
       <xsl:with-param name="list" select="ew:BundleCSS($comma-separated-files,$bundle-path)"/>
-
-
       <xsl:with-param name="ie8mode">
-
         <xsl:if test="(contains($userAgent, 'MSIE 7.0') or contains($userAgent, 'MSIE 8.0') or contains($userAgent, 'MSIE 9.0'))">
           <xsl:text>1</xsl:text>
-
         </xsl:if>
       </xsl:with-param>
-
     </xsl:call-template>
   </xsl:template>
 
@@ -10554,10 +10566,18 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-			<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
-				<noscript>
+			<xsl:choose>
+				<xsl:when test="not(/Page/Contents/Content[@name='criticalPathCSS'])">
 					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
-				</noscript>
+				</xsl:when>
+				<xsl:otherwise>
+					<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
+					<noscript>
+						<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+					</noscript>
+				</xsl:otherwise>
+			</xsl:choose>
+
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>

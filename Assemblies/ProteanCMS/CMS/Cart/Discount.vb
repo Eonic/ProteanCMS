@@ -330,6 +330,8 @@ Partial Public Class Cms
                                 Dim oDiscountMessage As XmlElement = oCartXML.OwnerDocument.CreateElement("DiscountMessage")
                                 oDiscountMessage.InnerXml = "<span class=""msg-1030"">The code you have provided is invalid for this transaction</span>"
                                 oCartXML.AppendChild(oDiscountMessage)
+                                'If promociode appiled and then it is inactive then also remove from cart also
+                                RemoveDiscountCode()
                             End If
                             Return 0
                         Else
@@ -1474,7 +1476,7 @@ NoDiscount:
 #Region "Content Procedures"
 
             Public Function AddDiscountCode(ByVal sCode As String) As String
-                Dim cProcessInfo As String
+                Dim cProcessInfo As String = "AddDiscountCode"
                 Dim sSql As String
                 Dim strSQL As New Text.StringBuilder
                 Dim oDs As DataSet
@@ -1606,7 +1608,7 @@ NoDiscount:
                                     End If
 
                                 End If
-                                    oDsDiscounts.Clear()
+                                oDsDiscounts.Clear()
                                 oDsDiscounts = Nothing
                             End If
                             'myCart.moCartXml
@@ -1657,9 +1659,12 @@ NoDiscount:
                             Return ""
                         End If
                     End If
+
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
                 End Try
+
             End Function
 
             Public Function ValidateDiscount(ByVal dAmount As Double, ByVal additionalInfo As String) As Boolean
@@ -2023,7 +2028,7 @@ NoDiscount:
             End Sub
 
             Public Function RemoveDiscountCode() As String
-                Dim cProcessInfo As String
+                Dim cProcessInfo As String = "RemoveDiscountCode"
                 Dim sSql As String
                 Dim oDs As DataSet
                 Dim oRow As DataRow
@@ -2058,13 +2063,16 @@ NoDiscount:
                     End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
                 End Try
+
             End Function
 
             'update packaging from giftbox to standard when removing promocode
             Public Sub UpdatePackagingforRemovePromoCode(ByVal CartId As Integer, ByVal sPromoCode As String)
                 Try
-                    Dim sSQL, sValidtoremove As String
+                    Dim sSQL As String = String.Empty
+                    Dim sValidtoremove As String = String.Empty
                     If (sPromoCode <> "") Then
                         sSQL = "select nDiscountKey from tblCartDiscountRules where cDiscountCode = '" & sPromoCode & "' and cAdditionalXML like '%<bFreeGiftBox>True</bFreeGiftBox>%'"
                         sValidtoremove = myWeb.moDbHelper.ExeProcessSqlScalar(sSQL)

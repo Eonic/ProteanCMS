@@ -173,7 +173,7 @@ Public Class Messaging
 
             Dim moDbhelper As New Protean.Cms.dbHelper(dbConn, 1)
             moDbhelper.moPageXml = RootElmt.OwnerDocument
-            Dim AttachmentsElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachements")
+            Dim AttachmentsElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachments")
             RootElmt.ParentNode.AppendChild(AttachmentsElmt)
             If Not (String.IsNullOrEmpty(ids)) Then
                 sSql = "select * from tblContent where nContentKey in (" & ids & ")"
@@ -181,7 +181,7 @@ Public Class Messaging
                 For Each dsRow In oDs.Tables("Item").Rows
                     strFilePath = moDbhelper.getContentFilePath(dsRow, xPath)
 
-                    Dim AttachmentElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachement")
+                    Dim AttachmentElmt As XmlElement = RootElmt.OwnerDocument.CreateElement("Attachment")
                     AttachmentsElmt.AppendChild(AttachmentElmt)
                     AttachmentElmt.AppendChild(moDbhelper.GetContentDetailXml(dsRow("nContentKey")))
                     AttachmentElmt.SetAttribute("file", strFilePath)
@@ -1399,7 +1399,7 @@ Public Class Messaging
         End Try
     End Function
 
-    Public Function SetInlineCss(ByVal sEmailBody As String)
+    Public Function SetInlineCss(ByVal sEmailBody As String) As String
         Try
             Dim hostUrl As String = goRequest.Url.Host
             Dim urlScheme As String = "http://"
@@ -1413,13 +1413,13 @@ Public Class Messaging
             sEmailBody = preMailerResult.Html
             Return sEmailBody
 
-        Catch ex As Exception
-
+        Catch
+            Return Nothing
         End Try
 
 
     End Function
-    Public Function SetEmailBodyAndSubject(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String)
+    Public Function SetEmailBodyAndSubject(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Hashtable
         Try
             Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
 
@@ -1458,7 +1458,7 @@ Public Class Messaging
             Return emailStructure
 
         Catch ex As Exception
-
+            Return Nothing
         End Try
     End Function
     Public Function GetGroupEmails(ByVal groupIds As String) As UserEmailDictionary

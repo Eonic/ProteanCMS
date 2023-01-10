@@ -57,7 +57,7 @@ Namespace Providers
                 Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.SagePayV3.Activities"
-                Private myWeb As Protean.Cms
+                Shadows myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode
                 Private nTransactionMode As TransactionMode
 
@@ -171,7 +171,7 @@ Namespace Providers
 
                         sAPIVer = "3.00"
 
-                        Select Case oDictOpt("opperationMode")
+                        Select Case Convert.ToString(oDictOpt("opperationMode"))
                             Case "test", "true"
                                 sVSPUrl = "https://test.sagepay.com/gateway/service/vspdirect-register.vsp"
                                 sVSP3DSUrl = "https://test.sagepay.com/gateway/service/direct3dcallback.vsp"
@@ -350,22 +350,22 @@ Namespace Providers
                                     If productDescription.Length > 100 Then
                                         productDescription = productDescription.Substring(0, 100)
                                     End If
-                                    xmlTools.addNewTextNode("description", oItemRoot, productDescription)
+                                    xmlTools.addNewTextNode("description", CType(oItemRoot, XmlElement), productDescription)
                                     'If Not oItemElmt.SelectSingleNode("productDetail/StockCode") Is Nothing Then
                                     '    xmlTools.addNewTextNode("productSku", oItemRoot, oItemElmt.SelectSingleNode("productDetail/StockCode").InnerText)
                                     'End If
                                     'If Not oItemElmt.SelectSingleNode("productDetail/Manufacturer") Is Nothing Then
                                     '    xmlTools.addNewTextNode("productCode", oItemRoot, oItemElmt.SelectSingleNode("productDetail/Manufacturer").InnerText)
                                     'End If
-                                    xmlTools.addNewTextNode("quantity", oItemRoot, oItemElmt.GetAttribute("quantity"))
-                                    xmlTools.addNewTextNode("unitNetAmount", oItemRoot, oItemElmt.GetAttribute("price"))
-                                    xmlTools.addNewTextNode("unitTaxAmount", oItemRoot, unitTaxAmount.ToString)
-                                    xmlTools.addNewTextNode("unitGrossAmount", oItemRoot, unitGrossAmount.ToString)
-                                    xmlTools.addNewTextNode("totalGrossAmount", oItemRoot, totalGrossAmount.ToString)
+                                    xmlTools.addNewTextNode("quantity", CType(oItemRoot, XmlElement), oItemElmt.GetAttribute("quantity"))
+                                    xmlTools.addNewTextNode("unitNetAmount", CType(oItemRoot, XmlElement), oItemElmt.GetAttribute("price"))
+                                    xmlTools.addNewTextNode("unitTaxAmount", CType(oItemRoot, XmlElement), unitTaxAmount.ToString)
+                                    xmlTools.addNewTextNode("unitGrossAmount", CType(oItemRoot, XmlElement), unitGrossAmount.ToString)
+                                    xmlTools.addNewTextNode("totalGrossAmount", CType(oItemRoot, XmlElement), totalGrossAmount.ToString)
                                     oBasketRoot.AppendChild(oItemRoot)
                                 Next
 
-                                xmlTools.addNewTextNode("deliveryGrossAmount", oBasketRoot, oOrder.GetAttribute("shippingCost"))
+                                xmlTools.addNewTextNode("deliveryGrossAmount", CType(oBasketRoot, XmlElement), oOrder.GetAttribute("shippingCost"))
 
                                 cRequest = cRequest & "BasketXML=" & oBasketXml.OuterXml & "&"
 
@@ -592,7 +592,7 @@ Namespace Providers
 
 
 
-                Public Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
+                Public Overloads Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
                     ' Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                     '  Dim oSagePayV3Cfg As XmlNode
@@ -600,7 +600,7 @@ Namespace Providers
 
                     Try
 
-
+                        Return ""
 
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
@@ -611,12 +611,12 @@ Namespace Providers
 
                 Public Function CancelPayments(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
-                    Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
-                    Dim oSagePayV3Cfg As XmlNode
+                    Dim moPaymentCfg As String = WebConfigurationManager.GetWebApplicationSection("protean/payment")
+                    'Dim oSagePayV3Cfg As XmlNode
 
                     Try
 
-
+                        Return ""
 
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)

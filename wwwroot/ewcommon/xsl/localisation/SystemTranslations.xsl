@@ -959,6 +959,9 @@
       <xsl:when test="$lang='jp'">
         <xsl:text>もっと読む.</xsl:text>
       </xsl:when>
+      <xsl:when test="$lang='pt'">
+        <xsl:text>consulte Mais informação</xsl:text>
+      </xsl:when>
       <xsl:otherwise>
         <xsl:text>Read more </xsl:text>
       </xsl:otherwise>

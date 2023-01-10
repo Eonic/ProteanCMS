@@ -70,7 +70,13 @@ Public Module stdTools
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
         Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-        Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
+        Dim moRequest As System.Web.HttpRequest = Nothing
+
+        If Not System.Web.HttpContext.Current Is Nothing Then
+            moRequest = System.Web.HttpContext.Current.Request
+        End If
+
+
         'Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
         sProcessInfo = "Getting Host"
 
@@ -97,8 +103,10 @@ Public Module stdTools
 
                 oExceptionXml.LoadXml("<Page layout=""Error""><Contents/></Page>")
                 'oExceptionXml.DocumentElement.SetAttribute("baseUrl", "http://" & moRequest.ServerVariables("HTTP_HOST"))
-                Dim mbIsUsingHTTPS As Boolean = (moRequest.ServerVariables("HTTPS") = "on")
-
+                Dim mbIsUsingHTTPS As Boolean = False
+                If Not moRequest Is Nothing Then
+                    mbIsUsingHTTPS = (moRequest.ServerVariables("HTTPS") = "on")
+                End If
                 oExceptionXml.DocumentElement.SetAttribute("baseUrl", IIf(mbIsUsingHTTPS, "https://", "http://") & cHost)
                 oElmt = oExceptionXml.CreateElement("Content")
                 oElmt.SetAttribute("type", "Formatted Text")
@@ -426,7 +434,7 @@ Public Module stdTools
         AddExceptionToEventLog(oException, cFurtherInfo)
     End Sub
 
-    Friend Sub AddExceptionToEventLog(ByVal oCurrentException As Exception, ByVal cCurrentInfo As String, Optional ByVal oOriginalError As Exception = Nothing, Optional ByVal cOriginalInfo As String = "")
+    Public Sub AddExceptionToEventLog(ByVal oCurrentException As Exception, ByVal cCurrentInfo As String, Optional ByVal oOriginalError As Exception = Nothing, Optional ByVal cOriginalInfo As String = "")
         'writes an event to the even log under the heading "EonicWebV4.1"
         Dim thisError As String
         Dim LogName As String = "ProteanCMS"
@@ -452,10 +460,7 @@ Public Module stdTools
                 oEventLog = New EventLog(LogName, Environment.MachineName, cSource)
             End If
 
-
-
             'The Current Error
-
             If Not oCurrentException Is Nothing Then
                 cMessage &= vbNewLine & "Current Error: " & vbNewLine
                 cMessage &= "Info:" & cCurrentInfo & vbNewLine
@@ -486,7 +491,7 @@ Public Module stdTools
         Catch ex As Exception
             'cant do diddly but cry 
             Try
-                System.IO.File.WriteAllText("F:\HostingSpaces\EliteModels\elitemodelsonline.co.uk\wwwroot\ProteanError.txt", cMessage)
+                System.IO.File.WriteAllText("F:\HostingSpaces\ProteanError.txt", cMessage)
             Catch ex2 As Exception
                 thisError = ex2.Message
             End Try
@@ -1198,12 +1203,12 @@ Public Module stdTools
 
 #Region "Deprecated"
 
-    <Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")> _
+    <Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")>
     Public Function is_valid_email(ByRef str_Renamed As String) As Boolean
         Return Tools.Text.IsEmail(str_Renamed)
     End Function
 
-    <Obsolete("This method is deprecated, use Protean.Tools.Text.SimpleRegexFind instead")> _
+    '<Obsolete("This method is deprecated, use Protean.Tools.Text.SimpleRegexFind instead")> _
     Public Function SimpleRegexFind(ByVal cSearchString As String, ByVal cRegexPattern As String, Optional ByVal nReturnGroup As Integer = 0, Optional ByVal oRegexOptions As RegexOptions = RegexOptions.None) As String
         Return Protean.Tools.Text.SimpleRegexFind(cSearchString, cRegexPattern, nReturnGroup, oRegexOptions)
     End Function

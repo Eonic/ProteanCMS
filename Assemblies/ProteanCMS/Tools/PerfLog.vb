@@ -21,11 +21,12 @@ Public Class PerfLog
     Private nStep As Integer
     Private oBuilder As StringBuilder
     Private oPerfMonRequests As PerformanceCounter
-    Private Entries(1000) As String
+    Private Entries() As String
     Dim dLast As Date = Now
     Dim nTimeAccumalative As Double = 0
     Dim nMemLast As Integer = 0
     Dim nProcLast As Integer = 0
+    Dim LatestLog As String = ""
 
 
     ' Counters
@@ -36,10 +37,10 @@ Public Class PerfLog
     Private moCtx As System.Web.HttpContext = System.Web.HttpContext.Current
 
     'Session / Request Level Properties
-    Public moRequest As System.Web.HttpRequest = moCtx.Request
-    Public moResponse As System.Web.HttpResponse = moCtx.Response
-    Public moSession As System.Web.SessionState.HttpSessionState = moCtx.Session
-    Public moServer As System.Web.HttpServerUtility = moCtx.Server
+    Public moRequest As System.Web.HttpRequest
+    Public moResponse As System.Web.HttpResponse
+    Public moSession As System.Web.SessionState.HttpSessionState
+    Public moServer As System.Web.HttpServerUtility
 
     Public moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
@@ -58,7 +59,15 @@ Public Class PerfLog
     Public Sub New(ByVal SiteName As String)
         Try
             cSiteName = SiteName
-            If Not moCtx.Session Is Nothing Then moSession = moCtx.Session
+
+            If Not moCtx Is Nothing Then
+                moRequest = moCtx.Request
+                moResponse = moCtx.Response
+                If Not moCtx.Session Is Nothing Then moSession = moCtx.Session
+                moServer = moCtx.Server
+            End If
+
+
             If Not moSession Is Nothing Then
                 If moSession("Logging") = "On" Then
                     TurnOn()
@@ -75,6 +84,7 @@ Public Class PerfLog
         'If bLoggingOn Then Exit Sub
         Try
             If Not bLoggingOn Then
+                ReDim Entries(1000)
                 bLoggingOn = True
                 nStep = 0
                 moSession("Logging") = "On"
@@ -101,6 +111,7 @@ Public Class PerfLog
 
                 _workingSetPrivateMemoryCounter = New PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess.ProcessName)
                 _workingSetMemoryCounter = New PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess.ProcessName)
+
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.ToString)
@@ -213,7 +224,9 @@ Public Class PerfLog
 
                 '   Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
                 '   Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
-
+            Else
+                'TS this is to be viewed in a memory dump to see how far the CMS object has proceeded.
+                LatestLog = cModuleName + "-" + cProcessName + "-" + cDescription
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.ToString)

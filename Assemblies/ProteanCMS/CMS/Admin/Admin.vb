@@ -23,6 +23,8 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
+Imports Lucene.Net.Support
+Imports System.ServiceModel.Channels
 
 Partial Public Class Cms
     Public Class Admin
@@ -192,6 +194,10 @@ Partial Public Class Cms
                 mcEwCmd = EwCmd(0)
                 If UBound(EwCmd) > 0 Then mcEwCmd2 = EwCmd(1)
                 If UBound(EwCmd) > 1 Then mcEwCmd3 = EwCmd(2)
+
+                If myWeb.moRequest("ewCmd2") <> "" Then
+                    mcEwCmd2 = myWeb.moRequest("ewCmd2")
+                End If
 
 
 
@@ -525,44 +531,46 @@ ProcessFlow:
                     Case "RewriteRules"
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                        Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                        If myWeb.impersonationMode Then
+                            oImp = New Protean.Tools.Security.Impersonate
+                            If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                            End If
+                        End If
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
+                        Dim rewriteXml As New XmlDocument
+                        rewriteXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                        Dim defaultXml As New XmlDocument
+                        defaultXml.Load(myWeb.goServer.MapPath("/ewcommon/setup/rootfiles/RewriteRules_config.xml"))
 
-                            Dim rewriteXml As New XmlDocument
-                            rewriteXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
-
-                            Dim defaultXml As New XmlDocument
-                            defaultXml.Load(myWeb.goServer.MapPath("/ewcommon/setup/rootfiles/RewriteRules_config.xml"))
-                            Dim oRule As XmlElement
-                            For Each oRule In rewriteXml.DocumentElement.SelectNodes("rule")
-                                Dim rulename As String = oRule.GetAttribute("name")
-                                Try
-                                    Dim defaultRule As XmlElement = defaultXml.SelectSingleNode("descendant-or-self::rule[@name=" & xPathEscapeQuote(rulename) & "]")
-                                    If defaultRule Is Nothing Then
-                                        oRule.SetAttribute("matchDefault", "create")
+                        Dim oRule As XmlElement
+                        For Each oRule In rewriteXml.DocumentElement.SelectNodes("rule")
+                            Dim rulename As String = oRule.GetAttribute("name")
+                            Try
+                                Dim defaultRule As XmlElement = defaultXml.SelectSingleNode("descendant-or-self::rule[@name=" & xPathEscapeQuote(rulename) & "]")
+                                If defaultRule Is Nothing Then
+                                    oRule.SetAttribute("matchDefault", "create")
+                                Else
+                                    If oRule.OuterXml = defaultRule.OuterXml Then
+                                        oRule.SetAttribute("matchDefault", "true")
                                     Else
-                                        If oRule.OuterXml = defaultRule.OuterXml Then
-                                            oRule.SetAttribute("matchDefault", "true")
-                                        Else
-                                            oRule.SetAttribute("matchDefault", "reset")
-                                        End If
+                                        oRule.SetAttribute("matchDefault", "reset")
                                     End If
-                                Catch ex As Exception
-                                    oRule.SetAttribute("matchDefault", ex.Message)
-                                End Try
+                                End If
+                            Catch ex As Exception
+                                oRule.SetAttribute("matchDefault", ex.Message)
+                            End Try
+                        Next
+                        Dim rulesElmt As XmlElement = moPageXML.CreateElement("RewriteRules")
+                        rulesElmt.InnerXml = rewriteXml.DocumentElement.OuterXml
+                        oPageDetail.AppendChild(rulesElmt)
 
-
-
-
-                            Next
-                            Dim rulesElmt As XmlElement = moPageXML.CreateElement("RewriteRules")
-                            rulesElmt.InnerXml = rewriteXml.DocumentElement.OuterXml
-                            oPageDetail.AppendChild(rulesElmt)
-
+                        If myWeb.impersonationMode Then
+                            oImp.UndoImpersonation()
+                            oImp = Nothing
                         End If
 
                         sAdminLayout = "RewriteRules"
@@ -1967,6 +1975,10 @@ ProcessFlow:
                     Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersRefunded", "OrdersHistory", "OrdersAwaitingPayment", "OrdersSaved", "OrdersInProgress", "BulkCartAction"
 
                         OrderProcess(oPageDetail, sAdminLayout, "Order")
+                    Case "EventBookings"
+                        EventBookingProcess(oPageDetail, sAdminLayout)
+
+
                     Case "Quotes", "QuotesFailed", "QuotesDeposit", "QuotesHistory"
                         OrderProcess(oPageDetail, sAdminLayout, "Quote")
 
@@ -2447,7 +2459,7 @@ AfterProcessFlow:
             Dim oUserXml As XmlElement
             Dim oMenuElmt As XmlElement
             Dim deleteCmds As Hashtable = New Hashtable
-            Dim pagePermLevel As String
+            Dim pagePermLevel As String = String.Empty
 
             Try
 
@@ -2914,10 +2926,10 @@ AfterProcessFlow:
 
             'old
             'Dim oElmt As XmlElement
-            Dim oElmt1 As XmlElement
-            Dim oElmt2 As XmlElement
-            Dim oElmt3 As XmlElement
-            Dim oElmt4 As XmlElement
+            'Dim oElmt1 As XmlElement
+            'Dim oElmt2 As XmlElement
+            'Dim oElmt3 As XmlElement
+            'Dim oElmt4 As XmlElement
 
             'Dim ewLastCmd As String
             Dim oPageElmt As XmlElement
@@ -3394,7 +3406,7 @@ AfterProcessFlow:
                             bShowTree = True
                         End If
                     Case "deleteFolder"
-                        Dim parentFolder
+                        'Dim parentFolder  'Never Used
                         oPageDetail.AppendChild(moAdXfm.xFrmDeleteFolder(sFolder, LibType))
                         If moAdXfm.valid = False Then
                             sAdminLayout = "AdminXForm"
@@ -4309,46 +4321,53 @@ from tblContentIndexDef"
 
 
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
+                        Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                        If myWeb.impersonationMode Then
+                            oImp = New Protean.Tools.Security.Impersonate
+                            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
+                            End If
+                        End If
 
-                            Dim content As String
+                        Dim content As String
 
-                            'check not read only
-                            Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeLessFile))
-                            oFileInfo.IsReadOnly = False
+                        'check not read only
+                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeLessFile))
+                        oFileInfo.IsReadOnly = False
 
-                            Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeLessFile))
-                                content = reader.ReadToEnd()
-                                reader.Close()
-                            End Using
+                        Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeLessFile))
+                            content = reader.ReadToEnd()
+                            reader.Close()
+                        End Using
 
-                            Dim oElmt As XmlElement
-                            For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
-                                Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
-                                Dim searchText As String = "(?<=@" & variableName & ":).*(?=;)"
-                                Dim replaceText As String = oElmt.GetAttribute("value").Trim
+                        Dim oElmt As XmlElement
+                        For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
+                            Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
+                            Dim searchText As String = "(?<=@" & variableName & ":).*(?=;)"
+                            Dim replaceText As String = oElmt.GetAttribute("value").Trim
 
-                                'handle image files in CSS
-                                If LCase(replaceText).EndsWith(".gif") Or LCase(replaceText).EndsWith(".png") Or LCase(replaceText).EndsWith(".jpg") Then
-                                    replaceText = " '" & replaceText & "'"
-                                Else
-                                    replaceText = " " & replaceText
-                                End If
+                            'handle image files in CSS
+                            If LCase(replaceText).EndsWith(".gif") Or LCase(replaceText).EndsWith(".png") Or LCase(replaceText).EndsWith(".jpg") Then
+                                replaceText = " '" & replaceText & "'"
+                            Else
+                                replaceText = " " & replaceText
+                            End If
 
-                                content = Regex.Replace(content, searchText, replaceText)
-                            Next
+                            content = Regex.Replace(content, searchText, replaceText)
+                        Next
 
-                            Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeLessFile))
-                                writer.Write(content)
-                                writer.Close()
-                            End Using
+                        Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeLessFile))
+                            writer.Write(content)
+                            writer.Close()
+                        End Using
 
+                        If myWeb.impersonationMode Then
                             oImp.UndoImpersonation()
+                            oImp = Nothing
                         End If
                     End If
 
                 End If
+
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "updateLessVariables", ex, "", cProcessInfo, gbDebug)
@@ -4370,10 +4389,14 @@ from tblContentIndexDef"
 
 
 
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
+                    Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                    If myWeb.impersonationMode Then
+                        oImp = New Protean.Tools.Security.Impersonate
+                        If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
+                        End If
+                    End If
 
-                        Dim content As String
+                    Dim content As String
 
                         'check not read only
                         Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
@@ -4399,8 +4422,9 @@ from tblContentIndexDef"
                             writer.Write(content)
                             writer.Close()
                         End Using
-
+                    If myWeb.impersonationMode Then
                         oImp.UndoImpersonation()
+                        oImp = Nothing
                     End If
                 End If
 
@@ -4976,14 +5000,72 @@ SP:
             End Try
         End Sub
 
+        Private Sub EventBookingProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
+
+            Try
+                'Case "cpdReportsPage"
+                Dim dateQuery As String = " and a.dExpireDate >= " & sqlDate(Now)
+                If mcEwCmd2 = "pastbookings" Then
+                    dateQuery = " and a.dExpireDate < " & sqlDate(Now)
+                End If
+
+
+                Dim sSql1 As String = "select nContentKey, cContentName, dExpireDate, cContentXmlBrief from tblContent c " &
+                "inner join tblAudit a On c.nAuditId = a.nAuditKey " &
+                "where cContentSchemaName = 'Event' " & dateQuery &
+                "order by a.dExpireDate desc"
+
+                'get a list of events with tickets sold in the future
+                Dim oEvtsDs As DataSet = myWeb.moDbHelper.GetDataSet(sSql1, "Event", "Events")
+                Dim sSql As String = "spTicketsSoldSummary"
+                myWeb.moDbHelper.addTableToDataSet(oEvtsDs, sSql, "Ticket")
+
+                If oEvtsDs.Tables(0).Rows.Count > 0 Then
+
+                    oEvtsDs.Tables(0).Columns(0).ColumnMapping = Data.MappingType.Attribute
+                    oEvtsDs.Tables(0).Columns(1).ColumnMapping = Data.MappingType.Attribute
+                    oEvtsDs.Tables(0).Columns(2).ColumnMapping = Data.MappingType.Attribute
+                    ' oEvtsDs.Tables(0).Columns("cContentXmlBrief").ColumnMapping = Data.MappingType.SimpleContent
+                    oEvtsDs.Relations.Add("rel01", oEvtsDs.Tables(0).Columns("nContentKey"), oEvtsDs.Tables(1).Columns("EventKey"), False)
+                    oEvtsDs.Relations("rel01").Nested = True
+
+
+                    Dim oXml As New XmlDocument
+                    oXml.LoadXml(oEvtsDs.GetXml())
+                    For Each oEvtElmt As XmlElement In oXml.DocumentElement.SelectNodes("Event/cContentXmlBrief")
+                        oEvtElmt.InnerXml = oEvtElmt.InnerText
+                    Next
+
+                    oPageDetail.AppendChild(moPageXML.ImportNode(oXml.DocumentElement, True))
+
+                    If myWeb.moRequest("EventId") <> "" Then
+
+                        Dim oTicketDs As DataSet = myWeb.moDbHelper.GetDataSet("select * from vw_TicketsSalesReport where EventKey = " & myWeb.moRequest("EventId"), "Ticket", "Tickets")
+
+                        Dim oXml2 As New XmlDocument
+                        oXml2.LoadXml(oTicketDs.GetXml())
+                        oXml2.DocumentElement.SetAttribute("EventId", myWeb.moRequest("EventId"))
+                        Dim oRpt As XmlElement = oPageDetail.OwnerDocument.CreateElement("Report")
+                        oRpt.AppendChild(moPageXML.ImportNode(oXml2.DocumentElement, True))
+                        oPageDetail.AppendChild(oRpt)
+
+                    End If
+                End If
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "EventBookingProcess", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
+
         Private Sub ReportsProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
             Dim sProcessInfo As String = ""
 
             Try
                 'Case "cpdReportsPage"
 
-                If myWeb.moRequest("ewCmd2") <> "" Then
-                    oPageDetail.AppendChild(moAdXfm.xFrmGetReport(myWeb.moRequest("ewCmd2")))
+                If mcEwCmd2 <> "" Then
+                    oPageDetail.AppendChild(moAdXfm.xFrmGetReport(mcEwCmd2))
                     If moAdXfm.valid Then
                         myWeb.moDbHelper.GetReport(oPageDetail, moAdXfm.Instance.FirstChild)
                     End If

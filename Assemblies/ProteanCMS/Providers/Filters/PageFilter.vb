@@ -15,7 +15,7 @@ Namespace Providers
                 Dim cProcessInfo As String = "AddControl"
                 Try
                     Dim pageFilterSelect As XmlElement
-                    Dim pageFilterButtons As XmlElement
+                    'Dim pageFilterButtons As XmlElement
                     Dim sCotrolDisplayName As String = "Page Filter"
                     'Parent page id flag used to populate the root level pages or pages under current page.
                     Dim bParentPageId As Boolean = False
@@ -53,24 +53,40 @@ Namespace Providers
 
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
-                        pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
-                        oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
+                        If (oXml.InnerText <> String.Empty) Then
+                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox filter-selected", ApperanceTypes.Full)
+                        Else
+                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
+                        End If
+
+                        'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
+                        While oDr.Read
+                            Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
+                            Dim value As String = Convert.ToString(oDr("nStructKey"))
+
+                            oXform.addOption(pageFilterSelect, name, value, True)
+                        End While
+
                     End Using
                     If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']") IsNot Nothing) Then
                         If (oXml.InnerText.Trim() <> String.Empty) Then
                             Dim sText As String
+                            'Dim sValue As String
                             Dim cnt As Integer
                             Dim aPages() As String = oXml.InnerText.Split(",")
                             If (aPages.Length <> 0) Then
                                 For cnt = 0 To aPages.Length - 1
-                                    sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().InnerText
-                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                                    sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().FirstChild().InnerText
+
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "filter-applied", "fa-times")
+
                                 Next
 
                             Else
 
-                                sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle", "", oXml.InnerText)
+                                sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
+                                'oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
+                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-times")
                             End If
                         End If
                     End If
@@ -79,10 +95,15 @@ Namespace Providers
                 End Try
             End Sub
 
-            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement) As String
                 Dim cProcessInfo As String = "ApplyFilter"
                 Try
 
+                    'Get the filter type parent or child based on the value of the parentPageId attribute
+                    Dim bParentPageId As Boolean = False
+                    If (FilterConfig.Attributes("parentPageId").Value IsNot Nothing) Then
+                        bParentPageId = Convert.ToBoolean(Convert.ToInt32(FilterConfig.Attributes("parentPageId").Value))
+                    End If
 
                     Dim cPageIds As String = String.Empty
 
@@ -91,20 +112,27 @@ Namespace Providers
 
                     End If
 
+
+
                     If (cPageIds <> String.Empty) Then
 
-                        'aWeb.moSession("PageFilter") = cPageIds
+
 
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = " AND "
                         End If
-                        cWhereSql = " nStructId IN (" + cPageIds + ")"
-
+                        If (bParentPageId) Then
+                            cWhereSql = " nStructId IN (" + cPageIds + ")"
+                        Else
+                            cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & cPageIds & "))"
+                        End If
                     End If
                     Return cWhereSql
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
+                    Return Nothing
                 End Try
+
             End Function
 
             Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)

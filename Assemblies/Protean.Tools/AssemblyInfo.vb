@@ -16,7 +16,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyProduct("Protean.Tools")>
 <Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  20212")>
 <Assembly: AssemblyTrademark("Eonic")>
-
+<Assembly: CLSCompliant(True)>
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
@@ -33,7 +33,9 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("6.0.55.1")>
-<Assembly: AssemblyFileVersion("6.0.55.1")>
+<Assembly: AssemblyVersion("6.0.58.46")>
+<Assembly: AssemblyFileVersion("6.0.58.46")>
 
 '<Assembly: System.Security.AllowPartiallyTrustedCallersAttribute()> 
+
+<assembly: AssemblyInformationalVersion("0.0.0.120")>

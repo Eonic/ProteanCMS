@@ -42,6 +42,7 @@ Partial Public Class Cms
             Public goConfig As System.Collections.Specialized.NameValueCollection ' = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Public mbAdminMode As Boolean = False
             Public moRequest As System.Web.HttpRequest
+            Public moImp As Protean.Tools.Security.Impersonate = Nothing
 
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
             Shadows Event OnError(ByVal sender As Object, ByVal err As Protean.Tools.Errors.ErrorEventArgs)
@@ -50,7 +51,6 @@ Partial Public Class Cms
                 returnException(myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug)
             End Sub
 
-            'Public myWeb As Protean.Cms
 
             Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
@@ -72,6 +72,35 @@ Partial Public Class Cms
             Public Sub New(ByRef sException As String)
                 MyBase.New(sException)
             End Sub
+
+            'Public myWeb As Protean.Cms
+            Private Function startImp() As Boolean
+                Try
+                    If myWeb.impersonationMode Then
+                        moImp = New Protean.Tools.Security.Impersonate
+                        Return moImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup"))
+                    Else
+                        Return Nothing
+                    End If
+
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Function
+
+            Private Sub endImp()
+                Try
+                    If myWeb.impersonationMode Then
+                        moImp.UndoImpersonation()
+                        moImp = Nothing
+                    End If
+
+                Catch ex As Exception
+
+                End Try
+            End Sub
+
+
 
             Public Shadows Sub open(ByVal oPageXml As XmlDocument)
                 Dim cProcessInfo As String = ""
@@ -641,14 +670,14 @@ Partial Public Class Cms
 
                     Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
                     Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
 
-                        MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                    startImp()
 
-                        'code here to replace any missing nodes
-                        'all of the required config settings
-                        Dim aSettingValues() As String = Split("DatabaseType,DatabaseName,DatabaseAuth,DatabaseUsername,DatabasePassword,MailServer,RootPageId,BaseUrl,SiteXsl,ImageRootPath,DocRootPath,MediaRootPath,Membership,MailingList,NonAuthenticatedUsersGroupId,AuthenticatedUsersGroupId,RegisterBehaviour,RegisterRedirectPageId,Cart,Quote,Debug,CompiledTransform,SiteAdminName,SiteAdminEmail,ContentSearch,SiteSearch,SiteSearchPath,Subscriptions,ActivityLogging,IPLogging,GoogleContentTypes,ShowRelatedBriefContentTypes,ShowRelatedBriefDepth,VersionControl,LegacyRedirect,PageURLFormat,AllowContentDetailAccess", ",")
+                    MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+
+                    'code here to replace any missing nodes
+                    'all of the required config settings
+                    Dim aSettingValues() As String = Split("DatabaseType,DatabaseName,DatabaseAuth,DatabaseUsername,DatabasePassword,MailServer,RootPageId,BaseUrl,SiteXsl,ImageRootPath,DocRootPath,MediaRootPath,Membership,MailingList,NonAuthenticatedUsersGroupId,AuthenticatedUsersGroupId,RegisterBehaviour,RegisterRedirectPageId,Cart,Quote,Debug,CompiledTransform,SiteAdminName,SiteAdminEmail,ContentSearch,SiteSearch,SiteSearchPath,Subscriptions,ActivityLogging,IPLogging,GoogleContentTypes,ShowRelatedBriefContentTypes,ShowRelatedBriefDepth,VersionControl,LegacyRedirect,PageURLFormat,AllowContentDetailAccess", ",")
 
                         Dim i As Long
                         Dim oElmt As XmlElement
@@ -679,8 +708,8 @@ Partial Public Class Cms
                             End If
                         End If
 
-                        oImp.UndoImpersonation()
-                    End If
+                    endImp()
+
                     MyBase.addValues()
                     Return MyBase.moXformElmt
 
@@ -714,13 +743,11 @@ Partial Public Class Cms
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        startImp()
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
-
-                            Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
+                        Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
                             Dim oCgfSectName As String = oTemplateInstance.FirstChild.Name
                             Dim oCgfSectPath As String = "protean/" & oCgfSectName
@@ -796,8 +823,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -831,14 +857,12 @@ Partial Public Class Cms
                     Else
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                        startImp()
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
-
-                            Dim rewriteXml As New XmlDocument
+                        Dim rewriteXml As New XmlDocument
 
                             rewriteXml.Load(goServer.MapPath("/rewriteMaps.config"))
 
@@ -1006,10 +1030,7 @@ Partial Public Class Cms
                                 'clear this if we are loading the first form
                                 goSession("oTempInstance") = Nothing
                             End If
-
-
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -1044,13 +1065,12 @@ Partial Public Class Cms
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                        startImp()
 
-                            'code here to replace any missing nodes
-                            'all of the required config settings
+                        'code here to replace any missing nodes
+                        'all of the required config settings
 
-                            Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
+                        Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
                             Dim oCgfSectName As String = "protean/" & oTemplateInstance.FirstChild.Name
                             Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
@@ -1177,8 +1197,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                         MyBase.addValues()
                     End If
 
@@ -1225,10 +1244,8 @@ Partial Public Class Cms
                         Dim oWebCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
                         Dim oThemeCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/theme")
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                            MyBase.Instance.InnerXml = oWebCgfSect.SectionInformation.GetRawXml & oThemeCgfSect.SectionInformation.GetRawXml
+                        startImp()
+                        MyBase.Instance.InnerXml = oWebCgfSect.SectionInformation.GetRawXml & oThemeCgfSect.SectionInformation.GetRawXml
 
                             Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
                             oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
@@ -1288,8 +1305,7 @@ Partial Public Class Cms
                                 End If
                             End If
 
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                     End If
 
 
@@ -2245,7 +2261,7 @@ Partial Public Class Cms
                 Dim oXformDoc As XmlDocument = New XmlDocument
                 Try
 
-                    If moRequest("cModuleBox") <> "" Then
+                    If moRequest("cModuleBox") <> "" Or moRequest("cModuleType") <> "" Then
                         ' case for when the content form is being submitted
                         If goConfig("cssFramework") = "bs5" Then
                             Dim ModulePath As String = GetModuleFormPath(moRequest("cModuleType"))
@@ -2336,7 +2352,7 @@ Partial Public Class Cms
                 Try
 
                     Dim oManifest As XmlDocument = GetSiteManifest()
-                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Filter[@type='" & SchemaName & "']")
+                    Dim thisModule As XmlElement = oManifest.SelectSingleNode("descendant-or-self::Module[@type='" & SchemaName & "']")
                     If thisModule Is Nothing Then
                         Return SchemaName
                     Else
@@ -2415,7 +2431,10 @@ Partial Public Class Cms
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
                 End Try
+
+
             End Function
 
 
@@ -2425,9 +2444,9 @@ Partial Public Class Cms
                 Dim sImgPath As String = ""
                 Dim oContentType As XmlElement
                 Dim oModuleType As XmlElement
-                Dim oItem As XmlElement
-                Dim oOptElmt As XmlElement
-                Dim oDescElmt As XmlElement
+                'Dim oItem As XmlElement
+                'Dim oOptElmt As XmlElement   'never used
+                'Dim oDescElmt As XmlElement
 
                 Try
                     If filepath = "" Then filepath = "/"
@@ -2771,9 +2790,9 @@ Partial Public Class Cms
 
             Public Overridable Function xFrmEditContent(Optional ByVal id As Long = 0, Optional ByVal cContentSchemaName As String = "", Optional ByVal pgid As Long = 0, Optional ByVal cContentName As String = "", Optional ByVal bCopy As Boolean = False, Optional ByRef nReturnId As Integer = 0, Optional ByRef zcReturnSchema As String = "", Optional ByRef AlternateFormName As String = "", Optional ByVal nVersionId As Long = 0) As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim oGrp1Elmt As XmlElement
-                Dim oGrp2Elmt As XmlElement
-                Dim oSelElmt As XmlElement
+                'Dim oGrp1Elmt As XmlElement
+                'Dim oGrp2Elmt As XmlElement   'Never used
+                'Dim oSelElmt As XmlElement
                 Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
                 Dim bCascade As Boolean = False
                 Dim cProcessInfo As String = ""
@@ -2846,7 +2865,8 @@ Partial Public Class Cms
                                 oTempInstance.AppendChild(prodCatElmt)
                             End If
                         End If
-
+                    Else
+                        cModuleType = moRequest("cModuleType")
                     End If
 
                     If Not goSession("oContentInstance") Is Nothing Then
@@ -2869,9 +2889,13 @@ Partial Public Class Cms
                     If AlternateFormName <> "" Then cXformPath = AlternateFormName
 
                     If cModuleType <> "" Then
-                        cXformPath = cXformPath & "/" & cModuleType
                         If goConfig("cssFramework") = "bs5" Then
                             cXformPath = GetModuleFormPath(cModuleType)
+                        Else
+                            If Not cXformPath.EndsWith("/" & cModuleType) Then
+                                cXformPath = cXformPath & "/" & cModuleType
+                            End If
+
                         End If
                     Else
                         If goConfig("cssFramework") = "bs5" Then
@@ -3436,6 +3460,27 @@ Partial Public Class Cms
                                     nRelId = relateCmdArr(1)
                                     myWeb.moDbHelper.RemoveContentRelation(nParId, nRelId)
                                     bResult = True
+                                    'Update newly added review count - code added by nita
+                                    If myWeb.moConfig("UpdateNewAddedReviewFlag") <> "" Then
+                                        If nParId > 0 Then
+                                            Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
+                                            oTempInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, nParId)
+                                            If oTempInstance.InnerXml <> "" Then
+                                                Dim oProduct As XmlElement = oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content")
+                                                If Not oProduct Is Nothing Then
+                                                    If oProduct.GetAttribute("ratingCount") <> "" Then
+                                                        Dim RatingCount As String = oProduct.GetAttribute("ratingCount")
+                                                        Dim FinalCount As String = RatingCount - 1
+                                                        oProduct.SetAttribute("ratingCount", FinalCount)
+                                                        myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, oTempInstance)
+                                                    End If
+
+                                                End If
+
+                                            End If
+                                            myWeb.moSession("contentParId") = Nothing
+                                        End If
+                                    End If
                                     Exit For
                                 ElseIf myItem.contains("RelateAdd") Then
 
@@ -3770,8 +3815,8 @@ Partial Public Class Cms
 
             Public Function xFrmMoveFile(ByVal cPath As String, ByVal cName As String, ByVal nType As fsHelper.LibraryType) As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim sValidResponse As String
-                Dim cProcessInfo As String = ""
+                Dim sValidResponse As String = String.Empty
+                Dim cProcessInfo As String = "xFrmMoveFile"
                 Try
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
@@ -4576,6 +4621,7 @@ Partial Public Class Cms
                         MyBase.addValues()
                         Return MyBase.moXformElmt
                     End If
+                    Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
@@ -5911,11 +5957,9 @@ Partial Public Class Cms
                     Else
                         'remove hyphens
                         cProviderType = Replace(cProviderType, "-", "")
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                            'replace the instance if it exists in the web.config
-                            If Not oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']") Is Nothing Then
+                        startImp()
+                        'replace the instance if it exists in the web.config
+                        If Not oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']") Is Nothing Then
                                 MyBase.Instance.InnerXml = oPaymentCfg.SelectSingleNode("payment/provider[@name='" & cProviderType & "']").OuterXml
                             End If
 
@@ -5948,8 +5992,7 @@ Partial Public Class Cms
                                     End If
                                 End If
                             End If
-                            oImp.UndoImpersonation()
-                        End If
+                        endImp()
                     End If
                     MyBase.addValues()
                     Return MyBase.moXformElmt
@@ -5986,10 +6029,8 @@ Partial Public Class Cms
 
                     'remove hyphens
                     cProviderType = Replace(cProviderType, "-", "")
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                        If MyBase.isSubmitted Then
+                    startImp()
+                    If MyBase.isSubmitted Then
                             MyBase.updateInstanceFromRequest()
                             MyBase.validate()
                             If MyBase.valid Then
@@ -6011,8 +6052,7 @@ Partial Public Class Cms
                                 fsHelper = Nothing
 
                             End If
-                        End If
-                        oImp.UndoImpersonation()
+                        endImp()
 
                     End If
 
@@ -6314,7 +6354,7 @@ Partial Public Class Cms
                     Dim refundAmount As Decimal
                     Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
-                    Dim amount As String = ""
+                    Dim amount As Double
 
 
 
@@ -6331,13 +6371,13 @@ Partial Public Class Cms
                             ' Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
                             Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/*[1]")
                             If (xnInstance IsNot Nothing) Then
-                                amount = xnInstance.Attributes("AmountPaid").InnerText
+                                amount = CDbl("0" & xnInstance.Attributes("AmountPaid").InnerText)
                             End If
                         End If
 
                     End If
 
-                    refundAmount = Convert.ToDouble(amount)
+                    refundAmount = amount
 
                     MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement
@@ -6379,9 +6419,6 @@ Partial Public Class Cms
                                 oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                                 For Each oRow In oDs.Tables("Order").Rows
                                     If (IsRefund IsNot Nothing) Then
-
-                                        moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
-
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
                                     Else
                                         oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And Error is: " & IsRefund & "'"
@@ -6389,9 +6426,11 @@ Partial Public Class Cms
                                 Next
                                 myWeb.moDbHelper.updateDataset(oDs, "Order")
 
+                                If (IsRefund IsNot Nothing) Then
+                                    moDbHelper.savePayment(nOrderId, mnUserId, providerName, providerPaymentReference, "Refund", Nothing, Nothing, False, (refundAmount * -1), "refund")
+                                End If
                             End If
                         End If
-
                     End If
                     MyBase.addValues()
                     Return MyBase.moXformElmt
@@ -7105,7 +7144,7 @@ Partial Public Class Cms
                     MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7407,7 +7446,11 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditScheduleItem")
 
-                    MyBase.load("/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    If goConfig("cssFramework") = "bs5" Then
+                        MyBase.load("/admin/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    Else
+                        MyBase.load("/xforms/ScheduledItems/" & cActionType & ".xml", myWeb.maCommonFolders)
+                    End If
 
                     If nID > 0 Then
                         MyBase.Instance.InnerXml = dbh.getObjectInstance(dbHelper.objectTypes.ScheduledItem, nID)
@@ -7421,7 +7464,13 @@ Partial Public Class Cms
                     'get files
                     Dim oXSLSelect As XmlElement = MyBase.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cXSLPath']")
                     If Not oXSLSelect Is Nothing Then
-                        FileList("/xsl/feeds/", oXSLSelect, ".xsl")
+                        If goConfig("cssFramework") = "bs5" Then
+
+                            FileList("/feeds/", oXSLSelect, ".xsl")
+                        Else
+
+                            FileList("/xsl/feeds/", oXSLSelect, ".xsl")
+                        End If
                     End If
                     'set siteid
                     Dim oSiteIDElmt As XmlElement = MyBase.Instance.SelectSingleNode("descendant-or-self::nWebsite")
@@ -7493,6 +7542,10 @@ Partial Public Class Cms
 
                     Dim cBasePath As String = goServer.MapPath("/" & cInitialFolder)
                     Dim cCommonPath As String = goServer.MapPath("/ewcommon" & cInitialFolder)
+
+                    If goConfig("cssFramework") = "bs5" Then
+                        cCommonPath = goServer.MapPath("/ptn" & cInitialFolder)
+                    End If
                     Dim dir As New DirectoryInfo(cBasePath)
 
                     If Not dir.Exists Then
@@ -7534,9 +7587,11 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditFeedItem")
 
-
-
-                    MyBase.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    If myWeb.moConfig("cssFramework") = "bs5" Then
+                        MyBase.load("/core/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    Else
+                        MyBase.load("/xforms/content/feeditem.xml", myWeb.maCommonFolders)
+                    End If
 
                     Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
 
@@ -8016,10 +8071,8 @@ Partial Public Class Cms
                     Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                     Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/cart")
 
-                    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                        MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                    startImp()
+                    MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
 
                         'code here to replace any missing nodes
                         'all of the required config settings
@@ -8054,8 +8107,8 @@ Partial Public Class Cms
                             End If
                         End If
 
-                        oImp.UndoImpersonation()
-                    End If
+                    endImp()
+
                     MyBase.addValues()
                     Return MyBase.moXformElmt
 
@@ -9229,6 +9282,7 @@ Partial Public Class Cms
                     Dim cDefinitionName As String = ""
                     Dim cContentValueXpath As String = ""
                     Dim bBriefNotDetail As String = ""
+                    Dim bProductRefForSKU As String = ""
 
                     Dim sSqlcheck As String = ""
                     Dim lookupsSingleDataset As DataSet
@@ -9244,6 +9298,7 @@ Partial Public Class Cms
                             cDefinitionName = lookupsSingleDataset.Tables(0).Rows(0)("cDefinitionName").ToString
                             cContentValueXpath = lookupsSingleDataset.Tables(0).Rows(0)("cContentValueXpath").ToString
                             bBriefNotDetail = lookupsSingleDataset.Tables(0).Rows(0)("bBriefNotDetail").ToString
+                            bProductRefForSKU = lookupsSingleDataset.Tables(0).Rows(0)("bProductRefForSKU").ToString
 
                         End If
                     End If
@@ -9251,9 +9306,9 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditProductGroup")
                     If indexId > 0 Then
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & bBriefNotDetail & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" & bProductRefForSKU & "</bProductRefForSKU></tblContentIndexDef>"
                     Else
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" & "0" & "</bProductRefForSKU> </tblContentIndexDef>"
                     End If
 
                     If indexId > 0 Then
@@ -9290,10 +9345,16 @@ Partial Public Class Cms
                     MyBase.addInput(oGrp1Elmt, "cContentValueXpath", True, "XPath")
                     MyBase.addBind("cContentValueXpath", "tblContentIndexDef/cContentValueXpath", "true()")
 
-                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bProductRefForSKU", True, "Parent Ref", ApperanceTypes.Minimal)
                     MyBase.addOption(oSelElmt, "Yes", "1")
                     MyBase.addOption(oSelElmt, "No", "0",)
-                    MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
+                    MyBase.addBind("bProductRefForSKU", "tblContentIndexDef/bProductRefForSKU", "false()")
+
+
+                    'oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
+                    'MyBase.addOption(oSelElmt, "Yes", "1")
+                    'MyBase.addOption(oSelElmt, "No", "0",)
+                    'MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
 
                     MyBase.addInput(oGrp1Elmt, "nKeywordGroupName", True, "nKeywordGroupName", "hidden")
                     MyBase.addBind("nKeywordGroupName", "tblContentIndexDef/nKeywordGroupName")
@@ -9517,8 +9578,8 @@ Partial Public Class Cms
                                 _form.addBind(selectItem.Id(), "location[@id='" & locationid & "']", , , bind)
 
 
-                                Dim proceedingParent As XmlElement
-                                Dim oChoices As XmlElement
+                                Dim proceedingParent As XmlElement = Nothing
+                                Dim oChoices As XmlElement = Nothing
                                 ' Process the menu items
                                 ' For each menuitem, check if it's already in scope.
                                 ' If not add the option to the select.

@@ -104,7 +104,8 @@ Public Class CssWebClient
             ComputeCSS(fullCss, cssSplit)
         Catch ex As Exception
             cProcessInfo = ex.Message
-            returnException(msException, mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
+            'WE DO NOT !!!!! want this to return an html exception becuase it will throw a loop.
+            'returnException(msException, mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -136,7 +137,7 @@ Public Class CssWebClient
     ''' <remarks>Currently should not risk setting the maxRules to the limit, as the regex may not find all selectors according to specification</remarks>
     Private Sub ComputeCSS(ByVal css As String, ByVal maxRules As Integer)
         Dim matches As MatchCollection = Regex.Matches(css, "\}\n\.|\}\.|,\.|,\n\.") 'this regex expression will search for ',.' OR '}.' OR '}[linefeed].'
-        Dim cProcessInfo As String
+        Dim cProcessInfo As String = "ComputeCSS"
         Try
             If matches.Count > maxRules Then
                 If Not matches.Item(maxRules).Value = "}." Then

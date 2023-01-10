@@ -35,7 +35,7 @@ Public Class IndexerAsync
     Dim mcIndexCopyFolder As String = ""
     Dim oIndexWriter As IndexWriter 'Lucene class
 
-    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate 'impersonate for access
+    Dim moImp As Protean.Tools.Security.Impersonate = Nothing
     Dim bNewIndex As Boolean = False 'if we need a new index or just add to one
     Dim bIsError As Boolean = False
     Dim dStartTime As Date
@@ -128,6 +128,7 @@ Public Class IndexerAsync
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
+            Return Nothing
         End Try
     End Function
 
@@ -369,6 +370,9 @@ Public Class IndexerAsync
             Catch ex2 As Exception
 
             End Try
+
+            Return Nothing
+
         Finally
             Try
 
@@ -376,6 +380,7 @@ Public Class IndexerAsync
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+
             End Try
         End Try
 
@@ -386,10 +391,16 @@ Public Class IndexerAsync
         'PerfMon.Log("Indexer", "StartIndex")
         Dim cProcessInfo As String = ""
         Try
-            oImp = New Protean.Tools.Security.Impersonate 'for access
-            If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-                EmptyFolder(mcIndexWriteFolder)
-                If gbDebug Then
+            If moConfig("AdminAcct") <> "" Then
+                moImp = New Protean.Tools.Security.Impersonate 'for access
+                If moImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                Else
+                    Err.Raise(108, , "Indexer did not validate")
+                    Exit Try
+                End If
+            End If
+            EmptyFolder(mcIndexWriteFolder)
+            If gbDebug Then
                     EmptyFolder(mcIndexCopyFolder)
                 End If
 
@@ -407,17 +418,14 @@ Public Class IndexerAsync
                 oIndexWriter.SetMaxBufferedDeleteTerms(50)
                 oIndexWriter.SetMaxBufferedDocs(100)
 
-            Else
-                Err.Raise(108, , "Indexer did not validate")
 
-            End If
         Catch ex As Exception
             cExError &= ex.StackTrace.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
 
             bIsError = True
             Try
-                oIndexWriter.Close()
+                oIndexWriter.Dispose()
                 oIndexWriter = Nothing
             Catch ex2 As Exception
 
@@ -478,7 +486,11 @@ Public Class IndexerAsync
             oIndexWriter.Dispose()
             EmptyFolder(mcIndexReadFolder)
             CopyFolderContents(mcIndexWriteFolder, mcIndexReadFolder)
-            oImp.UndoImpersonation()
+            If moConfig("AdminAcct") <> "" Then
+                moImp.UndoImpersonation()
+                moImp = Nothing
+            End If
+
             oIndexWriter = Nothing
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
@@ -694,7 +706,7 @@ Public Class IndexerAsync
             Dim oPageXml As New XmlDocument
             Dim cRules As String = ""
             Dim oElmtRules As XmlElement
-            Dim oElmtURL As XmlElement
+            Dim oElmtURL As XmlElement = Nothing
 
             Dim cProcessInfo As String
             Dim cPageExtract As String = ""
@@ -728,6 +740,8 @@ Public Class IndexerAsync
                 cPageHtml = Replace(cPageHtml, "<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.1//EN"" ""http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"">", "")
                 cPageHtml = Replace(cPageHtml, " xmlns=""http://www.w3.org/1999/xhtml""", "")
 
+                Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
+
                 If cPageHtml = "" Then
                     'we have an error to handle
                     If Not myWeb.msException Is Nothing Then
@@ -759,7 +773,6 @@ Public Class IndexerAsync
                             If Not (oElmtURL.GetAttribute("url").StartsWith("http")) Then
                                 IndexPage(oElmtURL.GetAttribute("url"), oPageXml.DocumentElement, "Page", myWeb.msException)
 
-                                Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
                                 oPageElmt.SetAttribute("url", oElmtURL.GetAttribute("url"))
                                 oInfoElmt.AppendChild(oPageElmt)
 
@@ -782,6 +795,7 @@ Public Class IndexerAsync
                     If Not InStr(cRules, "NOFOLLOW") > 0 Then
                         'Now let index the content of the pages
                         'Only index content where this is the parent page, so we don't index for multiple locations.
+                        Dim itemContentCount As Long = 0
                         Dim oElmt As XmlElement
                         Dim oContentElmts As XmlNodeList = myWeb.moPageXml.SelectNodes("/Page/Contents/Content[@type!='FormattedText' and @type!='PlainText' and @type!='MetaData' and @type!='Image' and @type!='xform' and @type!='report' and @type!='xformQuiz' and @type!='Module' and @parId=/Page/@id]")
                         For Each oElmt In oContentElmts
@@ -829,7 +843,7 @@ Public Class IndexerAsync
                                         If Not oElmt.GetAttribute("type") = "Document" Then
                                             oElmtRules = oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']")
                                             cRules = ""
-                                            Dim sPageUrl As String
+                                            Dim sPageUrl As String = ""
                                             If Not oElmtURL Is Nothing Then
                                                 sPageUrl = oElmtURL.GetAttribute("url")
                                             End If
@@ -846,12 +860,15 @@ Public Class IndexerAsync
 
                                                 IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), myWeb.msException)
 
-                                                Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
-                                                oPageElmt.SetAttribute("url", sPageUrl)
-                                                oInfoElmt.AppendChild(oPageElmt)
+                                                Dim oContentElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"))
+                                                oContentElmt.SetAttribute("artId", myWeb.mnArtId)
+                                                oContentElmt.SetAttribute("url", sPageUrl)
+
+                                                oPageElmt.AppendChild(oContentElmt)
 
                                                 nIndexed += 1
                                                 nContentsIndexed += 1
+                                                itemContentCount += 1
                                             Else
                                                 nContentSkipped += 1
                                             End If
@@ -867,7 +884,7 @@ Public Class IndexerAsync
                                                         Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText), myWeb.msException)
                                                         IndexPage(myWeb.mnPageId, "<h1>" & oElmt.GetAttribute("name") & "</h1>" & fileAsText, oDocElmt.InnerText, myWeb.msException, oElmt.GetAttribute("name"), "Download", myWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
 
-                                                        Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
+                                                        Dim oFileElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("file")
                                                         oPageElmt.SetAttribute("file", oDocElmt.InnerText)
                                                         oInfoElmt.AppendChild(oPageElmt)
 
@@ -883,7 +900,7 @@ Public Class IndexerAsync
                                         oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"))
                                         oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"))
                                         oPageErrElmt.InnerText = ex.Message
-                                        oInfoElmt.AppendChild(oPageErrElmt)
+                                        oPageElmt.AppendChild(oPageErrElmt)
                                         nContentSkipped += 1
                                         cProcessInfo = cPageHtml
                                     End Try
@@ -892,7 +909,7 @@ Public Class IndexerAsync
 
                             End If
                         Next
-
+                        oPageElmt.SetAttribute("contentCount", itemContentCount)
                     End If
 
                     If bIsError Then
@@ -904,10 +921,10 @@ Public Class IndexerAsync
 
                     Interlocked.Decrement(nPagesRemaining)
 
-                    If oInfoElmt.GetAttribute("indexCount") Then
+                    If oInfoElmt.GetAttribute("indexCount") IsNot Nothing Then
                         oInfoElmt.SetAttribute("indexCount", nIndexed)
                     End If
-                    If oInfoElmt.GetAttribute("pagesIndexed") Then
+                    If oInfoElmt.GetAttribute("pagesIndexed") IsNot Nothing Then
                         oInfoElmt.SetAttribute("pagesIndexed", nPagesIndexed)
                     End If
                     If oInfoElmt.GetAttribute("pagesRemaining") IsNot Nothing Then
