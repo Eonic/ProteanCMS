@@ -6028,13 +6028,6 @@ Public Class Cms
                     For Each oElmt In oPageElmt.SelectNodes(parentXpath)
                         oElmt.SetAttribute("active", "1")
                         Dim nPageId As Long = oElmt.GetAttribute("id")
-                        'Add one new condition for location sub pages to not get all products first time
-                        If oElmt.SelectSingleNode("MenuItem/DisplayName/@exclude") IsNot Nothing Then
-                            Dim SubMenuLocation As String = oElmt.SelectSingleNode("MenuItem/DisplayName/@exclude").Value
-                            If SubMenuLocation = "false" Then
-                                moSession("Submenu") = "Yes"
-                            End If
-                        End If
                         GetPageContentXml(nPageId)
                         nPageId = Nothing
                         IsInTree = True
@@ -6112,11 +6105,6 @@ Public Class Cms
                 'we are pulling in located and native items but not cascaded
             End If
 
-            'Add new extra condition for location sub or any other sub to get only subpage titles without whole product data.
-            If moSession("Submenu") = "Yes" And nCurrentPageId = mnPageId Then
-                sWhereSql &= " and c.cContentSchemaName <> 'Product' "
-            End If
-
             ' Check if the page is a cloned page
             ' If it is, then we need to switch the page id.
             If gbClone Then
@@ -6139,13 +6127,13 @@ Public Class Cms
                     " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
                     " where( CL.nStructId = " & nPageId
 
-            sSql = sSql & sFilterSql & sWhereSql & ") order by type, cl.nDisplayOrder"
+            sSql = sSql & sFilterSql & ") order by type, cl.nDisplayOrder"
 
             Dim oDs As DataSet = New DataSet
             oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents")
             PerfMon.Log("Web", "AddDataSetToContent - For Page ", sSql)
             moDbHelper.AddDataSetToContent(oDs, oRoot, nCurrentPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
-            moSession("Submenu") = Nothing
+
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
             'End If
