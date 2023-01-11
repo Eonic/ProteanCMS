@@ -4079,7 +4079,7 @@ listItems:
                             GoTo listItems
                         End If
                         GoTo listItems
-                    Case "update", "updateAllRules"
+                    Case "updateAllRules"
 
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
 
@@ -4096,7 +4096,7 @@ listItems:
                             End If
                         End If
                         GoTo listItems
-                        'Case "updateAllRules"
+                    Case "update"
 
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
                             SchemaNameForUpdate = myWeb.moRequest("SchemaName")
@@ -4112,7 +4112,18 @@ listItems:
                                     indexId = Nothing
                                     GoTo listItems
                                 End If
+                            Else
 
+                                sSql = "spScheduleToUpdateIndexTable"
+                                Dim arrParms As Hashtable = New Hashtable
+                                arrParms.Add("SchemaName", SchemaNameForUpdate)
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
+                                If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                    oPageDetail.InnerXml = ""
+                                    indexId = Nothing
+                                    GoTo listItems
+                                End If
                             End If
                         End If
                         GoTo listItems
