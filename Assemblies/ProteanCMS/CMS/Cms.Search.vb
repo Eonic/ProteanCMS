@@ -1295,8 +1295,24 @@ Partial Public Class Cms
                     ' meaning that this phrase will only attempt the match once, rather than on every character
                     ' of the search string
                     cRegExPattern = "^" & cRegExPattern & ".*?$"
+                    Try
 
-                    reMasterCheck = New Regex(cRegExPattern, RegexOptions.IgnoreCase Or RegexOptions.Compiled)
+                        reMasterCheck = New Regex(cRegExPattern, RegexOptions.IgnoreCase Or RegexOptions.Compiled)
+
+                    Catch 'ex As Exception
+
+                        'return invalid search
+                        Dim oResXMLErr As XmlElement = moPageXml.CreateElement("Content")
+                        oResXMLErr.SetAttribute("searchType", IIf(bUserQuery, "USER", "REGEX"))
+                        oResXMLErr.SetAttribute("SearchString", "Invalid Query")
+                        oResXMLErr.SetAttribute("type", "SearchHeader")
+                        oResXMLErr.SetAttribute("Hits", "0")
+                        oResXMLErr.SetAttribute("Time", Now.Subtract(dtStart).TotalMilliseconds)
+                        oResXMLErr.SetAttribute("resultIds", "")
+                        moContextNode.AppendChild(oResXMLErr)
+
+                        Exit Sub
+                    End Try
 
                     ' Get the SQL that will look for any of the search words or their variants
 

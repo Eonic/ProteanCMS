@@ -3055,35 +3055,36 @@ processFlow:
                                 'Go and collect the valid shipping options available for this order
                                 Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
                                 Dim oRowSO As DataRow
-                                For Each oRowSO In oDsShipOptions.Tables(0).Rows
-                                    Dim bCollection As Boolean = False
-                                    If Not IsDBNull(oRowSO("bCollection")) Then
-                                        bCollection = oRowSO("bCollection")
-                                    End If
-                                    If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
-                                        'logic to overide below...
-                                        If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
-                                            If (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
-                                                shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                                                oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                                oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
-                                                oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                                                oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                                                oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                            End If
+                                If Not oDsShipOptions Is Nothing Then
+                                    For Each oRowSO In oDsShipOptions.Tables(0).Rows
+                                        Dim bCollection As Boolean = False
+                                        If Not IsDBNull(oRowSO("bCollection")) Then
+                                            bCollection = oRowSO("bCollection")
                                         End If
-                                    ElseIf (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
-                                        shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                                        oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                        oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
-                                        oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                                        oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                                        oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                    End If
+                                        If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
+                                            'logic to overide below...
+                                            If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
+                                                If (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
+                                                    shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                    oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                    oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
+                                                    oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                    oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                    oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                                End If
+                                            End If
+                                        ElseIf (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
+                                            shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                            oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                            oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
+                                            oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                            oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                            oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                        End If
 
 
-                                Next
-
+                                    Next
+                                End If
                             End If
                             If shipCost = -1 Then shipCost = 0
                         End If
@@ -7186,31 +7187,34 @@ processFlow:
             Dim cUniqueLink As String = ""
             Dim cProcessInfo As String = ""
             Try
+                If moDBHelper.checkTableColumnExists("tblCartOrder", "nAmountReceived") Then
+                    ' If the cPaymentType is deposit then we need to make a link, otherwise we need to get the paymentReceived details.
+                    If cPaymentType = "deposit" Then
+                        ' Get the unique link from the cart
+                        cUniqueLink = ", cSettlementID='" & oRoot.GetAttribute("settlementID") & "' "
+                    Else
+                        ' Get the amount received so far
 
-                ' If the cPaymentType is deposit then we need to make a link, otherwise we need to get the paymentReceived details.
-                If cPaymentType = "deposit" Then
-                    ' Get the unique link from the cart
-                    cUniqueLink = ", cSettlementID='" & oRoot.GetAttribute("settlementID") & "' "
-                Else
-                    ' Get the amount received so far
-                    sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
-                    Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
-                        If oDr.HasRows Then
-                            While oDr.Read
-                                nAmountReceived = CDbl("0" & oDr("nAmountReceived"))
-                                cUniqueLink = ", cSettlementID='OLD_" & oDr("cSettlementID") & "' "
-                            End While
-                        End If
-                    End Using
+                        sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
+                        Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
+                            If oDr.HasRows Then
+                                While oDr.Read
+                                    nAmountReceived = CDbl("0" & oDr("nAmountReceived"))
+                                    cUniqueLink = ", cSettlementID='OLD_" & oDr("cSettlementID") & "' "
+                                End While
+                            End If
+                        End Using
+                    End If
+
+                    nAmountReceived = nAmountReceived + nPaymentAmount
+
+                    sSql = "update tblCartOrder set nAmountReceived = " & nAmountReceived & ", nLastPaymentMade= " & nPaymentAmount & cUniqueLink & " where nCartOrderKey = " & mnCartId
+                    moDBHelper.ExeProcessSql(sSql)
+
                 End If
 
-                nAmountReceived = nAmountReceived + nPaymentAmount
-
-                sSql = "update tblCartOrder set nAmountReceived = " & nAmountReceived & ", nLastPaymentMade= " & nPaymentAmount & cUniqueLink & " where nCartOrderKey = " & mnCartId
-                moDBHelper.ExeProcessSql(sSql)
-
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateCartDeposit", ex, "", cProcessInfo, gbDebug)
             Finally
                 'oDr = Nothing
             End Try

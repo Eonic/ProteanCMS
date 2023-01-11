@@ -177,6 +177,8 @@ Public Class Cms
     Private Const LoginRequiredPagePath As String = "/System-Pages/Login-Required"
     Private Const ProteanErrorPagePath As String = "/System-Pages/Protean-Error"
 
+    Public impersonationMode = False
+
 #End Region
 #Region "Enums"
     Enum pageResponseType
@@ -541,6 +543,11 @@ Public Class Cms
                         moDbHelper.gbAdminMode = mbAdminMode
                     End If
                 End If
+
+                If moConfig("AdminAcct") <> "" And moConfig("AdminGroup") <> "AzureWebApp" Then
+                    impersonationMode = True
+                End If
+
                 'Get system page ID's for application level
                 If moCtx.Application("PageNotFoundId") Is Nothing Then
                     moCtx.Application("PageNotFoundId") = moDbHelper.getPageIdFromPath(NotFoundPagePath, False, False)
@@ -635,7 +642,13 @@ Public Class Cms
                     If Not moRequest("pgid") = "" Then
 
                         'And we still need to check permissions
-                        mnPageId = CLng(Regex.Replace("0" & moRequest("pgid"), "[^\d]", ""))
+                        'strip any non numberic charactors
+                        Dim sPageId = Regex.Replace("0" & moRequest("pgid"), "[^\d]", "")
+                        'check not too large for an int
+                        If Integer.TryParse(sPageId, 0) Then
+                            mnPageId = CInt(sPageId)
+                        End If
+
                         'specified pgid takes priority
                         If Not mbAdminMode Then
                             newPageId = moDbHelper.checkPagePermission(mnPageId)
@@ -1382,8 +1395,15 @@ Public Class Cms
                                         If Not oTransform.bError Then
                                             If bPageCache Then
                                                 Dim pagestring As String = textWriter.ToString()
+
+                                                If gnResponseCode <> 200 Then
+                                                    moResponse.TrySkipIisCustomErrors = True
+                                                    moResponse.StatusCode = gnResponseCode
+                                                End If
+
                                                 moResponse.Write(pagestring)
                                                 moResponse.Flush()
+                                                gnResponseCode = 200 'we don't want this to happen again on line 1930
                                                 SavePage(sCachePath, pagestring)
                                                 'sServeFile = mcPageCacheFolder & sCachePath
                                             Else
@@ -1593,7 +1613,7 @@ Public Class Cms
             End If
             PerfMon.Log("Web", "GetPageHTML-Final")
             PerfMon.Write()
-            moResponse.End()
+            'moResponse.End()
         End Try
 
     End Sub
@@ -1849,7 +1869,13 @@ Public Class Cms
                     'establish the artid
                     If Not moRequest.QueryString.Count = 0 Then
                         If moRequest("artid") <> "" Then
-                            mnArtId = moRequest("artid")
+
+                            Dim sArtId = Regex.Replace("0" & moRequest("artid"), "[^\d]", "")
+                            'check not too large for an int
+                            If Integer.TryParse(sArtId, 0) Then
+                                mnArtId = CInt(sArtId)
+                            End If
+
                         End If
                     End If
 
@@ -5977,9 +6003,7 @@ Public Class Cms
                 gcBlockContentType = moDbHelper.GetPageBlockedContent(mnPageId)
                 Dim parentXpath As String = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]"
 
-                oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
-
-
+                oPageElmt.SetAttribute("blockedContent", Regex.Replace(gcBlockContentType, "^[|\d]+", ""))
 
                 'this is for load more steppers - we do not want any other content other than the one on the list
                 'the page url looks like
@@ -5996,19 +6020,21 @@ Public Class Cms
                         Case Else
                             cSort = "|ASC_cl.nDisplayOrder"
                     End Select
-                    GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType") & cSort, sFilterSql)
+                    ' Paging variables
+                    Dim nStart As Integer = 0
+                    Dim nRows As Integer = 500
+
+                    ' Set the paging variables, if provided.
+                    If Not (moRequest("startPos") Is Nothing) AndAlso IsNumeric(moRequest("startPos")) Then nStart = CInt(moRequest("startPos"))
+                    If Not (moRequest("rows") Is Nothing) AndAlso IsNumeric(moRequest("rows")) Then nRows = CInt(moRequest("rows"))
+
+                    GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType") & cSort, nStart, nRows, sFilterSql)
+
                 Else
                     'step through the tree from home to our current page
                     For Each oElmt In oPageElmt.SelectNodes(parentXpath)
                         oElmt.SetAttribute("active", "1")
                         Dim nPageId As Long = oElmt.GetAttribute("id")
-                        'Add one new condition for location sub pages to not get all products first time
-                        If oElmt.SelectSingleNode("MenuItem/DisplayName/@exclude") IsNot Nothing Then
-                            Dim SubMenuLocation As String = oElmt.SelectSingleNode("MenuItem/DisplayName/@exclude").Value
-                            If SubMenuLocation = "false" Then
-                                moSession("Submenu") = "Yes"
-                            End If
-                        End If
                         GetPageContentXml(nPageId)
                         nPageId = Nothing
                         IsInTree = True
@@ -6026,6 +6052,41 @@ Public Class Cms
                     If mnPageId = gnPageNotFoundId Then
                         GetPageContentXml(mnPageId)
                     End If
+
+                    ' get the first records in the case of a load more stepper.
+                    If gcBlockContentType <> "" Then
+
+                        Dim cContentTypes() As String = Split(gcBlockContentType, ",")
+                        Dim i As Integer
+                        For i = 0 To cContentTypes.Length() - 1
+                            Dim cContentType() As String = Split(cContentTypes(i), "|")
+
+                            Dim SingleContentType As String = cContentType(0)
+                            Dim ModuleId As String = cContentType(1)
+                            Dim ContentModule As XmlElement = moPageXml.SelectSingleNode("/Page/Contents/Content[@id='" & ModuleId & "']")
+                            If Not ContentModule Is Nothing Then
+                                Dim cSort As String = "|ASC_cl.nDisplayOrder"
+                                Select Case ContentModule.GetAttribute("sortBy")
+                                    Case "name"
+                                        cSort = "|ASC_c.cContentName"
+                                    Case Else
+                                        cSort = "|ASC_cl.nDisplayOrder"
+                                End Select
+                                ' Paging variables
+                                Dim nStart As Integer = 0
+                                Dim nRows As Integer = 500
+                                nRows = ContentModule.GetAttribute("stepCount")
+
+                                Dim sFilterSql As String = GetStandardFilterSQLForContent()
+                                sFilterSql = sFilterSql & " and nstructid=" & mnPageId
+
+                                GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, SingleContentType & cSort, nStart, nRows, sFilterSql,,, False)
+
+                            End If
+
+                        Next
+                    End If
+
                 End If
 
 
@@ -6086,11 +6147,6 @@ Public Class Cms
                 'we are pulling in located and native items but not cascaded
             End If
 
-            'Add new extra condition for location sub or any other sub to get only subpage titles without whole product data.
-            If moSession("Submenu") = "Yes" And nCurrentPageId = mnPageId Then
-                sWhereSql &= " and c.cContentSchemaName <> 'Product' "
-            End If
-
             ' Check if the page is a cloned page
             ' If it is, then we need to switch the page id.
             If gbClone Then
@@ -6101,7 +6157,10 @@ Public Class Cms
             'sSql = "select c.nContentKey as id, (select TOP 1 CL2.nStructId from tblContentLocation CL2 where CL2.nContentId=c.nContentKey and CL2.bPrimary = 1) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire from tblContent c inner join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" & _
 
             If gcBlockContentType <> "" Then
-                sFilterSql = sFilterSql & " and c.cContentSchemaName NOT IN ('" & gcBlockContentType.Replace(",", "','") & "') "
+
+                Dim gcBlockContentTypeRemovedIds As String = Regex.Replace(gcBlockContentType, "[|\d]+", "")
+
+                sFilterSql = sFilterSql & " and c.cContentSchemaName NOT IN ('" & gcBlockContentTypeRemovedIds.Replace(",", "','") & "') "
             End If
             Dim cContentLimit As String = ""
             If moConfig("ContentLimit") <> "" And IsNumeric(moConfig("ContentLimit")) Then
@@ -6113,13 +6172,13 @@ Public Class Cms
                     " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
                     " where( CL.nStructId = " & nPageId
 
-            sSql = sSql & sFilterSql & sWhereSql & ") order by type, cl.nDisplayOrder"
+            sSql = sSql & sFilterSql & ") order by type, cl.nDisplayOrder"
 
             Dim oDs As DataSet = New DataSet
             oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents")
             PerfMon.Log("Web", "AddDataSetToContent - For Page ", sSql)
             moDbHelper.AddDataSetToContent(oDs, oRoot, nCurrentPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
-            moSession("Submenu") = Nothing
+
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
             'End If
@@ -6753,7 +6812,7 @@ Public Class Cms
         End Try
     End Sub
 
-    Public Sub GetContentXMLByTypeAndOffset(ByRef oPageElmt As XmlElement, ByVal cContentType As String, Optional sqlFilter As String = "", Optional fullSQL As String = "", Optional ByRef oPageDetail As XmlElement = Nothing)
+    Public Sub GetContentXMLByTypeAndOffset(ByRef oPageElmt As XmlElement, ByVal cContentType As String, ByVal nStartPos As Long, ByVal nItemCount As Long, Optional sqlFilter As String = "", Optional fullSQL As String = "", Optional ByRef oPageDetail As XmlElement = Nothing, Optional bShowContentDetails As Boolean = True)
         PerfMon.Log("Web", "GetContentXMLByTypeAndOffset")
         '<add key="ControlPanelTypes" value="Event,Document|Top_10|DESC_Publish"/>
         Try
@@ -6780,16 +6839,9 @@ Public Class Cms
                 End If
             Next
 
-            ' Paging variables
-            Dim nStart As Integer = 0
-            Dim nRows As Integer = 500
 
-            ' Set the paging variables, if provided.
-            If Not (moRequest("startPos") Is Nothing) AndAlso IsNumeric(moRequest("startPos")) Then nStart = CInt(moRequest("startPos"))
-            If Not (moRequest("rows") Is Nothing) AndAlso IsNumeric(moRequest("rows")) Then nRows = CInt(moRequest("rows"))
-
-            If nStart < 0 Then nStart = 0
-            If nRows < 1 Then nRows = 500
+            If nStartPos < 0 Then nStartPos = 0
+            If nItemCount < 1 Then nItemCount = 500
 
 
             ' Quick call to get the total number of records
@@ -6817,7 +6869,7 @@ Public Class Cms
                     cSQL = fullSQL
                 End If
 
-                cSQL &= " offset " & nStart & " rows fetch next " & nRows & " rows only"
+                cSQL &= " offset " & nStartPos & " rows fetch next " & nItemCount & " rows only"
 
                 Dim oDS As DataSet = moDbHelper.GetDataSet(cSQL, "Content1", "Contents")
                 Dim oDT As New DataTable
@@ -6857,27 +6909,29 @@ Public Class Cms
                     moPageXml.DocumentElement.AppendChild(oRoot)
                 End If
                 moDbHelper.AddDataSetToContent(oDS, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
+                If bShowContentDetails Then
+                    'Get the content Detail element
+                    Dim oContentDetails As XmlElement
+                    If oPageDetail Is Nothing Then
+                        oContentDetails = moPageXml.SelectSingleNode("Page/ContentDetail")
+                        If oContentDetails Is Nothing Then
+                            oContentDetails = moPageXml.CreateElement("ContentDetail")
+                            If Not moPageXml.InnerXml = "" Then
+                                moPageXml.FirstChild.AppendChild(oContentDetails)
+                            Else
+                                oPageDetail.AppendChild(oContentDetails)
+                            End If
 
-                'Get the content Detail element
-                Dim oContentDetails As XmlElement
-                If oPageDetail Is Nothing Then
-                    oContentDetails = moPageXml.SelectSingleNode("Page/ContentDetail")
-                    If oContentDetails Is Nothing Then
-                        oContentDetails = moPageXml.CreateElement("ContentDetail")
-                        If Not moPageXml.InnerXml = "" Then
-                            moPageXml.FirstChild.AppendChild(oContentDetails)
-                        Else
-                            oPageDetail.AppendChild(oContentDetails)
                         End If
-
+                    Else
+                        oContentDetails = oPageDetail
                     End If
-                Else
-                    oContentDetails = oPageDetail
+
+                    oContentDetails.SetAttribute("start", nStartPos)
+                    oContentDetails.SetAttribute("total", nTotal)
+                    oContentDetails.SetAttribute("rows", nItemCount)
                 End If
 
-                oContentDetails.SetAttribute("start", nStart)
-                oContentDetails.SetAttribute("total", nTotal)
-                oContentDetails.SetAttribute("rows", nRows)
 
             End If
 
@@ -7546,7 +7600,7 @@ Public Class Cms
 
                                 If fso.Exists Then
                                     Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                                    If moConfig("AdminAcct") <> "" Then
+                                    If impersonationMode Then
                                         oImp = New Protean.Tools.Security.Impersonate
                                         oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup"))
 
@@ -7587,7 +7641,7 @@ Public Class Cms
                                         End If
                                     End If
 
-                                    If moConfig("AdminAcct") <> "" Then
+                                    If impersonationMode Then
                                         oImp.UndoImpersonation()
                                         oImp = Nothing
                                     End If
@@ -8617,7 +8671,7 @@ Public Class Cms
 
             If sError = "1" Then
                 Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                If moConfig("AdminAcct") <> "" Then
+                If impersonationMode Then
                     PerfMon.Log(mcModuleName, "Impersonation - Start")
                     oImp = New Protean.Tools.Security.Impersonate
                     oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup"))
@@ -8638,7 +8692,7 @@ Public Class Cms
                     sError = cProcessInfo
                 End If
 
-                If moConfig("AdminAcct") <> "" Then
+                If impersonationMode Then
                     oImp.UndoImpersonation()
                     oImp = Nothing
                 End If
@@ -8679,12 +8733,7 @@ Public Class Cms
     Public Function CheckProductStatus(ByVal nArtId As String) As String
         Try
             'Dim oDr As System.Data.SqlClient.SqlDataReader
-            Dim sSQL As String = "DECLARE @List VARCHAR(8000)
-
-SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
-from tblcontent C 
- inner join tblAudit A on C.nAuditId = A.nAuditKey 
- where A.nstatus=1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
+            Dim sSQL As String = "DECLARE @List VARCHAR(8000) SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR) from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey where A.nstatus=1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
             sSQL = sSQL & " SELECT @List "
 
             '"select  C.nContentKey from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey "
@@ -8698,7 +8747,8 @@ from tblcontent C
                         While oDr.Read
                             Return oDr(0).ToString()
                         End While
-
+                    Else
+                        Return ""
                     End If
                 Else
                     Return ""

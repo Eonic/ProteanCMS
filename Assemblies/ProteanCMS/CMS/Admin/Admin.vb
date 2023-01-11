@@ -532,7 +532,7 @@ ProcessFlow:
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                         Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                        If moConfig("AdminAcct") <> "" Then
+                        If myWeb.impersonationMode Then
                             oImp = New Protean.Tools.Security.Impersonate
                             If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
                             End If
@@ -568,7 +568,7 @@ ProcessFlow:
                         rulesElmt.InnerXml = rewriteXml.DocumentElement.OuterXml
                         oPageDetail.AppendChild(rulesElmt)
 
-                        If moConfig("AdminAcct") <> "" Then
+                        If myWeb.impersonationMode Then
                             oImp.UndoImpersonation()
                             oImp = Nothing
                         End If
@@ -820,7 +820,16 @@ ProcessFlow:
                                     'get a list of pages with this content on.
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
-                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
+                                        Dim nStart As Integer = 0
+                                        Dim nRows As Integer = 500
+
+                                        ' Set the paging variables, if provided.
+                                        If Not (myWeb.moRequest("startPos") Is Nothing) AndAlso IsNumeric(myWeb.moRequest("startPos")) Then nStart = CInt(myWeb.moRequest("startPos"))
+                                        If Not (myWeb.moRequest("rows") Is Nothing) AndAlso IsNumeric(myWeb.moRequest("rows")) Then nRows = CInt(myWeb.moRequest("rows"))
+
+                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, nStart, nRows, FilterSQL, "", oPageDetail)
+
+                                        ' myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                         Dim contentsNode = moPageXML.SelectSingleNode("/Page/Contents")
                                         If Not IsNothing(contentsNode) Then
                                             myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
@@ -922,7 +931,6 @@ ProcessFlow:
                         bClearEditContext = False
 
                         oPageDetail.AppendChild(moAdXfm.xFrmEditContent(0, myWeb.moRequest("type"), CLng(myWeb.moRequest("pgid")), myWeb.moRequest("name"), , nAdditionId))
-
                         If moAdXfm.valid Then
                             sAdminLayout = ""
                             mcEwCmd = myWeb.moSession("ewCmd")
@@ -937,30 +945,6 @@ ProcessFlow:
 
                             oPageDetail.RemoveAll()
 
-                            'Update newly added review count - code added by nita
-                            If moConfig("UpdateNewAddedReviewFlag") <> "" Then
-                                If nContentId = 0 And myWeb.moSession("contentParId") > 0 And myWeb.moRequest("cContentReviewer") <> "" Then
-                                    Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
-                                    oTempInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, myWeb.moSession("contentParId"))
-                                    If oTempInstance.InnerXml <> "" Then
-                                        Dim oProduct As XmlElement = oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content")
-                                        If Not oProduct Is Nothing Then
-                                            If oProduct.GetAttribute("ratingCount") <> "" Then
-                                                Dim RatingCount As String = oProduct.GetAttribute("ratingCount")
-                                                Dim FinalCount As String = RatingCount + 1
-                                                oProduct.SetAttribute("ratingCount", FinalCount)
-                                                myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, oTempInstance)
-                                                'Dim sSql As String = "Update tblContent set cContentXmlBrief= '" + oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content").OuterXml.Replace("'", "''").Replace("  ", "") + "'  where nContentKey=" + Convert.ToInt32(myWeb.moSession("contentParId"))
-                                                'myWeb.moDbHelper.ExeProcessSql(sSql)
-                                            End If
-
-                                        End If
-
-                                    End If
-                                    myWeb.moSession("contentParId") = Nothing
-                                End If
-                            End If
-
                             If myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""
@@ -973,6 +957,7 @@ ProcessFlow:
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
+
 
 
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
@@ -990,8 +975,6 @@ ProcessFlow:
                         If Not (IsNumeric(cVersionKey)) Then cVersionKey = "0"
                         nContentId = 0
                         oPageDetail.AppendChild(moAdXfm.xFrmEditContent(myWeb.moRequest("id"), "", CLng(myWeb.moRequest("pgid")), , , nContentId, , , CLng(cVersionKey)))
-                        'Update newly added review count
-                        myWeb.moSession("contentParId") = myWeb.moSession("mcRelParent")
 
                         If moAdXfm.valid Then
                             bAdminMode = False
@@ -1046,8 +1029,6 @@ ProcessFlow:
                             sAdminLayout = "AdminXForm"
 
                         End If
-
-
 
                     Case "PublishContent"
 
@@ -4098,7 +4079,7 @@ listItems:
                             GoTo listItems
                         End If
                         GoTo listItems
-                    Case "updateAllRules"
+                    Case "update", "updateAllRules"
 
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
 
@@ -4115,7 +4096,7 @@ listItems:
                             End If
                         End If
                         GoTo listItems
-                    Case "update"
+                        'Case "updateAllRules"
 
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
                             SchemaNameForUpdate = myWeb.moRequest("SchemaName")
@@ -4143,7 +4124,7 @@ listItems:
                         If indexId = Nothing Then
                             'list Lookup Lists
                             sSql = "select nContentIndexDefKey, CASE WHen nContentIndexDataType = 1 Then 'Int' when nContentIndexDataType=2 Then 'String' Else 'Date' End As nContentIndexDataType,
-     cContentSchemaName, cDefinitionName, cContentValueXpath, Case When bBriefNotDetail=0 Then 'false' Else 'True' End As bBriefNotDetail, nKeywordGroupName
+cContentSchemaName, cDefinitionName, cContentValueXpath, Case When bBriefNotDetail=0 Then 'false' Else 'True' End As bBriefNotDetail, nKeywordGroupName
 from tblContentIndexDef"
 
                             indexesDataset = myWeb.moDbHelper.GetDataSet(sSql, "indexkey", "indexkeys")
@@ -4156,7 +4137,7 @@ from tblContentIndexDef"
 
                                 indexesDataset.Tables(0).Columns("nContentIndexDefKey").ColumnMapping = MappingType.Attribute
                                 indexesDataset.Tables(1).Columns("Name").ColumnMapping = MappingType.Attribute
-                                indexesDataset.Tables(0).Columns("cDefinitionName").ColumnMapping = MappingType.Attribute
+
                                 ' lookupsDataset.Tables(0).Columns(2).ColumnMapping = MappingType.Attribute
                                 indexesDataset.Relations.Add("rel1",
                                 indexesDataset.Tables(1).Columns("Name"),
@@ -4356,7 +4337,7 @@ from tblContentIndexDef"
 
 
                         Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                        If myWeb.moConfig("AdminAcct") <> "" Then
+                        If myWeb.impersonationMode Then
                             oImp = New Protean.Tools.Security.Impersonate
                             If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
                             End If
@@ -4394,7 +4375,7 @@ from tblContentIndexDef"
                             writer.Close()
                         End Using
 
-                        If myWeb.moConfig("AdminAcct") <> "" Then
+                        If myWeb.impersonationMode Then
                             oImp.UndoImpersonation()
                             oImp = Nothing
                         End If
@@ -4424,7 +4405,7 @@ from tblContentIndexDef"
 
 
                     Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-                    If myWeb.moConfig("AdminAcct") <> "" Then
+                    If myWeb.impersonationMode Then
                         oImp = New Protean.Tools.Security.Impersonate
                         If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
                         End If
@@ -4456,7 +4437,7 @@ from tblContentIndexDef"
                         writer.Write(content)
                         writer.Close()
                     End Using
-                    If myWeb.moConfig("AdminAcct") <> "" Then
+                    If myWeb.impersonationMode Then
                         oImp.UndoImpersonation()
                         oImp = Nothing
                     End If

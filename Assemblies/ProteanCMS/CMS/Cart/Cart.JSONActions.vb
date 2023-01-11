@@ -445,15 +445,15 @@ Partial Public Class Cms
                     'add product option
                     myCart.AddProductOption(jObj)
                     'myCart.UpdatePackagingANdDeliveryType()
-                    myCart.GetCart(CartXml.FirstChild)
-                    ''persist cart
+                    'myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
+                    '''persist cart
                     myCart.close()
 
-                    CartXml = updateCartforJSON(CartXml)
+                    'CartXml = updateCartforJSON(CartXml)
 
-                    jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    jsonString = jsonString.Replace("""@", """_")
-                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    'jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    'jsonString = jsonString.Replace("""@", """_")
+                    'jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
 
                 Catch ex As Exception
