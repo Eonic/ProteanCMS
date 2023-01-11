@@ -287,3 +287,5 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\System.Num
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\System.Buffers.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\System.Memory.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\System.Numerics.Vectors.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
