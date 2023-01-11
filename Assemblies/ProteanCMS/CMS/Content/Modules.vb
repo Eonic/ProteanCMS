@@ -481,6 +481,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, "Product")
                         oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
 
+                        If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
+                            filterForm.addSubmit(oFrmGroup, "Clear Filters", "No Exepereince(s) found", "submit", "ClearFilters")
+                        End If
                     End If
 
                 Catch ex As Exception

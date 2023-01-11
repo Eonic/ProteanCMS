@@ -6079,8 +6079,10 @@ Public Class Cms
 
                                 Dim sFilterSql As String = GetStandardFilterSQLForContent()
                                 sFilterSql = sFilterSql & " and nstructid=" & mnPageId
-
-                                GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, SingleContentType & cSort, nStart, nRows, sFilterSql,,, False)
+                                If (ContentModule.HasAttribute("TotalCount") = False) Then
+                                    ContentModule.SetAttribute("TotalCount", 0)
+                                End If
+                                GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, SingleContentType & cSort, nStart, nRows, sFilterSql,,, False, ContentModule)
 
                             End If
 
@@ -6812,7 +6814,7 @@ Public Class Cms
         End Try
     End Sub
 
-    Public Sub GetContentXMLByTypeAndOffset(ByRef oPageElmt As XmlElement, ByVal cContentType As String, ByVal nStartPos As Long, ByVal nItemCount As Long, Optional sqlFilter As String = "", Optional fullSQL As String = "", Optional ByRef oPageDetail As XmlElement = Nothing, Optional bShowContentDetails As Boolean = True)
+    Public Sub GetContentXMLByTypeAndOffset(ByRef oPageElmt As XmlElement, ByVal cContentType As String, ByVal nStartPos As Long, ByVal nItemCount As Long, Optional sqlFilter As String = "", Optional fullSQL As String = "", Optional ByRef oPageDetail As XmlElement = Nothing, Optional bShowContentDetails As Boolean = True, Optional ByRef oContentModule As XmlElement = Nothing)
         PerfMon.Log("Web", "GetContentXMLByTypeAndOffset")
         '<add key="ControlPanelTypes" value="Event,Document|Top_10|DESC_Publish"/>
         Try
@@ -6932,6 +6934,11 @@ Public Class Cms
                     oContentDetails.SetAttribute("rows", nItemCount)
                 End If
 
+                If Not (oContentModule Is Nothing) Then
+                    If (oContentModule.HasAttribute("TotalCount")) Then
+                        oContentModule.SetAttribute("TotalCount", nTotal.ToString())
+                    End If
+                End If
 
             End If
 
