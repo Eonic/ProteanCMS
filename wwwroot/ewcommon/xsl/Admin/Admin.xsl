@@ -9247,7 +9247,7 @@
 					Date/Time
 				</th>
 				<xsl:for-each select="Item[last()]/cActivityXml/descendant-or-self::*">
-					<xsl:if test="count(*)=0 or local-name()='Attachements'">
+					<xsl:if test="count(*)=0 or local-name()='Attachements' or local-name()='Attachments'">
 						<th>
 							<xsl:value-of select="local-name()"/>
 						</th>
@@ -9284,9 +9284,9 @@
 		</td>
 	</xsl:template>
 
-	<xsl:template match="Attachements" mode ="Report_ColsValues">
+	<xsl:template match="Attachements | Attachments" mode ="Report_ColsValues">
 		<td>
-			<xsl:for-each select="Attachement ">
+			<xsl:for-each select="Attachement | Attachments ">
 				<xsl:value-of select="Content/@name"/>
 			</xsl:for-each>
 		</td>
@@ -11692,7 +11692,7 @@
   <!-- -->
   <xsl:template match="Page[@layout='SiteIndex' or @ewCmd='SiteIndex']" mode="Admin">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">
@@ -11718,11 +11718,11 @@
                 <dd>
                   <xsl:value-of select="@pagesSkipped"/>
                 </dd>
-                <dt>Articles Indexed</dt>
+                <dt>Content Items Indexed</dt>
                 <dd>
                   <xsl:value-of select="@contentCount"/>
                 </dd>
-                <dt>Articles Skipped</dt>
+                <dt>Content Items Skipped</dt>
                 <dd>
                   <xsl:value-of select="@contentSkipped"/>
                 </dd>
@@ -11739,9 +11739,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-
-
+      <div class="col-md-8">
         <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
       </div>
     </div>

@@ -35,7 +35,7 @@ Public Class IndexerAsync
     Dim mcIndexCopyFolder As String = ""
     Dim oIndexWriter As IndexWriter 'Lucene class
 
-    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate 'impersonate for access
+    Dim moImp As Protean.Tools.Security.Impersonate = Nothing
     Dim bNewIndex As Boolean = False 'if we need a new index or just add to one
     Dim bIsError As Boolean = False
     Dim dStartTime As Date
@@ -128,6 +128,7 @@ Public Class IndexerAsync
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
+            Return Nothing
         End Try
     End Function
 
@@ -369,6 +370,9 @@ Public Class IndexerAsync
             Catch ex2 As Exception
 
             End Try
+
+            Return Nothing
+
         Finally
             Try
 
@@ -376,6 +380,7 @@ Public Class IndexerAsync
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+
             End Try
         End Try
 
@@ -386,10 +391,16 @@ Public Class IndexerAsync
         'PerfMon.Log("Indexer", "StartIndex")
         Dim cProcessInfo As String = ""
         Try
-            oImp = New Protean.Tools.Security.Impersonate 'for access
-            If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-                EmptyFolder(mcIndexWriteFolder)
-                If gbDebug Then
+            If moConfig("AdminAcct") <> "" Then
+                moImp = New Protean.Tools.Security.Impersonate 'for access
+                If moImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+                Else
+                    Err.Raise(108, , "Indexer did not validate")
+                    Exit Try
+                End If
+            End If
+            EmptyFolder(mcIndexWriteFolder)
+            If gbDebug Then
                     EmptyFolder(mcIndexCopyFolder)
                 End If
 
@@ -407,10 +418,7 @@ Public Class IndexerAsync
                 oIndexWriter.SetMaxBufferedDeleteTerms(50)
                 oIndexWriter.SetMaxBufferedDocs(100)
 
-            Else
-                Err.Raise(108, , "Indexer did not validate")
 
-            End If
         Catch ex As Exception
             cExError &= ex.StackTrace.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
@@ -478,7 +486,11 @@ Public Class IndexerAsync
             oIndexWriter.Dispose()
             EmptyFolder(mcIndexReadFolder)
             CopyFolderContents(mcIndexWriteFolder, mcIndexReadFolder)
-            oImp.UndoImpersonation()
+            If moConfig("AdminAcct") <> "" Then
+                moImp.UndoImpersonation()
+                moImp = Nothing
+            End If
+
             oIndexWriter = Nothing
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
@@ -694,7 +706,7 @@ Public Class IndexerAsync
             Dim oPageXml As New XmlDocument
             Dim cRules As String = ""
             Dim oElmtRules As XmlElement
-            Dim oElmtURL As XmlElement
+            Dim oElmtURL As XmlElement = Nothing
 
             Dim cProcessInfo As String
             Dim cPageExtract As String = ""

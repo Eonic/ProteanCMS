@@ -103,7 +103,7 @@ Partial Public Class Cms
                 End If
                 If myWeb.mnUserId > 0 And mnEwUserId = 0 Then mnEwUserId = myWeb.mnUserId
                 'MEMB - eEDIT
-                If myWeb.goApp("bFullCartOption") = True Then
+                If myWeb.moCtx.Application("bFullCartOption") = True Then
                     bFullCartOption = True
                 Else
                     bFullCartOption = False

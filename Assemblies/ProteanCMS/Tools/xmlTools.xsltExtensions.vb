@@ -303,7 +303,7 @@ Partial Public Module xmlTools
                     End If
                 Loop
 
-                Dim returnStr As String
+                Dim returnStr As String = String.Empty
                 Dim i As Integer
                 For i = 0 To list.Count - 1
                     returnStr = CStr(returnStr) & CStr(list.Item(i)) & ","
@@ -1569,7 +1569,7 @@ Partial Public Module xmlTools
             Dim Query1 As String = ""
             Dim Query2 As String = ""
             Dim Query3 As String = ""
-            Dim sql As String
+            Dim sql As String = String.Empty
             Try
 
 
@@ -1690,10 +1690,10 @@ Partial Public Module xmlTools
 
                     Case "Library"
 
-                        Dim ProviderName As String
+                        Dim ProviderName As String = String.Empty
                         Dim calledType As Type
-                        Dim classPath As String = ""
-                        Dim methodName As String = ""
+                        Dim classPath As String = String.Empty
+                        Dim methodName As String = String.Empty
 
                         Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
                         Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
@@ -1775,7 +1775,7 @@ Partial Public Module xmlTools
                             oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
                         End Using
                     Case "availableIcons"
-                        Dim iconPath = "/ewcommon/icons/icons.xml"
+                        Dim iconPath As String = "/ewcommon/icons/icons.xml"
                         If myWeb.bs5 Then iconPath = "/ptn/core/icons/icons.xml"
 
                         If IO.File.Exists(goServer.MapPath(iconPath)) Then
@@ -2241,11 +2241,16 @@ Partial Public Module xmlTools
                         End If
 
                     Else
+                        Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                        If myWeb.impersonationMode Then
+                            oImp = New Protean.Tools.Security.Impersonate
+                            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
+                                sReturnString = "Admin Account logon Failure"
+                                Exit Try
+                            End If
+                        End If
 
-                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                        If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
-
-                            Dim appPath As String = myWeb.moRequest.ApplicationPath
+                        Dim appPath As String = myWeb.moRequest.ApplicationPath
                             If appPath.EndsWith("ewcommon") Then
                                 CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../")
                             End If
@@ -2330,12 +2335,12 @@ Partial Public Module xmlTools
 
                             oCssWebClient = Nothing
                             fsh = Nothing
+
+                        If myWeb.impersonationMode Then
                             If Not IsNothing(oImp) Then
                                 oImp.UndoImpersonation()
                                 oImp = Nothing
                             End If
-                        Else
-                            sReturnString = "Admin Account logon Failure"
                         End If
                     End If
                 End If

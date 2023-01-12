@@ -25,6 +25,7 @@ Imports System
 Imports System.Text.RegularExpressions
 Imports System.Web.UI
 Imports System.Web
+Imports Microsoft.Ajax.Utilities
 
 Partial Public Class fsHelper
 
@@ -43,6 +44,8 @@ Partial Public Class fsHelper
     Public mcRoot As String = ""
     Shared msException As String
     Public AdminJsonAPI As Protean.Cms.Admin.JSONActions
+
+    Public ImpersonationMode As Boolean = False
 
     Private _thumbnailPath As String = "/~ptn"
 
@@ -72,10 +75,16 @@ Partial Public Class fsHelper
 
     Public Sub New()
         Me.New(System.Web.HttpContext.Current)
+        If goConfig("AdminAcct") <> "" And goConfig("AdminGroup") <> "AzureWebApp" Then
+            ImpersonationMode = True
+        End If
     End Sub
 
     Public Sub New(ByVal Context As System.Web.HttpContext)
         goServer = Context.Server
+        If goConfig("AdminAcct") <> "" And goConfig("AdminGroup") <> "AzureWebApp" Then
+            ImpersonationMode = True
+        End If
     End Sub
 
     Public Shadows Sub open(ByVal oPageXml As XmlDocument)
@@ -148,7 +157,7 @@ Partial Public Class fsHelper
     Public Function getConfigNode(ByVal cPath As String) As XmlElement
         'PerfMon.Log("fsHelper", "getConfigNode")
         Dim cProcessInfo As String = ""
-        Dim oConfigXml As XmlDataDocument = New XmlDataDocument
+        Dim oConfigXml As XmlDocument = New XmlDocument  'Change XmlDataDocument to XmlDocument
 
         Dim oConfigNode As XmlElement
 
@@ -211,7 +220,7 @@ Partial Public Class fsHelper
     Public Function setConfigNode(ByVal oInstance As XmlElement) As XmlElement
         'PerfMon.Log("fsHelper", "setConfigNode")
         Dim cProcessInfo As String = ""
-        Dim oConfigXml As XmlDataDocument = New XmlDataDocument
+        Dim oConfigXml As XmlDocument = New XmlDocument  'Change XmlDataDocument to XmlDocument
         Dim oConfigNode As XmlElement
 
         Try
@@ -336,10 +345,14 @@ Partial Public Class fsHelper
         Dim tempFolder As String = ""
         Try
 
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+            Dim oImp As Protean.Tools.Security.Impersonate = Nothing
 
-                Dim startDir As String
+            If ImpersonationMode Then
+                oImp = New Protean.Tools.Security.Impersonate
+                oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup"))
+            End If
+
+            Dim startDir As String
                 If mcRoot = "../" Then
                     mcRoot = ""
                     startDir = goServer.MapPath("/")
@@ -380,20 +393,18 @@ Partial Public Class fsHelper
                     End If
                 Next
 
-                'PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
+            'PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
+            If ImpersonationMode Then
                 oImp.UndoImpersonation()
-
-                Return "1"
-
-            Else
-                Return "Server admin permissions are not configured"
+                oImp = Nothing
             End If
+
+            Return "1"
 
             'PerfMon.Log("fsHelper", "CreatePath - end")
 
         Catch ex As Exception
             Return ex.Message & " - " & tempFolder & "<br/>" & ex.StackTrace
-
         End Try
 
     End Function
@@ -449,30 +460,38 @@ Partial Public Class fsHelper
         'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
         Try
 
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                Dim dir As New DirectoryInfo(mcStartFolder & cFolderPath & "\" & cFolderName)
-                If dir.Exists Then
-
-                    'FIX disable AppDomain restart when deleting subdirectory
-                    'This code will turn off monitoring from the root website directory.
-                    'Monitoring of Bin, App_Themes and other folders will still be operational, so updated DLLs will still auto deploy.
-                    Dim p As System.Reflection.PropertyInfo = GetType(System.Web.HttpRuntime).GetProperty("FileChangesMonitor", System.Reflection.BindingFlags.NonPublic Or System.Reflection.BindingFlags.[Public] Or System.Reflection.BindingFlags.[Static])
-                    Dim o As Object = p.GetValue(Nothing, Nothing)
-                    Dim f As System.Reflection.FieldInfo = o.[GetType]().GetField("_dirMonSubdirs", System.Reflection.BindingFlags.Instance Or System.Reflection.BindingFlags.NonPublic Or System.Reflection.BindingFlags.IgnoreCase)
-                    Dim monitor As Object = f.GetValue(o)
-                    Dim m As System.Reflection.MethodInfo = monitor.[GetType]().GetMethod("StopMonitoring", System.Reflection.BindingFlags.Instance Or System.Reflection.BindingFlags.NonPublic)
-                    m.Invoke(monitor, New Object() {})
-
-                    dir.Delete(True)
-                Else
-                    Return "this folder does not exist - " & cFolderPath & cFolderName
+            Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+            If ImpersonationMode Then
+                oImp = New Protean.Tools.Security.Impersonate
+                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
+                    Return "Server admin permissions are not configured"
+                    Exit Try
                 End If
-                oImp.UndoImpersonation()
-            Else
-                Return "Server admin permissions are not configured"
             End If
+
+            Dim dir As New DirectoryInfo(mcStartFolder & cFolderPath & "\" & cFolderName)
+            If dir.Exists Then
+                'FIX disable AppDomain restart when deleting subdirectory
+                'This code will turn off monitoring from the root website directory.
+                'Monitoring of Bin, App_Themes and other folders will still be operational, so updated DLLs will still auto deploy.
+                Dim p As System.Reflection.PropertyInfo = GetType(System.Web.HttpRuntime).GetProperty("FileChangesMonitor", System.Reflection.BindingFlags.NonPublic Or System.Reflection.BindingFlags.[Public] Or System.Reflection.BindingFlags.[Static])
+                Dim o As Object = p.GetValue(Nothing, Nothing)
+                Dim f As System.Reflection.FieldInfo = o.[GetType]().GetField("_dirMonSubdirs", System.Reflection.BindingFlags.Instance Or System.Reflection.BindingFlags.NonPublic Or System.Reflection.BindingFlags.IgnoreCase)
+                Dim monitor As Object = f.GetValue(o)
+                Dim m As System.Reflection.MethodInfo = monitor.[GetType]().GetMethod("StopMonitoring", System.Reflection.BindingFlags.Instance Or System.Reflection.BindingFlags.NonPublic)
+                m.Invoke(monitor, New Object() {})
+
+                dir.Delete(True)
+
+            Else
+                Return "this folder does not exist - " & cFolderPath & cFolderName
+            End If
+
+            If ImpersonationMode Then
+                oImp.UndoImpersonation()
+                oImp = Nothing
+            End If
+
             Return "1"
         Catch ex As Exception
             Return ex.Message
@@ -486,9 +505,16 @@ Partial Public Class fsHelper
         'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
         Try
 
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-                Dim FolderName As String = mcStartFolder & cFolderPath & "\" & cFolderName
+            Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+            If ImpersonationMode Then
+                oImp = New Protean.Tools.Security.Impersonate
+                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
+                    Return "Server admin permissions are not configured"
+                    Exit Try
+                End If
+            End If
+
+            Dim FolderName As String = mcStartFolder & cFolderPath & "\" & cFolderName
                 Dim dir As New DirectoryInfo(FolderName)
 
                 If dir.Exists Then
@@ -504,8 +530,9 @@ Partial Public Class fsHelper
                     Return "this folder does not exist"
                 End If
                 oImp.UndoImpersonation()
-            Else
-                Return "Server admin permissions are not configured"
+            If ImpersonationMode Then
+                oImp.UndoImpersonation()
+                oImp = Nothing
             End If
             Return "1"
         Catch ex As Exception
@@ -558,20 +585,30 @@ Partial Public Class fsHelper
     Public Function DeleteFile(ByVal cFolderPath As String, ByVal cFileName As String) As String
         'PerfMon.Log("fsHelper", "DeleteFile")
         Try
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-                Dim cFullFileName As String = mcStartFolder & cFolderPath & "\" & cFileName
-                If IO.File.Exists(cFullFileName) Then
-                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(cFullFileName)
-                    oFileInfo.IsReadOnly = False
-                    IO.File.Delete(cFullFileName)
-                Else
-                    Return "this file does not exist"
+
+            Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+            If ImpersonationMode Then
+                oImp = New Protean.Tools.Security.Impersonate
+                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
+                    Return "Server admin permissions are not configured"
+                    Exit Try
                 End If
-                oImp.UndoImpersonation()
-            Else
-                Return "Server admin permissions are not configured"
             End If
+
+            Dim cFullFileName As String = mcStartFolder & cFolderPath & "\" & cFileName
+            If IO.File.Exists(cFullFileName) Then
+                Dim oFileInfo As IO.FileInfo = New IO.FileInfo(cFullFileName)
+                oFileInfo.IsReadOnly = False
+                IO.File.Delete(cFullFileName)
+            Else
+                Return "this file does not exist"
+            End If
+
+            If ImpersonationMode Then
+                oImp.UndoImpersonation()
+                oImp = Nothing
+            End If
+
             Return "1"
         Catch ex As Exception
             Return ex.Message
@@ -581,22 +618,29 @@ Partial Public Class fsHelper
     Public Function DeleteFile(ByVal cFullFilePath As String) As String
         'PerfMon.Log("fsHelper", "DeleteFile")
         Try
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-                If IO.File.Exists(cFullFilePath) Then
-                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(cFullFilePath)
-                    oFileInfo.IsReadOnly = False
-                    IO.File.Delete(cFullFilePath)
-
-                    ' scan for thumbnails to delete. subfolders starting with ~ look for files that end in the filename regardless of extension.
-
-                Else
-                    Return "this file does not exist"
+            Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+            If ImpersonationMode Then
+                oImp = New Protean.Tools.Security.Impersonate
+                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
+                    Return "Server admin permissions are not configured"
+                    Exit Try
                 End If
-                oImp.UndoImpersonation()
-            Else
-                Return "Server admin permissions are not configured"
             End If
+
+            If IO.File.Exists(cFullFilePath) Then
+                Dim oFileInfo As IO.FileInfo = New IO.FileInfo(cFullFilePath)
+                oFileInfo.IsReadOnly = False
+                IO.File.Delete(cFullFilePath)
+                ' scan for thumbnails to delete. subfolders starting with ~ look for files that end in the filename regardless of extension.
+            Else
+                Return "this file does not exist"
+            End If
+
+            If ImpersonationMode Then
+                oImp.UndoImpersonation()
+                oImp = Nothing
+            End If
+
             Return "1"
         Catch ex As Exception
             Return ex.Message
@@ -625,6 +669,7 @@ Partial Public Class fsHelper
                 myFile = Nothing
                 dir = Nothing
                 Return cFolderPath & "/" & FileName
+
             Catch ex As Exception
                 'We assume if failing to write then the file is being written allready by another process therefore we just return the filename as usual.
                 Return cFolderPath & "/" & FileName
@@ -662,7 +707,7 @@ Partial Public Class fsHelper
         Dim remoteStream As Stream
         Dim readStream As StreamReader
         Dim request As System.Net.WebRequest
-        Dim img As System.Drawing.Image
+        Dim img As System.Drawing.Image = Nothing
         Try
             httpURL = httpURL.Replace("\", "/")
             Dim filename As String = Right(httpURL, httpURL.Length - httpURL.LastIndexOf("/") - 1)
@@ -720,6 +765,9 @@ Partial Public Class fsHelper
                     remoteStream.Close()
                     img.Dispose()
                 End If
+
+
+
             End If
 
 
@@ -779,15 +827,24 @@ Partial Public Class fsHelper
     Public Function GetFileStream(ByVal FilePath As String) As FileStream
         'PerfMon.Log("GetFileStream", "SaveFile")
         Try
-            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-                Dim oFileStream As FileStream = New FileStream(FilePath, FileMode.Open, FileAccess.Read)
-                Return oFileStream
 
-                oImp.UndoImpersonation()
-            Else
-                Return Nothing
+            Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+            If ImpersonationMode Then
+                oImp = New Protean.Tools.Security.Impersonate
+                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
+                    Return Nothing
+                    Exit Try
+                End If
             End If
+
+            Dim oFileStream As FileStream = New FileStream(FilePath, FileMode.Open, FileAccess.Read)
+            Return oFileStream
+
+            If ImpersonationMode Then
+                oImp.UndoImpersonation()
+                oImp = Nothing
+            End If
+
         Catch ex As Exception
             Return Nothing
         End Try

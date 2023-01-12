@@ -56,21 +56,24 @@ Partial Public Class Cms
 
 
             Public Function DeleteObject(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim ObjType As String = ""  'Just declare at top
+                Dim result As Long
+                Dim ObjId As String = ""
                 Try
 
                     If ValidateAPICall(myWeb, "Administrator") Then
-                        Dim ObjType As String = ""
+
                         If inputJson("objType") IsNot Nothing Then
                             ObjType = inputJson("ObjType").ToObject(Of String)()
                         End If
-                        Dim ObjId As String = ""
+
                         If inputJson("objId") IsNot Nothing Then
                             ObjId = inputJson("objId").ToObject(Of String)()
                         End If
-                        Dim result As Long = myWeb.moDbHelper.DeleteObject(ObjType, ObjId, False)
-                        Return "[{""Key"":""" & ObjId & """,""Value"":""" & result & """}]"
-                    End If
+                        result = myWeb.moDbHelper.DeleteObject(ObjType, ObjId, False)
 
+                    End If
+                    Return "[{""Key"":""" & ObjId & """,""Value"":""" & result & """}]"
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""))
                     Return ex.Message
@@ -79,19 +82,18 @@ Partial Public Class Cms
 
             Public Function QueryValue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
+                    Dim count As String = "0"
                     Dim bIsAuthorized As Boolean = False
                     bIsAuthorized = ValidateAPICall(myWeb, "Administrator")
                     If bIsAuthorized Then
-                        Dim count As String = "0"
+
                         Dim sSql = myApi.moConfig(myApi.moRequest("query"))
 
                         Dim result = myWeb.moDbHelper.GetDataValue(sSql, System.Data.CommandType.StoredProcedure)
                         count = If(result Is Nothing, "", Convert.ToString(result))
 
-                        Return "[{""Key"":""" & myApi.moRequest("query") & """,""Value"":""" & count & """}]"
                     End If
-
+                    Return "[{""Key"":""" & myApi.moRequest("query") & """,""Value"":""" & count & """}]"
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""))
