@@ -10,7 +10,7 @@ Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.59.0"
+    Public Shared ewAssemblyVersion As String = "6.0.60.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -233,9 +233,10 @@ Public Class CustomActions
 
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
-                    UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-                    UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
-                    UpdateAssemblyRef(oAssembliesSect, "Protean.Tools.Csharp, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                    'TS: These are not required and forces the CMS to load so cannot be overiden by newer version
+                    '  UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                    '   UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
+                    '   UpdateAssemblyRef(oAssembliesSect, "Protean.Tools.Csharp, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                 End If
 
                 'UpdateAssemblyRef(oAssembliesSect, "Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=EB42632606E9261F")
@@ -570,7 +571,7 @@ Public Class CustomActions
                 'do nuffing
             End Try
             'MyBase.Install(savedState)
-            My.Computer.FileSystem.WriteAllText(installFolder & "\InstallLog.txt", errstr, True)
+            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
             Return ActionResult.Success
 
 
@@ -582,7 +583,7 @@ Public Class CustomActions
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace
             End If
 
-            My.Computer.FileSystem.WriteAllText(installFolder & "\InstallLog.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errorstr, True)
             Try
                 System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
             Catch ex2 As Exception
@@ -608,9 +609,9 @@ Public Class CustomActions
             Dim System32Folder As String = "C:\Windows\System32"
             Dim fs As New FileIO.FileSystem
 
-            If Not System.IO.File.Exists(GACFolder & "\NewtonSoft.Json\v4.0_13.0.3.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll") Then
-                System.IO.Directory.CreateDirectory(GACFolder & "\NewtonSoft.Json\v4.0_13.0.3.0__30ad4fe6b2a6aeed\")
-                System.IO.File.Move(installFolder & "\Libraries\NewtonSoft.Json.dll", GACFolder & "\NewtonSoft.Json\v4.0_13.0.3.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll")
+            If Not System.IO.File.Exists(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll") Then
+                System.IO.Directory.CreateDirectory(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\")
+                System.IO.File.Move(installFolder & "\Libraries\NewtonSoft.Json.dll", GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll")
             End If
 
             If System.IO.Directory.Exists(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\") Then
@@ -665,7 +666,7 @@ Public Class CustomActions
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace
             End If
 
-            My.Computer.FileSystem.WriteAllText(installFolder & "\InstallLog.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errorstr, True)
             Try
                 System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
             Catch ex2 As Exception
