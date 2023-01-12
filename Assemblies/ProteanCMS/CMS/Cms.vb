@@ -7588,10 +7588,8 @@ Public Class Cms
 
                                         objStream = Nothing
 
-                                        oImp.UndoImpersonation()
-                                        oImp = Nothing
-                                        'Activity Log
-                                        If mnUserId <> "0" And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
+                                    'Activity Log
+                                    If mnUserId <> "0" And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
                                             'NB: 30-03-2010 New check to add in the ArtId (original line is the 2nd, with ArtId hardcoded as 0?)
                                             If Not moRequest("docId") Is Nothing Then
                                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, Now, mnPageId, moRequest("docId"), strFileName)
