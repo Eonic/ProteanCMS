@@ -630,7 +630,7 @@ Public Class Indexer
         'PerfMon.Log("Indexer", "StartIndex")
         Dim cProcessInfo As String = ""
         Try
-            If moConfig("AdminAcct") <> "" Then
+            If moConfig("AdminAcct") <> "" And moConfig("AdminGroup") <> "AzureWebApp" Then
                 moImp = New Protean.Tools.Security.Impersonate 'for access
                 If moImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
                     Err.Raise(108, , "Indexer did not authenticate with system credentials")
@@ -638,7 +638,7 @@ Public Class Indexer
 
             End If
 
-                EmptyFolder(mcIndexWriteFolder)
+            EmptyFolder(mcIndexWriteFolder)
                     If gbDebug Then
                     EmptyFolder(mcIndexCopyFolder)
                 End If
@@ -1028,7 +1028,7 @@ Public Class Indexer
             oIndexWriter.Dispose()
             EmptyFolder(mcIndexReadFolder)
             CopyFolderContents(mcIndexWriteFolder, mcIndexReadFolder)
-            If moConfig("AdminAcct") <> "" Then
+            If moConfig("AdminAcct") <> "" And moConfig("AdminGroup") <> "AzureWebApp" Then
                 moImp.UndoImpersonation()
                 moImp = Nothing
             End If

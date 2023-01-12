@@ -45,6 +45,8 @@ Partial Public Class fsHelper
     Shared msException As String
     Public AdminJsonAPI As Protean.Cms.Admin.JSONActions
 
+    Public ImpersonationMode As Boolean = False
+
     Private _thumbnailPath As String = "/~ptn"
 
     Shared _libraryTypeExtensions()() As String = {
@@ -73,10 +75,16 @@ Partial Public Class fsHelper
 
     Public Sub New()
         Me.New(System.Web.HttpContext.Current)
+        If goConfig("AdminAcct") <> "" And goConfig("AdminGroup") <> "AzureWebApp" Then
+            ImpersonationMode = True
+        End If
     End Sub
 
     Public Sub New(ByVal Context As System.Web.HttpContext)
         goServer = Context.Server
+        If goConfig("AdminAcct") <> "" And goConfig("AdminGroup") <> "AzureWebApp" Then
+            ImpersonationMode = True
+        End If
     End Sub
 
     Public Shadows Sub open(ByVal oPageXml As XmlDocument)
@@ -339,7 +347,7 @@ Partial Public Class fsHelper
 
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
 
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp = New Protean.Tools.Security.Impersonate
                 oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup"))
             End If
@@ -386,7 +394,7 @@ Partial Public Class fsHelper
                 Next
 
             'PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
             End If
@@ -453,7 +461,7 @@ Partial Public Class fsHelper
         Try
 
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
                     Return "Server admin permissions are not configured"
@@ -479,7 +487,7 @@ Partial Public Class fsHelper
                 Return "this folder does not exist - " & cFolderPath & cFolderName
             End If
 
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
             End If
@@ -498,7 +506,7 @@ Partial Public Class fsHelper
         Try
 
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
                     Return "Server admin permissions are not configured"
@@ -522,7 +530,7 @@ Partial Public Class fsHelper
                     Return "this folder does not exist"
                 End If
                 oImp.UndoImpersonation()
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
             End If
@@ -579,7 +587,7 @@ Partial Public Class fsHelper
         Try
 
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
                     Return "Server admin permissions are not configured"
@@ -596,7 +604,7 @@ Partial Public Class fsHelper
                 Return "this file does not exist"
             End If
 
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
             End If
@@ -611,7 +619,7 @@ Partial Public Class fsHelper
         'PerfMon.Log("fsHelper", "DeleteFile")
         Try
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
                     Return "Server admin permissions are not configured"
@@ -628,7 +636,7 @@ Partial Public Class fsHelper
                 Return "this file does not exist"
             End If
 
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
             End If
@@ -821,7 +829,7 @@ Partial Public Class fsHelper
         Try
 
             Dim oImp As Protean.Tools.Security.Impersonate = Nothing
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) = False Then
                     Return Nothing
@@ -832,7 +840,7 @@ Partial Public Class fsHelper
             Dim oFileStream As FileStream = New FileStream(FilePath, FileMode.Open, FileAccess.Read)
             Return oFileStream
 
-            If goConfig("AdminAcct") <> "" Then
+            If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
             End If
