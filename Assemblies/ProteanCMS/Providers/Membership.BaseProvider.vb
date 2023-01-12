@@ -153,7 +153,7 @@ Namespace Providers
                     MyBase.New(aWeb)
                 End Sub
 
-                Public Overridable Function xFrmUserLogon(Optional ByVal FormName As String = "UserLogon") As XmlElement
+                Public Overrides Function xFrmUserLogon(Optional ByVal FormName As String = "UserLogon") As XmlElement 'Just replace Overridable to Overrides
 
                     ' Called to get XML for the User Logon.
 
@@ -292,7 +292,7 @@ Check:
                     End Try
                 End Function
 
-                Public Overridable Function xFrmPasswordReminder() As XmlElement
+                Public Overrides Function xFrmPasswordReminder() As XmlElement  'Just replace Overridable to Overrides
                     Dim oFrmElmt As XmlElement
                     Dim sValidResponse As String
                     Dim cProcessInfo As String = ""
@@ -372,7 +372,7 @@ Check:
                     End Try
                 End Function
 
-                Public Function xFrmActivateAccount() As XmlElement
+                Public Overrides Function xFrmActivateAccount() As XmlElement
                     Dim oFrmElmt As XmlElement
 
                     'Dim sValidResponse As String
@@ -631,7 +631,7 @@ Check:
                     End Try
                 End Function
 
-                Public Function xFrmConfirmPassword(ByVal AccountHash As String) As XmlElement
+                Public Overrides Function xFrmConfirmPassword(ByVal AccountHash As String) As XmlElement
                     Try
                         Dim oMembership As New Protean.Cms.Membership(myWeb)
                         Dim SubmittedUserId As Integer = CInt("0" + goRequest("id"))
@@ -646,7 +646,7 @@ Check:
                     End Try
                 End Function
 
-                Public Function xFrmConfirmPassword(ByVal nUserId As Long) As XmlElement
+                Public Overrides Function xFrmConfirmPassword(ByVal nUserId As Long) As XmlElement
                     Try
                         Dim moPolicy As XmlElement
                         Dim passwordClass As String = "required"
@@ -756,7 +756,7 @@ Check:
                     End Try
                 End Function
 
-                Public Overridable Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
+                Public Overrides Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
 
                     Dim oGrpElmt As XmlElement
                     Dim cProcessInfo As String = ""

@@ -40,7 +40,7 @@ namespace Protean.Tools.Xslt
             {
                 return text.Replace(replace, replaceWith);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return text;
             }
@@ -63,7 +63,7 @@ namespace Protean.Tools.Xslt
                 }
                 return dateString;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return dateString;
             }
@@ -83,7 +83,7 @@ namespace Protean.Tools.Xslt
                     return dateString;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return dateString;
             }
@@ -97,7 +97,7 @@ namespace Protean.Tools.Xslt
                     text = text.Substring(text.LastIndexOf(search) + search.Length);
                 return text;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return text;
             }
@@ -111,7 +111,7 @@ namespace Protean.Tools.Xslt
                     text = text.Substring(0, text.LastIndexOf(search));
                 return text;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return text;
             }
@@ -124,7 +124,7 @@ namespace Protean.Tools.Xslt
                 Random oRand = new Random();
                 return oRand.Next(min, max);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return min;
             }
@@ -137,7 +137,7 @@ namespace Protean.Tools.Xslt
 
                 return System.Guid.NewGuid().ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "noguid";
             }
@@ -149,7 +149,7 @@ namespace Protean.Tools.Xslt
             {
                 return Protean.Tools.Text.CleanName(name, true, true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "error";
             }
@@ -166,7 +166,7 @@ namespace Protean.Tools.Xslt
                     nDiff = Microsoft.VisualBasic.DateAndTime.DateDiff(datePart, DateTime.Parse(date1String), DateTime.Parse(date2String)).ToString();
                 return nDiff;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return nDiff;
             }
@@ -187,7 +187,8 @@ namespace Protean.Tools.Xslt
         private object oXslTExtensionsObject; // Any Class we want to use for additional functionality
         private string cXslTExtensionsURN; // The Urn for the class
 
-        private XslTransform oClassicTransform; // Classic Transform Object
+       
+       // private XslTransform oClassicTransform; // Classic Transform Object
         private XslCompiledTransform oCompiledTransform; // Compiled Transform Object
         private XsltArgumentList XsltArgs; // Argurment List
         // Error Handling
@@ -218,7 +219,7 @@ namespace Protean.Tools.Xslt
                 // make sure we close the reader properly
                 oXslReader.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             // raise the public timeout event
@@ -434,7 +435,7 @@ namespace Protean.Tools.Xslt
 
         private void ProcessClassicTimed(ref string cResult)
         {
-            string sProcessInfo = "";
+            string sProcessInfo = "ProcessClassicTimed";
             try
             {
                 TransformClassicDelegate d = new TransformClassicDelegate(ProcessClassic);
@@ -457,10 +458,11 @@ namespace Protean.Tools.Xslt
             }
             catch (Exception ex)
             {
-                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessClassicTimed", ex, ""));
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, sProcessInfo, ex, ""));
             }
         }
 
+       
         private void ProcessClassic(ref string cResult)
         {
             try
@@ -471,7 +473,7 @@ namespace Protean.Tools.Xslt
 
                 // create the transform object
 
-                oClassicTransform = new XslTransform();
+                XslTransform oClassicTransform = new XslTransform();
                 // get the Xsl
                 if (!(cFileLocation == ""))
                 {

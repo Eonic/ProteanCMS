@@ -486,8 +486,8 @@ Partial Public Class Cms
                     Dim results As Lucene.Net.Search.TopDocs
 
                     If LCase(myWeb.moConfig("SiteSearchDebug")) = "on" Then
-                        addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
-                        addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneQuery", searchQuery.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneLivePageFilter", livePages.ToString)
                     End If
 
                     If livePages Is Nothing Then
@@ -808,9 +808,9 @@ Partial Public Class Cms
                     Dim results As Lucene.Net.Search.TopDocs
 
                     If LCase(myAPI.moConfig("SiteSearchDebug")) = "on" Then
-                        addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
+                        addElement(CType(resultsXML, XmlElement), "LuceneQuery", searchQuery.ToString)
                         If Not livePages Is Nothing Then
-                            addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+                            addElement(CType(resultsXML, XmlElement), "LuceneLivePageFilter", livePages.ToString)
                         End If
                     End If
 
@@ -1295,8 +1295,24 @@ Partial Public Class Cms
                     ' meaning that this phrase will only attempt the match once, rather than on every character
                     ' of the search string
                     cRegExPattern = "^" & cRegExPattern & ".*?$"
+                    Try
 
-                    reMasterCheck = New Regex(cRegExPattern, RegexOptions.IgnoreCase Or RegexOptions.Compiled)
+                        reMasterCheck = New Regex(cRegExPattern, RegexOptions.IgnoreCase Or RegexOptions.Compiled)
+
+                    Catch 'ex As Exception
+
+                        'return invalid search
+                        Dim oResXMLErr As XmlElement = moPageXml.CreateElement("Content")
+                        oResXMLErr.SetAttribute("searchType", IIf(bUserQuery, "USER", "REGEX"))
+                        oResXMLErr.SetAttribute("SearchString", "Invalid Query")
+                        oResXMLErr.SetAttribute("type", "SearchHeader")
+                        oResXMLErr.SetAttribute("Hits", "0")
+                        oResXMLErr.SetAttribute("Time", Now.Subtract(dtStart).TotalMilliseconds)
+                        oResXMLErr.SetAttribute("resultIds", "")
+                        moContextNode.AppendChild(oResXMLErr)
+
+                        Exit Sub
+                    End Try
 
                     ' Get the SQL that will look for any of the search words or their variants
 
@@ -1442,7 +1458,7 @@ Partial Public Class Cms
             Dim cSearchWhereUSER As String = ""
             Dim cRegEx As String = ""
             Dim cRegExPattern As String = ""
-            Dim reMasterCheck As Regex
+            Dim reMasterCheck As Regex = Nothing
             Dim cSql As String = ""
             Dim aSearchTerms As Collection = New Collection
             Dim bFullMatch As Boolean = True

@@ -70,7 +70,7 @@ Public Module stdTools
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
         Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-        Dim moRequest As System.Web.HttpRequest
+        Dim moRequest As System.Web.HttpRequest = Nothing
 
         If Not System.Web.HttpContext.Current Is Nothing Then
             moRequest = System.Web.HttpContext.Current.Request
@@ -1203,12 +1203,12 @@ Public Module stdTools
 
 #Region "Deprecated"
 
-    <Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")> _
+    <Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")>
     Public Function is_valid_email(ByRef str_Renamed As String) As Boolean
         Return Tools.Text.IsEmail(str_Renamed)
     End Function
 
-    <Obsolete("This method is deprecated, use Protean.Tools.Text.SimpleRegexFind instead")> _
+    '<Obsolete("This method is deprecated, use Protean.Tools.Text.SimpleRegexFind instead")> _
     Public Function SimpleRegexFind(ByVal cSearchString As String, ByVal cRegexPattern As String, Optional ByVal nReturnGroup As Integer = 0, Optional ByVal oRegexOptions As RegexOptions = RegexOptions.None) As String
         Return Protean.Tools.Text.SimpleRegexFind(cSearchString, cRegexPattern, nReturnGroup, oRegexOptions)
     End Function

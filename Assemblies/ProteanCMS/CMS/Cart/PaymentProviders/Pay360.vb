@@ -55,7 +55,7 @@ Namespace Providers
                 Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.Pay360.Activities"
-                Private myWeb As Protean.Cms
+                Shadows myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode
                 Private nTransactionMode As TransactionMode
 
@@ -84,7 +84,7 @@ Namespace Providers
                     Dim sProcessInfo As String = ""
                     Dim aResponse() As String
                     Dim oDictResp As Hashtable
-                    Dim cResponse As String
+                    Dim cResponse As String = String.Empty
 
                     Dim oDictOpt As Hashtable = New Hashtable
                     Dim sSubmitPath As String = oCart.mcPagePath & returnCmd
@@ -138,7 +138,7 @@ Namespace Providers
                         'oPay360Cfg = moPaymentCfg.SelectSingleNode("provider[@name='SecPay']")
                         oDictOpt = xmlTools.xmlToHashTable(oPay360Cfg, "value")
 
-                        Select Case oDictOpt("opperationMode")
+                        Select Case Convert.ToString(oDictOpt("opperationMode"))
                             Case "true"
                                 nTransactionMode = TransactionMode.Test
                             Case "false"
@@ -363,7 +363,7 @@ Namespace Providers
                                         ccXform.valid = True
 
                                     Else
-                                        Select Case oDictResp("mpi_status_code")
+                                        Select Case Convert.ToString(oDictResp("mpi_status_code"))
                                             Case "200"
                                                 'we have to get the browser to redirect
                                                 ' v4 change - don't explicitly redirect to /deafault.ashx - this breaks everything.
@@ -444,7 +444,7 @@ Namespace Providers
                                     err_msg_log = "Payment Failed : " & oDictResp("message") & " (Code::" & oDictResp("code") & ")"
 
                                     ' Produce nice format error messages.
-                                    Select Case oDictResp("code")
+                                    Select Case Convert.ToString(oDictResp("code"))
                                         Case "N"
                                             err_msg = "The transaction was not authorised by your payment provider."
                                         Case "C"
@@ -521,14 +521,14 @@ Namespace Providers
 
                             End If
 
-                            ccXform.addNote(ccXform.moXformElmt, xForm.noteTypes.Alert, err_msg)
+                            ccXform.addNote(CType(ccXform.moXformElmt, XmlElement), xForm.noteTypes.Alert, err_msg)
 
 
 
                         Else
                             If ccXform.isSubmitted And ccXform.validationError = "" Then
                                 err_msg = "Unknown Error: Please call"
-                                ccXform.addNote(ccXform.moXformElmt, xForm.noteTypes.Alert, err_msg)
+                                ccXform.addNote(CType(ccXform.moXformElmt, XmlElement), xForm.noteTypes.Alert, err_msg)
                             Else
                                 err_msg = ccXform.validationError
                             End If
@@ -727,7 +727,7 @@ Namespace Providers
 
 
 
-                Public Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
+                Public Overloads Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String   'Overload method from base class
                     Dim cProcessInfo As String = ""
                     ' Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                     '  Dim oSagePayV3Cfg As XmlNode
@@ -829,7 +829,7 @@ Namespace Providers
                         Dim err_msg As String = ""
 
                         If oDictResp("valid") = "true" Then
-                            Select Case oDictResp("mpi_status_code")
+                            Select Case Convert.ToString(oDictResp("mpi_status_code"))
 
                                 Case "212"
                                     'not subscribes to 3D Secure
@@ -892,12 +892,12 @@ Namespace Providers
 
                 Public Function CancelPayments(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
-                    Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
+                    Dim moPaymentCfg As String = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                     '   Dim oPay360Cfg As XmlNode
 
                     Try
 
-
+                        Return ""
 
                     Catch ex As Exception
                         returnException(myWeb.msException, mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)

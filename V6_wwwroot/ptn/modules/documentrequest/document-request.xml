@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content position="" moduleType="documentdownloadxform" box="" title="Document Request" process="xform" contentFile="">
+						<model class="ewXform">
+							<instance>
+								<emailer xmlns="http://www.eonic.co.uk/ewcommon/Services">
+									<oBodyXML>
+										<Items id="DocumentRequest">
+											<Name />
+											<Email />
+											<Company />
+											<Country />
+											<AttachmentIds ids="" xpath="Content/Path" />
+										</Items>
+									</oBodyXML>
+									<!--<xsltPath>/ptn/modules/documentrequest/RequestDocumentEmail.xsl</xsltPath>-->
+									<xsltPath>RequestDocumentEmail.xsl</xsltPath>
+									<fromName></fromName>
+									<fromEmail></fromEmail>
+									<recipientEmail></recipientEmail>
+									<ccRecipient></ccRecipient>
+									<SubjectLine>Documents</SubjectLine>
+								</emailer>
+							</instance>
+							<submission method="post" action="/ptn/tools/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="DocumentRequest" event="return form_check(this);" />
+							<bind id="emailer" nodeset="emailer">
+								<bind id="oBodyXML" nodeset="oBodyXML/Items">
+									<bind id="Name" nodeset="Name" required="false()" type="string" />
+									<bind id="Company" nodeset="Company" required="false()" type="string" />
+									<bind id="Email" nodeset="Email" required="true()" type="email" />
+									<bind id="Country" nodeset="Country" required="true()" type="string" />
+									<bind nodeset="AttachmentIds">
+										<bind id="AttachmentIds" nodeset="@ids" required="false()" type="string" />
+									</bind>
+								</bind>
+								<bind id="Email" nodeset="fromEmail" required="false()" type="string" />
+								<bind id="Email" nodeset="recipientEmail" required="false()" type="string" />
+								<bind id="nOffice" nodeset="SubjectLine" required="true()" type="string" />
+							</bind>
+						</model>
+						<group>
+							<group class="inline">
+								<input bind="Name">
+									<label>Name</label>
+								</input>
+								<input bind="Email" class="required">
+									<label>Email</label>
+								</input>
+								<input bind="Company">
+									<label>Company</label>
+								</input>
+								<input bind="Country" class="required ">
+									<label>Country</label>
+								</input>
+							</group>
+							<select appearance="full" bind="AttachmentIds" class="relatedDocs">
+								<label>
+									<strong>Download:</strong>
+								</label>
+							</select>
+							<submit submission="DocRequest" bind="ewCmd" class="principle">
+								<label>Download</label>
+							</submit>
+						</group>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+			<bind id="cModuleTitleDisplay" nodeset="@displayTitle" required="false()" type="string"/>
+			<bind id="cFileLocation" nodeset="@contentFile" required="false()" type="string"/>
+			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+			<bind id="hideLabel" nodeset="@hideLabel" required="false()" type="string"/>
+			<bind id="formLayout" nodeset="@formLayout" required="false()" type="string"/>
+		</bind>
+		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	</model>
+	<group ref="EditContent">
+		<label>Document Download Module</label>
+		<group class="tabs">
+			<group>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
+				<group>
+					<alert>WARNING! Updating forms is an advanced task. Please contact your web-support rep for assistance.</alert>
+					<input bind="cModuleTitle" class="long">
+						<label>Title</label>
+					</input>
+					<textarea bind="cContentBody" rows="10" cols="100" class="xml"/>
+					<div>Or choose a filepath</div>
+					<input bind="cFileLocation" class="long">
+						<label>File Location</label>
+					</input>
+				</group>
+				<group>
+					<label>Related Documents</label>
+					<relatedContent type="Document" direction="2Way" search="find add" relationType="related">
+						<label>Document</label>
+					</relatedContent>
+				</group>
+				<group>
+					<label>Sent Message</label>
+					<relatedContent search="find add" type="FormattedText" relationType="" maxRelationNo="1" direction="1way">
+						<label>Formatted Text</label>
+					</relatedContent>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+				<group>
+					<select bind="hideLabel" appearance="full" class="inline-items">
+						<item>
+							<label>Hide Labels</label>
+							<value>true</value>
+						</item>
+						<help class="inline">Labels must stay in a form so they are available to screen readers, but this will make them hidden.</help>
+					</select>
+					<select1 bind="formLayout" appearance="full" class="inline-items">
+						<label>Form Layout</label>
+						<item>
+							<label>Horizontal</label>
+							<value>horizontal</value>
+						</item>
+						<item>
+							<label>Vertical</label>
+							<value>vertical</value>
+						</item>
+						<help class="inline">
+							<p>Horizontal forms will have labels to the left of the input, vertical forms will have the labels above.</p>
+						</help>
+					</select1>
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
+					<!-- These hidden fields and bindings are required for the component-->
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="cModuleType" class="hidden">
+						<label>ModuleType</label>
+					</input>
+					<!-- end of hidden fields -->
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				</group>
+			</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Document Request</label>
+		</submit>
+	</group>
+</Content>

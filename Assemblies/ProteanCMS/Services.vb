@@ -393,11 +393,13 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Search, 0, 0, 0, ex.ToString)
+            Return Nothing
         Finally
 
             myWeb.Close()
             myWeb = Nothing
         End Try
+
     End Function
 
     <WebMethod()>

@@ -345,20 +345,100 @@ Public Class Setup
             Case "NewDB"
                 buildDatabase(True)
             Case "RestoreZip"
-                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                Dim oDB As New Protean.Tools.Database
 
+                Dim oDB As New Protean.Tools.Database
                 oDB.DatabaseServer = goConfig("DatabaseServer")
                 oDB.DatabaseUser = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
                 oDB.DatabasePassword = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
                 oDB.FTPUser = goConfig("DatabaseFtpUsername")
                 oDB.FtpPassword = goConfig("DatabaseFtpPassword")
                 oDB.RestoreDatabase(goConfig("DatabaseName"), goRequest.Form("ewDatabaseFilename"))
-
+            Case "RunTests"
+                RunTests()
         End Select
 
     End Sub
+    Public Sub RunTests()
+        Dim oTests As New Protean.Tests()
+        Dim testCount As Integer
+        Dim testResponse As String = ""
 
+        testResponse = oTests.TestImpersonation()
+        If Not testResponse.StartsWith("Impersonation") Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        Else
+            AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
+        End If
+        TestCount = TestCount + 1
+
+
+        testResponse = oTests.TestEmailSend()
+        If testResponse <> "Message Sent" Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        Else
+            AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>Email Sent</p>")
+        End If
+        TestCount = TestCount + 1
+
+        testResponse = oTests.TestCreateFolder()
+        If Not testResponse.StartsWith("Folder Created") Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        Else
+            AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
+        End If
+        TestCount = TestCount + 1
+
+
+        testResponse = oTests.TestWriteFile()
+        If Not testResponse.StartsWith("File Written") Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        Else
+            AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
+        End If
+        TestCount = TestCount + 1
+
+        testResponse = oTests.TestWriteFileAlphaFS()
+        If Not testResponse.StartsWith("File Written") Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        Else
+            AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
+        End If
+        TestCount = TestCount + 1
+
+        testResponse = oTests.TestDeleteFile()
+        If Not testResponse.StartsWith("File Deleted") Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        Else
+            AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
+        End If
+        TestCount = TestCount + 1
+
+
+        testResponse = oTests.TestDeleteFolder()
+        If Not testResponse.StartsWith("Folder Deleted") Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        Else
+            AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
+        End If
+        TestCount = TestCount + 1
+
+        testResponse = oTests.TestHtmlTidy()
+        If Not testResponse.StartsWith("HTML Tidy is working") Then
+            AddResponse("<p><i class=""fa fa-times text-danger"">&#160;</i>" & testResponse & "</p>")
+        Else
+            AddResponse("<p><i class=""fa fa-check text-success"">&#160;</i>" & testResponse & "</p>")
+        End If
+        testCount = testCount + 1
+
+
+        '6 test the ability to update config settins
+        '7 test the ability to write to the index folder location
+
+        '9 database integrety tests
+
+        AddResponse("<h1> " & CStr(testCount) & " Tests Complete</h1>")
+
+    End Sub
 
     Public Sub GetSetupXml()
         Dim oPageElmt As XmlElement
@@ -578,7 +658,12 @@ Recheck:
                             AddResponse(oFsh.OptimiseImages(folderPath, 0, 0, False, goConfig("TinifyKey"), folderPrefix))
                             cStep = 1
                         End If
+                    Case "RunTests"
+                        If goRequest("ewCmd2") = "Do" Then
+                            cPostFlushActions = "RunTests"
 
+                            cStep = 1
+                        End If
                     Case "ImportContent"
                         If goRequest("ewCmd2") = "Do" Then
                             Dim oIC As New ContentImport(Me)
@@ -653,6 +738,7 @@ Recheck:
                 oElmt5 = appendMenuItem(oElmt2, "Import V3 Data", "ImportV3", , , "fa-level-up")
 
                 oElmt6 = appendMenuItem(oElmt1, "Maintenance", "Maintenance", , , "fa-wrench")
+                oElmt10 = appendMenuItem(oElmt6, "Run Tests", "RunTests", , , "fa-check-square-o")
                 oElmt7 = appendMenuItem(oElmt6, "Update Database Schema", "UpgradeDB", , , "fa-level-up")
                 oElmt8 = appendMenuItem(oElmt6, "Clean Audit Table", "CleanAudit", , , "fa-eraser")
                 oElmt9 = appendMenuItem(oElmt6, "Import Content", "ImportContent", , , "fa-arrow-circle-right")
@@ -1769,7 +1855,7 @@ DoOptions:
 
     Public Function CleanName(ByVal cName As String, Optional ByVal bLeaveAmp As Boolean = False) As String
 
-        Protean.Tools.Text.CleanName(cName, bLeaveAmp, False)
+        Return Protean.Tools.Text.CleanName(cName, bLeaveAmp, False)
 
     End Function
 
@@ -2183,10 +2269,16 @@ DoOptions:
 
                 MyBase.addSubmit(oFrmElmt, "", "Backup Database")
 
-                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
+                Dim oImp As Protean.Tools.Security.Impersonate = Nothing
+                If goConfig("AdminAcct") <> "" Then
+                    oImp = New Protean.Tools.Security.Impersonate
+                    If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
+                    Else
+                        MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
+                    End If
+                End If
 
-                    MyBase.Instance.InnerXml = "<backup name=""" & DatabaseName & """ filename=""" & DatabaseFilename & """ filepath=""" & DatabaseFilepath & """/>"
+                MyBase.Instance.InnerXml = "<backup name=""" & DatabaseName & """ filename=""" & DatabaseFilename & """ filepath=""" & DatabaseFilepath & """/>"
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
@@ -2204,10 +2296,11 @@ DoOptions:
 
                         End If
                     End If
-                    oImp.UndoImpersonation()
 
-                Else
-                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
+
+                If goConfig("AdminAcct") <> "" Then
+                    oImp.UndoImpersonation()
+                    oImp = Nothing
                 End If
 
                 MyBase.addValues()
@@ -2225,7 +2318,7 @@ DoOptions:
             Dim oFsh As fsHelper
 
             Dim DatabaseName As String = goConfig("DatabaseName")
-            Dim DatabaseFilename As String
+            Dim DatabaseFilename As String = String.Empty
             Dim DatabaseFilepath As String = goServer.MapPath("/") & "..\data"
 
             Try

@@ -21,11 +21,12 @@ Public Class PerfLog
     Private nStep As Integer
     Private oBuilder As StringBuilder
     Private oPerfMonRequests As PerformanceCounter
-    Private Entries(1000) As String
+    Private Entries() As String
     Dim dLast As Date = Now
     Dim nTimeAccumalative As Double = 0
     Dim nMemLast As Integer = 0
     Dim nProcLast As Integer = 0
+    Dim LatestLog As String = ""
 
 
     ' Counters
@@ -83,6 +84,7 @@ Public Class PerfLog
         'If bLoggingOn Then Exit Sub
         Try
             If Not bLoggingOn Then
+                ReDim Entries(1000)
                 bLoggingOn = True
                 nStep = 0
                 moSession("Logging") = "On"
@@ -109,6 +111,7 @@ Public Class PerfLog
 
                 _workingSetPrivateMemoryCounter = New PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess.ProcessName)
                 _workingSetMemoryCounter = New PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess.ProcessName)
+
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.ToString)
@@ -221,7 +224,9 @@ Public Class PerfLog
 
                 '   Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
                 '   Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
-
+            Else
+                'TS this is to be viewed in a memory dump to see how far the CMS object has proceeded.
+                LatestLog = cModuleName + "-" + cProcessName + "-" + cDescription
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.ToString)
