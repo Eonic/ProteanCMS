@@ -346,7 +346,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     filterForm.submission(formName, "", "POST", "")
 
                     If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
-                        If (Convert.ToString(myWeb.moRequest.Form("Submit")).ToLower.Contains("clear filters")) Then
+                        If (Convert.ToString(myWeb.moRequest.Form("Submit")).ToLower.Contains("no exepereince(s) found")) Then
                             myWeb.moResponse.Redirect(myWeb.moRequest.RawUrl)
                         End If
                     End If
@@ -482,7 +482,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                         oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
 
                         If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
-                            filterForm.addSubmit(oFrmGroup, "Clear Filters", "No Exepereince(s) found", "submit", "ClearFilters")
+                            filterForm.addSubmit(oFrmGroup, "Clear Filters", "No Exepereince(s) Found", "submit", "ClearFilters")
                         End If
                     End If
 
