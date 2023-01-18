@@ -10145,7 +10145,9 @@
     <div class="container-fluid" id="tpltLocateSearch">
       <div class="row">
         <div class="col-lg-3">
-          <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='FindContentToRelate']" mode="xform"/>
+
+          <xsl:apply-templates select="ContentDetail/Content[@type='xform' and @name='FindContentToRelate']" mode="xform-card"/>
+
           <div class="card card-default">
             <div class="card-header">
               <h3 >Instructions</h3>
