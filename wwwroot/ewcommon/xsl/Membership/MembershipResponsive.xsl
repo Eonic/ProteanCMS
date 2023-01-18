@@ -1066,15 +1066,15 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<!-- View addresses -->
-					<div class="add">
-            <a class="btn btn-primary principle" href="{$currentPage/@url}?memCmd=addContact">
+					<div class="add clearfix">
+            <a class="btn btn-primary pull-right btn-sm" href="{$currentPage/@url}?memCmd=addContact">
               <i class="fa fa-plus">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>
               Add New Address
             </a>
 					</div>
-					<div class="list orders cols{@cols}">
+					<div class="list orders">
 						<xsl:apply-templates select="$page/User[1]/Contacts/Contact" mode="membershipUserContactsDisplayBrief"/>
 						<div class="terminus">&#160;</div>
 					</div>
@@ -1120,15 +1120,42 @@
   </xsl:template>
 
 	<xsl:template match="Contact" mode="membershipUserContactsDisplayBrief">
-		<div class="listItem contact contactbrief col-md-6">
-      <div class="lIinner">
+		<div class="contact contactbrief">
+			
 			<h4>
+
 				<xsl:value-of select="cContactType"/>
 			</h4>
-			<h3>
-				<xsl:value-of select="cContactName"/>
-			</h3>
+	
 			<p>
+				<a class="btn btn-primary btn-sm pull-right" href="{$currentPage/@url}?memCmd=editContact&amp;id={nContactKey}">
+					<xsl:attribute name="title">
+						<!--Edit Contact-->
+						<xsl:call-template name="term4024" />
+					</xsl:attribute>
+					<i class="fa fa-pencil">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>
+
+					<!--Edit-->
+					<xsl:call-template name="term4022" />
+				</a>
+				<a class="btn btn-danger btn-sm pull-right" href="{$currentPage/@url}?memCmd=delContact&amp;id={nContactKey}" onclick="return confirm('Are you sure you want to delete this address?');">
+					<xsl:attribute name="title">
+						<!--Delete Contact-->
+						<xsl:call-template name="term4025" />
+					</xsl:attribute>
+					<i class="fa fa-trash-o">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>
+					<!--Delete-->
+					<xsl:call-template name="term4023" />
+				</a>
+				<strong>
+					<xsl:value-of select="cContactName"/>
+				</strong><br/>
 				<xsl:if test="cContactCompany/node()!=''">
 					<xsl:value-of select="cContactCompany"/>
 					<br/>
@@ -1142,10 +1169,10 @@
 					<br/>
 				</xsl:if>
 				<xsl:if test="cContactState/node()!=''">
-					<xsl:value-of select="cContactState"/>
-					<br/>
+					<xsl:value-of select="cContactState"/>					
 				</xsl:if>
 				<xsl:if test="cContactZip/node()!=''">
+					&#160;
 					<xsl:value-of select="cContactZip"/>
 					<br/>
 				</xsl:if>
@@ -1167,37 +1194,9 @@
 				</xsl:if>
 			</p>
        
-			<p class="buttons">
-				<a class="btn btn-primary" href="{$currentPage/@url}?memCmd=editContact&amp;id={nContactKey}">
-          <xsl:attribute name="title">
-						<!--Edit Contact-->
-						<xsl:call-template name="term4024" />
-					</xsl:attribute>
-          <i class="fa fa-pencil">
-            <xsl:text> </xsl:text>
-          </i>
-          <xsl:text> </xsl:text>
-					
-					<!--Edit-->
-					<xsl:call-template name="term4022" />
-				</a>
-				<xsl:text>&#160;&#160;&#160;</xsl:text>
-				<a class="btn btn-danger" href="{$currentPage/@url}?memCmd=delContact&amp;id={nContactKey}" onclick="return confirm('Are you sure you want to delete this address?');">
-					<xsl:attribute name="title">
-						<!--Delete Contact-->
-						<xsl:call-template name="term4025" />
-					</xsl:attribute>
-          <i class="fa fa-trash-o">
-            <xsl:text> </xsl:text>
-          </i>
-          <xsl:text> </xsl:text>
-					<!--Delete-->
-					<xsl:call-template name="term4023" />
-				</a>
-			</p>
+
 			<div class="terminus">&#160;</div>
       </div>
-		</div>
 	</xsl:template>
 	<!-- ##### /Membership User Contacts module ##### -->
  

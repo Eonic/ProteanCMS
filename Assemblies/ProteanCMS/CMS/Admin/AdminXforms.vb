@@ -7123,7 +7123,7 @@ Partial Public Class Cms
                     MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function

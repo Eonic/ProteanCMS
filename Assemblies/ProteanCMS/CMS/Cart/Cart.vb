@@ -3055,35 +3055,36 @@ processFlow:
                                 'Go and collect the valid shipping options available for this order
                                 Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
                                 Dim oRowSO As DataRow
-                                For Each oRowSO In oDsShipOptions.Tables(0).Rows
-                                    Dim bCollection As Boolean = False
-                                    If Not IsDBNull(oRowSO("bCollection")) Then
-                                        bCollection = oRowSO("bCollection")
-                                    End If
-                                    If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
-                                        'logic to overide below...
-                                        If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
-                                            If (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
-                                                shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                                                oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                                oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
-                                                oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                                                oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                                                oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                            End If
+                                If Not oDsShipOptions Is Nothing Then
+                                    For Each oRowSO In oDsShipOptions.Tables(0).Rows
+                                        Dim bCollection As Boolean = False
+                                        If Not IsDBNull(oRowSO("bCollection")) Then
+                                            bCollection = oRowSO("bCollection")
                                         End If
-                                    ElseIf (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
-                                        shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                                        oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                        oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
-                                        oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                                        oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                                        oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                    End If
+                                        If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
+                                            'logic to overide below...
+                                            If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
+                                                If (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
+                                                    shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                    oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                    oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
+                                                    oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                    oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                    oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                                End If
+                                            End If
+                                        ElseIf (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
+                                            shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                            oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                            oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
+                                            oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                            oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                            oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                        End If
 
 
-                                Next
-
+                                    Next
+                                End If
                             End If
                             If shipCost = -1 Then shipCost = 0
                         End If
@@ -7186,7 +7187,7 @@ processFlow:
             Dim cUniqueLink As String = ""
             Dim cProcessInfo As String = ""
             Try
-                If moDBHelper.checkTableColumnExists("tblCart", "nAmountReceived") Then
+                If moDBHelper.checkTableColumnExists("tblCartOrder", "nAmountReceived") Then
                     ' If the cPaymentType is deposit then we need to make a link, otherwise we need to get the paymentReceived details.
                     If cPaymentType = "deposit" Then
                         ' Get the unique link from the cart

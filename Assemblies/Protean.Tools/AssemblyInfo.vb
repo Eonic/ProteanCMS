@@ -14,7 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("ProteanCommon Tools")>
 <Assembly: AssemblyCompany("Eonic Digital LLP")>
 <Assembly: AssemblyProduct("Protean.Tools")>
-<Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  20212")>
+<Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2023")>
 <Assembly: AssemblyTrademark("Eonic")>
 <Assembly: CLSCompliant(True)>
 <Assembly: ComVisible(False)>
@@ -33,9 +33,9 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("6.0.58.33")>
-<Assembly: AssemblyFileVersion("6.0.58.33")>
+<Assembly: AssemblyVersion("6.0.60.1")>
+<Assembly: AssemblyFileVersion("6.0.60.1")>
 
 '<Assembly: System.Security.AllowPartiallyTrustedCallersAttribute()> 
 
-<assembly: AssemblyInformationalVersion("0.0.0.107")>
+<assembly: AssemblyInformationalVersion("0.0.0.134")>
