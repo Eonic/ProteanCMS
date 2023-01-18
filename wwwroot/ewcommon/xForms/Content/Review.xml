@@ -25,6 +25,9 @@
 						<EmailSent/>
 						<ShowImage/>
 					</Content>
+					<average_rating/>
+					<total/>
+					<recommend_to_friend/>
 				</cContentXmlBrief>
 				<cContentXmlDetail>
 					<Content>
@@ -43,6 +46,9 @@
 						<EmailSent/>
 						<ShowImage/>
 					</Content>
+					<average_rating/>
+					<total/>
+					<recommend_to_friend/>
 				</cContentXmlDetail>
 				<nAuditId/>
 				<nAuditKey/>
@@ -78,7 +84,7 @@
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
 				<bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>s
-				<bind id="cContentReviewDate" nodeset="ReviewDate" required="false()" type="string"/>
+				<bind id="dPublishDate" nodeset="ReviewDate" required="false()" type="string"/>
 				<bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
 				<bind id="cUrl" nodeset="Url" required="false()" type="string"/>
 				<bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
