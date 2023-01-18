@@ -514,7 +514,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\MySql.Data.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Fonet.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\JsonWebTokens.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\BouncyCastle.Crypto.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csharp.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csharp.dll.config
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
@@ -527,7 +526,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.x
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\MySql.Data.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Fonet.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.AssemblyReference.cache
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CoreCompileInputs.cache
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CopyComplete

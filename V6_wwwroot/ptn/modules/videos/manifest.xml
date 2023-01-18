@@ -7,6 +7,9 @@
     </ContentTypeGroup>   
   </ContentTypes>
   <ModuleTypes>
+	  <ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
+		  <Module type="Video" formPath="video" icon="fab fa-youtube" name="Video"></Module>
+	  </ModuleGroup>
     <ModuleGroup name="Content Lists" icon="fas fa-th-list">
       <Module type="VideoList" formPath="video-list" icon="far fa-file-video" name="Video List"></Module>
     </ModuleGroup>
