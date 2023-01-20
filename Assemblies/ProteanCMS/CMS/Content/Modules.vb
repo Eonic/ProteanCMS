@@ -335,31 +335,36 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Try
                     'current contentfilter id
 
-
-
-
-
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
                     'Dim cnt As Int16
                     Dim oFrmGroup As XmlElement
                     Dim filterForm As xForm = New xForm(myWeb)
-
+                    Dim className As String = String.Empty
+                    Dim oAdditionalFilterInput As New Hashtable()
                     filterForm.NewFrm(formName)
-                    filterForm.submission(formName, "", "POST", "return form_check(this);")
+                    filterForm.submission(formName, "", "POST", "")
 
                     If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
-                        If (Convert.ToString(myWeb.moRequest.Form("Submit")).ToLower.Contains("clear filters")) Then
+                        If (Convert.ToString(myWeb.moRequest.Form("Submit")).ToLower.Contains("no exepereince(s) found")) Then
                             myWeb.moResponse.Redirect(myWeb.moRequest.RawUrl)
                         End If
                     End If
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
 
+                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
+                        className = oFilterElmt.GetAttribute("className")
+                        If (myWeb.moRequest.Form(className) IsNot Nothing) Then
+                            oAdditionalFilterInput.Add(className, Convert.ToString(myWeb.moRequest.Form(className)))
+
+                        End If
+
+                    Next
 
                     For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
                         Dim calledType As Type
-                        Dim className As String = oFilterElmt.GetAttribute("className")
+                        className = oFilterElmt.GetAttribute("className")
                         Dim providerName As String = oFilterElmt.GetAttribute("providerName")
 
                         If className <> "" Then
@@ -395,6 +400,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             args(1) = oFilterElmt
                             args(2) = filterForm
                             args(3) = oFrmGroup
+                            'args(4) = oAdditionalFilterInput
 
                             calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                         End If
@@ -404,7 +410,7 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     Dim whereSQL As String = ""
 
-                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "ShowExperiences")
+                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "hidden-sm hidden-md hidden-lg filter-xs-btn showexperiences")
                     'filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
                     filterForm.addValues()
 
@@ -420,7 +426,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
                                 Dim calledType As Type
-                                Dim className As String = oFilterElmt.GetAttribute("className")
+                                className = oFilterElmt.GetAttribute("className")
                                 Dim providerName As String = oFilterElmt.GetAttribute("providerName")
 
                                 If className <> "" Then
@@ -451,11 +457,12 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                                     Dim o As Object = Activator.CreateInstance(calledType)
 
-                                    Dim args(3) As Object
+                                    Dim args(4) As Object
                                     args(0) = myWeb
                                     args(1) = whereSQL
                                     args(2) = filterForm
                                     args(3) = oFrmGroup
+                                    args(4) = oFilterElmt
 
                                     whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
                                 End If
@@ -474,6 +481,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, "Product")
                         oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
 
+                        If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
+                            filterForm.addSubmit(oFrmGroup, "Clear Filters", "No Exepereince(s) Found", "submit", "ClearFilters")
+                        End If
                     End If
 
                 Catch ex As Exception
