@@ -3459,27 +3459,7 @@ Partial Public Class Cms
                                     nRelId = relateCmdArr(1)
                                     myWeb.moDbHelper.RemoveContentRelation(nParId, nRelId)
                                     bResult = True
-                                    'Update newly added review count - code added by nita
-                                    If myWeb.moConfig("UpdateNewAddedReviewFlag") <> "" Then
-                                        If nParId > 0 Then
-                                            Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
-                                            oTempInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, nParId)
-                                            If oTempInstance.InnerXml <> "" Then
-                                                Dim oProduct As XmlElement = oTempInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content")
-                                                If Not oProduct Is Nothing Then
-                                                    If oProduct.GetAttribute("ratingCount") <> "" Then
-                                                        Dim RatingCount As String = oProduct.GetAttribute("ratingCount")
-                                                        Dim FinalCount As String = RatingCount - 1
-                                                        oProduct.SetAttribute("ratingCount", FinalCount)
-                                                        myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, oTempInstance)
-                                                    End If
 
-                                                End If
-
-                                            End If
-                                            myWeb.moSession("contentParId") = Nothing
-                                        End If
-                                    End If
                                     Exit For
                                 ElseIf myItem.contains("RelateAdd") Then
 
