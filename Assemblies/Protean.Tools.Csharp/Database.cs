@@ -22,7 +22,7 @@ namespace Protean.Tools
         private string cFtpUserName = "";
         private string cFtpPassword = "";
 
-        private int nConnectTimeout = 1800;
+        private int nConnectTimeout = 15;
         private int nMaxPoolSize = 100;
         private int nMinPoolSize = 0;
         private bool bPooling = false;
