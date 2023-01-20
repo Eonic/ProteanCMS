@@ -3119,7 +3119,6 @@ Partial Public Class Cms
                                     moDbHelper.setContentLocation(pgid, id, True, bCascade, )
                                 End If
 
-
                                 editResult = dbHelper.ActivityType.ContentEdited
 
                                 If updatedVersionId <> id Then

@@ -958,8 +958,6 @@ ProcessFlow:
                             sAdminLayout = "AdminXForm"
                         End If
 
-
-
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
                     Case "EditContent"
