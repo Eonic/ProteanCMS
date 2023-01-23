@@ -723,9 +723,19 @@
     </script>
   </xsl:template>
 
-  <xsl:template match="Content[@type='Module']" mode="themeModuleExtras">
-
-  </xsl:template>
+	<xsl:template match="Content[@type='Module']" mode="themeModuleExtras">
+		<xsl:if test="@modAnim!=''">
+			<xsl:attribute name="data-modanim">
+				<xsl:value-of select="@modAnim"/>
+			</xsl:attribute>
+			<xsl:attribute name="data-modanimdelay">
+				<xsl:value-of select="@modAnimDelay"/>
+			</xsl:attribute>
+			<xsl:attribute name="data-modanimspeed">
+				<xsl:value-of select="@modAnimSpeed"/>
+			</xsl:attribute>
+		</xsl:if>
+	</xsl:template>
 
   <xsl:template match="Content[@type='Module']" mode="themeModuleClassExtras">
 

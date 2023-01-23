@@ -34,6 +34,7 @@
 			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
 			<bind id="cModAnim" nodeset="@modAnim" required="false()" type="string"/>
 			<bind id="cModAnimDelay" nodeset="@modAnimDelay" required="false()" type="string"/>
+			<bind id="cModAnimSpeed" nodeset="@modAnimSpeed" required="false()" type="string"/>
 			<bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
 			<bind id="bMatchHeight" nodeset="@matchHeight" required="false()" type="string"/>
 			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
@@ -197,7 +198,7 @@
 				</group>
 				<group id="animate" class="row">
 					<group class="row">
-						<group class="col-lg-6">
+						<group class="col-lg-4">
 							<select1 bind="cModAnim" appearance="minimal">
 								<label>Animation Style</label>
 								<item>
@@ -237,6 +238,10 @@
 									<value>fadeInRightBig</value>
 								</item>
 								<item>
+									<label>Slide In Up</label>
+									<value>slideInUp</value>
+								</item>
+								<item>
 									<label>Slide In Down</label>
 									<value>slideInDown</value>
 								</item>
@@ -270,10 +275,35 @@
 								</item>
 							</select1>
 						</group>
-						<group class="col-lg-6">
+						<group class="col-lg-4">
 							<range bind="cModAnimDelay" start="0" end="500" step="10" >
 								<label>Delay</label>
 							</range>
+						</group>
+						<group class="col-lg-4">
+							<select1 bind="cModAnimSpeed" appearance="minimal">
+								<label>Animation Speed</label>
+								<item>
+									<label>Animate Faster (.5 sec)</label>
+									<value>animate__faster</value>
+								</item>
+								<item>
+									<label>Animate Faster (.8 sec)</label>
+									<value>animate__fast</value>
+								</item>
+								<item>
+									<label>Default (1 sec)</label>
+									<value/>
+								</item>
+								<item>
+									<label>Animate Slow (2 sec)</label>
+									<value>animate__slow</value>
+								</item>
+								<item>
+									<label>Animate Slower (3 sec)</label>
+									<value>animate__slower</value>
+								</item>
+							</select1>
 						</group>
 					</group>
 				</group>
