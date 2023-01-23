@@ -5,10 +5,12 @@ C:\Windows\assembly\GAC_MSIL\Microsoft.Web.Iis.Rewrite\1.0.0.0__31bf3856ad364e35
 ..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Release\createsend-dotnet.dll
 ..\Assemblies\ProteanCMS\bin\ProteanCMS.dll
 ..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll
+splash.jpg
 ..\packages\Fonet.1.0\lib\net20\Fonet.dll
 ..\packages\JavaScriptEngineSwitcher.Core.3.3.0\lib\net45\JavaScriptEngineSwitcher.Core.dll
 ..\packages\BundleTransformer.Less.1.12.44\lib\net40\BundleTransformer.Less.dll
 ..\packages\MsieJavaScriptEngine.3.0.3\lib\net45\MsieJavaScriptEngine.dll
+Installer_Logo.jpg
 ..\packages\AdvancedStringBuilder.0.1.0\lib\net45\AdvancedStringBuilder.dll
 ..\packages\WebGrease.1.6.0\lib\WebGrease.dll
 ..\packages\AjaxMin.5.14.5506.26202\lib\net40\AjaxMin.dll

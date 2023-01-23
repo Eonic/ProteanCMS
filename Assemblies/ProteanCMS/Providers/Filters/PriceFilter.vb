@@ -35,7 +35,7 @@ Namespace Providers
                     Dim nMaxPrice As Double = Convert.ToDouble(FilterConfig.Attributes("toPrice").Value)
                     Dim nStep As Integer = Convert.ToDouble(FilterConfig.Attributes("step").Value)
                     Dim priceFilterRange As XmlElement
-                    Dim cnt As Integer
+                    Dim cnt As Integer = 0
 
                     If (FilterConfig.Attributes("name") IsNot Nothing) Then
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
@@ -52,7 +52,12 @@ Namespace Providers
                             priceFilterRange = oXform.addSelect(oFromGroup, "PriceFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
                         End If
 
-                        oXform.addOptionsFromSqlDataReader(priceFilterRange, oDr, "name", "value")
+                        While oDr.Read
+                            Dim name As String = aWeb.moCart.mcCurrencySymbol + Convert.ToString(oDr("minPrice")) + "-" + aWeb.moCart.mcCurrencySymbol + Convert.ToString(oDr("maxPrice")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
+                            Dim value As String = Convert.ToString(oDr("minPrice")) + "-" + Convert.ToString(oDr("maxPrice"))
+
+                            oXform.addOption(priceFilterRange, name, value, True)
+                        End While
                     End Using
                     If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
                         If (oXml.InnerText.Trim() <> String.Empty) Then
@@ -61,14 +66,14 @@ Namespace Providers
                             Dim aPrice() As String = oXml.InnerText.Split(",")
                             If (aPrice.Length <> 0) Then
                                 For cnt = 0 To aPrice.Length - 1
-                                    sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().InnerText
-                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
+                                    sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().FirstChild().InnerText
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), " filter-applied", "fa-times")
                                 Next
 
                             Else
 
-                                sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "principle filter-applied", "", oXml.InnerText)
+                                sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
+                                oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), "filter-applied", "fa-times")
                             End If
                         End If
                     End If
@@ -78,8 +83,9 @@ Namespace Providers
             End Sub
 
 
-            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement) As String
                 Dim cProcessInfo As String = "ApplyFilter"
+                Dim cPriceCond As String = ""
                 Try
 
                     Dim priceRange() As String
@@ -91,16 +97,24 @@ Namespace Providers
                     End If
 
                     If (cSelectedPrice <> String.Empty) Then
-
-                        priceRange = cSelectedPrice.Split("-")
-
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = cWhereSql + " AND "
                         End If
 
+                        Dim cPriceLst As String() = cSelectedPrice.Split(New Char() {","c})
+                        For Each cSchema As String In cPriceLst
+                            priceRange = cSchema.Split("-")
+                            If cPriceCond <> "" Then
+                                cPriceCond = cPriceCond + " or ( ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
+                            Else
+                                cPriceCond = cPriceCond + " ( ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
+                            End If
+
+                        Next
+                        cPriceCond = cPriceCond + ")"
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
-                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" + cDefinitionName + "'"
-                        cWhereSql = cWhereSql + " And ci.nNumberValue between " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
+                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "' AND ("
+                        cWhereSql = cWhereSql + cPriceCond + ")"
 
 
                     End If

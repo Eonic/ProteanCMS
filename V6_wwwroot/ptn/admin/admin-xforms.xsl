@@ -265,7 +265,7 @@
 
 
 	<!-- Template for login, pick page-->
-	<xsl:template match="Content[@name='UserLogon' or @name='EditPageLayout' or @name='FindRelatedContent']" mode="xform">
+	<xsl:template match="Content[@name='UserLogon' or @name='EditPageLayout' or @name='FindRelatedContent' or @name='FindContentToRelate']" mode="xform">
 		<form method="{model/submission/@method}" action=""  novalidate="novalidate">
 			<xsl:attribute name="class">
 				<xsl:text>xform needs-validation</xsl:text>

@@ -18,3 +18,14 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debu
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMS.Installer.Actions.vbproj.CopyComplete
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMSInstallActions.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMSInstallActions.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\ProteanCMSInstallActions.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\ProteanCMSInstallActions.CA.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\ProteanCMSInstallActions.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\Microsoft.Deployment.WindowsInstaller.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\Microsoft.Web.Administration.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\Microsoft.Deployment.WindowsInstaller.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMS.Installer.Actions.vbproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMS.Installer.Actions.vbproj.CoreCompileInputs.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMS.Installer.Actions.vbproj.CopyComplete
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMSInstallActions.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMSInstallActions.pdb

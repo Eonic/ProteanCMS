@@ -13887,7 +13887,7 @@
 				<xsl:value-of select="cContentSchemaName/node()"/>
 			</td>
 			<td colspan="2">
-				<xsl:value-of select="cDefinitionName/node()"/>
+				<xsl:value-of select="@cDefinitionName"/>
 			</td>
 			<td colspan="2">
 				<xsl:value-of select="cContentValueXpath/node()"/>
@@ -13906,7 +13906,7 @@
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Edit
 				</a>
-				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;DefName={@cDefinitionName}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
 					<i class="fa fa-recycle fa-white">
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Re-Index

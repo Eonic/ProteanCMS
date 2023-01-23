@@ -2717,7 +2717,7 @@ processFlow:
                         additionalFields = ", i.nDepositAmount as nDepositAmount"
                     End If
                     If moDBHelper.checkTableColumnExists("tblCartItem", "xItemXml") Then
-                        sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, i.xItemXml as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, i.xItemXml.value('Content[1]/@type','nvarchar(50)') AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId " & additionalFields & "  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
+                        sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, i.xItemXml as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, i.xItemXml.value('Content[1]/@type','nvarchar(50)') AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId " & additionalFields & " ,A.nStatus As ProductStatus from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey where nCartOrderId=" & nCartIdUse
                     Else
                         sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, p.cContentXmlDetail as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, p.cContentSchemaName AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId " & additionalFields & " from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
                     End If
@@ -9457,6 +9457,120 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Function
 
 
+
+
+
+        'creating the duplicate order from old order
+        Public Function CreateDuplicateOrder(oldCartxml As XmlDocument, nOrderId As Integer, cMethodName As String) As String
+            Try
+                Dim cResult As String = "Success"
+                Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
+                GetCart(oCartListElmt, nOrderId)
+                'Insert code into tblcartOrder
+                Dim oInstance As XmlDocument = New XmlDocument
+                Dim oElmt As XmlElement
+                Dim oeResponseElmt As XmlElement = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response")
+                Dim ReceiptId As String = (oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value).ToString()
+                Dim Amount As Double = Convert.ToDouble(oCartListElmt.GetAttribute("total"))
+                Dim nItemID As Integer = 0 'ID of the cart item record
+                Dim oDs As DataSet
+
+                oInstance.AppendChild(oInstance.CreateElement("instance"))
+                oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)
+                addNewTextNode("cCurrency", oElmt, oCartListElmt.GetAttribute("currency"))
+                addNewTextNode("cCartSiteRef", oElmt, moCartConfig("OrderNoPrefix"))
+                addNewTextNode("cCartForiegnRef", oElmt)
+                addNewTextNode("nCartStatus", oElmt, oCartListElmt.GetAttribute("statusId"))
+                addNewTextNode("cCartSchemaName", oElmt, "Order")
+                addNewTextNode("cCartSessionId", oElmt, oCartListElmt.GetAttribute("session"))
+
+                addNewTextNode("nCartUserDirId", oElmt, "0")
+                addNewTextNode("nPayMthdId", oElmt, "0")
+                addNewTextNode("cPaymentRef", oElmt)
+                addNewTextNode("cCartXml", oElmt)
+                addNewTextNode("nShippingMethodId", oElmt, oCartListElmt.GetAttribute("shippingType"))
+                addNewTextNode("cShippingDesc", oElmt, oCartListElmt.GetAttribute("shippingDesc"))
+                addNewTextNode("nShippingCost", oElmt, oCartListElmt.GetAttribute("shippingCost"))
+                If (oCartListElmt.SelectSingleNode("/Notes") IsNot Nothing) Then
+                    addNewTextNode("cClientNotes", oElmt, oCartListElmt.SelectSingleNode("/Notes").OuterXml())
+                Else
+                    addNewTextNode("cClientNotes", oElmt, "")
+                End If
+                addNewTextNode("cSellerNotes", oElmt)
+                addNewTextNode("nTaxRate", oElmt, "0")
+                addNewTextNode("nGiftListId", oElmt, "-1")
+                addNewTextNode("nAuditId", oElmt)
+                'validate column exists then only
+                If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                    addNewTextNode("nReceiptType", oElmt, "0")
+                End If
+
+                mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
+
+                mnProcessId = 1
+                Dim oItem As XmlNode
+                Dim oOption As XmlElement
+                Dim oOptionName As String = String.Empty
+                Dim oOptionValue As Double = 0
+                If (oCartListElmt.SelectSingleNode("/Item") IsNot Nothing) Then
+                    For Each oItem In (oCartListElmt.SelectNodes("Item"))
+
+                        Dim nProductKey As Long = Convert.ToInt64(oItem.Attributes("contentId").InnerText)
+
+                        Dim nQuantity As Long = Convert.ToInt64(oItem.Attributes("quantity").InnerText)
+                        AddItem(nProductKey, nQuantity, Nothing, "",,, True,,)
+                        If (oItem.SelectSingleNode("/Item/Item") IsNot Nothing) Then
+
+                            Dim sSQL2 As String = ("select TOP 1 nCartItemKey  from tblCartItem  as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nParentId=0 and nCartOrderId =" & mnCartId.ToString() & "Order by nCartItemKey desc")
+
+                            Dim nCartItemId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+
+                            For Each oOption In oItem.SelectNodes("Item")
+
+                                If (oOption.SelectSingleNode("Name") IsNot Nothing) Then
+                                    oOptionName = oOption.SelectSingleNode("Name").InnerText
+                                End If
+                                If (oOption.Attributes("nPrice") IsNot Nothing) Then
+                                    oOptionValue = oOption.Attributes("nPrice").Value
+                                End If
+                                AddProductOption(nCartItemId, oOptionName, oOptionValue)
+                            Next
+                        End If
+                    Next
+                End If
+
+                Dim deliveryAddId As Integer = 0
+                Dim billingAddId As Integer = 0
+                Dim sSql As String = "select nContactKey, cContactType, nAuditKey from tblCartContact inner join tblAudit a on nAuditId = a.nAuditKey where nContactCartId = " & CStr(nOrderId)
+                Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)
+                    While (oDr.Read())
+                        If oDr("cContactType") = "Billing Address" Then
+                            billingAddId = oDr("nContactKey")
+                        End If
+                        If LCase(moCartConfig("NoDeliveryAddress")) = "on" Then
+                            deliveryAddId = billingAddId
+                        Else
+                            If oDr("cContactType") = "Delivery Address" Then
+                                deliveryAddId = oDr("nContactKey")
+                            End If
+                        End If
+                    End While
+
+                End Using
+
+
+                If deliveryAddId <> 0 And billingAddId <> 0 Then
+                    useSavedAddressesOnCart(billingAddId, deliveryAddId)
+                End If
+                ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
+                GetCart(oCartListElmt, mnCartId)
+                SaveCartXML(oCartListElmt, mnCartId)
+                Return cResult
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+                Return Nothing
+            End Try
+        End Function
     End Class
 End Class
 

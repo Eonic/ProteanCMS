@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.0.59"?>
+<?define version  = "6.0.60"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS into GAC $(var.version) (64bit)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -33,19 +33,21 @@
 
 
       <Directory Id='TARGETDIR' Name='SourceDir'>
-           <!--
+          
             <Component Id='com_4F4E0891_9559_2849_AA81_90D923C221DF' Guid='46B2EB81-8A8C-44CA-AC4A-4C5C9D6EF5BF' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_4F4E0891_9559_2849_AA81_90D923C221DF' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='splash.jpg' Source='splash.jpg' KeyPath='yes' />
             </Component>
             <Component Id='com_90E2C6FA_B536_6248_86D8_A92A1B7AD160' Guid='99B7C4BF-2DF3-459E-91E6-7751E7B69604' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_90E2C6FA_B536_6248_86D8_A92A1B7AD160' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Installer_Logo.jpg' Source='Installer_Logo.jpg' KeyPath='yes' />
             </Component>
-		  -->
+		
 		  <Directory Id='libs' Name='Libraries'>
 		    <Component Id='com_newtonsoft_local' Guid='57b6c216-051f-4871-a410-11bd50449189' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 			  <File Id='_newtonsoft_local' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Newtonsoft.Json.dll' Source='libraries\Newtonsoft.Json.dll' KeyPath='yes' />
 		    </Component>
+			
 		  </Directory>
+		
             <!-- The 'ewInstaller' project output. -->
             <Directory Id='ewInstaller.Binaries' />
             <Directory Id='DesktopFolder' Name='Desktop' />
@@ -312,10 +314,11 @@
             <ComponentRef Id='StartMenu' />
           
            <ComponentRef Id='com_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' />
-            <!-- <ComponentRef Id='com_4F4E0891_9559_2849_AA81_90D923C221DF' />
-			<ComponentRef Id='com_90E2C6FA_B536_6248_86D8_A92A1B7AD160' />-->
-    
+             <ComponentRef Id='com_4F4E0891_9559_2849_AA81_90D923C221DF' />
+			<ComponentRef Id='com_90E2C6FA_B536_6248_86D8_A92A1B7AD160' />
+           
 			<ComponentRef Id='com_newtonsoft_local' />
+		
            <!-- <ComponentRef Id='com_0050138C_ECBD_81A7_D88B_EF626150B2E9' />-->
             <ComponentRef Id='com_06F482B3_1FDF_E839_AF25_0B1482DBBD28' />
             <ComponentRef Id='com_0D920AEA_7F40_8AB4_7B25_53C91AB34843' />
@@ -838,7 +841,7 @@
                 <Control Id='Line1' Type='Line' X='0' Y='52' Width='375' Height='6' Text='{\VSI_MS_Sans_Serif13.0_0_0}MsiHorizontalLine' TabSkip='yes' Disabled='yes' />
                 <Control Id='Line2' Type='Line' X='0' Y='252' Width='375' Height='6' Text='{\VSI_MS_Sans_Serif13.0_0_0}MsiHorizontalLine' TabSkip='yes' Disabled='yes' />
                 <Control Id='BannerText' Type='Text' X='9' Y='9' Width='306' Height='33' Text='{\VSI_MS_Sans_Serif16.0_1_0}Installation Incomplete' TabSkip='yes' Transparent='yes' NoPrefix='yes' />
-                <Control Id='BodyTextRemove' Type='Text' X='9' Y='63' Width='354' Height='180' Text='{\VSI_MS_Sans_Serif13.0_0_0}The installer was interrupted before [ProductName] could be installed. You need to restart the installer to try again.&#xD;&#xA;&#xD;&#xA;Click "Close" to exit.' TabSkip='yes' NoPrefix='yes'>
+                <Control Id='BodyTextRemove' Type='Text' X='9' Y='63' Width='354' Height='180' Text='{\VSI_MS_Sans_Serif13.0_0_0}The installer failed in error before [ProductName] could be installed. You need to restart the installer to try again.&#xD;&#xA;&#xD;&#xA;Click "Close" to exit.' TabSkip='yes' NoPrefix='yes'>
                     <Condition Action='show'><![CDATA[REMOVE=""]]></Condition>
                     <Condition Action='hide'><![CDATA[REMOVE<>""]]></Condition>
                 </Control>
