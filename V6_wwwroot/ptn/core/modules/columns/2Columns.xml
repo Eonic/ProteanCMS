@@ -470,7 +470,7 @@
 
         <!-- end of hidden fields -->
         <group id="columnPresentation">
-          <select1 bind="cModuleBox" class="" appearance="minimal">
+          <select1 bind="cModuleBox"  class="bgStyle" appearance="minimal">
             <label>Background Style</label>
             <item>
               <label>None</label>

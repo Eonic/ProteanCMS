@@ -148,6 +148,14 @@ ProteanCMS
  <param name="jObj"></param>
  <returns></returns>
 </member>
+<member name="M:Protean.Cms.Cart.JSONActions.UpdateOrderWithPaymentResponse(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
+ <summary>
+ Add Missing order 
+ </summary>
+ <param name="myApi"></param>
+ <param name="jObj"></param>
+ <returns></returns>
+</member>
 <member name="M:Protean.Cms.Cart.JSONActions.ProcessNewPayment(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
  <summary>
  Process New payment
@@ -732,18 +740,6 @@ ProteanCMS
  If in Single Session per Session mode this will log an activity indicating that the user is still in session.
  </summary>
  <remarks>It is called in EonicWeb but has been extracted so that it may be called by lightweight EonicWeb calls (e.g. ajax calls)</remarks>
-</member>
-<member name="M:Protean.ExternalSynchronisation.Xslt.RemoveRelatedContentByRef(System.String,System.Int32,System.String)">
- <summary>
- Function to be called from an import XSLT to allow the deletion of content not contained in ValidContentNames.
- ONLY REMOVES CONTENT RELEATION FOR CONTENTS THAT ARE THE SAME TYPE AS SPECIFICALLY FOR PRODUCT IMPORTS
- </summary>
- <param name="cValidContentNames">List of Frefs for content for which we don't want to remove the relationship for</param>
- <param name="nContentId">The Content Id of the item we are handing relations for.</param>
- <param name="cContentTypeToRemove">The content Type of the Content Type we are removing from.</param>
- <returns>A count of the number of content items removed</returns>
- <remarks></remarks>
- 
 </member>
 <member name="T:Protean.PayPalAPI.CustomSecurityHeaderType">
 <remarks/>
@@ -9855,6 +9851,18 @@ ProteanCMS
 </member>
 <member name="P:Protean.PayPalAPI.ExternalRememberMeOptOutReq.ExternalRememberMeOptOutRequest">
 <remarks/>
+</member>
+<member name="M:Protean.ExternalSynchronisation.Xslt.RemoveRelatedContentByRef(System.String,System.Int32,System.String)">
+ <summary>
+ Function to be called from an import XSLT to allow the deletion of content not contained in ValidContentNames.
+ ONLY REMOVES CONTENT RELEATION FOR CONTENTS THAT ARE THE SAME TYPE AS SPECIFICALLY FOR PRODUCT IMPORTS
+ </summary>
+ <param name="cValidContentNames">List of Frefs for content for which we don't want to remove the relationship for</param>
+ <param name="nContentId">The Content Id of the item we are handing relations for.</param>
+ <param name="cContentTypeToRemove">The content Type of the Content Type we are removing from.</param>
+ <returns>A count of the number of content items removed</returns>
+ <remarks></remarks>
+ 
 </member>
 <member name="T:Protean.Config">
  <summary>

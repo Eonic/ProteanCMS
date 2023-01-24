@@ -434,7 +434,6 @@
     <Compile Include="Setup\Tests.vb" />
     <Compile Include="Tools\ExternalSynchronisation.vb" />
     <Compile Include="Providers\Filter.BaseProvider.vb" />
-    <Compile Include="Providers\Filters\OfferFilter.vb" />
     <Compile Include="Providers\Filters\PageFilter.vb" />
     <Compile Include="Providers\Filters\PriceFilter.vb" />
     <Compile Include="Providers\Streaming.BaseProvider.vb" />

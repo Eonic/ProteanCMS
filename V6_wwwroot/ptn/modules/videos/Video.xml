@@ -16,9 +16,9 @@
 						</Local>
 						<YouTube code="" showSuggested="false" useHttps="false"/>
 						<Vimeo code="" portrait="false" title="true" byline="false" autoplay="false" loop="false"/>
-            <HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="" controls="controls" loop="" muted="" poster="" preload="none">
-              <img class="display" />
-            </HTML5>  
+						<HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="" controls="controls" loop="" muted="" poster="" preload="none">
+						  <img class="display" />
+						</HTML5>  
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
@@ -83,23 +83,17 @@
         <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
         <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
 	</model>
-	<group ref="EditContent" class="2col">
+	<group ref="EditContent">
 		<label>Edit Video Module </label>
+		<group class="tabs">
+			
+
 		<group>
-			<group>
-				<!-- These hidden fields and bindings are required for the component-->
-				<input bind="nContentKey" class="hidden">
-					<label>ContentId</label>
-				</input>
-				<input bind="cModuleType" class="hidden">
-					<label>ModuleType</label>
-				</input>
-				<!-- End of hidden fields -->
-                <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
-                <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
-			</group>
-		</group>
-		<group>
+					<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Content</span>
+				</label>
 			<group>
 				<label>Content</label>
 				<input bind="cModuleTitle" class="long">
@@ -336,36 +330,44 @@
 					</case>
 				</switch>
 			</group> 
+			
+		</group>
+
+				<group>						<label>
+					<i class="fas fa-link"> </i>
+					<span class="space"> </span>
+					<span>Footer Links</span>
+				</label>
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+				</group>
 			<group>
-				<label>Module Links</label>
-				<select1 bind="cLinkType" appearance="full" class="required">
-					<label>Type of Link</label>
-					<item>
-						<label>Internal (Going to a page on this site)</label>
-						<value>internal</value>
-						<toggle case="cLinkType_1" event="DOMActivate"/>
-					</item>
-					<item>
-						<label>External (Going to another site)</label>
-						<value>external</value>
-						<toggle case="cLinkType_2" event="DOMActivate"/>
-					</item>
-				</select1>
-				<switch class="disable">
-					<case id="cLinkType_1">
-						<select1 bind="cModuleLink" class="siteTree">
-							<label>Link to page</label>
-						</select1>
-					</case>
-					<case id="cLinkType_2">
-						<input bind="cModuleLink" class="short">
-							<label>Link to URL</label>
-						</input>
-					</case>
-				</switch>
-				<input bind="cModuleLinkText" class="long">
-					<label>Module footer link text</label>
-				</input>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+			</group>
+					<group>
+								<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
+					<!-- These hidden fields and bindings are required for the component-->
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="cModuleType" class="hidden">
+						<label>ModuleType</label>
+					</input>
+					<!-- end of hidden fields -->
+
+
+
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				</group>
 			</group>
 		</group>
 	</group>
