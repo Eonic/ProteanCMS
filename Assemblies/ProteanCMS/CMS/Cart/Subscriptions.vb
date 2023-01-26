@@ -1728,15 +1728,15 @@ RedoCheck:
                 End Try
             End Function
 
-            Public Function RenewSubscription(ByVal SubKey As Long, bEmailClient As Boolean) As String
+            Public Function RenewSubscription(ByVal SubKey As Long, bEmailClient As Boolean, Optional bSkipPayment As Boolean = False) As String
 
                 'Get the subscription XML
                 Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, SubKey)
-                Return RenewSubscription(SubXml.FirstChild, bEmailClient)
+                Return RenewSubscription(SubXml.FirstChild, bEmailClient, bSkipPayment)
 
             End Function
 
-            Public Function RenewSubscription(ByVal SubXml As XmlElement, bEmailClient As Boolean) As String
+            Public Function RenewSubscription(ByVal SubXml As XmlElement, bEmailClient As Boolean, Optional bSkipPayment As Boolean = False) As String
                 Dim cProcessInfo As String
                 Try
                     Dim renewInterval As DateInterval = DateInterval.Day
@@ -1782,92 +1782,95 @@ RedoCheck:
                     'Collect the payment
                     Dim CurrencyCode As String = "GBP"
                     Dim PaymentDescription As String = "Renewal of " & oSubContent.GetAttribute("name") & "ref:" & SubId
-                    Dim paymentStatus As String = ""
+                    Dim paymentStatus As String = "Success" ' Allow policy to renew if no payment method
 
                     Dim PayInstance As New XmlDocument()
                     PayInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartPaymentMethod, nPaymentMethodId))
-                    Dim PaymentMethod As String = PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderName").InnerText
 
-                    If PaymentMethod <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, PaymentMethod)
-                        Try
-                            paymentStatus = oPayProv.Activities.CollectPayment(myWeb, nPaymentMethodId, Amount, CurrencyCode, PaymentDescription, myWeb.moCart)
-                        Catch ex2 As Exception
-                            cProcessInfo = ex2.Message
-                            ' no payment method to cancel. to we email site owner.
-                        End Try
+                    If Not bSkipPayment Then
+                        Dim PaymentMethod As String = PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderName").InnerText
+                        If PaymentMethod <> "" Then
+                            paymentStatus = "Failed"
+                            Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, PaymentMethod)
+                            Try
+                                paymentStatus = oPayProv.Activities.CollectPayment(myWeb, nPaymentMethodId, Amount, CurrencyCode, PaymentDescription, myWeb.moCart)
+                            Catch ex2 As Exception
+                                cProcessInfo = ex2.Message
+                                ' no payment method to cancel. to we email site owner.
+                            End Try
+                        End If
                     End If
 
                     If paymentStatus = "Success" Then
-                        myWeb.moCart.mnProcessId = 6
-                        myWeb.moCart.updateCart("Success")
-                        myWeb.moCart.GetCart()
-                        myWeb.moCart.addDateAndRef(myWeb.moCart.moCartXml.FirstChild, dNewStart)
+                            myWeb.moCart.mnProcessId = 6
+                            myWeb.moCart.updateCart("Success")
+                            myWeb.moCart.GetCart()
+                            myWeb.moCart.addDateAndRef(myWeb.moCart.moCartXml.FirstChild, dNewStart)
 
-                        'Send the invoice
-                        If bEmailClient Then
-                            myWeb.moCart.emailReceipts(myWeb.moCart.moCartXml)
+                            'Send the invoice
+                            If bEmailClient Then
+                                myWeb.moCart.emailReceipts(myWeb.moCart.moCartXml)
+                            End If
+
+                            'myWeb.moCart.updateCart("Success")
+
+                            myWeb.moCart.SaveCartXML(myWeb.moCart.moCartXml.FirstChild)
+
+                            'On Success update subscription
+                            Dim SubInstance As New XmlDocument()
+                            SubInstance.LoadXml("<instance>" & myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, SubXml.GetAttribute("id")) & "</instance>")
+                            Dim editElmt As XmlElement = SubInstance.DocumentElement.FirstChild
+
+                            editElmt.SelectSingleNode("dExpireDate").InnerText = xmlDate(dNewEnd)
+
+                            editElmt.SelectSingleNode("dUpdateDate").InnerText = xmlDate(Now())
+                            editElmt.SelectSingleNode("nUpdateDirId").InnerText = myWeb.mnUserId
+                            editElmt.SelectSingleNode("cDescription").InnerText = "Policy Renewed " & Now()
+
+                            'We only remove user from groups (this needs to happen by schduler to remove once expired)
+
+                            myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.Subscription, SubInstance.DocumentElement)
+
+                            'Create renewal record
+                            Dim renewalInstance As New XmlDocument()
+                            renewalInstance.LoadXml("<instance>" & myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.SubscriptionRenewal, 0) & "</instance>")
+                            Dim editElmt2 As XmlElement = renewalInstance.DocumentElement.FirstChild
+
+                            editElmt2.SelectSingleNode("nSubId").InnerText = SubId
+                            editElmt2.SelectSingleNode("nPaymentMethodId").InnerText = nPaymentMethodId
+                            editElmt2.SelectSingleNode("nOrderId").InnerText = myWeb.moCart.mnCartId.ToString()
+                            editElmt2.SelectSingleNode("nPaymentStatus").InnerText = "1"
+                            editElmt2.SelectSingleNode("xNotesXml").InnerXml = SubInstance.DocumentElement.InnerXml
+                            editElmt2.SelectSingleNode("dPublishDate").InnerText = xmlDate(dNewStart)
+                            editElmt2.SelectSingleNode("dExpireDate").InnerText = xmlDate(dNewEnd)
+
+                            myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.SubscriptionRenewal, renewalInstance.DocumentElement)
+
+                            Return "Success"
+
+                        Else
+
+                            myWeb.moCart.mnProcessId = 5
+                            myWeb.moCart.updateCart("Failed")
+
+                            'On Failure
+                            'Record the failure
+                            Dim renewalInstance As New XmlDocument()
+                            renewalInstance.LoadXml("<instance>" & myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.SubscriptionRenewal, 0) & "</instance>")
+                            Dim editElmt2 As XmlElement = renewalInstance.DocumentElement.FirstChild
+
+                            editElmt2.SelectSingleNode("nSubId").InnerText = SubId
+                            editElmt2.SelectSingleNode("nPaymentMethodId").InnerText = nPaymentMethodId
+                            editElmt2.SelectSingleNode("nPaymentStatus").InnerText = "0"
+                            editElmt2.SelectSingleNode("xNotesXml").InnerText = "<error>" & paymentStatus & "</error>"
+
+                            myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.SubscriptionRenewal, renewalInstance.DocumentElement)
+
+                            Return paymentStatus
+
+                            'ExpireSubscription(SubKey)
+
                         End If
-
-                        'myWeb.moCart.updateCart("Success")
-
-                        myWeb.moCart.SaveCartXML(myWeb.moCart.moCartXml.FirstChild)
-
-                        'On Success update subscription
-                        Dim SubInstance As New XmlDocument()
-                        SubInstance.LoadXml("<instance>" & myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, SubXml.GetAttribute("id")) & "</instance>")
-                        Dim editElmt As XmlElement = SubInstance.DocumentElement.FirstChild
-
-                        editElmt.SelectSingleNode("dExpireDate").InnerText = xmlDate(dNewEnd)
-
-                        editElmt.SelectSingleNode("dUpdateDate").InnerText = xmlDate(Now())
-                        editElmt.SelectSingleNode("nUpdateDirId").InnerText = myWeb.mnUserId
-                        editElmt.SelectSingleNode("cDescription").InnerText = "Policy Renewed " & Now()
-
-                        'We only remove user from groups (this needs to happen by schduler to remove once expired)
-
-                        myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.Subscription, SubInstance.DocumentElement)
-
-                        'Create renewal record
-                        Dim renewalInstance As New XmlDocument()
-                        renewalInstance.LoadXml("<instance>" & myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.SubscriptionRenewal, 0) & "</instance>")
-                        Dim editElmt2 As XmlElement = renewalInstance.DocumentElement.FirstChild
-
-                        editElmt2.SelectSingleNode("nSubId").InnerText = SubId
-                        editElmt2.SelectSingleNode("nPaymentMethodId").InnerText = nPaymentMethodId
-                        editElmt2.SelectSingleNode("nOrderId").InnerText = myWeb.moCart.mnCartId.ToString()
-                        editElmt2.SelectSingleNode("nPaymentStatus").InnerText = "1"
-                        editElmt2.SelectSingleNode("xNotesXml").InnerXml = SubInstance.DocumentElement.InnerXml
-                        editElmt2.SelectSingleNode("dPublishDate").InnerText = xmlDate(dNewStart)
-                        editElmt2.SelectSingleNode("dExpireDate").InnerText = xmlDate(dNewEnd)
-
-                        myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.SubscriptionRenewal, renewalInstance.DocumentElement)
-
-                        Return "Success"
-
-                    Else
-
-                        myWeb.moCart.mnProcessId = 5
-                        myWeb.moCart.updateCart("Failed")
-
-                        'On Failure
-                        'Record the failure
-                        Dim renewalInstance As New XmlDocument()
-                        renewalInstance.LoadXml("<instance>" & myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.SubscriptionRenewal, 0) & "</instance>")
-                        Dim editElmt2 As XmlElement = renewalInstance.DocumentElement.FirstChild
-
-                        editElmt2.SelectSingleNode("nSubId").InnerText = SubId
-                        editElmt2.SelectSingleNode("nPaymentMethodId").InnerText = nPaymentMethodId
-                        editElmt2.SelectSingleNode("nPaymentStatus").InnerText = "0"
-                        editElmt2.SelectSingleNode("xNotesXml").InnerText = "<error>" & paymentStatus & "</error>"
-
-                        myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.SubscriptionRenewal, renewalInstance.DocumentElement)
-
-                        Return "Failed"
-
-                        'ExpireSubscription(SubKey)
-
-                    End If
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug)

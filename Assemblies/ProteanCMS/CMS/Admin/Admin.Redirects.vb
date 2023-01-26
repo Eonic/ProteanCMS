@@ -180,9 +180,10 @@ Partial Public Class Cms
                                 If i > (skipRecords + takeRecord) - 1 Then
                                     Exit For
                                 Else
-                                    xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                    If props.ChildNodes(i).Name = "add" Then
+                                        xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                    End If
                                 End If
-
                             Next
                             Result = xmlstring & xmlstringend
 
