@@ -410,7 +410,7 @@
 
   <!-- ## Module Layouts   ###########################################################################   -->
 
-  <xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @layout='default']" mode="Layout">
+  <xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @type='default']" mode="Layout">
     <xsl:param name="containerClass"/>
     <div id="template_1_Column" class="template template_1_Column">
       <xsl:apply-templates select="." mode="layoutHeader">
@@ -737,9 +737,37 @@
 		</xsl:if>
 	</xsl:template>
 
-  <xsl:template match="Content[@type='Module']" mode="themeModuleClassExtras">
+	<xsl:template match="*" mode="themeModuleExtrasListItem">
+		<xsl:param name="parentId"/>
+		<xsl:param name="pos"/>
+		<xsl:variable name="parentModule" select="$page/Contents/Content[@id=$parentId]"/>
+		<xsl:if test="$parentModule/@modAnim!=''">
+			<xsl:attribute name="data-modanim">
+				<xsl:value-of select="$parentModule/@modAnim"/>
+			</xsl:attribute>
+			<xsl:attribute name="data-modanimdelay">
+				<xsl:value-of select="$parentModule/@modAnimDelay * $pos"/>
+			</xsl:attribute>
+			<xsl:attribute name="data-modanimspeed">
+				<xsl:value-of select="$parentModule/@modAnimSpeed"/>
+			</xsl:attribute>
+		</xsl:if>
+	</xsl:template>
 
+  <xsl:template match="*" mode="themeModuleClassExtras">
+	  <xsl:if test="@modAnim and @modAnim!=''">
+		  <xsl:text> moduleAnimate-invisible</xsl:text>
+	  </xsl:if>
   </xsl:template>
+
+	<xsl:template match="*" mode="themeModuleClassExtrasListItem">
+		<xsl:param name="parentId"/>
+		<xsl:variable name="parentModule" select="$page/Contents/Content[@id=$parentId]"/>
+
+		<xsl:if test="$parentModule/@modAnim and $parentModule/@modAnim!=''">
+			<xsl:text> moduleAnimate-invisible</xsl:text>
+		</xsl:if>
+	</xsl:template>
 
   <!-- ## Module Handlers - Boxes, No-Boxes, Links and Titles  #######################################   -->
   <xsl:template match="Content[@type='Module']" mode="displayModule">
@@ -802,9 +830,6 @@
 				</xsl:if>
 				<xsl:if test="@responsiveImg='true'">
 					<xsl:text> module-img-responsive</xsl:text>
-				</xsl:if>
-				<xsl:if test="@modAnim and @modAnim!=''">
-					<xsl:text> moduleAnimate-invisible</xsl:text>
 				</xsl:if>
 				<xsl:apply-templates select="." mode="hideScreens" />
 				<xsl:apply-templates select="." mode="marginBelow" />
