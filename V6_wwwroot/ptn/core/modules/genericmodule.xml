@@ -202,6 +202,22 @@
 							<select1 bind="cModAnim" appearance="minimal">
 								<label>Animation Style</label>
 								<item>
+									<label>Bounce</label>
+									<value>bounce</value>
+								</item>
+								<item>
+									<label>Flash</label>
+									<value>flash</value>
+								</item>
+								<item>
+									<label>Pulse</label>
+									<value>pulse</value>
+								</item>
+								<item>
+									<label>Zoom In</label>
+									<value>zoomIn</value>
+								</item>
+								<item>
 									<label>Fade In</label>
 									<value>fadeIn</value>
 								</item>
