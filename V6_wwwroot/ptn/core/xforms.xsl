@@ -2849,7 +2849,7 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
-    <input type="range" id="{$ref}" name="{$ref}" class="form-range">
+    <input type="range" id="{$ref}" name="{$ref}" class="form-range" min="{@start}" max="{@end}" step="{@step}">
       <xsl:if test="@size!=''">
         <xsl:attribute name="size">
           <xsl:value-of select="@size"/>
@@ -2869,6 +2869,12 @@
         </xsl:otherwise>
       </xsl:choose>
     </input>
+	  <span class="range-min">
+		  <xsl:value-of select="@start"/>
+	  </span>
+	  <span class="range-max">
+		  <xsl:value-of select="@end"/>
+	  </span>
     <!--<div class="slider">
       <span class="max">
         <xsl:value-of select="@end"/>
