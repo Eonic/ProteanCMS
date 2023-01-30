@@ -1,0 +1,12 @@
+Site: www.centuryuk.com
+
+
+Current Error: 
+Info:Saving:\ewCache\home.html<Error>File Locked: / - 1</Error>
+
+Exception Type:System.Exception
+Message:An Error writing the page.
+Source:ProteanCMS
+Stack:   at Protean.Cms.SavePage(String cUrl, String cBody) in D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\CMS\Cms.vb:line 8639
+Full Exception:System.Exception: An Error writing the page.
+   at Protean.Cms.SavePage(String cUrl, String cBody) in D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\CMS\Cms.vb:line 8639

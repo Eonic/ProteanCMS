@@ -21,3 +21,9 @@ C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.
 C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csproj.CopyComplete
 C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
 C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.dll
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.pdb
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb
