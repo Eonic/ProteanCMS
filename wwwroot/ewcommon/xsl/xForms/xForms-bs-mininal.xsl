@@ -324,7 +324,8 @@
           <xsl:if test="*/alert or */hint or */help">
             <div class="pt-row">
               <xsl:if test="label">
-                <div class="pt-col ">&#160;</div>
+                <div class="pt-col ">&#160;<xsl:text></xsl:text>
+			</div>
               </xsl:if>
               <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt"/>
             </div>

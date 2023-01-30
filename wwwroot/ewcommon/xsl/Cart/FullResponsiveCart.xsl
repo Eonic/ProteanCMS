@@ -650,7 +650,7 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='notesForm']" mode="xform"/>
       </div>
       <div class="bl">
-        <div class="br">&#160; <text></text>
+        <div class="br">&#160; <xsl:text></xsl:text>
 		</div>
       </div>
     </div>

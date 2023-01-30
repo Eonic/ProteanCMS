@@ -767,7 +767,7 @@
                     </xsl:apply-templates>               
               </ul>
               -->
-        <!--<div class="terminus">&#160; <text></text></div>-->
+        <!--<div class="terminus">&#160; <xsl:text></xsl:text></div>-->
         <!--
             </div>
           </xsl:if>

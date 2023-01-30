@@ -771,7 +771,7 @@
         </div>
       </xsl:if>
       <div class="bl">
-        <div class="br">&#160;<text></text>
+        <div class="br">&#160;<xsl:text></xsl:text>
 	</div>
       </div>
     </div>

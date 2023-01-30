@@ -15282,7 +15282,8 @@
       <!--  JPlayer  -->
       <xsl:if test="Path/node()!=''">
         <div class="jp-type-single">
-          <div id="jquery_jplayer_{@id}" class="jp-jplayer">&#160;</div>
+          <div id="jquery_jplayer_{@id}" class="jp-jplayer">&#160;<xsl:text></xsl:text>
+	  </div>
           <div id="jp_interface_{@id}" class="jp-interface">
             <ul class="jp-controls nav navbar-nav">
               <li>

@@ -116,7 +116,7 @@
 				</xsl:if>Request Contact</span>
 			<span>Convert to Order</span>
 		</div>
-		<div class="terminus">&#160;</div-->
+		<div class="terminus">&#160;<xsl:text></xsl:text></div-->
   </xsl:template>
   <!--#-->
   <!--############################## Quote Procees - Default ################################-->

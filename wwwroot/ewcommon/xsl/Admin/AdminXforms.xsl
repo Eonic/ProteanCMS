@@ -1027,7 +1027,7 @@
 
 			<xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
 
-			<div class="terminus">&#160; <text></text></div>
+			<div class="terminus">&#160; <xsl:text></xsl:text></div>
 			<!--</form>-->
 		</div>
 	</xsl:template>
@@ -1129,7 +1129,7 @@
 				{{else}}
 				<td class="progress">
 					<div>
-						<text></text>
+						<xsl:text></xsl:text>
 					</div>
 				</td>
 				<td class="start">

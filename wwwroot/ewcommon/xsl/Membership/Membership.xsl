@@ -125,7 +125,7 @@
 					<xsl:call-template name="term4007"/>
 				</a>
 			</p>
-			<div class="terminus">&#160; <text></text></div>
+			<div class="terminus">&#160; <xsl:text></xsl:text></div>
 			<xsl:apply-templates select="/" mode="layoutFooter"/>
 		</div>
 	</xsl:template>
@@ -169,7 +169,7 @@
 					<xsl:call-template name="term4007"/>
 				</a>
 			</p>
-			<div class="terminus">&#160; <text></text></div>
+			<div class="terminus">&#160; <xsl:text></xsl:text></div>
 			<xsl:apply-templates select="/" mode="layoutFooter"/>
 		</div>
 	</xsl:template>
@@ -196,7 +196,7 @@
         <xsl:text> </xsl:text>
 			</div>
 			<!-- Terminus class fix to floating columns -->
-			<div class="terminus">&#160; <text></text></div>
+			<div class="terminus">&#160; <xsl:text></xsl:text></div>
 			<xsl:apply-templates select="/" mode="layoutFooter"/>
 		</div>
 	</xsl:template>	
@@ -340,7 +340,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			<!-- Terminus class fix to floating columns -->
-			<div class="terminus">&#160; <text></text></div>
+			<div class="terminus">&#160; <xsl:text></xsl:text></div>
 			<xsl:apply-templates select="/" mode="layoutFooter"/>
 		</div>
 	</xsl:template>
@@ -429,7 +429,7 @@
                 <img src="/ewcommon/images/integrations/sign-in-with-twitter-d.png"/>
             </a>
         </p-->
-		<div class="terminus">&#160; <text></text></div>
+		<div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
   <!--   #############################################   generic login   #############################################   -->
@@ -877,7 +877,7 @@
 			<div class="morelink">
 				<a class="button principle" href="{$href}">View order</a>
 			</div>
-			<div class="terminus">&#160; <text></text></div>
+			<div class="terminus">&#160; <xsl:text></xsl:text></div>
 		</div>
 	</xsl:template>
 
@@ -914,7 +914,7 @@
 			<div class="morelink">
 				<a href="{$previousURL}" class="button principle">Back to orders</a>
 			</div>
-			<div class="terminus">&#160; <text></text></div>
+			<div class="terminus">&#160; <xsl:text></xsl:text></div>
 		</div>
 	</xsl:template>
 	<!-- ##### /Ecommerce List Orders module ##### -->
@@ -941,7 +941,7 @@
 					</div>
 					<div class="list orders cols{@cols}">
 						<xsl:apply-templates select="$page/User[1]/Contacts/Contact" mode="membershipUserContactsDisplayBrief"/>
-						<div class="terminus">&#160; <text></text></div>
+						<div class="terminus">&#160; <xsl:text></xsl:text></div>
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -1024,7 +1024,7 @@
 					<xsl:call-template name="term4023" />
 				</a>
 			</p>
-			<div class="terminus">&#160; <text></text></div>
+			<div class="terminus">&#160; <xsl:text></xsl:text></div>
       </div>
 		</div>
 	</xsl:template>

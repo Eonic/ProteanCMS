@@ -323,7 +323,7 @@
             <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
           </div>
           <div class="bl">
-            <div class="br">&#160; <text></text></div>
+            <div class="br">&#160; <xsl:text></xsl:text></div>
           </div>
         </div>
       </div>
@@ -338,7 +338,7 @@
             <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='CartRegistration']" mode="xform"/>
           </div>
           <div class="bl">
-            <div class="br">&#160; <text></text>
+            <div class="br">&#160; <xsl:text></xsl:text>
 			</div>
           </div>
         </div>
@@ -2712,7 +2712,8 @@
       </xsl:call-template>
     </xsl:variable>
     <div id="cartStepper">
-      <div id="quoteStepsTop">&#160;</div>
+      <div id="quoteStepsTop">&#160;<xsl:text></xsl:text>
+  </div>
       <div id="quoteSteps">
         <div>
           <xsl:attribute name="class">
@@ -2816,8 +2817,10 @@
           </div>
         </div>
       </div>
-      <div class="quoteStepsTerminus">&#160;</div>
-      <div id="quoteStepsBtm">&#160;</div>
+      <div class="quoteStepsTerminus">&#160;<xsl:text></xsl:text>
+  </div>
+      <div id="quoteStepsBtm">&#160;<xsl:text></xsl:text>
+  </div>
     </div>
 
   </xsl:template>
