@@ -746,7 +746,7 @@
 				<xsl:value-of select="$parentModule/@modAnim"/>
 			</xsl:attribute>
 			<xsl:attribute name="data-modanimdelay">
-				<xsl:value-of select="$parentModule/@modAnimDelay * $pos"/>
+				<xsl:value-of select="($parentModule/@modAnimDelay * $pos) - $parentModule/@modAnimDelay"/>
 			</xsl:attribute>
 			<xsl:attribute name="data-modanimspeed">
 				<xsl:value-of select="$parentModule/@modAnimSpeed"/>

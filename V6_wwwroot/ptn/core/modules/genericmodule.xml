@@ -254,6 +254,10 @@
 									<value>hinge</value>
 								</item>
 								<item>
+									<label>Jack in the Box</label>
+									<value>jackInTheBox</value>
+								</item>
+								<item>
 									<label>Roll In</label>
 									<value>rollIn</value>
 								</item>
