@@ -90,7 +90,7 @@
 			<xsl:call-template name="term4007"/>
 		</a>
       </p>
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
 
@@ -183,7 +183,7 @@
       </div>
      
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
       <xsl:apply-templates select="/" mode="layoutFooter"/>
     </div>
   </xsl:template>
@@ -218,7 +218,7 @@
         <xsl:text> </xsl:text>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
       <xsl:apply-templates select="/" mode="layoutFooter"/>
     </div>
   </xsl:template>
@@ -251,7 +251,7 @@
         </xsl:otherwise>
       </xsl:choose>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
       <xsl:apply-templates select="/" mode="layoutFooter"/>
     </div>
   </xsl:template>
@@ -514,7 +514,7 @@
     <xsl:for-each select="/Page/User/Contacts/Contact">
       <xsl:apply-templates select="." mode="contactAddressBrief"/>
       <xsl:if test="position() mod 2=0">
-        <div class="terminus">&#160; <text></text></div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
@@ -584,7 +584,7 @@
 				<xsl:call-template name="term4023" />
 			</a>
 		</p>
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
   <!-- -->
@@ -711,7 +711,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160; <text></text></div>      
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>      
       </div> 
     </div> 
     
@@ -765,7 +765,7 @@
             </xsl:with-param>
           </xsl:apply-templates>
         </div>-->
-        <div class="terminus">&#160; <text></text></div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </div>
     </div>
   </xsl:template>

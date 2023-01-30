@@ -39,7 +39,7 @@
           </xsl:choose>
           <xsl:apply-templates select="/" mode="addtoCartButtons"/>
         </xsl:if>
-        <div class="terminus">&#160; <text></text></div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </form>
     </div>
   </xsl:template>
@@ -67,7 +67,7 @@
           <input type="hidden" name="qty_{@id}" id="qty_{@id}" value="1"/>
           <xsl:apply-templates select="/" mode="addtoCartButtons"/>
         </xsl:if>
-        <div class="terminus">&#160; <text></text></div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </form>
     </div>
   </xsl:template>
@@ -89,7 +89,7 @@
       <xsl:apply-templates select="." mode="orderProgressLegend"/>
       <xsl:apply-templates select="." mode="orderAlert"/>
       <xsl:apply-templates select="." mode="orderProcess"/>
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
 
@@ -381,7 +381,7 @@
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <xsl:apply-templates select="." mode="orderAddresses"/>
-    <div class="terminus">&#160; <text></text></div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
     <div class="basket"> 
     <xsl:if test="@cmd='Add' or @cmd='Cart'">
       <xsl:apply-templates select="." mode="suggestedItems"/>
@@ -543,7 +543,7 @@
       </div>
     </xsl:if>
     <!-- Terminus class fix to floating columns -->
-    <div class="terminus">&#160; <text></text></div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
   </xsl:template>
   <!--#-->
   <!--############################## Quote Procees - Logon ################################-->
@@ -701,7 +701,7 @@
           <xsl:call-template name="term3062" />
         </button>
         <!--</div>-->
-        <div class="terminus">&#160; <text></text></div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </form>
     </div>
   </xsl:template>
@@ -746,7 +746,7 @@
             </i><xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
           </button>
-          <div class="terminus">&#160; <text></text></div>
+          <div class="terminus">&#160; <xsl:text></xsl:text></div>
         </div>
         <div>
           <xsl:apply-templates select="." mode="orderItems">
@@ -772,9 +772,9 @@
             </i><xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
           </button>
-          <div class="terminus">&#160; <text></text></div>
+          <div class="terminus">&#160; <xsl:text></xsl:text></div>
         </div>
-        <div class="terminus">&#160; <text></text></div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </form>
     </div>
   </xsl:template>
@@ -829,7 +829,7 @@
             </i><xsl:text> </xsl:text>
             <xsl:call-template name="term3062" />
           </button>
-          <div class="terminus">&#160; <text></text></div>
+          <div class="terminus">&#160; <xsl:text></xsl:text></div>
         </form>
       </div>
     </div>
@@ -861,7 +861,7 @@
       <xsl:apply-templates select="." mode="orderItems"/>
       <input type="submit" name="cartUpdate" value="Revise Order" class="button continue"/>
       <input type="submit" name="cartQuit" value="Cancel Order" class="button empty"/>
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form-->
   </xsl:template>
 
@@ -1719,7 +1719,7 @@
           <xsl:apply-templates select="submit" mode="xform"/>
         </p>
       </xsl:if>
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
     <iframe name="threeDS" id="threeDS"></iframe>
 
@@ -1822,7 +1822,7 @@
           <xsl:apply-templates select="submit" mode="xform"/>
         </p>
       </xsl:if>
-      <div class="terminus">&#160; <text></text></div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
   </xsl:template>
 
@@ -1863,7 +1863,7 @@
             </xsl:if>
             <!-- For xFormQuiz change how these buttons work -->
             <xsl:apply-templates select="submit" mode="xform"/>
-            <div class="terminus">&#160; <text></text></div>
+            <div class="terminus">&#160; <xsl:text></xsl:text></div>
           </li>
 
         </xsl:if>
@@ -1933,7 +1933,7 @@
             <xsl:apply-templates select="." mode="cleanXhtml"/>
           </span>
         </xsl:for-each>
-        <div class="terminus">&#160; <text></text></div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </div>
       
       
@@ -2040,7 +2040,7 @@
             <!-- Terminus needed for CHROME ! -->
             <!-- Terminus needed for BREAKS IE 7! -->
             <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus">&#160; <text></text></div>
+              <div class="terminus">&#160; <xsl:text></xsl:text></div>
             </xsl:if>
           </li>
         </xsl:if>
