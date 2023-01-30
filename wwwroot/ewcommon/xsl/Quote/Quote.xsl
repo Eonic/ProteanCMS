@@ -403,7 +403,7 @@
       </xsl:choose>
     </xsl:if>
     <!-- Terminus class fix to floating columns -->
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <text></text></div>
   </xsl:template>
   <!-- -->
   <xsl:template match="Quote" mode="quoteItems">

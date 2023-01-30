@@ -7,7 +7,7 @@
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <xsl:apply-templates select="." mode="orderAddresses"/>
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <text></text></div>
     <div class="basket"> 
     <xsl:if test="@cmd='Add' or @cmd='Cart'">
       <xsl:apply-templates select="." mode="suggestedItems"/>
@@ -188,7 +188,8 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='notesForm']" mode="xform"/>
       </div>
       <div class="bl">
-        <div class="br">&#160;</div>
+        <div class="br">&#160; <text></text>
+		</div>
       </div>
     </div>
     <div class="box blueEdge">
@@ -232,7 +233,7 @@
           </i><xsl:text> </xsl:text>Empty Order
         </button>
         <!--</div>-->
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <text></text></div>
       </form>
     </div>
   </xsl:template>
@@ -272,7 +273,7 @@
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Empty Order
           </button>
-          <div class="terminus">&#160;</div>
+          <div class="terminus">&#160; <text></text></div>
         </div>
         <div>
           <xsl:apply-templates select="." mode="orderItems">
@@ -295,9 +296,9 @@
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Empty Order
           </button>
-          <div class="terminus">&#160;</div>
+          <div class="terminus">&#160; <text></text></div>
         </div>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <text></text></div>
       </form>
     </div>
   </xsl:template>
@@ -348,7 +349,7 @@
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Empty Order
           </button>
-          <div class="terminus">&#160;</div>
+          <div class="terminus">&#160; <text></text></div>
         </form>
       </div>
     </div>
@@ -377,7 +378,7 @@
       <xsl:apply-templates select="." mode="orderItems"/>
       <input type="submit" name="cartUpdate" value="Revise Order" class="button continue"/>
       <input type="submit" name="cartQuit" value="Cancel Order" class="button empty"/>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <text></text></div>
     </form-->
   </xsl:template>
 
@@ -669,7 +670,7 @@
           </div>
         </xsl:if>
       </div>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <text></text></div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -682,7 +683,7 @@
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <text></text></div>
     </div>
   </xsl:template>
 
@@ -727,7 +728,7 @@
             <xsl:sort select="@displayOrder" order="ascending"/>
             <xsl:apply-templates select="." mode="displayBriefTicket"/>
           </xsl:for-each>
-          <div class="terminus">&#160;</div>
+          <div class="terminus">&#160; <text></text></div>
         </table>
         <div class="panel-footer">
           <span class="pull-right">
@@ -1737,7 +1738,7 @@
             <xsl:apply-templates select="." mode="cleanXhtml"/>
           </span>
         </xsl:for-each>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <text></text></div>
       </div>
     </xsl:if>
   </xsl:template>
@@ -1843,7 +1844,7 @@
             <!-- Terminus needed for CHROME ! -->
             <!-- Terminus needed for BREAKS IE 7! -->
             <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus">&#160;</div>
+              <div class="terminus">&#160; <text></text></div>
             </xsl:if>
           </li>
         </xsl:if>

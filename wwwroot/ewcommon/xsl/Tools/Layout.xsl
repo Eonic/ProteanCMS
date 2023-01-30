@@ -107,7 +107,7 @@
                 </xsl:for-each>
               </ul>
             </xsl:if>
-            <div class="terminus">&#160;</div>
+            <div class="terminus">&#160; <text></text></div>
 
             <div class="strapline">
               <xsl:apply-templates select="Contents/Content[@name='Strapline']" mode="displayBrief"/>
@@ -352,7 +352,7 @@
                 </xsl:for-each>
               </ul>
             </xsl:if>
-            <div class="terminus">&#160;</div>
+            <div class="terminus">&#160; <text></text></div>
             <!--~~~~~~~~~~~~~~ STRAPLINE ~~~~~~~~~~~~~~ -->
             <div class="strapline not-xs">
               <xsl:apply-templates select="Contents/Content[@name='Strapline']" mode="displayBrief"/>
@@ -383,7 +383,7 @@
                 </xsl:apply-templates>
               </div>
             </xsl:if>
-            <div class="terminus">&#160;</div>
+            <div class="terminus">&#160; <text></text></div>
             <div class="nav-wrapper">
               <xsl:if test="not($currentPage/DisplayName[@nonav='true'])">
                 <div class="navbar navbar-default">
@@ -731,7 +731,7 @@
                 </xsl:for-each>
               </ul>
             </xsl:if>
-            <div class="terminus">&#160;</div>
+            <div class="terminus">&#160; <text></text></div>
             <!--~~~~~~~~~~~~~~ STRAPLINE ~~~~~~~~~~~~~~ -->
             <div class="strapline not-xs">
               <xsl:apply-templates select="Contents/Content[@name='Strapline']" mode="displayBrief"/>
@@ -1882,7 +1882,7 @@
       </xsl:if>
       <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem_topnav"/>
     </ul>
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <text></text></div>
   </xsl:template>
 
   <xsl:template match="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem_topnav">
