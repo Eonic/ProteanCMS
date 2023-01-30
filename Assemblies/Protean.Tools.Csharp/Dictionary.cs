@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-
+using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
+using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
 namespace Protean.Tools
 {
     public static class Dictionary
     {
+
         public enum Dimension
         {
             Key = 0,
@@ -21,11 +21,13 @@ namespace Protean.Tools
         /// <remarks></remarks>
         public static Hashtable getSimpleHashTable(string cCSVString)
         {
+
             try
             {
                 var hTable = new Hashtable();
-                var cArray = cCSVString.Trim(',').Split(',');
+                string[] cArray = cCSVString.Trim(',').Split(',');
                 string[] cItemSplit;
+
                 foreach (string cItem in cArray)
                 {
                     cItemSplit = cItem.Split(':');
@@ -37,10 +39,12 @@ namespace Protean.Tools
 
                 return hTable;
             }
+
             catch (Exception ex)
             {
                 return new Hashtable();
             }
+
         }
 
         /// <summary>
@@ -56,11 +60,14 @@ namespace Protean.Tools
         /// <remarks></remarks>
         public static string hashtableToCSV(ref Hashtable hashTableToConvert, Dimension dimension = Dimension.Value, char separator = ',')
         {
+
             string csvList = "";
             try
             {
+
                 foreach (DictionaryEntry Item in hashTableToConvert)
                 {
+
                     if (!string.IsNullOrEmpty(csvList))
                         csvList += Conversions.ToString(separator);
                     switch (dimension)
@@ -70,21 +77,23 @@ namespace Protean.Tools
                                 csvList += Strings.Replace(Conversions.ToString(Item.Key), Conversions.ToString(separator), "");
                                 break;
                             }
-
                         case Dimension.Value:
                             {
                                 csvList += Strings.Replace(Conversions.ToString(Item.Value), Conversions.ToString(separator), "");
                                 break;
                             }
                     }
+
                 }
 
                 return csvList;
             }
+
             catch (Exception ex)
             {
                 return "";
             }
         }
+
     }
 }

@@ -12,7 +12,7 @@ namespace Protean.Models
     {
         private XmlElement OrderElmt;
         public System.Collections.Specialized.NameValueCollection moConfig;
-       // private System.Web.HttpServerUtility moServer;  //never used
+        // private System.Web.HttpServerUtility moServer;  //never used
 
         private double nFirstPayment;
         private double nRepeatPayment;

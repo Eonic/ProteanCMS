@@ -20,8 +20,8 @@ namespace Protean.Tools
         private string cDatabase = "";
         private string cUserName = "";
         private string cPassword = "";
-        //private string cFtpUserName = ""; //never used
-        //private string cFtpPassword = "";
+        private string cFtpUserName = "";
+        private string cFtpPassword = "";
 
         private int nConnectTimeout = 15;
         private int nMaxPoolSize = 100;
@@ -231,7 +231,7 @@ namespace Protean.Tools
                     oConn.Close();
                     return true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return false;
                 }
@@ -543,7 +543,7 @@ namespace Protean.Tools
                         oConn.Close();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
         }
