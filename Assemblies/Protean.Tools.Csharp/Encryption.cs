@@ -154,7 +154,8 @@ namespace Protean.Tools
                 // convert hashed bytes into to hex value
                 for (intCount = 0; intCount <= arrBytesHashed.Length - 1; intCount++)
                 {
-                    string newVal = Conversion.Hex(arrBytesHashed[intCount]);
+                    //string newVal = Conversion.Hex(arrBytesHashed[intCount]);
+                    string newVal = String.Format("0x{0:X}", arrBytesHashed[intCount]);
                     switch (newVal.Length)
                     {
                         case 0:
@@ -194,7 +195,8 @@ namespace Protean.Tools
                 for (nCount = 0; nCount <= 1; nCount++)
                 {
                     nBaseTen = System.Convert.ToInt32(Math.Ceiling(VBMath.Rnd() * 15)); // random number between 0 and 15
-                    strResult.Append(Conversion.Hex(nBaseTen));
+                    //strResult.Append(Conversion.Hex(nBaseTen));
+                    strResult.Append(String.Format("0x{0:X}", nBaseTen));
                 }
 
                 return Strings.LCase(strResult.ToString());
@@ -2052,7 +2054,8 @@ namespace Protean.Tools
                 maxIndex = Strings.Len(message);
 
                 for (index = 1; index <= maxIndex; index++)
-                    hexSb.Append(Strings.Right("0" + Conversion.Hex(Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1))), 2));
+                    //hexSb.Append(Strings.Right("0" + Conversion.Hex(Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1))), 2));
+                hexSb.Append(Strings.Right("0" + String.Format("0x{0:X}", (Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1)))), 2));
 
                 hexOut = hexSb.ToString();
                 hexSb.Length = 0;
