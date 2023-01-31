@@ -202,6 +202,110 @@
 							<select1 bind="cModAnim" appearance="minimal">
 								<label>Animation Style</label>
 								<item>
+									<label>Bounce</label>
+									<value>bounce</value>
+								</item>
+								<item>
+									<label>Flash</label>
+									<value>flash</value>
+								</item>
+								<item>
+									<label>Pulse</label>
+									<value>pulse</value>
+								</item>
+								<item>
+									<label>Rubber Band</label>
+									<value>rubberBand</value>
+								</item>
+								<item>
+									<label>Shake X</label>
+									<value>shakeX</value>
+								</item>	
+								<item>
+									<label>Shake Y</label>
+									<value>shakeY</value>
+								</item>
+								<item>
+									<label>Head Shake</label>
+									<value>headShake</value>
+								</item>								
+								<item>
+									<label>Swing</label>
+									<value>swing</value>
+								</item>								
+								<item>
+									<label>Tada</label>
+									<value>tada</value>
+								</item>							
+								<item>
+									<label>Wobble</label>
+									<value>wobble</value>
+								</item>					
+								<item>
+									<label>Jello</label>
+									<value>jello</value>
+								</item>				
+								<item>
+									<label>Heartbeat</label>
+									<value>heartbeat</value>
+								</item>				
+								<item>
+									<label>Hinge</label>
+									<value>hinge</value>
+								</item>
+								<item>
+									<label>Jack in the Box</label>
+									<value>jackInTheBox</value>
+								</item>
+								<item>
+									<label>Roll In</label>
+									<value>rollIn</value>
+								</item>
+								<item>
+									<label>Roll Out</label>
+									<value>rollOut</value>
+								</item>
+								<item>
+									<label>Zoom In</label>
+									<value>zoomIn</value>
+								</item>
+								<item>
+									<label>Zoom In Up</label>
+									<value>zoomInUp</value>
+								</item>
+								<item>
+									<label>Zoom In Down</label>
+									<value>zoomInDown</value>
+								</item>
+								<item>
+									<label>Zoom In Left</label>
+									<value>zoomInLeft</value>
+								</item>
+								<item>
+									<label>Zoom In Right</label>
+									<value>zoomInRight</value>
+								</item>
+									<item>
+									<label>Zoom Out</label>
+									<value>zoomOut</value>
+								</item>
+								<item>
+									<label>Zoom Out Up</label>
+									<value>zoomOutUp</value>
+								</item>
+								<item>
+									<label>Zoom Out Down</label>
+									<value>zoomOutDown</value>
+								</item>
+								<item>
+									<label>Zoom Out Left</label>
+									<value>zoomOutLeft</value>
+								</item>
+								<item>
+									<label>Zoom Out Right</label>
+									<value>zoomOutRight</value>
+								</item>
+								<item>
 									<label>Fade In</label>
 									<value>fadeIn</value>
 								</item>
