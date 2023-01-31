@@ -78,7 +78,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="Content[@type='Module' and @moduleType='SubPageList']"  mode="themeModuleExtras">
+	<xsl:template match="Content[@type='Module' and @moduleType='SubPageList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels-->
 	</xsl:template>
 

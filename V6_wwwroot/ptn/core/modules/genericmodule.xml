@@ -276,7 +276,7 @@
 							</select1>
 						</group>
 						<group class="col-lg-4">
-							<range bind="cModAnimDelay" start="0" end="500" step="10" >
+							<range bind="cModAnimDelay" start="0" end="5000" step="10" >
 								<label>Delay</label>
 							</range>
 						</group>

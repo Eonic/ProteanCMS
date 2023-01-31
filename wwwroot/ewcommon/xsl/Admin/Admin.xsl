@@ -3830,28 +3830,17 @@
             <input type="hidden" name="id" value="{ContentDetail/RelatedResults/@nParentID}"/>
             <input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
             <input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
-            <div class="panel-heading">
-              <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary btn-xs pull-right">
-                <i class="fa fa-check fa-white">
-                  <xsl:text> </xsl:text>
-                </i> Check All
-              </button>
-              <xsl:text> </xsl:text>
-              <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary btn-xs pull-right">
-                <i class="fa fa-share fa-white">
-                  <xsl:text> </xsl:text>
-                </i> Uncheck All
-              </button>
+            <div class="panel-heading">             
               <h3 class="panel-title">Search Results</h3>
             </div>
 
             <table cellpadding="0" cellspacing="1" class="table">
               <tbody>
                 <tr>
-                  <th>
+                  <th colspan="4">
                     <xsl:choose>
                       <xsl:when test="ContentDetail/RelatedResults/Content">
-                        <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success principle">
+                        <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success pull-right">
                           <i class="fa fa-plus fa-white">
                             <xsl:text> </xsl:text>
                           </i><xsl:text> </xsl:text>Add
@@ -3869,7 +3858,33 @@
                 <tr>
                   <th>Name</th>
                   <th>Publish Date</th>
-                  <th>Tick to Relate</th>
+                  <th>Tick to Relate<br/>
+				   <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-sm btn-success">
+                        <i class="fa fa-check fa-white">
+                          <xsl:text> </xsl:text>
+                        </i> All
+                      </button>
+                      <xsl:text> </xsl:text>
+                      <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-sm  btn-warning">
+                        <i class="fa fa-close fa-white">
+                          <xsl:text> </xsl:text>
+                        </i> All
+                      </button>
+				  </th>
+
+					<th>Tick to UnRelate<br/>
+					<button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.unrelate)" class="btn btn-sm btn-success">
+						<i class="fa fa-check fa-white">
+							<xsl:text> </xsl:text>
+						</i> All
+					</button>
+					<xsl:text> </xsl:text>
+					<button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.unrelate)" class="btn btn-sm btn-warning">
+						<i class="fa fa-close fa-white">
+							<xsl:text> </xsl:text>
+						</i> All
+					</button>
+				</th>
                 </tr>
                 <tr>
                   <xsl:for-each select="ContentDetail/RelatedResults/Content">
@@ -3897,23 +3912,23 @@
                         </i> Uncheck All
                       </button>
                     </th>
-                    <th>
-                      <xsl:choose>
-                        <xsl:when test="ContentDetail/RelatedResults/Content">
-                          <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success principle">
-                            <i class="fa fa-plus fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Add
-                            <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
-                          </button>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <label>
-                            <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
-                          </label>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </th>
+					  <th colspan="3">
+						  <xsl:choose>
+							  <xsl:when test="ContentDetail/RelatedResults/Content">
+								  <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success pull-right">
+									  <i class="fa fa-plus fa-white">
+										  <xsl:text> </xsl:text>
+									  </i><xsl:text> </xsl:text>Add
+									  <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
+								  </button>
+							  </xsl:when>
+							  <xsl:otherwise>
+								  <label>
+									  <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
+								  </label>
+							  </xsl:otherwise>
+						  </xsl:choose>
+					  </th>
                   </tr>
                 </xsl:if>
               </tbody>
@@ -3990,8 +4005,6 @@
         <td class="relate">
           <xsl:choose>
             <xsl:when test="@related=1">
-              <xsl:text>(Related)</xsl:text>
-              <xsl:value-of select="@sType"/>|<xsl:value-of select="$relationType"/>
             </xsl:when>
             <xsl:when test="@related=1 and not(contains(@sType,$relationType))">
               <xsl:text> </xsl:text>
@@ -3999,6 +4012,7 @@
               <xsl:text> (Related as </xsl:text>
               <xsl:value-of select="@sType"/>
               <xsl:text>)</xsl:text>
+				<input type="checkbox" name="unrelate" value="{@id}"/>
             </xsl:when>
             <xsl:otherwise>
               <!--<label>Relate</label>-->
@@ -4012,6 +4026,23 @@
             </xsl:otherwise>
           </xsl:choose>
         </td>
+		  <td class="unrelate">
+			  <xsl:choose>
+				  <xsl:when test="@related=1">
+					  <input type="checkbox" name="unrelate" value="{@id}"/>
+					  <xsl:text> </xsl:text>
+					  <xsl:text>(Related)</xsl:text> <xsl:value-of select="$relationType"/>
+				  </xsl:when>
+				  <xsl:when test="@related=1 and not(contains(@sType,$relationType))">
+					  <input type="checkbox" name="unrelate" value="{@id}"/>
+					  <xsl:text> </xsl:text>
+					  <xsl:text> (Related as </xsl:text>
+					  <xsl:value-of select="@sType"/>
+					  <xsl:text>)</xsl:text>
+				  </xsl:when>
+				  
+			  </xsl:choose>
+		  </td>
       </tr>
     </span>
 	  <!--

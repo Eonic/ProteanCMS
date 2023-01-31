@@ -9221,6 +9221,9 @@ restart:
                     If cOName.Contains("list") Then
                         insertGroupProductRelation(goRequest.QueryString("GroupId"), cOValue)
                     End If
+                    If cOName.Contains("unrelate") Then
+                        deleteGroupProductRelation(goRequest.QueryString("GroupId"), cOValue)
+                    End If
                 Next
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "saveProductsGroupRelations", ex, ""))
@@ -9276,7 +9279,37 @@ restart:
 
         End Function
 
+        Public Function deleteGroupProductRelation(ByVal nGroupId As Integer, ByVal nContent As String) As String
+            PerfMonLog("DBHelper", "insertProductGroupRelation")
+            Try
+                Dim oContentArr() As String = Split(nContent, ",")
+                Dim cCount As Integer
+                Dim strReturn As New Text.StringBuilder
 
+
+                For cCount = 0 To UBound(oContentArr)
+
+                    Dim nCatProductRelKey As Integer
+
+                    Dim cSQl As String = "Select nCatProductRelKey from tblCartCatProductRelations where nCatId = " & nGroupId & " and nContentId = " & oContentArr(cCount)
+                    nCatProductRelKey = ExeProcessSqlScalar(cSQl)
+
+                    If nCatProductRelKey <> 0 Then
+                        DeleteObject(objectTypes.CartCatProductRelations, nCatProductRelKey)
+                    End If
+
+                Next
+
+                Return "1"
+
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "insertProductGroupRelation", ex, ""))
+                Return "0"
+            End Try
+
+
+        End Function
 
 
         Public Function insertProductGroupRelation(ByVal nProductId As Integer, ByVal sGroupIds As String) As String
