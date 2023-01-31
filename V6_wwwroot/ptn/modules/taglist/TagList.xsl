@@ -89,7 +89,6 @@
             <xsl:with-param name="sortBy" select="@sortBy"/>
           </xsl:apply-templates>
         </ul>
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
