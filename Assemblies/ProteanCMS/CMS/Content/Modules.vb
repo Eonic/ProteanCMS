@@ -345,9 +345,11 @@ where cl.nStructId = " & myWeb.mnPageId)
                     filterForm.NewFrm(formName)
                     filterForm.submission(formName, "", "POST", "")
 
-                    If (myWeb.moRequest.Form("Submit") IsNot Nothing) Then
-                        If (Convert.ToString(myWeb.moRequest.Form("Submit")).ToLower.Contains("clear filters")) Then
+                    If (myWeb.moRequest.Form("clearfilters") IsNot Nothing) Then
+                        If (Convert.ToString(myWeb.moRequest.Form("clearfilters")) = "clearfilters") Then
+
                             myWeb.moResponse.Redirect(myWeb.moRequest.RawUrl)
+
                         End If
                     End If
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
@@ -481,6 +483,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, "Product")
                         oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
 
+                        If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
+                            filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
+                        End If
                     End If
 
                 Catch ex As Exception

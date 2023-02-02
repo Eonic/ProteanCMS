@@ -23,7 +23,8 @@
 											<AttachmentIds ids="" xpath="Content/Path" />
 										</Items>
 									</oBodyXML>
-									<xsltPath>/ptn/modules/documentrequest/RequestDocumentEmail.xsl</xsltPath>
+									<!--<xsltPath>/ptn/modules/documentrequest/RequestDocumentEmail.xsl</xsltPath>-->
+									<xsltPath>RequestDocumentEmail.xsl</xsltPath>
 									<fromName></fromName>
 									<fromEmail></fromEmail>
 									<recipientEmail></recipientEmail>

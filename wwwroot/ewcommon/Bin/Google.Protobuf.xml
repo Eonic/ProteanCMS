@@ -5544,8 +5544,8 @@
             The name of the uninterpreted option.  Each string represents a segment in
             a dot-separated name.  is_extension is true iff a segment represents an
             extension (denoted with parentheses in options specs in .proto files).
-            E.g.,{ ["foo", false], ["bar.baz", true], ["qux", false] } represents
-            "foo.(bar.baz).qux".
+            E.g.,{ ["foo", false], ["bar.baz", true], ["moo", false] } represents
+            "foo.(bar.baz).moo".
             </summary>
         </member>
         <member name="F:Google.Protobuf.Reflection.UninterpretedOption.Types.NamePart.NamePart_FieldNumber">
@@ -5699,13 +5699,13 @@
                // Comment attached to baz.
                // Another line attached to baz.
             
-               // Comment attached to qux.
+               // Comment attached to moo.
                //
-               // Another line attached to qux.
-               optional double qux = 4;
+               // Another line attached to moo.
+               optional double moo = 4;
             
                // Detached comment for corge. This is not leading or trailing comments
-               // to qux or corge because there are blank lines separating it from
+               // to moo or corge because there are blank lines separating it from
                // both.
             
                // Detached comment for corge paragraph 2.
@@ -6157,7 +6157,7 @@
         <member name="M:Google.Protobuf.Reflection.ExtensionCollection.GetExtensionsInNumberOrder(Google.Protobuf.Reflection.MessageDescriptor)">
             <summary>
             Returns a readonly list of all the extensions define in this type that extend 
-            the provided descriptor type in accending field order
+            the provided descriptor type in ascending field order
             </summary>
         </member>
         <member name="T:Google.Protobuf.Reflection.FieldAccessorBase">
@@ -8342,8 +8342,6 @@
                  service Foo {
                    rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
                  }
-            
-             The JSON representation for `Empty` is empty JSON object `{}`.
              </summary>
         </member>
         <member name="T:Google.Protobuf.WellKnownTypes.FieldMaskReflection">

@@ -820,7 +820,16 @@ ProcessFlow:
                                     'get a list of pages with this content on.
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
-                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
+                                        Dim nStart As Integer = 0
+                                        Dim nRows As Integer = 500
+
+                                        ' Set the paging variables, if provided.
+                                        If Not (myWeb.moRequest("startPos") Is Nothing) AndAlso IsNumeric(myWeb.moRequest("startPos")) Then nStart = CInt(myWeb.moRequest("startPos"))
+                                        If Not (myWeb.moRequest("rows") Is Nothing) AndAlso IsNumeric(myWeb.moRequest("rows")) Then nRows = CInt(myWeb.moRequest("rows"))
+
+                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, nStart, nRows, FilterSQL, "", oPageDetail)
+
+                                        ' myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                         Dim contentsNode = moPageXML.SelectSingleNode("/Page/Contents")
                                         If Not IsNothing(contentsNode) Then
                                             myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
@@ -948,8 +957,6 @@ ProcessFlow:
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
-
-
 
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
@@ -4070,7 +4077,7 @@ listItems:
                             GoTo listItems
                         End If
                         GoTo listItems
-                    Case "update", "updateAllRules"
+                    Case "updateAllRules", "update"
 
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
 
@@ -4087,20 +4094,7 @@ listItems:
                             End If
                         End If
                         GoTo listItems
-                        'Case "updateAllRules"
 
-                        '    SchemaNameForUpdate = "null"
-                        '    sSql = "spScheduleToUpdateIndexTable"
-                        '        Dim arrParms As Hashtable = New Hashtable
-                        '        arrParms.Add("SchemaName", SchemaNameForUpdate)
-                        '        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
-                        '        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
-                        '            oPageDetail.InnerXml = ""
-                        '            indexId = Nothing
-                        '            GoTo listItems
-                        '        End If
-
-                        '    GoTo listItems
 
                     Case Else
 listItems:
@@ -4398,30 +4392,30 @@ from tblContentIndexDef"
 
                     Dim content As String
 
-                        'check not read only
-                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
-                        oFileInfo.IsReadOnly = False
+                    'check not read only
+                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
+                    oFileInfo.IsReadOnly = False
 
-                        Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeXslFile))
-                            content = reader.ReadToEnd()
-                            reader.Close()
-                        End Using
+                    Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeXslFile))
+                        content = reader.ReadToEnd()
+                        reader.Close()
+                    End Using
 
-                        Dim oElmt As XmlElement
-                        For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
-                            Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
+                    Dim oElmt As XmlElement
+                    For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
+                        Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
 
-                            Dim searchText As String = "(?<=<xsl:variable name=""" & variableName & """>).*(?=</xsl:variable>)"
+                        Dim searchText As String = "(?<=<xsl:variable name=""" & variableName & """>).*(?=</xsl:variable>)"
 
-                            Dim replaceText As String = oElmt.GetAttribute("value").Trim
+                        Dim replaceText As String = oElmt.GetAttribute("value").Trim
 
-                            content = Regex.Replace(content, searchText, replaceText)
-                        Next
+                        content = Regex.Replace(content, searchText, replaceText)
+                    Next
 
-                        Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeXslFile))
-                            writer.Write(content)
-                            writer.Close()
-                        End Using
+                    Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeXslFile))
+                        writer.Write(content)
+                        writer.Close()
+                    End Using
                     If myWeb.impersonationMode Then
                         oImp.UndoImpersonation()
                         oImp = Nothing

@@ -3233,7 +3233,7 @@
           </a>
         </xsl:if>
       </xsl:if>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
 
@@ -4479,7 +4479,7 @@
         <xsl:with-param name="span" select="$span"/>
       </xsl:apply-templates>
     </ul>
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
   </xsl:template>
 
   <!-- -->
@@ -4518,7 +4518,7 @@
         <xsl:with-param name="homeLink" select="true()"/>
       </xsl:apply-templates>
     </ul>
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
   </xsl:template>
   <!-- -->
 
@@ -4650,7 +4650,7 @@
     <ul>
       <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem_topnav"/>
     </ul>
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
   </xsl:template>
   <!-- -->
   <xsl:template match="MenuItem" mode="submenuitem_topnav">

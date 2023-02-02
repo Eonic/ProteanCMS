@@ -7187,7 +7187,7 @@ processFlow:
             Dim cUniqueLink As String = ""
             Dim cProcessInfo As String = ""
             Try
-                If moDBHelper.checkTableColumnExists("tblCart", "nAmountReceived") Then
+                If moDBHelper.checkTableColumnExists("tblCartOrder", "nAmountReceived") Then
                     ' If the cPaymentType is deposit then we need to make a link, otherwise we need to get the paymentReceived details.
                     If cPaymentType = "deposit" Then
                         ' Get the unique link from the cart
