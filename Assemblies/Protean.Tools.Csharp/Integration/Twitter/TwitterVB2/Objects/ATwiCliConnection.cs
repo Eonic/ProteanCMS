@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Xml;
 using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
@@ -165,7 +166,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 rqUploadPhoto.ContentLength = bFormData.Length;
                 Stream stPhotoRequest = rqUploadPhoto.GetRequestStream();
                 stPhotoRequest.Write(bFormData, 0, bFormData.Length);
-                HttpWebResponse rpUploadPhoto = (HttpWebResponse)rqUploadPhoto.GetResponse;
+                HttpWebResponse rpUploadPhoto = (HttpWebResponse)rqUploadPhoto.GetResponse();
                 var srUploadPhoto = new StreamReader(rpUploadPhoto.GetResponseStream());
                 string strUploadResult = srUploadPhoto.ReadToEnd();
                 var xUploadResult = new XmlDocument();
@@ -300,7 +301,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 rqUploadPhoto.ContentLength = bFormData.Length;
                 Stream stPhotoRequest = rqUploadPhoto.GetRequestStream();
                 stPhotoRequest.Write(bFormData, 0, bFormData.Length);
-                HttpWebResponse rpUploadPhoto = (HttpWebResponse)rqUploadPhoto.GetResponse;
+                HttpWebResponse rpUploadPhoto = (HttpWebResponse)rqUploadPhoto.GetResponse();
                 var srUploadPhoto = new StreamReader(rpUploadPhoto.GetResponseStream());
                 string strUploadResult = srUploadPhoto.ReadToEnd();
                 var xUploadResult = new XmlDocument();
@@ -436,7 +437,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 rqUploadVideo.ContentLength = bFormData.Length;
                 Stream stVideoRequest = rqUploadVideo.GetRequestStream();
                 stVideoRequest.Write(bFormData, 0, bFormData.Length);
-                HttpWebResponse rpUploadVideo = (HttpWebResponse)rqUploadVideo.GetResponse;
+                HttpWebResponse rpUploadVideo = (HttpWebResponse)rqUploadVideo.GetResponse();
                 var srUploadVideo = new StreamReader(rpUploadVideo.GetResponseStream());
                 string strUploadResult = srUploadVideo.ReadToEnd();
                 var xUploadResult = new XmlDocument();
@@ -572,7 +573,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 rqUploadVideo.ContentLength = bFormData.Length;
                 Stream stVideoRequest = rqUploadVideo.GetRequestStream();
                 stVideoRequest.Write(bFormData, 0, bFormData.Length);
-                HttpWebResponse rpUploadVideo = (HttpWebResponse)rqUploadVideo.GetResponse;
+                HttpWebResponse rpUploadVideo = (HttpWebResponse)rqUploadVideo.GetResponse();
                 var srUploadVideo = new StreamReader(rpUploadVideo.GetResponseStream());
                 string strUploadResult = srUploadVideo.ReadToEnd();
                 var xUploadResult = new XmlDocument();
@@ -668,7 +669,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 Stream stAudioRequest = rqUploadAudio.GetRequestStream();
                 stAudioRequest.Write(bUploadData, 0, bUploadData.Length);
                 HttpWebResponse rsAudioupload = (HttpWebResponse)rqUploadAudio.GetResponse();
-                var srAudioData = new StreamReader(rsAudioupload.GetResponseStream);
+                var srAudioData = new StreamReader(rsAudioupload.GetResponseStream());
                 string strAudioData;
                 strAudioData = srAudioData.ReadToEnd();
                 var xUploadresult = new XmlDocument();
@@ -765,7 +766,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                 Stream stAudioRequest = rqUploadAudio.GetRequestStream();
                 stAudioRequest.Write(bUploadData, 0, bUploadData.Length);
                 HttpWebResponse rsAudioupload = (HttpWebResponse)rqUploadAudio.GetResponse();
-                var srAudioData = new StreamReader(rsAudioupload.GetResponseStream);
+                var srAudioData = new StreamReader(rsAudioupload.GetResponseStream());
                 string strAudioData;
                 strAudioData = srAudioData.ReadToEnd();
                 var xUploadresult = new XmlDocument();
@@ -803,7 +804,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
 
             HttpWebRequest rqInfo = (HttpWebRequest)System.Net.WebRequest.Create(TCC_GET_CONTENT_INFO + "?id=" + p_strID);
             rqInfo.Method = "POST";
-            HttpWebResponse rsInfo = (HttpWebResponse)rqInfo.GetResponse;
+            HttpWebResponse rsInfo = (HttpWebResponse)rqInfo.GetResponse();
             var srContent = new StreamReader(rsInfo.GetResponseStream());
             string strContent;
             strContent = srContent.ReadToEnd();
@@ -890,8 +891,8 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             {
                 HttpWebRequest rqUsersPhotos = (HttpWebRequest)System.Net.WebRequest.Create(strURL);
                 rqUsersPhotos.Method = "GET";
-                HttpWebResponse rsUsersPhotos = (HttpWebResponse)rqUsersPhotos.GetResponse;
-                var srUsersPhotos = new StreamReader(rsUsersPhotos.GetResponseStream);
+                HttpWebResponse rsUsersPhotos = (HttpWebResponse)rqUsersPhotos.GetResponse();
+                var srUsersPhotos = new StreamReader(rsUsersPhotos.GetResponseStream());
                 string strUsersPhotos;
                 strUsersPhotos = srUsersPhotos.ReadToEnd();
                 var xdPhotos = new XmlDocument();
@@ -940,8 +941,8 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             {
                 HttpWebRequest rqUsersPhotos = (HttpWebRequest)System.Net.WebRequest.Create(strURL);
                 rqUsersPhotos.Method = "GET";
-                HttpWebResponse rsUsersPhotos = (HttpWebResponse)rqUsersPhotos.GetResponse;
-                var srUsersPhotos = new StreamReader(rsUsersPhotos.GetResponseStream);
+                HttpWebResponse rsUsersPhotos = (HttpWebResponse)rqUsersPhotos.GetResponse();
+                var srUsersPhotos = new StreamReader(rsUsersPhotos.GetResponseStream());
                 string strUsersPhotos;
                 strUsersPhotos = srUsersPhotos.ReadToEnd();
                 var xdPhotos = new XmlDocument();
@@ -989,8 +990,8 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             {
                 HttpWebRequest rqUsersAudios = (HttpWebRequest)System.Net.WebRequest.Create(strURL);
                 rqUsersAudios.Method = "GET";
-                HttpWebResponse rsUsersAudios = (HttpWebResponse)rqUsersAudios.GetResponse;
-                var srUsersAudios = new StreamReader(rsUsersAudios.GetResponseStream);
+                HttpWebResponse rsUsersAudios = (HttpWebResponse)rqUsersAudios.GetResponse();
+                var srUsersAudios = new StreamReader(rsUsersAudios.GetResponseStream());
                 string strUsersAudios = srUsersAudios.ReadToEnd();
                 var xdAudios = new XmlDocument();
                 xdAudios.LoadXml(strUsersAudios);
@@ -1025,8 +1026,8 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             {
                 HttpWebRequest rqUsersAudios = (HttpWebRequest)System.Net.WebRequest.Create(strURL);
                 rqUsersAudios.Method = "GET";
-                HttpWebResponse rsUsersAudios = (HttpWebResponse)rqUsersAudios.GetResponse;
-                var srUsersAudios = new StreamReader(rsUsersAudios.GetResponseStream);
+                HttpWebResponse rsUsersAudios = (HttpWebResponse)rqUsersAudios.GetResponse();
+                var srUsersAudios = new StreamReader(rsUsersAudios.GetResponseStream());
                 string strUsersAudios = srUsersAudios.ReadToEnd();
                 var xdAudios = new XmlDocument();
                 xdAudios.LoadXml(strUsersAudios);
@@ -1061,8 +1062,8 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             {
                 HttpWebRequest rqUsersVideos = (HttpWebRequest)System.Net.WebRequest.Create(strURL);
                 rqUsersVideos.Method = "GET";
-                HttpWebResponse rsUsersVideos = (HttpWebResponse)rqUsersVideos.GetResponse;
-                var srUsersVideos = new StreamReader(rsUsersVideos.GetResponseStream);
+                HttpWebResponse rsUsersVideos = (HttpWebResponse)rqUsersVideos.GetResponse();
+                var srUsersVideos = new StreamReader(rsUsersVideos.GetResponseStream());
                 string strUsersVideos = srUsersVideos.ReadToEnd();
                 var xdVideos = new XmlDocument();
                 xdVideos.LoadXml(strUsersVideos);
@@ -1096,8 +1097,8 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             {
                 HttpWebRequest rqUsersVideos = (HttpWebRequest)System.Net.WebRequest.Create(strURL);
                 rqUsersVideos.Method = "GET";
-                HttpWebResponse rsUsersVideos = (HttpWebResponse)rqUsersVideos.GetResponse;
-                var srUsersVideos = new StreamReader(rsUsersVideos.GetResponseStream);
+                HttpWebResponse rsUsersVideos = (HttpWebResponse)rqUsersVideos.GetResponse();
+                var srUsersVideos = new StreamReader(rsUsersVideos.GetResponseStream());
                 string strUsersVideos = srUsersVideos.ReadToEnd();
                 var xdVideos = new XmlDocument();
                 xdVideos.LoadXml(strUsersVideos);

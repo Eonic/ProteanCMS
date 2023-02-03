@@ -44,7 +44,7 @@ using Protean.Tools.Integration.Twitter.TwitterVB2;
 using Protean.Tools.Integration.Twitter.TwitterVB2.Objects;
 using static Protean.Tools.Integration.Twitter.Globals;
 
-namespace Protean.Tools.Integration.Twitter
+namespace Protean.Tools.Integration.Twitter.TwitterVB2
 {
     /// <summary>
     /// Provides access to methods that communicate with Twitter.
@@ -373,7 +373,7 @@ namespace Protean.Tools.Integration.Twitter
                     tax.Method = HTTPMethod;
                     tax.AuthType = AuthType;
                     tax.Response = null;
-                    tax.Status=null;
+                   // tax.Status=null;
                     throw tax;
                 }
             }
@@ -1484,10 +1484,10 @@ namespace Protean.Tools.Integration.Twitter
         /// Users who have many followers may experience long wait times because of the way Twitter handles large requests.
         /// When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
         /// </remarks>
-        public List<TwitterUser> Followers()
-        {
-            return Followers(default);
-        }
+        //public List<TwitterUser> Followers()
+        //{
+        //    return Followers(default);
+        //}
 
         /// <summary>
         /// Retrieves a list of all the users that follow the specified user.
@@ -1499,15 +1499,15 @@ namespace Protean.Tools.Integration.Twitter
         /// Users who have many followers may experience long wait times because of the way Twitter handles large requests.
         /// When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
         /// </remarks>
-        public List<TwitterUser> Followers(TwitterParameters Parameters, PagedResults<TwitterUser> results)
-        {
-            var Results = new PagedResults<TwitterUser>();
+        //public List<TwitterUser> Followers(TwitterParameters Parameters, PagedResults<TwitterUser> results)
+        //{
+        //    var Results = new PagedResults<TwitterUser>();
 
-            while (Results.HasMore)
-                Followers(Parameters, Results);
+        //    while (Results.HasMore)
+        //        Followers(Parameters, results);
 
-            return Results;
-        }
+        //    return Results;
+        //}
 
         /// <summary>
         /// Retrieves a list of all the users that follow the specified user.
@@ -1534,8 +1534,8 @@ namespace Protean.Tools.Integration.Twitter
 
             LoopParameters.Add(TwitterParameterNames.Cursor, Results.Cursor);
             Url = LoopParameters.BuildUrl(Url);
-
-            Results.AddRange(ParseUsers(PerformWebRequest(Url, "GET"), ref Results.Cursor));
+            long Cursor = Results.Cursor;
+            Results.AddRange(ParseUsers(PerformWebRequest(Url, "GET"), ref Cursor));
         }
 
         /// <summary>
@@ -1710,21 +1710,21 @@ namespace Protean.Tools.Integration.Twitter
         /// <remarks>
         /// <code source="TwitterVB2\examples.vb" region="Get List Memberships" lang="vbnet" title="Getting list memberships"></code>
         /// </remarks>
-        public List<TwitterList> ListMemberships(string Username, PagedResults<TwitterList> results)
-        {
-            var Results = new PagedResults<TwitterList>();
-            do
-                ListMemberships(Username, Results);
-            while (Results.HasMore != false);
-            return Results;
-        }
+        //public List<TwitterList> ListMemberships(string Username, PagedResults<TwitterList> results)
+        //{
+        //    var Results = new PagedResults<TwitterList>();
+        //    do
+        //        ListMemberships(Username, Results);
+        //    while (Results.HasMore != false);
+        //    return Results;
+        //}
 
         /// <summary>
         /// List the lists the specified user has been added to.
         /// </summary>
         /// <param name="Username">The user whose memberships will be returned.</param>
         /// <param name="Results">The paged results to add the lists to</param>
-        public void ListMemberships(string Username, PagedResults Results)
+        public void ListMemberships(string Username, PagedResults<TwitterList> Results)
         {
             string Url = string.Format(LISTS_MEMBERSHIPS, Username);
             var Parameters = new TwitterParameters();
@@ -1732,7 +1732,8 @@ namespace Protean.Tools.Integration.Twitter
             Url = Parameters.BuildUrl(Url);
 
             List<TwitterList> Lists;
-            Lists = ParseLists(PerformWebRequest(Url, "GET"), ref Results.Cursor);
+            long Cursor = Results.Cursor;
+            Lists = ParseLists(PerformWebRequest(Url, "GET"), ref Cursor);
             Results.AddRange(Lists);
         }
 
@@ -1761,16 +1762,16 @@ namespace Protean.Tools.Integration.Twitter
         /// <remarks>
         /// <code source="TwitterVB2\examples.vb" region="Get List Subscriptions" lang="vbnet" title="Getting list subscriptions"></code>
         /// </remarks>
-        public List<TwitterUser> ListMembers(string Username, string ListID)
-        {
-            var Users = new PagedResults<TwitterUser>();
+        //public List<TwitterUser> ListMembers(string Username, string ListID)
+        //{
+        //    var Users = new PagedResults<TwitterUser>();
 
-            do
-                ListMembers(Username, ListID, Users);
-            while (Users.HasMore != false);
+        //    do
+        //        ListMembers(Username, ListID, Users);
+        //    while (Users.HasMore != false);
 
-            return Users;
-        }
+        //    return Users;
+        //}
 
         /// <summary>
         /// Returns the members of the specified list.
@@ -1778,7 +1779,7 @@ namespace Protean.Tools.Integration.Twitter
         /// <param name="Username">The user who owns the list.</param>
         /// <param name="ListID">The ID or slug of the list.</param>
         /// <param name="Results">The paged results to add the lists to</param>
-        public void ListMembers(string Username, string ListID, PagedResults Results)
+        public void ListMembers(string Username, string ListID, PagedResults<TwitterUser> Results)
         {
             string Url = string.Format(LISTS_MEMBERS, Username, ListID);
             var LoopParameters = new TwitterParameters();
@@ -1786,7 +1787,8 @@ namespace Protean.Tools.Integration.Twitter
             Url = LoopParameters.BuildUrl(Url);
 
             var Batch = new List<TwitterUser>();
-            Batch = ParseUsers(PerformWebRequest(Url, "GET"), ref Results.Cursor);
+            long Cursor = Results.Cursor;
+            Batch = ParseUsers(PerformWebRequest(Url, "GET"), ref Cursor);
             Results.AddRange(Batch);
         }
 
@@ -2498,7 +2500,7 @@ namespace Protean.Tools.Integration.Twitter
         public string GetAuthenticationLink(string ConsumerKey, string ConsumerKeySecret)
         {
             Twitter_OAuth = new TwitterOAuth(ConsumerKey, ConsumerKeySecret);
-            return Twitter_OAuth.GetAuthenticationLink;
+            return Twitter_OAuth.GetAuthenticationLink();
         }
 
         /// <summary>
@@ -2515,7 +2517,7 @@ namespace Protean.Tools.Integration.Twitter
         public string GetAuthenticationLink(string ConsumerKey, string ConsumerKeySecret, string CallbackUrl)
         {
             Twitter_OAuth = new TwitterOAuth(ConsumerKey, ConsumerKeySecret, CallbackUrl);
-            return Twitter_OAuth.GetAuthenticationLink;
+            return Twitter_OAuth.GetAuthenticationLink();
         }
 
         /// <summary>
@@ -2634,7 +2636,7 @@ namespace Protean.Tools.Integration.Twitter
         public string TweetPhotoUpload(string Filename, string Message, string Username, string Password, string APIKey)
         {
 
-            Global.System.Net.WebRequest request = HttpWebRequest.Create("http://tweetphotoapi.com/api/tpapi.svc/upload2");
+            System.Net.WebRequest request = HttpWebRequest.Create("http://tweetphotoapi.com/api/tpapi.svc/upload2");
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.Headers.Add("TPAPIKEY: " + APIKey);

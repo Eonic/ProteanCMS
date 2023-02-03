@@ -73,11 +73,11 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
         public TwitterOAuth(string ConsumerKey, string ConsumerKeySecret, string Token, string TokenSecret)
         {
             {
-                ref var withBlock = ref this;
-                withBlock.Token = Token;
-                withBlock.TokenSecret = TokenSecret;
-                withBlock.ConsumerKey = ConsumerKey;
-                withBlock.ConsumerSecret = ConsumerKeySecret;
+                //ref var withBlock = ref this;
+                //withBlock.Token = Token;
+                //withBlock.TokenSecret = TokenSecret;
+                //withBlock.ConsumerKey = ConsumerKey;
+                //withBlock.ConsumerSecret = ConsumerKeySecret;
             }
         }
 
@@ -272,10 +272,10 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     }
                 }
 
-                System.Net.WebResponse wr = Request.GetResponse;
-                Globals.API_HourlyLimit = wr.Headers("X-RateLimit-Limit");
-                Globals.API_RemainingHits = wr.Headers("X-RateLimit-Remaining");
-                Globals.API_Reset = wr.Headers("X-RateLimit-Reset");
+                System.Net.WebResponse wr = Request.GetResponse();
+                Globals.API_HourlyLimit = wr.Headers["X-RateLimit-Limit"];
+                Globals.API_RemainingHits = wr.Headers["X-RateLimit-Remaining"];
+                Globals.API_Reset = wr.Headers["X-RateLimit-Reset"];
 
                 using (var ResponseReader = new StreamReader(wr.GetResponseStream()))
                 {
@@ -287,7 +287,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             {
                 var tax = new TwitterAPIException(wex);
                 tax.Url = Url;
-                tax.Method = RequestMethod.ToString;
+                tax.Method = RequestMethod.ToString();
                 tax.AuthType = "OAUTH";
                 tax.Status = wex.Status;
                 tax.Response = wex.Response;
@@ -298,9 +298,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
             {
                 var tax = new TwitterAPIException(ex);
                 tax.Url = Url;
-                tax.Method = RequestMethod.ToString;
+                tax.Method = RequestMethod.ToString();
                 tax.AuthType = "OAUTH";
-                tax.Status = null;
+                //tax.Status = null; commented by nita on 1st feb when converting vb to c#
                 tax.Response = null;
                 throw tax;
             }

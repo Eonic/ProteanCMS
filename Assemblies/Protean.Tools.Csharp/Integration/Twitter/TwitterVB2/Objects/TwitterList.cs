@@ -39,7 +39,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
     /// A Twitter list.
     /// </summary>
     /// <remarks></remarks>
-    public partial class TwitterList : XmlObjectBase
+    public class TwitterList : XmlObjectBase
     {
 
         private long _ID;
@@ -70,17 +70,17 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
         public TwitterList(System.Xml.XmlNode ListNode)
         {
             {
-                ref var withBlock = ref this;
-                withBlock.ID = XmlInt64_Get(ListNode["id"]);
-                withBlock.Name = XmlString_Get(ListNode["name"]);
-                withBlock.FullName = XmlString_Get(ListNode["full_name"]);
-                withBlock.Slug = XmlString_Get(ListNode["slug"]);
-                withBlock.Description = XmlString_Get(ListNode["description"]);
-                withBlock.SubscriberCount = XmlInt64_Get(ListNode["subscriber_count"]);
-                withBlock.MemberCount = XmlInt64_Get(ListNode["member_count"]);
-                withBlock.Mode = XmlString_Get(ListNode["mode"]);
-                withBlock.Url = XmlString_Get(ListNode["url"]);
-                withBlock.User = new TwitterUser(ListNode["user"]);
+                //ref var withBlock = ref this;
+                //withBlock.ID = XmlInt64_Get(ListNode["id"]);
+                //withBlock.Name = XmlString_Get(ListNode["name"]);
+                //withBlock.FullName = XmlString_Get(ListNode["full_name"]);
+                //withBlock.Slug = XmlString_Get(ListNode["slug"]);
+                //withBlock.Description = XmlString_Get(ListNode["description"]);
+                //withBlock.SubscriberCount = XmlInt64_Get(ListNode["subscriber_count"]);
+                //withBlock.MemberCount = XmlInt64_Get(ListNode["member_count"]);
+                //withBlock.Mode = XmlString_Get(ListNode["mode"]);
+                //withBlock.Url = XmlString_Get(ListNode["url"]);
+                //withBlock.User = new TwitterUser(ListNode["user"]);
             }
         }
 

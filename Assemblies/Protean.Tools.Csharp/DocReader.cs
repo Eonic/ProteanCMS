@@ -136,58 +136,58 @@ namespace Protean.Tools.IFilter
         S_OK = 0U,
         /// 
         /// The function was denied access to the filter file.
-        //E_ACCESSDENIED = &H80070005UI,
-        ///// 
-        ///// The function encountered an invalid handle, probably due to a low-memory situation.
-        //E_HANDLE = &H80070006UI,
-        ///// 
-        ///// The function received an invalid parameter.
-        //E_INVALIDARG = &H80070057UI,
-        ///// 
-        ///// Out of memory
-        //E_OUTOFMEMORY = &H8007000EUI,
-        ///// 
-        ///// Not implemented
-        //E_NOTIMPL = &H80004001UI,
-        ///// 
-        ///// Unknown error
-        //E_FAIL = &H80000008UI,
-        ///// 
-        ///// File not filtered due to password protection
-        //FILTER_E_PASSWORD = &H8004170BUI,
-        ///// 
-        ///// The document format is not recognised by the filter
-        //FILTER_E_UNKNOWNFORMAT = &H8004170CUI,
-        ///// 
-        ///// No text in current chunk
-        //FILTER_E_NO_TEXT = &H80041705UI,
-        ///// 
-        ///// No more chunks of text available in object
-        //FILTER_E_END_OF_CHUNKS = &H80041700UI,
-        ///// 
-        ///// No more text available in chunk
-        //FILTER_E_NO_MORE_TEXT = &H80041701UI,
-        ///// 
-        ///// No more property values available in chunk
-        //FILTER_E_NO_MORE_VALUES = &H80041702UI,
-        ///// 
-        ///// Unable to access object
-        //FILTER_E_ACCESS = &H80041703UI,
-        ///// 
-        ///// Moniker doesn't cover entire region
-        //FILTER_W_MONIKER_CLIPPED = &H41704,
-        ///// 
-        ///// Unable to bind IFilter for embedded object
-        //FILTER_E_EMBEDDING_UNAVAILABLE = &H80041707UI,
-        ///// 
-        ///// Unable to bind IFilter for linked object
-        //FILTER_E_LINK_UNAVAILABLE = &H80041708UI,
-        ///// 
-        ///// This is the last text in the current chunk
-        //FILTER_S_LAST_TEXT = &H41709,
-        ///// 
-        ///// This is the last value in the current chunk
-        //FILTER_S_LAST_VALUES = &H4170A
+        E_ACCESSDENIED = &H80070005UI,
+        /// 
+        /// The function encountered an invalid handle, probably due to a low-memory situation.
+        E_HANDLE = &H80070006UI,
+        /// 
+        /// The function received an invalid parameter.
+        E_INVALIDARG = &H80070057UI,
+        /// 
+        /// Out of memory
+        E_OUTOFMEMORY = &H8007000EUI,
+        /// 
+        /// Not implemented
+        E_NOTIMPL = &H80004001UI,
+        /// 
+        /// Unknown error
+        E_FAIL = &H80000008UI,
+        /// 
+        /// File not filtered due to password protection
+        FILTER_E_PASSWORD = &H8004170BUI,
+        /// 
+        /// The document format is not recognised by the filter
+        FILTER_E_UNKNOWNFORMAT = &H8004170CUI,
+        /// 
+        /// No text in current chunk
+        FILTER_E_NO_TEXT = &H80041705UI,
+        /// 
+        /// No more chunks of text available in object
+        FILTER_E_END_OF_CHUNKS = &H80041700UI,
+        /// 
+        /// No more text available in chunk
+        FILTER_E_NO_MORE_TEXT = &H80041701UI,
+        /// 
+        /// No more property values available in chunk
+        FILTER_E_NO_MORE_VALUES = &H80041702UI,
+        /// 
+        /// Unable to access object
+        FILTER_E_ACCESS = &H80041703UI,
+        /// 
+        /// Moniker doesn't cover entire region
+        FILTER_W_MONIKER_CLIPPED = &H41704,
+        /// 
+        /// Unable to bind IFilter for embedded object
+        FILTER_E_EMBEDDING_UNAVAILABLE = &H80041707UI,
+        /// 
+        /// Unable to bind IFilter for linked object
+        FILTER_E_LINK_UNAVAILABLE = &H80041708UI,
+        /// 
+        /// This is the last text in the current chunk
+        FILTER_S_LAST_TEXT = &H41709,
+        /// 
+        /// This is the last value in the current chunk
+        FILTER_S_LAST_VALUES = &H4170A
     }
 
     /// 
