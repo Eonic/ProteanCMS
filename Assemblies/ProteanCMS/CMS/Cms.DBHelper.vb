@@ -10949,6 +10949,29 @@ ReturnMe:
 
         End Sub
 
+
+        Public Sub UpdateSellerNotes(ByVal CartId As Long, ByVal Status As String, ByVal Notes As String)
+            Dim sSql As String = ""
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim cProcessInfo As String = "SetClientNotes"
+            Try
+
+                'Update Seller Notes:
+                sSql = "select * from tblCartOrder where nCartOrderKey = " & CartId
+                oDs = getDataSetForUpdate(sSql, "Order", "Cart")
+                For Each oRow In oDs.Tables("Order").Rows
+                    oRow("cSellerNotes") = oRow("cSellerNotes") + "\n" + DateTime.Today + " " + DateTime.Now.TimeOfDay.ToString() + ": changed to: (" + Status + ") " + "\n" + "comment: " + Notes + "\n"
+                Next
+                updateDataset(oDs, "Order")
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+            End Try
+
+        End Sub
+
+
         Public Sub ListReports(ByRef oContentsXML As XmlElement)
             PerfMonLog("Cart", "ListReports")
 
