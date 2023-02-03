@@ -256,11 +256,8 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\MySql.Data.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\JsonWebTokens.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\BouncyCastle.Crypto.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Renci.SshNet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Memory.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Numerics.Vectors.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Buffers.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.pdb
@@ -276,11 +273,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\MySql.Data.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Fonet.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Renci.SshNet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Memory.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Numerics.Vectors.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Buffers.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.AssemblyReference.cache
@@ -289,3 +282,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.v
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Threading.Tasks.Extensions.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\System.Threading.Tasks.Extensions.xml

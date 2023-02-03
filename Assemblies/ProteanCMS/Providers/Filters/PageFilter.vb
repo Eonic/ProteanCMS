@@ -23,9 +23,6 @@ Namespace Providers
                     Dim sSql As String = "spGetPagesByParentPageId"
                     Dim arrParams As New Hashtable
                     Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PageFilter")
-                    'If (aWeb.moSession("PageFilter") IsNot Nothing) Then
-                    '    oXml.InnerText = Convert.ToString(aWeb.moSession("PageFilter"))
-                    'End If
 
                     If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
                         oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PageFilter"))
@@ -61,9 +58,10 @@ Namespace Providers
 
                         'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                         While oDr.Read
-                            Dim name As String = Convert.ToString(oDr("cStructName")) + " " + Convert.ToString(oDr("ProductCount"))
+                            Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
                             Dim value As String = Convert.ToString(oDr("nStructKey"))
-                            oXform.addOption(pageFilterSelect, name, value)
+
+                            oXform.addOption(pageFilterSelect, name, value, True)
                         End While
 
                     End Using
@@ -75,15 +73,16 @@ Namespace Providers
                             Dim aPages() As String = oXml.InnerText.Split(",")
                             If (aPages.Length <> 0) Then
                                 For cnt = 0 To aPages.Length - 1
-                                    sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().InnerText
-                                    'sValue = oFormGroup
-                                    oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
+                                    sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().FirstChild().InnerText
+
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "filter-applied", "fa-times")
+
                                 Next
 
                             Else
 
-                                sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
+                                sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
+                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-times")
                             End If
                         End If
                     End If
@@ -92,10 +91,15 @@ Namespace Providers
                 End Try
             End Sub
 
-            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement) As String
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement) As String
                 Dim cProcessInfo As String = "ApplyFilter"
                 Try
 
+                    'Get the filter type parent or child based on the value of the parentPageId attribute
+                    Dim bParentPageId As Boolean = False
+                    If (FilterConfig.Attributes("parentPageId").Value IsNot Nothing) Then
+                        bParentPageId = Convert.ToBoolean(Convert.ToInt32(FilterConfig.Attributes("parentPageId").Value))
+                    End If
 
                     Dim cPageIds As String = String.Empty
 
@@ -104,15 +108,20 @@ Namespace Providers
 
                     End If
 
+
+
                     If (cPageIds <> String.Empty) Then
 
-                        'aWeb.moSession("PageFilter") = cPageIds
+
 
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = " AND "
                         End If
-                        cWhereSql = " nStructId IN (" + cPageIds + ")"
-
+                        If (bParentPageId) Then
+                            cWhereSql = " nStructId IN (" + cPageIds + ")"
+                        Else
+                            cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & cPageIds & "))"
+                        End If
                     End If
                     Return cWhereSql
                 Catch ex As Exception
@@ -122,31 +131,31 @@ Namespace Providers
 
             End Function
 
-            Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
-                Dim cProcessInfo As String = "RemovePageFromFilter"
-                Try
-                    Dim cnt As Integer
-                    Dim cntPages As Integer = 0
-                    Dim cPageIds As String = String.Empty
-                    If (aWeb.moSession("PageFilter") IsNot Nothing) Then
-                        cPageIds = aWeb.moSession("PageFilter")
-                        cPageIds = cPageIds.Replace(cPageId, "")
+            'Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
+            '    Dim cProcessInfo As String = "RemovePageFromFilter"
+            '    Try
+            '        Dim cnt As Integer
+            '        Dim cntPages As Integer = 0
+            '        Dim cPageIds As String = String.Empty
+            '        If (aWeb.moSession("PageFilter") IsNot Nothing) Then
+            '            cPageIds = aWeb.moSession("PageFilter")
+            '            cPageIds = cPageIds.Replace(cPageId, "")
 
-                        Dim aPageId() As String = cPageIds.Split(",")
-                        For cnt = 0 To aPageId.Length - 1 Step 1
-                            If (aPageId(cnt) <> String.Empty) Then
-                                If aPageId(cnt) <> "" Then
-                                    cPageIds = cPageIds + aPageId(cnt) + ","
-                                End If
-                            End If
-                        Next
-                        aWeb.moSession("PageFilter") = Left(cPageIds, cPageIds.Length - 1)
-                    End If
+            '            Dim aPageId() As String = cPageIds.Split(",")
+            '            For cnt = 0 To aPageId.Length - 1 Step 1
+            '                If (aPageId(cnt) <> String.Empty) Then
+            '                    If aPageId(cnt) <> "" Then
+            '                        cPageIds = cPageIds + aPageId(cnt) + ","
+            '                    End If
+            '                End If
+            '            Next
+            '            aWeb.moSession("PageFilter") = Left(cPageIds, cPageIds.Length - 1)
+            '        End If
 
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
-                End Try
-            End Sub
+            '    Catch ex As Exception
+            '        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
+            '    End Try
+            'End Sub
 
         End Class
         ' End Class

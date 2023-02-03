@@ -56,7 +56,7 @@
       <xsl:apply-templates select="." mode="orderProgressLegend"/>
       <xsl:apply-templates select="." mode="orderAlert"/>
       <xsl:apply-templates select="." mode="orderProcess"/>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
 
@@ -145,7 +145,7 @@
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <xsl:apply-templates select="." mode="orderAddresses"/>
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
     <form method="post" id="cart" class="ewXform">
       <xsl:if test="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']">
         <xsl:attribute name="action">
@@ -164,7 +164,7 @@
       <input type="submit" name="cartBrief" value="Continue Shopping" class="button continue"/>
       <input type="submit" name="cartUpdate" value="Update Order" class="button update"/>
       <input type="submit" name="cartQuit" value="Empty Order" class="button empty"/>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
   </xsl:template>
 
@@ -197,7 +197,7 @@
       <input type="submit" name="cartUpdate" value="Update Order" class="button update"/>
       <input type="submit" name="cartQuit" value="Empty Order" class="button empty"/>
       <!--</div>-->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
   </xsl:template>
   <!--#-->
@@ -229,7 +229,7 @@
       <input type="submit" name="cartUpdate" value="Update Order" class="button update"/>
       <input type="submit" name="cartQuit" value="Empty Order" class="button empty"/>
       <!--</div>-->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
   </xsl:template>
 
@@ -323,7 +323,7 @@
             <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
           </div>
           <div class="bl">
-            <div class="br">&#160;</div>
+            <div class="br">&#160; <xsl:text></xsl:text></div>
           </div>
         </div>
       </div>
@@ -338,7 +338,8 @@
             <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='CartRegistration']" mode="xform"/>
           </div>
           <div class="bl">
-            <div class="br">&#160;</div>
+            <div class="br">&#160; <xsl:text></xsl:text>
+			</div>
           </div>
         </div>
       </div>
@@ -428,7 +429,7 @@
       <input type="submit" name="cartBrief" value="Continue Shopping" class="button continue"/>
       <input type="submit" name="cartUpdate" value="Update Order" class="button update"/>
       <input type="submit" name="cartQuit" value="Empty Order" class="button empty"/>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
   </xsl:template>
 
@@ -457,7 +458,7 @@
       <xsl:apply-templates select="." mode="orderItems"/>
       <input type="submit" name="cartUpdate" value="Revise Order" class="button continue"/>
       <input type="submit" name="cartQuit" value="Cancel Order" class="button empty"/>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
   </xsl:template>
 
@@ -526,7 +527,7 @@
           <xsl:apply-templates select="submit" mode="xform"/>
         </p>
       </xsl:if>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
     <iframe name="threeDS" id="threeDS"></iframe>
     <script type="text/javascript">$(document).ready(function () {$('#Secure3D .buttons').hide();$('#Secure3D').submit();});</script>
@@ -622,7 +623,7 @@
           <xsl:apply-templates select="submit" mode="xform"/>
         </p>
       </xsl:if>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </form>
     <script type="text/javascript">$(document).ready(function () {$('#Secure3DReturn').submit();});</script>
   </xsl:template>
@@ -660,7 +661,7 @@
             </xsl:if>
             <!-- For xFormQuiz change how these buttons work -->
             <xsl:apply-templates select="submit" mode="xform"/>
-            <div class="terminus">&#160;</div>
+            <div class="terminus">&#160; <xsl:text></xsl:text></div>
           </li>
 
         </xsl:if>
@@ -894,7 +895,7 @@
       </xsl:if>
 
 
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
   <!--#-->
@@ -975,11 +976,11 @@
             </xsl:when>
           </xsl:choose>
         </xsl:if>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </div>
     </xsl:if>
     <!-- Terminus class fix to floating columns -->
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
   </xsl:template>
   <!--#-->
 
@@ -995,7 +996,7 @@
     </xsl:if>
 
     <!-- Terminus class fix to floating columns -->
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
   </xsl:template>
 
 
@@ -1691,7 +1692,7 @@
           </xsl:choose>
           <xsl:apply-templates select="." mode="addtoCartButtons"/>
         </xsl:if>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </form>
     </div>
   </xsl:template>
@@ -1719,7 +1720,7 @@
           <input type="hidden" name="qty_{@id}" id="qty_{@id}" value="1"/>
           <xsl:apply-templates select="." mode="addtoCartButtons"/>
         </xsl:if>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </form>
     </div>
   </xsl:template>
@@ -2575,7 +2576,7 @@
           <xsl:apply-templates select="Order" mode="ListOrders"/>
         </tbody>
       </table>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
 
@@ -2711,7 +2712,8 @@
       </xsl:call-template>
     </xsl:variable>
     <div id="cartStepper">
-      <div id="quoteStepsTop">&#160;</div>
+      <div id="quoteStepsTop">&#160;<xsl:text></xsl:text>
+  </div>
       <div id="quoteSteps">
         <div>
           <xsl:attribute name="class">
@@ -2815,8 +2817,10 @@
           </div>
         </div>
       </div>
-      <div class="quoteStepsTerminus">&#160;</div>
-      <div id="quoteStepsBtm">&#160;</div>
+      <div class="quoteStepsTerminus">&#160;<xsl:text></xsl:text>
+  </div>
+      <div id="quoteStepsBtm">&#160;<xsl:text></xsl:text>
+  </div>
     </div>
 
   </xsl:template>
@@ -2923,7 +2927,7 @@
             </xsl:if>
             <!-- For xFormQuiz change how these buttons work -->
             <xsl:apply-templates select="submit" mode="xform"/>
-            <div class="terminus">&#160;</div>
+            <div class="terminus">&#160; <xsl:text></xsl:text></div>
           </li>
 
         </xsl:if>
@@ -2971,7 +2975,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </div>
     </div>
   </xsl:template>
@@ -3059,7 +3063,7 @@
         </div>
 
         <!-- Terminus class fix to floating columns -->
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
         <hr/>
       </div>
     </div>
@@ -3117,7 +3121,7 @@
         </div>
       </xsl:if>
 
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
       <div class="entryFooter">
         <xsl:if test="Content[@type='Tag']">
           <div class="tags">
@@ -3150,7 +3154,7 @@
 
       </div>
 
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
 
       <!--RELATED CONTENT-->
       <xsl:if test="Content">
@@ -3184,7 +3188,7 @@
         </xsl:if>
       </xsl:if>
     </div>
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
   </xsl:template>
 
   <!-- List Voucher Module -->
@@ -3197,7 +3201,7 @@
         <xsl:apply-templates select="Voucher" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">&#160; <xsl:text></xsl:text></div>
       </div>
     </div>
   </xsl:template>

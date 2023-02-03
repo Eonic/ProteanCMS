@@ -445,15 +445,15 @@ Partial Public Class Cms
                     'add product option
                     myCart.AddProductOption(jObj)
                     'myCart.UpdatePackagingANdDeliveryType()
-                    myCart.GetCart(CartXml.FirstChild)
-                    ''persist cart
+                    'myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
+                    '''persist cart
                     myCart.close()
 
-                    CartXml = updateCartforJSON(CartXml)
+                    'CartXml = updateCartforJSON(CartXml)
 
-                    jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    jsonString = jsonString.Replace("""@", """_")
-                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    'jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    'jsonString = jsonString.Replace("""@", """_")
+                    'jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
 
                 Catch ex As Exception
@@ -941,6 +941,38 @@ Partial Public Class Cms
                     Return josResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""))
+                    Return "Error" 'ex.Message
+                End Try
+
+            End Function
+
+            ''' <summary>
+            ''' Add Missing order 
+            ''' </summary>
+            ''' <param name="myApi"></param>
+            ''' <param name="jObj"></param>
+            ''' <returns></returns>
+            Public Function UpdateOrderWithPaymentResponse(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim josResult As String = ""
+                    Dim bIsAuthorized As Boolean = False
+                    Dim validGroup = IIf(jObj("validGroup") IsNot Nothing, CStr(jObj("validGroup")), "")
+                    bIsAuthorized = ValidateAPICall(myWeb, validGroup)
+
+                    'If bIsAuthorized = False Then Return "Error -Authorization Failed"
+
+                    'method name UpdateOrderWithPaymentResponse
+                    Dim receiptID = jObj("AuthNumber")
+                    Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
+                    Dim strConsumerRef = ""
+                    If cProviderName <> "" And receiptID <> 0 Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
+                        strConsumerRef = oPayProv.Activities.UpdateOrderWithPaymentResponse(receiptID)
+                        josResult = strConsumerRef
+                    End If
+                    Return josResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""))
                     Return "Error" 'ex.Message
                 End Try
 

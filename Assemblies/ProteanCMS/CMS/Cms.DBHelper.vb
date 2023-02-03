@@ -25,6 +25,7 @@ Imports Protean.Tools.Dictionary
 Imports Protean.Tools.Xml
 Imports System
 Imports System.Threading
+Imports WebGrease.Css.Ast.Selectors
 
 Partial Public Class Cms
 
@@ -7488,10 +7489,10 @@ restart:
                             stateObj.cDefiningFieldValue = cDefiningFieldValue
 
                             doneEvents.Add(stateObj.oResetEvt)
-                                System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
+                            System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
 
-                                stateObj = Nothing
-                            End If
+                            stateObj = Nothing
+                        End If
                     Next
 
 
@@ -7504,12 +7505,12 @@ restart:
 
                     updateActivity(logId, ReturnMessage & " Complete")
 
-                        'Clear Page Cache
+                    'Clear Page Cache
 
-                        myWeb.ClearPageCache()
+                    myWeb.ClearPageCache()
 
 
-                        Return ReturnMessage
+                    Return ReturnMessage
                     ''       End If
 
                     'Me.updateActivity(logId, "Importing " & totalInstances & "Objects, " & completeCount & " Complete")
@@ -7581,7 +7582,7 @@ restart:
 
 
                 Else
-                        Return ""
+                    Return ""
                 End If
 
 
@@ -7692,7 +7693,7 @@ restart:
                                     For Each relContId In oRelation.GetAttribute("relatedContentId").Split(",")
                                         If IsNumeric(relContId) Then
                                             If LCase(oRelation.GetAttribute("direction")) = "child" Then
-                                                insertContentRelation(Convert.ToInt32(relContId), savedId, True, oRelation.GetAttribute("type"), True)
+                                                insertContentRelation(Convert.ToInt32(relContId), savedId, False, oRelation.GetAttribute("type"), True)
                                             Else
                                                 insertContentRelation(savedId, Convert.ToInt32(relContId), True, oRelation.GetAttribute("type"), True)
                                             End If
@@ -11208,7 +11209,7 @@ ReturnMe:
             Dim oRow As DataRow
             Try
                 If Me.checkTableColumnExists("tblContent", "cBlockedSchemaType") Then
-                    Dim sSQL As String = "select cBlockedSchemaType from tblContent c inner join tblContentLocation cl on c.nContentKey = cl.nContentId where nStructId = " & nPageId
+                    Dim sSQL As String = "select cBlockedSchemaType, nContentKey from tblContent c inner join tblContentLocation cl on c.nContentKey = cl.nContentId where nStructId = " & nPageId & " and cBlockedSchemaType IS NOT NULL"
                     Dim oDs As DataSet = GetDataSet(sSQL, "ContentBlock", "Block")
                     For Each oRow In oDs.Tables("ContentBlock").Rows
                         If Not IsDBNull(oRow("cBlockedSchemaType")) Then
@@ -11217,7 +11218,7 @@ ReturnMe:
                                 If returnValue <> "" Then
                                     returnValue = returnValue & ","
                                 End If
-                                returnValue = returnValue & oRow("cBlockedSchemaType")
+                                returnValue = returnValue & oRow("cBlockedSchemaType") & "|" & oRow("nContentKey")
                             End If
                         End If
                     Next

@@ -5,12 +5,12 @@ Imports System.Web.Configuration
 Imports System.Configuration
 Imports System.Xml
 Imports Microsoft.Web.Administration
-Imports System.windows.forms
-
+Imports System.windows.Forms
+Imports System.Web.Management
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.58.0"
+    Public Shared ewAssemblyVersion As String = "6.0.60.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.12.44.0"
@@ -40,15 +40,16 @@ Public Class CustomActions
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.1.12"
     Public Shared SystemBuffersVersion As String = "4.0.3.0"
+    Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
 
-    <CustomAction()> _
+    <CustomAction()>
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
         session.Log("Begin CustomAction1")
         System.Diagnostics.Process.Start("http://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
         Return ActionResult.Success
     End Function
 
-    <CustomAction()> _
+    <CustomAction()>
     Public Shared Function UnInstall(ByVal session As Session) As ActionResult
 
         Try
@@ -85,6 +86,8 @@ Public Class CustomActions
             Dim machineWebConfig As System.Configuration.Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(Nothing)
 
             Dim WebFilePaths(1) As String
+            Dim errstr As String = "Success"
+
             WebFilePaths(0) = machineWebConfig.FilePath
             WebFilePaths(1) = machineWebConfig.FilePath.Replace("Framework", "Framework64")
 
@@ -136,7 +139,7 @@ Public Class CustomActions
 
 
                 'Add the globally Installed providers
-                AddProvider(ConfigRoot, "protean", "Messaging", "CampaignMonitor", "Protean.Providers.Messaging.CampaignMonitor, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                AddProvider(ConfigRoot, "protean", "Messaging", "CampaignMonitor", "Protean.Providers.Messaging.CampaignMonitor, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0E5e11efc3341916")
 
                 Dim oCgfProteanSect As XmlElement = webConfig.SelectSingleNode("configuration/protean")
 
@@ -190,7 +193,7 @@ Public Class CustomActions
                 'Update the Assemblies
                 Dim oAssembliesSect As XmlElement = webConfig.SelectSingleNode("/configuration/system.web/compilation/assemblies")
                 If oAssembliesSect Is Nothing Then
-                    Dim oerr As String = "Oh CRAP ! Missed again"
+                    errstr = "Oh CRAP ! Missed again"
                 Else
                     '  Don't want a global assembly ref for ProteanCMS makes impossible to overload.
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCMS, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
@@ -230,9 +233,10 @@ Public Class CustomActions
 
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
-                    ' UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-                    ' UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
-                    ' UpdateAssemblyRef(oAssembliesSect, "Protean.Tools.Csharp, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                    'TS: These are not required and forces the CMS to load so cannot be overiden by newer version
+                    '  UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                    '   UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
+                    '   UpdateAssemblyRef(oAssembliesSect, "Protean.Tools.Csharp, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                 End If
 
                 'UpdateAssemblyRef(oAssembliesSect, "Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=EB42632606E9261F")
@@ -486,7 +490,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "ClearScript.V8", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
 
 
-            UpdateDependantAssembly(oSectXml, "Newtonsoft.Json", "30AD4FE6B2A6AEED", JsonAssemblyVersion, "10.0.0.0")
+            UpdateDependantAssembly(oSectXml, "Newtonsoft.Json", "30AD4FE6B2A6AEED", JsonAssemblyVersion, "10.0.0.0", "13.0.2.0")
             UpdateDependantAssembly(oSectXml, "WebGrease", "31bf3856ad364e35", WebGreaseAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "SoundInTheory.DynamicImage.Extensions.Pdf", "fa44558110383067", DynamicImagePDFAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "System.Net.FTPClient", "fa4be07daa57c2b7", SystemNetFTPClientAssemblyVersion)
@@ -567,7 +571,7 @@ Public Class CustomActions
                 'do nuffing
             End Try
             'MyBase.Install(savedState)
-
+            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
             Return ActionResult.Success
 
 
@@ -579,7 +583,7 @@ Public Class CustomActions
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace
             End If
 
-            My.Computer.FileSystem.WriteAllText("C:\ProteanInstallError.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errorstr, True)
             Try
                 System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
             Catch ex2 As Exception
@@ -601,10 +605,15 @@ Public Class CustomActions
 
 
             'Move files to correct folders in GAC
-            Dim installFolder As String = "C:\Program Files\Eonic Associates LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)\Global Assembly Cache"
             Dim GACFolder As String = "C:\Windows\Microsoft.NET\assembly\GAC_MSIL"
             Dim System32Folder As String = "C:\Windows\System32"
             Dim fs As New FileIO.FileSystem
+
+            If Not System.IO.File.Exists(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll") Then
+                System.IO.Directory.CreateDirectory(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\")
+                System.IO.File.Move(installFolder & "\Libraries\NewtonSoft.Json.dll", GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll")
+            End If
+
             If System.IO.Directory.Exists(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\") Then
                 '64bit files
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll") Then
@@ -639,14 +648,14 @@ Public Class CustomActions
                     System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll")
                 End If
             End If
-            If System.IO.Directory.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\") Then
-                If Not System.IO.File.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll") Then
-                    System.IO.File.Move(installFolder & "\tidy.x64.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll")
-                    System.IO.File.Move(installFolder & "\tidy.x86.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x86.dll")
-                End If
-            End If
+            '  If System.IO.Directory.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\") Then
+            '   If Not System.IO.File.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll") Then
+            '    System.IO.File.Move(installFolder & "\tidy.x64.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll")
+            '            System.IO.File.Move(installFolder & "\tidy.x86.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x86.dll")
+            '   End If
+            '    End If
 
-            'MyBase.Install(savedState)
+            ' MyBase.Install(savedState)
 
             Return ActionResult.Success
         Catch ex As Exception
@@ -657,7 +666,7 @@ Public Class CustomActions
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace
             End If
 
-            My.Computer.FileSystem.WriteAllText("C:\ProteanInstallError.txt", errorstr, True)
+            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errorstr, True)
             Try
                 System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
             Catch ex2 As Exception
@@ -804,7 +813,7 @@ Public Class CustomActions
 
     End Sub
 
-    Public Shared Sub UpdateDependantAssembly(ByRef oSectXml As XmlDocument, ByVal type As String, ByVal token As String, ByVal NewAssemblyVersion As String, Optional ByVal OldestAssemblyVerion As String = "0.0.0.0")
+    Public Shared Sub UpdateDependantAssembly(ByRef oSectXml As XmlDocument, ByVal type As String, ByVal token As String, ByVal NewAssemblyVersion As String, Optional ByVal OldestAssemblyVerion As String = "0.0.0.0", Optional ByVal LowerAssemblyVerion As String = "")
 
         Try
 
@@ -822,7 +831,12 @@ Public Class CustomActions
             End If
             For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='" & type & "']/bindingRedirect")
                 oElmt.SetAttribute("oldVersion", OldestAssemblyVerion & "-" & NewAssemblyVersion)
-                oElmt.SetAttribute("newVersion", NewAssemblyVersion)
+                If LowerAssemblyVerion <> "" Then
+                    oElmt.SetAttribute("newVersion", LowerAssemblyVerion)
+                Else
+                    oElmt.SetAttribute("newVersion", NewAssemblyVersion)
+                End If
+
             Next
 
         Catch ex As Exception

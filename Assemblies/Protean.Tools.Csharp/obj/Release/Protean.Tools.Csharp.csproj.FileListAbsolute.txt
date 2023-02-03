@@ -108,7 +108,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Renci.Ss
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\System.Buffers.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\System.Memory.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\System.Numerics.Vectors.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\TidyHTML5Managed.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Fonet.xml
@@ -122,7 +121,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\Renci.Ss
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\System.Buffers.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\System.Memory.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\System.Numerics.Vectors.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.CoreCompileInputs.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.CopyComplete
