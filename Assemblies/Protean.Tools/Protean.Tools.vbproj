@@ -297,45 +297,8 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.vb" />
-    <Compile Include="Conversion.vb" />
-    <Compile Include="Counter.vb" />
-    <Compile Include="CSV.vb" />
-    <Compile Include="DelegateWrappers.vb" />
-    <Compile Include="Dictionary.vb" />
     <Compile Include="DocReader.vb" />
-    <Compile Include="Enum.vb" />
-    <Compile Include="GnuPG.vb" />
-    <Compile Include="FileHelper.vb" />
-    <Compile Include="FTPClient.vb" />
-    <Compile Include="Http\Http.Utils.vb" />
     <Compile Include="Image.vb" />
-    <Compile Include="Impersonate.vb" />
-    <Compile Include="Integration\Authentication\OAuth.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Globals.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliAudioFile.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliConnection.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliFile.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliPhotoFile.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliVideoFile.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\AyFrogConn.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\PagedResults.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterAPIException.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterDirectMessage.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterList.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterParameters.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterRelationships.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterSearchParameters.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterSearchResult.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterStatus.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterTrend.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterTrendLocation.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterUser.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitVidConnection.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\XmlNamespaceStripper.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\Objects\XmlObjectBase.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\TwitterAPI.vb" />
-    <Compile Include="Integration\Twitter\TwitterVB2\TwitterOAuth.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
@@ -345,9 +308,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Object.vb" />
-    <Compile Include="SoapClient.vb" />
-    <Compile Include="Http\Http.WebRequest.vb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -415,7 +375,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Release" BuildVersion_DetectChanges="False" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_DetectChanges="False" BuildVersion_ConfigurationName="Release" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />

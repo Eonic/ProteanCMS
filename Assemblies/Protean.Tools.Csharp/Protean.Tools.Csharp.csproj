@@ -141,8 +141,46 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calendar.cs" />
+    <Compile Include="Conversion.cs" />
+    <Compile Include="Counter.cs" />
+    <Compile Include="CSV.cs" />
+    <Compile Include="DelegateWrappers.cs" />
+    <Compile Include="Dictionary.cs" />
     <Compile Include="Encryption.cs" />
+    <Compile Include="Enum.cs" />
     <Compile Include="Errors.cs" />
+    <Compile Include="FileHelper.cs" />
+    <Compile Include="FTPClient.cs" />
+    <Compile Include="GnuPG.cs" />
+    <Compile Include="Http\Http.Utils.cs" />
+    <Compile Include="Http\Http.WebRequest.cs" />
+    <Compile Include="Image.cs" />
+    <Compile Include="Impersonate.cs" />
+    <Compile Include="Integration\Authentication\OAuth.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Globals.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliAudioFile.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliConnection.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliFile.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliPhotoFile.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\ATwiCliVideoFile.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\AyFrogConn.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\PagedResults.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterAPIException.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterDirectMessage.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterList.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterParameters.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterRelationships.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterSearchParameters.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterSearchResult.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterStatus.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterTrend.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterTrendLocation.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitterUser.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\TwitVidConnection.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\XmlNamespaceStripper.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\Objects\XmlObjectBase.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\TwitterAPI.cs" />
+    <Compile Include="Integration\Twitter\TwitterVB2\TwitterOAuth.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="MySqlDatabase.cs" />
@@ -151,6 +189,7 @@
     <Compile Include="IdentityModel\Tokens\JwtHelper.cs" />
     <Compile Include="Number.cs" />
     <Compile Include="Number.Random.cs" />
+    <Compile Include="Object.cs" />
     <Compile Include="PDF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -159,6 +198,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RecaptchaHelper.cs" />
+    <Compile Include="SoapClient.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="Xml.cs" />
     <Compile Include="Xslt.cs" />
