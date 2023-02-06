@@ -138,6 +138,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NonNuget\TidyHTML5Managed.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calendar.cs" />
@@ -154,7 +155,6 @@
     <Compile Include="GnuPG.cs" />
     <Compile Include="Http\Http.Utils.cs" />
     <Compile Include="Http\Http.WebRequest.cs" />
-    <Compile Include="Image.cs" />
     <Compile Include="Impersonate.cs" />
     <Compile Include="Integration\Authentication\OAuth.cs" />
     <Compile Include="Integration\Twitter\TwitterVB2\Globals.cs" />
