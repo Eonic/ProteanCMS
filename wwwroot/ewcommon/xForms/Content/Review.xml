@@ -17,9 +17,9 @@
 						<Summary/>
 						<Rating/>
 						<Images>
-							<img class="thumbnail"/>
-							<img class="display"/>
-							<img class="detail"/>
+							<img class="thumbnail" type="thumbnail"/>
+							<img class="display" type="display"/>
+							<img class="detail" type="detail"/>
 						</Images>
 						<Path/>
 						<EmailSent/>
@@ -38,9 +38,9 @@
 						<Description/>
 						<Rating/>
 						<Images>
-							<img class="thumbnail"/>
-							<img class="display"/>
-							<img class="detail"/>
+							<img class="thumbnail" type="thumbnail"/>
+							<img class="display" type="display"/>
+							<img class="detail" type="detail"/>
 						</Images>
 						<Path/>
 						<EmailSent/>
