@@ -127,7 +127,7 @@
 
         </p>
       </xsl:if>
-      <div class="terminus">&#160; <xsl:text></xsl:text></div>
+      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
     </form>
   </xsl:template>
 
@@ -166,7 +166,7 @@
             <!-- Terminus needed for CHROME ! -->
             <!-- Terminus needed for BREAKS IE 7! -->
             <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus">&#160; <xsl:text></xsl:text></div>
+              <div class="terminus"><xsl:text>&#160;</xsl:text></div>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
@@ -185,7 +185,7 @@
               <!-- Terminus needed for CHROME ! -->
               <!-- Terminus needed for BREAKS IE 7! -->
               <xsl:if test="$browserVersion!='MSIE 7.0'">
-                <div class="terminus">&#160; <xsl:text></xsl:text></div>
+                <div class="terminus"><xsl:text>&#160;</xsl:text></div>
               </xsl:if>
             </div>
           </xsl:otherwise>
@@ -324,7 +324,8 @@
           <xsl:if test="*/alert or */hint or */help">
             <div class="pt-row">
               <xsl:if test="label">
-                <div class="pt-col ">&#160;<xsl:text></xsl:text>
+                <div class="pt-col ">
+					<xsl:text>&#160;</xsl:text>
 			</div>
               </xsl:if>
               <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt"/>
@@ -3348,7 +3349,7 @@
         <xsl:value-of select="$ref"/>
       </span>
     </div>
-    <div class="terminus">&#160; <xsl:text></xsl:text></div>
+    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
   </xsl:template>
   <!-- -->
   <!-- ========================== CONTROL : UPLOAD ========================== -->

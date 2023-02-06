@@ -150,7 +150,7 @@
         <xsl:apply-templates select="ms:node-set($searchResults)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160; <xsl:text></xsl:text></div>
+        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
       </div>
     </div>
     
@@ -166,7 +166,7 @@
         <xsl:apply-templates select="ms:node-set($searchResults)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160; <xsl:text></xsl:text></div>
+        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
       </div>
     </div>
   </xsl:template>

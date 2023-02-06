@@ -117,7 +117,7 @@
                 </span>
               </xsl:if>
               <xsl:apply-templates select="submit" mode="xform"/>
-              <!--<div class="clearfix">&#160;</div>-->
+              <!--<div class="clearfix"><xsl:text>&#160; </xsl:text></div>-->
             </div>
           </xsl:if>
         </xsl:otherwise>
@@ -227,7 +227,7 @@
               </span>
             </xsl:if>
             <xsl:apply-templates select="submit" mode="xform"/>
-            <!--<div class="clearfix">&#160;</div>-->
+            <!--<div class="clearfix"><xsl:text>&#160; </xsl:text></div>-->
           </div>
         </xsl:if>
       </xsl:for-each>
@@ -324,7 +324,7 @@
             <!-- Terminus needed for CHROME ! -->
             <!-- Terminus needed for BREAKS IE 7! -->
             <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus">&#160; <xsl:text></xsl:text></div>
+              <div class="terminus"><xsl:text>&#160;</xsl:text></div>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
@@ -343,7 +343,7 @@
               <!-- Terminus needed for CHROME ! -->
               <!-- Terminus needed for BREAKS IE 7! -->
               <xsl:if test="$browserVersion!='MSIE 7.0'">
-                <div class="terminus">&#160; <xsl:text></xsl:text></div>
+                <div class="terminus"><xsl:text>&#160;</xsl:text></div>
               </xsl:if>
             </div>
           </xsl:otherwise>
