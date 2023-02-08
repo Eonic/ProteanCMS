@@ -1,12 +1,11 @@
-﻿// Namespace Protean.Tools.DelegateWrappers
+﻿using System;
+// Namespace Protean.Tools.DelegateWrappers
 
 // Collection of classes for delegate wrappers - predicates, actions and converters etc.
 // At the moment only predicates are implemented
 
 
-using System;
-
-namespace Protean.Tools.DelegateWrappers
+namespace DelegateWrappers
 {
 
     /// <summary>
@@ -20,13 +19,15 @@ namespace Protean.Tools.DelegateWrappers
     /// <remarks>From http://www.paulstovell.com/vb-anonymous-methods</remarks>
     public delegate bool PredicateWrapperDelegate<T, A>(T item, A argument);
 
-    public class PredicateWrapper<T, A>
+    public partial class PredicateWrapper<T, A>
     {
+
         private A _argument;
         private PredicateWrapperDelegate<T, A> _wrapperDelegate;
 
         public PredicateWrapper(A argument, PredicateWrapperDelegate<T, A> wrapperDelegate)
         {
+
             _argument = argument;
             _wrapperDelegate = wrapperDelegate;
         }
@@ -39,8 +40,10 @@ namespace Protean.Tools.DelegateWrappers
         public static implicit operator Predicate<T>(PredicateWrapper<T, A> wrapper)
 
         {
+
             return new Predicate<T>(wrapper.InnerPredicate);
         }
+
     }
 
     // My attempt at modifying the above for COnverters - fails as I think the converter delegate needs to be explicitly typed.

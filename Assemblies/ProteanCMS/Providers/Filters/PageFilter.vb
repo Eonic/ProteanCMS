@@ -23,9 +23,6 @@ Namespace Providers
                     Dim sSql As String = "spGetPagesByParentPageId"
                     Dim arrParams As New Hashtable
                     Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PageFilter")
-                    'If (aWeb.moSession("PageFilter") IsNot Nothing) Then
-                    '    oXml.InnerText = Convert.ToString(aWeb.moSession("PageFilter"))
-                    'End If
 
                     If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
                         oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PageFilter"))
@@ -85,7 +82,6 @@ Namespace Providers
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
-                                'oXform.addSubmit(oFromGroup, sText, sText, "submit", "filter-applied", "", oXml.InnerText)
                                 oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-times")
                             End If
                         End If
@@ -135,31 +131,31 @@ Namespace Providers
 
             End Function
 
-            Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
-                Dim cProcessInfo As String = "RemovePageFromFilter"
-                Try
-                    Dim cnt As Integer
-                    Dim cntPages As Integer = 0
-                    Dim cPageIds As String = String.Empty
-                    If (aWeb.moSession("PageFilter") IsNot Nothing) Then
-                        cPageIds = aWeb.moSession("PageFilter")
-                        cPageIds = cPageIds.Replace(cPageId, "")
+            'Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
+            '    Dim cProcessInfo As String = "RemovePageFromFilter"
+            '    Try
+            '        Dim cnt As Integer
+            '        Dim cntPages As Integer = 0
+            '        Dim cPageIds As String = String.Empty
+            '        If (aWeb.moSession("PageFilter") IsNot Nothing) Then
+            '            cPageIds = aWeb.moSession("PageFilter")
+            '            cPageIds = cPageIds.Replace(cPageId, "")
 
-                        Dim aPageId() As String = cPageIds.Split(",")
-                        For cnt = 0 To aPageId.Length - 1 Step 1
-                            If (aPageId(cnt) <> String.Empty) Then
-                                If aPageId(cnt) <> "" Then
-                                    cPageIds = cPageIds + aPageId(cnt) + ","
-                                End If
-                            End If
-                        Next
-                        aWeb.moSession("PageFilter") = Left(cPageIds, cPageIds.Length - 1)
-                    End If
+            '            Dim aPageId() As String = cPageIds.Split(",")
+            '            For cnt = 0 To aPageId.Length - 1 Step 1
+            '                If (aPageId(cnt) <> String.Empty) Then
+            '                    If aPageId(cnt) <> "" Then
+            '                        cPageIds = cPageIds + aPageId(cnt) + ","
+            '                    End If
+            '                End If
+            '            Next
+            '            aWeb.moSession("PageFilter") = Left(cPageIds, cPageIds.Length - 1)
+            '        End If
 
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
-                End Try
-            End Sub
+            '    Catch ex As Exception
+            '        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
+            '    End Try
+            'End Sub
 
         End Class
         ' End Class

@@ -737,6 +737,12 @@
 		</xsl:if>
 	</xsl:template>
 
+  <xsl:template match="Content[@type='Module']" mode="themeModuleClassExtras">
+	  <xsl:if test="@modAnim and @modAnim!=''">
+		  <xsl:text> moduleAnimate-invisible</xsl:text>
+	  </xsl:if>
+  </xsl:template>
+	
 	<xsl:template match="*" mode="themeModuleExtrasListItem">
 		<xsl:param name="parentId"/>
 		<xsl:param name="pos"/>
@@ -753,12 +759,6 @@
 			</xsl:attribute>
 		</xsl:if>
 	</xsl:template>
-
-  <xsl:template match="*" mode="themeModuleClassExtras">
-	  <xsl:if test="@modAnim and @modAnim!=''">
-		  <xsl:text> moduleAnimate-invisible</xsl:text>
-	  </xsl:if>
-  </xsl:template>
 
 	<xsl:template match="*" mode="themeModuleClassExtrasListItem">
 		<xsl:param name="parentId"/>
