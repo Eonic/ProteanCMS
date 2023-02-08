@@ -79,11 +79,11 @@
 	</xsl:template>
 
 	<xsl:template match="Content[@type='Module' and @moduleType='SubPageList']" mode="themeModuleExtras">
-		<!-- this is empty because we want this on individual listing panels-->
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
 
 	<xsl:template match="Content[@type='Module' and @moduleType='SubPageList']" mode="themeModuleClassExtras">
-		<!-- this is empty because we want this on individual listing panels-->
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
 
 	<!-- Sub Page Content -->
