@@ -584,13 +584,13 @@ Public Class Messaging
                 If mbEncrypt = True Then
                     ' encrypt the email using GNU
 
-                    Dim oGnuPg As Protean.Tools.GnuPG.GnuPGWrapper = New Tools.GnuPG.GnuPGWrapper
+                    Dim oGnuPg As GnuPG.GnuPGWrapper = New GnuPG.GnuPGWrapper
 
                     oGnuPg.homedirectory = msGnuDirectory
                     oGnuPg.originator = msGnuOriginator
                     oGnuPg.passphrase = msGnuPassphrase
                     oGnuPg.recipient = recipientEmail
-                    oGnuPg.command = Tools.GnuPG.Commands.SignAndEncrypt
+                    oGnuPg.command = GnuPG.Commands.SignAndEncrypt
                     oGnuPg.ExecuteCommand(messagePlainText, messagePlainText)
                 End If
 

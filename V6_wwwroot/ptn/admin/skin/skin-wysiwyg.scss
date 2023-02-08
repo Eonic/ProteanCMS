@@ -137,6 +137,13 @@
         //margin-top:4px;
     }
 
+    .not-over-content {
+        .ptn-edit.over-content {
+            margin-bottom: 0;
+            //margin-top:4px;
+        }
+    }
+
     .ptn-edit > .btn-default,
     .ptn-edit > .btn-primary,
     .ptn-edit > .dropdown > .btn-primary,
@@ -279,10 +286,13 @@
         z-index: 5;
         float: right;
         width: 100px;
-        &:hover{z-index:6;}
+
+        &:hover {
+            z-index: 6;
+        }
     }
 
-    
+
 
     .ptn-edit.options.addmodule.droppable-hover {
         border-color: $primary;

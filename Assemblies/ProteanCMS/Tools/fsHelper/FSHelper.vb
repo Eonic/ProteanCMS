@@ -26,6 +26,7 @@ Imports System.Text.RegularExpressions
 Imports System.Web.UI
 Imports System.Web
 Imports Microsoft.Ajax.Utilities
+Imports DelegateWrappers
 
 Partial Public Class fsHelper
 
@@ -353,45 +354,45 @@ Partial Public Class fsHelper
             End If
 
             Dim startDir As String
-                If mcRoot = "../" Then
-                    mcRoot = ""
-                    startDir = goServer.MapPath("/")
-                    Dim newDir As New DirectoryInfo(startDir)
-                    startDir = newDir.Parent.FullName
-                Else
-                    startDir = goServer.MapPath("/" & mcRoot)
-                End If
+            If mcRoot = "../" Then
+                mcRoot = ""
+                startDir = goServer.MapPath("/")
+                Dim newDir As New DirectoryInfo(startDir)
+                startDir = newDir.Parent.FullName
+            Else
+                startDir = goServer.MapPath("/" & mcRoot)
+            End If
 
-                'check startfolder exists
-                Dim rootDir As New DirectoryInfo(startDir)
+            'check startfolder exists
+            Dim rootDir As New DirectoryInfo(startDir)
 
-                If Not rootDir.Exists Then
-                    Dim baseDir As New DirectoryInfo(goServer.MapPath("/"))
-                    rootDir = baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
-                End If
+            If Not rootDir.Exists Then
+                Dim baseDir As New DirectoryInfo(goServer.MapPath("/"))
+                rootDir = baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
+            End If
 
-                If mcStartFolder = "" Then mcStartFolder = startDir
-                Dim workingFolder As String = mcStartFolder
-                Dim startFolderName As String = mcStartFolder.Replace("/", "\").Trim("\")
-                startFolderName = startFolderName.Substring(startFolderName.LastIndexOf("\") + 1)
-                Dim startfld As New DirectoryInfo(mcStartFolder)
-                If Not startfld.Exists Then
-                    rootDir.CreateSubdirectory(startFolderName)
-                End If
+            If mcStartFolder = "" Then mcStartFolder = startDir
+            Dim workingFolder As String = mcStartFolder
+            Dim startFolderName As String = mcStartFolder.Replace("/", "\").Trim("\")
+            startFolderName = startFolderName.Substring(startFolderName.LastIndexOf("\") + 1)
+            Dim startfld As New DirectoryInfo(mcStartFolder)
+            If Not startfld.Exists Then
+                rootDir.CreateSubdirectory(startFolderName)
+            End If
 
-                For i = 0 To UBound(aFolderNames)
-                    If aFolderNames(i) <> "" Then
-                        Dim dir1 As New DirectoryInfo(workingFolder)
-                        If dir1.Exists Then
-                            tempFolder = workingFolder.TrimEnd("\") & "\" & aFolderNames(i)
-                            Dim dir2 As New DirectoryInfo(tempFolder)
-                            If Not dir2.Exists Then
-                                dir1.CreateSubdirectory(aFolderNames(i))
-                            End If
+            For i = 0 To UBound(aFolderNames)
+                If aFolderNames(i) <> "" Then
+                    Dim dir1 As New DirectoryInfo(workingFolder)
+                    If dir1.Exists Then
+                        tempFolder = workingFolder.TrimEnd("\") & "\" & aFolderNames(i)
+                        Dim dir2 As New DirectoryInfo(tempFolder)
+                        If Not dir2.Exists Then
+                            dir1.CreateSubdirectory(aFolderNames(i))
                         End If
-                        workingFolder = workingFolder & "\" & aFolderNames(i)
                     End If
-                Next
+                    workingFolder = workingFolder & "\" & aFolderNames(i)
+                End If
+            Next
 
             'PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
             If ImpersonationMode Then
@@ -515,21 +516,21 @@ Partial Public Class fsHelper
             End If
 
             Dim FolderName As String = mcStartFolder & cFolderPath & "\" & cFolderName
-                Dim dir As New DirectoryInfo(FolderName)
+            Dim dir As New DirectoryInfo(FolderName)
 
-                If dir.Exists Then
-                    Dim f As FileInfo
-                    For Each f In dir.GetFiles()
-                        f.Delete()
-                    Next f
-                    Dim d As DirectoryInfo
-                    For Each d In dir.GetDirectories()
-                        d.Delete(True)
-                    Next d
-                Else
-                    Return "this folder does not exist"
-                End If
-                oImp.UndoImpersonation()
+            If dir.Exists Then
+                Dim f As FileInfo
+                For Each f In dir.GetFiles()
+                    f.Delete()
+                Next f
+                Dim d As DirectoryInfo
+                For Each d In dir.GetDirectories()
+                    d.Delete(True)
+                Next d
+            Else
+                Return "this folder does not exist"
+            End If
+            oImp.UndoImpersonation()
             If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
