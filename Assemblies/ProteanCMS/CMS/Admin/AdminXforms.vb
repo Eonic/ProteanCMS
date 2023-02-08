@@ -7079,6 +7079,127 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            'New method added for new form for shipping group for product discounts.
+            Public Function xFrmProductShippingGroupRelations(ByVal id As Long, ByVal dname As String) As XmlElement
+
+                Dim oFrmElmt As XmlElement
+                Dim oFrmGrp1 As XmlElement
+                Dim oFrmGrp2 As XmlElement
+                Dim oFrmGrp3 As XmlElement
+                Dim oElmt2 As XmlElement
+                Dim oElmt4 As XmlElement
+                Dim oElmt5 As XmlElement
+                Dim sSql As String
+                Dim bDeny As Boolean
+                Dim cProcessInfo As String = ""
+                Dim cDenyFilter As String = ""
+                Try
+
+                    MyBase.NewFrm("EditShippingDirRelations")
+
+                    If moDbHelper.checkTableColumnExists("tblCartShippingProductCategoryRelations", "nPermLevel") Then
+                        bDeny = True
+                        cDenyFilter = " and nPermLevel <> 0"
+                    End If
+
+
+                    MyBase.submission("EditInputPageRights", "", "post")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "EditDirs", "3col", "Shipping Group Relations for Shipping Method " & dname)
+
+                    oFrmGrp1 = MyBase.addGroup(oFrmElmt, "AllObjects", "", "Select the shipping groups you want to have access to this shipping method")
+                    MyBase.addNote(oFrmGrp1, xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names")
+
+                    'add the buttons so we can test for submission
+                    oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Allow Selected", "", "ShippingGroupButtons btn-allow")
+                    If bDeny Then
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "ShippingGroupButtons btn-deny")
+                    End If
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "ShippingGroupButtons btn-remove")
+
+                    Select Case MyBase.getSubmitted
+                        Case "AddSelected"
+                            If goRequest("Groups") <> "" Then
+                                moDbHelper.saveProductShippingGroupDirRelation(id, goRequest("Groups"))
+                            End If
+
+                        Case "DenySelected"
+                            If bDeny Then
+                                If goRequest("Groups") <> "" Then
+                                    moDbHelper.saveProductShippingGroupDirRelation(id, goRequest("Groups"), True, dbHelper.PermissionLevel.Denied)
+                                End If
+
+                            End If
+                        Case "RemoveSelected"
+                            moDbHelper.saveProductShippingGroupDirRelation(id, goRequest("Items"), False)
+                    End Select
+
+                    oElmt2 = MyBase.addSelect(oFrmGrp1, "Groups", False, "Shipping Groups", "scroll_10", xForm.ApperanceTypes.Minimal)
+                    'Dim nxxx As Integer = moDbhelper.exeProcessSQLScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " & id & ") AND (nDirId = 0)")
+                    If Not moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " & id & ") AND (nDirId = 0)") > 0 Then
+                        MyBase.addOption(oElmt2, "<<All Users>>", 0)
+                    End If
+                    sSql = "SELECT nCatKey as value, cCatName as name FROM tblCartProductCategories WHERE (cCatSchemaName = N'Shipping') AND" &
+                    " (((SELECT nShipProdCatRelKey" &
+                    " FROM tblCartShippingProductCategoryRelations" &
+                    " WHERE (nShipOptId = 84) AND (nCatId = tblCartProductCategories.nCatKey))) IS NULL)" &
+                    " ORDER BY cCatName"
+
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
+                    'oElmt2 = MyBase.addSelect(oFrmGrp1, "Roles", False, "User Roles", "scroll_10", xForm.ApperanceTypes.Minimal)
+
+                    'sSql = "SELECT nDirKey as value, cDirName as name FROM tblDirectory WHERE (cDirSchema = N'Role') AND" &
+                    '" (((SELECT nCartShippingPermissionKey" &
+                    '" FROM tblCartShippingPermission" &
+                    '" WHERE (nShippingMethodId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
+                    '"ORDER BY cDirName"
+
+                    'Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                    '    MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    'End Using
+
+
+                    oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All Groups with permissions for Shipping Method")
+                    MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
+
+                    oElmt4 = MyBase.addSelect(oFrmGrp3, "Items", False, "Allowed", "scroll_10", xForm.ApperanceTypes.Minimal)
+
+
+                    sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " &
+                    "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Users>>' ELSE tblCartProductCategories.cCatName END AS name" &
+                    " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" &
+                    " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" &
+                    " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " & id & ")" & cDenyFilter & " ORDER BY cCatName"
+
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
+                    If bDeny Then
+
+                        oElmt5 = MyBase.addSelect(oFrmGrp3, "Items", False, "Denied", "scroll_10", xForm.ApperanceTypes.Minimal)
+
+                        sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " &
+                    "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Users>>' ELSE tblCartProductCategories.cCatName END AS name" &
+                    " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" &
+                    " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" &
+                        " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " & id & ") and nPermLevel = 0 ORDER BY cCatName"
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value")
+                        End Using
+
+                    End If
+
+                    MyBase.Instance.InnerXml = "<Dirs/>"
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmProductShippingGroupRelations", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
             Public Function xFrmEditDirectoryContact(Optional ByVal id As Long = 0, Optional ByVal nUID As Integer = 0, Optional xFormPath As String = "/xforms/directory/UserContact.xml") As XmlElement
                 Dim cProcessInfo As String = ""
                 Try
