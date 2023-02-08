@@ -767,7 +767,7 @@
                     </xsl:apply-templates>               
               </ul>
               -->
-        <!--<div class="terminus">&#160;</div>-->
+        <!--<div class="terminus">&#160; <xsl:text></xsl:text></div>-->
         <!--
             </div>
           </xsl:if>
@@ -791,7 +791,7 @@
                     </xsl:apply-templates>
 
               </ul>
-              <div class="terminus">&#160;</div>
+              <div class="terminus">&#160; <xsl:text></xsl:text></div>
             </div>
           </xsl:if>
         </xsl:if>
@@ -827,7 +827,7 @@
       </div>-->
 
     </div>
-    <div class="terminus">&#160;</div>
+    <div class="terminus">&#160; <xsl:text></xsl:text></div>
 
     <xsl:if test="not(/Page[@ewCmd='Normal'])">
       <!--<div id="breadcrumb">-->
@@ -4286,7 +4286,7 @@
         </div>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
 
@@ -5234,7 +5234,7 @@
       </div>
 
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
 
@@ -6196,7 +6196,7 @@
                 <!--xsl:apply-templates select="." mode="contactAddressBriefProfile"/-->
                 <xsl:apply-templates select="." mode="AdminListContact"/>
                 <xsl:if test="position() mod 2=0">
-                  <div class="terminus">&#160;</div>
+                  <div class="terminus">&#160; <xsl:text></xsl:text></div>
                 </xsl:if>
               </xsl:for-each>
             </div>
@@ -6450,7 +6450,7 @@
 
                 <xsl:apply-templates select="." mode="AdminListContact"/>
                 <xsl:if test="position() mod 2=0">
-                  <div class="terminus">&#160;</div>
+                  <div class="terminus">&#160; <xsl:text></xsl:text></div>
                 </xsl:if>
               </xsl:for-each>
             </div>
@@ -7498,7 +7498,7 @@
         </div>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
   
@@ -7748,7 +7748,7 @@
         <p>Click on the 'VIEW QUOTE' button to view all the details for that Quote.</p>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
   <!-- -->
@@ -8623,7 +8623,7 @@
       </div>
 
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
       <xsl:if test="(Notes) and @cmd!='Notes' ">
         <div class="notes">
           <xsl:for-each select="Notes/*">
@@ -8646,7 +8646,7 @@
         </div>
       </xsl:if>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
 
       <table cellspacing="0" id="cartListing" summary="This table contains a list of the items which you have added to the shopping cart. To change the quantity of an item, replace the number under the Qty column and click on Update Cart.">
         <tr>
@@ -9099,7 +9099,7 @@
         <xsl:apply-templates select="ContentDetail/report" mode="reportDetail"/>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
   <!-- Default Report Template Sortable Columns -->
@@ -9676,7 +9676,7 @@
         Instructions go here
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
   <!-- -->
@@ -12342,7 +12342,7 @@
         </p>
 
       </div>
-      <div class="terminus">&#160;</div>
+      <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
 
