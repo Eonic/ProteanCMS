@@ -790,8 +790,13 @@ ProcessFlow:
                                     Dim oXfrm As New xForm(myWeb)
                                     oXfrm.NewFrm("LocationFilter")
                                     oXfrm.submission("LocationFilter", "/?ewCmd=ByType." & ContentType & ".Location", "post", "")
-                                    Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
-                                    "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+                                    ' Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
+                                    '  "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+
+                                    Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure " &
+                                    "where ( select count(cl1.nContentID) from tblContentLocation cl1 inner join tblContent tc on tc.nContentKey = cl1.nContentId  where cl1.nStructId = nStructKey and tc.cContentSchemaName = '" & ContentType & "') > 0 order by name"
+
+
                                     Dim locSelect As XmlElement = oXfrm.addSelect1(oXfrm.moXformElmt, "Location", False, "Select Location", "submit-on-select")
 
                                     If myWeb.moRequest("Location") <> "" Then

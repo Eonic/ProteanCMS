@@ -1,0 +1,300 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Protean.Tools.vbproj": {}
+  },
+  "projects": {
+    "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj",
+        "projectName": "Protean.Tools.Csharp",
+        "projectPath": "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj",
+        "packagesPath": "C:\\Users\\Santosh\\.nuget\\packages\\",
+        "outputPath": "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "configFilePaths": [
+          "C:\\Users\\Santosh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/nuget": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "BouncyCastle": {
+              "target": "Package",
+              "version": "[1.8.3.1, )"
+            },
+            "Fonet": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.6.1, )"
+            },
+            "Magick.NET-Q8-AnyCPU": {
+              "target": "Package",
+              "version": "[8.5.0, )"
+            },
+            "Magick.NET.Core": {
+              "target": "Package",
+              "version": "[8.5.0, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.0.18, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "SSH.NET": {
+              "target": "Package",
+              "version": "[2016.1.0, )"
+            },
+            "SharpZipLib": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
+            "TidyManaged": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Protean.Tools.vbproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Protean.Tools.vbproj",
+        "projectName": "Protean.Tools",
+        "projectPath": "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Protean.Tools.vbproj",
+        "packagesPath": "C:\\Users\\Santosh\\.nuget\\packages\\",
+        "outputPath": "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "configFilePaths": [
+          "C:\\Users\\Santosh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/nuget": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {
+              "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj": {
+                "projectPath": "D:\\Santosh_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "DocumentFormat.OpenXml": {
+              "target": "Package",
+              "version": "[2.9.0, )"
+            },
+            "Magick.NET-Q8-AnyCPU": {
+              "target": "Package",
+              "version": "[8.5.0, )"
+            },
+            "Magick.NET.Core": {
+              "target": "Package",
+              "version": "[8.5.0, )"
+            },
+            "Microsoft.NETCore.Platforms": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.Owin": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
+            "Microsoft.Owin.Security": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
+            "NETStandard.Library": {
+              "target": "Package",
+              "version": "[2.0.3, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            },
+            "Owin": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "SharpZipLib": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
+            "System.Collections": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Collections.Concurrent": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Console": {
+              "target": "Package",
+              "version": "[4.3.1, )"
+            },
+            "System.Diagnostics.Debug": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Diagnostics.DiagnosticSource": {
+              "target": "Package",
+              "version": "[4.5.1, )"
+            },
+            "System.Diagnostics.Tools": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Globalization": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.IO.Packaging": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Linq": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Linq.Expressions": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Net.Primitives": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.ObjectModel": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Reflection.Extensions": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Reflection.Primitives": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Resources.ResourceManager": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Runtime": {
+              "target": "Package",
+              "version": "[4.3.1, )"
+            },
+            "System.Runtime.Handles": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Runtime.Numerics": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Security.Cryptography.Algorithms": {
+              "target": "Package",
+              "version": "[4.3.1, )"
+            },
+            "System.Text.Encoding": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Text.Encoding.Extensions": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Text.RegularExpressions": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Threading": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Threading.Tasks": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Threading.Timer": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Xml.ReaderWriter": {
+              "target": "Package",
+              "version": "[4.3.1, )"
+            },
+            "System.Xml.XDocument": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "TidyHtml5ManagedRepack": {
+              "target": "Package",
+              "version": "[1.1.4, )"
+            },
+            "Tinify": {
+              "target": "Package",
+              "version": "[1.5.2, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

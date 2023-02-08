@@ -340,22 +340,34 @@
 				</label>
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
 				</group>
+			<group>
+				<label>
+					<i class="fas fa-brush"> </i>
+					<span class="space"> </span>
+					<span>Presentation</span>
+				</label>
+				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+			</group>
 					<group>
 								<label>
 					<i class="fas fa-cog"> </i>
 					<span class="space"> </span>
 					<span>Advanced Settings</span>
 				</label>
-				<!-- These hidden fields and bindings are required for the component-->
-				<input bind="nContentKey" class="hidden">
-					<label>ContentId</label>
-				</input>
-				<input bind="cModuleType" class="hidden">
-					<label>ModuleType</label>
-				</input>
-				<!-- End of hidden fields -->
-                <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
-                <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				<group>
+					<!-- These hidden fields and bindings are required for the component-->
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="cModuleType" class="hidden">
+						<label>ModuleType</label>
+					</input>
+					<!-- end of hidden fields -->
+
+
+
+					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+				</group>
 			</group>
 		</group>
 	</group>

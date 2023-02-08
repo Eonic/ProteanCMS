@@ -1,19 +1,41 @@
-
-CREATE VIEW [dbo].[vw_ticketsSalesReport]
+CREATE PROCEDURE spGetPriceRange 
+@MinPrice int,
+@MaxPrice int,
+@Step int
 AS
-SELECT DISTINCT 
-                         Items.nCartOrderId AS OrderId, dbo.tblAudit.dInsertDate, dbo.vw_GetDistinctEventsTickets.EventName, dbo.vw_GetDistinctEventsTickets.TicketName, dbo.vw_GetDistinctEventsTickets.TicketId, 
-                         dbo.tblCartContact.cContactName AS CustomerName, dbo.tblCartContact.cContactEmail AS Email, Items.nQuantity AS Quantity,
-                             (SELECT        CASE WHEN SUM(Options.nPrice) IS NULL THEN 0 WHEN SUM(Options.nQuantity) IS NULL THEN 0 ELSE SUM(Options.nPrice * Options.nQuantity) END AS nOptionsPrice
-                               FROM            dbo.tblCartItem AS Options
-                               WHERE        (nParentId = Items.nCartItemKey)) + Items.nPrice AS Price, dbo.vw_GetDistinctEventsTickets.EventKey, dbo.tblCartOrder.nAmountReceived, dbo.tblCartOrder.nLastPaymentMade, dbo.tblCartOrder.nCartStatus,
-                             (SELECT        CASE WHEN SUM(Options.nPrice) IS NULL THEN 0 WHEN SUM(Options.nQuantity) IS NULL THEN 0 ELSE SUM(Options.nPrice * Options.nQuantity) END AS nOptionsPrice
-                               FROM            dbo.tblCartItem AS Options
-                               WHERE        (nParentId = Items.nCartItemKey)) + Items.nPrice - dbo.tblCartOrder.nAmountReceived AS BalanceDue
-FROM            dbo.vw_GetDistinctEventsTickets INNER JOIN
-                         dbo.tblCartItem AS Items ON Items.nItemId = dbo.vw_GetDistinctEventsTickets.TicketId INNER JOIN
-                         dbo.tblCartOrder ON Items.nCartOrderId = dbo.tblCartOrder.nCartOrderKey INNER JOIN
-                         dbo.tblCartContact ON dbo.tblCartContact.nContactCartId = dbo.tblCartOrder.nCartOrderKey INNER JOIN
-                         dbo.tblAudit ON dbo.tblCartOrder.nAuditId = dbo.tblAudit.nAuditKey
-WHERE        (Items.nParentId IS NULL OR
-                         Items.nParentId = 0) AND (dbo.tblCartContact.cContactType LIKE N'Billing Address') AND (dbo.tblCartOrder.nCartStatus IN (6, 9, 10, 17))
+BEGIN
+DECLARE @cnt as int
+Declare @startPrice as int
+Declare @PriceRange AS Table(id INT NOT NULL IDENTITY(1, 1), minPrice int,maxPrice int,ProductCount int)
+Declare @stepPrice as int
+Declare @ProductCount as int
+
+SET @startPrice=@MinPrice
+
+	
+WHILE @startPrice<@MaxPrice
+BEGIN
+SET @stepPrice=@startPrice+@Step
+
+Select @ProductCount=count(ci.nContentId) from tblContentIndex ci 
+inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey 
+inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='Price' 
+inner join tblContent c on ci.nContentId=c.nContentKey and c.cContentSchemaName='Product'
+inner join tblAudit ac on ac.nAuditKey=c.nAuditId and ac.nStatus=1 
+where ci.nNumberValue between @startPrice and @stepPrice
+
+
+Insert into @PriceRange(minPrice,maxPrice,ProductCount) values (@startPrice,@stepPrice,@ProductCount)
+
+SET @startPrice=@stepPrice
+		
+END
+
+select minPrice,maxPrice,ProductCount,convert(varchar(10),minPrice)+'-'+convert(varchar(10),maxPrice) as [value],
+case when id=1 then '< £'+convert(varchar(10),maxPrice)+ ' ['+ Convert(varchar(10),ProductCount)+']' 
+else '£'+convert(varchar(10),minPrice) + ' - £'+convert(varchar(10),maxPrice)+ ' ['+ Convert(varchar(10),ProductCount)+']' 
+
+end as [name] from @PriceRange
+
+END
+

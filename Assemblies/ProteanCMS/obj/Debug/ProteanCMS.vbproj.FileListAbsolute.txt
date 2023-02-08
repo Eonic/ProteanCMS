@@ -1171,6 +1171,7 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Owin.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\PayPal.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\PreMailer.Net.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Renci.SshNet.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
@@ -1178,6 +1179,8 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\WebGrease.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll.config
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AdvancedStringBuilder.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.pdb
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.xml
@@ -1187,6 +1190,7 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.MicrosoftAjax.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Facebook.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Fonet.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Google.Protobuf.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.Core.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.V8.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JSPool.xml
@@ -1204,6 +1208,7 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Net.FtpClient.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Core.resources.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Less.resources.dll
@@ -1340,6 +1345,7 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.V8.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\EcmaScript.NET.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\QRCoder.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Buffers.dll
@@ -1348,15 +1354,18 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JsonWebTokens.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.pdb
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.dll.config
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.Core.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.V8.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\x64\libsass.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.SassAndScss.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\LibSassHost.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Memory.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Numerics.Vectors.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.SassAndScss.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Google.Protobuf.pdb
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\LibSassHost.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Buffers.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Memory.xml
@@ -1515,7 +1524,3 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\icsharpcode.sharpziplib.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\icsharpcode.sharpziplib.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.dll
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.pdb
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.xml
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.xml
