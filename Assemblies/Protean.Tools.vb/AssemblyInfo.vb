@@ -33,9 +33,9 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("6.0.60.1")>
-<Assembly: AssemblyFileVersion("6.0.60.1")>
+<Assembly: AssemblyVersion("6.0.60.2")>
+<Assembly: AssemblyFileVersion("6.0.60.2")>
 
 '<Assembly: System.Security.AllowPartiallyTrustedCallersAttribute()> 
 
-<assembly: AssemblyInformationalVersion("0.0.0.134")>
+<assembly: AssemblyInformationalVersion("0.0.0.135")>
