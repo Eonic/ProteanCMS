@@ -129,65 +129,65 @@ namespace Protean.Tools.IFilter
 
     /// 
     /// IFilter return codes
-    public enum IFilterReturnCodes : uint
+    public enum IFilterReturnCodes : long
     {
         /// 
         /// Success
-        S_OK = 0U,
+        S_OK = 0x0000,
         /// 
         /// The function was denied access to the filter file.
-        E_ACCESSDENIED = &H80070005UI,
+        E_ACCESSDENIED = 0x80070005,
         /// 
         /// The function encountered an invalid handle, probably due to a low-memory situation.
-        E_HANDLE = &H80070006UI,
+        E_HANDLE = 0x80070006,
         /// 
         /// The function received an invalid parameter.
-        E_INVALIDARG = &H80070057UI,
+        E_INVALIDARG = 0x80070057,
         /// 
         /// Out of memory
-        E_OUTOFMEMORY = &H8007000EUI,
+        E_OUTOFMEMORY = 0x8007000e,
         /// 
         /// Not implemented
-        E_NOTIMPL = &H80004001UI,
+        E_NOTIMPL = 0x80004001,
         /// 
         /// Unknown error
-        E_FAIL = &H80000008UI,
+        E_FAIL = 0x80000008,
         /// 
         /// File not filtered due to password protection
-        FILTER_E_PASSWORD = &H8004170BUI,
+        FILTER_E_PASSWORD = 0x8004170B,
         /// 
         /// The document format is not recognised by the filter
-        FILTER_E_UNKNOWNFORMAT = &H8004170CUI,
+        FILTER_E_UNKNOWNFORMAT = 0x8004170C,
         /// 
         /// No text in current chunk
-        FILTER_E_NO_TEXT = &H80041705UI,
+        FILTER_E_NO_TEXT = 0x80041705,
         /// 
         /// No more chunks of text available in object
-        FILTER_E_END_OF_CHUNKS = &H80041700UI,
+        FILTER_E_END_OF_CHUNKS = 0x80041700,
         /// 
         /// No more text available in chunk
-        FILTER_E_NO_MORE_TEXT = &H80041701UI,
+        FILTER_E_NO_MORE_TEXT = 0x80041701,
         /// 
         /// No more property values available in chunk
-        FILTER_E_NO_MORE_VALUES = &H80041702UI,
+        FILTER_E_NO_MORE_VALUES = 0x80041702,
         /// 
         /// Unable to access object
-        FILTER_E_ACCESS = &H80041703UI,
+        FILTER_E_ACCESS = 0x80041703,
         /// 
         /// Moniker doesn't cover entire region
-        FILTER_W_MONIKER_CLIPPED = &H41704,
+        FILTER_W_MONIKER_CLIPPED = 0x41704,
         /// 
         /// Unable to bind IFilter for embedded object
-        FILTER_E_EMBEDDING_UNAVAILABLE = &H80041707UI,
+        FILTER_E_EMBEDDING_UNAVAILABLE = 0x80070057,
         /// 
         /// Unable to bind IFilter for linked object
-        FILTER_E_LINK_UNAVAILABLE = &H80041708UI,
+        FILTER_E_LINK_UNAVAILABLE = 0x80070057,
         /// 
         /// This is the last text in the current chunk
-        FILTER_S_LAST_TEXT = &H41709,
+        FILTER_S_LAST_TEXT = 0x80070057,
         /// 
         /// This is the last value in the current chunk
-        FILTER_S_LAST_VALUES = &H4170A
+        FILTER_S_LAST_VALUES = 0x80070057
     }
 
     /// 

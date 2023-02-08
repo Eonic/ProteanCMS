@@ -5,10 +5,12 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 using TinifyAPI;
+using System.Drawing.Drawing2D;
+using static Protean.Tools.Text;
 
 namespace Protean.Tools
 {
-    Public class Image
+    public class Image
     {
         #region Declarations
         private string cLocation; // Location of the file to load
@@ -36,7 +38,7 @@ namespace Protean.Tools
             }
             set
             {
-                oImg = Image1;
+                oImg =(System.Drawing.Bitmap)value;
             }
         }
 
@@ -44,7 +46,7 @@ namespace Protean.Tools
 
 
         #region Public Subs
-        public void ImageType(string Location)
+        public Image(string Location)
         {
             try
             {
@@ -98,7 +100,7 @@ namespace Protean.Tools
                 {
                     using (var stream = File.OpenRead(cLocation))
                     {
-                        oImg = System.Drawing.Image.FromStream(stream);
+                        oImg = (Bitmap)System.Drawing.Image.FromStream(stream);
                     }
                     // oImg = System.Drawing.Image.FromFile(cLocation)
                 }
@@ -149,7 +151,8 @@ namespace Protean.Tools
                     }
                     else if (nWidth == oImg.Width & nHeight == oImg.Height)
                     {
-                        oImg = ImageResize(oImg, nHeight, nWidth);
+                        //System.Drawing.Image img = (System.Drawing.Image)oImg;
+                        oImg = (Bitmap)ImageResize(oImg, nHeight, nWidth);
                     }
                 }
             }
@@ -360,7 +363,7 @@ namespace Protean.Tools
                     }
                 }
 
-                oImg = ImageResize(oImg, nNewHeight, nNewWidth);
+                oImg = (Bitmap)ImageResize(oImg, nNewHeight, nNewWidth);
             }
             catch (Exception ex)
             {
@@ -889,18 +892,19 @@ namespace Protean.Tools
         }
 
 
-        private Global.System.Drawing.Image CropImage(Global.System.Drawing.Image oImage)
+        private System.Drawing.Image CropImage(System.Drawing.Image oImage)
         {
             try
             {
+                GraphicsUnit pixel = GraphicsUnit.Pixel;
                 var oBitmapOrig = new Bitmap(oImage);
-                RectangleF sRect = oBitmapOrig.GetBounds(GraphicsUnit.Pixel);
+                RectangleF sRect = oBitmapOrig.GetBounds(ref pixel);
                 var oBitmapCrop = new Bitmap(nMaxWidthCrop, nMaxHeightCrop);
                 Graphics oGraphics = Graphics.FromImage(oBitmapCrop);
-                oGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias;
-                oGraphics.CompositingQuality = Drawing2D.CompositingQuality.HighQuality;
-                oGraphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic;
-                oGraphics.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality;
+                oGraphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                oGraphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                oGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                oGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
                 if (oImage.Width == nMaxWidthCrop & nMaxHeightCrop > 0)
                 {
                     // If the Width is perfect, crop the Height
@@ -925,12 +929,12 @@ namespace Protean.Tools
             }
         }
 
-        private Global.System.Drawing.Image AddReflection(Color _BackgroundColor, int _Reflectivity)
+        private System.Drawing.Image AddReflection(Color _BackgroundColor, int _Reflectivity)
         {
 
-            Global.System.Drawing.Image _image = oImg;
+            System.Drawing.Image _image = oImg;
             // Calculate the size of the new image
-            int height = _image.Height + _image.Height * (_Reflectivity / 255f);
+            int height =Convert.ToInt32(_image.Height + _image.Height * (_Reflectivity / 255f));
             var newImage = new Bitmap(_image.Width, height, PixelFormat.Format24bppRgb);
             newImage.SetResolution(_image.HorizontalResolution, _image.VerticalResolution);
 
@@ -944,7 +948,7 @@ namespace Protean.Tools
 
                 // Prepare the reflected image
                 int reflectionHeight = _image.Height * _Reflectivity / 255;
-                Global.System.Drawing.Image reflectedImage = new Bitmap(_image.Width, reflectionHeight);
+                System.Drawing.Image reflectedImage = new Bitmap(_image.Width, reflectionHeight);
 
                 // Draw just the reflection on a second graphics buffer
                 using (Graphics gReflection = Graphics.FromImage(reflectedImage))
@@ -967,7 +971,7 @@ namespace Protean.Tools
 
         }
 
-        private Global.System.Drawing.Image AddWatermark(Global.System.Drawing.Image imgPhoto, string _WatermarkText, string _WatermarkImgPath)
+        private System.Drawing.Image AddWatermark(System.Drawing.Image imgPhoto, string _WatermarkText, string _WatermarkImgPath)
         {
 
             try
@@ -1021,7 +1025,7 @@ namespace Protean.Tools
                 if (!string.IsNullOrEmpty(_WatermarkImgPath))
                 {
 
-                    Global.System.Drawing.Image imgWatermark = System.Drawing.Image.FromFile(_WatermarkImgPath);
+                    System.Drawing.Image imgWatermark = System.Drawing.Image.FromFile(_WatermarkImgPath);
                     int wmWidth = imgWatermark.Width;
                     int wmHeight = imgWatermark.Height;
 
@@ -1073,7 +1077,7 @@ namespace Protean.Tools
         }
 
 
-        public Global.System.Drawing.Image AddWatermark(string _WatermarkText, string _WatermarkImgPath)
+        public System.Drawing.Image AddWatermark(Bitmap oImg, string _WatermarkText, string _WatermarkImgPath)
         {
 
             try
@@ -1127,7 +1131,7 @@ namespace Protean.Tools
                 if (!string.IsNullOrEmpty(_WatermarkImgPath))
                 {
 
-                    Global.System.Drawing.Image imgWatermark = System.Drawing.Image.FromFile(_WatermarkImgPath);
+                    System.Drawing.Image imgWatermark = System.Drawing.Image.FromFile(_WatermarkImgPath);
                     int wmWidth = imgWatermark.Width;
                     int wmHeight = imgWatermark.Height;
 
@@ -1207,7 +1211,8 @@ namespace Protean.Tools
             private BackgroundNoiseLevel _backgroundNoise;
             private LineNoiseLevel _lineNoise;
             private string _guid;
-            private string _fontWhitelist;
+            private string _fontWhitelist= "arial;arial black;comic sans ms;courier new;" + "lucida console;lucida sans unicode;microsoft sans serif;" + "tahoma;times new roman;trebuchet ms;verdana";
+
             public event OnErrorEventHandler OnError;
 
             public delegate void OnErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
@@ -1484,12 +1489,22 @@ namespace Protean.Tools
             {
                 try
                 {
+                    string[] ff = null;
+                   
                     // -- small optimization so we don't have to split for each char
-                    if (_RandomFontFamily_ff is null)
+                    if(_fontWhitelist != string.Empty)
                     {
-                        _RandomFontFamily_ff = _fontWhitelist.Split(';');
+                        ff = _fontWhitelist.Split(';');                        
                     }
-                    return _RandomFontFamily_ff[_rand.Next(0, _RandomFontFamily_ff.Length - 1)];
+                    if (ff != null)
+                    {
+                        return ff[_rand.Next(0, ff.Length - 1)];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -1518,7 +1533,7 @@ namespace Protean.Tools
 
                     if (lowercase)
                         options = options | TextOptions.LowerCase;
-                    return Protean.Tools.Text.RandomPassword(size, _randomTextChars, options);
+                    return Protean.Tools.Text.RandomPassword(Convert.ToInt32(size), _randomTextChars, options);
                 }
 
                 catch (Exception ex)
@@ -1640,7 +1655,7 @@ namespace Protean.Tools
                         rectChar = new Rectangle(Convert.ToInt32(charOffset * charWidth), 0, Convert.ToInt32(charWidth), _height);
 
                         // -- warp the character
-                        var gp = TextPath(c, fnt, rectChar);
+                        var gp = TextPath(c.ToString(), fnt, rectChar);
                         WarpText(gp, rectChar);
 
                         // -- draw the character
@@ -1845,7 +1860,7 @@ namespace Protean.Tools
                 {
                     for (int i = 0, loopTo1 = length; i <= loopTo1; i++)
                         pf[i] = RandomPoint(rect);
-                    graphics1.DrawCurve(p, pf, 1.75d);
+                    graphics1.DrawCurve(p, pf, Convert.ToInt32(1.75d));
                 }
 
                 p.Dispose();
