@@ -676,7 +676,7 @@ namespace Protean.Tools
                     imgFile.Refresh();
 
                 }
-                cProcessInfo = cProcessInfo;
+                //cProcessInfo = cProcessInfo;
                 return true;
             }
             catch (Exception ex)

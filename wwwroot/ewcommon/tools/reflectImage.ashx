@@ -31,13 +31,13 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
         eps.Param(0) = New EncoderParameter(Imaging.Encoder.Quality, 80)
 
         Dim cEncoder As String = "image/jpeg"
-        If oEwImg.Image1 Is Nothing Then
+        If oEwImg Is Nothing Then
             context.Response.StatusCode = 404
             context.ApplicationInstance.CompleteRequest()
             Return
         Else
             Using stream As New IO.MemoryStream()
-                oEwImg.Image1.Save(stream, GetEncoderInfo(cEncoder), eps)
+                ' oEwImg.Save(stream, GetEncoderInfo(cEncoder), eps)
                 stream.WriteTo(context.Response.OutputStream)
             End Using
             context.Response.StatusCode = 200
