@@ -9473,7 +9473,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim ReceiptId As String = (oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value).ToString()
                 Dim Amount As Double = Convert.ToDouble(oCartListElmt.GetAttribute("total"))
                 Dim nItemID As Integer = 0 'ID of the cart item record
-                Dim oDs As DataSet
+                ' Dim oDs As DataSet
 
                 oInstance.AppendChild(oInstance.CreateElement("instance"))
                 oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)

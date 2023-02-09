@@ -2786,6 +2786,8 @@
 
 
 	<!-- GA4 Ecommerce Events -->
+
+
 	<xsl:template match="Page[Cart/Order/@cmd='Logon']" mode="google-ga4-event">
 		gtag("event", "add_to_cart",
 		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
