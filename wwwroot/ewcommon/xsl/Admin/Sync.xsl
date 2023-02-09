@@ -22,7 +22,7 @@
       <div id="column1">
 
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -41,7 +41,7 @@
       <div id="column1">
 
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   <xsl:template match="Page[@layout='SynchronisationXForm']" mode="Admin">
@@ -52,7 +52,7 @@
       <div id="column1">
         <!--<iframe src="/ewcommon/KeepAlive/KA.aspx" width="400px" />-->
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   
