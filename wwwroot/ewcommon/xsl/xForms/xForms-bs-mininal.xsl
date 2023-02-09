@@ -127,7 +127,7 @@
 
         </p>
       </xsl:if>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </form>
   </xsl:template>
 
@@ -166,7 +166,7 @@
             <!-- Terminus needed for CHROME ! -->
             <!-- Terminus needed for BREAKS IE 7! -->
             <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+              <div class="terminus">&#160;</div>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
@@ -185,7 +185,7 @@
               <!-- Terminus needed for CHROME ! -->
               <!-- Terminus needed for BREAKS IE 7! -->
               <xsl:if test="$browserVersion!='MSIE 7.0'">
-                <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+                <div class="terminus">&#160;</div>
               </xsl:if>
             </div>
           </xsl:otherwise>
@@ -3349,7 +3349,7 @@
         <xsl:value-of select="$ref"/>
       </span>
     </div>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
   <!-- -->
   <!-- ========================== CONTROL : UPLOAD ========================== -->

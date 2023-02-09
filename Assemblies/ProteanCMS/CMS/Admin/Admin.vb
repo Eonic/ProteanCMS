@@ -790,8 +790,13 @@ ProcessFlow:
                                     Dim oXfrm As New xForm(myWeb)
                                     oXfrm.NewFrm("LocationFilter")
                                     oXfrm.submission("LocationFilter", "/?ewCmd=ByType." & ContentType & ".Location", "post", "")
-                                    Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
-                                    "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+                                    ' Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
+                                    '  "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+
+                                    Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure " &
+                                    "where ( select count(cl1.nContentID) from tblContentLocation cl1 inner join tblContent tc on tc.nContentKey = cl1.nContentId  where cl1.nStructId = nStructKey and tc.cContentSchemaName = '" & ContentType & "') > 0 order by name"
+
+
                                     Dim locSelect As XmlElement = oXfrm.addSelect1(oXfrm.moXformElmt, "Location", False, "Select Location", "submit-on-select")
 
                                     If myWeb.moRequest("Location") <> "" Then
@@ -2770,25 +2775,25 @@ AfterProcessFlow:
                                         ImportDS = newDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
                                         oImportXml.LoadXml(ImportDS.GetXml())
                                     End If
-                                Case "mysql"
-                                    DBConn = "server=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
-                                            "port=" & oImportRootElmt.GetAttribute("databasePort") & "; " &
-                                            "database=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
-                                            "uid=" & oImportRootElmt.GetAttribute("databaseUsername") & "; pwd=" & oImportRootElmt.GetAttribute("databasePassword")
+                                    'Case "mysql"
+                                    '    DBConn = "server=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
+                                    '            "port=" & oImportRootElmt.GetAttribute("databasePort") & "; " &
+                                    '            "database=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
+                                    '            "uid=" & oImportRootElmt.GetAttribute("databaseUsername") & "; pwd=" & oImportRootElmt.GetAttribute("databasePassword")
 
-                                    Dim mysqlDb As New MySqlDatabase(DBConn)
-                                    If mysqlDb.ConnectionValid = False Then
-                                        moAdXfm.valid = False
-                                        sErrorMsg = "Bad DB Connection - " & DBConn
-                                    Else
-                                        Dim ImportDS As New DataSet
-                                        Dim sSql As String = oImportRootElmt.GetAttribute("select")
-                                        If sSql = "" Then
-                                            sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
-                                        End If
-                                        ImportDS = mysqlDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
-                                        oImportXml.LoadXml(ImportDS.GetXml())
-                                    End If
+                                    '    Dim mysqlDb As New MySqlDatabase(DBConn)
+                                    '    If mysqlDb.ConnectionValid = False Then
+                                    '        moAdXfm.valid = False
+                                    '        sErrorMsg = "Bad DB Connection - " & DBConn
+                                    '    Else
+                                    '        Dim ImportDS As New DataSet
+                                    '        Dim sSql As String = oImportRootElmt.GetAttribute("select")
+                                    '        If sSql = "" Then
+                                    '            sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
+                                    '        End If
+                                    '        ImportDS = mysqlDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
+                                    '        oImportXml.LoadXml(ImportDS.GetXml())
+                                    '    End If
                             End Select
                         End If
                     End If

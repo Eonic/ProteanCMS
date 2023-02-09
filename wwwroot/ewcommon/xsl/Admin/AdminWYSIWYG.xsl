@@ -592,7 +592,7 @@
 
    
     </div>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
     <xsl:if test="not(/Page[@ewCmd='Normal'])">
       <!--<div id="breadcrumb">-->
       <ol class="breadcrumb admin-breadcrumb">

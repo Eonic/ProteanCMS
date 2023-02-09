@@ -283,7 +283,7 @@
                 </xsl:with-param>
               </xsl:apply-templates>
             </div>
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </div>
       </section>
@@ -398,7 +398,7 @@
         </div>
       </section>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
@@ -465,7 +465,7 @@
               </xsl:apply-templates>
             </div>
             <!-- Terminus class fix to floating columns -->
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </div>
       </section>
@@ -489,10 +489,10 @@
           <xsl:with-param name="position">column1-1col</xsl:with-param>
           <xsl:with-param name="class">column1-1col</xsl:with-param>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
@@ -633,7 +633,7 @@
           <xsl:if test="@rss and @rss!='false'">
             <xsl:apply-templates select="." mode="rssLink" />
           </xsl:if>
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
             <div class="panel-image">
               <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
@@ -664,7 +664,7 @@
               <xsl:text> </xsl:text>
             </div>
           </xsl:if>
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -747,7 +747,7 @@
       </div>
       <div class="content">
         <xsl:apply-templates select="." mode="displayBrief"/>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
       <xsl:if test="@linkText!='' and @link!=''">
         <div class="entryFooter">
@@ -2250,7 +2250,7 @@
             <xsl:if test="@rss and @rss!='false'">
               <xsl:apply-templates select="." mode="rssLink" />
             </xsl:if>
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
 
             <xsl:apply-templates select="." mode="displayBrief"/>
 
@@ -2274,7 +2274,7 @@
                 <xsl:text> </xsl:text>
               </div>
             </xsl:if>
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </div>
       </xsl:otherwise>
@@ -3244,7 +3244,7 @@
         <p class="strap">
           <xsl:value-of select="Strap/node()"/>
         </p>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -3294,7 +3294,7 @@
       </xsl:if>
 
       <!-- Terminus class fix to floating content -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -3400,7 +3400,7 @@
             </xsl:apply-templates>
           </xsl:when>
         </xsl:choose>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -3652,7 +3652,7 @@
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -3842,7 +3842,7 @@
           </div>
         </div>
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -3898,7 +3898,7 @@
             </div>
           </xsl:if>
           <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </div>
       </a>
     </div>
@@ -3945,7 +3945,7 @@
         <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
       </div>
       <!-- Terminus class fix to floating content -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -4103,10 +4103,10 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <xsl:if test="not($page[@cssFramework='bs3'])">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </xsl:if>
         <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -4297,7 +4297,7 @@
           </xsl:if>
         </div>
         <!-- Terminus class fix to floating columns -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -4511,11 +4511,11 @@
           <xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
             <xsl:with-param name="sortBy" select="@publishDate"/>
           </xsl:apply-templates>
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </div>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -4528,7 +4528,7 @@
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -4570,7 +4570,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -4651,7 +4651,7 @@
         <div class="clear-fix">
           <xsl:text> </xsl:text>
         </div>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -4768,7 +4768,7 @@
         <xsl:text> </xsl:text>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -5094,10 +5094,10 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <xsl:if test="not($page[@cssFramework='bs3'])">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </xsl:if>
         <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -5239,7 +5239,7 @@
           </div>
         </div>
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -5459,7 +5459,7 @@
               </xsl:with-param>
             </xsl:apply-templates>
           </div>
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -5509,7 +5509,7 @@
             <xsl:sort select="@displayOrder" order="ascending"/>
             <xsl:apply-templates select="." mode="displayBriefTicket"/>
           </xsl:for-each>
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </div>
         <div class="panel-footer">
           <span class="pull-right">
@@ -5643,10 +5643,10 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <xsl:if test="not($page[@cssFramework='bs3'])">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </xsl:if>
         <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -5746,7 +5746,7 @@
           </div>
         </div>
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -5897,7 +5897,7 @@
         </xsl:otherwise>
       </xsl:choose>
 
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
 
       <div class="entryFooter">
         <div class="tags">
@@ -5911,7 +5911,7 @@
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -6007,7 +6007,7 @@
           </div>
         </xsl:if>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -6020,7 +6020,7 @@
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -6065,7 +6065,7 @@
             <xsl:sort select="@displayOrder" order="ascending"/>
             <xsl:apply-templates select="." mode="displayBriefTicket"/>
           </xsl:for-each>
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </table>
         <div class="panel-footer">
           <span class="pull-right">
@@ -6213,10 +6213,10 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <xsl:if test="not($page[@cssFramework='bs3'])">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </xsl:if>
         <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -6241,7 +6241,7 @@
       <div class="content">
         <div class="cols3">
           <xsl:apply-templates select="Content[@type='Ticket']" mode="displayBrief" />
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </div>
       </div>
     </div>
@@ -6341,7 +6341,7 @@
 
         <xsl:if test="$page[@cssFramework='bs3']">
           <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </xsl:if>
       </div>
     </div>
@@ -6450,7 +6450,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -6676,7 +6676,7 @@
         </div>
       </xsl:otherwise>
     </xsl:choose>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
 
   <!-- ## IMAGE FLOW IMAGE CONTENT TYPE  ###############################################   -->
@@ -7004,10 +7004,10 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <xsl:if test="not($page[@cssFramework='bs3'])">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </xsl:if>
         <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -7063,10 +7063,10 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <xsl:if test="not($page[@cssFramework='bs3'])">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </xsl:if>
         <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -7171,7 +7171,7 @@
         </div>
 
         <!-- Terminus class fix to floating columns -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -7277,7 +7277,7 @@
         </div>-->
 
         <!-- Terminus class fix to floating columns -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -7379,7 +7379,7 @@
         </div>
       </xsl:if>
 
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <xsl:if test="Content[@type='Tag']">
           <div class="tags">
@@ -7400,7 +7400,7 @@
 
       </div>
 
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
 
       <xsl:if test="Content[@type='LibraryImage']">
         <h2>
@@ -7460,7 +7460,7 @@
         </xsl:if>
       </xsl:if>
     </div>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
 
   <xsl:template match="Content" mode="scollerImage">
@@ -7657,7 +7657,7 @@
         </div>
 
         <!-- Terminus class fix to floating columns -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -7798,7 +7798,7 @@
               </a>
             </h3>
             <!-- Terminus class fix to floating columns -->
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </div>
       </xsl:otherwise>
@@ -7897,7 +7897,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -7951,7 +7951,7 @@
             <xsl:text> </xsl:text>
           </div>
         </div>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </xsl:if>
   </xsl:template>
@@ -8004,7 +8004,7 @@
           </xsl:apply-templates>
           <xsl:text> </xsl:text>
         </ul>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -8072,7 +8072,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="gridDisplayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -8130,7 +8130,7 @@
                 </a>
               </h3>
             </div>
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </xsl:otherwise>
       </xsl:choose>
@@ -8160,7 +8160,7 @@
           <xsl:apply-templates select="." mode="getDisplayName"/>
         </h3>
       </a>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
 
   </xsl:template>-->
@@ -8207,7 +8207,7 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="showThumbnail" select="@showThumbnails"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
       <xsl:if test="@allAsZip='on'">
         <div class="listItem list-group-item">
@@ -8323,7 +8323,7 @@
           </a>
         </p>
         <!-- Terminus class fix to floating columns -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -8414,7 +8414,7 @@
         <xsl:text> </xsl:text>
       </div>
       <!-- Terminus class fix to floating content -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -8427,7 +8427,7 @@
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -8596,7 +8596,7 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <!--<xsl:copy-of select="ms:node-set($contentList)"/>-->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -8667,7 +8667,7 @@
                 </span>
               </a>
             </h3>
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </div>
       </xsl:otherwise>
@@ -8712,7 +8712,7 @@
                         <xsl:apply-templates select="." mode="getDisplayName"/>
                     </h3>
                 </a>
-                <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+                <div class="terminus">&#160;</div>
             </div>
         </div>
     </xsl:template>-->
@@ -8787,7 +8787,7 @@
         </xsl:choose>
 
         <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
             <xsl:with-param name="noPerPage" select="@stepCount"/>
@@ -8872,7 +8872,7 @@
           </footer>
         </blockquote>
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -8928,7 +8928,7 @@
             </div>
           </xsl:if>
           <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-          <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+          <div class="terminus">&#160;</div>
         </div>
       </a>
     </div>
@@ -8952,7 +8952,7 @@
       <div class="entry-content">
         <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="source">
         <p>
           <xsl:if test="SourceName/node()!=''">
@@ -8967,7 +8967,7 @@
         </p>
       </div>
       <!-- Terminus class fix to floating content -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -9022,7 +9022,7 @@
           </xsl:with-param>
         </xsl:apply-templates>
       </ul>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
 
   </xsl:template>
@@ -9092,7 +9092,7 @@
             </ul>
           </xsl:if>
           <!--<xsl:if test="$level = 2">
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </xsl:if>-->
         </li>
       </xsl:otherwise>
@@ -9138,7 +9138,7 @@
           <xsl:with-param name="descriptions" select="$descriptions"/>
         </xsl:apply-templates>
 
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </xsl:if>
   </xsl:template>
@@ -9192,7 +9192,7 @@
           </xsl:apply-templates>
         </xsl:if>
 
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
 
@@ -9249,7 +9249,7 @@
           <xsl:with-param name="sortBy" select="@sort"/>
 
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -9649,7 +9649,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -9717,7 +9717,7 @@
           <xsl:text> </xsl:text>
         </div>
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -9760,7 +9760,7 @@
         </xsl:apply-templates>
       </xsl:if>
       <!-- Terminus class fix to floating content -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -9941,7 +9941,7 @@
           </xsl:if>
         </div>
 
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
         <div class="entryFooter">
           <xsl:apply-templates select="." mode="displayTags"/>
           <xsl:apply-templates select="." mode="moreLink">
@@ -10208,7 +10208,7 @@
         <ul>
           <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQMenu"/>
         </ul>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
       <div class="cols{@cols} list-group">
         <xsl:if test="@stepCount != '0'">
@@ -10224,7 +10224,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -10284,12 +10284,12 @@
         <div class="description">
           <xsl:apply-templates select="Body" mode="cleanXhtml"/>
         </div>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
         <div class="backTop">
           <a href="{$currentPage/@url}#pageTop" title="Back to Top">Back To Top</a>
         </div>
         <!-- Terminus class fix to floating columns -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -10447,7 +10447,7 @@
           <xsl:with-param name="max-height" select="@SlideHeight"/>
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -10654,7 +10654,7 @@
           <xsl:with-param name="crop" select="'true'"/>
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -11258,7 +11258,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -11356,7 +11356,7 @@
           <xsl:text> </xsl:text>
         </div>
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -11492,7 +11492,7 @@
             <span class="equipment">
               <xsl:apply-templates select="Equipment/node()" mode="cleanXhtml"/>
             </span>
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </xsl:if>
 
@@ -11515,7 +11515,7 @@
       </div>
 
       <!-- Terminus class fix to floating content -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -11608,7 +11608,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefGrid">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -11672,7 +11672,7 @@
               <span class="hidden">|</span>
             </xsl:if>
             <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </div>
       </xsl:otherwise>
@@ -11721,7 +11721,7 @@
           <xsl:sort select="@update" order="ascending"/>
         </xsl:apply-templates>
 
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </xsl:if>
   </xsl:template>
@@ -11836,7 +11836,7 @@
           </xsl:apply-templates>
         </div>-->
         <!-- Terminus class fix to floating columns -->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -11924,7 +11924,7 @@
         </xsl:apply-templates>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -11974,7 +11974,7 @@
           <xsl:with-param name="type" select="'MenuItem'" />
         </xsl:apply-templates>
       </span>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </xsl:if>
 
   </xsl:template>
@@ -11998,7 +11998,7 @@
           <xsl:with-param name="type" select="'Content'" />
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </xsl:if>
 
   </xsl:template>
@@ -12035,7 +12035,7 @@
       </xsl:apply-templates>
       <xsl:text> </xsl:text>
     </div>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
 
   <!-- Generic catch -->
@@ -13033,7 +13033,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -13184,7 +13184,7 @@
             </xsl:with-param>
           </xsl:apply-templates>
         </div>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
       <div class="col-md-8">
         <xsl:apply-templates select="." mode="VideoDetailDisplay">
@@ -14056,7 +14056,7 @@
             <xsl:with-param name="sortBy" select="@sortBy"/>
           </xsl:apply-templates>
         </ul>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -14121,7 +14121,7 @@
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>-->
+      <div class="terminus">&#160;</div>-->
   <!--
     </div>
   </xsl:template>-->
@@ -14170,7 +14170,7 @@
             <xsl:with-param name="sortBy" select="@sortBy"/>
           </xsl:apply-templates>
         </div>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -14372,14 +14372,14 @@
             </div>
             <div id="jplayer_play_time" class="jp-play-time"></div>
             <div id="jplayer_total_time" class="jp-total-time"></div>-->
-            <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+            <div class="terminus">&#160;</div>
           </div>
         </div>
       </xsl:if>
       <div class="description">
         <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -14466,7 +14466,7 @@
         <!--<xsl:apply-templates select="ms:node-set($contentList)/*/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>-->
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
 

@@ -89,7 +89,7 @@
 								</span>
 							</xsl:if>
 							<xsl:apply-templates select="submit" mode="xform"/>
-							<!--<div class="clearfix"><xsl:text>&#160; </xsl:text></div>-->
+							<!--<div class="clearfix">&#160; </div>-->
 						</div>
 					</xsl:if>
 				</xsl:otherwise>
@@ -200,7 +200,7 @@
 							</span>
 						</xsl:if>
 						<xsl:apply-templates select="submit" mode="xform"/>
-						<!--<div class="clearfix"><xsl:text>&#160; </xsl:text></div>-->
+						<!--<div class="clearfix">&#160; </div>-->
 					</div>
 				</xsl:if>
 			</xsl:for-each>
@@ -1027,7 +1027,7 @@
 
 			<xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
 
-			<div class="terminus"><xsl:text>&#160;</xsl:text></div>
+			<div class="terminus">&#160;</div>
 			<!--</form>-->
 		</div>
 	</xsl:template>

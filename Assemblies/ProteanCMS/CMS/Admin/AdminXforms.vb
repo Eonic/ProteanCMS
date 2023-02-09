@@ -6301,7 +6301,7 @@ Partial Public Class Cms
                                         cartElement.AppendChild(carrierElmt)
                                     End If
                                     Dim CustomerEmailShippedTemplatePath As String = IIf(moCartConfig("CustomerEmailShippedTemplatePath") <> "", moCartConfig("CustomerEmailShippedTemplatePath"), "/xsl/Cart/mailOrderCustomerDelivery.xsl")
-                                    cProcessInfo = oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText), "Order Shipped")
+                                    cProcessInfo = oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText), "Order Shipped",,,,, moCartConfig("MerchantEmailShippedBcc"))
 
                                     oMsg = Nothing
                                 End If
@@ -7898,6 +7898,11 @@ Partial Public Class Cms
 
                     MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
                     MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
+
+                    Dim oSkipPay As XmlElement = MyBase.addSelect(oFrmElmt, "skipPayment", True, "", "", ApperanceTypes.Full)
+                    MyBase.addOption(oSkipPay, "Renew Without Payment", "yes")
+                    'MyBase.addValue(oSkipPay, "no")
+
                     Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
                     MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
                     MyBase.addValue(oSelElmt, "yes")
@@ -7915,17 +7920,20 @@ Partial Public Class Cms
                             Dim bEmailClient As Boolean = False
                             If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
                             Dim RenewResponse As String
-                            RenewResponse = oSub.RenewSubscription(nSubscriptionId, bEmailClient)
-                            If RenewResponse = "Success" Then
-                                MyBase.valid = True
-                            Else
-                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Payment Failed")
-                                MyBase.valid = False
-                            End If
+                            Dim skipPayment As Boolean = False
+                            If myWeb.moRequest("skipPayment") = "yes" Then skipPayment = True
 
-                            Return MyBase.moXformElmt
+                            RenewResponse = oSub.RenewSubscription(nSubscriptionId, bEmailClient, skipPayment)
+                                If RenewResponse = "Success" Then
+                                    MyBase.valid = True
+                                Else
+                                    MyBase.addNote(oFrmElmt, noteTypes.Alert, RenewResponse)
+                                    MyBase.valid = False
+                                End If
+
+                                Return MyBase.moXformElmt
+                            End If
                         End If
-                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
@@ -10054,10 +10062,17 @@ Partial Public Class Cms
 
                             Dim msgHtml As String = msgNode.InnerXml
 
+
+                            Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
+
+
+                            Dim SettlementDate As Date = CDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText)
+                            SettlementDate = DateAdd(DateInterval.Day, CInt(moCartConfig("SettlementDays") * -1), SettlementDate)
+
                             msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText)
                             msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementID"))
                             msgHtml = msgHtml.Replace("{PaymentDue}", oCartListElmt.GetAttribute("payableAmount"))
-                            msgHtml = msgHtml.Replace("{PaymentDueDate}", CDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText).ToString("dd MMM yyyy"))
+                            msgHtml = msgHtml.Replace("{PaymentDueDate}", SettlementDate.ToString("dd MMM yyyy"))
                             msgHtml = msgHtml.Replace("{CourseName}", oCartListElmt.SelectSingleNode("Item[1]/Name").InnerText)
 
                             msgNode.InnerXml = msgHtml

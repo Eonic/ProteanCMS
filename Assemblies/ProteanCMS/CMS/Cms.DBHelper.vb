@@ -9222,6 +9222,9 @@ restart:
                     If cOName.Contains("list") Then
                         insertGroupProductRelation(goRequest.QueryString("GroupId"), cOValue)
                     End If
+                    If cOName.Contains("unrelate") Then
+                        deleteGroupProductRelation(goRequest.QueryString("GroupId"), cOValue)
+                    End If
                 Next
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "saveProductsGroupRelations", ex, ""))
@@ -9277,7 +9280,37 @@ restart:
 
         End Function
 
+        Public Function deleteGroupProductRelation(ByVal nGroupId As Integer, ByVal nContent As String) As String
+            PerfMonLog("DBHelper", "insertProductGroupRelation")
+            Try
+                Dim oContentArr() As String = Split(nContent, ",")
+                Dim cCount As Integer
+                Dim strReturn As New Text.StringBuilder
 
+
+                For cCount = 0 To UBound(oContentArr)
+
+                    Dim nCatProductRelKey As Integer
+
+                    Dim cSQl As String = "Select nCatProductRelKey from tblCartCatProductRelations where nCatId = " & nGroupId & " and nContentId = " & oContentArr(cCount)
+                    nCatProductRelKey = ExeProcessSqlScalar(cSQl)
+
+                    If nCatProductRelKey <> 0 Then
+                        DeleteObject(objectTypes.CartCatProductRelations, nCatProductRelKey)
+                    End If
+
+                Next
+
+                Return "1"
+
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "insertProductGroupRelation", ex, ""))
+                Return "0"
+            End Try
+
+
+        End Function
 
 
         Public Function insertProductGroupRelation(ByVal nProductId As Integer, ByVal sGroupIds As String) As String
@@ -10983,6 +11016,29 @@ ReturnMe:
             End Try
 
         End Sub
+
+
+        Public Sub UpdateSellerNotes(ByVal CartId As Long, ByVal Status As String, ByVal Notes As String)
+            Dim sSql As String = ""
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim cProcessInfo As String = "SetClientNotes"
+            Try
+
+                'Update Seller Notes:
+                sSql = "select * from tblCartOrder where nCartOrderKey = " & CartId
+                oDs = getDataSetForUpdate(sSql, "Order", "Cart")
+                For Each oRow In oDs.Tables("Order").Rows
+                    oRow("cSellerNotes") = oRow("cSellerNotes") + "\n" + DateTime.Today + " " + DateTime.Now.TimeOfDay.ToString() + ": changed to: (" + Status + ") " + "\n" + "comment: " + Notes + "\n"
+                Next
+                updateDataset(oDs, "Order")
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+            End Try
+
+        End Sub
+
 
         Public Sub ListReports(ByRef oContentsXML As XmlElement)
             PerfMonLog("Cart", "ListReports")

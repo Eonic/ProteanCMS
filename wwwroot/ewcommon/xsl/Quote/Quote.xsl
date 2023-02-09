@@ -116,7 +116,7 @@
 				</xsl:if>Request Contact</span>
 			<span>Convert to Order</span>
 		</div>
-		<div class="terminus"><xsl:text>&#160;</xsl:text></div-->
+		<div class="terminus">&#160;</div-->
   </xsl:template>
   <!--#-->
   <!--############################## Quote Procees - Default ################################-->
@@ -403,7 +403,7 @@
       </xsl:choose>
     </xsl:if>
     <!-- Terminus class fix to floating columns -->
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
   <!-- -->
   <xsl:template match="Quote" mode="quoteItems">

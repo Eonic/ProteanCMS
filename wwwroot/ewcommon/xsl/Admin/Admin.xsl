@@ -767,7 +767,7 @@
                     </xsl:apply-templates>               
               </ul>
               -->
-        <!--<div class="terminus"><xsl:text>&#160;</xsl:text></div>-->
+        <!--<div class="terminus">&#160;</div>-->
         <!--
             </div>
           </xsl:if>
@@ -791,7 +791,7 @@
                     </xsl:apply-templates>
 
               </ul>
-              <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+              <div class="terminus">&#160;</div>
             </div>
           </xsl:if>
         </xsl:if>
@@ -827,7 +827,7 @@
       </div>-->
 
     </div>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
 
     <xsl:if test="not(/Page[@ewCmd='Normal'])">
       <!--<div id="breadcrumb">-->
@@ -3613,7 +3613,7 @@
 									<xsl:text> </xsl:text>
 								</i> Save Locations
 							</button>
-							<div class="clearfix"><xsl:text>&#160; </xsl:text></div>
+							<div class="clearfix">&#160; </div>
 						</div>
 						<ul id="MenuTree" class="list-group">
 							<xsl:apply-templates select="Menu/MenuItem" mode="LocateContent">
@@ -3629,7 +3629,7 @@
 									<xsl:text> </xsl:text>
 								</i> Save Locations
 							</button>
-							<div class="clearfix"><xsl:text>&#160; </xsl:text></div>
+							<div class="clearfix">&#160; </div>
 						</div>
 					</div>
 				</div>
@@ -3830,28 +3830,17 @@
             <input type="hidden" name="id" value="{ContentDetail/RelatedResults/@nParentID}"/>
             <input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
             <input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
-            <div class="panel-heading">
-              <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary btn-xs pull-right">
-                <i class="fa fa-check fa-white">
-                  <xsl:text> </xsl:text>
-                </i> Check All
-              </button>
-              <xsl:text> </xsl:text>
-              <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary btn-xs pull-right">
-                <i class="fa fa-share fa-white">
-                  <xsl:text> </xsl:text>
-                </i> Uncheck All
-              </button>
+            <div class="panel-heading">             
               <h3 class="panel-title">Search Results</h3>
             </div>
 
             <table cellpadding="0" cellspacing="1" class="table">
               <tbody>
                 <tr>
-                  <th>
+                  <th colspan="4">
                     <xsl:choose>
                       <xsl:when test="ContentDetail/RelatedResults/Content">
-                        <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success principle">
+                        <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success pull-right">
                           <i class="fa fa-plus fa-white">
                             <xsl:text> </xsl:text>
                           </i><xsl:text> </xsl:text>Add
@@ -3869,7 +3858,33 @@
                 <tr>
                   <th>Name</th>
                   <th>Publish Date</th>
-                  <th>Tick to Relate</th>
+                  <th>Tick to Relate<br/>
+				   <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-sm btn-success">
+                        <i class="fa fa-check fa-white">
+                          <xsl:text> </xsl:text>
+                        </i> All
+                      </button>
+                      <xsl:text> </xsl:text>
+                      <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-sm  btn-warning">
+                        <i class="fa fa-close fa-white">
+                          <xsl:text> </xsl:text>
+                        </i> All
+                      </button>
+				  </th>
+
+					<th>Tick to UnRelate<br/>
+					<button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.unrelate)" class="btn btn-sm btn-success">
+						<i class="fa fa-check fa-white">
+							<xsl:text> </xsl:text>
+						</i> All
+					</button>
+					<xsl:text> </xsl:text>
+					<button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.unrelate)" class="btn btn-sm btn-warning">
+						<i class="fa fa-close fa-white">
+							<xsl:text> </xsl:text>
+						</i> All
+					</button>
+				</th>
                 </tr>
                 <tr>
                   <xsl:for-each select="ContentDetail/RelatedResults/Content">
@@ -3897,23 +3912,23 @@
                         </i> Uncheck All
                       </button>
                     </th>
-                    <th>
-                      <xsl:choose>
-                        <xsl:when test="ContentDetail/RelatedResults/Content">
-                          <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success principle">
-                            <i class="fa fa-plus fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Add
-                            <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
-                          </button>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <label>
-                            <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
-                          </label>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </th>
+					  <th colspan="3">
+						  <xsl:choose>
+							  <xsl:when test="ContentDetail/RelatedResults/Content">
+								  <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success pull-right">
+									  <i class="fa fa-plus fa-white">
+										  <xsl:text> </xsl:text>
+									  </i><xsl:text> </xsl:text>Add
+									  <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
+								  </button>
+							  </xsl:when>
+							  <xsl:otherwise>
+								  <label>
+									  <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
+								  </label>
+							  </xsl:otherwise>
+						  </xsl:choose>
+					  </th>
                   </tr>
                 </xsl:if>
               </tbody>
@@ -3990,8 +4005,6 @@
         <td class="relate">
           <xsl:choose>
             <xsl:when test="@related=1">
-              <xsl:text>(Related)</xsl:text>
-              <xsl:value-of select="@sType"/>|<xsl:value-of select="$relationType"/>
             </xsl:when>
             <xsl:when test="@related=1 and not(contains(@sType,$relationType))">
               <xsl:text> </xsl:text>
@@ -3999,6 +4012,7 @@
               <xsl:text> (Related as </xsl:text>
               <xsl:value-of select="@sType"/>
               <xsl:text>)</xsl:text>
+				<input type="checkbox" name="unrelate" value="{@id}"/>
             </xsl:when>
             <xsl:otherwise>
               <!--<label>Relate</label>-->
@@ -4012,6 +4026,23 @@
             </xsl:otherwise>
           </xsl:choose>
         </td>
+		  <td class="unrelate">
+			  <xsl:choose>
+				  <xsl:when test="@related=1">
+					  <input type="checkbox" name="unrelate" value="{@id}"/>
+					  <xsl:text> </xsl:text>
+					  <xsl:text>(Related)</xsl:text> <xsl:value-of select="$relationType"/>
+				  </xsl:when>
+				  <xsl:when test="@related=1 and not(contains(@sType,$relationType))">
+					  <input type="checkbox" name="unrelate" value="{@id}"/>
+					  <xsl:text> </xsl:text>
+					  <xsl:text> (Related as </xsl:text>
+					  <xsl:value-of select="@sType"/>
+					  <xsl:text>)</xsl:text>
+				  </xsl:when>
+				  
+			  </xsl:choose>
+		  </td>
       </tr>
     </span>
 	  <!--
@@ -4255,7 +4286,7 @@
         </div>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -5203,7 +5234,7 @@
       </div>
 
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -5915,7 +5946,7 @@
                 </i>
                 <xsl:text> </xsl:text>Return
               </button>
-              <div class="clearfix"><xsl:text>&#160; </xsl:text></div>
+              <div class="clearfix">&#160; </div>
             </div>
           </div>
         </form>
@@ -6165,7 +6196,7 @@
                 <!--xsl:apply-templates select="." mode="contactAddressBriefProfile"/-->
                 <xsl:apply-templates select="." mode="AdminListContact"/>
                 <xsl:if test="position() mod 2=0">
-                  <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+                  <div class="terminus">&#160;</div>
                 </xsl:if>
               </xsl:for-each>
             </div>
@@ -6419,7 +6450,7 @@
 
                 <xsl:apply-templates select="." mode="AdminListContact"/>
                 <xsl:if test="position() mod 2=0">
-                  <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+                  <div class="terminus">&#160;</div>
                 </xsl:if>
               </xsl:for-each>
             </div>
@@ -7467,7 +7498,7 @@
         </div>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   
@@ -7717,7 +7748,7 @@
         <p>Click on the 'VIEW QUOTE' button to view all the details for that Quote.</p>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   <!-- -->
@@ -8592,7 +8623,7 @@
       </div>
 
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <xsl:if test="(Notes) and @cmd!='Notes' ">
         <div class="notes">
           <xsl:for-each select="Notes/*">
@@ -8615,7 +8646,7 @@
         </div>
       </xsl:if>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
 
       <table cellspacing="0" id="cartListing" summary="This table contains a list of the items which you have added to the shopping cart. To change the quantity of an item, replace the number under the Qty column and click on Update Cart.">
         <tr>
@@ -9074,7 +9105,7 @@
         <xsl:apply-templates select="ContentDetail/report" mode="reportDetail"/>
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   <!-- Default Report Template Sortable Columns -->
@@ -9651,7 +9682,7 @@
         Instructions go here
       </div>
       <!-- Terminus class fix to floating columns -->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   <!-- -->
@@ -12317,7 +12348,7 @@
         </p>
 
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -13314,7 +13345,7 @@
     <body id="pg_{@id}" class="ewAdmin">
       <xsl:apply-templates select="AdminMenu"/>
       <div class="row" id="tpltCartActivity">
-        <div class="col-md-4"><xsl:text>&#160; </xsl:text></div>
+        <div class="col-md-4">&#160; </div>
         <div class="col-md-4">
           <br/>
           <br/>
@@ -13323,7 +13354,7 @@
           <br/>
           <br/>
         </div>
-        <div class="col-md-4"><xsl:text>&#160; </xsl:text></div>
+        <div class="col-md-4">&#160; </div>
       </div>
       <!--iframe class="pluginIframe" src="https://analytics.google.com/analytics/web/" width="100%" height="1000">
         <p>Your browser does not support iframes.</p>

@@ -70,11 +70,20 @@
 							<xsl:with-param name="button" select="@button"/>
 							<xsl:with-param name="imagePosition" select="@imagePosition"/>
 							<xsl:with-param name="alignment" select="@alignment"/>
+							<xsl:with-param name="parentId" select="@id"/>
 						</xsl:apply-templates>
 					</div>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='SubPageList']" mode="themeModuleExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='SubPageList']" mode="themeModuleClassExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
 
 	<!-- Sub Page Content -->
@@ -108,6 +117,7 @@
 		<xsl:param name="button"/>
 		<xsl:param name="imagePosition"/>
 		<xsl:param name="alignment"/>
+		<xsl:param name="parentId"/>
 		<xsl:variable name="url">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -125,9 +135,19 @@
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:if test="(@name!='Information' and (not(DisplayName/@exclude='true'))) or (@name!='Information' and $showHidden='true')">
-			<div class="listItem subpageItem">
+			<xsl:variable name="classValues">
+				<xsl:text>listItem subpageItem</xsl:text>
+				<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+					<xsl:with-param name="parentId" select="$parentId"/>
+				</xsl:apply-templates>
+			</xsl:variable>
+			<div class="{$classValues}">
+				<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
+					<xsl:with-param name="parentId" select="$parentId"/>
+					<xsl:with-param name="pos" select="position()"/>
+				</xsl:apply-templates>
 				<xsl:apply-templates select="." mode="inlinePopupOptions">
-					<xsl:with-param name="class" select="'listItem subpageItem'"/>
+					<xsl:with-param name="class" select="$classValues"/>
 					<xsl:with-param name="sortBy" select="$sortBy"/>
 				</xsl:apply-templates>
 				<div class="lIinner">
@@ -137,6 +157,7 @@
 								<xsl:text>title text-</xsl:text>
 								<xsl:value-of select="$alignment"/>
 							</xsl:attribute>
+							
 							<xsl:apply-templates select="." mode="menuLink"/>
 						</h3>
 					</xsl:if>

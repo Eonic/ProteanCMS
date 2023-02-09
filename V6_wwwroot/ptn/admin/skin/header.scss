@@ -48,7 +48,8 @@ body.normalMode, #adminLayout {
         background-color: $admin-header-bg;
         border-color: $admin-header-bg;
         padding-right: 35px;
-        margin-bottom:0;
+        margin-bottom: 0;
+
         .container-fluid {
             padding: 0;
         }
@@ -109,6 +110,17 @@ body.normalMode, #adminLayout {
         }
     }
 
+    .preview .btn-default {
+        border-radius: 6px;
+        border: 2px solid #fff;
+        padding: 2px 10px;
+        font-size: 14px;
+        margin: 5px;
+    }
+
+    .preview{
+        margin-right:10px;
+    }
     .navbar-nav {
         > li > a {
             padding-left: 14px;
@@ -133,7 +145,6 @@ body.normalMode, #adminLayout {
             }
         }
     }
-
     /*.dashboard-logo {
         position: static;
     }
@@ -221,7 +232,7 @@ body.normalMode, #adminLayout {
             background: #c9302c;
             text-transform: uppercase;
             font-weight: 700;
-            margin-right:45px;
+            margin-right: 45px;
         }
 
 
@@ -229,9 +240,6 @@ body.normalMode, #adminLayout {
             min-width: 25px;
             text-align: center;
         }
-
-
-
         /*&.dashboard-menu {
             @include media-breakpoint-up(xl) {
                 display: block !important;

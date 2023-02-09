@@ -44,6 +44,7 @@
 					<xsl:otherwise>
 						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 							<xsl:with-param name="sortBy" select="@sortBy"/>
+							<xsl:with-param name="parentId" select="@id"/>
 						</xsl:apply-templates>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -59,6 +60,14 @@
 				<xsl:text> </xsl:text>
 			</div>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleClassExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
 
 	<!-- NewsArticle Module Swiper -->
@@ -235,11 +244,24 @@
 	<xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
 		<xsl:param name="class"/>
+		<xsl:param name="parentId"/>
 		<!-- articleBrief -->
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
-		<div class="listItem newsarticle {$class}">
+		<xsl:variable name="classValues">
+			<xsl:text>listItem newsarticle </xsl:text>
+			<xsl:value-of select="$class"/>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<div class="{$classValues}">
+			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+				<xsl:with-param name="pos" select="position()"/>
+			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="concat('listItem newsarticle ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>

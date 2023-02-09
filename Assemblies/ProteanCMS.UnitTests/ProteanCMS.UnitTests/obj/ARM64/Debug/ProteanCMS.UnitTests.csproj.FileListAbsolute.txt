@@ -1,0 +1,15 @@
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\ProteanCMS.UnitTests.dll.config
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\ProteanCMS.UnitTests.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\ProteanCMS.UnitTests.pdb
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\ARM64\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\ARM64\Debug\ProteanCMS.UnitTests.csproj.AssemblyReference.cache
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\ARM64\Debug\ProteanCMS.UnitTests.csproj.CoreCompileInputs.cache
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\ARM64\Debug\ProteanCMS.UnitTests.csproj.CopyComplete
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\ARM64\Debug\ProteanCMS.UnitTests.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\obj\ARM64\Debug\ProteanCMS.UnitTests.pdb

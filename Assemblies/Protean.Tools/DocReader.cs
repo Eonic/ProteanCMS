@@ -129,65 +129,65 @@ namespace Protean.Tools.IFilter
 
     /// 
     /// IFilter return codes
-    public enum IFilterReturnCodes : uint
+    public enum IFilterReturnCodes : long
     {
         /// 
         /// Success
-        S_OK = 0U,
+        S_OK = 0x0000,
         /// 
         /// The function was denied access to the filter file.
-        E_ACCESSDENIED = int.MinValue + 0x00070005,
+        E_ACCESSDENIED = 0x80070005,
         /// 
         /// The function encountered an invalid handle, probably due to a low-memory situation.
-        E_HANDLE = int.MinValue + 0x00070006,
+        E_HANDLE = 0x80070006,
         /// 
         /// The function received an invalid parameter.
-        E_INVALIDARG = int.MinValue + 0x00070057,
+        E_INVALIDARG = 0x80070057,
         /// 
         /// Out of memory
-        E_OUTOFMEMORY = int.MinValue + 0x0007000E,
+        E_OUTOFMEMORY = 0x8007000e,
         /// 
         /// Not implemented
-        E_NOTIMPL = int.MinValue + 0x00004001,
+        E_NOTIMPL = 0x80004001,
         /// 
         /// Unknown error
-        E_FAIL = int.MinValue + 0x00000008,
+        E_FAIL = 0x80000008,
         /// 
         /// File not filtered due to password protection
-        FILTER_E_PASSWORD = int.MinValue + 0x0004170B,
+        FILTER_E_PASSWORD = 0x8004170B,
         /// 
         /// The document format is not recognised by the filter
-        FILTER_E_UNKNOWNFORMAT = int.MinValue + 0x0004170C,
+        FILTER_E_UNKNOWNFORMAT = 0x8004170C,
         /// 
         /// No text in current chunk
-        FILTER_E_NO_TEXT = int.MinValue + 0x00041705,
+        FILTER_E_NO_TEXT = 0x80041705,
         /// 
         /// No more chunks of text available in object
-        FILTER_E_END_OF_CHUNKS = int.MinValue + 0x00041700,
+        FILTER_E_END_OF_CHUNKS = 0x80041700,
         /// 
         /// No more text available in chunk
-        FILTER_E_NO_MORE_TEXT = int.MinValue + 0x00041701,
+        FILTER_E_NO_MORE_TEXT = 0x80041701,
         /// 
         /// No more property values available in chunk
-        FILTER_E_NO_MORE_VALUES = int.MinValue + 0x00041702,
+        FILTER_E_NO_MORE_VALUES = 0x80041702,
         /// 
         /// Unable to access object
-        FILTER_E_ACCESS = int.MinValue + 0x00041703,
+        FILTER_E_ACCESS = 0x80041703,
         /// 
         /// Moniker doesn't cover entire region
-        FILTER_W_MONIKER_CLIPPED = 0x41704U,
+        FILTER_W_MONIKER_CLIPPED = 0x41704,
         /// 
         /// Unable to bind IFilter for embedded object
-        FILTER_E_EMBEDDING_UNAVAILABLE = int.MinValue + 0x00041707,
+        FILTER_E_EMBEDDING_UNAVAILABLE = 0x80070057,
         /// 
         /// Unable to bind IFilter for linked object
-        FILTER_E_LINK_UNAVAILABLE = int.MinValue + 0x00041708,
+        FILTER_E_LINK_UNAVAILABLE = 0x80070057,
         /// 
         /// This is the last text in the current chunk
-        FILTER_S_LAST_TEXT = 0x41709U,
+        FILTER_S_LAST_TEXT = 0x80070057,
         /// 
         /// This is the last value in the current chunk
-        FILTER_S_LAST_VALUES = 0x4170AU
+        FILTER_S_LAST_VALUES = 0x80070057
     }
 
     /// 

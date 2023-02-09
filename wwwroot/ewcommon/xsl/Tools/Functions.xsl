@@ -3233,7 +3233,7 @@
           </a>
         </xsl:if>
       </xsl:if>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -4479,7 +4479,7 @@
         <xsl:with-param name="span" select="$span"/>
       </xsl:apply-templates>
     </ul>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
 
   <!-- -->
@@ -4518,7 +4518,7 @@
         <xsl:with-param name="homeLink" select="true()"/>
       </xsl:apply-templates>
     </ul>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
   <!-- -->
 
@@ -4650,7 +4650,7 @@
     <ul>
       <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem_topnav"/>
     </ul>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
   <!-- -->
   <xsl:template match="MenuItem" mode="submenuitem_topnav">
@@ -7832,7 +7832,7 @@
     <xsl:param name="imageRetinaUrl"/>
     <!--New image tags-->
     <source type="{$type}" media="{$media}" srcset="{ew:replacestring($imageUrl,' ','%20')} 1x, {$imageRetinaUrl} 2x" >
-      <xsl:choose>
+      <!--<xsl:choose>
         <xsl:when test="$lazy='on'">
           <xsl:attribute name="data-src">
             <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
@@ -7841,13 +7841,14 @@
             <xsl:value-of select="$lazyplaceholder"/>
           </xsl:attribute>
         </xsl:when>
-        <xsl:otherwise>
+        <xsl:otherwise>-->
           <xsl:attribute name="src">
             <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
           </xsl:attribute>
+		<!--
         </xsl:otherwise>
       </xsl:choose>
-
+-->
       <xsl:attribute name="srcset">
         <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
         <xsl:if test="imageRetinaUrl!=''">
@@ -7861,9 +7862,11 @@
         <xsl:if test="$class!=''">
           <xsl:value-of select="$class" />
         </xsl:if>
+		  <!--
         <xsl:if test="$lazy='on'">
           <xsl:text> lazy</xsl:text>
         </xsl:if>
+		-->
       </xsl:attribute>
       <xsl:if test="$style!=''">
         <xsl:attribute name="style">

@@ -7,7 +7,7 @@
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <xsl:apply-templates select="." mode="orderAddresses"/>
-    <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+    <div class="terminus">&#160;</div>
     <div class="box blueEdge">
     <form method="post" id="cart" class="ewXform">
       <xsl:apply-templates select="." mode="principleButton"/>
@@ -21,7 +21,7 @@
       <input type="submit" name="cartBrief" value="Continue Shopping" class="button continue"/>
       <input type="submit" name="cartUpdate" value="Update Order" class="button update"/>
       <input type="submit" name="cartQuit" value="Empty Order" class="button empty"/>
-      <div class="terminus">&#160;  <xsl:text></xsl:text>
+      <div class="terminus">&#160;  
 	  </div>
     </form>
     </div>
@@ -104,7 +104,7 @@
             <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
           </div>
           <div class="bl">
-            <div class="br"><xsl:text>&#160; </xsl:text></div>
+            <div class="br">&#160; </div>
           </div>
         </div>
         <div id="cartRegisterBox" class="box blueEdge">
@@ -117,7 +117,7 @@
             <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='CartRegistration']" mode="xform"/>
           </div>
           <div class="bl">
-            <div class="br"><xsl:text>&#160; </xsl:text></div>
+            <div class="br">&#160; </div>
           </div>
         </div>
       </div>
@@ -156,7 +156,7 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='notesForm']" mode="xform"/>
        </div>
       <div class="bl">
-        <div class="br"><xsl:text>&#160; </xsl:text></div>
+        <div class="br">&#160; </div>
       </div>
     </div>
     <div class="box blueEdge">
@@ -176,7 +176,7 @@
       <input type="submit" name="cartUpdate" value="Update Order" class="button update"/>
       <input type="submit" name="cartQuit" value="Empty Order" class="button empty"/>
       <!--</div>-->
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </form>
     </div>
   </xsl:template>
@@ -201,7 +201,7 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='optionsForm']" mode="xform"/>
       </div>
       <div class="bl">
-        <div class="br"><xsl:text>&#160; </xsl:text></div>
+        <div class="br">&#160; </div>
       </div>
     </div>
     <xsl:apply-templates select="." mode="orderAddresses"/>
@@ -214,7 +214,7 @@
       <input type="submit" name="cartBrief" value="Continue Shopping" class="button continue"/>
       <input type="submit" name="cartUpdate" value="Update Order" class="button update"/>
       <input type="submit" name="cartQuit" value="Empty Order" class="button empty"/>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </form>
     </div>
   </xsl:template>
@@ -240,14 +240,14 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='PayForm' or @name='Secure3D' or @name='Secure3DReturn')]" mode="xform"/>
       </div>
       <div class="bl">
-        <div class="br"><xsl:text>&#160; </xsl:text></div>
+        <div class="br">&#160; </div>
       </div>
     </div>
     <!--form method="post" id="cart" class="ewXform">
       <xsl:apply-templates select="." mode="orderItems"/>
       <input type="submit" name="cartUpdate" value="Revise Order" class="button continue"/>
       <input type="submit" name="cartQuit" value="Cancel Order" class="button empty"/>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </form-->
   </xsl:template>
 
@@ -527,10 +527,10 @@
       <div class="description">
         <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
 
       
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
       <div class="entryFooter">
         <div class="tags">
           <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
@@ -543,7 +543,7 @@
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
@@ -577,7 +577,7 @@
           <xsl:sort select="@displayOrder" order="ascending"/>
           <xsl:apply-templates select="." mode="displayBriefTicket"/>
         </xsl:for-each>
-        <div class="terminus"><xsl:text>&#160;</xsl:text></div>
+        <div class="terminus">&#160;</div>
       </table>
       <div class="ListGroupCart">
         <xsl:apply-templates select="/" mode="addtoCartButtons"/>
