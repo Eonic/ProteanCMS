@@ -903,12 +903,6 @@
     <WCFMetadataStorage Include="Service References\Paypoint\" />
     <WCFMetadataStorage Include="Service References\proteancms.com\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
-      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
-      <Name>Protean.Tools</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PreBuildEvent>
