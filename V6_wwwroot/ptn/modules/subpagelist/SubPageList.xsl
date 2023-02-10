@@ -103,7 +103,8 @@
 					<xsl:with-param name="sortBy" select="$sortBy"/>
 				</xsl:apply-templates>
 				<a href="{$url}" title="{$pageName}" class="nav-link">
-					<xsl:apply-templates select="." mode="menuLink"/>
+					<!--<xsl:apply-templates select="." mode="menuLink"/>-->
+          <xsl:apply-templates select="." mode="getDisplayName"/>
 				</a>
 			</li>
 		</xsl:if>
