@@ -391,7 +391,7 @@ namespace Protean.Tools
         {
             bool firstRow = true;
             char _separator = CSVseparator;
-            string _fieldnames = null;
+          //  string _fieldnames = null;
             long succeeded = 0L;
             long failed = 0L;
             var ResponseXml = new XmlDocument();
