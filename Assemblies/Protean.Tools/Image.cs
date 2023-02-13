@@ -8,6 +8,7 @@ using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 using System.Drawing.Drawing2D;
 using static Protean.Tools.Text;
 using TinifyAPI;
+using Exception = System.Exception;
 
 namespace Protean.Tools
 {

@@ -8052,25 +8052,41 @@
 
 	<!-- GA4 Ecommerce Events -->
 	<xsl:template match="Page[ContentDetail/Content[@type='Product']]" mode="google-ga4-event">
-		gtag("event", "view_item",
+		gtag("event", "view_item",{
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:apply-templates  select="ContentDetail/Content[@type='Product']" mode="PriceNumberic"/>,
 		items:[
 		<xsl:apply-templates select="ContentDetail/Content[@type='Product']" mode="google-ga4-view-item"/>
 		]
-		);
+		});
 	</xsl:template>
 
 
 	<xsl:template match="Content[@type='Product']" mode="google-ga4-view-item">
 		{
-		item_id: "<xsl:value-of select="StockCode/node()"/>",
-		item_name: "<xsl:value-of select="Name/node()"/>",
-		currency: "<xsl:value-of select="$page/Cart/@currency"/>",
-		discount: 0,
-		index: 0,
-		item_brand: "<xsl:value-of select="Manufacturer/node()"/>",
-		price: <xsl:apply-templates  select="." mode="PriceNumberic"/>
+		    item_id: "<xsl:value-of select="StockCode/node()"/>",
+		    item_name: "<xsl:value-of select="Name/node()"/>",
+		    currency: "<xsl:value-of select="$page/Cart/@currency"/>",
+		    discount: 0,
+		    index: 0,
+		    item_brand: "<xsl:value-of select="Manufacturer/node()"/>",
+		    item_category: "<xsl:value-of select="$sectionPage/@name"/>",
+			<xsl:if test="$subSectionPage">
+				item_category2: "<xsl:value-of select="$subSectionPage/@name"/>",
+			</xsl:if>
+		    <xsl:if test="$subSubSectionPage">
+			    item_category3: "<xsl:value-of select="$subSubSectionPage/@name"/>",
+		    </xsl:if>
+		    <xsl:if test="$subSubSubSectionPage">
+			    item_category4: "<xsl:value-of select="$subSubSubSectionPage/@name"/>",
+		    </xsl:if>
+		<xsl:if test="$subSubSubSubSectionPage">
+			item_category5: "<xsl:value-of select="$subSubSubSubSectionPage/@name"/>",
+		</xsl:if>
+		    price: <xsl:apply-templates  select="." mode="PriceNumberic"/>,
+		    item_list_id: "<xsl:value-of select="$page/@id"/>",
+		    item_list_name: "<xsl:value-of select="$currentPage/@name"/>",
+      	    quantity: 1
 		}
 		<xsl:if test="following-sibling::Content">
 			  <xsl:text>,</xsl:text>
