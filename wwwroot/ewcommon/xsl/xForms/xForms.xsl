@@ -3820,7 +3820,7 @@
         </td>
         {{else}}
         <td class="progress">
-          <div><xsl:text></xsl:text></div>
+          <div></div>
 			
         </td>
         <td class="start">

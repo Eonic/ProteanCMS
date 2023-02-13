@@ -413,7 +413,8 @@
             </i><xsl:text> </xsl:text>Back to Admin
           </a>
         </div>
-        <div class="terminus"> </div>
+        <div class="terminus">
+			<xsl:text> </xsl:text> </div>
       </div>
     </div>
   </xsl:template>
