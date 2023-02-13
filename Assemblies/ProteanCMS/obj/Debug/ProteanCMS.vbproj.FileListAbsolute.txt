@@ -1404,10 +1404,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Numerics.Vectors.xm
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\MySql.Data.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-arm64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x86.dll
@@ -1424,6 +1420,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AjaxMin.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AngleSharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Antlr3.Runtime.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BouncyCastle.Crypto.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.Less.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.MicrosoftAjax.dll
@@ -1441,7 +1438,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.V
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JSPool.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\LibSassHost.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Lucene.Net.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.JsonWebTokens.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.Logging.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.Tokens.dll
@@ -1465,6 +1461,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.dl
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\WebGrease.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Tinify.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JsonWebTokens.dll
@@ -1492,7 +1489,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JSPool.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\LibSassHost.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Lucene.Net.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Lucene.Net.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.JsonWebTokens.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.Logging.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Microsoft.IdentityModel.Tokens.xml
@@ -1509,14 +1505,18 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Net.FtpClient.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Numerics.Vectors.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Core.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Less.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BouncyCastle.Crypto.dll
