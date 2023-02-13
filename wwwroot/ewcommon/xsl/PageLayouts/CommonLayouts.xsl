@@ -11717,8 +11717,8 @@
         </div>
 
         <xsl:apply-templates select="Content[@type='Review']" mode="displayBrief">
-          <xsl:sort select="@publish" order="ascending"/>
-          <xsl:sort select="@update" order="ascending"/>
+          <xsl:sort select="@publish" order="descending"/>
+          <!--<xsl:sort select="@update" order="descending"/>-->
         </xsl:apply-templates>
 
         <div class="terminus">&#160;</div>
