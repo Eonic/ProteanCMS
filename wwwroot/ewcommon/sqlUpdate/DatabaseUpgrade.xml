@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="6.0.59.0">
+<DatabaseUpgrade LatestVersion="6.0.60.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -495,6 +495,11 @@
 		<Sub2 Number="59">
 			<Sub3 Number="0">
 				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.59.0/tblCartItem.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="60">
+			<Sub3 Number="0">
+				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.60.0/tblCartShippingProductCategoryRelations.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>

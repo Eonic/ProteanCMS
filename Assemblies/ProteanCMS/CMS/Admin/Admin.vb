@@ -3764,6 +3764,10 @@ AfterProcessFlow:
                         sAdminLayout = "AdminXForm"
                         oPageDetail.AppendChild(moAdXfm.xFrmShippingDirRelations(myWeb.moRequest.QueryString("id"), ""))
 
+                    Case "ShippingGroup"
+                        sAdminLayout = "AdminXForm"
+                        oPageDetail.AppendChild(moAdXfm.xFrmProductShippingGroupRelations(myWeb.moRequest.QueryString("id"), ""))
+
                     Case "delete"
                         'xFrmDeleteDeliveryMethod
                         oPageDetail.AppendChild(moAdXfm.xFrmDeleteDeliveryMethod(myWeb.moRequest("id")))
