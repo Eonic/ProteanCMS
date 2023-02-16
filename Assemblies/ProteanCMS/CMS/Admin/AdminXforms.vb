@@ -7097,9 +7097,9 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditShippingDirRelations")
 
-                    If moDbHelper.checkTableColumnExists("tblCartShippingProductCategoryRelations", "nPermLevel") Then
+                    If moDbHelper.checkTableColumnExists("tblCartShippingProductCategoryRelations", "nRuleType") Then
                         bDeny = True
-                        cDenyFilter = " and nPermLevel <> 0"
+                        cDenyFilter = " and nRuleType <> 2"
                     End If
 
 
@@ -7111,9 +7111,9 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Allow Selected", "", "ShippingGroupButtons btn-allow")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Include Selected", "", "ShippingGroupButtons btn-allow")
                     If bDeny Then
-                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Deny Selected", "", "ShippingGroupButtons btn-deny")
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Exclude Selected", "", "ShippingGroupButtons btn-deny")
                     End If
                     MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "ShippingGroupButtons btn-remove")
 
@@ -7142,7 +7142,7 @@ Partial Public Class Cms
                     sSql = "SELECT nCatKey as value, cCatName as name FROM tblCartProductCategories WHERE (cCatSchemaName = N'Shipping') AND" &
                     " (((SELECT nShipProdCatRelKey" &
                     " FROM tblCartShippingProductCategoryRelations" &
-                    " WHERE (nShipOptId = 84) AND (nCatId = tblCartProductCategories.nCatKey))) IS NULL)" &
+                    " WHERE (nShipOptId  = " & id & ") AND (nCatId = tblCartProductCategories.nCatKey))) IS NULL)" &
                     " ORDER BY cCatName"
 
                     Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
@@ -7161,10 +7161,10 @@ Partial Public Class Cms
                     'End Using
 
 
-                    oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All Groups with permissions for Shipping Method")
-                    MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
+                    oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All Groups with include/exclude for Shipping Method")
+                    'MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
 
-                    oElmt4 = MyBase.addSelect(oFrmGrp3, "Items", False, "Allowed", "scroll_10", xForm.ApperanceTypes.Minimal)
+                    oElmt4 = MyBase.addSelect(oFrmGrp3, "Items", False, "Included", "scroll_10", xForm.ApperanceTypes.Minimal)
 
 
                     sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " &
@@ -7178,13 +7178,13 @@ Partial Public Class Cms
                     End Using
                     If bDeny Then
 
-                        oElmt5 = MyBase.addSelect(oFrmGrp3, "Items", False, "Denied", "scroll_10", xForm.ApperanceTypes.Minimal)
+                        oElmt5 = MyBase.addSelect(oFrmGrp3, "Items", False, "Excluded", "scroll_10", xForm.ApperanceTypes.Minimal)
 
                         sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " &
                     "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Users>>' ELSE tblCartProductCategories.cCatName END AS name" &
                     " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" &
                     " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" &
-                        " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " & id & ") and nPermLevel = 0 ORDER BY cCatName"
+                        " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " & id & ") and nRuleType = 2 ORDER BY cCatName"
                         Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
                             MyBase.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value")
                         End Using

@@ -8957,19 +8957,20 @@
           <i class="fa fa-user fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Select User Groups
-        </a>
+        </a>		  
         <xsl:text> </xsl:text>
+	    <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}" class="btn btn-xs btn-primary">
+			  <i class="fa fa-user fa-white">
+				  <xsl:text> </xsl:text>
+			  </i><xsl:text> </xsl:text>Select Shipping Group
+		</a>
         <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete Method
         </a>
 		  <xsl:text> </xsl:text>
-		  <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}" class="btn btn-xs btn-danger">
-			  <i class="fa fa-user fa-white">
-				  <xsl:text> </xsl:text>
-			  </i><xsl:text> </xsl:text>Select Shipping Group
-		  </a>
+		 
       </td>
     </tr>
   </xsl:template>

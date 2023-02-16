@@ -274,7 +274,7 @@ Partial Public Class Cms
 
             indexkey = 200
             'indexdefkey = 201
-            CartShippingProductCategoryRelations = 202
+            nShipProdCatRelKey = 202
         End Enum
 
         Enum TableNames
@@ -698,7 +698,8 @@ Partial Public Class Cms
                     'Add new key id for Index def table by nita
                 Case 200
                     Return "nContentIndexDefKey"
-
+                Case 202
+                    Return "nShipProdCatRelKey"
 
             End Select
             Return strReturn
@@ -9531,14 +9532,14 @@ restart:
                 Dim nI As Integer
                 Dim cNewIds As String = ""
                 Dim bDeny As Boolean = False
-                Dim nPermLevel As Integer = "1"
-                If checkTableColumnExists("tblCartShippingProductCategoryRelations", "nPermLevel") Then
+                Dim nRuleType As Integer = "1"
+                If checkTableColumnExists("tblCartShippingProductCategoryRelations", "nRuleType") Then
                     bDeny = True
                     Select Case Permlevel
                         Case PermissionLevel.Denied
-                            nPermLevel = 0
+                            nRuleType = 2
                         Case Else
-                            nPermLevel = 1
+                            nRuleType = 1
                     End Select
                 End If
 
@@ -9554,36 +9555,35 @@ restart:
                         If nCatKeys > 0 Then
                             'remove any "all" record
                             cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " & nShippingMethodId & " And nCatId = 0"
-                            Me.DeleteObject(objectTypes.CartShippingProductCategoryRelations, ExeProcessSqlScalar(cSQL))
+                            Me.DeleteObject(objectTypes.nShipProdCatRelKey, ExeProcessSqlScalar(cSQL))
                         Else
                             'remove any specific record
                             cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " & nShippingMethodId & " And nCatId > 0"
                             Using oDre As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
                                 Do While oDre.Read
-                                    Me.DeleteObject(objectTypes.CartShippingProductCategoryRelations, oDre(0))
+                                    Me.DeleteObject(objectTypes.nShipProdCatRelKey, oDre(0))
                                 Loop
                             End Using
                         End If
                         If bDeny Then
-                            cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId, nPermLevel) Values(" &
+                            cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values(" &
                                 nShippingMethodId & "," &
                                 nCatKeys & "," &
-                                nCatKeys & "," &
-                                Me.getAuditId(1, , "CartShippingProductCategoryRelations") & ")" & "," &
-                                nPermLevel
+                                nRuleType & "," &
+                                Me.getAuditId(1, , "CartShippingProductCategoryRelations") & ")"
 
 
                         Else
                             cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values(" &
                                                    nShippingMethodId & "," &
                                                    nCatKeys & "," &
-                                                   nCatKeys & "," &
+                                                   nRuleType & "," &
                                                    Me.getAuditId(1, , "CartShippingProductCategoryRelations") & ")"
                         End If
 
                         cNewIds &= GetIdInsertSql(cSQL) & ","
                     Else
-                        cNewIds &= DeleteObject(objectTypes.CartShippingProductCategoryRelations, nCatKeys) & ","
+                        cNewIds &= DeleteObject(objectTypes.nShipProdCatRelKey, nCatKeys) & ","
                     End If
                 Next
                 Return Left(cNewIds, cNewIds.Length - 1)
@@ -9592,6 +9592,7 @@ restart:
                 Return 0
             End Try
         End Function
+
         Public Function saveDiscountProdGroupRelation(ByVal nDiscountId As Integer, ByVal cProductgroups As String, Optional ByVal bInsert As Boolean = True) As String
             PerfMonLog("DBHelper", "saveDiscountProdGroupRelation")
             Try
