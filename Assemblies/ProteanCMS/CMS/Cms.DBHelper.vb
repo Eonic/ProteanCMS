@@ -9525,17 +9525,17 @@ restart:
             End Try
         End Function
 
-        Public Function saveProductShippingGroupDirRelation(ByVal nShippingMethodId As Integer, ByVal nCatKeys As String, Optional ByVal bInsert As Boolean = True, Optional ByVal Permlevel As PermissionLevel = PermissionLevel.Open) As String
+        Public Function saveProductShippingGroupDirRelation(ByVal nShippingMethodId As Integer, ByVal nCatKeys As String, Optional ByVal bInsert As Boolean = True, Optional ByVal nRuleType As PermissionLevel = PermissionLevel.Open) As String
             PerfMonLog("DBHelper", "saveShippingDirRelation")
             Try
                 Dim cGroups() As String = Split(nCatKeys, ",")
                 Dim nI As Integer
                 Dim cNewIds As String = ""
                 Dim bDeny As Boolean = False
-                Dim nRuleType As Integer = "1"
+                ' Dim nRuleType As Integer = "1"
                 If checkTableColumnExists("tblCartShippingProductCategoryRelations", "nRuleType") Then
                     bDeny = True
-                    Select Case Permlevel
+                    Select Case nRuleType
                         Case PermissionLevel.Denied
                             nRuleType = 2
                         Case Else

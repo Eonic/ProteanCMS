@@ -7111,11 +7111,11 @@ Partial Public Class Cms
 
                     'add the buttons so we can test for submission
                     oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
-                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Include Selected", "", "ShippingGroupButtons btn-allow")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Include Selected", "", "PermissionButtons btn-allow")
                     If bDeny Then
-                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Exclude Selected", "", "ShippingGroupButtons btn-deny")
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Exclude Selected", "", "PermissionButtons btn-deny")
                     End If
-                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "ShippingGroupButtons btn-remove")
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
