@@ -685,6 +685,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="moduleBox">
+	  mod box
     <xsl:choose>
       <xsl:when test="@linkBox='true'">
         <div id="mod_{@id}" class="module">
@@ -741,7 +742,7 @@
                 <xsl:apply-templates select="." mode="marginBelow" />
               </xsl:attribute>
               <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
-                <div class="panel-image">!!
+                <div class="panel-image">
                   <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
                 </div>
               </xsl:if>
