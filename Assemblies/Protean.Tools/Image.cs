@@ -9,6 +9,7 @@ using System.Drawing.Drawing2D;
 using static Protean.Tools.Text;
 using TinifyAPI;
 using Exception = System.Exception;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Protean.Tools
 {
@@ -368,8 +369,11 @@ namespace Protean.Tools
                         nNewHeight = Convert.ToInt32(oImg.Height * nPercent);
                     }
                 }
-
-                oImg = (Bitmap)ImageResize(oImg, nNewHeight, nNewWidth);
+                if (nNewHeight > 0 && nNewWidth > 0)
+                {
+                    oImg = (Bitmap)ImageResize(oImg, nNewHeight, nNewWidth);
+                }
+              
             }
             catch (Exception ex)
             {
@@ -615,9 +619,18 @@ namespace Protean.Tools
 
                 if (szFileName.EndsWith(".gif"))
                 {
-                    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"), ImageFormat.Png);
 
-                    var imgFile = new FileInfo(Strings.Replace(szFileName, ".gif", ".png"));
+                    // Save to memory using the Png format
+                    //  MemoryStream ms = new MemoryStream();
+                    //   theImg.Save(ms, ImageFormat.Png);
+                    //   theImg = new Bitmap(ms);             
+                    //    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
+                    //    var imgFile = new FileInfo(Strings.Replace(szFileName, ".gif", ".png"));
+
+                    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
+                    
+                    var imgFile = new FileInfo(szFileName);
+
                     if (compression == 100L)
                     {
                         CompressImage(imgFile, true);
