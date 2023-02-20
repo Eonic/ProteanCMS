@@ -413,7 +413,8 @@
             </i><xsl:text> </xsl:text>Back to Admin
           </a>
         </div>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">
+			<xsl:text> </xsl:text> </div>
       </div>
     </div>
   </xsl:template>
@@ -8956,13 +8957,20 @@
           <i class="fa fa-user fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Select User Groups
-        </a>
+        </a>		  
         <xsl:text> </xsl:text>
+	    <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}" class="btn btn-xs btn-primary">
+			  <i class="fa fa-user fa-white">
+				  <xsl:text> </xsl:text>
+			  </i><xsl:text> </xsl:text>Select Shipping Group
+		</a>
         <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete Method
         </a>
+		  <xsl:text> </xsl:text>
+		 
       </td>
     </tr>
   </xsl:template>

@@ -272,7 +272,8 @@
           </i>
         </a>
         </div>
-        <div class="terminus">&#160;</div>
+        <div class="terminus">
+			<xsl:text></xsl:text> </div>
       </div>
     </div>
   </xsl:template>

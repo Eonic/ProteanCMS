@@ -98,12 +98,12 @@ Namespace Providers
                     oXform.addBind("Step", "PriceFilter/@Step", "false()", "string", oXform.model)
                     oXform.addBind("ProductListCount", "PriceFilter/@ProductCountList", "false()", "string", oXform.model)
 
-                    oXform.addInput(oFromGroup, "MinPrice", True, "", "")
-                    oXform.addInput(oFromGroup, "MaxPrice", True, "", "")
-                    oXform.addInput(oFromGroup, "SliderMinPrice", True, "", "")
-                    oXform.addInput(oFromGroup, "SliderMaxPrice", True, "", "")
-                    oXform.addInput(oFromGroup, "Step", True, "", "")
-                    oXform.addInput(oFromGroup, "ProductListCount", True, "", "")
+                    oXform.addInput(oFromGroup, "MinPrice", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "MaxPrice", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "SliderMinPrice", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "SliderMaxPrice", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "Step", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "ProductListCount", True, "", "hidden")
 
                     'If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
                     '    If (oXml.InnerText.Trim() <> String.Empty) Then
@@ -131,7 +131,8 @@ Namespace Providers
 
                     End If
 
-                            oXform.addDiv(oFromGroup, "", "histogramSlider", True)
+                    oXform.addDiv(oFromGroup, "", " form-group select-group histogramSlider", True)
+                    oXform.addInput(oFromGroup, "", False, sCotrolDisplayName, "histogramSliderMainDiv")
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try

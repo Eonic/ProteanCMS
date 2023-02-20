@@ -8,6 +8,8 @@ using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 using System.Drawing.Drawing2D;
 using static Protean.Tools.Text;
 using TinifyAPI;
+using Exception = System.Exception;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Protean.Tools
 {
@@ -200,6 +202,10 @@ namespace Protean.Tools
             // saves the file to designated location
             try
             {
+
+                cPath = cPath.Replace("/","\\");
+                cPath = cPath.Replace("\\\\", "\\");
+
                 // check the compression ratio
                 if (nCompression > 100)
                     nCompression = 100;
@@ -363,8 +369,11 @@ namespace Protean.Tools
                         nNewHeight = Convert.ToInt32(oImg.Height * nPercent);
                     }
                 }
-
-                oImg = (Bitmap)ImageResize(oImg, nNewHeight, nNewWidth);
+                if (nNewHeight > 0 && nNewWidth > 0)
+                {
+                    oImg = (Bitmap)ImageResize(oImg, nNewHeight, nNewWidth);
+                }
+              
             }
             catch (Exception ex)
             {
@@ -610,9 +619,18 @@ namespace Protean.Tools
 
                 if (szFileName.EndsWith(".gif"))
                 {
-                    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"), ImageFormat.Png);
 
-                    var imgFile = new FileInfo(Strings.Replace(szFileName, ".gif", ".png"));
+                    // Save to memory using the Png format
+                    //  MemoryStream ms = new MemoryStream();
+                    //   theImg.Save(ms, ImageFormat.Png);
+                    //   theImg = new Bitmap(ms);             
+                    //    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
+                    //    var imgFile = new FileInfo(Strings.Replace(szFileName, ".gif", ".png"));
+
+                    theImg.Save(Strings.Replace(szFileName, ".gif", ".png"));
+                    
+                    var imgFile = new FileInfo(szFileName);
+
                     if (compression == 100L)
                     {
                         CompressImage(imgFile, true);
@@ -641,7 +659,7 @@ namespace Protean.Tools
                 else
                 {
                     var eps = new EncoderParameters(1);
-                    eps.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100);
+                    eps.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
                     string cEncoder = "image/jpeg";
                     var ici = GetEncoderInfo(cEncoder);
                     try
@@ -910,14 +928,14 @@ namespace Protean.Tools
                 {
                     // If the Width is perfect, crop the Height
                     int nNewY = (oImage.Height - nMaxHeightCrop) / 2;
-                    sRect.Inflate(-0, -nNewY);
+                    sRect.Inflate(-0, (nNewY * -1));
                     oGraphics.DrawImage(oBitmapOrig, 0, 0, sRect, GraphicsUnit.Pixel);
                 }
                 else if (nMaxWidthCrop > 0)
                 {
                     // Else crop the width
                     int nNewW = (oImage.Width - nMaxWidthCrop) / 2;
-                    sRect.Inflate(-nNewW, -0);
+                    sRect.Inflate((nNewW * -1), -0);
                     oGraphics.DrawImage(oBitmapOrig, 0, 0, sRect, GraphicsUnit.Pixel);
                 }
                 oImage = oBitmapCrop;
