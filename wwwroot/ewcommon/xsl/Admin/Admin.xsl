@@ -413,7 +413,7 @@
             </i><xsl:text> </xsl:text>Back to Admin
           </a>
         </div>
-        <div class="terminus"> </div>
+        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -7417,9 +7417,7 @@
                   <xsl:value-of select="$title"/>
                 </h3>
                 
-                <div class="terminus">
-                  <xsl:text> </xsl:text>
-                </div>
+                <div class="terminus">&#160;</div>
             </div>
               <table class="panel-body table table-striped">
                 <tbody>
@@ -7460,15 +7458,17 @@
                   </xsl:apply-templates>
                 </div>
                 <div class="terminus">
-                  <xsl:text> </xsl:text>
-                </div>
+					<xsl:text> </xsl:text>
+				</div>
               </div>
             </xsl:when>
             <xsl:otherwise>
               <xsl:choose>
                 <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
                   <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
-                    <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
+                    <i class="fa fa-chevron-left">
+						<xsl:text> </xsl:text>
+					</i>&#160;Back to <xsl:value-of select="$title"/>
                   </a>
 
 					<xsl:apply-templates select="ContentDetail/ActivityLog" mode="activityReport"/>
@@ -10254,10 +10254,14 @@
         </textarea>
 
         <a href="{$appPath}?ewCmd=ScheduledItemRunNow&amp;type={$page/Request/QueryString/Item[@name='type']/node()}&amp;id={$page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-success btn-xs">
-          <i class="fa fa-play">&#160;</i>&#160;Run Again
+          <i class="fa fa-play">
+			  <xsl:text> </xsl:text>
+		  </i>&#160;Run Again
         </a>
         <a href="{$appPath}?ewCmd=ScheduledItems" class="btn btn-success btn-xs">
-          <i class="fa fa-chevron-left">&#160;</i>&#160;Back to List
+          <i class="fa fa-chevron-left">
+			  <xsl:text> </xsl:text>
+		  </i>&#160;Back to List
         </a>
       </div>
     </div>
