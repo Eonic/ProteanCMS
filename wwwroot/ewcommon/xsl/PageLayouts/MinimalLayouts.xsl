@@ -685,7 +685,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="moduleBox">
-	  mod box
+	  <!--mod box-->
     <xsl:choose>
       <xsl:when test="@linkBox='true'">
         <div id="mod_{@id}" class="module">

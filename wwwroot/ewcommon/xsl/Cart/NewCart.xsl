@@ -21,8 +21,7 @@
       <input type="submit" name="cartBrief" value="Continue Shopping" class="button continue"/>
       <input type="submit" name="cartUpdate" value="Update Order" class="button update"/>
       <input type="submit" name="cartQuit" value="Empty Order" class="button empty"/>
-      <div class="terminus">&#160;  
-	  </div>
+      <div class="terminus">&#160;</div>
     </form>
     </div>
   </xsl:template>

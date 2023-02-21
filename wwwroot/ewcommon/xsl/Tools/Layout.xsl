@@ -145,15 +145,9 @@
           <div class="navbar-header xs-only">
             <xsl:if test="not($currentPage/DisplayName[@nonav='true'])">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-                <span class="icon-bar">
-                  <xsl:text> </xsl:text>
-                </span>
-                <span class="icon-bar">
-                  <xsl:text> </xsl:text>
-                </span>
-                <span class="icon-bar">
-                  <xsl:text> </xsl:text>
-                </span>
+                <span class="icon-bar">&#160;</span>
+                <span class="icon-bar">&#160;</span>
+                <span class="icon-bar">&#160;</span>
               </button>
             </xsl:if>
             <!--~~~~~~~~~~~~~~~~ XS HEADER ~~~~~~~~~~~~~~~~-->
@@ -390,15 +384,9 @@
                   <div class="row">
                     <div class="navbar-header xs-only">
                       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-                        <span class="icon-bar">
-                          <xsl:text> </xsl:text>
-                        </span>
-                        <span class="icon-bar">
-                          <xsl:text> </xsl:text>
-                        </span>
-                        <span class="icon-bar">
-                          <xsl:text> </xsl:text>
-                        </span>
+                        <span class="icon-bar">&#160;</span>
+                        <span class="icon-bar">&#160;</span>
+                        <span class="icon-bar">&#160;</span>
                       </button>
                       <!--~~~~~~~~~~~~~~~~ XS HEADER ~~~~~~~~~~~~~~~~-->
                       <div class="navbar-brand">
@@ -463,9 +451,7 @@
                             <xsl:if test="$HomeNav='true' or $HomeInfo='true'">
                               <li class="first">
                                 <a href="/">
-                                  <i class="icon icon-home icon-lg">
-                                    <xsl:text> </xsl:text>
-                                  </i>
+                                  <i class="icon icon-home icon-lg">&#160;</i>
                                   Home
                                 </a>
                               </li>
@@ -533,9 +519,7 @@
         <div class="xs-search pull-right">
           <div class="dropdown">
             <a data-toggle="dropdown" href="#" class="search-xs-btn">
-              <i class="fa fa-search fa-2x">
-                <xsl:text> </xsl:text>
-              </i>
+              <i class="fa fa-search fa-2x">&#160;</i>
             </a>
             <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
               <span>
@@ -546,9 +530,7 @@
                     <input type="hidden" name="searchFormId" value="8923" />
                     <input type="text" class="CTAsearch" name="searchString" id="searchStringxs" value="" />
                     <button type="submit" class="btn btn-sm btn-primary CTAsearch_button" name="Search" value="Submit">
-                      <i class="fa fa-search">
-                        <xsl:text> </xsl:text>
-                      </i>
+                      <i class="fa fa-search">&#160;</i>
                     </button>
                   </form>
                 </div>
@@ -578,15 +560,9 @@
               <div class="navbar navbar-default">
                 <div class="navbar-header">
                   <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-                    <span class="icon-bar">
-                      <xsl:text> </xsl:text>
-                    </span>
-                    <span class="icon-bar">
-                      <xsl:text> </xsl:text>
-                    </span>
-                    <span class="icon-bar">
-                      <xsl:text> </xsl:text>
-                    </span>
+                    <span class="icon-bar">&#160;</span>
+                    <span class="icon-bar">&#160;</span>
+                    <span class="icon-bar">&#160;</span>
                   </button>
                   <!--~~~~~~~~~~~~~~~~ LOGO ~~~~~~~~~~~~~~~~-->
                   <div class="navbar-brand">
@@ -769,15 +745,9 @@
                 <div class="row">
                   <div class="navbar-header xs-only">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-                      <span class="icon-bar">
-                        <xsl:text> </xsl:text>
-                      </span>
-                      <span class="icon-bar">
-                        <xsl:text> </xsl:text>
-                      </span>
-                      <span class="icon-bar">
-                        <xsl:text> </xsl:text>
-                      </span>
+                      <span class="icon-bar">&#160;</span>
+                      <span class="icon-bar">&#160;</span>
+                      <span class="icon-bar">&#160;</span>
                     </button>
                     <!--~~~~~~~~~~~~~~~~ XS HEADER ~~~~~~~~~~~~~~~~-->
                     <div class="navbar-brand">
@@ -844,9 +814,7 @@
                           <xsl:if test="$HomeNav='true' or $HomeInfo='true'">
                             <li class="first">
                               <a href="/">
-                                <i class="icon icon-home icon-lg">
-                                  <xsl:text> </xsl:text>
-                                </i>
+                                <i class="icon icon-home icon-lg">&#160;</i>
                                 Home
                               </a>
                             </li>
@@ -911,15 +879,9 @@
           <div class="container">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main" aria-expanded="false">
               <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar">
-                <xsl:text> </xsl:text>
-              </span>
-              <span class="icon-bar">
-                <xsl:text> </xsl:text>
-              </span>
-              <span class="icon-bar">
-                <xsl:text> </xsl:text>
-              </span>
+              <span class="icon-bar"><xsl:text> </xsl:text></span>
+              <span class="icon-bar"><xsl:text> </xsl:text></span>
+              <span class="icon-bar"><xsl:text> </xsl:text></span>
             </button>
             <div class="navbar-brand">
               <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
@@ -1075,9 +1037,7 @@
   <xsl:template match="/" mode="cartBrief1">
     <div id="cartBrief">
       <div class="cartinfo">
-        <i class="fa fa-shopping-basket fa-3x cart-icon">
-          <xsl:text> </xsl:text>
-        </i>
+        <i class="fa fa-shopping-basket fa-3x cart-icon">&#160;</i>
         <xsl:text> </xsl:text>
         <xsl:choose>
           <xsl:when test="/Page/Cart/Order/@itemCount &gt; 0">
@@ -1094,8 +1054,7 @@
             </span>
           </xsl:when>
           <xsl:otherwise>
-            <span id="itemCount">
-              <xsl:text>0&#160;</xsl:text>
+            <span id="itemCount">&#160;
               <span id="itemCountLabel">
                 <xsl:text>items</xsl:text>
               </span>
@@ -1110,9 +1069,7 @@
         </xsl:choose>
         <br />
         <a class=""  href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
-          View basket&#160;<i class="fa fa-chevron-right">
-            <xsl:text> </xsl:text>
-          </i>
+          View basket&#160;<i class="fa fa-chevron-right">&#160;</i>
         </a>
       </div>
     </div>
@@ -1122,9 +1079,7 @@
     <div id="cartBriefxs">
       <div class="dropdown">
         <a data-toggle="dropdown" href="#">
-          <i class="fa fa-shopping-basket fa-2x">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-shopping-basket fa-2x">&#160;</i>
         </a>
         <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
           <span class="basket-inner">
@@ -1151,17 +1106,14 @@
                     </span>
                   </span>
                   <span id="itemTotal">
-                    <xsl:text>&#160; </xsl:text>
-                    <xsl:value-of select="/Page/Cart/@currencySymbol"/>
+                   &#160;<xsl:value-of select="/Page/Cart/@currencySymbol"/>
                     <xsl:text>0.00</xsl:text>
                   </span>
                 </xsl:otherwise>
               </xsl:choose>
             </p>
             <a class="btn btn-sm btn-primary"  href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
-              View basket&#160;<i class="fa fa-chevron-right">
-                <xsl:text> </xsl:text>
-              </i>
+              View basket&#160;<i class="fa fa-chevron-right">&#160;</i>
             </a>
           </span>
         </div>
@@ -1173,9 +1125,7 @@
     <div id="cartBrief">
       <div class="cartinfo">
         <a href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
-          <i class="fa fa-shopping-basket">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-shopping-basket">&#160;</i>
           <xsl:text> </xsl:text>
           <xsl:choose>
             <xsl:when test="/Page/Cart/Order/@itemCount &gt; 0">
@@ -1206,9 +1156,7 @@
               </span>
             </xsl:otherwise>
           </xsl:choose>
-          <i class="fa fa-chevron-right">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-chevron-right">&#160;</i>
         </a>
       </div>
     </div>
@@ -1218,9 +1166,7 @@
     <div id="cartBriefxs">
       <div class="dropdown">
         <a data-toggle="dropdown" href="#">
-          <i class="fa fa-shopping-basket">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-shopping-basket">&#160;</i>
         </a>
         <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
           <span class="basket-inner">
@@ -1254,9 +1200,7 @@
               </xsl:choose>
             </p>
             <a class=""  href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
-              View basket&#160;<i class="fa fa-chevron-right">
-                <xsl:text> </xsl:text>
-              </i>
+              View basket&#160;<i class="fa fa-chevron-right">&#160;</i>
             </a>
           </span>
         </div>
@@ -1268,9 +1212,7 @@
     <div id="cartBrief">
       <div class="cartinfo">
         <a class=""  href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
-          <i class="fa fa-shopping-basket">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-shopping-basket">&#160;</i>
           <xsl:text> </xsl:text>
           <xsl:choose>
             <xsl:when test="/Page/Cart/Order/@itemCount &gt; 0">
@@ -1303,9 +1245,7 @@
             </xsl:otherwise>
           </xsl:choose>
           <xsl:text> </xsl:text>
-          <i class="fa fa-chevron-right">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-chevron-right">&#160;</i>
         </a>
       </div>
     </div>
@@ -1315,9 +1255,7 @@
     <div id="cartBriefxs ">
       <div class="dropdown">
         <a data-toggle="dropdown" href="#">
-          <i class="fa fa-shopping-basket fa-2x">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-shopping-basket fa-2x">&#160;</i>
         </a>
         <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
           <span class="basket-inner">
@@ -1356,9 +1294,7 @@
               </xsl:choose>
             </p>
             <a class=""  href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
-              View basket&#160;<i class="fa fa-chevron-right">
-                <xsl:text> </xsl:text>
-              </i>
+              View basket&#160;<i class="fa fa-chevron-right">&#160;</i>
             </a>
           </span>
         </div>
@@ -1424,9 +1360,7 @@
         <p class="loginText">
           <xsl:choose>
             <xsl:when test="/Page/User">
-              <i class="fa fa-user fa-3x logged-in-icon">
-                <xsl:text> </xsl:text>
-              </i>
+              <i class="fa fa-user fa-3x logged-in-icon">&#160;</i>
               <xsl:apply-templates select="/" mode="loggedIn" />
               <a href="/Information/Manage-Account">Manage Account</a>
               <span>
@@ -1435,9 +1369,7 @@
               <a href="?ewCmd=logoff">Log Out</a>
             </xsl:when>
             <xsl:otherwise>
-              <i class="fa fa-user fa-3x logged-in-icon">
-                <xsl:text> </xsl:text>
-              </i>
+              <i class="fa fa-user fa-3x logged-in-icon">&#160;</i>
               <xsl:text>Welcome:&#160;</xsl:text>
               <strong>
                 <xsl:text>Guest</xsl:text>
@@ -1445,9 +1377,7 @@
               <br/>
               <a href="/Information/Login-Register" class="">
                 Sign in / Register&#160;
-                <i class="fa fa-chevron-right">
-                  <xsl:text> </xsl:text>
-                </i>
+                <i class="fa fa-chevron-right">&#160;</i>
               </a>
             </xsl:otherwise>
           </xsl:choose>
@@ -1461,9 +1391,7 @@
 
       <div class="dropdown">
         <a data-toggle="dropdown" href="#">
-          <i class="fa fa-user fa-2x">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-user fa-2x">&#160;</i>
         </a>
         <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
           <span class="membership-inner">
@@ -1488,24 +1416,18 @@
                 <xsl:when test="/Page/User">
 
                   <a href="/Information/Manage-Account">
-                    Manage Account&#160;<i class="fa fa-chevron-right">
-                      <xsl:text> </xsl:text>
-                    </i>
+                    Manage Account&#160;<i class="fa fa-chevron-right">&#160;</i>
                   </a>
                   <br />
                   <a href="?ewCmd=logoff">
-                    Log Out&#160;<i class="fa fa-chevron-right">
-                      <xsl:text> </xsl:text>
-                    </i>
+                    Log Out&#160;<i class="fa fa-chevron-right">&#160;</i>
                   </a>
 
                 </xsl:when>
                 <xsl:otherwise>
                   <a href="/Information/Login-Register" class="">
                     Sign in / Register&#160;
-                    <i class="fa fa-chevron-right">
-                      <xsl:text> </xsl:text>
-                    </i>
+                    <i class="fa fa-chevron-right">&#160;</i>
                   </a>
                 </xsl:otherwise>
               </xsl:choose>
@@ -1532,9 +1454,7 @@
             </xsl:when>
             <xsl:otherwise>
               <a href="/Information/Login-Register" class="">
-                <i class="fa fa-user">
-                  <xsl:text> </xsl:text>
-                </i>
+                <i class="fa fa-user">&#160;</i>
                 <xsl:text> </xsl:text>
                 <xsl:text>Welcome:&#160;</xsl:text>
                 <strong>
@@ -1542,8 +1462,7 @@
                 </strong>
                 <!--Sign in / Register&#160;-->
                 <xsl:text> </xsl:text>
-                <i class="fa fa-chevron-right">
-                </i>
+                <i class="fa fa-chevron-right">&#160;</i>
               </a>
             </xsl:otherwise>
           </xsl:choose>
@@ -1557,9 +1476,7 @@
 
       <div class="dropdown">
         <a data-toggle="dropdown" href="#">
-           <i class="fa fa-user">
-            <xsl:text> </xsl:text>
-          </i>
+           <i class="fa fa-user">&#160;</i>
         </a>
         <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
           <span class="membership-inner">
@@ -1586,23 +1503,17 @@
                 <xsl:when test="/Page/User">
 
                   <a href="/Information/Manage-Account">
-                    Manage Account&#160;<i class="fa fa-chevron-right">
-                      <xsl:text> </xsl:text>
-                    </i>
+                    Manage Account&#160;<i class="fa fa-chevron-right">&#160;</i>
                   </a>
                   <br />
                   <a href="?ewCmd=logoff">
-                    Log Out&#160;<i class="fa fa-chevron-right">
-                      <xsl:text> </xsl:text>
-                    </i>
+                    Log Out&#160;<i class="fa fa-chevron-right">&#160;</i>
                   </a>
                 </xsl:when>
                 <xsl:otherwise>
                   <a href="/Information/Login-Register" class="">
                     Sign in / Register&#160;
-                    <i class="fa fa-chevron-right">
-                      <xsl:text> </xsl:text>
-                    </i>
+                    <i class="fa fa-chevron-right">&#160;</i>
                   </a>
                 </xsl:otherwise>
               </xsl:choose>
@@ -1646,9 +1557,7 @@
       </xsl:if>
       <div id="signinxs">
         <a class="loginText login-small">
-          <i class="fa fa-user fa-2x">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-user fa-2x">&#160;</i>
         </a>
       </div>
     </div>
@@ -1703,11 +1612,7 @@
       <xsl:if test="alert">
         <!--<xsl:apply-templates select="alert" mode="xform"/>-->
         <div class="alert alert-warning pull-left">
-          <i class="fa fa-exclamation-triangle">
-            <xsl:text> </xsl:text>
-          </i>
-          <xsl:text> </xsl:text>
-          <xsl:value-of select="descendant-or-self::alert"/>
+          <i class="fa fa-exclamation-triangle">&#160;</i>&#160;<xsl:value-of select="descendant-or-self::alert"/>
         </div>
       </xsl:if>
       <div class="username">
@@ -1735,9 +1640,7 @@
         <input type="hidden" name="searchFormId" value="8923" />
         <input type="text" class="CTAsearch" name="searchString" id="searchStringxs" value="" />
         <button type="submit" class="btn btn-sm btn-primary CTAsearch_button" name="Search" value="Submit">
-          <i class="fa fa-search">
-            <xsl:text> </xsl:text>
-          </i>
+          <i class="fa fa-search">&#160;</i>
           <span class="sr-only">Search</span>
         </button>
       </form>
@@ -1747,9 +1650,7 @@
   <xsl:template match="/" mode="searchBriefxs">
     <div class="dropdown">
       <a data-toggle="dropdown" href="#" class="search-xs-btn">
-        <i class="fa fa-search fa-2x">
-          <xsl:text> </xsl:text>
-        </i>
+        <i class="fa fa-search fa-2x">&#160;</i>
         <span class="sr-only">Expand search section</span>
       </a>
       <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -1761,9 +1662,7 @@
               <input type="hidden" name="searchFormId" value="8923" />
               <input type="text" class="CTAsearch" name="searchString" id="searchStringxs" value="" />
               <button type="submit" class="btn btn-sm btn-primary CTAsearch_button" name="Search" value="Submit">
-                <i class="fa fa-search">
-                  <xsl:text> </xsl:text>
-                </i>
+                <i class="fa fa-search">&#160;</i>
                 <span class="sr-only">Search</span>
               </button>
             </form>
@@ -2071,10 +1970,16 @@
 
   <!-- -->
   <xsl:template match="/" mode="pager-arrow-left">
-    <i class="fa fa-chevron-left">&#160;</i>&#160;<xsl:call-template name="term2099"/>
+    <i class="fa fa-chevron-left">
+		<xsl:text> </xsl:text>
+	</i>
+	  <xsl:text> </xsl:text><xsl:call-template name="term2099"/>
   </xsl:template>
   <xsl:template match="/" mode="pager-arrow-right">
-    <xsl:call-template name="term2100"/>&#160;<i class="fa fa-chevron-right">&#160;</i>
+    <xsl:call-template name="term2100"/>
+	  <xsl:text> </xsl:text><i class="fa fa-chevron-right">
+		<xsl:text> </xsl:text>
+	</i>
   </xsl:template>
 
 </xsl:stylesheet>

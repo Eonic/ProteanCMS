@@ -169,7 +169,7 @@
       <xsl:call-template name="getContentParURL"/>
     </xsl:variable>
     <div class="row" id="order-addresses">
-
+		<xsl:text> </xsl:text>
       <xsl:if test="Contact[@type='Billing Address']">
         <div class="col-md-6">
           <div id="billingAddress" class="cartAddress box Default-Box">

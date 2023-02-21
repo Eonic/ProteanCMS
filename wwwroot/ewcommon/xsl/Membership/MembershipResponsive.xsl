@@ -936,6 +936,7 @@
       <xsl:call-template name="getContentParURL"/>
     </xsl:variable>
     <div class="row" id="order-addresses">
+		<xsl:text> </xsl:text>
       <div class="col-md-4">
         <h4>Order Details</h4>
         <dl class="dl-horizontal">

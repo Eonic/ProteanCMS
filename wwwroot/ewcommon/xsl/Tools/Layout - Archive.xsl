@@ -2069,10 +2069,14 @@
 
   <!-- -->
   <xsl:template match="/" mode="pager-arrow-left">
-    <i class="fa fa-chevron-left">&#160;</i>&#160;<xsl:call-template name="term2099"/>
+    <i class="fa fa-chevron-left">
+		<xsl:text> </xsl:text>
+	</i>&#160;<xsl:call-template name="term2099"/>
   </xsl:template>
   <xsl:template match="/" mode="pager-arrow-right">
-    <xsl:call-template name="term2100"/>&#160;<i class="fa fa-chevron-right">&#160;</i>
+    <xsl:call-template name="term2100"/>&#160;<i class="fa fa-chevron-right">
+		<xsl:text> </xsl:text>
+	</i>
   </xsl:template>
 
 </xsl:stylesheet>
