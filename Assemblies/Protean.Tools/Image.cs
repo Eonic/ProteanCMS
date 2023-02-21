@@ -10,6 +10,7 @@ using static Protean.Tools.Text;
 using TinifyAPI;
 using Exception = System.Exception;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text.RegularExpressions;
 
 namespace Protean.Tools
 {
@@ -204,7 +205,7 @@ namespace Protean.Tools
             {
 
                 cPath = cPath.Replace("/","\\");
-                cPath = cPath.Replace("\\\\", "\\");
+               // cPath = cPath.Replace("\\\\", "\\");
 
                 // check the compression ratio
                 if (nCompression > 100)
@@ -662,11 +663,26 @@ namespace Protean.Tools
                     eps.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
                     string cEncoder = "image/jpeg";
                     var ici = GetEncoderInfo(cEncoder);
+
+                    if (File.Exists(szFileName)) {
+                        File.Delete(szFileName);
+                    }
+
                     try
                     {
                         if (theImg != null)
                         {
-                            theImg.Save(szFileName, ici, eps);
+                            // TS Added to avoid GDI+ Errors
+
+                            var newImg = new Bitmap(theImg);
+                            theImg.Dispose();
+                            theImg = default;
+                            newImg.Save(szFileName, ici, eps);
+                            newImg.Dispose();
+
+                           // theImg.Save(szFileName, ici, eps);
+
+
                         }
                     }
 
@@ -679,6 +695,7 @@ namespace Protean.Tools
                         theImg.Dispose();
                         theImg = default;
                         newImg.Save(szFileName, ici, eps);
+                        newImg.Dispose();
 
                     }
 
