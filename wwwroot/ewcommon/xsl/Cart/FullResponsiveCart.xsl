@@ -89,6 +89,7 @@
       <xsl:apply-templates select="." mode="orderProgressLegend"/>
       <xsl:apply-templates select="." mode="orderAlert"/>
       <xsl:apply-templates select="." mode="orderProcess"/>
+
       <div class="terminus">&#160; <xsl:text></xsl:text></div>
     </div>
   </xsl:template>
