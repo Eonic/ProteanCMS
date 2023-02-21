@@ -1182,9 +1182,7 @@
             <xsl:if test="@status='1'">
               <li>
                 <a href="?ewCmd=HidePage&amp;pgid={@id}" title="Click here to hide this page">
-                  <i class="fa fa-times-circle">
-                    <xsl:text> </xsl:text>
-                  </i>
+                  <i class="fa fa-times-circle">&#160;</i>
                   <xsl:text> </xsl:text>Hide
                 </a>
               </li>
@@ -2381,9 +2379,7 @@
                   <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='HideContent']">
                     <li>
                       <a href="?ewCmd=HideContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to hide this item">
-                        <i class="fa fa-times-circle">
-                          <xsl:text> </xsl:text>
-                        </i>
+                        <i class="fa fa-times-circle">&#160;</i>
                         <xsl:text> </xsl:text>Hide
                       </a>
                     </li>

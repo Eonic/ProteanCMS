@@ -151,10 +151,13 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-admin-navbar-collapse-1">
                   <span class="sr-only">Toggle navigation</span>
                   <span class="icon-bar">
+					  <xsl:text> </xsl:text>
                   </span>
                   <span class="icon-bar">
+					  <xsl:text> </xsl:text>
                   </span>
                   <span class="icon-bar">
+					  <xsl:text> </xsl:text>
                   </span>
                 </button>
                 <a class="navbar-brand" href="#">
@@ -164,7 +167,9 @@
                   <span class="visible-xs xs-admin-switch">
                     <span class="sectionName">Setup Panel</span>
                     <span class="switch">
-                      switch <i class="fa fa-ellipsis-v"></i>
+                      switch <i class="fa fa-ellipsis-v">
+						  <xsl:text> </xsl:text>
+					  </i>
                     </span>
                   </span>
                 </a>
