@@ -356,16 +356,16 @@ namespace Protean.Tools
                 }
                 else
                 {
-                    double nPercent;
+                    float nPercent;
                     if (nWidth > 0)
                     {
-                        nPercent = nWidth / oImg.Width;
+                        nPercent = (float)nWidth / (float)oImg.Width;
                         nNewWidth = Convert.ToInt32(oImg.Width * nPercent);
                         nNewHeight = Convert.ToInt32(oImg.Height * nPercent);
                     }
                     else
                     {
-                        nPercent = nHeight / oImg.Height;
+                        nPercent = (float)nHeight / (float)oImg.Height;
                         nNewWidth = Convert.ToInt32(oImg.Width * nPercent);
                         nNewHeight = Convert.ToInt32(oImg.Height * nPercent);
                     }
@@ -395,8 +395,8 @@ namespace Protean.Tools
 
                     // NB 13th April 2010 Changes!
 
-                    double nXCalc = oImg.Width / nMaxWidth;
-                    double yXCalc = oImg.Height / nMaxHeight;
+                    float nXCalc = (float)oImg.Width / (float)nMaxWidth;
+                    float yXCalc = (float)oImg.Height / (float)nMaxHeight;
 
 
                     if (bNoStretch == false)
