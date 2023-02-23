@@ -131,7 +131,7 @@ Namespace Providers
 
                     End If
 
-                    oXform.addDiv(oFromGroup, "", " form-group select-group histogramSlider", True)
+                    'oXform.addDiv(oFromGroup, "", "form-group select-group histogramSlider", True)
                     oXform.addInput(oFromGroup, "", False, sCotrolDisplayName, "histogramSliderMainDiv")
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
