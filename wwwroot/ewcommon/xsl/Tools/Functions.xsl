@@ -5240,6 +5240,7 @@
   <xsl:template name="status_legend">
     <xsl:param name="status"/>
     <i class="status" title="none">
+    <xsl:text> </xsl:text>
       <xsl:choose>
         <xsl:when test="$status=0">
           <xsl:attribute name="class">
@@ -5286,7 +5287,7 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
-      &#160;</i>
+   </i>
   </xsl:template>
 
 
@@ -10562,7 +10563,9 @@
       <xsl:choose>
         <xsl:when test="(contains($userAgent, 'MSIE 7.0') or contains($userAgent, 'MSIE 8.0') or contains($userAgent, 'MSIE 9.0'))">
           <xsl:if test="$ie8mode='1'">
-            <link rel="stylesheet" type="text/css" href="{$first}" />
+			  <link rel="stylesheet" type="text/css" href="{$first}" >
+				  <xsl:text> </xsl:text>
+			  </link>
           </xsl:if>
           <xsl:call-template name="render-css-files">
             <xsl:with-param name="list" select="$remaining" />
@@ -10575,9 +10578,12 @@
 					<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'"/>
+					<link rel="preload" href="{$first}{$bundleVersion}" as="style" onload="this.rel='stylesheet'">
+						<xsl:text> </xsl:text>
+					</link>
 					<noscript>
-						<link rel="stylesheet" href="{$first}{$bundleVersion}"/>
+						<link rel="stylesheet" href="{$first}{$bundleVersion}"><xsl:text> </xsl:text>
+					</link>
 					</noscript>
 				</xsl:otherwise>
 			</xsl:choose>

@@ -145,9 +145,15 @@
           <div class="navbar-header xs-only">
             <xsl:if test="not($currentPage/DisplayName[@nonav='true'])">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-                <span class="icon-bar">&#160;</span>
-                <span class="icon-bar">&#160;</span>
-                <span class="icon-bar">&#160;</span>
+                <span class="icon-bar">
+                  <xsl:text> </xsl:text>
+                </span>
+                <span class="icon-bar">
+                  <xsl:text> </xsl:text>
+                </span>
+                <span class="icon-bar">
+                  <xsl:text> </xsl:text>
+                </span>
               </button>
             </xsl:if>
             <!--~~~~~~~~~~~~~~~~ XS HEADER ~~~~~~~~~~~~~~~~-->
