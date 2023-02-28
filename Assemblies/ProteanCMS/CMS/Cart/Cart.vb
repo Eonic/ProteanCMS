@@ -6678,20 +6678,20 @@ processFlow:
                                         nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
                                     End If
 
-                                    If (UniqueProduct) Then
+                                    'If (UniqueProduct) Then
 
-                                        If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
-                                            giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
-                                            oProdXml.DocumentElement.AppendChild(giftMessageNode)
-                                        Else
-                                            ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
-                                        End If
-                                    End If
+                                    '    If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                    '        giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                    '        oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                    '    Else
+                                    '        ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                    '    End If
+                                    'End If
 
                                     'Add Parent Product to cart if SKU.add
                                     If cContentType = "SKU" Or cContentType = "Ticket" Then
                                         'Then we need to add the Xml for the ParentProduct.
-                                        Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
+                                        Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where nContentChildId =" & nProductId & "Order by nContentParentId desc")
 
                                         Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
                                         Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
