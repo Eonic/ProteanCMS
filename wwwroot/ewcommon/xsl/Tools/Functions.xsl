@@ -461,11 +461,8 @@
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
         <!-- common css -->
-		  <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
-       
-
+		<xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
-
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
@@ -492,8 +489,9 @@
 	
 		
   <xsl:template match="Page" mode="criticalPathCSS">
-   
-      <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
+	  <style>
+        <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
+	  </style>
   </xsl:template>
 
   <xsl:template match="Page" mode="alternatePages">
@@ -687,8 +685,11 @@
 
 
   <xsl:template match="Page" mode="js">
+	  <xsl:param name="async"/>
     <!-- bring in jQuery and standard plugins -->
-    <xsl:apply-templates select="." mode="commonJs" />
+    <xsl:apply-templates select="." mode="commonJs">
+	    <xsl:with-param name="async" select="$async"/>
+	 </xsl:apply-templates>
 
     <!-- site specific javascripts -->
     <xsl:apply-templates select="." mode="siteJs"/>
@@ -719,6 +720,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="commonJs">
+	  <xsl:param name="async"/>
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
         <xsl:apply-templates select="." mode="commonJsFiles" />
@@ -726,6 +728,7 @@
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Jquery</xsl:text>
       </xsl:with-param>
+	<xsl:with-param name="async" select="$async"/>  
     </xsl:call-template>
   </xsl:template>
 
@@ -5286,7 +5289,8 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
-      &#160;</i>
+      <xsl:text> </xsl:text>
+    </i>
   </xsl:template>
 
 
@@ -7833,23 +7837,22 @@
     <xsl:param name="imageRetinaUrl"/>
     <!--New image tags-->
     <source type="{$type}" media="{$media}" srcset="{ew:replacestring($imageUrl,' ','%20')} 1x, {$imageRetinaUrl} 2x" >
-      <!--<xsl:choose>
+      <xsl:choose>
         <xsl:when test="$lazy='on'">
-          <xsl:attribute name="data-src">
+          <xsl:attribute name="data-srcset">
             <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
           </xsl:attribute>
-          <xsl:attribute name="src">
+          <xsl:attribute name="srcset">
             <xsl:value-of select="$lazyplaceholder"/>
           </xsl:attribute>
         </xsl:when>
-        <xsl:otherwise>-->
-          <xsl:attribute name="src">
+        <xsl:otherwise>
+          <xsl:attribute name="srcset">
             <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
           </xsl:attribute>
-		<!--
         </xsl:otherwise>
       </xsl:choose>
--->
+
       <xsl:attribute name="srcset">
         <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
         <xsl:if test="imageRetinaUrl!=''">
@@ -7863,11 +7866,9 @@
         <xsl:if test="$class!=''">
           <xsl:value-of select="$class" />
         </xsl:if>
-		  <!--
         <xsl:if test="$lazy='on'">
           <xsl:text> lazy</xsl:text>
         </xsl:if>
-		-->
       </xsl:attribute>
       <xsl:if test="$style!=''">
         <xsl:attribute name="style">
@@ -10526,7 +10527,7 @@
     <xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
     <xsl:if test="$first!=''">
       <script type="{$scriptType}" src="{$first}{$bundleVersion}">
-        <xsl:if test="$async!=''">
+        <xsl:if test="$async!='' and not($adminMode)">
           <xsl:attribute name="async">async</xsl:attribute>
         </xsl:if>
         <xsl:text>/* */</xsl:text>

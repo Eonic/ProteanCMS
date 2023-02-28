@@ -15556,7 +15556,7 @@
               <xsl:if test="position()=1">
                 <xsl:attribute name="class">active</xsl:attribute>
               </xsl:if>
-              
+              <xsl:text> </xsl:text>
             </li>
           </xsl:for-each>
         </ol>
@@ -15658,7 +15658,7 @@
               <xsl:if test="position()=1">
                 <xsl:attribute name="class">active</xsl:attribute>
               </xsl:if>
-              
+              <xsl:text> </xsl:text>
             </li>
           </xsl:for-each>
         </ol>
