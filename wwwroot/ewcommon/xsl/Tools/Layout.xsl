@@ -145,9 +145,15 @@
           <div class="navbar-header xs-only">
             <xsl:if test="not($currentPage/DisplayName[@nonav='true'])">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-                <span class="icon-bar">&#160;</span>
-                <span class="icon-bar">&#160;</span>
-                <span class="icon-bar">&#160;</span>
+                <span class="icon-bar">
+                  <xsl:text> </xsl:text>
+                </span>
+                <span class="icon-bar">
+                  <xsl:text> </xsl:text>
+                </span>
+                <span class="icon-bar">
+                  <xsl:text> </xsl:text>
+                </span>
               </button>
             </xsl:if>
             <!--~~~~~~~~~~~~~~~~ XS HEADER ~~~~~~~~~~~~~~~~-->
@@ -384,9 +390,15 @@
                   <div class="row">
                     <div class="navbar-header xs-only">
                       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-                        <span class="icon-bar">&#160;</span>
-                        <span class="icon-bar">&#160;</span>
-                        <span class="icon-bar">&#160;</span>
+                        <span class="icon-bar">
+                          <xsl:text> </xsl:text>
+                        </span>
+                        <span class="icon-bar">
+                          <xsl:text> </xsl:text>
+                        </span>
+                        <span class="icon-bar">
+                          <xsl:text> </xsl:text>
+                        </span>
                       </button>
                       <!--~~~~~~~~~~~~~~~~ XS HEADER ~~~~~~~~~~~~~~~~-->
                       <div class="navbar-brand">
@@ -451,7 +463,9 @@
                             <xsl:if test="$HomeNav='true' or $HomeInfo='true'">
                               <li class="first">
                                 <a href="/">
-                                  <i class="icon icon-home icon-lg">&#160;</i>
+                                  <i class="icon icon-home icon-lg">
+                                    <xsl:text> </xsl:text>
+                                  </i>
                                   Home
                                 </a>
                               </li>
