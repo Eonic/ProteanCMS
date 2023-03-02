@@ -160,7 +160,7 @@
             <p class="tel">
               <strong>
                 <xsl:call-template name="term2007" />
-                <xsl:text>:&#160;</xsl:text>
+                <xsl:text>: </xsl:text>
               </strong>
               <xsl:apply-templates select="Telephone" mode="displayBrief"/>
             </p>
@@ -169,7 +169,7 @@
             <p class="mobile">
               <strong>
                 <xsl:call-template name="term2080" />
-                <xsl:text>:&#160;</xsl:text>
+                <xsl:text>: </xsl:text>
               </strong>
               <xsl:apply-templates select="Mobile" mode="displayBrief"/>
             </p>
@@ -217,7 +217,9 @@
             <xsl:apply-templates select="." mode="moreLink">
               <xsl:with-param name="link" select="$parentURL"/>
               <xsl:with-param name="altText">
-                <xsl:value-of select="Headline/node()"/>
+                <xsl:value-of select="GivenName/node()"/>
+				  <xsl:text> </xsl:text>
+				  <xsl:value-of select="Surname/node()"/>
               </xsl:with-param>
             </xsl:apply-templates>
             <xsl:text> </xsl:text>
