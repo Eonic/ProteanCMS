@@ -1738,7 +1738,7 @@
 					</label>
 					</div>
 					<div class="col-md-6">
-						
+						<xsl:text> </xsl:text>
 					</div>
 					<div class="col-md-3">
 				<xsl:choose>
