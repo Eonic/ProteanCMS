@@ -284,23 +284,25 @@
 						<xsl:value-of select="$sitename"/>
 					</span>
 				</span>
-				<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
-				<xsl:if test="@publish!=''">
-					<p class="date" itemprop="datePublished">
-						<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-						<xsl:call-template name="DisplayDate">
-							<xsl:with-param name="date" select="@publish"/>
-						</xsl:call-template>
-					</p>
-				</xsl:if>
-				<xsl:if test="@update!=''">
-					<p class="hidden" itemprop="dateModified">
-						<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-						<xsl:call-template name="DisplayDate">
-							<xsl:with-param name="date" select="@update"/>
-						</xsl:call-template>
-					</p>
-				</xsl:if>
+				<span class="news-brief-info">
+					<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
+					<xsl:if test="@publish!=''">
+						<p class="date" itemprop="datePublished">
+							<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+							<xsl:call-template name="DisplayDate">
+								<xsl:with-param name="date" select="@publish"/>
+							</xsl:call-template>
+						</p>
+					</xsl:if>
+					<xsl:if test="@update!=''">
+						<p class="hidden" itemprop="dateModified">
+							<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+							<xsl:call-template name="DisplayDate">
+								<xsl:with-param name="date" select="@update"/>
+							</xsl:call-template>
+						</p>
+					</xsl:if>
+				</span>
 
 				<xsl:if test="Strapline/node()!=''">
 					<div class="summary" itemprop="description">
