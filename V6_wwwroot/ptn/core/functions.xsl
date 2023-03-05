@@ -279,6 +279,63 @@
 		</xsl:if>
 	</xsl:variable>
 
+	<!-- IMAGE SIZE DEFAULTS -->
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">100</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">100</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xxs">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xxs">768</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">768</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">496</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">
+		<xsl:apply-templates select="." mode="getThWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-md">
+		<xsl:apply-templates select="." mode="getThHeight"/>
+	</xsl:template>
+
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">496</xsl:template>
+
+	<!-- Get Sub Page Thumbnail Dimensions -->
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">100</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThHeight">100</xsl:template>
+
+	<!-- To fit if submenu -->
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">300</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">400</xsl:template>
+
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-xxs">768</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-xs">768</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-sm">496</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
+		<xsl:apply-templates select="." mode="getDisplayWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-md">
+		<xsl:apply-templates select="." mode="getDisplayWidth"/>
+	</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-lg">496</xsl:template>
+
+	<!-- To fit 800x600 - fits nicely inside any screen ratio -->
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeWidth">750</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeHeight">550</xsl:template>
+
+
 	<!-- Cal Cmd for Calendars -->
 	<xsl:variable name="calendarMonth">
 		<xsl:choose>
@@ -7297,61 +7354,6 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!-- -->
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">100</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">100</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xxs">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xxs">768</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">768</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">496</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">
-		<xsl:apply-templates select="." mode="getThWidth"/>
-	</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-md">
-		<xsl:apply-templates select="." mode="getThHeight"/>
-	</xsl:template>
-
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">496</xsl:template>
-
-	<!-- Get Sub Page Thumbnail Dimensions -->
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">100</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThHeight">100</xsl:template>
-
-	<!-- To fit if submenu -->
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">300</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">400</xsl:template>
-
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">768</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">496</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
-		<xsl:apply-templates select="." mode="getDisplayWidth"/>
-	</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
-		<xsl:apply-templates select="." mode="getDisplayWidth"/>
-	</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
-
-	<!-- To fit 800x600 - fits nicely inside any screen ratio -->
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeWidth">750</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeHeight">550</xsl:template>
 
 	<!-- resize image template for Image Content and Modules -->
 	<xsl:template match="Content" mode="resize-image">

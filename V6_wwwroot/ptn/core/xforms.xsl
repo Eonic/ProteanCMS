@@ -609,35 +609,39 @@
         </xsl:otherwise>
       </xsl:choose>
 
-      <xsl:choose>
-        <xsl:when test="$classVal='alert-success'">
-          <i class="fa fa-check fa-2x pull-left">
-            <xsl:text> </xsl:text>
-          </i>
-        </xsl:when>
-        <xsl:when test="$classVal!=''">
-          <i class="fa fa-exclamation-triangle  pull-left">
-            <xsl:text> </xsl:text>
-          </i>
-        </xsl:when>
-        <xsl:otherwise>
-          <i class="fa fa-exclamation-circle  pull-left">
-            <xsl:text> </xsl:text>
-          </i>
-        </xsl:otherwise>
-      </xsl:choose>
-      <xsl:text>&#160;&#160;</xsl:text>
-      <span class="alert-msg">
+
+
         <xsl:choose>
           <xsl:when test="span[contains(@class,'msg-')]">
             <!-- Send to system translations templates -->
-            <xsl:apply-templates select="span" mode="term"/>
+			  <xsl:apply-templates select="span" mode="term-alert">
+				  <xsl:with-param select="$classVal" name="classVal"/>
+			  </xsl:apply-templates>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+			  <xsl:choose>
+				  <xsl:when test="$classVal='alert-success'">
+					  <i class="fa fa-check fa-2x pull-left">
+						  <xsl:text> </xsl:text>
+					  </i>
+				  </xsl:when>
+				  <xsl:when test="$classVal!=''">
+					  <i class="fa fa-exclamation-triangle  pull-left">
+						  <xsl:text> </xsl:text>
+					  </i>
+				  </xsl:when>
+				  <xsl:otherwise>
+					  <i class="fa fa-exclamation-circle  pull-left">
+						  <xsl:text> </xsl:text>
+					  </i>
+				  </xsl:otherwise>
+			  </xsl:choose>
+			  <xsl:text>&#160;&#160;</xsl:text>
+          <span class="alert-msg">
+                <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+          </span>
           </xsl:otherwise>
         </xsl:choose>
-      </span>
     </div>
   </xsl:template>
   <!-- -->
@@ -2849,7 +2853,19 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
-    <input type="range" id="{$ref}" name="{$ref}" class="form-range" min="{@start}" max="{@end}" step="{@step}">
+	  [
+	  <span class="range-min">
+		  <xsl:value-of select="@start"/>
+	  </span>
+	  &#160;-&#160;
+	  <span class="range-max">
+		  <xsl:value-of select="@end"/>
+	  </span>
+	  ]
+	  <div class="row from-range-group">
+		  <div class="col-md-9">
+    <input type="range" id="{$ref}" name="{$ref}" class="form-range" min="{@start}" max="{@end}" step="{@step}" oninput="$('#{$ref}-input').val(this.value)">
+
       <xsl:if test="@size!=''">
         <xsl:attribute name="size">
           <xsl:value-of select="@size"/>
@@ -2868,13 +2884,15 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
+		
     </input>
-	  <span class="range-min">
-		  <xsl:value-of select="@start"/>
-	  </span>
-	  <span class="range-max">
-		  <xsl:value-of select="@end"/>
-	  </span>
+			</div>
+			  <div class="col-md-3">
+	<input type="number" id="{$ref}-input" name="{$ref}-input" class="form-control short" min="{@start}" max="{@end}" oninput="$('#{$ref}').val(this.value)" value="{value/node()}"/>
+</div>
+			</div>
+	
+
     <!--<div class="slider">
       <span class="max">
         <xsl:value-of select="@end"/>
@@ -2979,6 +2997,32 @@
     </legend>
   </xsl:template>
 
+
+	<xsl:template match="span" mode="term-alert">
+		<xsl:param name="classVal"/>
+		<div class="alert-msg">
+			<xsl:choose>
+				<xsl:when test="$classVal='alert-success'">
+					<i class="fa fa-check fa-2x pull-left">
+						<xsl:text> </xsl:text>
+					</i>
+				</xsl:when>
+				<xsl:when test="$classVal!=''">
+					<i class="fa fa-exclamation-triangle  pull-left">
+						<xsl:text> </xsl:text>
+					</i>
+				</xsl:when>
+				<xsl:otherwise>
+					<i class="fa fa-exclamation-circle  pull-left">
+						<xsl:text> </xsl:text>
+					</i>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:text>&#160;&#160;</xsl:text>
+		    <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+		</div>
+	</xsl:template>
+	
   <xsl:template match="label" mode="xform">
     <label class="form-label">
       <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
@@ -3360,9 +3404,9 @@
 
   <xsl:template match="alert" mode="inlineAlert">
     <div class="alert-wrapper help-block">
-      <i class="fa fa-exclamation-triangle">
-        <xsl:text> </xsl:text>
-      </i>
+			<i class="fa fa-exclamation-triangle">
+				<xsl:text> </xsl:text>
+			</i>
       <xsl:text> </xsl:text>
       <xsl:choose>
         <xsl:when test="span[contains(@class,'msg-')]">
@@ -3370,6 +3414,7 @@
           <xsl:apply-templates select="span" mode="term"/>
         </xsl:when>
         <xsl:otherwise>
+
           <xsl:apply-templates select="node()" mode="cleanXhtml"/>
         </xsl:otherwise>
       </xsl:choose>
