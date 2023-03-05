@@ -323,6 +323,12 @@ section.bg-primary {
         }
     }
 
+    .detail-text {
+        max-width: 45rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .author {
         display: flex;
         align-items: center;

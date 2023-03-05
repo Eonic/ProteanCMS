@@ -5549,7 +5549,7 @@
 				<div class="center-block center-large">
 
 					<xsl:if test="@icon!=''">
-						<i>
+						<i role="img" aria-hidden="true">
 							<xsl:attribute name="class">
 								<xsl:text>fa fa-3x center-block </xsl:text>
 								<xsl:value-of select="@icon"/>
@@ -5559,7 +5559,7 @@
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
-						<span class="upload-icon">
+						<span class="upload-icon" role="img" aria-hidden="true">
 							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
 						</span>
 					</xsl:if>
