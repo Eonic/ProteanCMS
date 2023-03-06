@@ -1170,7 +1170,10 @@
           <xsl:text> is-invalid</xsl:text>
         </xsl:if>
       </xsl:attribute>
-      <xsl:if test="@data-fv-not-empty='true'">
+      <xsl:if test="@data-fv-not-empty='true' or contains(@class,'required')">
+		  <xsl:attribute name="aria-required">
+			  <xsl:text>true</xsl:text>
+		  </xsl:attribute>
         <xsl:attribute name="required">
           <xsl:text>required</xsl:text>
         </xsl:attribute>

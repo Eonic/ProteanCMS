@@ -690,6 +690,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="moduleBox">
+	  <!--mod box-->
     <xsl:choose>
       <xsl:when test="@linkBox='true'">
         <div id="mod_{@id}" class="module">
@@ -746,7 +747,7 @@
                 <xsl:apply-templates select="." mode="marginBelow" />
               </xsl:attribute>
               <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
-                <div class="panel-image">!!
+                <div class="panel-image">
                   <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
                 </div>
               </xsl:if>
@@ -2136,9 +2137,7 @@
           </xsl:if>
           <h3 class="panel-title">
             <!--<i class="fa fa-ellipsis-v">&#160;</i>-->
-            <i class="fa fa-caret-down">
-              <xsl:text> </xsl:text>
-            </i>
+            <i class="fa fa-caret-down">&#160;</i>
             <span class="space">&#160;</span>
             <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
             <xsl:value-of select="@title"/>
@@ -2952,12 +2951,15 @@
            </xsl:otherwise>
         </xsl:choose>
        </xsl:variable>
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
-      <script type="text/javascript">
-        <xsl:text>function initialiseGMaps(){</xsl:text>
-        <xsl:apply-templates select="." mode="initialiseGoogleMap"/>
-        <xsl:text>};</xsl:text>
-      </script>
+
+      	  <xsl:if test="not(following-sibling::Content[@type='Module' and @moduleType='GoogleMapv3'])">
+		  <script type="text/javascript">
+            <xsl:text>function initialiseGMaps(){</xsl:text>
+            <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="initialiseGoogleMap"/>
+            <xsl:text>};</xsl:text>
+          </script>
+		  <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps">&#160;</script>
+	  </xsl:if>
   </xsl:template>
 
 	<xsl:template match="Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]" mode="contentDetailJS">
@@ -12860,7 +12862,7 @@
         </div>
         <xsl:apply-templates select="Content[@type='Review']" mode="displayBrief">
           <xsl:sort select="@publish" order="ascending"/>
-          <xsl:sort select="@update" order="ascending"/>
+			<xsl:sort select="@update" order="ascending"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
@@ -15562,7 +15564,7 @@
               <xsl:if test="position()=1">
                 <xsl:attribute name="class">active</xsl:attribute>
               </xsl:if>
-              
+              <xsl:text> </xsl:text>
             </li>
           </xsl:for-each>
         </ol>
@@ -15664,7 +15666,7 @@
               <xsl:if test="position()=1">
                 <xsl:attribute name="class">active</xsl:attribute>
               </xsl:if>
-              
+              <xsl:text> </xsl:text>
             </li>
           </xsl:for-each>
         </ol>

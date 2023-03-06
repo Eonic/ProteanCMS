@@ -152,6 +152,7 @@
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
       </xsl:with-param>
+		<xsl:with-param name="async" select="true()"/>
     </xsl:call-template>
  
     <xsl:apply-templates select="." mode="siteAdminJs"/>
@@ -272,7 +273,8 @@
           </i>
         </a>
         </div>
-        <div class="terminus"> </div>
+        <div class="terminus">
+			<xsl:text></xsl:text> </div>
       </div>
     </div>
   </xsl:template>
@@ -592,7 +594,7 @@
 
    
     </div>
-    <div class="terminus">&#160; <xsl:text></xsl:text></div>
+    <div class="terminus">&#160;</div>
     <xsl:if test="not(/Page[@ewCmd='Normal'])">
       <!--<div id="breadcrumb">-->
       <ol class="breadcrumb admin-breadcrumb">
@@ -1181,9 +1183,7 @@
             <xsl:if test="@status='1'">
               <li>
                 <a href="?ewCmd=HidePage&amp;pgid={@id}" title="Click here to hide this page">
-                  <i class="fa fa-times-circle">
-                    <xsl:text> </xsl:text>
-                  </i>
+                  <i class="fa fa-times-circle">&#160;</i>
                   <xsl:text> </xsl:text>Hide
                 </a>
               </li>
@@ -1658,14 +1658,14 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
-    <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
-      <xsl:attribute name="class">
+ <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
+      <!--<xsl:attribute name="class">
         <xsl:text>moduleContainer</xsl:text>
         <xsl:if test="$class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="$class"/>
         </xsl:if>
-      </xsl:attribute>
+      </xsl:attribute>-->
       <xsl:if test="not(/Page/Contents/Content[@position = $position])">
         <div class="ewAdmin options addmodule">
           <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
@@ -1684,7 +1684,7 @@
     <xsl:if test="/Page/Contents/Content[@position = $position]">
       <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
     </xsl:if>
-
+	  <xsl:text> </xsl:text>
   </xsl:template>
 
   <xsl:template match="Page" mode="addMailModule">
@@ -2380,9 +2380,7 @@
                   <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='HideContent']">
                     <li>
                       <a href="?ewCmd=HideContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to hide this item">
-                        <i class="fa fa-times-circle">
-                          <xsl:text> </xsl:text>
-                        </i>
+                        <i class="fa fa-times-circle">&#160;</i>
                         <xsl:text> </xsl:text>Hide
                       </a>
                     </li>

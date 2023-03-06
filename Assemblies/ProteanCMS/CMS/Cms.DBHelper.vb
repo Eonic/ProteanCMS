@@ -274,6 +274,7 @@ Partial Public Class Cms
 
             indexkey = 200
             'indexdefkey = 201
+            nShipProdCatRelKey = 202
         End Enum
 
         Enum TableNames
@@ -322,7 +323,7 @@ Partial Public Class Cms
 
             'tblContentIndex = 200
             tblContentIndexDef = 200
-
+            tblCartShippingProductCategoryRelations = 202
         End Enum
 
         Enum PermissionLevel
@@ -697,7 +698,8 @@ Partial Public Class Cms
                     'Add new key id for Index def table by nita
                 Case 200
                     Return "nContentIndexDefKey"
-
+                Case 202
+                    Return "nShipProdCatRelKey"
 
             End Select
             Return strReturn
@@ -9523,6 +9525,73 @@ restart:
             End Try
         End Function
 
+        Public Function saveProductShippingGroupDirRelation(ByVal nShippingMethodId As Integer, ByVal nCatKeys As String, Optional ByVal bInsert As Boolean = True, Optional ByVal nRuleType As PermissionLevel = PermissionLevel.Open) As String
+            PerfMonLog("DBHelper", "saveShippingDirRelation")
+            Try
+                Dim cGroups() As String = Split(nCatKeys, ",")
+                Dim nI As Integer
+                Dim cNewIds As String = ""
+                Dim bDeny As Boolean = False
+                ' Dim nRuleType As Integer = "1"
+                If checkTableColumnExists("tblCartShippingProductCategoryRelations", "nRuleType") Then
+                    bDeny = True
+                    Select Case nRuleType
+                        Case PermissionLevel.Denied
+                            nRuleType = 2
+                        Case Else
+                            nRuleType = 1
+                    End Select
+                End If
+
+                For nI = 0 To UBound(cGroups)
+                    nCatKeys = CInt(cGroups(nI))
+                    If bInsert Then
+                        'if exists then  return the id
+                        Dim cSQL As String = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " & nShippingMethodId & " And nCatId = " & nCatKeys
+                        Dim nId As Integer = ExeProcessSqlScalar(cSQL)
+                        If nId > 0 Then Return nId
+
+                        'Logic to rmove relations if an "all" entry exists, or other way round
+                        If nCatKeys > 0 Then
+                            'remove any "all" record
+                            cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " & nShippingMethodId & " And nCatId = 0"
+                            Me.DeleteObject(objectTypes.nShipProdCatRelKey, ExeProcessSqlScalar(cSQL))
+                        Else
+                            'remove any specific record
+                            cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " & nShippingMethodId & " And nCatId > 0"
+                            Using oDre As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                Do While oDre.Read
+                                    Me.DeleteObject(objectTypes.nShipProdCatRelKey, oDre(0))
+                                Loop
+                            End Using
+                        End If
+                        If bDeny Then
+                            cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values(" &
+                                nShippingMethodId & "," &
+                                nCatKeys & "," &
+                                nRuleType & "," &
+                                Me.getAuditId(1, , "CartShippingProductCategoryRelations") & ")"
+
+
+                        Else
+                            cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values(" &
+                                                   nShippingMethodId & "," &
+                                                   nCatKeys & "," &
+                                                   nRuleType & "," &
+                                                   Me.getAuditId(1, , "CartShippingProductCategoryRelations") & ")"
+                        End If
+
+                        cNewIds &= GetIdInsertSql(cSQL) & ","
+                    Else
+                        cNewIds &= DeleteObject(objectTypes.nShipProdCatRelKey, nCatKeys) & ","
+                    End If
+                Next
+                Return Left(cNewIds, cNewIds.Length - 1)
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "saveProductShippingGroupDirRelation", ex, ""))
+                Return 0
+            End Try
+        End Function
 
         Public Function saveDiscountProdGroupRelation(ByVal nDiscountId As Integer, ByVal cProductgroups As String, Optional ByVal bInsert As Boolean = True) As String
             PerfMonLog("DBHelper", "saveDiscountProdGroupRelation")

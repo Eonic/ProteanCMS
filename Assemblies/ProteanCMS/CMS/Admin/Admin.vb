@@ -3764,6 +3764,10 @@ AfterProcessFlow:
                         sAdminLayout = "AdminXForm"
                         oPageDetail.AppendChild(moAdXfm.xFrmShippingDirRelations(myWeb.moRequest.QueryString("id"), ""))
 
+                    Case "ShippingGroup"
+                        sAdminLayout = "AdminXForm"
+                        oPageDetail.AppendChild(moAdXfm.xFrmProductShippingGroupRelations(myWeb.moRequest.QueryString("id"), ""))
+
                     Case "delete"
                         'xFrmDeleteDeliveryMethod
                         oPageDetail.AppendChild(moAdXfm.xFrmDeleteDeliveryMethod(myWeb.moRequest("id")))
@@ -4082,7 +4086,7 @@ listItems:
                             GoTo listItems
                         End If
                         GoTo listItems
-                    Case "updateAllRules", "update"
+                    Case "updateAllRules"
 
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
 
@@ -4099,7 +4103,37 @@ listItems:
                             End If
                         End If
                         GoTo listItems
+                    Case "update"
 
+                        If Not myWeb.moRequest("SchemaName") = Nothing Then
+                            SchemaNameForUpdate = myWeb.moRequest("SchemaName")
+                            If Not moConfig("FilterIndexITBCust") = "" Then
+                                sSql = "spUpdateFilterIndex"
+                                Dim arrParms As Hashtable = New Hashtable
+                                arrParms.Add("SchemaName", SchemaNameForUpdate)
+                                arrParms.Add("IndexId", indexId)
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
+                                If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                    oPageDetail.InnerXml = ""
+                                    indexId = Nothing
+                                    GoTo listItems
+                                End If
+                            Else
+
+                                sSql = "spScheduleToUpdateIndexTable"
+                                Dim arrParms As Hashtable = New Hashtable
+                                arrParms.Add("SchemaName", SchemaNameForUpdate)
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
+                                If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                    oPageDetail.InnerXml = ""
+                                    indexId = Nothing
+                                    GoTo listItems
+                                End If
+                            End If
+                        End If
+                        GoTo listItems
 
                     Case Else
 listItems:

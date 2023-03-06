@@ -9,12 +9,18 @@
         <div class="modal-dialog">
           <div class="modal-content  alert alert-danger" role="alert">
             <div class="modal-body">
-              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
-              <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
+              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">
+				  <xsl:text> </xsl:text>
+			  </i>
+             
               <button type="button" class="close" data-dismiss="modal">
-                <i class="fa fa-times">&#160;</i>
+                <i class="fa fa-times">
+					<xsl:text> </xsl:text>
+				</i>
               </button>
-              <span id="errorMessage">&#160;</span>
+              <span id="errorMessage">
+				  <xsl:text> </xsl:text>
+			  </span>
             </div>
           </div>
         </div>
@@ -127,7 +133,7 @@
 
         </p>
       </xsl:if>
-      <div class="terminus">&#160; <xsl:text></xsl:text></div>
+      <div class="terminus">&#160;</div>
     </form>
   </xsl:template>
 
@@ -166,7 +172,7 @@
             <!-- Terminus needed for CHROME ! -->
             <!-- Terminus needed for BREAKS IE 7! -->
             <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus">&#160; <xsl:text></xsl:text></div>
+              <div class="terminus">&#160;</div>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
@@ -185,7 +191,7 @@
               <!-- Terminus needed for CHROME ! -->
               <!-- Terminus needed for BREAKS IE 7! -->
               <xsl:if test="$browserVersion!='MSIE 7.0'">
-                <div class="terminus">&#160; <xsl:text></xsl:text></div>
+                <div class="terminus">&#160;</div>
               </xsl:if>
             </div>
           </xsl:otherwise>
@@ -324,7 +330,8 @@
           <xsl:if test="*/alert or */hint or */help">
             <div class="pt-row">
               <xsl:if test="label">
-                <div class="pt-col ">&#160;<xsl:text></xsl:text>
+                <div class="pt-col ">
+					<xsl:text>&#160;</xsl:text>
 			</div>
               </xsl:if>
               <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt"/>
@@ -3348,7 +3355,7 @@
         <xsl:value-of select="$ref"/>
       </span>
     </div>
-    <div class="terminus">&#160; <xsl:text></xsl:text></div>
+    <div class="terminus">&#160;</div>
   </xsl:template>
   <!-- -->
   <!-- ========================== CONTROL : UPLOAD ========================== -->
@@ -3946,11 +3953,14 @@
   </xsl:template>
   
  <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
-    <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css" />
+	 <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css">
+		 <xsl:text> </xsl:text>
+	 </link>
     <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
       <xsl:text> </xsl:text>
     </script>
-     <script>
+	 
+    	<script type="text/javascript">
       $(document).ready(function () {
       <xsl:for-each select="descendant::input[contains(@class,'telephone')]">
        <xsl:variable name="ref">

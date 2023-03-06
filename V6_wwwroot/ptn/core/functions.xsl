@@ -5653,8 +5653,8 @@
           Thumbnail, Details and Fullsizes.
   -->
 	<xsl:template match="Content | MenuItem | Discount | productDetail" mode="displayThumbnail">
-		<xsl:param name="crop" select="false()" />
-		<xsl:param name="no-stretch" select="true()" />
+		<xsl:param name="crop" select="true()" />
+		<xsl:param name="no-stretch" select="false()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
 		<xsl:param name="forceResize"/>
@@ -5782,7 +5782,7 @@
 
 	<xsl:template name="displayResponsiveImage">
 		<xsl:param name="crop"/>
-		<xsl:param name="no-stretch" select="true()" />
+		<xsl:param name="no-stretch" select="false()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
 		<xsl:param name="max-width-xxs"/>
@@ -9237,7 +9237,7 @@
 								<xsl:with-param name="file-suffix" select="''"/>
 								<xsl:with-param name="quality" select="100"/>
 								<xsl:with-param name="crop" select="false" />
-								<xsl:with-param name="no-stretch" select="true" />
+								<xsl:with-param name="no-stretch" select="false" />
 								<xsl:with-param name="forceResize" select="false" />
 							</xsl:call-template>
 						</xsl:if>
@@ -9335,7 +9335,7 @@
 											<xsl:with-param name="file-suffix" select="''"/>
 											<xsl:with-param name="quality" select="100"/>
 											<xsl:with-param name="crop" select="false" />
-											<xsl:with-param name="no-stretch" select="true" />
+											<xsl:with-param name="no-stretch" select="false" />
 											<xsl:with-param name="forceResize" select="false" />
 										</xsl:call-template>
 									</xsl:if>
