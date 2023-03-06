@@ -33,6 +33,7 @@
       <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cModuleBox" nodeset="@background" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
       <bind id="backgroundImage" nodeset="@backgroundImage" required="false()" type="string"/>

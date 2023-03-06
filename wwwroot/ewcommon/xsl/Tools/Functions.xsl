@@ -195,6 +195,41 @@
     </xsl:call-template>
   </xsl:variable>
 
+	<xsl:template name="eonicwebLogo">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebLogo']/@value!=''">
+				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>/ewcommon/images/admin/skin/protean-admin-white.png</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="eonicwebCMSName">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebCMSName']/@value!=''">
+				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebCMSName']/@value"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="eonicwebProductName"/>
+				<xsl:text> - Content Management System</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="eonicwebProductName">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Protean</xsl:text>
+				<strong>CMS</strong>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <xsl:variable name="siteURL">
     <xsl:variable name="baseUrl">
       <xsl:call-template name="getXmlSettings">

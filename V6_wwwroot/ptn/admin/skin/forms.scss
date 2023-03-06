@@ -84,7 +84,9 @@ form.xform {
         font-size: 1rem;
     }
 
-    .time-divider{padding: 6px 12px 0;}
+    .time-divider {
+        padding: 6px 12px 0;
+    }
     //ACCORDION FORM
     .accordion {
         box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
@@ -139,6 +141,19 @@ form.xform {
                     }
                 }
             }
+        }
+    }
+
+    .alert-msg {
+        padding-left: 50px;
+    }
+    .from-range-group {
+        input[type=number] {
+            padding: 0.375rem 0.375rem;
+        }
+
+        input[type=number]::-webkit-inner-spin-button {
+            opacity: 1;
         }
     }
 
