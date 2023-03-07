@@ -440,7 +440,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Newtonsoft.Json.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Owin.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\PayPal.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\PreMailer.Net.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Renci.SshNet.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Buffers.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.dll
@@ -450,8 +449,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodeP
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\WebGrease.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll.config
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AdvancedStringBuilder.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.xml
@@ -1379,13 +1376,10 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.SassAndS
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.Core.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.V8.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\LibSassHost.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\QRCoder.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Memory.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Numerics.Vectors.dll
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\MySql.Data.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JsonWebTokens.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Tinify.dll
@@ -1396,12 +1390,9 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.SassAndS
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.Core.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.V8.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\LibSassHost.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-x64.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET.Core.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Buffers.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Memory.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Numerics.Vectors.xml
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\MySql.Data.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-arm64.dll
@@ -1520,3 +1511,8 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.Co
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-arm64.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x86.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.xml

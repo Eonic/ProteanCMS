@@ -2578,7 +2578,7 @@ if (editProductElement > 0) {
 function CompressImage(path) {
     var dataMsg = 'Filename=' + path;
   //  debugger;
-    showAdminAlert("<h2>Compressing Image</h2><br/><h3>Please Wait...<h3>");
+    showAdminAlert("Compressing Image - Please Wait...");
     $.ajax({
         url: '/ewapi/Cms.Admin/CompressImage',
         data: dataMsg,

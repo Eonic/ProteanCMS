@@ -9,12 +9,19 @@
         <div class="modal-dialog">
           <div class="modal-content  alert alert-danger" role="alert">
             <div class="modal-body">
-              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+				<xsl:text> </xsl:text>
+              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">
+				  <xsl:text> </xsl:text>
+			  </i>
               <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
               <button type="button" class="close" data-dismiss="modal">
-                <i class="fa fa-times"> &#160;</i>
+                <i class="fa fa-times">
+					<xsl:text> </xsl:text>
+				</i>
               </button>
-              <span id="errorMessage"></span>
+              <span id="errorMessage">
+				  <xsl:text> </xsl:text>
+			  </span>
             </div>
           </div>
         </div>
@@ -117,7 +124,7 @@
                 </span>
               </xsl:if>
               <xsl:apply-templates select="submit" mode="xform"/>
-              <!--<div class="clearfix">&#160;</div>-->
+              <!--<div class="clearfix">&#160; </div>-->
             </div>
           </xsl:if>
         </xsl:otherwise>
@@ -184,6 +191,7 @@
             </xsl:when>
             <xsl:when test="contains(@class,'2col5050') or contains(@class,'2Col5050') ">
               <div class="row">
+				  <xsl:text> </xsl:text>
                 <xsl:for-each select="group | repeat">
                   <xsl:apply-templates select="." mode="xform">
                     <xsl:with-param name="class">
@@ -227,7 +235,7 @@
               </span>
             </xsl:if>
             <xsl:apply-templates select="submit" mode="xform"/>
-            <!--<div class="clearfix">&#160;</div>-->
+            <!--<div class="clearfix">&#160; </div>-->
           </div>
         </xsl:if>
       </xsl:for-each>
@@ -324,7 +332,7 @@
             <!-- Terminus needed for CHROME ! -->
             <!-- Terminus needed for BREAKS IE 7! -->
             <xsl:if test="$browserVersion!='MSIE 7.0'">
-              <div class="terminus">&#160; <xsl:text></xsl:text></div>
+              <div class="terminus">&#160;</div>
             </xsl:if>
           </xsl:when>
           <xsl:otherwise>
@@ -343,7 +351,7 @@
               <!-- Terminus needed for CHROME ! -->
               <!-- Terminus needed for BREAKS IE 7! -->
               <xsl:if test="$browserVersion!='MSIE 7.0'">
-                <div class="terminus">&#160; <xsl:text></xsl:text></div>
+                <div class="terminus">&#160;</div>
               </xsl:if>
             </div>
           </xsl:otherwise>
@@ -519,6 +527,7 @@
           </div>
           <div id="colapse-{$mybind}-{position()}" role="tabpanel" aria-labelledby="heading-{$mybind}-{position()}" class="panel-collapse collapse">
             <div class="panel-body">
+				<xsl:text> </xsl:text>
               <xsl:apply-templates select="." mode="xform"/>
             </div>
           </div>
@@ -537,6 +546,7 @@
       </div>
     </xsl:if>
     <fieldset class="row">
+		<xsl:text> </xsl:text>
       <xsl:if test="label and ancestor::group">
         <legend class="col-md-12">
           <xsl:copy-of select="label/node()"/>
@@ -562,6 +572,7 @@
     <xsl:if test="label and not(parent::Content)">
       <div class="panel-heading">
         <h3 class="panel-title">
+			<xsl:text> </xsl:text>
           <xsl:copy-of select="label/node()"/>
         </h3>
       </div>
@@ -575,6 +586,7 @@
         </div>
       </xsl:if>
       <div class="row">
+		  <xsl:text> </xsl:text>
         <xsl:for-each select="group">
           <xsl:apply-templates select="." mode="xform">
             <xsl:with-param name="class">
@@ -595,11 +607,13 @@
       <xsl:if test="label and ancestor::group">
         <div class="row">
           <legend class="col-md-12">
+			  <xsl:text> </xsl:text>
             <xsl:copy-of select="label/node()"/>
           </legend>
         </div>
       </xsl:if>
       <div class="row">
+		  <xsl:text> </xsl:text>
         <xsl:for-each select="group">
           <xsl:apply-templates select="." mode="xform">
             <xsl:with-param name="class">
@@ -641,11 +655,13 @@
           <xsl:apply-templates select="." mode="xform_control"/>
           <xsl:if test="help">
             <span class="input-group-btn">
+				<xsl:text> </xsl:text>
               <xsl:apply-templates select="." mode="infoButton"/>
             </span>
           </xsl:if>
           <xsl:if test="hint">
             <span class="input-group-btn">
+				<xsl:text> </xsl:text>
               <xsl:apply-templates select="." mode="hintButton"/>
             </span>
           </xsl:if>
@@ -702,6 +718,7 @@
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
     <div class="popover-{$ref2} popoverContent" role="tooltip">
+		<xsl:text> </xsl:text>
       <xsl:copy-of select="help/node()"/>
     </div>
     <button type="button" class="btn btn-info" data-contentwrapper=".popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="left" rel="frmPopover" data-original-title="{label/node()}" title="{label/node()}">
@@ -720,6 +737,7 @@
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
     <div class="popover-{$ref2} popoverContent" role="tooltip">
+		<xsl:text> </xsl:text>
       <xsl:copy-of select="hint/node()"/>
     </div>
     <button type="button" class="btn btn-primary" data-contentwrapper=".popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="left" rel="frmPopover" data-original-title="{label/node()}" title="{label/node()}">
@@ -748,6 +766,7 @@
       <xsl:value-of select="value/node()"/>
     </xsl:variable>
     <div class="form-inline">
+		<xsl:text> </xsl:text>
       <!-- when Query to get select options -->
       <xsl:choose>
         <xsl:when test="contains(@class,'ewQuery')">
@@ -814,11 +833,13 @@
       </xsl:when>
       <xsl:when test="contains(@class,'hidden')">
         <div class="form-group hidden">
+			<xsl:text> </xsl:text>
           <xsl:apply-templates select="." mode="xform"/>
         </div>
       </xsl:when>
       <xsl:otherwise>
         <div>
+			<xsl:text> </xsl:text>
           <xsl:attribute name="class">
             <xsl:choose>
               <xsl:when test="name()='div'">
@@ -882,6 +903,7 @@
       <xsl:text>-dependant</xsl:text>
     </xsl:variable>
     <div class="form-inline">
+		<xsl:text> </xsl:text>
       <xsl:apply-templates select="item | choices" mode="xform_radiocheck">
         <xsl:with-param name="type">radio</xsl:with-param>
         <xsl:with-param name="ref" select="$ref"/>
@@ -908,7 +930,7 @@
     <xsl:param name="dependantClass" />
 
     <div id="{translate(@id,'[]#=/','')}-dependant">
-
+		<xsl:text> </xsl:text>
 
       <!-- IF CHOSEN CASE - HIDE-->
       <xsl:attribute name="class">
@@ -1021,6 +1043,7 @@
     <!--<xsl:attribute name="class">pickByImage</xsl:attribute>-->
     <!--<input type="hidden" name="{$ref}" value="{value/node()}"/>-->
     <div class="pickByImage" id="accordion">
+		<xsl:text> </xsl:text>
       <xsl:apply-templates select="item | choices" mode="xform_imageClick">
         <xsl:with-param name="type">radio</xsl:with-param>
         <xsl:with-param name="ref" select="$ref"/>
@@ -1053,6 +1076,7 @@
         </div>
       </a>
       <div id="collapse{$makeClass}">
+		  <xsl:text> </xsl:text>
         <xsl:attribute name="class">
           <xsl:text>panel-collapse collapse panel-body</xsl:text>
           <xsl:if test="position()=1">
@@ -1060,6 +1084,7 @@
           </xsl:if>
         </xsl:attribute>
         <div class=" row choices">
+			<xsl:text> </xsl:text>
           <xsl:apply-templates select="item" mode="xform_imageClick">
             <xsl:with-param name="ref" select="$ref"/>
           </xsl:apply-templates>
@@ -1177,6 +1202,7 @@
 
     </xsl:variable>
     <div>
+		<xsl:text> </xsl:text>
       <xsl:if test="@id!=''">
         <xsl:attribute name="id">
           <xsl:value-of select="@id"/>
@@ -1273,7 +1299,9 @@
   <xsl:template match="item" mode="xform_PickIcon">
     <xsl:param name="ref"/>
     <div data-value="{value/node()}">
-      <i class="fa {value/node()} fa-lg">&#160;</i>
+      <i class="fa {value/node()} fa-lg">
+		  <xsl:text> </xsl:text>
+	  </i>
     </div>
   </xsl:template>
 
@@ -1283,6 +1311,7 @@
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
     <div class="bfh-selectbox boxStyle" data-name="{$ref}" data-value="{value/node()}">
+		<xsl:text> </xsl:text>
       <xsl:apply-templates select="item" mode="xform_BoxStyles"/>
       <xsl:apply-templates select="." mode="siteBoxStyles">
         <xsl:with-param name="value" select="value/node()" />
@@ -1296,6 +1325,7 @@
   <xsl:template match="item" mode="xform_BoxStyles">
     <xsl:param name="ref"/>
     <div data-value="{value/node()}">
+		<xsl:text> </xsl:text>
       <xsl:value-of select="label/node()"/>
     </div>
   </xsl:template>
@@ -1482,7 +1512,7 @@
     </xsl:variable>
 
     <div class="bfh-selectbox cssStyle" data-name="{$ref}" data-value="{value/node()}">
-
+		<xsl:text> </xsl:text>
       <xsl:apply-templates select="." mode="siteCssStyles">
         <xsl:with-param name="value" select="value/node()" />
       </xsl:apply-templates>
@@ -1496,6 +1526,7 @@
   <xsl:template match="item" mode="xFormCssStyles">
     <xsl:param name="ref"/>
     <div data-value="{value/node()}">
+		<xsl:text> </xsl:text>
       <xsl:value-of select="label/node()"/>
     </div>
   </xsl:template>
@@ -1506,6 +1537,7 @@
       <div class="Site">
         <div class="tp-caption {value/node()}">
           <span>
+			  <xsl:text> </xsl:text>
             <xsl:value-of select="label/node()"/>
           </span>
         </div>

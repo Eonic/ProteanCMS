@@ -385,7 +385,7 @@
 
       </div>
 
-      <div class="terminus">&#160; <xsl:text></xsl:text></div>
+      <div class="terminus">&#160;</div>
 
       <!--<xsl:if test="Content[@type='LibraryImage']">
         <h2>
