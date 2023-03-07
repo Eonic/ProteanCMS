@@ -3876,7 +3876,7 @@
 					<xsl:text> dropdown dropdown-hover-menu</xsl:text>
 				</xsl:attribute>
 			</xsl:if>
-			<a href="{@url}" id="mainNavDD{@id}">
+			<a href="{@url}" id="mainNavDD{@id}" role="button">
 				<xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
 				<xsl:attribute name="class">
