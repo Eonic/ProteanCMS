@@ -1658,14 +1658,14 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
-    <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
-      <xsl:attribute name="class">
+ <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
+      <!--<xsl:attribute name="class">
         <xsl:text>moduleContainer</xsl:text>
         <xsl:if test="$class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="$class"/>
         </xsl:if>
-      </xsl:attribute>
+      </xsl:attribute>-->
       <xsl:if test="not(/Page/Contents/Content[@position = $position])">
         <div class="ewAdmin options addmodule">
           <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
@@ -1684,7 +1684,7 @@
     <xsl:if test="/Page/Contents/Content[@position = $position]">
       <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
     </xsl:if>
-
+	  <xsl:text> </xsl:text>
   </xsl:template>
 
   <xsl:template match="Page" mode="addMailModule">

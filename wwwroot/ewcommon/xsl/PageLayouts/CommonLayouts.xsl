@@ -3681,6 +3681,7 @@
         </xsl:attribute>
       </xsl:if>
       <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+		  <xsl:text> </xsl:text>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -6837,6 +6838,7 @@
         </xsl:attribute>
       </xsl:if>
       <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+		  <xsl:text> </xsl:text>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -8517,24 +8519,26 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="clearfix Links">
-      <xsl:if test="@carousel='true'">
-        <xsl:attribute name="class">
-          <xsl:text>clearfix Links content-scroller</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}">
-        <xsl:if test="@autoplay !=''">
-          <xsl:attribute name="data-autoplay">
-            <xsl:value-of select="@autoplay"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@autoPlaySpeed !=''">
-          <xsl:attribute name="data-autoPlaySpeed">
-            <xsl:value-of select="@autoPlaySpeed"/>
-          </xsl:attribute>
-        </xsl:if>
+	  <xsl:if test="@carousel='true'">
+		  <xsl:attribute name="class">
+			  <xsl:text>clearfix Links content-scroller</xsl:text>
+		  </xsl:attribute>
+	  </xsl:if>
+	  <xsl:if test="@autoplay !=''">
+		  <xsl:attribute name="data-autoplay">
+			  <xsl:value-of select="@autoplay"/>
+		  </xsl:attribute>
+	  </xsl:if>
+	  <xsl:if test="@autoPlaySpeed !=''">
+		  <xsl:attribute name="data-autoPlaySpeed">
+			  <xsl:value-of select="@autoPlaySpeed"/>
+		  </xsl:attribute>
+	  </xsl:if>
 
+	  <div class="clearfix Links">
+	 <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}">
+		   
+       
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="linkList" select="$contentList"/>
@@ -8547,6 +8551,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
   </xsl:template>
@@ -8814,6 +8819,7 @@
       </xsl:if>
 
       <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" height="{@carouselHeight}">
+		  <xsl:text> </xsl:text>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>

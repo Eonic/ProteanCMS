@@ -42,6 +42,7 @@ namespace Protean.Tools
 
             catch (Exception ex)
             {
+                ex = null;
                 return new Hashtable();
             }
 

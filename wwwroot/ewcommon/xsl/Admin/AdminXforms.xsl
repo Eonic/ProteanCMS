@@ -1741,6 +1741,7 @@
 						<xsl:text> </xsl:text>
 					</div>
 					<div class="col-md-3">
+						<xsl:text> </xsl:text>
 				<xsl:choose>
 					<xsl:when test="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]">
 						<xsl:variable name="relatedContent" select="concat('FilterEdit_',$filterType)" />
