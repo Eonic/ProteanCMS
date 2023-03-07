@@ -12,7 +12,7 @@
               <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">
 				  <xsl:text> </xsl:text>
 			  </i>
-              <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
+             
               <button type="button" class="close" data-dismiss="modal">
                 <i class="fa fa-times">
 					<xsl:text> </xsl:text>
@@ -3953,11 +3953,14 @@
   </xsl:template>
   
  <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
-    <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css" />
+	 <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css">
+		 <xsl:text> </xsl:text>
+	 </link>
     <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
       <xsl:text> </xsl:text>
     </script>
-     <script>
+	 
+    	<script type="text/javascript">
       $(document).ready(function () {
       <xsl:for-each select="descendant::input[contains(@class,'telephone')]">
        <xsl:variable name="ref">
