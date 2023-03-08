@@ -524,10 +524,10 @@
         </xsl:for-each>
       </div>
       <a href="" class="all-breadcrumb">
-        <i class="fas fa-chevron-down"> </i>
+        <i class="fas fa-chevron-down">&#160;</i>
       </a>
       <a href="" class="less-breadcrumb">
-        <i class="fas fa-chevron-up"> </i>
+        <i class="fas fa-chevron-up">&#160;</i>
       </a>
     </div>
   </xsl:template>
@@ -769,29 +769,29 @@
                       <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
                         <p>
                           <a href="https://www.facebook.com/proteancms" class="" target="_new">
-                            <i class="fab fa-facebook-square fa-lg"> </i>Follow ProteanCMS
+                            <i class="fab fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS
                           </a>
                         </p>
                         <p>
                           <a href="https://www.linkedin.com/groups?gid=1840777" class="" target="_new">
-                            <i class="fab fa-linkedin fa-lg"> </i>Join our LinkedIn Group
+                            <i class="fab fa-linkedin fa-lg">&#160;</i>&#160;Join our LinkedIn Group
                           </a>
                         </p>
 
 
                       </xsl:if>
                       <p>
-                        <i class="fa fa-phone"> </i>
+                        <i class="fa fa-phone">&#160;</i>
                         <xsl:call-template name="eonicwebSupportTelephone"/>
                       </p>
                       <p>
                         <a href="mailto:{$supportEmail}" title="Email Support">
-                          <i class="fa fa-envelope"> </i>
+                          <i class="fa fa-envelope">&#160;</i>
                           <xsl:value-of select="$supportEmail"/>
                         </a>
                       </p>
                       <p>
-                        <i class="fa fa-globe"> </i>
+                        <i class="fa fa-globe">&#160;</i>
                         <a title="view the latest news">
                           <xsl:attribute name="href">
                             <xsl:text>http://{$supportWebsite}?utm_campaign=cmsadminsystem&amp;utm_source=</xsl:text>

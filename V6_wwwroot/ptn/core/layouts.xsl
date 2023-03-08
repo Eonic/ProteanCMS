@@ -396,7 +396,6 @@
   <!-- ## Error Layout   #############################################################################   -->
   <xsl:template match="Page[@layout='Error']" mode="Layout">
     <xsl:param name="containerClass"/>
-	  <h1>test2</h1>
     <div class="container content" id="Error" >
       <xsl:choose>
         <xsl:when test="/Page/Contents/Content[@name='1005']">
@@ -1086,7 +1085,7 @@
             </xsl:if>
             <xsl:apply-templates select="." mode="hideScreens" />
             <xsl:apply-templates select="." mode="marginBelow" />
-            <xsl:apply-templates select="." mode="themeModuleExtras"/>
+           <!-- <xsl:apply-templates select="." mode="themeModuleExtras"/>-->
           </xsl:attribute>
           <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
             <div class="panel-image">
@@ -1153,6 +1152,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+	
   <xsl:template match="Content[starts-with(@box,'bg') or starts-with(@box,'border') or starts-with(@box,'Default') or starts-with(@box,'card')]" mode="moduleBox">
     <xsl:choose>
       <xsl:when test="@linkBox='true'">
@@ -1190,7 +1190,7 @@
             </xsl:if>
             <xsl:apply-templates select="." mode="hideScreens" />
             <xsl:apply-templates select="." mode="marginBelow" />
-            <xsl:apply-templates select="." mode="themeModuleExtras"/>
+            <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
           </xsl:attribute>
           <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
             <div class="panel-image">
@@ -1265,7 +1265,7 @@
 
   <xsl:template match="Content" mode="modalBox">
     <div id="mod_{@id}">
-      <xsl:apply-templates select="." mode="themeModuleExtras"/>
+      <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
       <!-- define classes for box -->
       <xsl:attribute name="class">
         <xsl:text>modal-content </xsl:text>
