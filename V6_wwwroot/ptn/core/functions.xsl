@@ -382,7 +382,6 @@
 		<html lang="{$pageLang}" xml:lang="{$pageLang}">
 			<xsl:apply-templates select="." mode="htmlattr"/>
 			<head>
-				<xsl:apply-templates select="." mode="metacharset"/>
 				<xsl:choose>
 					<xsl:when test="ContentDetail">
 						<xsl:attribute name="prefix">
@@ -393,11 +392,10 @@
 						<xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
-
+				<xsl:apply-templates select="." mode="metacharset"/>
 				<xsl:if test="$GoogleOptimizeID!=''">
 					<script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
 				</xsl:if>
-
 				<xsl:if test="$GoogleTagManagerID!=''">
 					<!-- Google Tag Manager -->
 					<script>

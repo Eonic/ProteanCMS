@@ -69,10 +69,12 @@
                   <xsl:apply-templates select="submit" mode="xform"/>
                   <div class="footer-status">
                     <span>
-                      <i class="fas fa-eye"> </i> Live
+                      <i class="fas fa-eye">
+						  <xsl:text> </xsl:text>
+					</i> Live
                     </span>
                     <span class="text-muted hidden">
-                      <i class="fas fa-eye-slash"> </i> Hidden
+                      <i class="fas fa-eye-slash"><xsl:text> </xsl:text></i> Hidden
                     </span>
                   </div>
                 </div>
