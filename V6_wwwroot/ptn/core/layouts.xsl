@@ -326,9 +326,11 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- Otherwise show page layout -->
-        <xsl:apply-templates select="." mode="Layout">
+		<h1>test</h1>
+		<xsl:apply-templates select="." mode="Layout">
           <xsl:with-param name="containerClass" select="$containerClass"/>
         </xsl:apply-templates>
+
         <xsl:apply-templates select="." mode="socialBookmarks" />
       </xsl:otherwise>
     </xsl:choose>
@@ -393,6 +395,7 @@
   <!-- ## Error Layout   #############################################################################   -->
   <xsl:template match="Page[@layout='Error']" mode="Layout">
     <xsl:param name="containerClass"/>
+	  <h1>test2</h1>
     <div class="container content" id="Error" >
       <xsl:choose>
         <xsl:when test="/Page/Contents/Content[@name='1005']">
@@ -412,10 +415,13 @@
 
   <xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @type='default']" mode="Layout">
     <xsl:param name="containerClass"/>
+	  <h1>test1</h1>
+	  <!--
     <div id="template_1_Column" class="template template_1_Column">
       <xsl:apply-templates select="." mode="layoutHeader">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
+		<div>
       <xsl:if test="/Page/Contents/Content[@name='column1' or @position='column1'] or /Page/@adminMode">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
@@ -423,10 +429,11 @@
           <xsl:with-param name="class" select="$containerClass"/>
         </xsl:apply-templates>
       </xsl:if>
+			</div>
     </div>
     <xsl:apply-templates select="." mode="layoutFooter">
       <xsl:with-param name="containerClass" select="$containerClass"/>
-    </xsl:apply-templates>
+    </xsl:apply-templates>-->
   </xsl:template>
 
   <xsl:template match="Page[@layout='Modules_2_columns' or @layout='Modules_2_columns_66_33' or @layout='Modules_2_columns_33_66' or @layout='Modules_2_columns_75_25' or @layout='Modules_2_columns_25_75']" mode="Layout">
