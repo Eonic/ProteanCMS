@@ -482,6 +482,7 @@
 
 			</head>
 			<!-- Go build the Body of the HTML doc -->
+			
 			<xsl:apply-templates select="." mode="bodyBuilder"/>
 		</html>
 	</xsl:template>
@@ -1507,6 +1508,7 @@
 					<xsl:value-of select="@artid"/>
 				</xsl:if>
 			</xsl:attribute>
+			<xsl:apply-templates select="." mode="bodyStyle"/>
 			<xsl:if test="$GoogleTagManagerID!=''">
 				<!-- Google Tag Manager (noscript) -->
 				<noscript>
@@ -1514,7 +1516,6 @@
 				</noscript>
 				<!-- End Google Tag Manager (noscript) -->
 			</xsl:if>
-			<xsl:apply-templates select="." mode="bodyStyle"/>
 			<xsl:apply-templates select="." mode="bodyDisplay"/>
 			<xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
 				<xsl:apply-templates select="." mode="commonStyle"/>
@@ -4508,7 +4509,27 @@
 		</xsl:if>
 	</xsl:template>
 	<!-- -->
+	<xsl:template name="SortArrows">
+		<xsl:param name="sortCol"/>
+		<xsl:param name="bSortFormMethod"/>
 
+		<div class="sortArrows">
+			<xsl:variable name="qsSet" select="/Page/Request/QueryString/Item[@name!='sortCol' and @name!='sortDir']"/>
+			<xsl:variable name="qs">
+				<xsl:for-each select="$qsSet/.">
+					<xsl:if test="not(position()=1)">&amp;</xsl:if>
+					<xsl:value-of select="@name"/>=<xsl:value-of select="."/>
+				</xsl:for-each>
+			</xsl:variable>
+			<a href="?{$qs}&amp;sortCol={$sortCol}&amp;sortDir=ascending" title="Sort Ascending">
+				<img  src="/ewcommon/images/sortDown.gif" width="11" height="7" class="down" />
+			</a>
+			<a href="?{$qs}&amp;sortCol={$sortCol}&amp;sortDir=descending" title="Sort Descending">
+				<img  src="/ewcommon/images/sortUp.gif" width="11" height="7" class="up" />
+			</a>
+		</div>
+	</xsl:template>
+	
 	<xsl:template match="Voted_For" mode="reportCell">
 		<td>
 			<xsl:value-of select="Content/Title"/>
@@ -6158,7 +6179,7 @@
 								<!--WebP Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="'image/webp'"/>
-									<xsl:with-param name="media" select="$mediaWidth"/>
+									<xsl:with-param name="media" select="'(max-width: 576px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-webp"/>
 									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2-webp"/>
 									<xsl:with-param name="class" select="$class"/>

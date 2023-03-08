@@ -1093,6 +1093,9 @@ Public Class XmlHelper
         Public Function CompileXSLTassembly(ByVal classname As String) As String
 
             Dim compilerPath As String = goServer.MapPath("/ewcommon/xsl/compiler/xsltc.exe")
+            If myWeb.bs5 Then
+                compilerPath = goServer.MapPath("/ptn/tools/compiler/xsltc.exe")
+            End If
             Dim xsltPath As String = """" & msXslFile & """"
             Dim sProcessInfo As String = "compiling: " & xsltPath
             Dim outFile As String = classname & ".dll"
