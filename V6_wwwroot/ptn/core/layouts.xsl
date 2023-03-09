@@ -963,7 +963,6 @@
 								<xsl:otherwise>
 									<xsl:choose>
 										<xsl:when test="@heading and @heading!=''">
-
 											<xsl:element name="{@heading}">
 												<xsl:attribute name="class">
 													<xsl:text>title</xsl:text>
