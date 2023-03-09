@@ -15,6 +15,7 @@ body {
 a {
     text-decoration: none;
 }
+
 //images
 img {
     max-width: 100%;
@@ -468,5 +469,11 @@ section.bg-primary {
 
     @include media-breakpoint-down(sm) {
         max-width: 50%;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .moduleAnimate-animated {
+        animation: none !important;
+        animation-delay: 0 !important;
     }
 }
