@@ -236,7 +236,7 @@
 						  <xsl:text>px;</xsl:text>
 					  </xsl:if>
 				  </xsl:attribute>-->
-				  <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" poster="{@backgroundImage}" id="bgvid-{@id}" class="bg-video">
+				  <video preload="true" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" poster="{@backgroundImage}" id="bgvid-{@id}" class="bg-video">
 					  <xsl:if test="@backgroundVideo-mp4!=''">
 						  <source src="{@backgroundVideo-mp4}" type="video/mp4"/>
 					  </xsl:if>
@@ -244,6 +244,9 @@
 						  <source src="{@backgroundVideo-webm}" type="video/webm"/>
 					  </xsl:if>
 				  </video>
+			    <script>
+                    document.getElementById('bgvid-<xsl:value-of select="@id"/>').play();
+                </script>
 			  </xsl:if>
 			  <xsl:choose>
               <xsl:when test="@fullWidth='true'">
@@ -1265,7 +1268,7 @@
 
   <xsl:template match="Content" mode="modalBox">
     <div id="mod_{@id}">
-      <!--<xsl:apply-templates select="." mode="themeModuleExtras"/>-->
+      <xsl:apply-templates select="." mode="themeModuleExtras"/>
       <!-- define classes for box -->
       <xsl:attribute name="class">
         <xsl:text>modal-content </xsl:text>
@@ -1287,7 +1290,7 @@
         pos-<xsl:value-of select="@position"/>
         <xsl:apply-templates select="." mode="hideScreens" />
         <xsl:apply-templates select="." mode="marginBelow" />
-        <xsl:apply-templates select="." mode="themeModuleExtras"/>
+       <!-- <xsl:apply-templates select="." mode="themeModuleExtras"/>-->
       </xsl:attribute>
       <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
         <div class="modal-header">

@@ -4199,7 +4199,7 @@
 		<div class="morelink">
 			<span>
 				<a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
-					<xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
+					<xsl:if test="not(substring($link,1,1)='/') and ((contains($link,'http://') or contains($link,'tel:')) and $linkType='external')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 						<xsl:attribute name="class">extLink</xsl:attribute>
 					</xsl:if>
@@ -4260,7 +4260,7 @@
 													<xsl:value-of select="$link"/>
 												</xsl:attribute>
 											</xsl:when>
-											<xsl:when test="contains($link,'http')">
+											<xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
 												<xsl:attribute name="href">
 													<xsl:value-of select="$link"/>
 												</xsl:attribute>
