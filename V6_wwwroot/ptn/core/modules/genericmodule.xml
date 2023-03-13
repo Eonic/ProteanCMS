@@ -47,6 +47,7 @@
 			<bind id="linkWindow" nodeset="@linkWindow" required="false()" type="string"/>
 			<bind id="linkObject" nodeset="@linkObject" required="false()" type="string"/>
 			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
@@ -55,6 +56,7 @@
 			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
 			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
 			<bind id="bCascade" nodeset="bCascade" required="false()" type="string"/>
+
 			<bind nodeset="cContentXmlBrief/Content">
 				<bind id="Screens" nodeset="@screens" required="false()" type="string"/>
 				<bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
@@ -524,6 +526,7 @@
 								<p>By default modules have a margin below them. If you would like to remove this for this module, please select "no"</p>
 							</help>
 						</select1>-->
+						
 					</group>
 					<group class="col-lg-4">
 						<select bind="Screens" appearance="full" class="multiline bs-only">
@@ -577,16 +580,51 @@
 						</select>
 					</group>
 					<group class="col-lg-4">
+						<select1 bind="heading" appearance="full" class="">
+							<label>Heading</label>
+							<item>
+								<label>Heading 1</label>
+								<value>h1</value>
+							</item>
+							<item>
+								<label>Heading 2</label>
+								<value>h2</value>
+							</item>
+							<item>
+								<label>Heading 3</label>
+								<value>h3</value>
+							</item>
+							<item>
+								<label>Heading 4</label>
+								<value>h4</value>
+							</item>
+							<item>
+								<label>Heading 5</label>
+								<value>h5</value>
+							</item>
+							<item>
+								<label>Heading 6</label>
+								<value>h6</value>
+							</item>
+
+						</select1>
+						
+					</group>
+					<group class="col-lg-4">
 						<input bind="dPublishDate" class="calendar short">
 							<label>Publish Date</label>
 						</input>
+					</group>
+					<group class="col-lg-4">
 						<input bind="dExpireDate" class="calendar short">
 							<label>Expire Date</label>
 						</input>
 					</group>
-					<input bind="cDescription" class="short">
-						<label>Change Notes</label>
-					</input>
+					<group class="col-lg-4">
+						<input bind="cDescription" class="short">
+							<label>Change Notes</label>
+						</input>
+					</group>
 				</group>
 				<group id="columns" class="inline-select">
 					<label>
