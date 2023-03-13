@@ -699,12 +699,12 @@
             <xsl:choose>
               <xsl:when test="/Page/@previewHidden='on'">
                 <a href="?ewcmd=PreviewOn&amp;ewCmd2=hideHidden" class="btn btn-default">
-                  <i class="fas fa-eye-slash"> </i> Hide Hidden
+                  <i class="fas fa-eye-slash">&#160;</i>&#160;Hide Hidden
                 </a>
               </xsl:when>
               <xsl:otherwise>
                 <a href="?ewcmd=PreviewOn&amp;ewCmd2=showHidden" class="btn btn-default">
-                  <i class="fas fa-eye"> </i> Show Hidden
+                  <i class="fas fa-eye">&#160;</i>&#160;Show Hidden
                 </a>
               </xsl:otherwise>
             </xsl:choose>
@@ -713,7 +713,7 @@
         <xsl:text> </xsl:text>
         <xsl:text> </xsl:text>
         <a href="?ewCmd=Normal&amp;pgid={/Page/@id}" class="btn btn-default" id="previewBack">
-          <i class="fas fa-times"> </i> Exit Preview<xsl:text> </xsl:text>
+          <i class="fas fa-times">&#160;</i>&#160;Exit Preview<xsl:text> </xsl:text>
         </a>
       </div>
     </div>
