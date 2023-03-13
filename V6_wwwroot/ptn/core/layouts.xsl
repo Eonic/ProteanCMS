@@ -1166,6 +1166,7 @@
 								</xsl:apply-templates>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="displayBrief"/>
+							<xsl:text> </xsl:text>
 						</div>
 					</xsl:if>
 					<xsl:if test="@linkText!='' and @link!=''">
@@ -1271,6 +1272,8 @@
 								</xsl:apply-templates>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="displayBrief"/>
+						
+							<xsl:text> </xsl:text>
 						</div>
 					</xsl:if>
 					<xsl:if test="@listGroup='true'">
@@ -1281,6 +1284,8 @@
 								</xsl:apply-templates>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="displayBrief"/>
+						
+							<xsl:text> </xsl:text>
 						</div>
 					</xsl:if>
 					<xsl:if test="@linkText!='' and @link!=''">
@@ -1378,6 +1383,8 @@
             </xsl:apply-templates>
           </xsl:if>
           <xsl:apply-templates select="." mode="displayBrief"/>
+		
+							<xsl:text> </xsl:text>
         </div>
       </xsl:if>
       <xsl:if test="@linkText!='' and @link!=''">
