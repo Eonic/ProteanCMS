@@ -20,7 +20,7 @@
         <a href="{$href}" title="{$title}">
           <xsl:choose>
             <xsl:when test="img[contains(@src,'.svg')]">
-              <svg id="svg-{@position}" width="{img/@width}" height="{img/@height}" viewbox="0 0 {img/@width} {img/@height}" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <svg role="image" aria-label="{img/@alt}" id="svg-{@position}" width="{img/@width}" height="{img/@height}" viewbox="0 0 {img/@width} {img/@height}" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <image id="svg-img-{@position}" xlink:href="{img/@src}" src="{@svgFallback}" width="{img/@width}" height="{img/@height}" class="img-responsive">
                   <xsl:text> </xsl:text>
                 </image>

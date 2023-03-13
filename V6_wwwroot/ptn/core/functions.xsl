@@ -382,7 +382,6 @@
 		<html lang="{$pageLang}" xml:lang="{$pageLang}">
 			<xsl:apply-templates select="." mode="htmlattr"/>
 			<head>
-				<xsl:apply-templates select="." mode="metacharset"/>
 				<xsl:choose>
 					<xsl:when test="ContentDetail">
 						<xsl:attribute name="prefix">
@@ -393,11 +392,10 @@
 						<xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
-
+				<xsl:apply-templates select="." mode="metacharset"/>
 				<xsl:if test="$GoogleOptimizeID!=''">
 					<script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
 				</xsl:if>
-
 				<xsl:if test="$GoogleTagManagerID!=''">
 					<!-- Google Tag Manager -->
 					<script>
@@ -3934,7 +3932,7 @@
 					<xsl:text> dropdown dropdown-hover-menu</xsl:text>
 				</xsl:attribute>
 			</xsl:if>
-			<a href="{@url}" id="mainNavDD{@id}">
+			<a href="{@url}" id="mainNavDD{@id}" role="button">
 				<xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
 				<xsl:attribute name="class">
@@ -4201,7 +4199,7 @@
 		<div class="morelink">
 			<span>
 				<a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
-					<xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
+					<xsl:if test="not(substring($link,1,1)='/') and ((contains($link,'http://') or contains($link,'tel:')) and $linkType='external')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 						<xsl:attribute name="class">extLink</xsl:attribute>
 					</xsl:if>
@@ -4262,7 +4260,7 @@
 													<xsl:value-of select="$link"/>
 												</xsl:attribute>
 											</xsl:when>
-											<xsl:when test="contains($link,'http')">
+											<xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
 												<xsl:attribute name="href">
 													<xsl:value-of select="$link"/>
 												</xsl:attribute>

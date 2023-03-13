@@ -410,7 +410,7 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:if>
-        <video>
+        <video id="vid-{@id}">
           <xsl:choose>
             <xsl:when test="@size='Manual'">
               <xsl:if test="@width!=''">
@@ -481,6 +481,11 @@
           </xsl:if>
         </video>
       </div>
+		<xsl:if test="HTML5/@autoplay='autoplay'">
+					    <script>
+                    document.getElementById('vid-<xsl:value-of select="@id"/>').play();
+                </script>
+		</xsl:if>
     </xsl:if>
   </xsl:template>
 
