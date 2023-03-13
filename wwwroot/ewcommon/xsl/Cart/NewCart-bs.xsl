@@ -1285,12 +1285,14 @@
     </xsl:variable>
     <!--<xsl:if test="Images/img[@class='detail']/@src and Images/img[@class='detail']/@src!=''">-->
       <div class="cart-thumbnail">
+      	  <xsl:text> </xsl:text>
         <xsl:apply-templates select="productDetail" mode="displayThumbnail">
           <xsl:with-param name="forceResize">true</xsl:with-param>
 <xsl:with-param name="crop">true</xsl:with-param>
 	  <xsl:with-param name="width">50</xsl:with-param>
     		<xsl:with-param name="height">50</xsl:with-param>
         </xsl:apply-templates>
+	
       </div>
     <!--</xsl:if>-->
     <div class="description">
