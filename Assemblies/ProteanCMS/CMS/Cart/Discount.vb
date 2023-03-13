@@ -268,27 +268,6 @@ Partial Public Class Cms
                                         dMaxPrice = CDbl("0" & docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
                                     End If
 
-                                    'Add New code for checking promocode is valid/invalid for include/exclude shipping groups
-
-                                    'check for shipping option is assigned to promocode or not
-                                    If (oDsDiscounts IsNot Nothing) Then
-                                        If (docAdditionalXMl.InnerXml.Contains("cFreeShippingMethods")) Then
-                                            If (docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
-                                                ''checkfor shipping group assigned for that shipping option
-                                                If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
-                                                    validateShippingGroup = CheckShippingGroupIncludeExclude(oDsDiscounts, oDiscountMessageNew, docAdditionalXMl)
-                                                    If validateShippingGroup <> "Promocode Applied" Then
-                                                        RemoveDiscountCode()
-                                                        oDsDiscounts = Nothing
-                                                    End If
-                                                Else
-                                                    'table not exist...
-                                                End If
-                                            End If
-                                        End If
-                                    End If
-
-
                                     If oDsCart.Tables("Item").Rows.Count > 0 Then
                                         For Each drItem As DataRow In oDsCart.Tables("Item").Rows
 
@@ -1611,23 +1590,6 @@ NoDiscount:
 
                                     End If
 
-                                    'check for shipping option is assigned to promocode or not
-                                    If (oDsDiscounts IsNot Nothing) Then
-                                        If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
-                                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
-                                                ''checkfor shipping group assigned for that shipping option
-                                                If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
-                                                    validateShippingGroup = CheckShippingGroupIncludeExclude(oDsDiscounts, oDiscountMessage, doc)
-                                                    If validateShippingGroup <> "Promocode Applied" Then
-                                                        Return oDiscountMessage
-                                                    End If
-                                                Else
-                                                    'table not exist...
-                                                End If
-                                            End If
-                                        End If
-                                    End If
-
                                     'check maximum item price value set or not
                                     If (dMaxPrice <> 0) Then
                                         'validate quantity of cart as individual item not total quantity of item purchased
@@ -1702,76 +1664,6 @@ NoDiscount:
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
-                    Return Nothing
-                End Try
-
-            End Function
-
-            Public Function CheckShippingGroupIncludeExclude(ByRef oDsDiscounts As DataSet, ByVal oDiscountMessage As String, ByRef doc As XmlDocument) As String
-                Dim cProcessInfo As String = "RemoveDiscountCode"
-                Dim sPromoCode As String = "Promocode Applied"
-                Try
-                    'check for shipping option is assigned
-                    If (oDsDiscounts IsNot Nothing) Then
-
-                        If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
-                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
-                                ''checkfor shipping group assigned for that shipping option
-                                If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
-                                    '' input parameter shipping option id,orderid
-                                    Dim param As New Hashtable
-                                    Dim oDsShippingGroup As DataSet
-                                    Dim sSqlSG As New Text.StringBuilder
-                                    Dim nRuleType As String
-                                    Dim cFreeShippingMethods As String = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
-                                    sSqlSG.Append("Select cspcr.nRuleType, count(ci.nItemid) as itemcount from tblCartShippingProductCategoryRelations cspcr  ")
-                                    sSqlSG.Append("inner join tblCartCatProductRelations cpr on cpr.nCatId=cspcr.nCatId ")
-                                    sSqlSG.Append("inner join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId ")
-                                    sSqlSG.Append(" INNER JOIN tblCartItem cI ON cpr.nContentId= CI.nItemId and nItemId<>0 ")
-                                    sSqlSG.Append(" inner join tblCartOrder co on co.nCartOrderKey=ci.nCartOrderId  ")
-                                    sSqlSG.Append(" where cspcr.nShipOptId=" & cFreeShippingMethods & " and co.nCartOrderKey= " & myCart.mnCartId & " ")
-                                    sSqlSG.Append("group by cspcr.nRuleType ")
-                                    oDsShippingGroup = myWeb.moDbHelper.GetDataSet(sSqlSG.ToString, "ShippingGroup", "ShippingGroups")
-                                    'oDsDiscounts = Nothing 'incase of both condition mapped ... rule type=1, 
-
-                                    'you need to  check ruletype and then #of product count= oDsDiscount.tables(0).rows.count
-                                    'if both count are same then promocode is valid else it is invalid
-                                    If oDsShippingGroup.Tables(0).Rows.Count > 0 Then
-                                        nRuleType = Convert.ToString(oDsShippingGroup.Tables(0).Rows(0)("nRuleType"))
-                                        If nRuleType = "1" Then
-                                            If oDsDiscounts.Tables(0).Rows.Count = oDsShippingGroup.Tables(0).Rows.Count Then
-                                                'Promocode valid
-                                                oDsDiscounts = oDsDiscounts
-                                                Return sPromoCode
-                                            Else
-                                                'Promocode Invalid
-                                                oDsDiscounts.Clear()
-                                                oDsDiscounts = Nothing
-                                                Return oDiscountMessage
-                                            End If
-                                        Else
-                                            If oDsShippingGroup.Tables(0).Rows.Count = 0 Then
-                                                'Promocode valid
-                                                oDsDiscounts = oDsDiscounts
-                                                Return sPromoCode
-                                            Else
-                                                'Promocode Invalid
-                                                oDsDiscounts.Clear()
-                                                oDsDiscounts = Nothing
-                                                Return oDiscountMessage
-                                            End If
-
-                                        End If
-                                    End If
-                                Else
-                                    'table not exist...
-                                End If
-                            End If
-                        End If
-                    End If
-
-                Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
 
