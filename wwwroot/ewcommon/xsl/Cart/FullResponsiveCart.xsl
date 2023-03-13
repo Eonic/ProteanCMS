@@ -1273,12 +1273,14 @@
     </xsl:variable>
     <!--<xsl:if test="Images/img[@class='detail']/@src and Images/img[@class='detail']/@src!=''">-->
       <div class="cart-thumbnail">
+		    <xsl:text> </xsl:text>
         <xsl:apply-templates select="productDetail" mode="displayThumbnail">
           <xsl:with-param name="forceResize">true</xsl:with-param>
 <xsl:with-param name="crop">true</xsl:with-param>
 	  <xsl:with-param name="width">50</xsl:with-param>
     		<xsl:with-param name="height">50</xsl:with-param>
         </xsl:apply-templates>
+	
       </div>
     <!--</xsl:if>-->
     <div class="description">
@@ -1304,16 +1306,7 @@
             <xsl:text> / </xsl:text>
           </xsl:if>
           </xsl:for-each>
-          <!-- <xsl:if test="@price!=0">
-							  Remmed by Rob
-							  <xsl:value-of select="$currency"/>
-							  <xsl:value-of select="format-number(@price,'#0.00')"/>
-								
-							  <xsl:apply-templates select="/Page" mode="formatPrice">
-								  <xsl:with-param name="price" select="@price"/>
-								  <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-							  </xsl:apply-templates>
-						  </xsl:if>-->
+      <xsl:text> </xsl:text>
         </span>
         </xsl:if>
       <!-- ################################# Line Discount Info ################################# -->
@@ -1325,13 +1318,16 @@
           </xsl:variable>
           <div class="discount">
 			<span class="label label-success">
-			  <i class="fa fa-certificate">&#160;</i>&#160;
+			  <i class="fa fa-certificate">
+				  <xsl:text> </xsl:text>
+			  </i>
 				  <xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/></span>
             <xsl:if test="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']/@src!=''">
               <xsl:copy-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']"/>
             </xsl:if>
             <span class="discountName">
               <xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/cDescription"/>
+				<xsl:text> </xsl:text>
             </span>
             <!--RRP-->
             <!--xsl:text>&#160;</xsl:text>
@@ -1356,9 +1352,9 @@
               </xsl:choose>
             </strike-->
             <!--less-->
-            <xsl:text>&#160;&#160;&#160;</xsl:text>
+            <xsl:text> </xsl:text>
             <xsl:call-template name="term3054" />
-            <xsl:text>:&#160;</xsl:text>
+            <xsl:text>: </xsl:text>
             <!-- Remmed by Rob 
 							  <xsl:value-of select="$currency"/>
                               <xsl:value-of select="format-number(@UnitSaving,'#0.00')"/>
@@ -1393,13 +1389,7 @@
         </xsl:for-each>
       </xsl:if>
     </div>
-    <!--<div class="ref">
-      <xsl:value-of select="@ref"/>&#160;
-      <xsl:for-each select="Item">
-        <xsl:apply-templates select="option" mode="optionCodeConcat"/>
-      </xsl:for-each>
-    </div>-->
-
+   
     <div class="quantity">
       <div class="quantity-input">
         <xsl:choose>
@@ -2261,11 +2251,9 @@
         <div class="cart-headings hidden-xs">
           <div class="description">
             <xsl:call-template name="term3040" />
-            &#160;
+			  <xsl:text> </xsl:text>
           </div>
-          <!--<div class="ref">
-          <xsl:call-template name="term3041" />
-        </div>-->
+         
           <div class="quantity">
             <!--Qty-->
             <xsl:call-template name="term3039" />
@@ -2298,7 +2286,7 @@
                   <xsl:text>:</xsl:text>
                 </xsl:otherwise>
               </xsl:choose>
-              <xsl:text>&#160;</xsl:text>
+              <xsl:text> </xsl:text>
             </strong>
             <xsl:choose>
               <xsl:when test="/Page/Cart/Order/Shipping">
@@ -2351,6 +2339,7 @@
                     <xsl:with-param name="price" select="@totalNet"/>
                     <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
                   </xsl:apply-templates>
+					<xsl:text> </xsl:text>
                 </span>
               </div>
 
@@ -2439,9 +2428,10 @@
         </xsl:if>
           
           </xsl:otherwise>
-          </xsl:choose>       
+          </xsl:choose>
+			<xsl:text> </xsl:text>
         </div>
-
+		  <xsl:text> </xsl:text>
        
       </div>
     </xsl:if>
