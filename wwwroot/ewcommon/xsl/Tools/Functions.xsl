@@ -6905,6 +6905,7 @@
 		<xsl:param name="style"/>
     <xsl:param name="imageUrl"/>
     <xsl:param name="altText"/>
+	 <xsl:param name="noLazy"/>
    	<!-- IF SO THAT we don't get empty tags if NO IMAGE -->
 		<xsl:if test="$imageUrl!=''">
       	<!-- SRC VALUE -->
@@ -7356,16 +7357,13 @@
 								<img>
 									<!-- SRC -->
 									<xsl:choose>
-										<xsl:when test="$lazy='on'">
+										<xsl:when test="$lazy='on' and not($noLazy)">
 											<xsl:attribute name="data-src">
 												<xsl:value-of select="$newSrc"/>
 											</xsl:attribute>
 											<xsl:attribute name="src">
 												<xsl:value-of select="$lazyplaceholder"/>
-											</xsl:attribute>
-											<xsl:attribute name="loading">
-												<xsl:text>lazy</xsl:text>
-											</xsl:attribute>
+											</xsl:attribute>										
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:attribute name="src">
@@ -7373,6 +7371,11 @@
 											</xsl:attribute>
 										</xsl:otherwise>
 									</xsl:choose>
+									<xsl:if test="not($noLazy)">
+										<xsl:attribute name="loading">
+											<xsl:text>lazy</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
 									<!-- Width -->
 									<xsl:attribute name="width">										
 										<xsl:choose>
@@ -7685,13 +7688,14 @@
                 <img>
                   <!-- SRC -->
                   <xsl:choose>
-                    <xsl:when test="$lazy='on'">
+                    <xsl:when test="$lazy='on' and not($noLazy)">
                       <xsl:attribute name="data-src">
                         <xsl:value-of select="$newSrc"/>
                       </xsl:attribute>
                       <xsl:attribute name="src">
                         <xsl:value-of select="$lazyplaceholder"/>
                       </xsl:attribute>
+						
 						<xsl:attribute name="loading">
 							<xsl:text>lazy</xsl:text>
 						</xsl:attribute>
@@ -7742,7 +7746,7 @@
                         <xsl:text>photo thumbnail resized</xsl:text>
                       </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:if test="$lazy='on'">
+                    <xsl:if test="$lazy='on' and not($noLazy)">
                       <xsl:text> lazy</xsl:text>
                     </xsl:if>
                   </xsl:attribute>
@@ -7751,6 +7755,12 @@
                       <xsl:value-of select="$style" />
                     </xsl:attribute>
                   </xsl:if>
+					
+					<xsl:if test="not($noLazy)">
+						<xsl:attribute name="loading">
+							<xsl:text>lazy</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
                 </img>
               </picture>
             </xsl:variable>
