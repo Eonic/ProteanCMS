@@ -8966,7 +8966,6 @@ SaveNotes:      ' this is so we can skip the appending of new node
                         param.Add("CartOrderId", mnCartId)
                         Return moDBHelper.GetDataSet("spCheckShippingGroupAssignedToDeliveryMethods", "Option", "Shipping", False, param, CommandType.StoredProcedure)
                     End If
-
                 Else
 
                     Dim sSql As String

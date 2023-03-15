@@ -1627,6 +1627,7 @@ NoDiscount:
                                         End If
                                     End If
 
+
                                     'check maximum item price value set or not
                                     If (dMaxPrice <> 0) Then
                                         'validate quantity of cart as individual item not total quantity of item purchased
