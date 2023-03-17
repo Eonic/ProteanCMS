@@ -2664,7 +2664,8 @@ processFlow:
             End If
 
             Dim oldCartId As Long = mnCartId
-            Dim cIsDeliveryShippingMethod As Long = moCartConfig("DefaultShippingMethod")
+            Dim IsDeliveryShippingMethod As Long = moCartConfig("DefaultShippingMethod")
+            Dim cShippingGroupName As String = String.Empty
 
             Dim cProcessInfo As String = "CartId=" & nCartIdUse
 
@@ -2758,10 +2759,12 @@ processFlow:
                                     Exit For
                                 ElseIf oRowShipGroup("cCatSchemaName") = ShippingGroup Then
                                     oDs.Tables("Item").AcceptChanges()
+                                    'Set Shipping Group Name to variable
+                                    cShippingGroupName = oRowShipGroup("cCatName")
                                     If oRowShipGroup("cCatName") = "Post Only - No E-Voucher" Then
-                                        cIsDeliveryShippingMethod = moCartConfig("DefaultShippingMethod")
+                                        IsDeliveryShippingMethod = moCartConfig("DefaultShippingMethod")
                                     Else
-                                        cIsDeliveryShippingMethod = 1
+                                        IsDeliveryShippingMethod = 1
                                     End If
                                     Exit For
                                 Else
@@ -3111,15 +3114,17 @@ processFlow:
                                         End If
                                         If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
                                             'logic to overide below...
-                                            If cIsDeliveryShippingMethod <> moCartConfig("DefaultShippingMethod") Then
+                                            'Add extra condition for checking shipping delievry method set by default
+                                            If IsDeliveryShippingMethod <> moCartConfig("DefaultShippingMethod") Then
                                                 If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
-                                                    If (oRowSO("nShipOptKey") = cIsDeliveryShippingMethod) Then
+                                                    If (oRowSO("nShipOptKey") = IsDeliveryShippingMethod) Then
                                                         shipCost = CDbl("0" & oRowSO("nShipOptCost"))
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                                        oCartElmt.SetAttribute("shippingType", cIsDeliveryShippingMethod & "")
+                                                        oCartElmt.SetAttribute("shippingType", IsDeliveryShippingMethod & "")
                                                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                                        oCartElmt.SetAttribute("shippingGroupName", cShippingGroupName & "")
                                                     End If
                                                 End If
                                             Else
