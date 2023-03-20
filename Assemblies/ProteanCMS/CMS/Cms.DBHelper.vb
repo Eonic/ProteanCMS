@@ -11150,12 +11150,10 @@ ReturnMe:
                 Me.ConnectTimeout = 180
                 ds = Me.GetDataSet(spWithBespokeCheck, "Item", "Report", , params, CommandType.StoredProcedure)
 
-
                 ' Convert the dataset to Xml
                 Dim reportXml As XmlDocument = New XmlDocument
                 myWeb.moDbHelper.ReturnNullsEmpty(ds)
                 reportXml.LoadXml(ds.GetXml)
-
 
                 ' Process the data for type-specific columns
                 processInfo &= "; Updating Column data"
