@@ -1112,18 +1112,21 @@ Partial Public Module xmlTools
                 End If
 
                 ' PerfMon.Log("xmlTools", "ResizeImage - Start")
-                If myWeb.moRequest Is Nothing Then
+                If Not myWeb Is Nothing Then
+                    If myWeb.moRequest Is Nothing Then
 
-                Else
-                    Try
-                        If myWeb.moRequest("imgRefresh") <> "" Then
-                            forceCheck = True
-                        End If
-                    Catch ex As Exception
+                    Else
+                        Try
+                            If myWeb.moRequest("imgRefresh") <> "" Then
+                                forceCheck = True
+                            End If
+                        Catch ex As Exception
 
-                    End Try
+                        End Try
 
+                    End If
                 End If
+
 
                 cVirtualPath = cVirtualPath.Replace("%20", " ")
                 'calculate the new filename
@@ -1148,68 +1151,72 @@ Partial Public Module xmlTools
                     Case Else
                         newFilepath = Replace(cVirtualPath2, "." & filetype, sSuffix & "." & filetype)
                 End Select
-
-                If (Not myWeb.mbAdminMode) And forceCheck = False Then
+                If myWeb Is Nothing Then
                     Return newFilepath
                 Else
 
-                    If VirtualFileExists(cVirtualPath) > 0 Then
 
-                        If (Not (VirtualFileExists(newFilepath) > 0)) Or CompareDateIsNewer(cVirtualPath, newFilepath) > 0 Then
-                            Select Case filetype
-                                Case "pdf"
+                    If (Not myWeb.mbAdminMode) And forceCheck = False Then
+                        Return newFilepath
+                    Else
 
-                                    Dim ihelp As New ImageHelper("")
+                        If VirtualFileExists(cVirtualPath) > 0 Then
 
-                                    System.Threading.ThreadPool.SetMaxThreads(10, 10)
-                                    Dim doneEvents(1) As System.Threading.ManualResetEvent
+                            If (Not (VirtualFileExists(newFilepath) > 0)) Or CompareDateIsNewer(cVirtualPath, newFilepath) > 0 Then
+                                Select Case filetype
+                                    Case "pdf"
 
-                                    Dim newThumbnail As New ImageHelper.PDFThumbNail
-                                    newThumbnail.FilePath = cVirtualPath
-                                    newThumbnail.newImageFilepath = newFilepath
-                                    newThumbnail.goServer = goServer
-                                    newThumbnail.maxWidth = maxWidth
+                                        Dim ihelp As New ImageHelper("")
 
-                                    System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf ihelp.GeneratePDFThumbNail), newThumbnail)
-                                    newThumbnail = Nothing
-                                    ihelp.Close()
-                                    ihelp = Nothing
+                                        System.Threading.ThreadPool.SetMaxThreads(10, 10)
+                                        Dim doneEvents(1) As System.Threading.ManualResetEvent
 
-                                Case Else
-                                    Dim cCheckServerPath As String = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1)
-                                    cCheckServerPath = goServer.MapPath(cCheckServerPath)
-                                    'load the orignal image and resize
-                                    Dim oImage As New Protean.Tools.Image(goServer.MapPath(cVirtualPath))
-                                    oImage.KeepXYRelation = True
-                                    oImage.NoStretch = noStretch
-                                    oImage.IsCrop = isCrop
-                                    oImage.SetMaxSize(maxWidth, maxHeight)
+                                        Dim newThumbnail As New ImageHelper.PDFThumbNail
+                                        newThumbnail.FilePath = cVirtualPath
+                                        newThumbnail.newImageFilepath = newFilepath
+                                        newThumbnail.goServer = goServer
+                                        newThumbnail.maxWidth = maxWidth
 
-                                    oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath)
+                                        System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf ihelp.GeneratePDFThumbNail), newThumbnail)
+                                        newThumbnail = Nothing
+                                        ihelp.Close()
+                                        ihelp = Nothing
 
-                                    Dim imgFile As New FileInfo(goServer.MapPath(newFilepath))
-                                    Dim ptnImg As New Protean.Tools.Image("")
-                                    ptnImg.TinifyKey = moConfig("TinifyKey")
-                                    ptnImg.CompressImage(imgFile, False)
-                                    oImage.Close()
-                                    oImage = Nothing
+                                    Case Else
+                                        Dim cCheckServerPath As String = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1)
+                                        cCheckServerPath = goServer.MapPath(cCheckServerPath)
+                                        'load the orignal image and resize
+                                        Dim oImage As New Protean.Tools.Image(goServer.MapPath(cVirtualPath))
+                                        oImage.KeepXYRelation = True
+                                        oImage.NoStretch = noStretch
+                                        oImage.IsCrop = isCrop
+                                        oImage.SetMaxSize(maxWidth, maxHeight)
 
-                            End Select
-                            'PerfMon.Log("xmlTools", "ResizeImage - End")
-                            Return newFilepath
+                                        oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath)
+
+                                        Dim imgFile As New FileInfo(goServer.MapPath(newFilepath))
+                                        Dim ptnImg As New Protean.Tools.Image("")
+                                        ptnImg.TinifyKey = moConfig("TinifyKey")
+                                        ptnImg.CompressImage(imgFile, False)
+                                        oImage.Close()
+                                        oImage = Nothing
+
+                                End Select
+                                'PerfMon.Log("xmlTools", "ResizeImage - End")
+                                Return newFilepath
+                            Else
+                                'PerfMon.Log("xmlTools", "ResizeImage - End")
+                                Return newFilepath
+                            End If
+
                         Else
                             'PerfMon.Log("xmlTools", "ResizeImage - End")
-                            Return newFilepath
+                            Return "/ewcommon/images/awaiting-image-thumbnail.gif"
                         End If
 
-                    Else
-                        'PerfMon.Log("xmlTools", "ResizeImage - End")
-                        Return "/ewcommon/images/awaiting-image-thumbnail.gif"
                     End If
 
                 End If
-
-
 
 
             Catch ex As Exception
