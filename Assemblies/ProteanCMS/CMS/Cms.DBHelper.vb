@@ -4589,7 +4589,7 @@ restart:
                     sSql &= IIf(bPrimary, 1, 0) & ","
                     sSql &= IIf(bCascade, 1, 0) & ","
                     sSql &= "0,"
-                    sSql &= getAuditId() & ");select @@identity"
+                    sSql &= getAuditId() & ");select scope_identity()"
                 Else
                     sSql = "UPDATE tblContentLocation  SET "
                     sSql &= "nStructId =" & nStructId & ","
