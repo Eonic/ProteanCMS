@@ -1620,8 +1620,8 @@ NoDiscount:
                                                     If validateShippingGroup <> "Promocode Applied" Then
                                                         Return oDiscountMessage
                                                     End If
-                                                Else
-                                                    'table not exist...
+                                                    'Else
+                                                    '    'table not exist...
                                                 End If
                                             End If
                                         End If
@@ -1722,7 +1722,7 @@ NoDiscount:
                                     Dim param As New Hashtable
                                     Dim oDsShippingGroup As DataSet
                                     Dim sSqlSG As New Text.StringBuilder
-                                    Dim nRuleType As String
+                                    Dim nRuleType As String = String.Empty
                                     Dim cFreeShippingMethods As String = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
                                     sSqlSG.Append("Select cspcr.nRuleType, count(ci.nItemid) as itemcount from tblCartShippingProductCategoryRelations cspcr  ")
                                     sSqlSG.Append("inner join tblCartCatProductRelations cpr on cpr.nCatId=cspcr.nCatId ")
@@ -1738,30 +1738,39 @@ NoDiscount:
                                     'if both count are same then promocode is valid else it is invalid
                                     If oDsShippingGroup.Tables(0).Rows.Count > 0 Then
                                         nRuleType = Convert.ToString(oDsShippingGroup.Tables(0).Rows(0)("nRuleType"))
-                                        If nRuleType = "1" Then
-                                            If oDsDiscounts.Tables(0).Rows.Count = oDsShippingGroup.Tables(0).Rows.Count Then
-                                                'Promocode valid
-                                                oDsDiscounts = oDsDiscounts
-                                                Return sPromoCode
+                                        'Add extra condition for checking null ruletype
+                                        If nRuleType <> String.Empty Then
+                                            If nRuleType = "1" Then  ' Is it ok to keep 1 or can I pull it from config, 1=Include 2=Exclude
+                                                If oDsDiscounts.Tables(0).Rows.Count = oDsShippingGroup.Tables(0).Rows.Count Then
+                                                    'Promocode valid
+                                                    oDsDiscounts = oDsDiscounts
+                                                    Return sPromoCode
+                                                Else
+                                                    'Promocode Invalid
+                                                    oDsDiscounts.Clear()
+                                                    oDsDiscounts = Nothing
+                                                    Return oDiscountMessage
+                                                End If
                                             Else
-                                                'Promocode Invalid
-                                                oDsDiscounts.Clear()
-                                                oDsDiscounts = Nothing
-                                                Return oDiscountMessage
+                                                If oDsShippingGroup.Tables(0).Rows.Count = 0 Then
+                                                    'Promocode valid
+                                                    oDsDiscounts = oDsDiscounts
+                                                    Return sPromoCode
+                                                Else
+                                                    'Promocode Invalid
+                                                    oDsDiscounts.Clear()
+                                                    oDsDiscounts = Nothing
+                                                    Return oDiscountMessage
+                                                End If
+
                                             End If
                                         Else
-                                            If oDsShippingGroup.Tables(0).Rows.Count = 0 Then
-                                                'Promocode valid
-                                                oDsDiscounts = oDsDiscounts
-                                                Return sPromoCode
-                                            Else
-                                                'Promocode Invalid
-                                                oDsDiscounts.Clear()
-                                                oDsDiscounts = Nothing
-                                                Return oDiscountMessage
-                                            End If
-
+                                            'Promocode Invalid
+                                            oDsDiscounts.Clear()
+                                            oDsDiscounts = Nothing
+                                            Return oDiscountMessage
                                         End If
+
                                     End If
                                 Else
                                     'table not exist...
