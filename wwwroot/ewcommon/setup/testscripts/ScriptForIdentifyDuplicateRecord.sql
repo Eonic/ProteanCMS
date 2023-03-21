@@ -1,50 +1,63 @@
 
+DECLARE @SQL AS VARCHAR(max)
+DECLARE @tblNames AS TABLE (
+	tableName VARCHAR(200)
+	,tableKey VARCHAR(100)
+	)
+DECLARE @tableName AS VARCHAR(200)
+DECLARE @KeyName AS VARCHAR(200)
+DECLARE @CNT int=0
+INSERT INTO @tblNames
+SELECT c.TABLE_NAME
+	,C.COLUMN_NAME
+FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS T
+JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE C ON C.CONSTRAINT_NAME = T.CONSTRAINT_NAME
+	AND T.CONSTRAINT_TYPE = 'PRIMARY KEY'
+	AND c.TABLE_NAME NOT IN (
+		'tblPerfMon'
+		,'tblOptOutAddresses'
+		,'tblSingleUsePromoCode'
+		,'tblITBSupplierOfferVenues'
+		,'tblActivityLog'
+		,'tblEmailActivityLog'
+		,'tblContentIndex'
+		,'sysdiagrams'
+		,'tblXmlCache'
+		,'tblAudit'
+		,'tblSchemaVersion'
+			
+		)
 
+SET @SQL= 'SELECT A.nAuditKey,cnt.aCount FROM tblAudit A'
+SET @SQL = @SQL + ' OUTER APPLY ('
+SET @SQL = @SQL + ' SELECT SUM(AuditCount) As aCount FROM ('
 
+WHILE EXISTS (
+			SELECT TOP 1 tableName
+			FROM @tblNames
+			ORDER BY 1 ASC
+			)
+	BEGIN
+		
+		SELECT TOP 1 @tableName = tableName,@KeyName=tableKey
+		FROM @tblNames
+		ORDER BY tableName ASC
+		if (@CNT=0)
+		BEGIN
+			SET @SQL = @SQL + ' SELECT COUNT(C.nAuditId) AS AuditCount FROM '+ @tableName +' C WHERE C.nAuditId = A.nAuditKey '
+		END
+		ELSE
+		BEGIN
+			SET @SQL = @SQL + ' UNION ALL SELECT COUNT(C.nAuditId) AS AuditCount FROM '+ @tableName +' C WHERE C.nAuditId = A.nAuditKey '
+		END
 
-SELECT A.nAuditKey,cnt.aCount
-FROM tblAudit A
-OUTER APPLY
-(
-    SELECT SUM(AuditCount) As aCount
-    FROM (
+		SET @CNT=@CNT+1
+		DELETE
+		FROM @tblNames
+		WHERE tableName = @tableName
+	END
 
-    SELECT COUNT(C.nAuditId) AS AuditCount FROM tblContent C WHERE C.nAuditId = A.nAuditKey     
-	UNION ALL SELECT COUNT(CR.nAuditId) AS AuditCount FROM tblContentRelation CR WHERE CR.nAuditId = A.nAuditKey
-	UNION ALL SELECT COUNT(cpm.nAuditId) AS AuditCount FROM tblCartPaymentMethod cpm WHERE cpm.nAuditId = A.nAuditKey
-	UNION ALL SELECT COUNT(al.nAuditId) AS AuditCount FROM tblAlerts al  WHERE al.nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartContact	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCodes	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartDiscountRules	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblContentIndexDef	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartShippingPermission	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartPayment	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartCatProductRelations	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartDiscountDirRelations	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartDiscountProdCatRelations	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartItem	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartOrder	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartProductCategories	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartShippingLocations	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartShippingMethods	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartShippingRelations	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblContent	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblContentLocation	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblContentRelation	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblITBSupplierOffer	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblContentStructure	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblDirectory	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblDirectoryPermission	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblDirectoryRelation	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblLookup	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblDirectorySubscriptions	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblSubscription	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblSubscriptionQuota	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartCarrier	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblCartOrderDelivery	 WHERE nAuditId = A.nAuditKey
-UNION ALL 	SELECT COUNT(nAuditId) AS AuditCount FROM 	tblSubscriptionRenewal	 WHERE nAuditId = A.nAuditKey
+SET @SQL = @SQL + '	) p)  CNT WHERE CNT.aCount > 2'
 
-
-) p)
- CNT
-WHERE CNT.aCount > 2
+--PRINT(@SQL)
+Exec(@SQL)
