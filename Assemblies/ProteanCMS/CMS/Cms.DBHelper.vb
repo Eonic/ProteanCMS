@@ -4589,7 +4589,7 @@ restart:
                     sSql &= IIf(bPrimary, 1, 0) & ","
                     sSql &= IIf(bCascade, 1, 0) & ","
                     sSql &= "0,"
-                    sSql &= getAuditId() & ");select @@identity"
+                    sSql &= getAuditId() & ");select scope_identity()"
                 Else
                     sSql = "UPDATE tblContentLocation  SET "
                     sSql &= "nStructId =" & nStructId & ","
@@ -11150,12 +11150,10 @@ ReturnMe:
                 Me.ConnectTimeout = 180
                 ds = Me.GetDataSet(spWithBespokeCheck, "Item", "Report", , params, CommandType.StoredProcedure)
 
-
                 ' Convert the dataset to Xml
                 Dim reportXml As XmlDocument = New XmlDocument
                 myWeb.moDbHelper.ReturnNullsEmpty(ds)
                 reportXml.LoadXml(ds.GetXml)
-
 
                 ' Process the data for type-specific columns
                 processInfo &= "; Updating Column data"

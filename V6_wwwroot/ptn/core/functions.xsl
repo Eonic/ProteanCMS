@@ -6665,15 +6665,15 @@
 		<source type="{$type}" media="{$media}" srcset="{ew:replacestring($imageUrl,' ','%20')} 1x, {$imageRetinaUrl} 2x" >
 			<xsl:choose>
 				<xsl:when test="$lazy='on'">
-					<xsl:attribute name="data-src">
+					<xsl:attribute name="data-srcset">
 						<xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
 					</xsl:attribute>
-					<xsl:attribute name="src">
+					<xsl:attribute name="srcset">
 						<xsl:value-of select="$lazyplaceholder"/>
 					</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:attribute name="src">
+					<xsl:attribute name="srcset">
 						<xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
 					</xsl:attribute>
 				</xsl:otherwise>
