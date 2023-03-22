@@ -9150,14 +9150,18 @@
 	<xsl:template name="render-js-files">
 		<xsl:param name="list" />
 		<xsl:param name="async" />
+		<xsl:param name="defer" />
 		<xsl:variable name="seperator" select="','"/>
 		<xsl:variable name="newlist" select="concat(normalize-space($list),$seperator)" />
 		<xsl:variable name="first" select="substring-before($newlist, $seperator)" />
 		<xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
 		<xsl:if test="$first!=''">
 			<script type="text/javascript" src="{$first}{$bundleVersion}">
-				<xsl:if test="$async!=''">
+				<xsl:if test="$async=true()">
 					<xsl:attribute name="async">async</xsl:attribute>
+				</xsl:if>				
+				<xsl:if test="$defer=true()">
+					<xsl:attribute name="defer">defer</xsl:attribute>
 				</xsl:if>
 				<xsl:text>/* */</xsl:text>
 			</script>
