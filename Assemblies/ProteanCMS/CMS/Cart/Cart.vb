@@ -508,8 +508,9 @@ Partial Public Class Cms
                         Else
                             mcPagePath = mcCartURL & mcPagePath & "?"
                         End If
+                    End If
 
-                        If moConfig("Membership") = "on" Then mbEwMembership = True
+                    If moConfig("Membership") = "on" Then mbEwMembership = True
 
                     mcMerchantEmail = moCartConfig("MerchantEmail")
                     mcTermsAndConditions = moCartConfig("TermsAndConditions")
