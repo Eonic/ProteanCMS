@@ -502,11 +502,14 @@ Partial Public Class Cms
                             mcPagePath = mcCartURL & "/?"
                         End If
                     Else
+                        If mcPagePath.EndsWith("/") Then
+                            mcPagePath = mcCartURL & mcPagePath.TrimStart("/") & "?"
 
-                        mcPagePath = mcCartURL & mcPagePath.TrimStart("/") & "?"  'Modified by sonali to remove double '/' from url. 17 march 23
-                    End If
+                        Else
+                            mcPagePath = mcCartURL & mcPagePath & "?"
+                        End If
 
-                    If moConfig("Membership") = "on" Then mbEwMembership = True
+                        If moConfig("Membership") = "on" Then mbEwMembership = True
 
                     mcMerchantEmail = moCartConfig("MerchantEmail")
                     mcTermsAndConditions = moCartConfig("TermsAndConditions")
