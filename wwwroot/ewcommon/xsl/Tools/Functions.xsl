@@ -1869,15 +1869,19 @@
           <xsl:value-of select="@artid"/>
         </xsl:if>
       </xsl:attribute>
-      <xsl:if test="$GoogleTagManagerID!=''">
-        <!-- Google Tag Manager (noscript) -->
-        <noscript>
-          <iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-        </noscript>
-        <!-- End Google Tag Manager (noscript) -->
-      </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
-      <xsl:apply-templates select="." mode="bodyDisplay"/>
+		<xsl:if test="$GoogleTagManagerID!=''">
+			<!-- Google Tag Manager (noscript) -->
+			<noscript>
+				<iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden">
+					<xsl:text> </xsl:text>
+				</iframe>
+			</noscript>
+			<!-- End Google Tag Manager (noscript) -->
+		</xsl:if>
+		<xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaLeadForensicsID']" mode="MetaLeadForensicsCode"/>
+	
+		<xsl:apply-templates select="." mode="bodyDisplay"/>
 		<xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
       
 
@@ -1901,7 +1905,6 @@
       </xsl:if>
       <xsl:if test="@previewMode='true'"> previewMode</xsl:if>
     </xsl:attribute>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaLeadForensicsID']" mode="MetaLeadForensicsCode"/>
   </xsl:template>
 
   <xsl:template match="Page" mode="bodyDisplay">
