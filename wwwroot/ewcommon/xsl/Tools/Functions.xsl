@@ -385,6 +385,7 @@
 
 
   <xsl:template match="Page">
+	 
     <xsl:variable name="pageLang">
       <xsl:choose>
         <xsl:when test="/Page/Contents/Content[@name='XmlLang']">
@@ -1859,8 +1860,9 @@
   </xsl:template>
 
   <!--  ##  BUILD PAGE BODY TAG  ###################################################################  -->
-  <xsl:template match="Page" mode="bodyBuilder">
+ <xsl:template match="Page" mode="bodyBuilder">
     <body>
+	 
       <xsl:attribute name="id">
         <xsl:text>page</xsl:text>
         <xsl:value-of select="@id"/>
@@ -1869,19 +1871,20 @@
           <xsl:value-of select="@artid"/>
         </xsl:if>
       </xsl:attribute>
-      <xsl:if test="$GoogleTagManagerID!=''">
-        <!-- Google Tag Manager (noscript) -->
-        <noscript>
-          <iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-        </noscript>
-        <!-- End Google Tag Manager (noscript) -->
-      </xsl:if>
+     
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
 		<xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
       
 
       <xsl:apply-templates select="." mode="footerJs"/>
+	  <xsl:if test="$GoogleTagManagerID!=''">
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+          <iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+      </xsl:if>
     </body>
   </xsl:template>
 
