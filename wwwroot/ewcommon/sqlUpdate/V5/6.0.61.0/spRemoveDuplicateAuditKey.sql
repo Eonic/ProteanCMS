@@ -1,18 +1,5 @@
 
 
-/****** Object:  StoredProcedure [dbo].[spRemoveDuplicateAuditKey]    Script Date: 21-03-2023 12:57:06 ******/
-DROP PROCEDURE [dbo].[spRemoveDuplicateAuditKey]
-GO
-
-/****** Object:  StoredProcedure [dbo].[spRemoveDuplicateAuditKey]    Script Date: 21-03-2023 12:57:06 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-
-
 CREATE PROCEDURE [dbo].[spRemoveDuplicateAuditKey] @Key VARCHAR(100) 
 	,@TableName VARCHAR(200)  
 AS
@@ -99,6 +86,5 @@ BEGIN
 
 	EXEC (@SQL)
 END
-GO
 
 

@@ -25,6 +25,7 @@ JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE C ON C.CONSTRAINT_NAME = T.CONST
 		,'tblXmlCache'
 		,'tblAudit'
 		,'tblSchemaVersion'
+		,'dtproperties'
 			
 		)
 
