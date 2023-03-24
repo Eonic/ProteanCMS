@@ -1411,7 +1411,7 @@
 
   <xsl:template match="Page" mode="metadata">
     <xsl:if test="@cssFramework='bs3' or $adminMode">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
     </xsl:if>
 
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
@@ -1869,18 +1869,19 @@
           <xsl:value-of select="@artid"/>
         </xsl:if>
       </xsl:attribute>
-      <xsl:if test="$GoogleTagManagerID!=''">
-        <!-- Google Tag Manager (noscript) -->
-        <noscript>
-          <iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-        </noscript>
-        <!-- End Google Tag Manager (noscript) -->
-      </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
+      <xsl:if test="$GoogleTagManagerID!=''">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden">
+			<xsl:text> </xsl:text>
+		</iframe>
+	</noscript>
+	<!-- End Google Tag Manager (noscript) -->
+      </xsl:if>
+      <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaLeadForensicsID']" mode="MetaLeadForensicsCode"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-		<xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
-      
-
+      <xsl:apply-templates select="/Page" mode="footerCommonStyle"/>      
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
@@ -1901,7 +1902,6 @@
       </xsl:if>
       <xsl:if test="@previewMode='true'"> previewMode</xsl:if>
     </xsl:attribute>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaLeadForensicsID']" mode="MetaLeadForensicsCode"/>
   </xsl:template>
 
   <xsl:template match="Page" mode="bodyDisplay">
@@ -6905,6 +6905,7 @@
 		<xsl:param name="style"/>
     <xsl:param name="imageUrl"/>
     <xsl:param name="altText"/>
+	 <xsl:param name="noLazy"/>
    	<!-- IF SO THAT we don't get empty tags if NO IMAGE -->
 		<xsl:if test="$imageUrl!=''">
       	<!-- SRC VALUE -->
@@ -7356,13 +7357,13 @@
 								<img>
 									<!-- SRC -->
 									<xsl:choose>
-										<xsl:when test="$lazy='on'">
+										<xsl:when test="$lazy='on' and not($noLazy)">
 											<xsl:attribute name="data-src">
 												<xsl:value-of select="$newSrc"/>
 											</xsl:attribute>
 											<xsl:attribute name="src">
 												<xsl:value-of select="$lazyplaceholder"/>
-											</xsl:attribute>
+											</xsl:attribute>										
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:attribute name="src">
@@ -7370,9 +7371,13 @@
 											</xsl:attribute>
 										</xsl:otherwise>
 									</xsl:choose>
+									<xsl:if test="not($noLazy)">
+										<xsl:attribute name="loading">
+											<xsl:text>lazy</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
 									<!-- Width -->
-									<xsl:attribute name="width">
-										
+									<xsl:attribute name="width">										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-width"/>
@@ -7683,13 +7688,17 @@
                 <img>
                   <!-- SRC -->
                   <xsl:choose>
-                    <xsl:when test="$lazy='on'">
+                    <xsl:when test="$lazy='on' and not($noLazy)">
                       <xsl:attribute name="data-src">
                         <xsl:value-of select="$newSrc"/>
                       </xsl:attribute>
                       <xsl:attribute name="src">
                         <xsl:value-of select="$lazyplaceholder"/>
                       </xsl:attribute>
+						
+						<xsl:attribute name="loading">
+							<xsl:text>lazy</xsl:text>
+						</xsl:attribute>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:attribute name="src">
@@ -7737,7 +7746,7 @@
                         <xsl:text>photo thumbnail resized</xsl:text>
                       </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:if test="$lazy='on'">
+                    <xsl:if test="$lazy='on' and not($noLazy)">
                       <xsl:text> lazy</xsl:text>
                     </xsl:if>
                   </xsl:attribute>
@@ -7746,6 +7755,12 @@
                       <xsl:value-of select="$style" />
                     </xsl:attribute>
                   </xsl:if>
+					
+					<xsl:if test="not($noLazy)">
+						<xsl:attribute name="loading">
+							<xsl:text>lazy</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
                 </img>
               </picture>
             </xsl:variable>
@@ -7794,6 +7809,9 @@
 										</xsl:attribute>
 										<xsl:attribute name="src">
 											<xsl:value-of select="$lazyplaceholder"/>
+										</xsl:attribute>
+										<xsl:attribute name="loading">
+											<xsl:text>lazy</xsl:text>
 										</xsl:attribute>
 									</xsl:when>
 									<xsl:otherwise>
@@ -7871,8 +7889,9 @@
     <xsl:param name="imageUrl"/>
     <xsl:param name="imageRetinaUrl"/>
     <!--New image tags-->
-    <source type="{$type}" media="{$media}" srcset="{ew:replacestring($imageUrl,' ','%20')} 1x, {$imageRetinaUrl} 2x" >
-      <xsl:choose>
+    <source type="{$type}" media="{$media}">
+      <!--
+	<xsl:choose>
         <xsl:when test="$lazy='on'">
           <xsl:attribute name="data-srcset">
             <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
@@ -7887,7 +7906,7 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
-
+        -->
       <xsl:attribute name="srcset">
         <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
         <xsl:if test="imageRetinaUrl!=''">
@@ -7896,20 +7915,23 @@
           <xsl:text> 2x</xsl:text>
         </xsl:if>
       </xsl:attribute>
-
+      <!--
       <xsl:attribute name="class">
         <xsl:if test="$class!=''">
           <xsl:value-of select="$class" />
-        </xsl:if>
+        </xsl:if>		 
         <xsl:if test="$lazy='on'">
           <xsl:text> lazy</xsl:text>
         </xsl:if>
+	
       </xsl:attribute>
+      
       <xsl:if test="$style!=''">
         <xsl:attribute name="style">
           <xsl:value-of select="$style" />
         </xsl:attribute>
       </xsl:if>
+      -->
     </source>
   </xsl:template>
 

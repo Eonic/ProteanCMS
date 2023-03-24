@@ -1166,6 +1166,7 @@
 								</xsl:apply-templates>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="displayBrief"/>
+							<xsl:text> </xsl:text>
 						</div>
 					</xsl:if>
 					<xsl:if test="@linkText!='' and @link!=''">
@@ -1253,9 +1254,21 @@
 						<xsl:apply-templates select="." mode="moduleLink"/>
 					</h5>
 				</xsl:if>-->
-							<h5 class="card-title">
-								<xsl:apply-templates select="." mode="moduleLink"/>
-							</h5>
+							<xsl:choose>
+								<xsl:when test="@heading and @heading!=''">
+									<xsl:element name="{@heading}">
+										<xsl:attribute name="class">
+											<xsl:text>card-title</xsl:text>
+										</xsl:attribute>
+										<xsl:apply-templates select="." mode="moduleLink"/>
+									</xsl:element>
+								</xsl:when>
+								<xsl:otherwise>
+									<h5 class="card-title">
+										<xsl:apply-templates select="." mode="moduleLink"/>
+									</h5>
+								</xsl:otherwise>
+							</xsl:choose>
 						</div>
 					</xsl:if>
 					<xsl:if test="not(@listGroup='true')">
@@ -1271,6 +1284,8 @@
 								</xsl:apply-templates>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="displayBrief"/>
+						
+							<xsl:text> </xsl:text>
 						</div>
 					</xsl:if>
 					<xsl:if test="@listGroup='true'">
@@ -1281,6 +1296,8 @@
 								</xsl:apply-templates>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="displayBrief"/>
+						
+							<xsl:text> </xsl:text>
 						</div>
 					</xsl:if>
 					<xsl:if test="@linkText!='' and @link!=''">
@@ -1378,6 +1395,8 @@
             </xsl:apply-templates>
           </xsl:if>
           <xsl:apply-templates select="." mode="displayBrief"/>
+		
+							<xsl:text> </xsl:text>
         </div>
       </xsl:if>
       <xsl:if test="@linkText!='' and @link!=''">

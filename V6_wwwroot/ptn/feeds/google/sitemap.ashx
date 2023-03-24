@@ -16,7 +16,7 @@ Public Class google_sitemap : Implements IHttpHandler, IRequiresSessionState
         If IO.File.Exists(context.Server.MapPath("/xsl/feeds/google/sitemap.xsl")) Then
             oEw.mcEwSiteXsl = "/xsl/feeds/google/sitemap.xsl"
         Else
-            oEw.mcEwSiteXsl = "/ewcommon/xsl/feeds/google/sitemap.xsl"
+            oEw.mcEwSiteXsl = "/ptn/feeds/google/sitemap.xsl"
         End If
 
         context.Response.ContentType = "text/xml"

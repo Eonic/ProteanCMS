@@ -459,6 +459,7 @@ Partial Public Class Cms
         End Sub
 
 
+
         Public Sub InitializeVariables()
             myWeb.PerfMon.Log("Cart", "InitializeVariables")
             'Author:        Trevor Spink
@@ -492,6 +493,8 @@ Partial Public Class Cms
                     End If
 
                     moDiscount = New Discount(Me)
+
+
                     mcPagePath = myWeb.mcPagePath
 
                     If mcPagePath = "" Then
@@ -501,7 +504,7 @@ Partial Public Class Cms
                             mcPagePath = mcCartURL & "/?"
                         End If
                     Else
-                        mcPagePath = mcCartURL & mcPagePath & "?"
+                        mcPagePath = mcCartURL & mcPagePath.TrimStart("/") & "?"
                     End If
 
                     If moConfig("Membership") = "on" Then mbEwMembership = True
