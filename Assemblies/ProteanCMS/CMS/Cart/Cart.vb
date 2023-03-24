@@ -3096,7 +3096,7 @@ processFlow:
                                                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                                        'oCartElmt.SetAttribute("shippingCartType", cCartType & "")
+                                                        oCartElmt.SetAttribute("shippingCartType", cCartType & "")
                                                     End If
                                                 End If
                                             Else
@@ -3108,11 +3108,11 @@ processFlow:
                                                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                                        'If cCartType <> String.Empty Then
-                                                        '    oCartElmt.SetAttribute("shippingCartType", cCartType & "")
-                                                        'Else
-                                                        '    oCartElmt.SetAttribute("shippingCartType", "" & "")
-                                                        'End If
+                                                        If cCartType <> String.Empty Then
+                                                            oCartElmt.SetAttribute("shippingCartType", cCartType & "")
+                                                        Else
+                                                            oCartElmt.SetAttribute("shippingCartType", "" & "")
+                                                        End If
 
                                                     End If
                                                 End If
@@ -8962,99 +8962,101 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim sCountryList As String = getParentCountries(cDestinationCountry, 1)
 
                 'Add code for checking shipping group is included/Excluded for delievry methods
-                If mnCartId > 0 Then
-                    If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
-                        '' call stored procedure else existing code.
-                        '' Passing parameter: nCartId
-                        Dim param As New Hashtable
-                        param.Add("CartOrderId", mnCartId)
-                        param.Add("Amount", nAmount)
-                        param.Add("Quantity", nQuantity)
-                        param.Add("Weight", nWeight)
-                        param.Add("Currency", mcCurrency)
-                        param.Add("userId", userId)
-                        param.Add("AuthUsers", gnAuthUsers)
-                        param.Add("NonAuthUsers", gnNonAuthUsers)
-                        param.Add("CountryList", sCountryList)
-                        param.Add("dPublishDate", Protean.Tools.Database.SqlDate(Now))
-                        param.Add("dExpireDate", Protean.Tools.Database.SqlDate(Now))
-                        Return moDBHelper.GetDataSet("GetValidShippingOptions", "Option", "Shipping", False, param, CommandType.StoredProcedure)
-                        'End If
-                    Else
+                Dim PublishExpireDate As DateTime = Now()
 
-                        Dim sSql As String
+                If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
+                    '' call stored procedure else existing code.
+                    '' Passing parameter: nCartId
+                    Dim param As New Hashtable
+                    param.Add("CartOrderId", mnCartId)
+                    param.Add("Amount", nAmount)
+                    param.Add("Quantity", nQuantity)
+                    param.Add("Weight", nWeight)
+                    param.Add("Currency", mcCurrency)
+                    param.Add("userId", userId)
+                    param.Add("AuthUsers", gnAuthUsers)
+                    param.Add("NonAuthUsers", gnNonAuthUsers)
+                    param.Add("CountryList", sCountryList)
+                    param.Add("dPublishDate", PublishExpireDate)
+                    param.Add("dExpireDate", PublishExpireDate)
 
-                        sSql = "select opt.*, dbo.fxn_shippingTotal(opt.nShipOptKey," & nAmount & "," & nQuantity & "," & nWeight & ") as nShippingTotal  from tblCartShippingLocations Loc "
-                        sSql = sSql & "Inner Join tblCartShippingRelations rel ON Loc.nLocationKey = rel.nShpLocId "
-                        sSql = sSql & "Inner Join tblCartShippingMethods opt ON rel.nShpOptId = opt.nShipOptKey "
-                        sSql &= "INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey"
+                    Return moDBHelper.GetDataSet("GetValidShippingOptions", "Option", "Shipping", False, param, CommandType.StoredProcedure)
+                    'End If
+                Else
 
-                        sSql = sSql & " WHERE (nShipOptQuantMin <= 0 or nShipOptQuantMin <= " & nQuantity & ") and (nShipOptQuantMax <= 0 or nShipOptQuantMax >= " & nQuantity & ") and "
-                        sSql = sSql & "(nShipOptPriceMin <= 0 or nShipOptPriceMin <= " & nAmount & ") and (nShipOptPriceMax <= 0 or nShipOptPriceMax >= " & nAmount & ") and "
-                        sSql = sSql & "(nShipOptWeightMin <= 0 or nShipOptWeightMin <= " & nWeight & ") and (nShipOptWeightMax <= 0 or nShipOptWeightMax >= " & nWeight & ") "
+                    Dim sSql As String
 
-                        sSql &= " and ((opt.cCurrency Is Null) or (opt.cCurrency = '') or (opt.cCurrency = '" & mcCurrency & "'))"
-                        'If myWeb.mnUserId > 0 Then
-                        '    ' if user in group then return it
-                        '    sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                        '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                        '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 1) > 0"
-                        '    sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                        '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                        '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 0) > 0)"
-                        If userId > 0 Then
-                            ' if user in group then return it
-                            sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                                " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                                "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 1) > 0"
-                            sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                                " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                                "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 0) > 0)"
-                            'method allowed for authenticated or imporsonating CS users.
-                            Dim shippingGroupCondition As String
+                    sSql = "select opt.*, dbo.fxn_shippingTotal(opt.nShipOptKey," & nAmount & "," & nQuantity & "," & nWeight & ") as nShippingTotal  from tblCartShippingLocations Loc "
+                    sSql = sSql & "Inner Join tblCartShippingRelations rel ON Loc.nLocationKey = rel.nShpLocId "
+                    sSql = sSql & "Inner Join tblCartShippingMethods opt ON rel.nShpOptId = opt.nShipOptKey "
+                    sSql &= "INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey"
 
-                            shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
+                    sSql = sSql & " WHERE (nShipOptQuantMin <= 0 or nShipOptQuantMin <= " & nQuantity & ") and (nShipOptQuantMax <= 0 or nShipOptQuantMax >= " & nQuantity & ") and "
+                    sSql = sSql & "(nShipOptPriceMin <= 0 or nShipOptPriceMin <= " & nAmount & ") and (nShipOptPriceMax <= 0 or nShipOptPriceMax >= " & nAmount & ") and "
+                    sSql = sSql & "(nShipOptWeightMin <= 0 or nShipOptWeightMin <= " & nWeight & ") and (nShipOptWeightMax <= 0 or nShipOptWeightMax >= " & nWeight & ") "
 
-                            sSql &= " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                               "  where perm.nShippingMethodId = opt.nShipOptKey And " & shippingGroupCondition & " And perm.nPermLevel = 1) > 0"
+                    sSql &= " and ((opt.cCurrency Is Null) or (opt.cCurrency = '') or (opt.cCurrency = '" & mcCurrency & "'))"
+                    'If myWeb.mnUserId > 0 Then
+                    '    ' if user in group then return it
+                    '    sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                    '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+                    '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 1) > 0"
+                    '    sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                    '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+                    '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 0) > 0)"
+                    If userId > 0 Then
+                        ' if user in group then return it
+                        sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+                            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 1) > 0"
+                        sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+                            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 0) > 0)"
+                        'method allowed for authenticated or imporsonating CS users.
+                        Dim shippingGroupCondition As String
 
-                            ' if no group exists return it.
-                            sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
+                        shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
 
-                            sSql &= " And opt.nShipOptKey not in ( select nShippingMethodId
+                        sSql &= " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                           "  where perm.nShippingMethodId = opt.nShipOptKey And " & shippingGroupCondition & " And perm.nPermLevel = 1) > 0"
+
+                        ' if no group exists return it.
+                        sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
+
+                        sSql &= " And opt.nShipOptKey not in ( select nShippingMethodId
                                 from tblCartShippingPermission perm 
                                 Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId  
                                  and  nPermLevel = 0  and PermGroup.nDirChildId =" & userId & ")"
 
-                        Else
-                            Dim nonAuthID As Long = gnNonAuthUsers
-                            Dim AuthID As Long = gnAuthUsers
-                            'method allowed for non-authenticated
-                            sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                               "  where perm.nShippingMethodId = opt.nShipOptKey and perm.nDirId = " & gnNonAuthUsers & "  and perm.nPermLevel = 1) > 0"
-                            ' method has no group 
-                            sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
-
-                        End If
-                        ' Restrict the shipping options by looking at the delivery country currently selected.  
-                        ' Of course, if we are hiding the delivery address then this can be ignored.
-
-                        If sCountryList <> "" Then
-                            sSql = sSql & " and ((loc.cLocationNameShort IN " & sCountryList & ") or (loc.cLocationNameFull IN " & sCountryList & ")) "
-                        End If
-
-                        'Active methods
-
-                        sSql &= " AND (tblAudit.nStatus >0)"
-                        sSql &= " AND ((tblAudit.dPublishDate = 0) or (tblAudit.dPublishDate Is Null) or (tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & "))"
-                        sSql &= " AND ((tblAudit.dExpireDate = 0) or (tblAudit.dExpireDate Is Null) or (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & "))"
-                        'Build Form
-
-                        'Go and collect the valid shipping options available for this order
-                        Return moDBHelper.GetDataSet(sSql & " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping")
+                    Else
+                        Dim nonAuthID As Long = gnNonAuthUsers
+                        Dim AuthID As Long = gnAuthUsers
+                        'method allowed for non-authenticated
+                        sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                           "  where perm.nShippingMethodId = opt.nShipOptKey and perm.nDirId = " & gnNonAuthUsers & "  and perm.nPermLevel = 1) > 0"
+                        ' method has no group 
+                        sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
 
                     End If
+                    ' Restrict the shipping options by looking at the delivery country currently selected.  
+                    ' Of course, if we are hiding the delivery address then this can be ignored.
+
+                    If sCountryList <> "" Then
+                        sSql = sSql & " and ((loc.cLocationNameShort IN " & sCountryList & ") or (loc.cLocationNameFull IN " & sCountryList & ")) "
+                    End If
+
+                    'Active methods
+
+                    sSql &= " AND (tblAudit.nStatus >0)"
+                    sSql &= " AND ((tblAudit.dPublishDate = 0) or (tblAudit.dPublishDate Is Null) or (tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & "))"
+                    sSql &= " AND ((tblAudit.dExpireDate = 0) or (tblAudit.dExpireDate Is Null) or (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & "))"
+                    'Build Form
+
+                    'Go and collect the valid shipping options available for this order
+                    Return moDBHelper.GetDataSet(sSql & " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping")
+
                 End If
+
             Catch ex As Exception
 
                 returnException(myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, , "", gbDebug)
