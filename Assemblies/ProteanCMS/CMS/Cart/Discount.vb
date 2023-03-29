@@ -1765,10 +1765,11 @@ NoDiscount:
 
                                             End If
                                         Else
-                                            'Promocode Invalid
-                                            oDsDiscounts.Clear()
-                                            oDsDiscounts = Nothing
-                                            Return oDiscountMessage
+                                            'Considering no shipping group is assign to shipping option,
+                                            'so promocode is applicable independant of the shipping group with respect to selected delivery option
+                                            'Promocode valid
+                                            oDsDiscounts = oDsDiscounts
+                                            Return sPromoCode
                                         End If
 
                                     End If

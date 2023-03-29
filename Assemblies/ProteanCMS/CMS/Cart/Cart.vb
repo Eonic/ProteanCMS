@@ -8977,9 +8977,10 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 'Add code for checking shipping group is included/Excluded for delievry methods
                 Dim PublishExpireDate As DateTime = Now()
 
-                If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
+                If myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure) Then
                     '' call stored procedure else existing code.
                     '' Passing parameter: nCartId
+
                     Dim param As New Hashtable
                     param.Add("CartOrderId", mnCartId)
                     param.Add("Amount", nAmount)
@@ -8993,7 +8994,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     param.Add("dPublishDate", PublishExpireDate)
                     param.Add("dExpireDate", PublishExpireDate)
 
-                    Return moDBHelper.GetDataSet("GetValidShippingOptions", "Option", "Shipping", False, param, CommandType.StoredProcedure)
+                    Return moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", False, param, CommandType.StoredProcedure)
                     'End If
                 Else
 
