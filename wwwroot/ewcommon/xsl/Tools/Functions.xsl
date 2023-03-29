@@ -6243,7 +6243,7 @@
       </xsl:if>
 
       <xsl:apply-templates mode="cleanXhtml"/>
-
+	    <xsl:text> </xsl:text>
     </xsl:element>
   </xsl:template>
 
