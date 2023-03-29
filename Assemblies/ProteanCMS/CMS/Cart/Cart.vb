@@ -3059,6 +3059,16 @@ processFlow:
                         oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                         oCartElmt.SetAttribute("shippingDesc", oRow("cShippingDesc") & "")
+                        'Add extra condition for checking shipping delievry method set by default
+                        If IsDeliveryShippingMethod <> moCartConfig("DefaultShippingMethod") Then
+                            If (oRow("nShippingMethodId") = IsDeliveryShippingMethod) Then
+                                If cCartType <> String.Empty Then
+                                    oCartElmt.SetAttribute("shippingCartType", cCartType & "")
+                                Else
+                                    oCartElmt.SetAttribute("shippingCartType", "" & "")
+                                End If
+                            End If
+                        End If
                         If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
                             If IsDBNull(oRow("nReceiptType")) Then
                                 ReceiptDeliveryType = 1
