@@ -48,7 +48,7 @@ Namespace Providers
                     oStep.Value = FilterConfig.GetAttribute("step")
                     oXml.Attributes.Append(oMinPrice)
                     oXml.Attributes.Append(oMaxPrice)
-                    oXml.Attributes.Append(oSliderMinPrice)
+                    oXml.Attributes.Append(oSliderMinPrice)  
                     oXml.Attributes.Append(oSliderMaxPrice)
                     oXml.Attributes.Append(oStep)
 
@@ -132,7 +132,7 @@ Namespace Providers
                     End If
 
                     'oXform.addDiv(oFromGroup, "", "form-group select-group histogramSlider", True)
-                    oXform.addInput(oFromGroup, "", False, sCotrolDisplayName, "histogramSliderMainDiv")
+                    oXform.addInput(oFromGroup, "", False, sCotrolDisplayName, "histogramSliderMainDivPrice")
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
