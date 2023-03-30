@@ -8991,9 +8991,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     param.Add("AuthUsers", gnAuthUsers)
                     param.Add("NonAuthUsers", gnNonAuthUsers)
                     param.Add("CountryList", sCountryList)
-                    param.Add("dPublishDate", PublishExpireDate)
-                    param.Add("dExpireDate", PublishExpireDate)
-
+                    param.Add("dValidDate", PublishExpireDate)
                     Return moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", False, param, CommandType.StoredProcedure)
                     'End If
                 Else
