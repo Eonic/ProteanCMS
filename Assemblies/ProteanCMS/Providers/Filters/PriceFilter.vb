@@ -127,7 +127,7 @@ Namespace Providers
                     If (aWeb.moRequest.Form("MinPrice") IsNot Nothing And aWeb.moRequest.Form("MinPrice") <> "") Then
 
                         Dim sText As String = "From £" + oMinPrice.Value.Trim() + " To £" + oMaxPrice.Value.Trim()
-                        oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter" + sText, "btnCross filter-applied", "fa-times")
+                        oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter" + sText, "btnCrossForPrice filter-applied", "fa-times")
 
                     End If
 
