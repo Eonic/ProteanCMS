@@ -1729,7 +1729,7 @@ NoDiscount:
                                     sSqlSG.Append("inner join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId ")
                                     sSqlSG.Append(" INNER JOIN tblCartItem cI ON cpr.nContentId= CI.nItemId and nItemId<>0 ")
                                     sSqlSG.Append(" inner join tblCartOrder co on co.nCartOrderKey=ci.nCartOrderId  ")
-                                    sSqlSG.Append(" where cspcr.nShipOptId=" & cFreeShippingMethods & " and co.nCartOrderKey= " & myCart.mnCartId & " ")
+                                    sSqlSG.Append(" where cspcr.nShipOptId in (" & cFreeShippingMethods & " ) and co.nCartOrderKey= " & myCart.mnCartId & " ")
                                     sSqlSG.Append("group by cspcr.nRuleType ")
                                     oDsShippingGroup = myWeb.moDbHelper.GetDataSet(sSqlSG.ToString, "ShippingGroup", "ShippingGroups")
                                     'oDsDiscounts = Nothing 'incase of both condition mapped ... rule type=1, 
