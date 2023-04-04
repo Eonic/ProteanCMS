@@ -45,23 +45,23 @@
 
   <!-- -->
 
-  <xsl:template match="Content[@moduleType='Carousel']" mode="writeNodes">
+	<xsl:template match="cContentSchemaName" mode="writeNodes">
+		<xsl:element name="cContentSchemaName">
+			<xsl:text>SwiperSlide</xsl:text>			
+		</xsl:element>
+	</xsl:template>
+
+  <xsl:template match="Content[@type='LibraryImageWithLink']" mode="writeNodes">
     <xsl:element name="{name()}">
       <xsl:for-each select="@*">
         <xsl:attribute name="{name()}">
           <xsl:value-of select="." />
         </xsl:attribute>
       </xsl:for-each>
-		<xsl:attribute name="moduleType">
-			<xsl:text>SwiperCarousel</xsl:text>
-		</xsl:attribute>
-		<xsl:attribute name="contentType">
+		<xsl:attribute name="type">
 			<xsl:text>SwiperSlide</xsl:text>
 		</xsl:attribute>
       <xsl:apply-templates mode="writeNodes"/>
-      <xsl:if test="not(Profile)">
-        <Profile/>
-      </xsl:if>
     </xsl:element>
   </xsl:template>
 
