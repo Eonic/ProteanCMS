@@ -28,8 +28,8 @@ Namespace Providers
                     Dim oMaxPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("MaxPrice")
                     Dim oSliderMinPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("SliderMinPrice")
                     Dim oSliderMaxPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("SliderMaxPrice")
-                    Dim oStep As XmlAttribute = oXform.moPageXML.CreateAttribute("Step")
-                    Dim oProductCountList As XmlAttribute = oXform.moPageXML.CreateAttribute("ProductCountList")
+                    Dim oStep As XmlAttribute = oXform.moPageXML.CreateAttribute("PriceStep")
+                    Dim oProductCountList As XmlAttribute = oXform.moPageXML.CreateAttribute("PriceCountList")
                     Dim sProductCount As String = String.Empty
                     Dim cnt As Integer = 0
                     Dim cProductCountList As String = String.Empty
@@ -57,7 +57,7 @@ Namespace Providers
                     End If
                     arrParams.Add("MinPrice", oSliderMinPrice.Value)
                     arrParams.Add("MaxPrice", oSliderMaxPrice.Value)
-                    arrParams.Add("Step", oStep.Value)
+                    arrParams.Add("PriceStep", oStep.Value)
 
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
                         If (oDr.HasRows) Then
@@ -95,15 +95,15 @@ Namespace Providers
                     oXform.addBind("MaxPrice", "PriceFilter/@MaxPrice", "false()", "string", oXform.model)
                     oXform.addBind("SliderMinPrice", "PriceFilter/@SliderMinPrice", "false()", "string", oXform.model)
                     oXform.addBind("SliderMaxPrice", "PriceFilter/@SliderMaxPrice", "false()", "string", oXform.model)
-                    oXform.addBind("Step", "PriceFilter/@Step", "false()", "string", oXform.model)
-                    oXform.addBind("ProductListCount", "PriceFilter/@ProductCountList", "false()", "string", oXform.model)
+                    oXform.addBind("PriceStep", "PriceFilter/@PriceStep", "false()", "string", oXform.model)
+                    oXform.addBind("PriceListCount", "PriceFilter/@PriceCountList", "false()", "string", oXform.model)
 
                     oXform.addInput(oFromGroup, "MinPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "MaxPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "SliderMinPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "SliderMaxPrice", True, "", "hidden")
-                    oXform.addInput(oFromGroup, "Step", True, "", "hidden")
-                    oXform.addInput(oFromGroup, "ProductListCount", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "PriceStep", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "PriceListCount", True, "", "hidden")
 
                     'If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
                     '    If (oXml.InnerText.Trim() <> String.Empty) Then
