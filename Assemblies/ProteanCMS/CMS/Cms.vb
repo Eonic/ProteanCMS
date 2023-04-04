@@ -6075,7 +6075,7 @@ Public Class Cms
                                 ' Paging variables
                                 Dim nStart As Integer = 0
                                 Dim nRows As Integer = 500
-                                nRows = ContentModule.GetAttribute("stepCount")
+                                nRows = CInt("0" & ContentModule.GetAttribute("stepCount"))
 
                                 Dim sFilterSql As String = GetStandardFilterSQLForContent()
                                 sFilterSql = sFilterSql & " and nstructid=" & mnPageId

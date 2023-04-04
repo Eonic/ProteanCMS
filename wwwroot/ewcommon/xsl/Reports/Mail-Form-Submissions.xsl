@@ -3,6 +3,8 @@
 	<xsl:output method="text" indent="yes" omit-xml-declaration="yes" encoding="utf-8"/>
 	<xsl:template match="Page">
 
+		<xsl:output method="html" indent="no" omit-xml-declaration="yes" encoding="utf-8"/>
+
 		<xsl:for-each select="ContentDetail/Report">
 			<xsl:apply-templates select="Item[1]" mode="reportTitles"/>
 			<xsl:apply-templates select="Item" mode="reportRow"/>

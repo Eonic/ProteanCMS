@@ -46,7 +46,7 @@
       <xsl:if test="@allAsZip='on'">
         <div class="listItem list-group-item">
           <div class="lIinner">
-            <a class="docLink zipicon" href="{$appPath}ewcommon/tools/download.ashx?docId={$idsList}&amp;filename=myzip.zip&amp;xPath=/Content/Path">
+            <a class="docLink zipicon" href="{$appPath}ptn/tools/download.ashx?docId={$idsList}&amp;filename=myzip.zip&amp;xPath=/Content/Path">
               <xsl:call-template name="term2074" />
             </a>
           </div>
@@ -109,7 +109,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="$appPath"/>
-                  <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
+                  <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
                   <xsl:value-of select="@id"/>
                 </xsl:otherwise>
               </xsl:choose>
@@ -135,7 +135,7 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:value-of select="$appPath"/>
-                  <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
+                  <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
                   <xsl:value-of select="@id"/>
                 </xsl:otherwise>
               </xsl:choose>

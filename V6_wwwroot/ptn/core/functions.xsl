@@ -4199,7 +4199,7 @@
 		<div class="morelink">
 			<span>
 				<a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
-					<xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
+					<xsl:if test="not(substring($link,1,1)='/') and ((contains($link,'http://') or contains($link,'tel:')) and $linkType='external')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 						<xsl:attribute name="class">extLink</xsl:attribute>
 					</xsl:if>
@@ -4260,7 +4260,7 @@
 													<xsl:value-of select="$link"/>
 												</xsl:attribute>
 											</xsl:when>
-											<xsl:when test="contains($link,'http')">
+											<xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
 												<xsl:attribute name="href">
 													<xsl:value-of select="$link"/>
 												</xsl:attribute>
@@ -6665,15 +6665,15 @@
 		<source type="{$type}" media="{$media}" srcset="{ew:replacestring($imageUrl,' ','%20')} 1x, {$imageRetinaUrl} 2x" >
 			<xsl:choose>
 				<xsl:when test="$lazy='on'">
-					<xsl:attribute name="data-src">
+					<xsl:attribute name="data-srcset">
 						<xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
 					</xsl:attribute>
-					<xsl:attribute name="src">
+					<xsl:attribute name="srcset">
 						<xsl:value-of select="$lazyplaceholder"/>
 					</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:attribute name="src">
+					<xsl:attribute name="srcset">
 						<xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
 					</xsl:attribute>
 				</xsl:otherwise>
@@ -9150,14 +9150,18 @@
 	<xsl:template name="render-js-files">
 		<xsl:param name="list" />
 		<xsl:param name="async" />
+		<xsl:param name="defer" />
 		<xsl:variable name="seperator" select="','"/>
 		<xsl:variable name="newlist" select="concat(normalize-space($list),$seperator)" />
 		<xsl:variable name="first" select="substring-before($newlist, $seperator)" />
 		<xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
 		<xsl:if test="$first!=''">
 			<script type="text/javascript" src="{$first}{$bundleVersion}">
-				<xsl:if test="$async!=''">
+				<xsl:if test="$async=true()">
 					<xsl:attribute name="async">async</xsl:attribute>
+				</xsl:if>				
+				<xsl:if test="$defer=true()">
+					<xsl:attribute name="defer">defer</xsl:attribute>
 				</xsl:if>
 				<xsl:text>/* */</xsl:text>
 			</script>
