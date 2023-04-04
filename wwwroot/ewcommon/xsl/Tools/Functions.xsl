@@ -6858,10 +6858,9 @@
     <xsl:variable name="max-height-lg">
       <xsl:apply-templates select="." mode="getThHeight-lg"/>
     </xsl:variable>
-    
-    
+
     <xsl:if test="Images/img[@src and @src!='']">
-      <xsl:call-template  name="displayResponsiveImage">
+		     <xsl:call-template  name="displayResponsiveImage">
         <xsl:with-param name="crop" select="$crop"/>
         <xsl:with-param name="width" select="$max-width"/>
         <xsl:with-param name="height" select="$max-height"/>
@@ -7939,7 +7938,7 @@
     <xsl:value-of select="false()"/>
   </xsl:template>
 
-  <xsl:template match="Content[@type='Document' or @type='Review']" mode="displayThumbnail">
+  <xsl:template match="Content[@type='Document']" mode="displayThumbnail">
     <xsl:param name="crop" select="false()" />
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="width"/>
