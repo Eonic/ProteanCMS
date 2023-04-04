@@ -300,7 +300,7 @@ Partial Public Class Cms
 
                     End If
 
-                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
+                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, "")
 
                     Dim ShippingOptionXml As String = dsShippingOption.GetXml()
                     Dim xmlDoc As New XmlDocument

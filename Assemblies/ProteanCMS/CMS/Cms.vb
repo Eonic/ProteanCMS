@@ -7159,7 +7159,7 @@ Public Class Cms
                                     nWeight = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                 End If
                                 ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
-                                Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight)
+                                Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight, "")
                                 oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
                                 contentElmt.AppendChild(oShippingElmt)
                             Catch ex As Exception

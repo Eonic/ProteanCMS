@@ -3047,6 +3047,7 @@ processFlow:
                         oCartElmt.SetAttribute("showDiscountCodeBox", "true")
                     End If
 
+                    Dim cPromoCode As String = ""
 
                     If mbNoDeliveryAddress Then oCartElmt.SetAttribute("hideDeliveryAddress", "True")
                     If mnGiftListId > 0 Then oCartElmt.SetAttribute("giftListId", mnGiftListId)
@@ -3089,7 +3090,7 @@ processFlow:
                             End If
                             If cDestinationCountry <> "" Then
                                 'Go and collect the valid shipping options available for this order
-                                Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
+                                Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight, cPromoCode)
                                 Dim oRowSO As DataRow
                                 If Not oDsShipOptions Is Nothing Then
                                     For Each oRowSO In oDsShipOptions.Tables(0).Rows
@@ -3110,6 +3111,9 @@ processFlow:
                                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
                                                         oCartElmt.SetAttribute("shippingCartType", cCartType & "")
+                                                        If oRowSO("NonDiscountedShippingCost") <> "0" Then
+                                                            oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
+                                                        End If
                                                     End If
                                                 End If
                                             Else
@@ -3126,7 +3130,9 @@ processFlow:
                                                         Else
                                                             oCartElmt.SetAttribute("shippingCartType", "" & "")
                                                         End If
-
+                                                        If oRowSO("NonDiscountedShippingCost") <> "0" Then
+                                                            oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
+                                                        End If
                                                     End If
                                                 End If
                                             End If
@@ -3138,8 +3144,10 @@ processFlow:
                                             oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                             oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
                                             oCartElmt.SetAttribute("shippingCartType", "" & "")
+                                            If oRowSO("NonDiscountedShippingCost") <> "0" Then
+                                                oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
+                                            End If
                                         End If
-
 
                                     Next
                                 End If
@@ -5937,7 +5945,7 @@ processFlow:
                 End If
                 If cDestinationCountry = "" Then cDestinationCountry = moCartConfig("DefaultCountry")
                 'Go and collect the valid shipping options available for this order
-                ods = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
+                ods = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, "")
 
                 Dim oOptXform As New xForm(myWeb.msException)
                 oOptXform.moPageXML = moPageXml
@@ -8958,7 +8966,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Sub
 
 
-        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Long, nQuantity As Long, nWeight As Long) As DataSet
+        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Long, nQuantity As Long, nWeight As Long, cPromoCode As String) As DataSet
 
             Try
                 Dim userId As Integer = 0
@@ -8992,6 +9000,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     param.Add("NonAuthUsers", gnNonAuthUsers)
                     param.Add("CountryList", sCountryList)
                     param.Add("dValidDate", PublishExpireDate)
+                    param.Add("PromoCode", cPromoCode)
                     Return moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", False, param, CommandType.StoredProcedure)
                     'End If
                 Else
@@ -9504,9 +9513,10 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 If country <> "" Then
                     cDestinationCountry = country
+
                     '' pass other parameters as well-
                     ''get it from cart
-                    Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
+                    Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight, "")
                     'sort dataset for applied delivery option
                     If (oDsShipOptions.Tables(0) IsNot Nothing And cOrderofDeliveryOption = "1") Then
                         Dim TempTable As New DataTable

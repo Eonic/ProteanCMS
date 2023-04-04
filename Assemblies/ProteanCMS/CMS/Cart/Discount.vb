@@ -271,22 +271,22 @@ Partial Public Class Cms
                                     'Add New code for checking promocode is valid/invalid for include/exclude shipping groups
 
                                     'check for shipping option is assigned to promocode or not
-                                    If (oDsDiscounts IsNot Nothing) Then
-                                        If (docAdditionalXMl.InnerXml.Contains("cFreeShippingMethods")) Then
-                                            If (docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
-                                                ''checkfor shipping group assigned for that shipping option
-                                                If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
-                                                    validateShippingGroup = CheckShippingGroupIncludeExclude(oDsDiscounts, oDiscountMessageNew, docAdditionalXMl)
-                                                    If validateShippingGroup <> "Promocode Applied" Then
-                                                        RemoveDiscountCode()
-                                                        oDsDiscounts = Nothing
-                                                    End If
-                                                Else
-                                                    'table not exist...
-                                                End If
-                                            End If
-                                        End If
-                                    End If
+                                    'If (oDsDiscounts IsNot Nothing) Then
+                                    '    If (docAdditionalXMl.InnerXml.Contains("cFreeShippingMethods")) Then
+                                    '        If (docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
+                                    '            ''checkfor shipping group assigned for that shipping option
+                                    '            If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
+                                    '                validateShippingGroup = CheckShippingGroupIncludeExclude(oDsDiscounts, oDiscountMessageNew, docAdditionalXMl)
+                                    '                If validateShippingGroup <> "Promocode Applied" Then
+                                    '                    RemoveDiscountCode()
+                                    '                    oDsDiscounts = Nothing
+                                    '                End If
+                                    '            Else
+                                    '                'table not exist...
+                                    '            End If
+                                    '        End If
+                                    '    End If
+                                    'End If
 
                                     If oDsCart.Tables("Item").Rows.Count > 0 Then
                                         For Each drItem As DataRow In oDsCart.Tables("Item").Rows
@@ -1611,21 +1611,21 @@ NoDiscount:
                                     End If
 
                                     'check for shipping option is assigned to promocode or not
-                                    If (oDsDiscounts IsNot Nothing) Then
-                                        If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
-                                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
-                                                ''checkfor shipping group assigned for that shipping option
-                                                If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
-                                                    validateShippingGroup = CheckShippingGroupIncludeExclude(oDsDiscounts, oDiscountMessage, doc)
-                                                    If validateShippingGroup <> "Promocode Applied" Then
-                                                        Return oDiscountMessage
-                                                    End If
-                                                    'Else
-                                                    '    'table not exist...
-                                                End If
-                                            End If
-                                        End If
-                                    End If
+                                    'If (oDsDiscounts IsNot Nothing) Then
+                                    '    If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
+                                    '        If (doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
+                                    '            ''checkfor shipping group assigned for that shipping option
+                                    '            If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
+                                    '                validateShippingGroup = CheckShippingGroupIncludeExclude(oDsDiscounts, oDiscountMessage, doc)
+                                    '                If validateShippingGroup <> "Promocode Applied" Then
+                                    '                    Return oDiscountMessage
+                                    '                End If
+                                    '                'Else
+                                    '                '    'table not exist...
+                                    '            End If
+                                    '        End If
+                                    '    End If
+                                    'End If
 
 
                                     'check maximum item price value set or not
