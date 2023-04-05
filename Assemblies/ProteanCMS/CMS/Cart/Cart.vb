@@ -3047,7 +3047,8 @@ processFlow:
                         oCartElmt.SetAttribute("showDiscountCodeBox", "true")
                     End If
 
-                    Dim cPromoCode As String = ""
+                    Dim cPromoCode As String = "test"
+                    Dim IscPromoCodeValid As Boolean = True
 
                     If mbNoDeliveryAddress Then oCartElmt.SetAttribute("hideDeliveryAddress", "True")
                     If mnGiftListId > 0 Then oCartElmt.SetAttribute("giftListId", mnGiftListId)
@@ -3080,7 +3081,7 @@ processFlow:
 
                         End If
 
-                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Then
+                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Or IscPromoCodeValid = True Then
                             shipCost = -1
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")

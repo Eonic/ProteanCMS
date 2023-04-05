@@ -273,6 +273,8 @@ Partial Public Class Cms
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
+                    Dim promocode As String = ""
+
                     If (jObj IsNot Nothing) Then
                         If jObj("country") <> "" Then
                             cDestinationCountry = jObj("country")
@@ -298,9 +300,14 @@ Partial Public Class Cms
                             nWeight = 0
                         End If
 
+                        If jObj("promocode") IsNot Nothing Then
+                            promocode = jObj("promocode")
+                        Else
+                            promocode = ""
+                        End If
                     End If
 
-                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, "")
+                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, promocode)
 
                     Dim ShippingOptionXml As String = dsShippingOption.GetXml()
                     Dim xmlDoc As New XmlDocument
