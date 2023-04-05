@@ -502,7 +502,7 @@ Partial Public Class Cms
                             mcPagePath = mcCartURL & "/?"
                         End If
                     Else
-                        mcPagePath = mcCartURL & mcPagePath.TrimStart("/") & "?"
+                        mcPagePath = mcCartURL.TrimEnd("/") & mcPagePath & "?"
                     End If
 
                     If moConfig("Membership") = "on" Then mbEwMembership = True

@@ -111,7 +111,43 @@
 
     }
 
+    cartActionListeners();
+
 });
+
+/* Function to trigger listners for the cartListing */
+function cartActionListeners() {
+
+    /* Add to cart button action */
+    $('#addPromoCode').click(function (clicky) {
+        clicky.preventDefault();
+        addPromoCodeAPIUrl = '/ewapi/Cms.Cart/AddDiscountCode';
+        discountCode = $('#txtPromoCode').val();
+
+       // alert(discountCode);
+        var inputJson = {
+            Code: discountCode
+        };
+
+        $.ajax(addPromoCodeAPIUrl, {
+            data: JSON.stringify(inputJson),
+            contentType: 'application/json',
+            type: 'POST'
+        }).done(function (data) {
+            if (data === discountCode) {
+                location.reload();
+            }
+            else {
+                $('.promo-alert').remove();
+                $('.basket-promo').append('<div class="alert promo-alert">' + data + '</div>')
+            }
+        }
+        );
+        return false;
+    });
+
+   // alert("listeners on");
+}
 
 
 function resetDelAddress() {

@@ -1593,7 +1593,7 @@ namespace Protean.Tools
                     {
                         foreach (DataColumn oColumn in oTable.Columns)
                         {
-                            if (oRow[oColumn.ColumnName] == null)
+                            if (oRow[oColumn.ColumnName] == DBNull.Value)
                             {
                                 cProcessInfo = "Error in Feild:" + oColumn.ColumnName + " DataType:" + oColumn.DataType.ToString();
                                 switch (oColumn.DataType.ToString())

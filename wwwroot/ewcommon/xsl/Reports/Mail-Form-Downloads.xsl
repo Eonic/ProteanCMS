@@ -4,6 +4,8 @@
 	<xsl:import href="Report-Base.xsl"/>
 	<xsl:import href="Formats/Report-Format-Loader.xsl"/>
 
+	<xsl:output method="html" indent="no" omit-xml-declaration="yes" encoding="utf-8"/>
+
 	<xsl:template match="/">
 		<xsl:apply-imports/>
 	</xsl:template>
