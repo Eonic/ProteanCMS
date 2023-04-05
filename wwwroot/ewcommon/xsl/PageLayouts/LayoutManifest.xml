@@ -167,6 +167,5 @@
   <FilterTypes>
 	  <Filter type="PageFilter" formPath="Filter/PageFilter" name="Page Filter" >Page Filter</Filter>
 	  <Filter type="PriceFilter" formPath="Filter/PriceFilter" name="Price Filter" >Price Filter</Filter>
-	  <Filter type="PriceFilter" formPath="Filter/PriceFilter" name="Price Filter" >Price Filter</Filter>
   </FilterTypes>
 </PageLayouts>
