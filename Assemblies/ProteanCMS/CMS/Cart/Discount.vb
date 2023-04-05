@@ -268,7 +268,14 @@ Partial Public Class Cms
                                         dMaxPrice = CDbl("0" & docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
                                     End If
 
-                                    'Add New code for checking promocode is valid/invalid for include/exclude shipping groups
+                                    'Add New code for checking promocode has free shipping options
+                                    If (docAdditionalXMl.InnerXml.Contains("cFreeShippingMethods")) Then
+                                        If (docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText <> String.Empty) Then
+                                            oCartXML.SetAttribute("NonDiscountedShippingCost", "0" & "")
+                                        End If
+                                    End If
+
+
 
                                     'check for shipping option is assigned to promocode or not
                                     'If (oDsDiscounts IsNot Nothing) Then
@@ -490,6 +497,7 @@ Partial Public Class Cms
 
                                         If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
                                             strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                                            oCartXML.SetAttribute("NonDiscountedShippingCost", "0")
                                         End If
                                         If (doc.InnerXml.Contains("bFreeGiftBox")) Then
                                             strbFreeGiftBox = doc.SelectSingleNode("additionalXml").SelectSingleNode("bFreeGiftBox").InnerText

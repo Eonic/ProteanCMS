@@ -3047,8 +3047,10 @@ processFlow:
                         oCartElmt.SetAttribute("showDiscountCodeBox", "true")
                     End If
 
-                    Dim cPromoCode As String = "test"
-                    Dim IscPromoCodeValid As Boolean = True
+                    Dim cPromoCode As String = ""
+                    Dim IsPromocodeValid As Boolean = False
+                    Dim oPromoElmt As XmlElement = oNotes.SelectSingleNode("//Notes/PromotionalCode")
+                    If Not oPromoElmt Is Nothing Then cPromoCode = oPromoElmt.InnerText
 
                     If mbNoDeliveryAddress Then oCartElmt.SetAttribute("hideDeliveryAddress", "True")
                     If mnGiftListId > 0 Then oCartElmt.SetAttribute("giftListId", mnGiftListId)
@@ -3081,7 +3083,11 @@ processFlow:
 
                         End If
 
-                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Or IscPromoCodeValid = True Then
+                        If oCartElmt.GetAttribute("NonDiscountedShippingCost") = "0" Then
+                            IsPromocodeValid = True
+                        End If
+
+                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Or IsPromocodeValid = True Then
                             shipCost = -1
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")
@@ -3134,6 +3140,16 @@ processFlow:
                                                         If oRowSO("NonDiscountedShippingCost") <> "0" Then
                                                             oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
                                                         End If
+                                                    End If
+                                                ElseIf (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
+                                                    shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                    oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                    oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
+                                                    oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                    oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                    oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                                    If oRowSO("NonDiscountedShippingCost") <> "0" Then
+                                                        oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
                                                     End If
                                                 End If
                                             End If
