@@ -48,7 +48,7 @@ Namespace Providers
                     oStep.Value = FilterConfig.GetAttribute("step")
                     oXml.Attributes.Append(oMinPrice)
                     oXml.Attributes.Append(oMaxPrice)
-                    oXml.Attributes.Append(oSliderMinPrice)  
+                    oXml.Attributes.Append(oSliderMinPrice)
                     oXml.Attributes.Append(oSliderMaxPrice)
                     oXml.Attributes.Append(oStep)
 
