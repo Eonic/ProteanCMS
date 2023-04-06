@@ -3118,9 +3118,6 @@ processFlow:
                                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
                                                         oCartElmt.SetAttribute("shippingCartType", cCartType & "")
-                                                        If oRowSO("NonDiscountedShippingCost") <> "0" Then
-                                                            oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
-                                                        End If
                                                     End If
                                                 End If
                                             Else
@@ -3136,9 +3133,6 @@ processFlow:
                                                             oCartElmt.SetAttribute("shippingCartType", cCartType & "")
                                                         Else
                                                             oCartElmt.SetAttribute("shippingCartType", "" & "")
-                                                        End If
-                                                        If oRowSO("NonDiscountedShippingCost") <> "0" Then
-                                                            oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
                                                         End If
                                                     End If
                                                 ElseIf (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
@@ -3161,9 +3155,6 @@ processFlow:
                                             oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                             oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
                                             oCartElmt.SetAttribute("shippingCartType", "" & "")
-                                            If oRowSO("NonDiscountedShippingCost") <> "0" Then
-                                                oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
-                                            End If
                                         End If
 
                                     Next
@@ -9197,13 +9188,13 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim cSqlUpdate As String
 
                 sSql = "select * from tblCartShippingMethods "
-                sSql = sSql & " where nShipOptKey = " & nShipOptKey
+                sSql = sSql & " where nShipOptKey in ( " & nShipOptKey & ")"
                 ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
 
                 For Each oRow In ods.Tables("Order").Rows
                     cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
                     nShippingCost = oRow("nShipOptCost")
-                    cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
+                    cSqlUpdate = "UPDATE tblCartOrder Set cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
                     moDBHelper.ExeProcessSql(cSqlUpdate)
                 Next
 

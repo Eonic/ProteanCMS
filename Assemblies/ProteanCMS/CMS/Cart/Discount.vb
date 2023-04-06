@@ -498,6 +498,7 @@ Partial Public Class Cms
                                         If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
                                             strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
                                             oCartXML.SetAttribute("NonDiscountedShippingCost", "0")
+                                            oCartXML.SetAttribute("freeShippingMethods", strcFreeShippingMethods)
                                         End If
                                         If (doc.InnerXml.Contains("bFreeGiftBox")) Then
                                             strbFreeGiftBox = doc.SelectSingleNode("additionalXml").SelectSingleNode("bFreeGiftBox").InnerText
