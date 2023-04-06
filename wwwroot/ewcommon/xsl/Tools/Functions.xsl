@@ -1411,7 +1411,7 @@
 
   <xsl:template match="Page" mode="metadata">
     <xsl:if test="@cssFramework='bs3' or $adminMode">
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </xsl:if>
 
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
@@ -2725,7 +2725,7 @@
       <xsl:if test="$BingTrackingID!=''">
 		 <script cookie-consent="tracking">
 			
-          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState; s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
+          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp;s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
           <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
 			  window.uetq = window.uetq || [];
 			  window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
@@ -6243,7 +6243,7 @@
       </xsl:if>
 
       <xsl:apply-templates mode="cleanXhtml"/>
-
+	    <xsl:text> </xsl:text>
     </xsl:element>
   </xsl:template>
 
@@ -6858,10 +6858,9 @@
     <xsl:variable name="max-height-lg">
       <xsl:apply-templates select="." mode="getThHeight-lg"/>
     </xsl:variable>
-    
-    
+
     <xsl:if test="Images/img[@src and @src!='']">
-      <xsl:call-template  name="displayResponsiveImage">
+		     <xsl:call-template  name="displayResponsiveImage">
         <xsl:with-param name="crop" select="$crop"/>
         <xsl:with-param name="width" select="$max-width"/>
         <xsl:with-param name="height" select="$max-height"/>
@@ -7939,7 +7938,7 @@
     <xsl:value-of select="false()"/>
   </xsl:template>
 
-  <xsl:template match="Content[@type='Document' or @type='Review']" mode="displayThumbnail">
+  <xsl:template match="Content[@type='Document']" mode="displayThumbnail">
     <xsl:param name="crop" select="false()" />
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="width"/>

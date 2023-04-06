@@ -5,8 +5,6 @@
   <xsl:import href="../Tools/Functions.xsl"/>
   <xsl:import href="../localisation/SystemTranslations.xsl"/>
   
-  <xsl:output method="html" indent="no" omit-xml-declaration="yes" encoding="utf-8"/>
-
 	<!-- 
 	
 		Reporting Generic Base Handler
@@ -14,8 +12,6 @@
 		
 	
 	-->
-	
-	
 	<xsl:template match="/">
 		<xsl:apply-imports/>
 	</xsl:template>

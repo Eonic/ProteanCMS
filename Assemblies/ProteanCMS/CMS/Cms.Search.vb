@@ -2070,14 +2070,16 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     keywordQuery = parser.Parse(queryToBeParsed.ToString())
                 End If
 
-
+                Dim booleanQ As New BooleanQuery()
                 If _includePrefixNameSearch And Not _overrideQueryBuilder Then
-                    Dim booleanQ As New BooleanQuery()
+
                     booleanQ.Add(keywordQuery, Occur.SHOULD)
                     booleanQ.Add(New PrefixQuery(New Term("qsname", keywords)), Occur.SHOULD)
                     queryBuilder.Add(booleanQ, Occur.MUST)
                 Else
-                    queryBuilder.Add(keywordQuery, Occur.MUST)
+                    booleanQ.Add(keywordQuery, Occur.MUST)
+                    booleanQ.Add(New PrefixQuery(New Term("qsnoname", keywords)), Occur.MUST_NOT)
+                    queryBuilder.Add(booleanQ, Occur.MUST)
                 End If
 
 

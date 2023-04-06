@@ -264,10 +264,9 @@
 				<xsl:attribute name="class">
 					<xsl:text>form-control pickImageInput </xsl:text>
 					<xsl:value-of select="@class"/>
-				</xsl:attribute>
-				<xsl:text></xsl:text>
+				</xsl:attribute> 
 				<xsl:apply-templates select="value/img" mode="jsNiceImage"/>
-				<xsl:text></xsl:text>
+				<xsl:text> </xsl:text>
 			</textarea>
 			<xsl:choose>
 				<xsl:when test="value/img/@src!=''">
