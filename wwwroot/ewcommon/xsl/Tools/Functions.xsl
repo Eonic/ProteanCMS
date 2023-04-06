@@ -1411,7 +1411,7 @@
 
   <xsl:template match="Page" mode="metadata">
     <xsl:if test="@cssFramework='bs3' or $adminMode">
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </xsl:if>
 
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
@@ -6243,7 +6243,7 @@
       </xsl:if>
 
       <xsl:apply-templates mode="cleanXhtml"/>
-
+	    <xsl:text> </xsl:text>
     </xsl:element>
   </xsl:template>
 
@@ -6858,10 +6858,9 @@
     <xsl:variable name="max-height-lg">
       <xsl:apply-templates select="." mode="getThHeight-lg"/>
     </xsl:variable>
-    
-    
+
     <xsl:if test="Images/img[@src and @src!='']">
-      <xsl:call-template  name="displayResponsiveImage">
+		     <xsl:call-template  name="displayResponsiveImage">
         <xsl:with-param name="crop" select="$crop"/>
         <xsl:with-param name="width" select="$max-width"/>
         <xsl:with-param name="height" select="$max-height"/>
@@ -7939,7 +7938,7 @@
     <xsl:value-of select="false()"/>
   </xsl:template>
 
-  <xsl:template match="Content[@type='Document' or @type='Review']" mode="displayThumbnail">
+  <xsl:template match="Content[@type='Document']" mode="displayThumbnail">
     <xsl:param name="crop" select="false()" />
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="width"/>

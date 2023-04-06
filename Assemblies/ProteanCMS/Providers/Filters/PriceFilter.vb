@@ -48,7 +48,7 @@ Namespace Providers
                     oStep.Value = FilterConfig.GetAttribute("step")
                     oXml.Attributes.Append(oMinPrice)
                     oXml.Attributes.Append(oMaxPrice)
-                    oXml.Attributes.Append(oSliderMinPrice)  
+                    oXml.Attributes.Append(oSliderMinPrice)
                     oXml.Attributes.Append(oSliderMaxPrice)
                     oXml.Attributes.Append(oStep)
 
@@ -57,7 +57,7 @@ Namespace Providers
                     End If
                     arrParams.Add("MinPrice", oSliderMinPrice.Value)
                     arrParams.Add("MaxPrice", oSliderMaxPrice.Value)
-                    arrParams.Add("PriceStep", oStep.Value)
+                    arrParams.Add("Step", oStep.Value)
 
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
                         If (oDr.HasRows) Then
