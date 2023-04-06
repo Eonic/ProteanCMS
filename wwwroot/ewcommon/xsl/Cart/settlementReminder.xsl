@@ -93,7 +93,7 @@ td.amount
 			<div id="billingAddress" class="orderAddress"><xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart"/></div>
 			<div id="deliveryAddress" class="orderAddress"><xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/></div>
 			<div class="terminus">
-				<xsl:text></xsl:text>
+				<xsl:text> </xsl:text>
 			</div>
 			<table cellspacing="0" id="orderListing" summary="This table contains a list of the items which you have bought.">
 				<tr>

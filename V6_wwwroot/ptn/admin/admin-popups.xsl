@@ -207,6 +207,7 @@
 			</div>
 
 		</div>
+
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
