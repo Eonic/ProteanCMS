@@ -502,6 +502,9 @@ Partial Public Class Cms
                                         End If
                                         If (doc.InnerXml.Contains("bFreeGiftBox")) Then
                                             strbFreeGiftBox = doc.SelectSingleNode("additionalXml").SelectSingleNode("bFreeGiftBox").InnerText
+                                            If strbFreeGiftBox = "True" Then
+                                                oCartXML.SetAttribute("bFreeGiftBox", strbFreeGiftBox)
+                                            End If
                                         End If
                                     End If
 
