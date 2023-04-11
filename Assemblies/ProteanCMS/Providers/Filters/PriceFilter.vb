@@ -161,10 +161,10 @@ Namespace Providers
                         cPriceCond = " ci.nNumberValue between " + cSelectedMinPrice + " and " + cSelectedMaxPrice
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = cWhereSql + " AND "
-                        End If
-                        If (cPageIds = String.Empty) Then
 
-                            cPageIds = aWeb.moPageXml.SelectSingleNode("Page/@id").Value.ToString()
+                        ElseIf (cPageIds = String.Empty) Then
+
+                        cPageIds = aWeb.moPageXml.SelectSingleNode("Page/@id").Value.ToString()
                             cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & cPageIds & ")) AND "
                         End If
 
