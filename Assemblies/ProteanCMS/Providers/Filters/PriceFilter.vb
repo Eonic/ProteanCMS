@@ -147,37 +147,31 @@ Namespace Providers
                     Dim cDefinitionName As String = "Price"
                     Dim cSelectedMinPrice As String = String.Empty
                     Dim cSelectedMaxPrice As String = String.Empty
-                    'If (oXform.Instance.SelectNodes("PriceFilter") IsNot Nothing) Then
-                    '    cSelectedPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter").InnerText)
-
-                    'End If
-
-
-
-
+                    Dim cPageIds As String = String.Empty
                     cSelectedMinPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MinPrice").InnerText)
                     cSelectedMaxPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MaxPrice").InnerText)
+                    Dim bParentPageId As Boolean = False
 
+
+                    If (oXform.Instance.SelectSingleNode("PageFilter") IsNot Nothing) Then
+                        cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText
+
+                    End If
                     If (cSelectedMinPrice <> String.Empty) Then
+                        cPriceCond = " ci.nNumberValue between " + cSelectedMinPrice + " and " + cSelectedMaxPrice
                         If (cWhereSql <> String.Empty) Then
                             cWhereSql = cWhereSql + " AND "
+
+                        ElseIf (cPageIds = String.Empty) Then
+
+                        cPageIds = aWeb.moPageXml.SelectSingleNode("Page/@id").Value.ToString()
+                            cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & cPageIds & ")) AND "
                         End If
 
-                        'Dim cPriceLst As String() = cSelectedPrice.Split(New Char() {","c})
-                        'For Each cSchema As String In cPriceLst
-                        '    priceRange = cSchema.Split("-")
-                        '    If cPriceCond <> "" Then
-                        '        cPriceCond = cPriceCond + " or ( ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
-                        '    Else
-                        '        cPriceCond = cPriceCond + " ( ci.nNumberValue between  " + Convert.ToString(priceRange(0)) + " and " + Convert.ToString(priceRange(1)) + ")"
-                        '    End If
-
-                        'Next
-                        cPriceCond = " ci.nNumberValue between " + cSelectedMinPrice + " and " + cSelectedMaxPrice
 
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
-                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "' AND ("
-                        cWhereSql = cWhereSql + cPriceCond + "))"
+                            cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "' AND ("
+                            cWhereSql = cWhereSql + cPriceCond + "))"
 
 
                     End If

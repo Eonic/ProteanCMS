@@ -2,6 +2,7 @@
 
 Imports System.Data.SqlClient
 Imports System.Xml
+Imports Microsoft
 Imports Protean.Cms
 Imports Protean.xForm
 
@@ -51,9 +52,10 @@ Namespace Providers
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
                         If (oXml.InnerText <> String.Empty) Then
-                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox filter-selected", ApperanceTypes.Full)
+
+                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox SubmitPageFilter filter-selected", ApperanceTypes.Full)
                         Else
-                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
+                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox SubmitPageFilter", ApperanceTypes.Full)
                         End If
 
                         'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
@@ -62,6 +64,7 @@ Namespace Providers
                             Dim value As String = Convert.ToString(oDr("nStructKey"))
 
                             oXform.addOption(pageFilterSelect, name, value, True)
+
                         End While
 
                     End Using
@@ -75,14 +78,14 @@ Namespace Providers
                                 For cnt = 0 To aPages.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().FirstChild().InnerText
 
-                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "filter-applied", "fa-times")
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), " btnCross filter-applied", "fa-times")
 
                                 Next
 
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-times")
+                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", " btnCross filter-applied", "fa-times")
                             End If
                         End If
                     End If
