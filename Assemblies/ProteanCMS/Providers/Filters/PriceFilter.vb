@@ -33,6 +33,8 @@ Namespace Providers
                     Dim sProductCount As String = String.Empty
                     Dim cnt As Integer = 0
                     Dim cProductCountList As String = String.Empty
+                    Dim nPageId As Integer = aWeb.mnPageId
+                    Dim nMaxPRiceProduct As Integer = 0
                     If aWeb.moRequest.Form("MinPrice") IsNot Nothing Then
 
                         oMinPrice.Value = Convert.ToString(aWeb.moRequest.Form("MinPrice"))
@@ -40,34 +42,37 @@ Namespace Providers
 
                     End If
 
-                    oSliderMinPrice.Value = FilterConfig.GetAttribute("fromPrice")
-                    oSliderMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
-
-
-
-                    oStep.Value = FilterConfig.GetAttribute("step")
-                    oXml.Attributes.Append(oMinPrice)
-                    oXml.Attributes.Append(oMaxPrice)
-                    oXml.Attributes.Append(oSliderMinPrice)
-                    oXml.Attributes.Append(oSliderMaxPrice)
-                    oXml.Attributes.Append(oStep)
 
                     If (FilterConfig.Attributes("name") IsNot Nothing) Then
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
                     End If
-                    arrParams.Add("MinPrice", oSliderMinPrice.Value)
-                    arrParams.Add("MaxPrice", oSliderMaxPrice.Value)
-                    arrParams.Add("Step", oStep.Value)
+                    arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPrice"))
+                    arrParams.Add("MaxPrice", FilterConfig.GetAttribute("toPrice"))
+                    arrParams.Add("Step", FilterConfig.GetAttribute("step"))
+                    arrParams.Add("PageId", nPageId)
 
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
                         If (oDr.HasRows) Then
                             While oDr.Read
                                 cnt = cnt + 1
+                                nMaxPRiceProduct = oDr("MaxProductPrice")
                                 sProductCount = Convert.ToString(oDr("ProductCount"))
                                 cProductCountList = cProductCountList + cnt.ToString() + ":" + sProductCount + ","
                             End While
 
                         End If
+                        oSliderMinPrice.Value = FilterConfig.GetAttribute("fromPrice")
+                        oSliderMaxPrice.Value = nMaxPRiceProduct
+
+
+
+                        oStep.Value = FilterConfig.GetAttribute("step")
+                        oXml.Attributes.Append(oMinPrice)
+                        oXml.Attributes.Append(oMaxPrice)
+                        oXml.Attributes.Append(oSliderMinPrice)
+                        oXml.Attributes.Append(oSliderMaxPrice)
+                        oXml.Attributes.Append(oStep)
+
 
                         '    'Adding controls to the form like dropdown, radiobuttons
                         '    'If (oXml.InnerText <> String.Empty) Then
@@ -131,8 +136,12 @@ Namespace Providers
 
                     End If
 
-                    'oXform.addDiv(oFromGroup, "", "form-group select-group histogramSlider", True)
-                    oXform.addInput(oFromGroup, "", False, sCotrolDisplayName, "histogramSliderMainDivPrice")
+                    If (aWeb.moRequest.Form("MinPrice") IsNot Nothing And aWeb.moRequest.Form("MinPrice") <> "") Then
+                        oXform.addInput(oFromGroup, "", False, sCotrolDisplayName, "histogramSliderMainDivPrice filter-selected")
+                    Else
+                        oXform.addInput(oFromGroup, "", False, sCotrolDisplayName, "histogramSliderMainDivPrice")
+                    End If
+
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""))
                 End Try
