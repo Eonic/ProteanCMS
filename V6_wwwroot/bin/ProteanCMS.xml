@@ -148,7 +148,7 @@ ProteanCMS
  <param name="jObj"></param>
  <returns></returns>
 </member>
-<member name="M:Protean.Cms.Cart.JSONActions.AddMissingOrder(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
+<member name="M:Protean.Cms.Cart.JSONActions.UpdateOrderWithPaymentResponse(Protean.API@,Newtonsoft.Json.Linq.JObject@)">
  <summary>
  Add Missing order 
  </summary>

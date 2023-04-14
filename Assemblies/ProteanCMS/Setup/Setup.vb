@@ -980,49 +980,56 @@ Recheck:
             goResponse.Flush()
             'Run The Script
             '############################
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/Structure.sql"))
+
+            Dim dbUpdatePath = "/ewcommon/sqlupdate"
+            If goConfig("cssFramework") = "bs5" Then
+                dbupdatePath = "/ptn/update/sql"
+            End If
+
+
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/Structure.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/Structure.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_SearchXML.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_SearchXML.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_SearchXML.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_addAudit.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_addAudit.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_addAudit.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getStatus.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_getStatus.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_getStatus.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_checkPermission.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_checkPermission.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_checkPermission.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserCompanies.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_getUserCompanies.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_getUserCompanies.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_shippingTotal.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_shippingTotal.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_shippingTotal.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserDepts.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_getUserDepts.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_getUserDepts.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserRoles.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/fxn_getUserRoles.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_getUserRoles.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsers.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spGetAllUsers.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetAllUsers.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetUsers.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spGetUsers.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetUsers.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/getContentStructure.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/getContentStructure.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/getContentStructure.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetDirectoryItems.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spGetDirectoryItems.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetDirectoryItems.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/getUsersCompanyAllParents.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/getUsersCompanyAllParents.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/getUsersCompanyAllParents.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsers.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spGetCompanyUsers.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetCompanyUsers.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsersActive.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spGetAllUsersActive.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetAllUsersActive.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsersInActive.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spGetAllUsersInActive.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetAllUsersInActive.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsersActive.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spGetCompanyUsersActive.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetCompanyUsersActive.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsersInActive.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spGetCompanyUsersInActive.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetCompanyUsersInActive.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spSearchUsers.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/spSearchUsers.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spSearchUsers.SQL'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/4.0.1.40/tblOptOutAddresses.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/4.0.1.40/tblOptOutAddresses.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/4.0.1.40/tblOptOutAddresses.sql'")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/4.0.1.45/fxn_getContentParents.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/4.0.1.45/fxn_getContentParents.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/4.0.1.45/fxn_getContentParents.sql'")
 
             AddResponse("Completed Initial Build")
@@ -1099,9 +1106,12 @@ Recheck:
     Function saveVersionNumber(Optional ByVal cVersionNumber As String = "") As Boolean
         Try
             If cVersionNumber = "" Then cVersionNumber = mnCurrentVersion
-
+            Dim dbUpdatePath = "/ewcommon/sqlupdate"
+            If goConfig("cssFramework") = "bs5" Then
+                dbUpdatePath = "/ptn/update/sql"
+            End If
             'create the version table if not exists
-            Dim sFilePath As String = "/ewcommon/sqlupdate/toV4/4.1.1.35/tblSchemaVersion.sql"
+            Dim sFilePath As String = dbUpdatePath & "/toV4/4.1.1.35/tblSchemaVersion.sql"
             If Not myWeb.moDbHelper.checkDBObjectExists("tblSchemaVersion", Tools.Database.objectTypes.Table) Then
                 myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(sFilePath))
             End If
@@ -1840,10 +1850,14 @@ DoOptions:
     Public Function Migrate_Rollback() As Boolean
         'deletes v4 Tables
         Try
+            Dim dbUpdatePath = "/ewcommon/sqlupdate"
+            If goConfig("cssFramework") = "bs5" Then
+                dbUpdatePath = "/ptn/update/sql"
+            End If
             'AddResponse("Removing V4 Tables")
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/DropAllForeignKeys.sql"))
             myWeb.msException = ""
-            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/ClearDB.SQL"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(dbUpdatePath & "/toV4/ClearDB.SQL"))
             AddResponse("Run File (/ewcommon/sqlupdate/toV4/ClearDB.SQL)")
             Return saveVersionNumber("0.0.0.0")
         Catch ex As Exception
@@ -1915,7 +1929,7 @@ DoOptions:
         '    Dim bIsXml As Boolean = False
 
         '    Try
-        '        oXml.Load(goServer.MapPath("/ewcommon/sqlupdate/import_data/ex_shiplocs_master.xml"))
+        '        oXml.Load(goServer.MapPath(dbUpdatePath & "/import_data/ex_shiplocs_master.xml"))
         '        bIsXml = True
         '    Catch ex As Exception
         '        ' If Load fails then there's something invalid about what we just imported.
