@@ -3083,6 +3083,7 @@ processFlow:
 
                         End If
 
+                        'Set flag true if promocode have free shipping option
                         If oCartElmt.GetAttribute("NonDiscountedShippingCost") = "0" Then
                             IsPromocodeValid = True
                         End If
@@ -3135,6 +3136,8 @@ processFlow:
                                                             oCartElmt.SetAttribute("shippingCartType", "" & "")
                                                         End If
                                                     End If
+                                                    'Add extra condition only when promocode is valid
+                                                    'Set nondiscountedshippingcost to attribute when promocode is valid(include free shipping methods)
                                                 ElseIf (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
                                                     shipCost = CDbl("0" & oRowSO("nShipOptCost"))
                                                     oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
