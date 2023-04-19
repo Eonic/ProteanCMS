@@ -3769,6 +3769,11 @@ Public Class Cms
 
             sSql = sSql & " where (" & combinedWhereSQL & ")"
             If cOrderBy <> "" Then sSql &= " ORDER BY " & cOrderBy
+            Dim nStartPos As Long = 0
+            Dim nItemCount As Long = 24
+
+            sSql &= " offset " & nStartPos & " rows fetch next " & nItemCount & " rows only"
+
             sSql = Replace(sSql, "&lt;", "<")
 
             PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect:" & sSql)
