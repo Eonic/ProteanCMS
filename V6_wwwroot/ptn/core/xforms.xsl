@@ -1825,14 +1825,8 @@
     <xsl:variable name="formName">
       <xsl:value-of select="ancestor::Content/model/submission/@id"/>
     </xsl:variable>
-    <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="colorPicker form-control">
-      <xsl:if test="value/node()">
-        <xsl:attribute name="style">
-          <xsl:text>background-color:</xsl:text>
-          <xsl:value-of select="value/node()"/>
-          <xsl:text>;</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
+    <input type="color" name="{$ref}" id="{$ref}" value="{value/node()}" class="form-control-color form-control">
+		<xsl:text> </xsl:text>
     </input>
   </xsl:template>
   <!-- -->

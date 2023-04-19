@@ -3,21 +3,22 @@
 <Content type="xform" name="ThemeSettings">
   <model>
     <instance>
-      <theme>
+      <theme>]
+	    <!--
         <add key="CurrentTheme" value="ptn-base"/>
         <add key="variablesPath" value="/css/variables.scss"/>
         <add key="SiteXsl" value="/ewthemes/ptn-base/layout-header-banner.xsl" />
         <add key="ptn-base.HeaderLayout" value="header-template1"/>
         <add key="ptn-base.ThemePreset" value="Default" />
         <add key="ptn-base.ThemeSkin" value="" />
-        
-        <add key="ptn-base.brand-primary" value="#2C3E50" />
-        <add key="ptn-base.brand-action" value="#18BC9C" />
-        <add key="ptn-base.brand-info" value="#3498DB" />
-        <add key="ptn-base.brand-success" value="#18BC9C" />
-        <add key="ptn-base.brand-warning" value="#F39C12" />
-        <add key="ptn-base.brand-danger" value="#E74C3C" />
-
+        -->
+        <add key="ptn-base.primary" value="#2C3E50" />
+        <add key="ptn-base.action" value="#18BC9C" />
+        <add key="ptn-base.info" value="#3498DB" />
+        <add key="ptn-base.success" value="#18BC9C" />
+        <add key="ptn-base.warning" value="#F39C12" />
+        <add key="ptn-base.danger" value="#E74C3C" />
+    <!--
         <add key="ptn-base.link-color" value="#18BC9C" />
         <add key="ptn-base.text-color" value="#333" />
         <add key="ptn-base.headings-font" value="'Lato', sans-serif" />
@@ -30,24 +31,25 @@
         <add key="ptn-base.btn-default-bg" value="#444" />
         <add key="ptn-base.btn-default-color" value="#fff" />
         <add key="ptn-base.headings-color" value="#333" />
-        
+        -->
       </theme>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
     <bind nodeset="theme">
+		<!--
       <bind id="Theme" nodeset="add[@key='CurrentTheme']/@value" required="true()" type="string" />
       <bind id="SiteXsl" nodeset="add[@key='SiteXsl']/@value" required="true()" type="string" />
       <bind id="HeaderLayout" nodeset="add[@key='ptn-base.HeaderLayout']/@value" required="true()" type="string" />
       <bind id="ThemePreset" nodeset="add[@key='ptn-base.ThemePreset']/@value" required="true()" type="string" />
       <bind id="ThemeSkin" nodeset="add[@key='ptn-base.ThemeSkin']/@value" required="true()" type="string" />
-      
-      <bind id="brand-primary" nodeset="add[@key='ptn-base.brand-primary']/@value" required="true()" type="string" />
-      <bind id="brand-action" nodeset="add[@key='ptn-base.brand-action']/@value" required="true()" type="string" />
-      <bind id="brand-info" nodeset="add[@key='ptn-base.brand-info']/@value" required="true()" type="string" />
-      <bind id="brand-success" nodeset="add[@key='ptn-base.brand-success']/@value" required="true()" type="string" />
-      <bind id="brand-warning" nodeset="add[@key='ptn-base.brand-warning']/@value" required="true()" type="string" />
-      <bind id="brand-danger" nodeset="add[@key='ptn-base.brand-danger']/@value" required="true()" type="string" />
-
+      -->
+      <bind id="brand-primary" nodeset="add[@key='ptn-base.primary']/@value" required="true()" type="string" />
+      <bind id="brand-action" nodeset="add[@key='ptn-base.action']/@value" required="true()" type="string" />
+      <bind id="brand-info" nodeset="add[@key='ptn-base.info']/@value" required="true()" type="string" />
+      <bind id="brand-success" nodeset="add[@key='ptn-base.success']/@value" required="true()" type="string" />
+      <bind id="brand-warning" nodeset="add[@key='ptn-base.warning']/@value" required="true()" type="string" />
+      <bind id="brand-danger" nodeset="add[@key='ptn-base.danger']/@value" required="true()" type="string" />
+<!--
       <bind id="link-color" nodeset="add[@key='ptn-base.link-color']/@value" required="true()" type="string" />
       <bind id="text-color" nodeset="add[@key='ptn-base.text-color']/@value" required="true()" type="string" />
       <bind id="headings-font" nodeset="add[@key='ptn-base.headings-font']/@value" required="false()" type="string" />
@@ -60,12 +62,13 @@
       <bind id="btn-default-bg" nodeset="add[@key='ptn-base.btn-default-bg']/@value" required="true()" type="string" />
       <bind id="btn-default-color" nodeset="add[@key='ptn-base.btn-default-color']/@value" required="true()" type="string" />
       <bind id="headings-color" nodeset="add[@key='ptn-base.headings-color']/@value" required="true()" type="string" />
-      
+      -->
     </bind>
   </model>
   <group ref="WebSettings">
     <label>ptn-base Theme Settings</label>
 	  <group class="tabs">
+		  <!--
     <group class="inline">
       <label>Preset Colour Themes</label>
 		<group  class="row row-cols-md-2">
@@ -109,6 +112,7 @@
         </select1>
       </group>
     </group>
+	-->
 		  <!--group class="inline">
       <label>Theme Style</label>
       <select1 bind="ThemeSkin" appearance="minimal">
@@ -149,6 +153,7 @@
       </input>
 			</group>
     </group>
+		  <!--
     <group class="inline">
       <label>Fonts Settings</label>
 		<group  class="row row-cols-md-2">
@@ -319,6 +324,7 @@
 				  </input>
 			  </group>
 		  </group>
+		  -->
     </group>
     <submit submission="" ref="WebSettings" class="principle">
       <label>Save Settings</label>
