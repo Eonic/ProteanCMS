@@ -12,7 +12,7 @@ Namespace Providers
         Public Class PageFilter
 
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef oContentNode As XmlElement)
                 Dim cProcessInfo As String = "AddControl"
                 Try
                     Dim pageFilterSelect As XmlElement
@@ -24,11 +24,22 @@ Namespace Providers
                     Dim sSql As String = "spGetPagesByParentPageId"
                     Dim arrParams As New Hashtable
                     Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PageFilter")
+                    Dim oFilterElmt As XmlElement = Nothing
+                    Dim className As String = String.Empty
 
                     If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
                         oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PageFilter"))
 
                     End If
+
+                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
+                        className = oFilterElmt.GetAttribute("className")
+                        If (aWeb.moRequest.Form(className) IsNot Nothing) Then
+
+                            'oAdditionalFilterInput.Add(className, Convert.ToString(aWeb.moRequest.Form(className)))
+                        End If
+                    Next
+
                     oXform.Instance.AppendChild(oXml)
 
 
