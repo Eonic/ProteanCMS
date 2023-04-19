@@ -6,6 +6,7 @@ Imports System.Xml
 Imports Lucene.Net.Index.SegmentReader
 Imports Lucene.Net.Search
 Imports Microsoft
+Imports Microsoft.Ajax.Utilities
 Imports Microsoft.ClearScript.Util
 Imports Protean.Cms
 Imports Protean.xForm
@@ -17,7 +18,7 @@ Namespace Providers
         Public Class PriceFilter
 
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef oContentNode As XmlElement)
                 Dim cProcessInfo As String = "AddControl"
                 Try
                     Dim sSql As String = "spGetPriceRange"
@@ -35,12 +36,23 @@ Namespace Providers
                     Dim cProductCountList As String = String.Empty
                     Dim nPageId As Integer = aWeb.mnPageId
                     Dim nMaxPRiceProduct As Integer = 0
+                    Dim oFilterElmt As XmlElement = Nothing
+                    Dim className As String = String.Empty
+
                     If aWeb.moRequest.Form("MinPrice") IsNot Nothing Then
 
                         oMinPrice.Value = Convert.ToString(aWeb.moRequest.Form("MinPrice"))
                         oMaxPrice.Value = Convert.ToString(aWeb.moRequest.Form("MaxPrice"))
 
                     End If
+
+                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
+                        className = oFilterElmt.GetAttribute("className")
+                        If (aWeb.moRequest.Form(className) IsNot Nothing) Then
+
+                        End If
+                    Next
+
 
 
                     If (FilterConfig.Attributes("name") IsNot Nothing) Then
@@ -173,14 +185,14 @@ Namespace Providers
 
                         ElseIf (cPageIds = String.Empty) Then
 
-                        cPageIds = aWeb.moPageXml.SelectSingleNode("Page/@id").Value.ToString()
+                            cPageIds = aWeb.moPageXml.SelectSingleNode("Page/@id").Value.ToString()
                             cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & cPageIds & ")) AND "
                         End If
 
 
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
-                            cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "' AND ("
-                            cWhereSql = cWhereSql + cPriceCond + "))"
+                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cDefinitionName + "' AND ("
+                        cWhereSql = cWhereSql + cPriceCond + "))"
 
 
                     End If

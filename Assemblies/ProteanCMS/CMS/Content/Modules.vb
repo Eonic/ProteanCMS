@@ -354,14 +354,6 @@ where cl.nStructId = " & myWeb.mnPageId)
                     End If
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
 
-                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
-                        className = oFilterElmt.GetAttribute("className")
-                        If (myWeb.moRequest.Form(className) IsNot Nothing) Then
-                            oAdditionalFilterInput.Add(className, Convert.ToString(myWeb.moRequest.Form(className)))
-
-                        End If
-
-                    Next
 
                     For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
@@ -397,12 +389,12 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                             Dim o As Object = Activator.CreateInstance(calledType)
 
-                            Dim args(3) As Object
+                            Dim args(4) As Object
                             args(0) = myWeb
                             args(1) = oFilterElmt
                             args(2) = filterForm
                             args(3) = oFrmGroup
-                            'args(4) = oAdditionalFilterInput
+                            args(4) = oContentNode
 
                             calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                         End If
@@ -510,6 +502,22 @@ where cl.nStructId = " & myWeb.mnPageId)
             End Sub
 
         End Class
+        Public Function ApplyFilters(ByRef oXform As Protean.xForm) As String
+            Try
+                Dim whereSQL As String
+                If (oXform.Instance.SelectSingleNode("PriceFilter/@MaxPrice").InnerText <> "") Then
+
+                    Dim cSelectedMinPrice As String = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MinPrice").InnerText)
+                    Dim cSelectedMaxPrice As String = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MaxPrice").InnerText)
+                    whereSQL = " ci.nContentId in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey  inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='Price' AND (ci.nNumberValue between " & cSelectedMinPrice & " and " & cSelectedMaxPrice & "))"
+
+                End If
+                Return whereSQL
+            Catch ex As Exception
+                Return ""
+            End Try
+
+        End Function
 
 #End Region
 
