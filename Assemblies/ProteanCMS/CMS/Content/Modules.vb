@@ -334,7 +334,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Dim cProcessInfo As String = "ContentFilter"
                 Try
                     'current contentfilter id
-
+                    myWeb.moSession("FilterWhereCondition") = Nothing
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
                     'Dim cnt As Int16
@@ -471,9 +471,9 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
-
+                        myWeb.moSession("FilterWhereCondition") = whereSQL
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, "Product")
-                        oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
+                        'oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
 
                         If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
                             filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")

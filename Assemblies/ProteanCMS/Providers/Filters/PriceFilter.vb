@@ -38,6 +38,7 @@ Namespace Providers
                     Dim nMaxPRiceProduct As Integer = 0
                     Dim oFilterElmt As XmlElement = Nothing
                     Dim className As String = String.Empty
+                    Dim cWhereSql As String = String.Empty
 
                     If aWeb.moRequest.Form("MinPrice") IsNot Nothing Then
 
@@ -62,7 +63,7 @@ Namespace Providers
                     arrParams.Add("MaxPrice", FilterConfig.GetAttribute("toPrice"))
                     arrParams.Add("Step", FilterConfig.GetAttribute("step"))
                     arrParams.Add("PageId", nPageId)
-
+                    arrParams.Add("whereSql", cWhereSql)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
                         If (oDr.HasRows) Then
                             While oDr.Read

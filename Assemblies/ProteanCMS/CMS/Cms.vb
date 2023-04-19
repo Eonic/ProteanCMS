@@ -3661,7 +3661,7 @@ Public Class Cms
     ''' <param name="distinct"></param>
     ''' <param name="cShowSpecificContentTypes"></param>
     ''' 
-    Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False, Optional cShowSpecificContentTypes As String = "", Optional ignoreActiveAndDate As Boolean = False)
+    Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False, Optional cShowSpecificContentTypes As String = "", Optional ignoreActiveAndDate As Boolean = False, Optional nStartPos As Long = 0, Optional nItemCount As Long = 24)
         PerfMon.Log("Web", "GetPageContentFromSelect")
         Dim oRoot As XmlElement
         Dim sSql As String
@@ -3681,6 +3681,7 @@ Public Class Cms
             ' Apply the possiblity of getting contents into a node other than the page contents node
             If oContentsNode Is Nothing Then
                 oRoot = moPageXml.SelectSingleNode("//Contents")
+                nItemCount = CInt("0" & oContentsNode.GetAttribute("stepCount"))
 
                 If oRoot Is Nothing Then
                     oRoot = moPageXml.CreateElement("Contents")
@@ -3768,11 +3769,24 @@ Public Class Cms
             End If
 
             sSql = sSql & " where (" & combinedWhereSQL & ")"
-            If cOrderBy <> "" Then sSql &= " ORDER BY " & cOrderBy
-            Dim nStartPos As Long = 0
-            Dim nItemCount As Long = 24
 
-            sSql &= " offset " & nStartPos & " rows fetch next " & nItemCount & " rows only"
+            ' Quick call to get the total number of records
+            Dim cSQL As String = "SET ARITHABORT ON "
+            cSQL &= "Select COUNT(*) FROM tblContent AS c INNER JOIN "
+            cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
+            cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
+            '' Add the extra joins if specified.
+            If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then cSQL &= " " & cAdditionalJoins & " "
+            cSQL = cSQL & " where (" & combinedWhereSQL & ")"
+
+            Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
+            oContentsNode.SetAttribute("resultCount", nTotal)
+
+            If cOrderBy <> "" Then sSql &= " ORDER BY " & cOrderBy
+
+            If nStartPos <> 0 & nItemCount <> 0 Then
+                sSql &= " offset " & nStartPos & " rows fetch next " & nItemCount & " rows only"
+            End If
 
             sSql = Replace(sSql, "&lt;", "<")
 
@@ -3786,7 +3800,7 @@ Public Class Cms
             nCount = oDs.Tables("Content").Rows.Count
             PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
 
-            moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
+            moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
 
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
@@ -6032,8 +6046,13 @@ Public Class Cms
                     ' Set the paging variables, if provided.
                     If Not (moRequest("startPos") Is Nothing) AndAlso IsNumeric(moRequest("startPos")) Then nStart = CInt(moRequest("startPos"))
                     If Not (moRequest("rows") Is Nothing) AndAlso IsNumeric(moRequest("rows")) Then nRows = CInt(moRequest("rows"))
+                    If moSession("FilterWhereCondition") <> Nothing Then
+                        Dim whereSQL As String = moSession("FilterWhereCondition")
+                        GetPageContentFromSelect(whereSQL,,,,,, oPageElmt,,,,, moRequest("singleContentType"), False, nStart, nRows)
+                    Else
+                        GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType") & cSort, nStart, nRows, sFilterSql)
 
-                    GetContentXMLByTypeAndOffset(moPageXml.DocumentElement, moRequest("singleContentType") & cSort, nStart, nRows, sFilterSql)
+                    End If
 
                 Else
                     'step through the tree from home to our current page
