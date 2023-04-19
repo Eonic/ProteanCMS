@@ -102,34 +102,34 @@ Namespace Providers
                                 cWhereSql = cWhereSql & " )"
                             End If
 
-                            If className = "LocationFilter" AndAlso aWeb.moRequest.Form("Location") <> "" AndAlso aWeb.moRequest.Form("Location") IsNot Nothing Then
-                                Dim cSelectedLocation As String = String.Empty
-                                Dim cSelectedDistance As String = String.Empty
-                                Dim Latitude As String = ""
-                                Dim Longitude As String = ""
-                                cSelectedLocation = aWeb.moRequest.Form("Location")
-                                cSelectedDistance = aWeb.moRequest.Form("Distance")
+                            'If className = "LocationFilter" AndAlso aWeb.moRequest.Form("Location") <> "" AndAlso aWeb.moRequest.Form("Location") IsNot Nothing Then
+                            '    Dim cSelectedLocation As String = String.Empty
+                            '    Dim cSelectedDistance As String = String.Empty
+                            '    Dim Latitude As String = ""
+                            '    Dim Longitude As String = ""
+                            '    cSelectedLocation = aWeb.moRequest.Form("Location")
+                            '    cSelectedDistance = aWeb.moRequest.Form("Distance")
 
-                                'If cSelectedLocation <> "" Then
+                            '    'If cSelectedLocation <> "" Then
 
-                                '    Dim commonSvc = New commans
-                                '    Dim offerDistance = New OfferDistance()
+                            '    '    Dim commonSvc = New commans
+                            '    '    Dim offerDistance = New OfferDistance()
 
-                                '    If cSelectedLocation.Contains(",") Then
-                                '        cSelectedLocation = cSelectedLocation.Replace(",", "")
-                                '    End If
+                            '    '    If cSelectedLocation.Contains(",") Then
+                            '    '        cSelectedLocation = cSelectedLocation.Replace(",", "")
+                            '    '    End If
 
-                                '    offerDistance = commonSvc.GetPostcodeDetails(cSelectedLocation.Trim())
+                            '    '    offerDistance = commonSvc.GetPostcodeDetails(cSelectedLocation.Trim())
 
-                                '    If offerDistance.Location IsNot Nothing Then
-                                '        Latitude = offerDistance.Latitude
-                                '        Longitude = offerDistance.Longitude
-                                '    End If
-                                'End If
+                            '    '    If offerDistance.Location IsNot Nothing Then
+                            '    '        Latitude = offerDistance.Latitude
+                            '    '        Longitude = offerDistance.Longitude
+                            '    '    End If
+                            '    'End If
 
-                                cWhereSql = cWhereSql & " and  nContentKey in (  select ncontentkey from tblContent tc left  join dbo.cfn_GetAllProductsDistance('" & Latitude & "','" & Longitude & "',0) pd on pd.nProductContentKey = tc.nContentKey "
-                                cWhereSql = cWhereSql & " where tc.cContentSchemaName = 'Product' and    (pd.distance <=" & cSelectedDistance & ")) "
-                            End If
+                            '    cWhereSql = cWhereSql & " and  nContentKey in (  select ncontentkey from tblContent tc left  join dbo.cfn_GetAllProductsDistance('" & Latitude & "','" & Longitude & "',0) pd on pd.nProductContentKey = tc.nContentKey "
+                            '    cWhereSql = cWhereSql & " where tc.cContentSchemaName = 'Product' and    (pd.distance <=" & cSelectedDistance & ")) "
+                            'End If
                         End If
                     Next
                     oXform.Instance.AppendChild(oXml)
