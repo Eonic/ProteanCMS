@@ -16,6 +16,7 @@ Imports System.Collections.Generic
 Imports System.Windows
 Imports Microsoft.Ajax.Utilities
 Imports Protean.Cms
+Imports System.Configuration
 
 Partial Public Class Cms
 
@@ -2634,13 +2635,11 @@ processFlow:
             Dim ReceiptDeliveryType As Int16
             Dim oDs As DataSet
             Dim oDs2 As DataSet
-            Dim oDs3 As DataSet
+            Dim oDsShippingOptionKey As DataSet
 
             Dim sSql As String
             Dim oRow As DataRow
             Dim oRow2 As DataRow
-            Dim oRow3 As DataRow
-            Dim oRowShipGroup As DataRow
 
             Dim oElmt As XmlElement
             Dim oElmt2 As XmlElement
@@ -2669,7 +2668,7 @@ processFlow:
             End If
 
             Dim oldCartId As Long = mnCartId
-            Dim IsDeliveryShippingMethod As Long = moCartConfig("DefaultShippingMethod")
+            Dim ShippingOptionKey As Long = moCartConfig("DefaultShippingMethod")
             Dim cCartType As String = String.Empty
 
             Dim cProcessInfo As String = "CartId=" & nCartIdUse
@@ -2736,19 +2735,15 @@ processFlow:
                     oDs = moDBHelper.getDataSetForUpdate(sSql, "Item", "Cart")
 
                     ' check if shipping group exists or not and then we set bydefault delivery option on cart
-                    If myWeb.moDbHelper.checkDBObjectExists("tblCartShippingProductCategoryRelations") Then
-                        Dim sSqlShippingGroup As String = "select csm.nShipOptKey, csm.cShipOptName, csm.nShipOptCost,case when csm.nShipOptKey = 1 then 'DropShip' when csm.nShipOptKey=65 then 'SkipCategory' ELSe '' END As ShippingCartType from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" & nCartIdUse & " and cCatSchemaName = 'Shipping' and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"
-                        oDs3 = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
-                        If oDs3.Tables(0).Rows.Count > 0 Then
-                            For Each oRow3 In oDs3.Tables("Item").Rows
-                                If Not IsDBNull(oRow3("nShipOptKey")) Then
-                                    IsDeliveryShippingMethod = oRow3("nShipOptKey")
-                                    cCartType = oRow3("ShippingCartType")
-                                    Exit For
-                                End If
-                            Next
+                    ' return key and check key value with config key and then set delivery cart type
+                    If myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure) Then
+                        Dim sSqlShippingGroup As String = "select csm.nShipOptKey,cCatSchemaName from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" & nCartIdUse & " and cCatSchemaName = 'Shipping' and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"
+                        oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
+                        If oDsShippingOptionKey.Tables(0).Rows.Count > 0 Then
+                            ShippingOptionKey = Convert.ToInt64(oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0))
+                            cCartType = oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(1)
                         Else
-                            IsDeliveryShippingMethod = moCartConfig("DefaultShippingMethod")
+                            ShippingOptionKey = moCartConfig("DefaultShippingMethod")
                         End If
                     End If
 
@@ -3063,13 +3058,13 @@ processFlow:
                         oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                         oCartElmt.SetAttribute("shippingDesc", oRow("cShippingDesc") & "")
-                        'Add extra condition for checking shipping delievry method set by default
-                        If IsDeliveryShippingMethod <> moCartConfig("DefaultShippingMethod") Then
-                            If (oRow("nShippingMethodId") = IsDeliveryShippingMethod) Then
+                        ''Add extra condition for checking shipping delievry method set by default
+                        If ShippingOptionKey <> moCartConfig("DefaultShippingMethod") Then
+                            If (oRow("nShippingMethodId") = ShippingOptionKey) Then
                                 If cCartType <> String.Empty Then
-                                    oCartElmt.SetAttribute("shippingCartType", cCartType & "")
+                                    oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
                                 Else
-                                    oCartElmt.SetAttribute("shippingCartType", "" & "")
+                                    oCartElmt.SetAttribute("cCatSchemaName", "" & "")
                                 End If
                             End If
                         End If
@@ -3083,10 +3078,14 @@ processFlow:
 
                         End If
 
-                        'Set flag true if promocode have free shipping option
-                        If oCartElmt.GetAttribute("NonDiscountedShippingCost") = "0" Then
-                            IsPromocodeValid = True
+                        If oCartElmt.GetAttribute("NonDiscountedShippingCost") IsNot Nothing Then
+                            'As NonDiscountedShippingCost is initialized in CheckDiscount method, Free shipping promocode is valid so set the flag to True
+                            ' for setting default shipping option to the cart with updating the NonDiscountedShippingCost amount to the free shipping amount.
+                            If oCartElmt.GetAttribute("NonDiscountedShippingCost") = "0" Then
+                                IsPromocodeValid = True
+                            End If
                         End If
+
 
                         If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Or IsPromocodeValid = True Then
                             shipCost = -1
@@ -3109,16 +3108,16 @@ processFlow:
                                         If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
                                             'logic to overide below...
                                             'Add extra condition for checking shipping delievry method set by default
-                                            If IsDeliveryShippingMethod <> moCartConfig("DefaultShippingMethod") Then
+                                            If ShippingOptionKey <> moCartConfig("DefaultShippingMethod") Then
                                                 If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
-                                                    If (oRowSO("nShipOptKey") = IsDeliveryShippingMethod) Then
+                                                    If (oRowSO("nShipOptKey") = ShippingOptionKey) Then
                                                         shipCost = CDbl("0" & oRowSO("nShipOptCost"))
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                                        oCartElmt.SetAttribute("shippingType", IsDeliveryShippingMethod & "")
+                                                        oCartElmt.SetAttribute("shippingType", ShippingOptionKey & "")
                                                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                                        oCartElmt.SetAttribute("shippingCartType", cCartType & "")
+                                                        oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
                                                     End If
                                                 End If
                                             Else
@@ -3131,17 +3130,17 @@ processFlow:
                                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
                                                         If cCartType <> String.Empty Then
-                                                            oCartElmt.SetAttribute("shippingCartType", cCartType & "")
+                                                            oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
                                                         Else
-                                                            oCartElmt.SetAttribute("shippingCartType", "" & "")
+                                                            oCartElmt.SetAttribute("cCatSchemaName", "" & "")
                                                         End If
                                                     End If
                                                     'Add extra condition only when promocode is valid
                                                     'Set nondiscountedshippingcost to attribute when promocode is valid(include free shipping methods)
-                                                ElseIf (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
+                                                ElseIf IsPromocodeValid = True And oRowSO("NonDiscountedShippingCost") <> "0" Then
                                                     shipCost = CDbl("0" & oRowSO("nShipOptCost"))
                                                     oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                                    oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
+                                                    oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
                                                     oCartElmt.SetAttribute("shippingCost", shipCost & "")
                                                     oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                     oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
@@ -3157,7 +3156,7 @@ processFlow:
                                             oCartElmt.SetAttribute("shippingCost", shipCost & "")
                                             oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                             oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                            oCartElmt.SetAttribute("shippingCartType", "" & "")
+                                            oCartElmt.SetAttribute("cCatSchemaName", "" & "")
                                         End If
 
                                     Next

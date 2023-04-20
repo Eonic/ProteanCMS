@@ -75,8 +75,17 @@ Partial Public Class Cms
                 Try
                     Dim cProcessInfo As String = ""
 
+                    'Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    'myCart.GetCart(CartXml.FirstChild)
+                    Dim cShipOptKey As String = "0"
+
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
+                    If (CartXml.SelectSingleNode("Order") IsNot Nothing AndAlso CartXml.SelectSingleNode("Order").Attributes("shippingType") IsNot Nothing) Then
+                        cShipOptKey = CartXml.SelectSingleNode("Order").Attributes("shippingType").Value
+                        myCart.updateGCgetValidShippingOptionsDS(cShipOptKey)
+                    End If
+
 
                     CartXml = updateCartforJSON(CartXml)
 
@@ -471,7 +480,7 @@ Partial Public Class Cms
 
             Public Function UpdatePackagingForRemovingFreeGiftDiscount(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
+                    myCart.moDiscount.RemoveDiscountCode()
                     'update packaging while removing giftbox promocode
                     myCart.updatePackagingForRemovingFreeGiftDiscount(jObj("CartOrderId"), jObj("AmountToDiscount"))
 

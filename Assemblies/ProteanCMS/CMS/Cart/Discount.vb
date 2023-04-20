@@ -497,14 +497,15 @@ Partial Public Class Cms
 
                                         If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
                                             strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                                            'Initializing the attribute NonDiscountedShippingCost which will get update once promocode applied
                                             oCartXML.SetAttribute("NonDiscountedShippingCost", "0")
                                             oCartXML.SetAttribute("freeShippingMethods", strcFreeShippingMethods)
                                         End If
                                         If (doc.InnerXml.Contains("bFreeGiftBox")) Then
                                             strbFreeGiftBox = doc.SelectSingleNode("additionalXml").SelectSingleNode("bFreeGiftBox").InnerText
-                                            If strbFreeGiftBox = "True" Then
-                                                oCartXML.SetAttribute("bFreeGiftBox", strbFreeGiftBox)
-                                            End If
+                                            'If strbFreeGiftBox = "True" Then
+                                            '    oCartXML.SetAttribute("bFreeGiftBox", strbFreeGiftBox)
+                                            'End If
                                         End If
                                     End If
 
