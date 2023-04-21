@@ -38,7 +38,6 @@ Namespace Providers
                     Dim nMaxPRiceProduct As Integer = 0
                     Dim oFilterElmt As XmlElement = Nothing
                     Dim className As String = String.Empty
-                    Dim cWhereSql As String = String.Empty
 
                     If aWeb.moRequest.Form("MinPrice") IsNot Nothing Then
 
