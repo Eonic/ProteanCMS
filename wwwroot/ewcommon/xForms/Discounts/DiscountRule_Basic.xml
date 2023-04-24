@@ -106,6 +106,10 @@
             <label>Monetary</label>
             <value>0</value>
           </item>
+			<item>
+				<label>Free Shipping</label>
+				<value>2</value>
+			</item>
         </select1>
         <input bind="nDiscountValue" class="required short">
           <label>Value</label>

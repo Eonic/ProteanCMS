@@ -253,6 +253,7 @@ Partial Public Class Cms
                                     Dim iDiscount As Int16 = oDsDiscounts.Tables("Discount").Rows.Count
                                     Dim drDiscount As DataRow
                                     Dim nValidProductCount As Int16 = 0
+                                    Dim bDiscountIsPercent As Int16 = CInt("0" + oDsDiscounts.Tables("Discount").Rows(0)("bDiscountIsPercent"))
 
                                     docAdditionalXMl.LoadXml(additionalInfo)
                                     'check promocode is for total amount or not
@@ -275,7 +276,9 @@ Partial Public Class Cms
                                         End If
                                     End If
 
-
+                                    If bDiscountIsPercent <> Nothing Then
+                                        oCartXML.SetAttribute("bDiscountIsPercent", bDiscountIsPercent & "")
+                                    End If
 
                                     'check for shipping option is assigned to promocode or not
                                     'If (oDsDiscounts IsNot Nothing) Then
