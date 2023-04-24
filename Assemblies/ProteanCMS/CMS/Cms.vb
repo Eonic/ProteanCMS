@@ -6255,6 +6255,9 @@ Public Class Cms
                     End If
 
                 Else
+
+                    'Set nothing to Filter Pagination session
+                    moSession("FilterWhereCondition") = Nothing
                     'step through the tree from home to our current page
                     For Each oElmt In oPageElmt.SelectNodes(parentXpath)
                         oElmt.SetAttribute("active", "1")

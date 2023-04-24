@@ -336,7 +336,6 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Dim cProcessInfo As String = "ContentFilter"
                 Try
                     'current contentfilter id
-                    myWeb.moSession("FilterWhereCondition") = Nothing
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
                     'Dim cnt As Int16
