@@ -9,12 +9,14 @@ Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Collections.Generic
 
+
 Partial Public Class Cms
     Public Class Content
 
 #Region "Declarations"
 
         Dim myWeb As Protean.Cms
+
         Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         Private Const mcModuleName As String = "Protean.Cms.Content"
@@ -334,7 +336,6 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Dim cProcessInfo As String = "ContentFilter"
                 Try
                     'current contentfilter id
-
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
                     'Dim cnt As Int16
@@ -354,14 +355,6 @@ where cl.nStructId = " & myWeb.mnPageId)
                     End If
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
 
-                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
-                        className = oFilterElmt.GetAttribute("className")
-                        If (myWeb.moRequest.Form(className) IsNot Nothing) Then
-                            oAdditionalFilterInput.Add(className, Convert.ToString(myWeb.moRequest.Form(className)))
-
-                        End If
-
-                    Next
 
                     For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
@@ -397,12 +390,12 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                             Dim o As Object = Activator.CreateInstance(calledType)
 
-                            Dim args(3) As Object
+                            Dim args(4) As Object
                             args(0) = myWeb
                             args(1) = oFilterElmt
                             args(2) = filterForm
                             args(3) = oFrmGroup
-                            'args(4) = oAdditionalFilterInput
+                            args(4) = oContentNode
 
                             calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                         End If
@@ -479,9 +472,9 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
-
+                        myWeb.moSession("FilterWhereCondition") = whereSQL
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, "Product")
-                        oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
+                        'oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
 
                         If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
                             filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
@@ -510,6 +503,112 @@ where cl.nStructId = " & myWeb.mnPageId)
             End Sub
 
         End Class
+        Public Function ApplyFilters(ByRef oXform As Protean.xForm, ByRef oContentNode As XmlElement) As String
+            Try
+
+                Dim className As String
+                Dim cWhereSql As String
+                For Each oFilterElmt As XmlNode In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
+                    className = oFilterElmt.Attributes("className").Value.ToString()
+
+                    If myWeb.moRequest.Form(className) Is Nothing Then
+
+                        If className = "PriceFilter" AndAlso myWeb.moRequest.Form("MaxPrice") <> "" AndAlso myWeb.moRequest.Form("MaxPrice") IsNot Nothing Then
+                            Dim cSelectedMinPrice As String = ""
+                            Dim cSelectedMaxPrice As String = ""
+                            cSelectedMinPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MinPrice").InnerText)
+                            cSelectedMaxPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MaxPrice").InnerText)
+                            cWhereSql = cWhereSql & " and  nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
+                            cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='Price' AND ("
+                            cWhereSql = cWhereSql & "ci.nNumberValue between " & cSelectedMinPrice & " and " & cSelectedMaxPrice & "))"
+                        End If
+
+                        If className = "AgeFilter" AndAlso myWeb.moRequest.Form("MaxAge") <> "" AndAlso myWeb.moRequest.Form("MaxAge") IsNot Nothing Then
+                            Dim cDefMinName As String = "Age"
+                            Dim cDefMaxName As String = "Max Age"
+                            Dim nAgeMin As String = Convert.ToString(myWeb.moRequest.Form("MinAge"))
+                            Dim nAgeMax As String = Convert.ToString(myWeb.moRequest.Form("MaxAge"))
+                            Dim cAgeMinCond As String = "(ci.nNumberValue >= " & Convert.ToString(nAgeMin) & ")"
+                            Dim cAgeMaxCond As String = "(ci.nNumberValue >= " & Convert.ToString(nAgeMin) & "  and ci.nNumberValue <= " + Convert.ToString(nAgeMax) & ") "
+                            cWhereSql = cWhereSql & " and nContentKey in (Select  cr.nContentParentId from tblContentIndex ci  "
+                            cWhereSql = cWhereSql & " inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey and cid.cDefinitionName in ('" & cDefMinName & "','" & cDefMaxName & "')"
+                            cWhereSql = cWhereSql & " inner join tblContent cs on ci.nContentId=cs.nContentKey and cs.cContentSchemaName='SKU' inner join tblContentRelation cr on cr.nContentChildId=cs.nContentKey   inner join tblAudit acr on acr.nAuditKey=cr.nAuditId and acr.nStatus=1 "
+                            cWhereSql = cWhereSql & "  where ci.nNumberValue!=0    And  " & cAgeMinCond & " union "
+                            cWhereSql = cWhereSql & "  Select  cr.nContentParentId from tblContentIndex ci  "
+                            cWhereSql = cWhereSql & " inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey and cid.cDefinitionName in ('" & cDefMinName & "','" & cDefMaxName & "')"
+                            cWhereSql = cWhereSql & " inner join tblContent cs on ci.nContentId=cs.nContentKey and cs.cContentSchemaName='SKU' inner join tblContentRelation cr on cr.nContentChildId=cs.nContentKey  inner join tblAudit acr on acr.nAuditKey=cr.nAuditId and acr.nStatus=1 "
+                            cWhereSql = cWhereSql & "  where ci.nNumberValue!=0    And " & cAgeMaxCond & " )"
+                        End If
+
+                        If className = "WeightFilter" AndAlso myWeb.moRequest.Form("To") <> "" AndAlso myWeb.moRequest.Form("To") IsNot Nothing Then
+                            Dim cDefinitionName As String = "weight"
+                            cWhereSql = cWhereSql & " and  nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
+                            cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" & cDefinitionName & "'"
+                            cWhereSql = cWhereSql & " And ci.nNumberValue between " + Convert.ToString(myWeb.moRequest.Form("From")) & " and " + Convert.ToString(myWeb.moRequest.Form("To")) & ")"
+                        End If
+                    Else
+
+                        If className = "PageFilter" Then
+                            cWhereSql = cWhereSql & " and nStructId IN(" + myWeb.moRequest.Form(className) & ")"
+                        End If
+
+                        If className = "OccasionFilter" Then
+                            cWhereSql = cWhereSql & " and  ci.nContentId in (select nContentId from tblCartCatProductRelations c inner join tblAudit a on a.nAuditKey=c.nAuditId and nStatus=1"
+                            cWhereSql = cWhereSql & " where c.nCatId in (" + myWeb.moRequest.Form(className) & ")) "
+                        End If
+
+                        If className = "OfferFilter" Then
+                            cWhereSql = cWhereSql & " and  c.cContentSchemaName = 'Product' "
+                            cWhereSql = cWhereSql & " and nContentKey in ("
+                            cWhereSql = cWhereSql & " select distinct cr.nContentParentId from tblContent cn inner join tblContentRelation cr on cr.nContentParentId = cn.nContentKey and cn.cContentSchemaName = 'Product'"
+                            cWhereSql = cWhereSql & " inner join tblAudit ac on ac.nAuditKey = cn.nAuditId and ac.nStatus = 1"
+                            cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey = cr.nAuditId and ca.nStatus = 1"
+                            cWhereSql = cWhereSql & " where cr.nContentParentId in "
+                            cWhereSql = cWhereSql & " (select nContentId from tblCartCatProductRelations c inner join tblAudit a on a.nAuditKey=c.nAuditId and nStatus=1 where c.nCatId in (" + myWeb.moRequest.Form(className) & ")) "
+                            cWhereSql = cWhereSql & " union "
+                            cWhereSql = cWhereSql & " select  distinct cr.nContentParentId from tblContent cn inner join tblContentRelation cr on cr.nContentChildId = cn.nContentKey  and cn.cContentSchemaName = 'SKU' "
+                            cWhereSql = cWhereSql & " inner join tblAudit sa on sa.nAuditKey = cn.nAuditId and sa.nStatus = 1 "
+                            cWhereSql = cWhereSql & " inner join tblAudit sca on sca.nAuditKey = cr.nAuditId and sca.nStatus = 1 "
+                            cWhereSql = cWhereSql & " where cr.nContentChildId in "
+                            cWhereSql = cWhereSql & " (select nContentId from tblCartCatProductRelations c inner join tblAudit a on a.nAuditKey=c.nAuditId and nStatus=1 where c.nCatId in (" + myWeb.moRequest.Form(className) & ")) "
+                            cWhereSql = cWhereSql & " )"
+                        End If
+
+                        'If className = "LocationFilter" AndAlso myWeb.moRequest.Form("Location") <> "" AndAlso myWeb.moRequest.Form("Location") IsNot Nothing Then
+                        '    Dim cSelectedLocation As String = String.Empty
+                        '    Dim cSelectedDistance As String = String.Empty
+                        '    Dim Latitude As String = ""
+                        '    Dim Longitude As String = ""
+                        '    cSelectedLocation = myWeb.moRequest.Form("Location")
+                        '    cSelectedDistance = myWeb.moRequest.Form("Distance")
+
+                        '    If cSelectedLocation <> "" Then
+
+                        '        Dim commonSvc = New commans
+                        '        Dim offerDistance = New OfferDistance()
+
+                        '        If cSelectedLocation.Contains(",") Then
+                        '            cSelectedLocation = cSelectedLocation.Replace(",", "")
+                        '        End If
+
+                        '        offerDistance = commonSvc.GetPostcodeDetails(cSelectedLocation.Trim())
+
+                        '        If offerDistance.Location IsNot Nothing Then
+                        '            Latitude = offerDistance.Latitude
+                        '            Longitude = offerDistance.Longitude
+                        '        End If
+                        '    End If
+
+                        '    cWhereSql = cWhereSql & " and  nContentKey in (  select ncontentkey from tblContent tc left  join dbo.cfn_GetAllProductsDistance('" & Latitude & "','" & Longitude & "',0) pd on pd.nProductContentKey = tc.nContentKey "
+                        '    cWhereSql = cWhereSql & " where tc.cContentSchemaName = 'Product' and    (pd.distance <=" & cSelectedDistance & ")) "
+                        'End If
+                    End If
+                Next
+            Catch ex As Exception
+                Return ""
+            End Try
+
+        End Function
 
 #End Region
 
