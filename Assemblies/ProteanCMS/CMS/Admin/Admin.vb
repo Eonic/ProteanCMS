@@ -4342,7 +4342,7 @@ from tblContentIndexDef"
             Dim cProcessInfo As String = ""
             Dim ThemeLessFile As String = ""
             Dim ThemePath As String = "/themes/"
-            Dim VariablePrefix As String = "$"
+            Dim VariablePrefix As String = "\\$" ' $ needs escaping.
             If myWeb.moConfig("cssFramework") <> "bs5" Then
                 ThemePath = "/ewThemes/"
                 VariablePrefix = "@"

@@ -22,7 +22,7 @@
   <xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
   <xsl:variable name="HomeInfo">false</xsl:variable>
   <xsl:variable name="HomeNav">true</xsl:variable>
-  <xsl:variable name="NavFix">false</xsl:variable>
+  <xsl:variable name="NavFix">true</xsl:variable>
   <xsl:variable name="nav-dropdown">true</xsl:variable>
   <xsl:variable name="SideSubWidth">3</xsl:variable>
   <xsl:variable name="SideSubWidthCustom"></xsl:variable>
