@@ -3819,7 +3819,7 @@ Public Class Cms
 
             ' Quick call to get the total number of records
             Dim cSQL As String = "SET ARITHABORT ON "
-            cSQL &= "Select COUNT(*) FROM tblContent AS c INNER JOIN "
+            cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
             cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
             cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
             '' Add the extra joins if specified.
