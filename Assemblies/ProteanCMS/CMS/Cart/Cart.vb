@@ -9464,7 +9464,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
 
         'creating the duplicate order from old order
-        Public Function CreateDuplicateOrder(oldCartxml As XmlDocument, nOrderId As Integer, cMethodName As String) As String
+        Public Function CreateDuplicateOrder(oldCartxml As XmlDocument, nOrderId As Integer, cMethodName As String, cNewAuthNumber As String) As String
             Try
                 Dim cResult As String = "Success"
                 Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
@@ -9565,7 +9565,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 If deliveryAddId <> 0 And billingAddId <> 0 Then
                     useSavedAddressesOnCart(billingAddId, deliveryAddId)
                 End If
-                ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
+                ConfirmPayment(oCartListElmt, oeResponseElmt, cNewAuthNumber, cMethodName, Amount)
                 GetCart(oCartListElmt, mnCartId)
                 SaveCartXML(oCartListElmt, mnCartId)
                 Return cResult
