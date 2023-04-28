@@ -3058,16 +3058,7 @@ processFlow:
                         oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                         oCartElmt.SetAttribute("shippingDesc", oRow("cShippingDesc") & "")
-                        ''Add extra condition for checking shipping delievry method set by default
-                        'If ShippingOptionKey <> moCartConfig("DefaultShippingMethod") Then
-                        '    If (oRow("nShippingMethodId") = ShippingOptionKey) Then
-                        '        If cCartType <> String.Empty Then
-                        '            oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
-                        '        Else
-                        '            oCartElmt.SetAttribute("cCatSchemaName", "" & "")
-                        '        End If
-                        '    End If
-                        'End If
+
                         If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
                             If IsDBNull(oRow("nReceiptType")) Then
                                 ReceiptDeliveryType = 1
@@ -3132,11 +3123,6 @@ processFlow:
                                                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                                        'If cCartType <> String.Empty Then
-                                                        '    oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
-                                                        'Else
-                                                        '    oCartElmt.SetAttribute("cCatSchemaName", "" & "")
-                                                        'End If
                                                     End If
                                                     'Add extra condition only when promocode is valid
                                                     'Set nondiscountedshippingcost to attribute when promocode is valid(include free shipping methods)
