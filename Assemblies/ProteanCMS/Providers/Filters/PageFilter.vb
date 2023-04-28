@@ -66,12 +66,12 @@ Namespace Providers
                                 cWhereSql = cWhereSql & "  where ci.nNumberValue!=0    And " & cAgeMaxCond & " )"
                             End If
 
-                            If className = "WeightFilter" AndAlso aWeb.moRequest.Form("To") <> "" AndAlso aWeb.moRequest.Form("To") IsNot Nothing Then
-                                Dim cDefinitionName As String = "weight"
-                                cWhereSql = cWhereSql & " and  nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
-                                cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" & cDefinitionName & "'"
-                                cWhereSql = cWhereSql & " And ci.nNumberValue between " + Convert.ToString(aWeb.moRequest.Form("From")) & " and " + Convert.ToString(aWeb.moRequest.Form("To")) & ")"
-                            End If
+                            'If className = "WeightFilter" AndAlso aWeb.moRequest.Form("To") <> "" AndAlso aWeb.moRequest.Form("To") IsNot Nothing Then
+                            '    Dim cDefinitionName As String = "weight"
+                            '    cWhereSql = cWhereSql & " and  nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey "
+                            '    cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 and cid.cDefinitionName='" & cDefinitionName & "'"
+                            '    cWhereSql = cWhereSql & " And ci.nNumberValue between " + Convert.ToString(aWeb.moRequest.Form("From")) & " and " + Convert.ToString(aWeb.moRequest.Form("To")) & ")"
+                            'End If
                         Else
 
                             If className = "GroupSizeFilter" Then
@@ -173,8 +173,8 @@ Namespace Providers
                         End While
 
                     End Using
-                    If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']") IsNot Nothing) Then
-                        If (oXml.InnerText.Trim() <> String.Empty) Then
+                    If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item") IsNot Nothing) Then
+                        If (oXml.InnerText.Trim() <> "") Then
                             Dim sText As String
                             'Dim sValue As String
                             Dim cnt As Integer
