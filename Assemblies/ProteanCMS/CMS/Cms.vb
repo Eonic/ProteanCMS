@@ -3784,7 +3784,7 @@ Public Class Cms
 
 
                 ' Check the page is not denied
-                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = " c.cContentSchemaName ='Product' and NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
 
@@ -3819,7 +3819,7 @@ Public Class Cms
 
             ' Quick call to get the total number of records
             Dim cSQL As String = "SET ARITHABORT ON "
-            cSQL &= "Select COUNT(*) FROM tblContent AS c INNER JOIN "
+            cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
             cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
             cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
             '' Add the extra joins if specified.
@@ -3935,7 +3935,7 @@ Public Class Cms
                 End If
 
                 ' Check the page is not denied
-                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = "  c.cContentSchemaName ='Product' and NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
                 ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"

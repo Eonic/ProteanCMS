@@ -2735,7 +2735,7 @@ processFlow:
                     oDs = moDBHelper.getDataSetForUpdate(sSql, "Item", "Cart")
 
                     ' check if shipping group exists or not and then we set bydefault delivery option on cart
-                    ' return key and check key value with config key and then set delivery cart type
+                    ' Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
                     If myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure) Then
                         Dim sSqlShippingGroup As String = "select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" & nCartIdUse & " and cCatSchemaName = 'Shipping' and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"
                         oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
@@ -3088,7 +3088,10 @@ processFlow:
 
 
                         If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Or IsPromocodeValid = True Then
-                            shipCost = -1
+                            If oCartElmt.GetAttribute("bDiscountIsPercent") <> "" Then
+                                shipCost = -1
+                            End If
+
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")
                             cDestinationCountry = moCartConfig("DefaultCountry")
@@ -3138,14 +3141,16 @@ processFlow:
                                                     'Add extra condition only when promocode is valid
                                                     'Set nondiscountedshippingcost to attribute when promocode is valid(include free shipping methods)
                                                 ElseIf IsPromocodeValid = True And oRowSO("NonDiscountedShippingCost") <> "0" Then
-                                                    shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                                                    oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                                    oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
-                                                    oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                                                    oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                                                    oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                                    If oRowSO("NonDiscountedShippingCost") <> "0" Then
-                                                        oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
+                                                    If oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")) Then
+                                                        shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                        oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                        oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
+                                                        oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                        oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                        oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                                        If oRowSO("NonDiscountedShippingCost") <> "0" Then
+                                                            oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
+                                                        End If
                                                     End If
                                                 End If
                                             End If
@@ -9193,6 +9198,10 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 sSql = sSql & " where nShipOptKey in ( " & nShipOptKey & ")"
                 ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
 
+                'Check if shipping option contains multiple option then get lowest 
+                If InStr(1, nShipOptKey, ",") > 0 Then
+                    nShipOptKey = nShipOptKey.Split(","c)(0)
+                End If
                 For Each oRow In ods.Tables("Order").Rows
                     cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
                     nShippingCost = oRow("nShipOptCost")
