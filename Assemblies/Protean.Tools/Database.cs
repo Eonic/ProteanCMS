@@ -1252,10 +1252,10 @@ namespace Protean.Tools
         {
             int nInsertId = 0;
             SqlDataReader dr;
-            string cProcessInfo = "Running: " + sql;
+            string cProcessInfo = "Running: " + sql; 
             try
             {
-                SqlCommand oCmd = new SqlCommand(sql + ";select @@identity", oConn);
+                SqlCommand oCmd = new SqlCommand(sql + ";select scope_identity();", oConn);
                 if (oConn == null)
                     oConn.Open();
                 else if (oConn.State == ConnectionState.Closed)
@@ -1593,7 +1593,7 @@ namespace Protean.Tools
                     {
                         foreach (DataColumn oColumn in oTable.Columns)
                         {
-                            if (oRow[oColumn.ColumnName] == null)
+                            if (oRow[oColumn.ColumnName] == DBNull.Value)
                             {
                                 cProcessInfo = "Error in Feild:" + oColumn.ColumnName + " DataType:" + oColumn.DataType.ToString();
                                 switch (oColumn.DataType.ToString())

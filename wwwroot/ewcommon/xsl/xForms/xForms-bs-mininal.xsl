@@ -9,12 +9,18 @@
         <div class="modal-dialog">
           <div class="modal-content  alert alert-danger" role="alert">
             <div class="modal-body">
-              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
-              <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
+              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">
+				  <xsl:text> </xsl:text>
+			  </i>
+             
               <button type="button" class="close" data-dismiss="modal">
-                <i class="fa fa-times">&#160;</i>
+                <i class="fa fa-times">
+					<xsl:text> </xsl:text>
+				</i>
               </button>
-              <span id="errorMessage">&#160;</span>
+              <span id="errorMessage">
+				  <xsl:text> </xsl:text>
+			  </span>
             </div>
           </div>
         </div>
@@ -3947,11 +3953,14 @@
   </xsl:template>
   
  <xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
-    <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css" />
+	 <link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css">
+		 <xsl:text> </xsl:text>
+	 </link>
     <script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
       <xsl:text> </xsl:text>
     </script>
-     <script>
+	 
+    	<script type="text/javascript">
       $(document).ready(function () {
       <xsl:for-each select="descendant::input[contains(@class,'telephone')]">
        <xsl:variable name="ref">

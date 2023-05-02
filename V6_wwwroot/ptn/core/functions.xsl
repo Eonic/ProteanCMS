@@ -279,6 +279,63 @@
 		</xsl:if>
 	</xsl:variable>
 
+	<!-- IMAGE SIZE DEFAULTS -->
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">100</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">100</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xxs">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xxs">768</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">768</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">496</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">
+		<xsl:apply-templates select="." mode="getThWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-md">
+		<xsl:apply-templates select="." mode="getThHeight"/>
+	</xsl:template>
+
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">496</xsl:template>
+
+	<!-- Get Sub Page Thumbnail Dimensions -->
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">100</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThHeight">100</xsl:template>
+
+	<!-- To fit if submenu -->
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">300</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">400</xsl:template>
+
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-xxs">768</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">768</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-xs">768</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-sm">496</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
+		<xsl:apply-templates select="." mode="getDisplayWidth"/>
+	</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-md">
+		<xsl:apply-templates select="." mode="getDisplayWidth"/>
+	</xsl:template>
+
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayHeight-lg">496</xsl:template>
+
+	<!-- To fit 800x600 - fits nicely inside any screen ratio -->
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeWidth">750</xsl:template>
+	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeHeight">550</xsl:template>
+
+
 	<!-- Cal Cmd for Calendars -->
 	<xsl:variable name="calendarMonth">
 		<xsl:choose>
@@ -325,7 +382,6 @@
 		<html lang="{$pageLang}" xml:lang="{$pageLang}">
 			<xsl:apply-templates select="." mode="htmlattr"/>
 			<head>
-				<xsl:apply-templates select="." mode="metacharset"/>
 				<xsl:choose>
 					<xsl:when test="ContentDetail">
 						<xsl:attribute name="prefix">
@@ -336,11 +392,10 @@
 						<xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
-
+				<xsl:apply-templates select="." mode="metacharset"/>
 				<xsl:if test="$GoogleOptimizeID!=''">
 					<script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
 				</xsl:if>
-
 				<xsl:if test="$GoogleTagManagerID!=''">
 					<!-- Google Tag Manager -->
 					<script>
@@ -425,6 +480,7 @@
 
 			</head>
 			<!-- Go build the Body of the HTML doc -->
+			
 			<xsl:apply-templates select="." mode="bodyBuilder"/>
 		</html>
 	</xsl:template>
@@ -1005,8 +1061,7 @@
 
 	<xsl:template match="Page" mode="metadata">
 		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
 
 		<xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
 			<xsl:apply-templates select="." mode="getMetaDescription"/>
@@ -1451,6 +1506,7 @@
 					<xsl:value-of select="@artid"/>
 				</xsl:if>
 			</xsl:attribute>
+			<xsl:apply-templates select="." mode="bodyStyle"/>
 			<xsl:if test="$GoogleTagManagerID!=''">
 				<!-- Google Tag Manager (noscript) -->
 				<noscript>
@@ -1458,7 +1514,6 @@
 				</noscript>
 				<!-- End Google Tag Manager (noscript) -->
 			</xsl:if>
-			<xsl:apply-templates select="." mode="bodyStyle"/>
 			<xsl:apply-templates select="." mode="bodyDisplay"/>
 			<xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
 				<xsl:apply-templates select="." mode="commonStyle"/>
@@ -3877,7 +3932,7 @@
 					<xsl:text> dropdown dropdown-hover-menu</xsl:text>
 				</xsl:attribute>
 			</xsl:if>
-			<a href="{@url}" id="mainNavDD{@id}">
+			<a href="{@url}" id="mainNavDD{@id}" role="button">
 				<xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
 				<xsl:attribute name="class">
@@ -4144,7 +4199,7 @@
 		<div class="morelink">
 			<span>
 				<a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
-					<xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
+					<xsl:if test="not(substring($link,1,1)='/') and ((contains($link,'http://') or contains($link,'tel:')) and $linkType='external')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 						<xsl:attribute name="class">extLink</xsl:attribute>
 					</xsl:if>
@@ -4205,7 +4260,7 @@
 													<xsl:value-of select="$link"/>
 												</xsl:attribute>
 											</xsl:when>
-											<xsl:when test="contains($link,'http')">
+											<xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
 												<xsl:attribute name="href">
 													<xsl:value-of select="$link"/>
 												</xsl:attribute>
@@ -4452,7 +4507,27 @@
 		</xsl:if>
 	</xsl:template>
 	<!-- -->
+	<xsl:template name="SortArrows">
+		<xsl:param name="sortCol"/>
+		<xsl:param name="bSortFormMethod"/>
 
+		<div class="sortArrows">
+			<xsl:variable name="qsSet" select="/Page/Request/QueryString/Item[@name!='sortCol' and @name!='sortDir']"/>
+			<xsl:variable name="qs">
+				<xsl:for-each select="$qsSet/.">
+					<xsl:if test="not(position()=1)">&amp;</xsl:if>
+					<xsl:value-of select="@name"/>=<xsl:value-of select="."/>
+				</xsl:for-each>
+			</xsl:variable>
+			<a href="?{$qs}&amp;sortCol={$sortCol}&amp;sortDir=ascending" title="Sort Ascending">
+				<img  src="/ewcommon/images/sortDown.gif" width="11" height="7" class="down" />
+			</a>
+			<a href="?{$qs}&amp;sortCol={$sortCol}&amp;sortDir=descending" title="Sort Descending">
+				<img  src="/ewcommon/images/sortUp.gif" width="11" height="7" class="up" />
+			</a>
+		</div>
+	</xsl:template>
+	
 	<xsl:template match="Voted_For" mode="reportCell">
 		<td>
 			<xsl:value-of select="Content/Title"/>
@@ -5493,7 +5568,7 @@
 				<div class="center-block center-large">
 
 					<xsl:if test="@icon!=''">
-						<i>
+						<i role="img" aria-hidden="true">
 							<xsl:attribute name="class">
 								<xsl:text>fa fa-3x center-block </xsl:text>
 								<xsl:value-of select="@icon"/>
@@ -5503,7 +5578,7 @@
 						<xsl:text> </xsl:text>
 					</xsl:if>
 					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
-						<span class="upload-icon">
+						<span class="upload-icon" role="img" aria-hidden="true">
 							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
 						</span>
 					</xsl:if>
@@ -5597,8 +5672,8 @@
           Thumbnail, Details and Fullsizes.
   -->
 	<xsl:template match="Content | MenuItem | Discount | productDetail" mode="displayThumbnail">
-		<xsl:param name="crop" select="false()" />
-		<xsl:param name="no-stretch" select="true()" />
+		<xsl:param name="crop" select="true()" />
+		<xsl:param name="no-stretch" select="false()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
 		<xsl:param name="forceResize"/>
@@ -5726,7 +5801,7 @@
 
 	<xsl:template name="displayResponsiveImage">
 		<xsl:param name="crop"/>
-		<xsl:param name="no-stretch" select="true()" />
+		<xsl:param name="no-stretch" select="false()" />
 		<xsl:param name="width"/>
 		<xsl:param name="height"/>
 		<xsl:param name="max-width-xxs"/>
@@ -6102,7 +6177,7 @@
 								<!--WebP Images-->
 								<xsl:call-template name="sourceTag">
 									<xsl:with-param name="type" select="'image/webp'"/>
-									<xsl:with-param name="media" select="$mediaWidth"/>
+									<xsl:with-param name="media" select="'(max-width: 576px)'"/>
 									<xsl:with-param name="imageUrl" select="$newSrc-webp"/>
 									<xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2-webp"/>
 									<xsl:with-param name="class" select="$class"/>
@@ -6590,15 +6665,15 @@
 		<source type="{$type}" media="{$media}" srcset="{ew:replacestring($imageUrl,' ','%20')} 1x, {$imageRetinaUrl} 2x" >
 			<xsl:choose>
 				<xsl:when test="$lazy='on'">
-					<xsl:attribute name="data-src">
+					<xsl:attribute name="data-srcset">
 						<xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
 					</xsl:attribute>
-					<xsl:attribute name="src">
+					<xsl:attribute name="srcset">
 						<xsl:value-of select="$lazyplaceholder"/>
 					</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:attribute name="src">
+					<xsl:attribute name="srcset">
 						<xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
 					</xsl:attribute>
 				</xsl:otherwise>
@@ -7298,61 +7373,6 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!-- -->
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">100</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">100</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xxs">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xxs">768</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">768</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">496</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">
-		<xsl:apply-templates select="." mode="getThWidth"/>
-	</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-md">
-		<xsl:apply-templates select="." mode="getThHeight"/>
-	</xsl:template>
-
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">496</xsl:template>
-
-	<!-- Get Sub Page Thumbnail Dimensions -->
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">100</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThHeight">100</xsl:template>
-
-	<!-- To fit if submenu -->
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">300</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">400</xsl:template>
-
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xxs">768</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">768</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-xs">768</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-sm">496</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
-		<xsl:apply-templates select="." mode="getDisplayWidth"/>
-	</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-md">
-		<xsl:apply-templates select="." mode="getDisplayWidth"/>
-	</xsl:template>
-
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getDisplayWidth-lg">496</xsl:template>
-
-	<!-- To fit 800x600 - fits nicely inside any screen ratio -->
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeWidth">750</xsl:template>
-	<xsl:template match="Content | MenuItem | Discount | Company" mode="getFullSizeHeight">550</xsl:template>
 
 	<!-- resize image template for Image Content and Modules -->
 	<xsl:template match="Content" mode="resize-image">
@@ -9130,14 +9150,18 @@
 	<xsl:template name="render-js-files">
 		<xsl:param name="list" />
 		<xsl:param name="async" />
+		<xsl:param name="defer" />
 		<xsl:variable name="seperator" select="','"/>
 		<xsl:variable name="newlist" select="concat(normalize-space($list),$seperator)" />
 		<xsl:variable name="first" select="substring-before($newlist, $seperator)" />
 		<xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
 		<xsl:if test="$first!=''">
 			<script type="text/javascript" src="{$first}{$bundleVersion}">
-				<xsl:if test="$async!=''">
+				<xsl:if test="$async=true()">
 					<xsl:attribute name="async">async</xsl:attribute>
+				</xsl:if>				
+				<xsl:if test="$defer=true()">
+					<xsl:attribute name="defer">defer</xsl:attribute>
 				</xsl:if>
 				<xsl:text>/* */</xsl:text>
 			</script>
@@ -9236,7 +9260,7 @@
 								<xsl:with-param name="file-suffix" select="''"/>
 								<xsl:with-param name="quality" select="100"/>
 								<xsl:with-param name="crop" select="false" />
-								<xsl:with-param name="no-stretch" select="true" />
+								<xsl:with-param name="no-stretch" select="false" />
 								<xsl:with-param name="forceResize" select="false" />
 							</xsl:call-template>
 						</xsl:if>
@@ -9334,7 +9358,7 @@
 											<xsl:with-param name="file-suffix" select="''"/>
 											<xsl:with-param name="quality" select="100"/>
 											<xsl:with-param name="crop" select="false" />
-											<xsl:with-param name="no-stretch" select="true" />
+											<xsl:with-param name="no-stretch" select="false" />
 											<xsl:with-param name="forceResize" select="false" />
 										</xsl:call-template>
 									</xsl:if>

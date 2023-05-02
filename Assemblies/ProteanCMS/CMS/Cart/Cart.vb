@@ -457,6 +457,7 @@ Partial Public Class Cms
         End Sub
 
 
+
         Public Sub InitializeVariables()
             myWeb.PerfMon.Log("Cart", "InitializeVariables")
             'Author:        Trevor Spink
@@ -490,6 +491,8 @@ Partial Public Class Cms
                     End If
 
                     moDiscount = New Discount(Me)
+
+
                     mcPagePath = myWeb.mcPagePath
 
                     If mcPagePath = "" Then
@@ -499,7 +502,7 @@ Partial Public Class Cms
                             mcPagePath = mcCartURL & "/?"
                         End If
                     Else
-                        mcPagePath = mcCartURL & mcPagePath & "?"
+                        mcPagePath = mcCartURL.TrimEnd("/") & mcPagePath & "?"
                     End If
 
                     If moConfig("Membership") = "on" Then mbEwMembership = True
@@ -6678,20 +6681,20 @@ processFlow:
                                         nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
                                     End If
 
-                                    If (UniqueProduct) Then
+                                    'If (UniqueProduct) Then
 
-                                        If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
-                                            giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
-                                            oProdXml.DocumentElement.AppendChild(giftMessageNode)
-                                        Else
-                                            ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
-                                        End If
-                                    End If
+                                    '    If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                    '        giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                    '        oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                    '    Else
+                                    '        ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                    '    End If
+                                    'End If
 
                                     'Add Parent Product to cart if SKU.add
                                     If cContentType = "SKU" Or cContentType = "Ticket" Then
                                         'Then we need to add the Xml for the ParentProduct.
-                                        Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
+                                        Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where nContentChildId =" & nProductId & "Order by nContentParentId desc")
 
                                         Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
                                         Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
@@ -9461,7 +9464,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
 
         'creating the duplicate order from old order
-        Public Function CreateDuplicateOrder(oldCartxml As XmlDocument, nOrderId As Integer, cMethodName As String) As String
+        Public Function CreateDuplicateOrder(oldCartxml As XmlDocument, nOrderId As Integer, cMethodName As String, cNewAuthNumber As String) As String
             Try
                 Dim cResult As String = "Success"
                 Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
@@ -9562,7 +9565,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 If deliveryAddId <> 0 And billingAddId <> 0 Then
                     useSavedAddressesOnCart(billingAddId, deliveryAddId)
                 End If
-                ConfirmPayment(oCartListElmt, oeResponseElmt, ReceiptId, cMethodName, Amount)
+                ConfirmPayment(oCartListElmt, oeResponseElmt, cNewAuthNumber, cMethodName, Amount)
                 GetCart(oCartListElmt, mnCartId)
                 SaveCartXML(oCartListElmt, mnCartId)
                 Return cResult

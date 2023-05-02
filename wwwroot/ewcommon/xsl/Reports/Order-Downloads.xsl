@@ -2,6 +2,8 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt">
 	<xsl:import href="Report-Base.xsl"/>
 	<xsl:import href="Formats/Report-Format-Loader.xsl"/>
+
+	<xsl:output method="html" indent="no" omit-xml-declaration="yes" encoding="utf-8"/>
 	
 	<xsl:template match="/">
 		<xsl:apply-imports/>

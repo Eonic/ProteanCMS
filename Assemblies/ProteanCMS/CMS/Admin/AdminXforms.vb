@@ -4243,8 +4243,13 @@ Partial Public Class Cms
                 Dim cProcessInfo As String = ""
                 Try
                     MyBase.NewFrm("EditImage")
+                    If cImgHtml.Contains("</img>") Then
+                        'if image tag is closed properly for XHTML
+                        MyBase.Instance.InnerXml = cImgHtml.Replace("&", "&amp;")
+                    Else
+                        MyBase.Instance.InnerXml = cImgHtml.Replace(""">", """/>").Replace("&", "&amp;")
+                    End If
 
-                    MyBase.Instance.InnerXml = cImgHtml.Replace(""">", """/>").Replace("&", "&amp;")
                     If cClassName = "" Then
                         oElmt = MyBase.Instance.FirstChild
                         cClassName = oElmt.GetAttribute("class")

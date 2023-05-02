@@ -148,7 +148,7 @@
         </button>
       </xsl:if>-->
        <xsl:if test="@pageStart &gt; 1">
-      <a type="button" id="btnPrevResult" class="btn btn-default pull-left" href="?searchMode=INDEX&amp;searchString={@searchString}&amp;pageStart={@pageStart - @pageSize}">
+      <a type="button" id="btnPrevResult" class="btn btn-default pull-left" href="{$currentPage/@url}?searchMode=INDEX&amp;searchString={@searchString}&amp;pageStart={@pageStart - @pageSize}">
         <i class=" fa fa-chevron-circle-left text-green">&#160;</i>&#160;Prev 
       </a>
          </xsl:if>
@@ -178,8 +178,8 @@
       </xsl:choose>
       </span>
       <xsl:if test="@pageEnd &lt; $totalResults">
-        <a id="btnNextResult" class="btn btn-default" name="Search" href="?searchMode=INDEX&amp;searchString={@searchString}&amp;pageStart={@pageEnd + 1}">
-          Next&#160;<i class=" fa fa-chevron-circle-right text-green">&#160;</i>
+        <a id="btnNextResult" class="btn btn-default" name="Search" href="{$currentPage/@url}?searchMode=INDEX&amp;searchString={@searchString}&amp;pageStart={@pageEnd + 1}">
+         Next&#160;<i class=" fa fa-chevron-circle-right text-green">&#160;</i>
         </a>
       </xsl:if>
       </div>

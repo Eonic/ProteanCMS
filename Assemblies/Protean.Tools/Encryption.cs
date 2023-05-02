@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.VisualBasic;
 using System;
 using System.IO;
 using System.Security;
@@ -1925,10 +1926,13 @@ namespace Protean.Tools
                 try
                 {
                     string returnValue = string.Empty;
+                    StringBuilder sb = new StringBuilder();
+                   
 
-                    returnValue = EnDeCrypt(message, key);
-                    returnValue = StringToHex(returnValue);
-
+                    returnValue =EnDeCrypt(message, key);
+                   
+                    returnValue =StringToHex(returnValue);
+                    returnValue = returnValue.Replace("-", "");
                     return returnValue;
                 }
                 catch (Exception ex)
@@ -2053,11 +2057,14 @@ namespace Protean.Tools
 
                 maxIndex = Strings.Len(message);
 
-                for (index = 1; index <= maxIndex; index++)
-                    //hexSb.Append(Strings.Right("0" + Conversion.Hex(Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1))), 2));
-                hexSb.Append(Strings.Right("0" + String.Format("0x{0:X}", (Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1)))), 2));
+                //for (index = 1; index <= maxIndex; index++)
+                //    //hexSb.Append(Strings.Right("0" + Conversion.Hex(Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1))), 2));
+                //hexSb.Append(Strings.Right("0" + String.Format("0x{0:X}", (Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1)))), 2));
 
-                hexOut = hexSb.ToString();
+                byte[] ba = Encoding.Default.GetBytes(message);
+                hexOut = BitConverter.ToString(ba);
+
+               // hexOut = hexSb.ToString();
                 hexSb.Length = 0;
 
                 return hexOut;
@@ -2071,20 +2078,36 @@ namespace Protean.Tools
             ///         ''' <remarks></remarks>
             private static string HexToString(string hex)
             {
-                long index;
-                long maxIndex;
-                StringBuilder sb = new StringBuilder();
-                string returnString = string.Empty;
+                try {
+                    int index;
+                    long maxIndex;
+                    StringBuilder sb = new StringBuilder();
+                    string returnString = string.Empty;
 
-                maxIndex = Strings.Len(hex);
+                    maxIndex = Strings.Len(hex)/2;
 
-                for (index = 1; index <= maxIndex; index += 2)
-                    sb.Append(Strings.Chr(System.Convert.ToInt32( Strings.Mid(hex, System.Convert.ToInt32(index), 2),16)));
+                    for (index = 0; index < maxIndex; index++)
+                        sb.Append(Strings.Chr(System.Convert.ToInt32(hex.Substring(index * 2, 2), 16)));
 
-                returnString = sb.ToString();
-                sb.Length = 0;
 
-                return returnString;
+                    //byte[] raw = new byte[hex.Length / 2];
+                    //for (int i = 0; i < raw.Length; i++)
+                    //{
+                    //    raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+                    //}
+                    //returnString = Encoding.ASCII.GetString(raw);
+
+                    returnString = sb.ToString();
+                    sb.Length = 0;
+
+                    return returnString;
+
+                }
+                catch(Exception ex)
+                {
+                    return ex.Message;
+                }
+                
             }
         }
     }

@@ -3,6 +3,7 @@
 
   <!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
   <xsl:template match="Page" mode="mainLayout">
+	
     <xsl:param name="containerClass"/>
     <xsl:choose>
       <!-- IF QUOTE CMD SHOW QUOTE -->
@@ -13,9 +14,11 @@
       </xsl:when>
       <!-- IF CART CMD SHOW CART -->
       <xsl:when test="Cart[@type='order']/Order/@cmd!=''">
+	
         <div class="container">
           <xsl:apply-templates select="Cart[@type='order']/Order" mode="cartFull"/>
         </div>
+
       </xsl:when>
       <!-- IF GIFT LIST CMD SHOW GIFT LIST -->
       <xsl:when test="Cart[@type='giftlist']/Order/@cmd!=''">
@@ -37,10 +40,12 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- Otherwise show page layout -->
+		 
         <xsl:apply-templates select="." mode="Layout">
           <xsl:with-param name="containerClass" select="$containerClass"/>
         </xsl:apply-templates>
-        <xsl:apply-templates select="." mode="socialBookmarks" />
+
+        <xsl:apply-templates select="." mode="socialBookmarks" />-->
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2946,12 +2951,15 @@
            </xsl:otherwise>
         </xsl:choose>
        </xsl:variable>
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
-      <script type="text/javascript">
-        <xsl:text>function initialiseGMaps(){</xsl:text>
-        <xsl:apply-templates select="." mode="initialiseGoogleMap"/>
-        <xsl:text>};</xsl:text>
-      </script>
+
+      	  <xsl:if test="not(following-sibling::Content[@type='Module' and @moduleType='GoogleMapv3'])">
+		  <script type="text/javascript">
+            <xsl:text>function initialiseGMaps(){</xsl:text>
+            <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="initialiseGoogleMap"/>
+            <xsl:text>};</xsl:text>
+          </script>
+		  <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps">&#160;</script>
+	  </xsl:if>
   </xsl:template>
 
 	<xsl:template match="Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]" mode="contentDetailJS">
@@ -15556,7 +15564,7 @@
               <xsl:if test="position()=1">
                 <xsl:attribute name="class">active</xsl:attribute>
               </xsl:if>
-              
+              <xsl:text> </xsl:text>
             </li>
           </xsl:for-each>
         </ol>
@@ -15658,7 +15666,7 @@
               <xsl:if test="position()=1">
                 <xsl:attribute name="class">active</xsl:attribute>
               </xsl:if>
-              
+              <xsl:text> </xsl:text>
             </li>
           </xsl:for-each>
         </ol>

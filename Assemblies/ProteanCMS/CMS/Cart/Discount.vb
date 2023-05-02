@@ -132,7 +132,8 @@ Partial Public Class Cms
                 Dim nCount As Integer
                 Dim dDisountAmount As Double = 0
                 Dim xmlCartItem As XmlElement
-
+                Dim validateShippingGroup As String = String.Empty
+                Dim oDiscountMessageNew As String = "The promo code you have provided is invalid for this transaction"
 
                 Try
                     Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
@@ -267,7 +268,6 @@ Partial Public Class Cms
                                         dMaxPrice = CDbl("0" & docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
                                     End If
 
-
                                     If oDsCart.Tables("Item").Rows.Count > 0 Then
                                         For Each drItem As DataRow In oDsCart.Tables("Item").Rows
 
@@ -302,14 +302,14 @@ Partial Public Class Cms
 
                                     'validate discount if it is on total
                                     If (bApplyToTotal) Then
-                                            validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
-                                        End If
-                                        If validateAddedDiscount = False Then
-                                            RemoveDiscountCode()
-                                            oDsDiscounts = Nothing
-                                        End If
+                                        validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
                                     End If
-                                Else
+                                    If validateAddedDiscount = False Then
+                                        RemoveDiscountCode()
+                                        oDsDiscounts = Nothing
+                                    End If
+                                End If
+                            Else
                                 Dim oItemElmt As XmlElement
                                 For Each oItemElmt In oCartXML.SelectNodes("Item")
                                     'later sites are dependant on these values
@@ -1496,6 +1496,7 @@ NoDiscount:
                 Dim dMinPrice As Double = 0
                 Dim nCount As Integer = 0
                 Dim applyToTotal As Boolean = False
+                Dim validateShippingGroup As String = String.Empty
 
                 Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
                 Try
@@ -1588,6 +1589,7 @@ NoDiscount:
                                         End If
 
                                     End If
+
                                     'check maximum item price value set or not
                                     If (dMaxPrice <> 0) Then
                                         'validate quantity of cart as individual item not total quantity of item purchased

@@ -5388,7 +5388,7 @@
 		        $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
 		        ev.preventDefault();
 		        $('.modal-dialog').addClass('loading')
-		        $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
+		        $('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>;<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
 			        var target = $(this).attr("href");
 			        // load the url and show modal on success
 			        var currentModal = $('.pickImageModal')
@@ -5436,15 +5436,34 @@
 
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
-	  
-      var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-	    
-		 var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
-          newItem = newItem + '<div class="description">'
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
-          newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
-          newItem = newItem + '</div></div>';
-		   var filename = file.name;	      
+	
+		  var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
+
+		  <xsl:text disable-output-escaping="yes">var newItem=</xsl:text>'<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="item item-image col-md-2 col-sm-4"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+			  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="panel"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+				  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="image-thumbnail"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>img src="' + targetPath + '/' + file.name + '" class="img-responsive" /<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="popover-description"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+							  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>span class="image-description-name">' + file.name + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/span<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+							  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>br/<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>img src="' + targetPath + '/' + file.name + '" class="img-responsive" /<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/a<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+				  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
+				  newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="description"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
+				  newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-trash-o fa-white"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+							  <xsl:text> </xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Delete<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/a<xsl:text disable-output-escaping="yes">&gt;</xsl:text>';
+					  newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="img-description"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>span class="image-description-name">' + file.name + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/span<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>br/<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>';
+				  newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>';
+		  var filename = file.name;
+	
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
@@ -5683,10 +5702,12 @@
   </xsl:template>
 
  <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
-    var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '</td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
-    newItem = newItem + '<td><a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
+	
+    var newItem = '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>tr<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>td<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="icon-file-' + /[^.]+$/.exec(file.name) + '"<xsl:text disable-output-escaping="yes">&gt;</xsl:text> <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text> ' + file.name.replace(/\ /g,'-') + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/td<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>td<xsl:text disable-output-escaping="yes">&gt;</xsl:text>.' + /[^.]+$/.exec(file.name) + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/td<xsl:text disable-output-escaping="yes">&gt;</xsl:text>';
+    newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>td<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-trash-o fa-white"<xsl:text disable-output-escaping="yes">&gt;</xsl:text> <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text> Delete<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/a<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/td<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/tr<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
 	
 	 var filename = file.name;	
+
   </xsl:template>
 
 
@@ -5695,9 +5716,9 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='MediaLib']" mode="newItemScript">
-    var newItem = '<div class="item col-md-2 col-sm-4"><div class="panel panel-default"><div class="panel-body"><div class="ItemThumbnail"><img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /></div>'
-    newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
-    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
+    var newItem = '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="item col-md-2 col-sm-4"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="panel panel-default"><xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="panel-body"><xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="ItemThumbnail"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
+    newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="description"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>' + file.name + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>br /<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
+    newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-trash-o fa-white"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text> </xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Delete<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/a<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
 	
 	var filename = file.name;	
   </xsl:template>

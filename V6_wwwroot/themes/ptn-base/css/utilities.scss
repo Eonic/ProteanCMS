@@ -1,4 +1,18 @@
-﻿@mixin btn-clean($color: $link-color, $hover: $link-hover-color) {
+﻿.link-underline {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: $secondary;
+
+    &:hover {
+        color: $secondary;
+    }
+
+    &:visited {
+        color: $visited;
+        text-decoration-color: #c2a5c9;
+    }
+}
+@mixin btn-clean($color: $link-color, $hover: $link-hover-color) {
     background: none;
     border: none;
     padding: 0;
