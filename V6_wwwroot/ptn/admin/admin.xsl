@@ -106,6 +106,7 @@
         <xsl:text>~/ptn/admin/treeview/jquery.treeview.js,</xsl:text>
         <xsl:text>~/ptn/libs/jqueryui/jquery-ui.js,</xsl:text>
 		<xsl:text>~/ptn/libs/fancyapps/ui/dist/fancybox.umd.min.js,</xsl:text>
+		 <xsl:text>~/ptn/libs/jquery.lazy/jquery.lazy.min.js,</xsl:text>
 		<xsl:text>~/ptn/admin/admin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
@@ -4152,7 +4153,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
+  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='AddModule' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
     <script src="/ptn/libs/blueimp-load-image/js/load-image.all.min.js">/* */</script>
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->

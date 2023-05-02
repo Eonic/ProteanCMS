@@ -45,13 +45,19 @@
 
   <!-- -->
 
-  <xsl:template match="Content" mode="writeNodes">
+  <xsl:template match="Content[@moduleType='Carousel']" mode="writeNodes">
     <xsl:element name="{name()}">
       <xsl:for-each select="@*">
         <xsl:attribute name="{name()}">
           <xsl:value-of select="." />
         </xsl:attribute>
       </xsl:for-each>
+		<xsl:attribute name="moduleType">
+			<xsl:text>SwiperCarousel</xsl:text>
+		</xsl:attribute>
+		<xsl:attribute name="contentType">
+			<xsl:text>SwiperSlide</xsl:text>
+		</xsl:attribute>
       <xsl:apply-templates mode="writeNodes"/>
       <xsl:if test="not(Profile)">
         <Profile/>
@@ -59,74 +65,4 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- IMAGES on detail -->
-  <xsl:template match="Images" mode="writeNodes">
-    <xsl:element name="{name()}">
-      <!-- process attributes -->
-      <xsl:for-each select="@*">
-        <!-- remove attribute prefix (if any) -->
-        <xsl:attribute name="{name()}">
-          <xsl:value-of select="." />
-        </xsl:attribute>
-      </xsl:for-each>
-      <xsl:apply-templates mode="writeNodes"/>
-      <xsl:if test="not(img[@class='display'])">
-        <img class="display"/>
-      </xsl:if>
-      <xsl:if test="not(img[@class='detail'])">
-        <img class="detail"/>
-      </xsl:if>
-    </xsl:element>
-  </xsl:template>
-
-  <!-- IMAGES on brief -->
-  <xsl:template match="Images[ancestor::cContentXmlBrief]" mode="writeNodes">
-    <xsl:element name="{name()}">
-      <!-- process attributes -->
-      <xsl:for-each select="@*">
-        <!-- remove attribute prefix (if any) -->
-        <xsl:attribute name="{name()}">
-          <xsl:value-of select="." />
-        </xsl:attribute>
-      </xsl:for-each>
-      <xsl:apply-templates mode="writeNodes"/>
-      <xsl:if test="not(img[@class='display'])">
-        <xsl:apply-templates select="//cContentXmlDetail/Content/Images/img[@class='display']" mode="writeNodes"/>
-      </xsl:if>
-      <xsl:if test="not(img[@class='detail'])">
-        <xsl:choose>
-          <xsl:when test="//cContentXmlDetail/Content/Images/img[@class='detail']">
-            <xsl:apply-templates select="//cContentXmlDetail/Content/Images/img[@class='detail']" mode="writeNodes"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <img class="detail"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:if>
-    </xsl:element>
-  </xsl:template>
-
-  <!-- Bring Locational information up to date -->
-  <xsl:template match="Address[not(parent::Location)]" mode="writeNodes">
-    <Location loc="address" map="">
-      <Venue/>
-      <Address>
-        <No />
-        <Street>
-          <xsl:value-of select="Street/node()"/>
-        </Street>
-        <Locality>
-          <xsl:value-of select="City/node()"/>
-        </Locality>
-        <Region>
-          <xsl:value-of select="State/node()"/>
-        </Region>
-        <PostCode>
-          <xsl:value-of select="Country/node()"/>
-        </PostCode>
-        <Country />
-      </Address>
-      <Geo longitude="" latitude="" />
-    </Location>
-  </xsl:template>
 </xsl:stylesheet>
