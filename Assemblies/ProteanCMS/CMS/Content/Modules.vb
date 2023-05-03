@@ -396,7 +396,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             args(2) = filterForm
                             args(3) = oFrmGroup
                             args(4) = oContentNode
-                            'args(5) = filterTarget
+
                             calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                         End If
 

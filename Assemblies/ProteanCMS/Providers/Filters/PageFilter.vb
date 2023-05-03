@@ -21,6 +21,8 @@ Namespace Providers
                     Dim sCotrolDisplayName As String = "Page Filter"
                     'Parent page id flag used to populate the root level pages or pages under current page.
                     Dim bParentPageId As Boolean = False
+                    Dim cFilterTarget As String = String.Empty
+
                     Dim nParentId As Integer = 1
                     Dim sSql As String = "spGetPagesByParentPageId"
                     Dim arrParams As New Hashtable
@@ -28,6 +30,9 @@ Namespace Providers
                     Dim oFilterElmt As XmlElement = Nothing
                     Dim className As String = String.Empty
 
+                    If (oContentNode.Attributes("filterTarget") IsNot Nothing) Then
+                        cFilterTarget = oContentNode.Attributes("filterTarget").Value
+                    End If
                     If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
                         oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PageFilter"))
 
@@ -86,9 +91,9 @@ Namespace Providers
                             End If
 
                             If className = "OfferFilter" Then
-                                cWhereSql = cWhereSql & " and  c.cContentSchemaName = 'Product' "
+                                cWhereSql = cWhereSql & " and  c.cContentSchemaName = '" + cFilterTarget + "' "
                                 cWhereSql = cWhereSql & " and nContentKey in ("
-                                cWhereSql = cWhereSql & " select distinct cr.nContentParentId from tblContent cn inner join tblContentRelation cr on cr.nContentParentId = cn.nContentKey and cn.cContentSchemaName = 'Product'"
+                                cWhereSql = cWhereSql & " select distinct cr.nContentParentId from tblContent cn inner join tblContentRelation cr on cr.nContentParentId = cn.nContentKey and cn.cContentSchemaName = '" + cFilterTarget + "'"
                                 cWhereSql = cWhereSql & " inner join tblAudit ac on ac.nAuditKey = cn.nAuditId and ac.nStatus = 1"
                                 cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey = cr.nAuditId and ca.nStatus = 1"
                                 cWhereSql = cWhereSql & " where cr.nContentParentId in "
@@ -149,6 +154,7 @@ Namespace Providers
                     End If
                     If (bParentPageId) Then
                         arrParams.Add("PageId", nParentId)
+                        arrParams.Add("FilterTarget", cFilterTarget)
                         arrParams.Add("whereSql", cWhereSql)
                     End If
 
@@ -165,7 +171,7 @@ Namespace Providers
 
                         'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                         While oDr.Read
-                            Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
+                            Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ContentCount")) + "</span>"
                             Dim value As String = Convert.ToString(oDr("nStructKey"))
 
                             oXform.addOption(pageFilterSelect, name, value, True)
