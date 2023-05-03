@@ -6246,7 +6246,7 @@ Public Class Cms
                     ' Set the paging variables, if provided.
                     If Not (moRequest("startPos") Is Nothing) AndAlso IsNumeric(moRequest("startPos")) Then nStart = CInt(moRequest("startPos"))
                     If Not (moRequest("rows") Is Nothing) AndAlso IsNumeric(moRequest("rows")) Then nRows = CInt(moRequest("rows"))
-                    If moSession("FilterWhereCondition") <> Nothing Then
+                    If moSession("FilterWhereCondition") IsNot Nothing AndAlso moSession("FilterWhereCondition") <> String.Empty Then
                         Dim whereSQL As String = moSession("FilterWhereCondition")
                         GetPageContentFromSelectFilterPagination(whereSQL,,,,,, oPageElmt,,,,, moRequest("singleContentType"), False, nStart, nRows)
                     Else
@@ -6257,7 +6257,11 @@ Public Class Cms
                 Else
 
                     'Set nothing to Filter Pagination session
-                    moSession("FilterWhereCondition") = Nothing
+                    If moSession("FilterWhereCondition") IsNot Nothing Then
+                        moSession("FilterWhereCondition") = Nothing
+                        'moSession.Remove("FilterWhereCondition")
+                    End If
+
                     'step through the tree from home to our current page
                     For Each oElmt In oPageElmt.SelectNodes(parentXpath)
                         oElmt.SetAttribute("active", "1")
@@ -7386,7 +7390,7 @@ Public Class Cms
                                     nWeight = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                 End If
                                 ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
-                                Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight, "")
+                                Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight, mnArtId)
                                 oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
                                 contentElmt.AppendChild(oShippingElmt)
                             Catch ex As Exception
