@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="ContentFilter" contentType="ContentFilter" resultCount="0" box="" title="" link="" linkType="filter" order="Position" cols="1" stepBy="" stepCount="24" display="all" position="" action="Protean.Cms+Content+Modules.ContentFilter">
+          <Content moduleType="ContentFilter" filterTarget="Product" contentType="ContentFilter" resultCount="0" box="" title="" link="" linkType="filter" order="Position" cols="1" stepBy="" stepCount="24" display="all" position="" action="Protean.Cms+Content+Modules.ContentFilter">
             </Content>
 			
         </cContentXmlBrief>
@@ -33,6 +33,7 @@
     <bind nodeset="tblContent/cContentXmlBrief/Content">
       <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
       <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+	  <bind id="cfilterTarget" nodeset="@filterTarget" required="true()" type="string"/>
       <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
@@ -65,6 +66,9 @@
         <input bind="cModuleType" class="hidden">
           <label>ModuleType</label>
         </input>
+		  <input bind="cfilterTarget" class="hidden">
+			  <label>FilterTarget</label>
+		  </input>
         <!-- end of hidden fields -->
         <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
         <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
