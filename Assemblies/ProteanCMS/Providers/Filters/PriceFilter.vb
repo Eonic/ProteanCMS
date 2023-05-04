@@ -24,6 +24,8 @@ Namespace Providers
                     Dim sSql As String = "spGetPriceRange"
                     Dim arrParams As New Hashtable
                     Dim sCotrolDisplayName As String = "Price Filter"
+                    Dim cFilterTarget As String = String.Empty
+
                     Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PriceFilter")
                     Dim oMinPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("MinPrice")
                     Dim oMaxPrice As XmlAttribute = oXform.moPageXML.CreateAttribute("MaxPrice")
@@ -45,7 +47,9 @@ Namespace Providers
                         oMaxPrice.Value = Convert.ToString(aWeb.moRequest.Form("MaxPrice"))
 
                     End If
-
+                    If (oContentNode.Attributes("filterTarget") IsNot Nothing) Then
+                        cFilterTarget = oContentNode.Attributes("filterTarget").Value
+                    End If
                     Dim cWhereSql As String = String.Empty
 
                     For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
@@ -92,9 +96,9 @@ Namespace Providers
                             End If
 
                             If className = "OfferFilter" Then
-                                cWhereSql = cWhereSql & " and  c.cContentSchemaName = 'Product' "
+                                cWhereSql = cWhereSql & " and  c.cContentSchemaName = '" + cFilterTarget + "' "
                                 cWhereSql = cWhereSql & " and nContentKey in ("
-                                cWhereSql = cWhereSql & " select distinct cr.nContentParentId from tblContent cn inner join tblContentRelation cr on cr.nContentParentId = cn.nContentKey and cn.cContentSchemaName = 'Product'"
+                                cWhereSql = cWhereSql & " select distinct cr.nContentParentId from tblContent cn inner join tblContentRelation cr on cr.nContentParentId = cn.nContentKey and cn.cContentSchemaName = '" + cFilterTarget + "'"
                                 cWhereSql = cWhereSql & " inner join tblAudit ac on ac.nAuditKey = cn.nAuditId and ac.nStatus = 1"
                                 cWhereSql = cWhereSql & " inner join tblAudit ca on ca.nAuditKey = cr.nAuditId and ca.nStatus = 1"
                                 cWhereSql = cWhereSql & " where cr.nContentParentId in "
@@ -147,12 +151,13 @@ Namespace Providers
                     arrParams.Add("Step", FilterConfig.GetAttribute("step"))
                     arrParams.Add("PageId", nPageId)
                     arrParams.Add("whereSql", cWhereSql)
+                    arrParams.Add("FilterTarget", cFilterTarget)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
                         If (oDr.HasRows) Then
                             While oDr.Read
                                 cnt = cnt + 1
                                 nMaxPRiceProduct = oDr("MaxProductPrice")
-                                sProductCount = Convert.ToString(oDr("ProductCount"))
+                                sProductCount = Convert.ToString(oDr("ContentCount"))
                                 cProductCountList = cProductCountList + cnt.ToString() + ":" + sProductCount + ","
                             End While
 

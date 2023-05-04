@@ -33,7 +33,7 @@
     <bind nodeset="tblContent/cContentXmlBrief/Content">
       <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
       <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
-		<bind id="cfilterTarget" nodeset="@filterTarget" required="true()" type="string"/>
+	  <bind id="cfilterTarget" nodeset="@filterTarget" required="true()" type="string"/>
       <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
@@ -67,7 +67,7 @@
           <label>ModuleType</label>
         </input>
 		  <input bind="cfilterTarget" class="hidden">
-			  <label>filterTarget</label>
+			  <label>FilterTarget</label>
 		  </input>
         <!-- end of hidden fields -->
         <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
