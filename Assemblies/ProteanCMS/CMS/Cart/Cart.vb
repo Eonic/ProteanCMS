@@ -9294,7 +9294,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Public Function updateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String
+        Public Function UpdateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String
             Try
                 ''check if country is not default country
                 Dim DeliveryOption As String = ""
@@ -9427,18 +9427,19 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     ''get it from cart
                     Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
                     'sort dataset for applied delivery option
-                    If (oDsShipOptions.Tables(0) IsNot Nothing And cOrderofDeliveryOption = "1") Then
-                        Dim TempTable As New DataTable
-                        Dim dv As DataView
-                        TempTable = oDsShipOptions.Tables(0)
-                        dv = TempTable.DefaultView
-                        ' dv.Sort = " nShippingTotal DESC"
-                        dv.RowFilter = "nShipOptCost > 0"
-                        TempTable = dv.ToTable
+                    'code commented by sonali to set evoucher for other than uk country
+                    'If (oDsShipOptions.Tables(0) IsNot Nothing And cOrderofDeliveryOption = "1") Then
+                    '    Dim TempTable As New DataTable
+                    '    Dim dv As DataView
+                    '    TempTable = oDsShipOptions.Tables(0)
+                    '    dv = TempTable.DefaultView
+                    '    ' dv.Sort = " nShippingTotal DESC"
+                    '    dv.RowFilter = "nShipOptCost > 0"
+                    '    TempTable = dv.ToTable
 
-                        oDsShipOptions.Tables(0).Clear()
-                        oDsShipOptions.Tables(0).Merge(TempTable)
-                    End If
+                    '    oDsShipOptions.Tables(0).Clear()
+                    '    oDsShipOptions.Tables(0).Merge(TempTable)
+                    'End If
                     Dim oRowSO As DataRow
                     For Each oRowSO In oDsShipOptions.Tables(0).Rows
                         If bChangedDelivery Then
