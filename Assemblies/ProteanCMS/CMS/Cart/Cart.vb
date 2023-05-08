@@ -1496,9 +1496,6 @@ processFlow:
                         Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
 
-
-
-
                         If InStr(mcPaymentMethod, "Repeat_") > 0 Then
                             If ccPaymentXform.valid = True Then
                                 mcCartCmd = "ShowInvoice"
