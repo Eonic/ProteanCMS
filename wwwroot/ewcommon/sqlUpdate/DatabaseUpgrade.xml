@@ -512,6 +512,7 @@
 			<Sub3 Number="0">
 				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.62.0/spGetPagesByParentPageId.sql"/>
 				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.62.0/spGetPriceRange.sql"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.62.0/spGetValidShippingOptions.sql"/>			
 			</Sub3>
 		</Sub2>
 		

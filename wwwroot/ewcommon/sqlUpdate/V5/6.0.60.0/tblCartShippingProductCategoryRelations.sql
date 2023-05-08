@@ -6,7 +6,7 @@ CREATE TABLE [dbo].[tblCartShippingProductCategoryRelations](
 	[nShipProdCatRelKey] [bigint] IDENTITY(1,1) NOT NULL,
 	[nCatId] [int] NULL,
 	[nShipOptId] [int] NULL,
-	[nRuleType] [nvarchar](500) NULL,
+	[nRuleType] [int] NULL,
 	[nAuditId] [int] NULL,
  CONSTRAINT [PK_tblCartShippingProductCategoryRelations] PRIMARY KEY CLUSTERED 
 (
