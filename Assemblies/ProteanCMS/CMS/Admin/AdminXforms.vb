@@ -1042,14 +1042,19 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function xFrmThemeSettings(ByVal ConfigType As String) As XmlElement
+            Public Function xFrmThemeSettings(ByVal ConfigPath As String) As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim oFsh As fsHelper
-                Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
+                Dim themePath As String = "/themes/"
+                If goConfig("cssFramework") <> "bs5" Then
+                    themePath = "/ewThemes/"
+                End If
+                Dim xFormPath As String = themePath & ConfigPath & ".xml"
                 Try
                     oFsh = New fsHelper
                     oFsh.open(moPageXML)
+
 
                     Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/theme")
                     Dim currentTheme As String = moThemeConfig("CurrentTheme")
@@ -1071,131 +1076,131 @@ Partial Public Class Cms
                         'all of the required config settings
 
                         Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
-                            oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
-                            Dim oCgfSectName As String = "protean/" & oTemplateInstance.FirstChild.Name
-                            Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
-                            cProcessInfo = "Getting Section Name:" & oCgfSectName
-                            'Get the current settings
-                            MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                        oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
+                        Dim oCgfSectName As String = "protean/" & oTemplateInstance.FirstChild.Name
+                        Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
+                        cProcessInfo = "Getting Section Name:" & oCgfSectName
+                        'Get the current settings
+                        MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
 
 
 
-                            Dim currentPresetName As String = ""
-                            Dim presetSetting As XmlElement = MyBase.Instance.SelectSingleNode("theme/add[@key='" & currentTheme & ".ThemePreset']")
-                            If Not presetSetting Is Nothing Then
-                                currentPresetName = presetSetting.GetAttribute("value")
-                            End If
+                        Dim currentPresetName As String = ""
+                        Dim presetSetting As XmlElement = MyBase.Instance.SelectSingleNode("theme/add[@key='" & currentTheme & ".ThemePreset']")
+                        If Not presetSetting Is Nothing Then
+                            currentPresetName = presetSetting.GetAttribute("value")
+                        End If
 
-                            If myWeb.moRequest("ThemePreset") <> currentPresetName Or currentPresetName = "" Then
-                                'replace Instance Elements WITH VALUES IN NAMED THEME PRESET FILE.
+                        If myWeb.moRequest("ThemePreset") <> currentPresetName Or currentPresetName = "" Then
+                            'replace Instance Elements WITH VALUES IN NAMED THEME PRESET FILE.
 
-                                If IO.File.Exists(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml")) Then
+                            If IO.File.Exists(goServer.MapPath(themePath & "/" & currentTheme & "/themeManifest.xml")) Then
 
 
 
-                                    Dim newXml As New XmlDocument
-                                    newXml.PreserveWhitespace = True
-                                    newXml.Load(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml"))
-                                    Dim oElmt2 As XmlElement
-                                    For Each oElmt2 In newXml.SelectNodes("/Theme/Presets/Preset[@name='" & myWeb.moRequest("ThemePreset") & "']/add")
-                                        '<add key="Bootswatch.Layout" value="TopNavSideSub"/>
-                                        Dim changeElmt As XmlElement = MyBase.Instance.SelectSingleNode("descendant-or-self::add[@key='" & oElmt2.GetAttribute("key") & "']")
-                                        If Not changeElmt Is Nothing Then
-                                            changeElmt.SetAttribute("value", oElmt2.GetAttribute("value"))
-                                        End If
-                                    Next
-                                End If
-                            End If
-
-                            Dim oTemplateElmt As XmlElement
-                            Dim oElmt As XmlElement
-                            Dim Key As String
-                            Dim ConfigSectionName As String
-                            Dim ConfigSection As System.Collections.Specialized.NameValueCollection
-
-                            For Each oTemplateElmt In oTemplateInstance.SelectNodes("*/add")
-                                ConfigSectionName = oTemplateElmt.ParentNode.Name
-                                ConfigSection = WebConfigurationManager.GetWebApplicationSection("protean/" & ConfigSectionName)
-                                Key = oTemplateElmt.GetAttribute("key")
-
-                                oElmt = MyBase.Instance.SelectSingleNode(ConfigSectionName & "/add[@key='" & Key & "']")
-                                'lets not write an empty value if inherited from machine level web.config
-                                If Not (ConfigSection(Key) <> "" And oTemplateElmt.GetAttribute("value") = "") Then
-                                    If oElmt Is Nothing Then
-                                        oElmt = moPageXML.CreateElement("add")
-                                        oElmt.SetAttribute("key", Key)
-                                        oElmt.SetAttribute("value", oTemplateElmt.GetAttribute("value"))
-                                        MyBase.Instance.SelectSingleNode(ConfigSectionName).AppendChild(oElmt)
+                                Dim newXml As New XmlDocument
+                                newXml.PreserveWhitespace = True
+                                newXml.Load(goServer.MapPath(themePath & "/" & currentTheme & "/themeManifest.xml"))
+                                Dim oElmt2 As XmlElement
+                                For Each oElmt2 In newXml.SelectNodes("/Theme/Presets/Preset[@name='" & myWeb.moRequest("ThemePreset") & "']/add")
+                                    '<add key="Bootswatch.Layout" value="TopNavSideSub"/>
+                                    Dim changeElmt As XmlElement = MyBase.Instance.SelectSingleNode("descendant-or-self::add[@key='" & oElmt2.GetAttribute("key") & "']")
+                                    If Not changeElmt Is Nothing Then
+                                        changeElmt.SetAttribute("value", oElmt2.GetAttribute("value"))
                                     End If
+                                Next
+                            End If
+                        End If
+
+                        Dim oTemplateElmt As XmlElement
+                        Dim oElmt As XmlElement
+                        Dim Key As String
+                        Dim ConfigSectionName As String
+                        Dim ConfigSection As System.Collections.Specialized.NameValueCollection
+
+                        For Each oTemplateElmt In oTemplateInstance.SelectNodes("*/add")
+                            ConfigSectionName = oTemplateElmt.ParentNode.Name
+                            ConfigSection = WebConfigurationManager.GetWebApplicationSection("protean/" & ConfigSectionName)
+                            Key = oTemplateElmt.GetAttribute("key")
+
+                            oElmt = MyBase.Instance.SelectSingleNode(ConfigSectionName & "/add[@key='" & Key & "']")
+                            'lets not write an empty value if inherited from machine level web.config
+                            If Not (ConfigSection(Key) <> "" And oTemplateElmt.GetAttribute("value") = "") Then
+                                If oElmt Is Nothing Then
+                                    oElmt = moPageXML.CreateElement("add")
+                                    oElmt.SetAttribute("key", Key)
+                                    oElmt.SetAttribute("value", oTemplateElmt.GetAttribute("value"))
+                                    MyBase.Instance.SelectSingleNode(ConfigSectionName).AppendChild(oElmt)
                                 End If
-                            Next
+                            End If
+                        Next
 
-                            If MyBase.isSubmitted Then
+                        If MyBase.isSubmitted Then
 
-                                'If myWeb.moRequest("ThemePreset") <> currentPresetName And Not (myWeb.moSession("presetView") = "true") Then
-                                '    MyBase.valid = False
-                                '    myWeb.moSession("presetView") = "true"
-                                'Else
-                                '    myWeb.moSession("presetView") = Nothing
-                                '    MyBase.updateInstanceFromRequest()
-                                '    MyBase.validate()
-                                'End If
+                            'If myWeb.moRequest("ThemePreset") <> currentPresetName And Not (myWeb.moSession("presetView") = "true") Then
+                            '    MyBase.valid = False
+                            '    myWeb.moSession("presetView") = "true"
+                            'Else
+                            '    myWeb.moSession("presetView") = Nothing
+                            '    MyBase.updateInstanceFromRequest()
+                            '    MyBase.validate()
+                            'End If
 
-                                MyBase.updateInstanceFromRequest()
-                                MyBase.validate()
+                            MyBase.updateInstanceFromRequest()
+                            MyBase.validate()
 
 
-                                If MyBase.valid Then
+                            If MyBase.valid Then
 
-                                    'check not read only
-                                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(goServer.MapPath("/protean.theme.config"))
-                                    oFileInfo.IsReadOnly = False
+                                'check not read only
+                                Dim oFileInfo As IO.FileInfo = New IO.FileInfo(goServer.MapPath("/protean.theme.config"))
+                                oFileInfo.IsReadOnly = False
 
-                                    oCgfSect.SectionInformation.RestartOnExternalChanges = False
-                                    oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
-                                    oCfg.Save()
+                                oCgfSect.SectionInformation.RestartOnExternalChanges = False
+                                oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
+                                oCfg.Save()
 
-                                    If myWeb.moRequest("newPresetName") <> "" Then
+                                If myWeb.moRequest("newPresetName") <> "" Then
 
-                                        If IO.File.Exists(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml")) Then
-                                            Dim newXml As New XmlDocument
-                                            newXml.PreserveWhitespace = True
-                                            newXml.Load(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml"))
-                                            Dim oElmt2 As XmlElement
-                                            Dim addNew As Boolean = True
-                                            'update existing
-                                            For Each oElmt2 In newXml.SelectNodes("/Theme/Presets/Preset[@name='" & myWeb.moRequest("newPresetName") & "']")
-                                                oElmt2.InnerXml = Instance.InnerXml
-                                                addNew = False
+                                    If IO.File.Exists(goServer.MapPath(themePath & currentTheme & "/themeManifest.xml")) Then
+                                        Dim newXml As New XmlDocument
+                                        newXml.PreserveWhitespace = True
+                                        newXml.Load(goServer.MapPath(themePath & currentTheme & "/themeManifest.xml"))
+                                        Dim oElmt2 As XmlElement
+                                        Dim addNew As Boolean = True
+                                        'update existing
+                                        For Each oElmt2 In newXml.SelectNodes("/Theme/Presets/Preset[@name='" & myWeb.moRequest("newPresetName") & "']")
+                                            oElmt2.InnerXml = Instance.InnerXml
+                                            addNew = False
+                                        Next
+                                        If addNew Then
+                                            Dim PresetsNode As XmlElement = newXml.SelectSingleNode("/Theme/Presets")
+                                            Dim NewPreset As XmlElement = PresetsNode.OwnerDocument.CreateElement("Preset")
+                                            NewPreset.SetAttribute("name", myWeb.moRequest("newPresetName"))
+                                            Dim matchingElmt As XmlElement
+                                            For Each matchingElmt In Instance.SelectNodes("descendant-or-self::add[starts-with(@key,'" & currentTheme & ".')]")
+                                                If matchingElmt.GetAttribute("key") = currentTheme & ".ThemePreset" Then
+                                                    matchingElmt.SetAttribute("value", myWeb.moRequest("newPresetName"))
+                                                End If
+                                                Protean.Tools.Xml.AddExistingNode(NewPreset, matchingElmt)
                                             Next
-                                            If addNew Then
-                                                Dim PresetsNode As XmlElement = newXml.SelectSingleNode("/Theme/Presets")
-                                                Dim NewPreset As XmlElement = PresetsNode.OwnerDocument.CreateElement("Preset")
-                                                NewPreset.SetAttribute("name", myWeb.moRequest("newPresetName"))
-                                                Dim matchingElmt As XmlElement
-                                                For Each matchingElmt In Instance.SelectNodes("descendant-or-self::add[starts-with(@key,'" & currentTheme & ".')]")
-                                                    If matchingElmt.GetAttribute("key") = currentTheme & ".ThemePreset" Then
-                                                        matchingElmt.SetAttribute("value", myWeb.moRequest("newPresetName"))
-                                                    End If
-                                                    Protean.Tools.Xml.AddExistingNode(NewPreset, matchingElmt)
-                                                Next
-                                                PresetsNode.AppendChild(NewPreset)
-                                            End If
-                                            'check not read only
-                                            Dim oFileInfo2 As IO.FileInfo = New IO.FileInfo(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml"))
-                                            oFileInfo2.IsReadOnly = False
-                                            newXml.Save(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml"))
+                                            PresetsNode.AppendChild(NewPreset)
                                         End If
-
-                                        MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "New Preset Saved")
-                                    Else
-                                        MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "Settings Saved")
+                                        'check not read only
+                                        Dim oFileInfo2 As IO.FileInfo = New IO.FileInfo(goServer.MapPath(themePath & currentTheme & "/themeManifest.xml"))
+                                        oFileInfo2.IsReadOnly = False
+                                        newXml.Save(goServer.MapPath(themePath & currentTheme & "/themeManifest.xml"))
                                     End If
-                                Else
-                                    MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "Form Invalid:" & MyBase.validationError)
 
+                                    MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "New Preset Saved")
+                                Else
+                                    MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "Settings Saved")
                                 End If
+                            Else
+                                MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "Form Invalid:" & MyBase.validationError)
+
                             End If
+                        End If
 
                         endImp()
                         MyBase.addValues()

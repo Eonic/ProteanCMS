@@ -633,7 +633,7 @@ ProcessFlow:
 
                         Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/theme")
 
-                        oPageDetail.AppendChild(moAdXfm.xFrmThemeSettings("../../ewThemes/" & moThemeConfig("CurrentTheme") & "/xforms/Config/SkinSettings"))
+                        oPageDetail.AppendChild(moAdXfm.xFrmThemeSettings(moThemeConfig("CurrentTheme") & "/xforms/Config/ThemeSettings"))
 
                         If moAdXfm.valid Then
 
@@ -4341,6 +4341,13 @@ from tblContentIndexDef"
         Private Sub updateLessVariables(ByVal ThemeName As String, ByRef settingsXml As XmlElement)
             Dim cProcessInfo As String = ""
             Dim ThemeLessFile As String = ""
+            Dim ThemePath As String = "/themes/"
+            Dim VariablePrefix As String = "\\$" ' $ needs escaping.
+            If myWeb.moConfig("cssFramework") <> "bs5" Then
+                ThemePath = "/ewThemes/"
+                VariablePrefix = "@"
+            End If
+
             Try
                 If Not settingsXml.SelectSingleNode("theme/add[@key='variablesPath']") Is Nothing Then
                     ThemeLessFile = settingsXml.SelectSingleNode("theme/add[@key='variablesPath']/@value").InnerText
@@ -4349,7 +4356,7 @@ from tblContentIndexDef"
                     Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
 
                     ThemeLessFile = fsHelper.checkLeadingSlash(ThemeLessFile)
-                    ThemeLessFile = "/ewThemes/" & ThemeName & "/" & ThemeLessFile
+                    ThemeLessFile = ThemePath & ThemeName & "/" & ThemeLessFile
                     If oFsH.VirtualFileExists(ThemeLessFile) Then
 
 
@@ -4375,7 +4382,7 @@ from tblContentIndexDef"
                         Dim oElmt As XmlElement
                         For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
                             Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
-                            Dim searchText As String = "(?<=@" & variableName & ":).*(?=;)"
+                            Dim searchText As String = "(?<=" & VariablePrefix & variableName & ":).*(?=;)"
                             Dim replaceText As String = oElmt.GetAttribute("value").Trim
 
                             'handle image files in CSS
@@ -4411,16 +4418,15 @@ from tblContentIndexDef"
 
         Private Sub updateStandardXslVariables(ByVal ThemeName As String, ByRef settingsXml As XmlElement)
             Dim cProcessInfo As String = ""
-            Dim ThemeXslFile As String = ""
+            Dim ThemeXslFile As String = "/themes/" & ThemeName & "/shared.xsl"
             Try
 
                 Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
+                If myWeb.moConfig("cssFramework") <> "bs5" Then
+                    ThemeXslFile = "/ewThemes/" & ThemeName & "/Standard.xsl"
+                End If
 
-
-                ThemeXslFile = "/ewThemes/" & ThemeName & "/Standard.xsl"
                 If oFsH.VirtualFileExists(ThemeXslFile) Then
-
-
 
                     Dim oImp As Protean.Tools.Security.Impersonate = Nothing
                     If myWeb.impersonationMode Then

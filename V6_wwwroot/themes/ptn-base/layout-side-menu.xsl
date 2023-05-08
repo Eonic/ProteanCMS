@@ -18,7 +18,7 @@
   <xsl:variable name="themeLayout">layout-side-menu</xsl:variable>
   <xsl:template match="Page" mode="bodyDisplay">
     <xsl:variable name="nav-padding">
-      <xsl:if test="$currentPage/DisplayName[@navpad='false'] and not($cartPage)">nav-no-padding</xsl:if>
+      <xsl:if test="$currentPage/DisplayName[@navpad='false'] and not($cartPage)">mt-0</xsl:if>
     </xsl:variable>
     <xsl:variable name="detail-heading">
       <xsl:if test="$page/ContentDetail">detail-heading</xsl:if>
@@ -32,7 +32,7 @@
       </xsl:if>
       <!--################## HEADER ################## -->
 
-      <a class="akip" href="#content">Skip to main content</a>
+      <a class="skip" href="#content">Skip to main content</a>
       <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginModal">
         <div class="modal-dialog modal-md" role="document">
           <div class="modal-content">
@@ -66,14 +66,20 @@
         </div>
       </xsl:if>
       <xsl:choose>
-        <xsl:when test="$header-layout='header-flex1'">
-          <xsl:apply-templates select="." mode="header-flex1">
+        <xsl:when test="$header-layout='header-menu-right'">
+          <xsl:apply-templates select="." mode="header-menu-right">
+            <xsl:with-param name="nav-collapse">false</xsl:with-param>
+            <xsl:with-param name="social-links">true</xsl:with-param>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:when test="$header-layout='header-basic'">
+          <xsl:apply-templates select="." mode="header-basic1">
             <xsl:with-param name="nav-collapse">false</xsl:with-param>
             <xsl:with-param name="social-links">true</xsl:with-param>
           </xsl:apply-templates>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:apply-templates select="." mode="header-template1">
+          <xsl:apply-templates select="." mode="header-menu-below">
             <xsl:with-param name="nav-collapse">false</xsl:with-param>
           </xsl:apply-templates>
         </xsl:otherwise>

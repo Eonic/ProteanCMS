@@ -1411,7 +1411,7 @@
 
   <xsl:template match="Page" mode="metadata">
     <xsl:if test="@cssFramework='bs3' or $adminMode">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
     </xsl:if>
 
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
