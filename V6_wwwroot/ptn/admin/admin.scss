@@ -5,11 +5,16 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+@import "../libs/bs5/scss/mixins/banner";
+@include bsBanner("");
+
 // scss-docs-start import-stack
 // Configuration
 @import "skin/variables";
 @import "../libs/bs5/scss/functions";
 @import "../libs/bs5/scss/variables";
+@import "../libs/bs5/scss/variables-dark";
+@import "../libs/bs5/scss/maps";
 @import "../libs/bs5/scss/mixins";
 @import "../libs/bs5/scss/utilities";
 
