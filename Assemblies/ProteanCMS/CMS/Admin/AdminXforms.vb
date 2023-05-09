@@ -7114,6 +7114,7 @@ Partial Public Class Cms
 
 
                     MyBase.submission("EditInputPageRights", "", "post")
+
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "EditDirs", "3col", "Shipping Group Relations for Shipping Method " & dname)
 
                     oFrmGrp1 = MyBase.addGroup(oFrmElmt, "AllObjects", "", "Select the shipping groups you want to have access to this shipping method")

@@ -75,8 +75,17 @@ Partial Public Class Cms
                 Try
                     Dim cProcessInfo As String = ""
 
+                    'Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    'myCart.GetCart(CartXml.FirstChild)
+                    Dim cShipOptKey As String = "0"
+
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
+                    If (CartXml.SelectSingleNode("Order") IsNot Nothing AndAlso CartXml.SelectSingleNode("Order").Attributes("shippingType") IsNot Nothing) Then
+                        cShipOptKey = CartXml.SelectSingleNode("Order").Attributes("shippingType").Value
+                        myCart.updateGCgetValidShippingOptionsDS(cShipOptKey)
+                    End If
+
 
                     CartXml = updateCartforJSON(CartXml)
 
@@ -273,6 +282,8 @@ Partial Public Class Cms
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
+                    Dim promocode As String = ""
+
                     If (jObj IsNot Nothing) Then
                         If jObj("country") <> "" Then
                             cDestinationCountry = jObj("country")
@@ -298,9 +309,14 @@ Partial Public Class Cms
                             nWeight = 0
                         End If
 
+                        If jObj("promocode") IsNot Nothing Then
+                            promocode = jObj("promocode")
+                        Else
+                            promocode = ""
+                        End If
                     End If
 
-                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
+                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, promocode)
 
                     Dim ShippingOptionXml As String = dsShippingOption.GetXml()
                     Dim xmlDoc As New XmlDocument
@@ -358,9 +374,9 @@ Partial Public Class Cms
                     If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
                         RemoveDiscountCode(myApi, jObj)
                         'this will remove discount section from address page in vuemain.js
-                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#1"
+                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#1" & "#" & myCart.mnCartId
                     Else
-                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#0"
+                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#0" & "#" & myCart.mnCartId
                     End If
 
                     Return cOrderofDeliveryOption
@@ -464,7 +480,7 @@ Partial Public Class Cms
 
             Public Function UpdatePackagingForRemovingFreeGiftDiscount(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
+                    myCart.moDiscount.RemoveDiscountCode()
                     'update packaging while removing giftbox promocode
                     myCart.updatePackagingForRemovingFreeGiftDiscount(jObj("CartOrderId"), jObj("AmountToDiscount"))
 
