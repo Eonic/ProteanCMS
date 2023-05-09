@@ -374,9 +374,9 @@ Partial Public Class Cms
                     If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
                         RemoveDiscountCode(myApi, jObj)
                         'this will remove discount section from address page in vuemain.js
-                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#1"
+                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#1" & "#" & myCart.mnCartId
                     Else
-                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#0"
+                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#0" & "#" & myCart.mnCartId
                     End If
 
                     Return cOrderofDeliveryOption
