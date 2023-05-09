@@ -510,7 +510,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
                         Dim providerName As String = oFilterElmt.GetAttribute("providerName")
                         className = oFilterElmt.Attributes("className").Value.ToString()
-                        If myWeb.moRequest.Form(className) Is Nothing Then
+                        If myWeb.moRequest.Form(className) IsNot Nothing Then
                             If (excludeClassName <> className) Then
 
                                 If providerName = "" Or LCase(providerName) = "default" Then
