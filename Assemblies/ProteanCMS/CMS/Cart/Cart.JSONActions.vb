@@ -369,7 +369,7 @@ Partial Public Class Cms
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     'check config setting here so that it will take order option which is optional.
-                    Dim cOrderofDeliveryOption As String = myCart.moCartConfig("ShippingTotalIsNotZero")
+                    Dim cOrderofDeliveryOption As String = jObj("ShipOptKey")  'myCart.moCartConfig("ShippingTotalIsNotZero")
                     cOrderofDeliveryOption = myCart.updateDeliveryOptionByCountry(CartXml.FirstChild, country, cOrderofDeliveryOption)
                     If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
                         RemoveDiscountCode(myApi, jObj)

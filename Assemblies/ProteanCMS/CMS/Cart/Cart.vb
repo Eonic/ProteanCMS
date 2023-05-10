@@ -9565,11 +9565,13 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     Dim oRowSO As DataRow
                     For Each oRowSO In oDsShipOptions.Tables(0).Rows
                         If bChangedDelivery Then
-                            updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
-                            DeliveryOption = oRowSO("cShipOptName")
-                            'pass total item cost including packaging amount
-                            DeliveryOption = DeliveryOption & "#" & total & "#" & oRowSO("nShipOptKey")
-                            bChangedDelivery = False
+                            If (cOrderofDeliveryOption = oRowSO("nShipOptKey")) Then
+                                updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
+                                DeliveryOption = oRowSO("cShipOptName")
+                                'pass total item cost including packaging amount
+                                DeliveryOption = DeliveryOption & "#" & total & "#" & oRowSO("nShipOptKey")
+                                bChangedDelivery = False
+                            End If
                         End If
                     Next
                 End If
