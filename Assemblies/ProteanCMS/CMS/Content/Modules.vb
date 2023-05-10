@@ -542,9 +542,9 @@ where cl.nStructId = " & myWeb.mnPageId)
                                 Dim args(0) As Object
                                 args(0) = myWeb
 
-                                'If (cWhereSQL <> String.Empty) Then
-                                '    cWhereSQL = cWhereSQL & " AND "
-                                'End If
+                                If (cWhereSQL <> String.Empty) Then
+                                    cWhereSQL = cWhereSQL & " AND "
+                                End If
                                 cWhereSQL = cWhereSQL & calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                             End If
                         End If
