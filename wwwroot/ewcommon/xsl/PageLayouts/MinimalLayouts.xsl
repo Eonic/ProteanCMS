@@ -14639,17 +14639,12 @@
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+      <iframe frameborder="0" class="embed-responsive-item" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen="allowfullscreen" >
         <xsl:attribute name="src">
           <xsl:text>//player.vimeo.com/video/</xsl:text>
           <xsl:value-of select="$code"/>
           <!-- Turn all options off by default -->
-          <xsl:text>/?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=0&amp;loop=0</xsl:text>
-          <xsl:if test="Vimeo/@title='true'">&amp;title=1</xsl:if>
-          <xsl:if test="Vimeo/@byline='true'">&amp;byline=1</xsl:if>
-          <xsl:if test="Vimeo/@portrait='true'">&amp;portrait=1</xsl:if>
-          <xsl:if test="Vimeo/@autoplay='true'">&amp;autoplay=1</xsl:if>
-          <xsl:if test="Vimeo/@loop='true'">&amp;loop=1</xsl:if>
+          <xsl:text>&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
         </xsl:attribute>
         <xsl:choose>
           <xsl:when test="@size='Manual'">
@@ -14672,6 +14667,7 @@
         </xsl:choose>
         <xsl:text> </xsl:text>
       </iframe>
+		<script src="https://player.vimeo.com/api/player.js">&#160;</script>
     </div>
   </xsl:template>
 
