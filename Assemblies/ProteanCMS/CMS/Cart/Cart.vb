@@ -9692,6 +9692,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 End If
                 ConfirmPayment(oCartListElmt, oeResponseElmt, cNewAuthNumber, cMethodName, Amount)
                 GetCart(oCartListElmt, mnCartId)
+                oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber)
                 SaveCartXML(oCartListElmt, mnCartId)
                 Return cResult
             Catch ex As Exception
