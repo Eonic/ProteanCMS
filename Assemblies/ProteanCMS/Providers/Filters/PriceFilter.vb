@@ -204,6 +204,7 @@ Namespace Providers
                     oXform.addBind("SliderMaxPrice", "PriceFilter/@SliderMaxPrice", "false()", "string", oXform.model)
                     oXform.addBind("PriceStep", "PriceFilter/@PriceStep", "false()", "string", oXform.model)
                     oXform.addBind("PriceListCount", "PriceFilter/@PriceCountList", "false()", "string", oXform.model)
+                    oXform.addBind("PriceFilter", "PriceFilter/@MaxPrice", "false()", "string", oXform.model)
 
                     oXform.addInput(oFromGroup, "MinPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "MaxPrice", True, "", "hidden")
@@ -211,6 +212,7 @@ Namespace Providers
                     oXform.addInput(oFromGroup, "SliderMaxPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceStep", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceListCount", True, "", "hidden")
+                    oXform.addInput(oFromGroup, "PriceFilter", True, "", "hidden")
 
                     'If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
                     '    If (oXml.InnerText.Trim() <> String.Empty) Then
