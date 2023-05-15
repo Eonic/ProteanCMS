@@ -4,6 +4,7 @@
   <xsl:template match="Page" mode="xform_control_scripts">
 
     <!--################################################ modal for alert-->
+    <xsl:if test="@cssFramework='bs3'">
     <xsl:if test="descendant-or-self::instance">
       <div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
         <div class="modal-dialog">
@@ -21,6 +22,7 @@
       </div>
     </xsl:if>
 
+    </xsl:if>
     <xsl:if test="descendant-or-self::textarea[contains(@class,'xhtml')]">
       <script type="text/javascript">
         var tinymcelinklist = <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')][1]" mode="tinymcelinklist"/>;

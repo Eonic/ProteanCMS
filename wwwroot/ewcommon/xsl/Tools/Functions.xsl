@@ -1313,7 +1313,7 @@
 	  <xsl:if test="$GoogleGA4MeasurementID!=''">
 		  <!-- GA4 Tag Manager -->
 		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-		  <script cookie-consent="tracking">
+		  <script id="GA4Code" cookie-consent="tracking">
 			  window.dataLayer = window.dataLayer || [];
 			  function gtag(){dataLayer.push(arguments);}
 			  gtag('js', new Date());
@@ -1321,6 +1321,7 @@
 			  <xsl:apply-templates select="." mode="google-ga4-event"/>
 		  </script>
 		  <!-- End GA4 Tag Manager -->
+		  CART CMD - <xsl:value-of select="Page/Cart/Order/@cmd"/>
 	  </xsl:if>
 	  
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
