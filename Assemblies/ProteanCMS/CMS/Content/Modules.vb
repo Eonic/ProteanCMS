@@ -541,11 +541,17 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                                 Dim args(0) As Object
                                 args(0) = myWeb
+                                Dim cAdditionalCondition As String = String.Empty
+                                cAdditionalCondition = calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
+                                If (cAdditionalCondition <> String.Empty) Then
+                                    If (cWhereSQL <> String.Empty) Then
+                                        cWhereSQL = cWhereSQL & " AND " & cAdditionalCondition
+                                    Else
+                                        cWhereSQL = cAdditionalCondition
+                                    End If
 
-                                If (cWhereSQL <> String.Empty) Then
-                                    cWhereSQL = cWhereSQL & " AND "
+                                    'cWhereSQL = cWhereSQL & calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                                 End If
-                                cWhereSQL = cWhereSQL & calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                             End If
                         End If
 
