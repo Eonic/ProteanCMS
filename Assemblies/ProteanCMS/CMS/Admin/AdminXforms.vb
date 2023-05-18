@@ -1499,10 +1499,15 @@ Partial Public Class Cms
 
                     'Add the page name if passed through
                     If cName <> "" Then
+
                         cProcessInfo = MyBase.Instance.InnerXml
                         MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText = cName
                     End If
-
+                    Dim cpageName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                    If cpageName.Contains("-") Then
+                        cpageName = cpageName.Replace("-", " ")
+                        MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText = cpageName
+                    End If
                     ' delete the status if we are editing the home page
 
                     If pgid = myWeb.moConfig("RootPageId") Then
