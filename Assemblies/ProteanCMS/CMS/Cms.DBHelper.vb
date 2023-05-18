@@ -4252,7 +4252,7 @@ restart:
                                 'oRow(getOrderFname(objectType)) = i - 1
 
                                 'Set original display order in one flag 
-                                If oRow(getOrderFname(objectType)) IsNot Nothing Then
+                                If IsDBNull(oRow(getOrderFname(objectType))) = False Then
                                     nDisplayOrder = oRow(getOrderFname(objectType))
                                 End If
                                 k = i
@@ -4307,7 +4307,7 @@ restart:
                                 'oRow(getOrderFname(objectType)) = i + 1
 
                                 'Set original display order in one flag and get next active product display order in one flag
-                                If oRow(getOrderFname(objectType)) IsNot Nothing Then
+                                If IsDBNull(oRow(getOrderFname(objectType))) = False Then
                                     nDisplayOrder = oRow(getOrderFname(objectType))
                                 End If
                                 If oRow(sStatusField) = 1 Then
