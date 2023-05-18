@@ -4133,27 +4133,37 @@ restart:
             Dim oDs As DataSet
             'Dim oDr As SqlDataReader
             Dim oRow As DataRow
+            Dim oRowNext As DataRow
 
             Dim cSchemaName As String = ""
             Dim RecCount As Long
 
 
             Dim i As Integer
+            Dim j As Integer
+            Dim k As Integer
 
             Dim objectType As objectTypes
             Dim sKeyField As String
+            Dim sStatusField As String
+            Dim nextDisplayOrder As Long
+            Dim nDisplayOrder As Long
+            Dim nStatus As Long
 
             If nGroupId <> 0 Then
                 objectType = objectTypes.CartCatProductRelations
                 sKeyField = "nContentId"
+                sStatusField = "nStatus"
             Else
                 If bIsRelatedContent Then
                     objectType = objectTypes.ContentRelation
                     'sKeyField = "nContentRelationKey"
                     sKeyField = "nContentChildId"
+                    sStatusField = "nStatus"
                 Else
                     objectType = objectTypes.ContentLocation
                     sKeyField = "nContentId"
+                    sStatusField = "nStatus"
                 End If
             End If
 
@@ -4172,11 +4182,11 @@ restart:
 
                 'Get all locations of similar objects on the same page.
 
-                sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
+                sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
 
                 If nGroupId <> 0 Then
-                    sSql = " Select * From tblContent c " &
-                    " INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId " &
+                    sSql = " Select *,a.nStatus From tblContent c " &
+                    " INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId  inner join tblAudit as a on c.nAuditId= a.nAuditKey " &
                     " WHERE(tblCartCatProductRelations.nCatId = " & nGroupId & ") " &
                     " And c.cContentSchemaName = '" & cSchemaName & "'" &
                     " order by tblCartCatProductRelations.nDisplayOrder  "
@@ -4185,16 +4195,16 @@ restart:
                 Else
                     If cPosition <> "" Then
                         If cPosition.EndsWith("-") Then
-                            sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and CL.cPosition like'" & cPosition & "%' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
+                            sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and CL.cPosition like'" & cPosition & "%' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
                         Else
-                            sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and CL.cPosition ='" & cPosition & "' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
+                            sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and CL.cPosition ='" & cPosition & "' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
                         End If
                     End If
 
                     If bIsRelatedContent Then
-                        sSql = "Select tblContentRelation.* FROM tblContentRelation INNER JOIN" &
+                        sSql = "Select tblContentRelation.*, a.nStatus FROM tblContentRelation INNER JOIN" &
                            " tblContent On tblContentRelation.nContentChildId = tblContent.nContentKey INNER JOIN" &
-                           " tblContent tblContent_1 On tblContent.cContentSchemaName = tblContent_1.cContentSchemaName" &
+                           " tblContent tblContent_1 On tblContent.cContentSchemaName = tblContent_1.cContentSchemaName inner join tblAudit as a on tblContent_1.nAuditId= a.nAuditKey" &
                            " WHERE (tblContentRelation.nContentParentId = " & nPgId & ") And (tblContent_1.nContentKey = " & nContentId & ")" &
                            " ORDER BY tblContentRelation.nDisplayOrder"
                     End If
@@ -4205,6 +4215,7 @@ restart:
                 RecCount = oDs.Tables(getTable(objectType)).Rows.Count
                 i = 1
                 Dim skipnext As Boolean = False
+                Dim skipnextUpdate As Boolean = False
 
                 Select Case ReOrderCmd
                     Case "MoveTop"
@@ -4235,17 +4246,53 @@ restart:
                         For Each oRow In oDs.Tables(getTable(objectType)).Rows
                             If oRow(sKeyField) = nContentId And i <> 1 Then
                                 'swap with previous
-                                oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) = i
-                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
-                                ExeProcessSql(sSql)
+                                'oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) = i
+                                'sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
+                                'ExeProcessSql(sSql)
+                                'oRow(getOrderFname(objectType)) = i - 1
 
-                                oRow(getOrderFname(objectType)) = i - 1
-                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
-                                ExeProcessSql(sSql)
+                                'Set original display order in one flag 
+                                If oRow(getOrderFname(objectType)) IsNot Nothing Then
+                                    nDisplayOrder = oRow(getOrderFname(objectType))
+                                End If
+                                k = i
+                                If oRow(sStatusField) = 1 Then    'If product is active
+                                    nStatus = 1
+                                End If
+                                If oRow(sStatusField) = 0 Then     'If product is hidden
+                                    nStatus = 0
+                                End If
+                                For j = 0 To i     'Update one step up order
+                                    If oDs.Tables(getTable(objectType)).Rows(i - 2)("nStatus") = nStatus Then
+                                        oRow(getOrderFname(objectType)) = oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType))
+                                        skipnext = True
+                                        sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
+                                        ExeProcessSql(sSql)
+                                        Exit For
+                                    End If
+                                    i = i - 1
+                                Next
+
+                                If skipnext Then
+                                    For j = 0 To i    'Update one step down order
+                                        If oDs.Tables(getTable(objectType)).Rows(i - 2)("nStatus") = nStatus Then
+                                            oRow(getOrderFname(objectType)) = nDisplayOrder
+                                            skipnext = False
+                                            sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " =  " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
+                                            ExeProcessSql(sSql)
+                                            i = k
+                                            Exit For
+                                        End If
+                                    Next
+                                End If
+
                             Else
-                                oRow(getOrderFname(objectType)) = i
-                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
-                                ExeProcessSql(sSql)
+                                If Not skipnext Then
+                                    oRow(getOrderFname(objectType)) = i
+                                    sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
+                                    ExeProcessSql(sSql)
+                                End If
+
                             End If
                             'non-ideal alternative for updating the entire dataset
                             ' sSql = "update tblContentLocation Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where nAuditId = " & oRow("nAuditId")
@@ -4256,13 +4303,51 @@ restart:
                         For Each oRow In oDs.Tables(getTable(objectType)).Rows
                             If oRow(sKeyField) = nContentId And i <> (RecCount) Then
                                 'swap with next
-                                oDs.Tables(getTable(objectType)).Rows(i).Item(getOrderFname(objectType)) = i
-                                oRow(getOrderFname(objectType)) = i + 1
-                                skipnext = True
+                                'oDs.Tables(getTable(objectType)).Rows(i).Item(getOrderFname(objectType)) = i
+                                'oRow(getOrderFname(objectType)) = i + 1
+
+                                'Set original display order in one flag and get next active product display order in one flag
+                                If oRow(getOrderFname(objectType)) IsNot Nothing Then
+                                    nDisplayOrder = oRow(getOrderFname(objectType))
+                                End If
+                                If oRow(sStatusField) = 1 Then
+                                    nStatus = 1
+                                    skipnext = True
+                                End If
+
+                                ' Add code for hidden product sorting
+                                If oRow(sStatusField) = 0 Then
+                                    nStatus = 0
+                                    skipnextUpdate = True
+                                End If
+
+                                For j = i To RecCount   'Update order number as per product status
+                                    If oDs.Tables(getTable(objectType)).Rows(j)("nStatus") = nStatus Then
+                                        nextDisplayOrder = oDs.Tables(getTable(objectType)).Rows(j).Item(getOrderFname(objectType))
+                                        Exit For
+                                    End If
+                                Next
+                                oRow(getOrderFname(objectType)) = nextDisplayOrder
+
                             Else
+                                'Set all remaining products displayOrder if bydefault null
                                 If Not skipnext Then
                                     oRow(getOrderFname(objectType)) = i
                                     skipnext = False
+                                End If
+                                'Active product sorting
+                                If skipnext Then
+                                    If oDs.Tables(getTable(objectType)).Rows(i - 1)("nStatus") = 1 Then
+                                        oRow(getOrderFname(objectType)) = nDisplayOrder
+                                        skipnext = False
+                                    End If
+                                End If
+                                'Hidden product sorting
+                                If skipnextUpdate Then
+                                    If oDs.Tables(getTable(objectType)).Rows(i - 1)("nStatus") = 0 Then
+                                        oRow(getOrderFname(objectType)) = nDisplayOrder
+                                        skipnextUpdate = False
+                                    End If
                                 End If
                             End If
 
@@ -11671,7 +11756,7 @@ ReturnMe:
                             End If
 
                         End If
-                        End If
+                    End If
 
                     'if we want to replace the fRef
                     If Not fRefNode.GetAttribute("replaceWith") = "" Then
@@ -11690,152 +11775,152 @@ ReturnMe:
 
 
                         If nId > 0 And ImportStateObj.oInstance.getAttribute("update").contains("surgical") Then
-                                'Get origional instance
-                                Dim origInstance As New XmlDocument
-                                origInstance.LoadXml("<instance>" & modbhelper.getObjectInstance(oObjType, nId) & "</instance>")
+                            'Get origional instance
+                            Dim origInstance As New XmlDocument
+                            origInstance.LoadXml("<instance>" & modbhelper.getObjectInstance(oObjType, nId) & "</instance>")
 
-                                'Setupthrough nodes with @surgicalUpdate & update the origional instance
-                                Dim oUpdElmt As XmlElement
-                                For Each oUpdElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")
-                                    Dim updXpath As String = oUpdElmt.GetAttribute("updateSurgical")
-                                    Dim nodeToUpdate As XmlElement = origInstance.SelectSingleNode("/instance/" & updXpath)
-                                    If Not nodeToUpdate Is Nothing Then
-                                        If oUpdElmt.InnerText.Trim() <> "surgicalIgnore" Then
-                                            nodeToUpdate.InnerText = oUpdElmt.InnerText
-                                        End If
-                                        Dim att As XmlAttribute
-                                        For Each att In oUpdElmt.Attributes
-                                            nodeToUpdate.SetAttribute(att.Name, att.Value)
-                                        Next
-                                    Else
-                                        ErrorMsg = ErrorMsg & updXpath & " not found"
+                            'Setupthrough nodes with @surgicalUpdate & update the origional instance
+                            Dim oUpdElmt As XmlElement
+                            For Each oUpdElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")
+                                Dim updXpath As String = oUpdElmt.GetAttribute("updateSurgical")
+                                Dim nodeToUpdate As XmlElement = origInstance.SelectSingleNode("/instance/" & updXpath)
+                                If Not nodeToUpdate Is Nothing Then
+                                    If oUpdElmt.InnerText.Trim() <> "surgicalIgnore" Then
+                                        nodeToUpdate.InnerText = oUpdElmt.InnerText
                                     End If
-
-                                Next
-
-                                'clean up sugical update - just in case this failed on insert / can be deleted
-                                Dim oRemoveElmt As XmlElement
-                                For Each oRemoveElmt In origInstance.SelectNodes("descendant-or-self::*[@updateSurgical!='']")
-                                    oRemoveElmt.RemoveAttribute("updateSurgical")
-                                Next
-
-                                'save the origional instance
-                                nId = modbhelper.setObjectInstance(oObjType, origInstance.DocumentElement, nId)
-                                'run instance extras on update like relate and locate etc.
-                                If ImportStateObj.oInstance.getAttribute("update").contains("locate") Then
-                                    Dim bResetLocations As Boolean = ImportStateObj.bResetLocations
-                                    If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
-                                        bResetLocations = True
-                                    Else
-                                        bResetLocations = False
-                                    End If
-
-                                    Dim xmlDoc As New XmlDocument
-                                    modbhelper.moPageXml = xmlDoc
-                                    modbhelper.ResetConnection(oConnString)
-                                    Dim PrimaryLocation As Long = CLng("0" & modbhelper.GetDataValue("select nStructId from tblContentLocation where bPrimary=1 and nContentId = " & nId))
-
-                                    If PrimaryLocation = 0 Then
-                                        bResetLocations = True
-                                    Else
-                                        Dim resetIfHere As Long = CLng("0" & ImportStateObj.oInstance.getAttribute("resetifhere"))
-                                        If ImportStateObj.nResetLocationIfHere > 0 Then
-                                            resetIfHere = ImportStateObj.nResetLocationIfHere
-                                        End If
-                                        If resetIfHere > 0 Then
-                                            If PrimaryLocation = resetIfHere Then
-                                                bResetLocations = True
-                                            End If
-                                        End If
-
-                                    End If
-                                    modbhelper.processInstanceExtras(nId, ImportStateObj.oInstance, bResetLocations, ImportStateObj.bOrphan)
-                                End If
-                            Else
-
-                                If ImportStateObj.oInstance.getAttribute("delete").contains("true") Then
-                                    ImportStateObj.bSkipExisting = True
-                                End If
-                                'clean up sugical update as we are doing inserts or straight replacements.
-                                Dim oRemoveElmt As XmlElement
-                                For Each oRemoveElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")
-                                    oRemoveElmt.RemoveAttribute("updateSurgical")
-                                    If oRemoveElmt.InnerText.Trim() = "surgicalIgnore" Then
-                                        oRemoveElmt.InnerText = ""
-                                    End If
-                                Next
-
-                                Dim updateInstance As XmlElement = ImportStateObj.oInstance
-
-                                If ImportStateObj.oInstance.getAttribute("insert") = "reparse" Then
-                                    'run XSL again on instance....
-                                    Dim oTW As IO.TextWriter = New StringWriter()
-                                    Dim oTR As IO.TextReader
-                                    Dim cFeedItemXML As String
-                                    Dim oInstanceDoc As New XmlDocument
-                                    oInstanceDoc.LoadXml(ImportStateObj.oInstance.OuterXml)
-                                    ImportStateObj.moTransform.Process(oInstanceDoc, oTW)
-                                    oTR = New StringReader(oTW.ToString())
-                                    cFeedItemXML = oTR.ReadToEnd
-                                    'remove whitespace
-                                    Dim myRegex As New Regex(">\s*<")
-                                    cFeedItemXML = myRegex.Replace(cFeedItemXML, "><")
-                                    'move up a node
-                                    ImportStateObj.oInstance.innerXml = cFeedItemXML
-                                    updateInstance = ImportStateObj.oInstance.firstChild
-                                End If
-
-                                Dim bRelocate As Boolean = False
-
-                                Dim bCommitUpdate = True
-
-                                If nId > 0 Then
-                                    'case for updates
-                                    If ImportStateObj.oInstance.getAttribute("update").contains("none") Then
-                                        ImportStateObj.bSkipExisting = True
-                                        bCommitUpdate = False
-                                    End If
-                                    If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
-                                        bRelocate = True
-                                    End If
+                                    Dim att As XmlAttribute
+                                    For Each att In oUpdElmt.Attributes
+                                        nodeToUpdate.SetAttribute(att.Name, att.Value)
+                                    Next
                                 Else
-                                    bRelocate = True
-                                    'case for inserts
-                                    If ImportStateObj.oInstance.getAttribute("insert").contains("none") Then
-                                        ImportStateObj.bSkipExisting = True
-                                        bCommitUpdate = False
-                                    End If
+                                    ErrorMsg = ErrorMsg & updXpath & " not found"
                                 End If
 
-                                If bCommitUpdate Then
-                                    nId = modbhelper.setObjectInstance(oObjType, updateInstance, nId)
-                                    If bRelocate Then
-                                        modbhelper.processInstanceExtras(nId, updateInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
-                                    End If
-                                    cProcessInfo = nId & " Saved"
+                            Next
+
+                            'clean up sugical update - just in case this failed on insert / can be deleted
+                            Dim oRemoveElmt As XmlElement
+                            For Each oRemoveElmt In origInstance.SelectNodes("descendant-or-self::*[@updateSurgical!='']")
+                                oRemoveElmt.RemoveAttribute("updateSurgical")
+                            Next
+
+                            'save the origional instance
+                            nId = modbhelper.setObjectInstance(oObjType, origInstance.DocumentElement, nId)
+                            'run instance extras on update like relate and locate etc.
+                            If ImportStateObj.oInstance.getAttribute("update").contains("locate") Then
+                                Dim bResetLocations As Boolean = ImportStateObj.bResetLocations
+                                If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
+                                    bResetLocations = True
                                 Else
-                                    cProcessInfo = nId & "Not Saved"
+                                    bResetLocations = False
                                 End If
 
-                                updateInstance = Nothing
+                                Dim xmlDoc As New XmlDocument
+                                modbhelper.moPageXml = xmlDoc
+                                modbhelper.ResetConnection(oConnString)
+                                Dim PrimaryLocation As Long = CLng("0" & modbhelper.GetDataValue("select nStructId from tblContentLocation where bPrimary=1 and nContentId = " & nId))
 
+                                If PrimaryLocation = 0 Then
+                                    bResetLocations = True
+                                Else
+                                    Dim resetIfHere As Long = CLng("0" & ImportStateObj.oInstance.getAttribute("resetifhere"))
+                                    If ImportStateObj.nResetLocationIfHere > 0 Then
+                                        resetIfHere = ImportStateObj.nResetLocationIfHere
+                                    End If
+                                    If resetIfHere > 0 Then
+                                        If PrimaryLocation = resetIfHere Then
+                                            bResetLocations = True
+                                        End If
+                                    End If
+
+                                End If
+                                modbhelper.processInstanceExtras(nId, ImportStateObj.oInstance, bResetLocations, ImportStateObj.bOrphan)
+                            End If
+                        Else
+
+                            If ImportStateObj.oInstance.getAttribute("delete").contains("true") Then
+                                ImportStateObj.bSkipExisting = True
+                            End If
+                            'clean up sugical update as we are doing inserts or straight replacements.
+                            Dim oRemoveElmt As XmlElement
+                            For Each oRemoveElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")
+                                oRemoveElmt.RemoveAttribute("updateSurgical")
+                                If oRemoveElmt.InnerText.Trim() = "surgicalIgnore" Then
+                                    oRemoveElmt.InnerText = ""
+                                End If
+                            Next
+
+                            Dim updateInstance As XmlElement = ImportStateObj.oInstance
+
+                            If ImportStateObj.oInstance.getAttribute("insert") = "reparse" Then
+                                'run XSL again on instance....
+                                Dim oTW As IO.TextWriter = New StringWriter()
+                                Dim oTR As IO.TextReader
+                                Dim cFeedItemXML As String
+                                Dim oInstanceDoc As New XmlDocument
+                                oInstanceDoc.LoadXml(ImportStateObj.oInstance.OuterXml)
+                                ImportStateObj.moTransform.Process(oInstanceDoc, oTW)
+                                oTR = New StringReader(oTW.ToString())
+                                cFeedItemXML = oTR.ReadToEnd
+                                'remove whitespace
+                                Dim myRegex As New Regex(">\s*<")
+                                cFeedItemXML = myRegex.Replace(cFeedItemXML, "><")
+                                'move up a node
+                                ImportStateObj.oInstance.innerXml = cFeedItemXML
+                                updateInstance = ImportStateObj.oInstance.firstChild
                             End If
 
+                            Dim bRelocate As Boolean = False
+
+                            Dim bCommitUpdate = True
+
+                            If nId > 0 Then
+                                'case for updates
+                                If ImportStateObj.oInstance.getAttribute("update").contains("none") Then
+                                    ImportStateObj.bSkipExisting = True
+                                    bCommitUpdate = False
+                                End If
+                                If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
+                                    bRelocate = True
+                                End If
+                            Else
+                                bRelocate = True
+                                'case for inserts
+                                If ImportStateObj.oInstance.getAttribute("insert").contains("none") Then
+                                    ImportStateObj.bSkipExisting = True
+                                    bCommitUpdate = False
+                                End If
+                            End If
+
+                            If bCommitUpdate Then
+                                nId = modbhelper.setObjectInstance(oObjType, updateInstance, nId)
+                                If bRelocate Then
+                                    modbhelper.processInstanceExtras(nId, updateInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
+                                End If
+                                cProcessInfo = nId & " Saved"
+                            Else
+                                cProcessInfo = nId & "Not Saved"
+                            End If
+
+                            updateInstance = Nothing
+
                         End If
-
-                        If ImportStateObj.bDeleteNonEntries Then
-
-                            Dim cSQL As String = "INSERT INTO dbo." & ImportStateObj.cDeleteTempTableName & " (cImportID , cTableName) VALUES ('" & SqlFmt(fRef) & "','" & SqlFmt(cTableName) & "')"
-                            modbhelper.ResetConnection(oConnString)
-                            modbhelper.ExeProcessSql(cSQL)
-
-                        End If
-                        ErrorId = nId
 
                     End If
 
-                    'update every 10 records
-                    If ImportStateObj.totalInstances = ImportStateObj.CompleteCount Then
+                    If ImportStateObj.bDeleteNonEntries Then
+
+                        Dim cSQL As String = "INSERT INTO dbo." & ImportStateObj.cDeleteTempTableName & " (cImportID , cTableName) VALUES ('" & SqlFmt(fRef) & "','" & SqlFmt(cTableName) & "')"
+                        modbhelper.ResetConnection(oConnString)
+                        modbhelper.ExeProcessSql(cSQL)
+
+                    End If
+                    ErrorId = nId
+
+                End If
+
+                'update every 10 records
+                If ImportStateObj.totalInstances = ImportStateObj.CompleteCount Then
                     modbhelper.updateActivity(ImportStateObj.LogId, ImportStateObj.cDeleteTempTableName & " Imported " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Completed")
                 End If
 
