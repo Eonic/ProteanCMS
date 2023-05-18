@@ -25,6 +25,7 @@ Imports Protean.Tools.Dictionary
 Imports Protean.Tools.Xml
 Imports System
 Imports System.Threading
+Imports WebGrease.Css.Ast.Selectors
 
 Partial Public Class Cms
 
@@ -273,6 +274,7 @@ Partial Public Class Cms
 
             indexkey = 200
             'indexdefkey = 201
+            nShipProdCatRelKey = 202
         End Enum
 
         Enum TableNames
@@ -321,7 +323,7 @@ Partial Public Class Cms
 
             'tblContentIndex = 200
             tblContentIndexDef = 200
-
+            tblCartShippingProductCategoryRelations = 202
         End Enum
 
         Enum PermissionLevel
@@ -696,7 +698,8 @@ Partial Public Class Cms
                     'Add new key id for Index def table by nita
                 Case 200
                     Return "nContentIndexDefKey"
-
+                Case 202
+                    Return "nShipProdCatRelKey"
 
             End Select
             Return strReturn
@@ -4586,7 +4589,7 @@ restart:
                     sSql &= IIf(bPrimary, 1, 0) & ","
                     sSql &= IIf(bCascade, 1, 0) & ","
                     sSql &= "0,"
-                    sSql &= getAuditId() & ");select @@identity"
+                    sSql &= getAuditId() & ");select scope_identity()"
                 Else
                     sSql = "UPDATE tblContentLocation  SET "
                     sSql &= "nStructId =" & nStructId & ","
@@ -7488,10 +7491,10 @@ restart:
                             stateObj.cDefiningFieldValue = cDefiningFieldValue
 
                             doneEvents.Add(stateObj.oResetEvt)
-                                System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
+                            System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
 
-                                stateObj = Nothing
-                            End If
+                            stateObj = Nothing
+                        End If
                     Next
 
 
@@ -7504,12 +7507,12 @@ restart:
 
                     updateActivity(logId, ReturnMessage & " Complete")
 
-                        'Clear Page Cache
+                    'Clear Page Cache
 
-                        myWeb.ClearPageCache()
+                    myWeb.ClearPageCache()
 
 
-                        Return ReturnMessage
+                    Return ReturnMessage
                     ''       End If
 
                     'Me.updateActivity(logId, "Importing " & totalInstances & "Objects, " & completeCount & " Complete")
@@ -7581,7 +7584,7 @@ restart:
 
 
                 Else
-                        Return ""
+                    Return ""
                 End If
 
 
@@ -7692,7 +7695,7 @@ restart:
                                     For Each relContId In oRelation.GetAttribute("relatedContentId").Split(",")
                                         If IsNumeric(relContId) Then
                                             If LCase(oRelation.GetAttribute("direction")) = "child" Then
-                                                insertContentRelation(Convert.ToInt32(relContId), savedId, True, oRelation.GetAttribute("type"), True)
+                                                insertContentRelation(Convert.ToInt32(relContId), savedId, False, oRelation.GetAttribute("type"), True)
                                             Else
                                                 insertContentRelation(savedId, Convert.ToInt32(relContId), True, oRelation.GetAttribute("type"), True)
                                             End If
@@ -9220,6 +9223,9 @@ restart:
                     If cOName.Contains("list") Then
                         insertGroupProductRelation(goRequest.QueryString("GroupId"), cOValue)
                     End If
+                    If cOName.Contains("unrelate") Then
+                        deleteGroupProductRelation(goRequest.QueryString("GroupId"), cOValue)
+                    End If
                 Next
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "saveProductsGroupRelations", ex, ""))
@@ -9275,7 +9281,37 @@ restart:
 
         End Function
 
+        Public Function deleteGroupProductRelation(ByVal nGroupId As Integer, ByVal nContent As String) As String
+            PerfMonLog("DBHelper", "insertProductGroupRelation")
+            Try
+                Dim oContentArr() As String = Split(nContent, ",")
+                Dim cCount As Integer
+                Dim strReturn As New Text.StringBuilder
 
+
+                For cCount = 0 To UBound(oContentArr)
+
+                    Dim nCatProductRelKey As Integer
+
+                    Dim cSQl As String = "Select nCatProductRelKey from tblCartCatProductRelations where nCatId = " & nGroupId & " and nContentId = " & oContentArr(cCount)
+                    nCatProductRelKey = ExeProcessSqlScalar(cSQl)
+
+                    If nCatProductRelKey <> 0 Then
+                        DeleteObject(objectTypes.CartCatProductRelations, nCatProductRelKey)
+                    End If
+
+                Next
+
+                Return "1"
+
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "insertProductGroupRelation", ex, ""))
+                Return "0"
+            End Try
+
+
+        End Function
 
 
         Public Function insertProductGroupRelation(ByVal nProductId As Integer, ByVal sGroupIds As String) As String
@@ -9489,6 +9525,73 @@ restart:
             End Try
         End Function
 
+        Public Function saveProductShippingGroupDirRelation(ByVal nShippingMethodId As Integer, ByVal nCatKeys As String, Optional ByVal bInsert As Boolean = True, Optional ByVal nRuleType As PermissionLevel = PermissionLevel.Open) As String
+            PerfMonLog("DBHelper", "saveShippingDirRelation")
+            Try
+                Dim cGroups() As String = Split(nCatKeys, ",")
+                Dim nI As Integer
+                Dim cNewIds As String = ""
+                Dim bDeny As Boolean = False
+                ' Dim nRuleType As Integer = "1"
+                If checkTableColumnExists("tblCartShippingProductCategoryRelations", "nRuleType") Then
+                    bDeny = True
+                    Select Case nRuleType
+                        Case PermissionLevel.Denied
+                            nRuleType = 2
+                        Case Else
+                            nRuleType = 1
+                    End Select
+                End If
+
+                For nI = 0 To UBound(cGroups)
+                    nCatKeys = CInt(cGroups(nI))
+                    If bInsert Then
+                        'if exists then  return the id
+                        Dim cSQL As String = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " & nShippingMethodId & " And nCatId = " & nCatKeys
+                        Dim nId As Integer = ExeProcessSqlScalar(cSQL)
+                        If nId > 0 Then Return nId
+
+                        'Logic to rmove relations if an "all" entry exists, or other way round
+                        If nCatKeys > 0 Then
+                            'remove any "all" record
+                            cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " & nShippingMethodId & " And nCatId = 0"
+                            Me.DeleteObject(objectTypes.nShipProdCatRelKey, ExeProcessSqlScalar(cSQL))
+                        Else
+                            'remove any specific record
+                            cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " & nShippingMethodId & " And nCatId > 0"
+                            Using oDre As SqlDataReader = getDataReaderDisposable(cSQL)  'Done by nita on 6/7/22
+                                Do While oDre.Read
+                                    Me.DeleteObject(objectTypes.nShipProdCatRelKey, oDre(0))
+                                Loop
+                            End Using
+                        End If
+                        If bDeny Then
+                            cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values(" &
+                                nShippingMethodId & "," &
+                                nCatKeys & "," &
+                                nRuleType & "," &
+                                Me.getAuditId(1, , "CartShippingProductCategoryRelations") & ")"
+
+
+                        Else
+                            cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values(" &
+                                                   nShippingMethodId & "," &
+                                                   nCatKeys & "," &
+                                                   nRuleType & "," &
+                                                   Me.getAuditId(1, , "CartShippingProductCategoryRelations") & ")"
+                        End If
+
+                        cNewIds &= GetIdInsertSql(cSQL) & ","
+                    Else
+                        cNewIds &= DeleteObject(objectTypes.nShipProdCatRelKey, nCatKeys) & ","
+                    End If
+                Next
+                Return Left(cNewIds, cNewIds.Length - 1)
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "saveProductShippingGroupDirRelation", ex, ""))
+                Return 0
+            End Try
+        End Function
 
         Public Function saveDiscountProdGroupRelation(ByVal nDiscountId As Integer, ByVal cProductgroups As String, Optional ByVal bInsert As Boolean = True) As String
             PerfMonLog("DBHelper", "saveDiscountProdGroupRelation")
@@ -10915,6 +11018,29 @@ ReturnMe:
 
         End Sub
 
+
+        Public Sub UpdateSellerNotes(ByVal CartId As Long, ByVal Status As String, ByVal Notes As String)
+            Dim sSql As String = ""
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim cProcessInfo As String = "SetClientNotes"
+            Try
+
+                'Update Seller Notes:
+                sSql = "select * from tblCartOrder where nCartOrderKey = " & CartId
+                oDs = getDataSetForUpdate(sSql, "Order", "Cart")
+                For Each oRow In oDs.Tables("Order").Rows
+                    oRow("cSellerNotes") = oRow("cSellerNotes") + "\n" + DateTime.Today + " " + DateTime.Now.TimeOfDay.ToString() + ": changed to: (" + Status + ") " + "\n" + "comment: " + Notes + "\n"
+                Next
+                updateDataset(oDs, "Order")
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+            End Try
+
+        End Sub
+
+
         Public Sub ListReports(ByRef oContentsXML As XmlElement)
             PerfMonLog("Cart", "ListReports")
 
@@ -11024,12 +11150,10 @@ ReturnMe:
                 Me.ConnectTimeout = 180
                 ds = Me.GetDataSet(spWithBespokeCheck, "Item", "Report", , params, CommandType.StoredProcedure)
 
-
                 ' Convert the dataset to Xml
                 Dim reportXml As XmlDocument = New XmlDocument
                 myWeb.moDbHelper.ReturnNullsEmpty(ds)
                 reportXml.LoadXml(ds.GetXml)
-
 
                 ' Process the data for type-specific columns
                 processInfo &= "; Updating Column data"
@@ -11208,7 +11332,7 @@ ReturnMe:
             Dim oRow As DataRow
             Try
                 If Me.checkTableColumnExists("tblContent", "cBlockedSchemaType") Then
-                    Dim sSQL As String = "select cBlockedSchemaType from tblContent c inner join tblContentLocation cl on c.nContentKey = cl.nContentId where nStructId = " & nPageId
+                    Dim sSQL As String = "select cBlockedSchemaType, nContentKey from tblContent c inner join tblContentLocation cl on c.nContentKey = cl.nContentId where nStructId = " & nPageId & " and cBlockedSchemaType IS NOT NULL"
                     Dim oDs As DataSet = GetDataSet(sSQL, "ContentBlock", "Block")
                     For Each oRow In oDs.Tables("ContentBlock").Rows
                         If Not IsDBNull(oRow("cBlockedSchemaType")) Then
@@ -11217,7 +11341,7 @@ ReturnMe:
                                 If returnValue <> "" Then
                                     returnValue = returnValue & ","
                                 End If
-                                returnValue = returnValue & oRow("cBlockedSchemaType")
+                                returnValue = returnValue & oRow("cBlockedSchemaType") & "|" & oRow("nContentKey")
                             End If
                         End If
                     Next

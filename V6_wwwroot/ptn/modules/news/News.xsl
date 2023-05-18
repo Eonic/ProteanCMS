@@ -44,6 +44,7 @@
 					<xsl:otherwise>
 						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 							<xsl:with-param name="sortBy" select="@sortBy"/>
+							<xsl:with-param name="parentId" select="@id"/>
 						</xsl:apply-templates>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -59,6 +60,14 @@
 				<xsl:text> </xsl:text>
 			</div>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleClassExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
 
 	<!-- NewsArticle Module Swiper -->
@@ -235,11 +244,24 @@
 	<xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
 		<xsl:param name="class"/>
+		<xsl:param name="parentId"/>
 		<!-- articleBrief -->
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
-		<div class="listItem newsarticle {$class}">
+		<xsl:variable name="classValues">
+			<xsl:text>listItem newsarticle </xsl:text>
+			<xsl:value-of select="$class"/>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<div class="{$classValues}">
+			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+				<xsl:with-param name="pos" select="position()"/>
+			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="concat('listItem newsarticle ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
@@ -262,23 +284,25 @@
 						<xsl:value-of select="$sitename"/>
 					</span>
 				</span>
-				<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
-				<xsl:if test="@publish!=''">
-					<p class="date" itemprop="datePublished">
-						<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-						<xsl:call-template name="DisplayDate">
-							<xsl:with-param name="date" select="@publish"/>
-						</xsl:call-template>
-					</p>
-				</xsl:if>
-				<xsl:if test="@update!=''">
-					<p class="hidden" itemprop="dateModified">
-						<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-						<xsl:call-template name="DisplayDate">
-							<xsl:with-param name="date" select="@update"/>
-						</xsl:call-template>
-					</p>
-				</xsl:if>
+				<span class="news-brief-info">
+					<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
+					<xsl:if test="@publish!=''">
+						<p class="date" itemprop="datePublished">
+							<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+							<xsl:call-template name="DisplayDate">
+								<xsl:with-param name="date" select="@publish"/>
+							</xsl:call-template>
+						</p>
+					</xsl:if>
+					<xsl:if test="@update!=''">
+						<p class="hidden" itemprop="dateModified">
+							<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+							<xsl:call-template name="DisplayDate">
+								<xsl:with-param name="date" select="@update"/>
+							</xsl:call-template>
+						</p>
+					</xsl:if>
+				</span>
 
 				<xsl:if test="Strapline/node()!=''">
 					<div class="summary" itemprop="description">
@@ -401,51 +425,53 @@
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="'detail newsarticle'"/>
 			</xsl:apply-templates>
-			<h2 class="entry-title content-title" itemprop="headline">
-				<xsl:apply-templates select="." mode="getDisplayName" />
-			</h2>
 			<xsl:apply-templates select="." mode="displayDetailImage"/>
-			<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
-			<xsl:if test="@publish!=''">
-				<p class="dtstamp" title="{@publish}" itemprop="datePublished">
-					<xsl:call-template name="DisplayDate">
-						<xsl:with-param name="date" select="@publish"/>
-					</xsl:call-template>
-				</p>
-			</xsl:if>
-			<span class="strapline-detail" itemprop="description">
-				<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-			</span>
-			<div class="description entry-content" itemprop="text">
-				<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-			</div>
-			<xsl:if test="Content[@type='FAQ']">
-				<div class="faq-list">
-					<a name="pageTop" class="pageTop">&#160;</a>
-					<h3>Question and Answer</h3>
-					<ul>
-						<xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
-					</ul>
-					<xsl:apply-templates select="Content[@type='FAQ']" mode="displayBrief">
-						<xsl:with-param name="sortBy" select="@sortBy"/>
+			<div class="detail-text">
+				<h2 class="entry-title content-title" itemprop="headline">
+					<xsl:apply-templates select="." mode="getDisplayName" />
+				</h2>
+				<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
+				<xsl:if test="@publish!=''">
+					<p class="dtstamp" title="{@publish}" itemprop="datePublished">
+						<xsl:call-template name="DisplayDate">
+							<xsl:with-param name="date" select="@publish"/>
+						</xsl:call-template>
+					</p>
+				</xsl:if>
+				<span class="strapline-detail" itemprop="description">
+					<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+				</span>
+				<div class="description entry-content" itemprop="text">
+					<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
+				</div>
+				<xsl:if test="Content[@type='FAQ']">
+					<div class="faq-list">
+						<a name="pageTop" class="pageTop">&#160;</a>
+						<h3>Question and Answer</h3>
+						<ul>
+							<xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
+						</ul>
+						<xsl:apply-templates select="Content[@type='FAQ']" mode="displayBrief">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+						</xsl:apply-templates>
+					</div>
+				</xsl:if>
+				<div class="entryFooter">
+					<div class="tags">
+						<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
+						<xsl:text> </xsl:text>
+					</div>
+					<xsl:apply-templates select="." mode="backLink">
+						<xsl:with-param name="link" select="$thisURL"/>
+						<xsl:with-param name="altText">
+							<xsl:call-template name="term2006" />
+						</xsl:with-param>
 					</xsl:apply-templates>
 				</div>
-			</xsl:if>
-			<div class="entryFooter">
-				<div class="tags">
-					<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
-					<xsl:text> </xsl:text>
-				</div>
-				<xsl:apply-templates select="." mode="backLink">
-					<xsl:with-param name="link" select="$thisURL"/>
-					<xsl:with-param name="altText">
-						<xsl:call-template name="term2006" />
-					</xsl:with-param>
+				<xsl:apply-templates select="." mode="ContentDetailCommenting">
+					<xsl:with-param name="commentPlatform" select="$page/Contents/Content[@moduleType='NewsList']/@commentPlatform"/>
 				</xsl:apply-templates>
 			</div>
-			<xsl:apply-templates select="." mode="ContentDetailCommenting">
-				<xsl:with-param name="commentPlatform" select="$page/Contents/Content[@moduleType='NewsList']/@commentPlatform"/>
-			</xsl:apply-templates>
 		</div>
 	</xsl:template>
 

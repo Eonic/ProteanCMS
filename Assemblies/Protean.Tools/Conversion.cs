@@ -12,11 +12,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-
-namespace Protean.Tools
-{
-
-    /// <summary>
+/// <summary>
 ///   <para>   Protean.Tools.Conversion is designed to covert from one data source to another (e.g. Excel to Xml)</para>
 ///   <example>
 ///     <para>Exmaple usage to convert an Excel file to XML</para>
@@ -26,15 +22,14 @@ namespace Protean.Tools
 ///   </example>
 /// </summary>
 /// <remarks></remarks>
+namespace Protean.Tools
+{
     public class Conversion
     {
 
         #region     Declarations
-
         public static event OnErrorEventHandler OnError;
-
         public delegate void OnErrorEventHandler(object sender, Errors.ErrorEventArgs e);
-
         private const string mcModuleName = "Protean.Tools.Conversion";
 
         public enum Type
@@ -275,16 +270,22 @@ namespace Protean.Tools
 
         private void ConvertExcelToXml()
         {
-            OleDbConnection oExcelConn = null;
+
+
+            OleDbConnection oExcelConn = default;
             var oExcelAdapter = new OleDbDataAdapter();
             DataSet oExcelDataset;
+
             DataTable oWorksheets;
             string cWorksheetname = "";
+
             XmlDataDocument oXml;
             var oOutputXml = new XmlDocument();
             XmlElement oOutputRoot;
-            XmlElement oOutputWorksheet;
+            XmlElement oOutputWorksheet = null;
+
             string cSql = "";
+
             try
             {
 
@@ -293,20 +294,25 @@ namespace Protean.Tools
                 // "Provider=Microsoft.Jet.OLEDB.4.0;" & _
                 // "Data Source=" & Me.oInput & ";" & _
                 // "Extended Properties=""Excel 8.0;HDR=Yes;IMEX=1;""")
-
-                if (Conversions.ToBoolean(oInput.endswith(".xlsx")))
+               
+                if ((this.oInput).ToString().EndsWith(".xlsx"))
                 {
-                    oOutputXml.LoadXml(GetXML(Conversions.ToString(oInput)));
+
+                    oOutputXml.LoadXml(GetXML(this.oInput.ToString()));
                     this.oOutputXml = oOutputXml.DocumentElement;
                 }
-                else if (Conversions.ToBoolean(oInput.endswith(".csv")))
+
+                else if ((this.oInput).ToString().EndsWith(".csv"))
                 {
-                    oOutputXml.LoadXml(GetXML(Conversions.ToString(oInput)));
+
+                    oOutputXml.LoadXml(GetXML(this.oInput.ToString()));
                     this.oOutputXml = oOutputXml.DocumentElement;
                 }
                 else
                 {
-                    oExcelConn = new OleDbConnection(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Provider=Microsoft.ACE.OLEDB.12.0;" + "Data Source=", oInput), ";"), "Extended Properties=Excel 12.0")));
+
+                    oExcelConn = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;" + "Data Source=" + this.oInput + ";" + "Extended Properties=Excel 12.0");
+
                     oExcelConn.Open();
 
                     // Get the worksheet names
@@ -314,6 +320,7 @@ namespace Protean.Tools
 
                     // Set up the Xml
                     oOutputRoot = oOutputXml.CreateElement("Workbook");
+
                     if (oWorksheets.Rows.Count == 0)
                     {
                         SetStatus(Status.Failed, StatusReason.InputSourceNotValidorEmpty);
@@ -321,7 +328,7 @@ namespace Protean.Tools
                     else
                     {
                         foreach (DataRow oWorksheet in oWorksheets.Rows)
-                        {
+                        {                            
                             // .Trim("'") added to deal with worksheet names encompassed with 's
                             cWorksheetname = oWorksheet["TABLE_NAME"].ToString().Trim('\'');
                             if (cWorksheetname.EndsWith("$"))
@@ -340,16 +347,18 @@ namespace Protean.Tools
                                 // Turn the DS into XML
 
                                 oExcelDataset.EnforceConstraints = false;
+
                                 oXml = new XmlDataDocument(oExcelDataset);
-                                oOutputWorksheet = (XmlElement)oXml.FirstChild;
+
+                                oOutputWorksheet.AppendChild(oXml.FirstChild);
 
                                 // Add the sheet
-                                if (oOutputWorksheet is object)
+                                if (oOutputWorksheet != null)
                                 {
                                     oOutputWorksheet.SetAttribute("name", Strings.Replace(cWorksheetname, "$", ""));
                                 }
-
                                 oOutputRoot.AppendChild(oOutputXml.ImportNode(oOutputWorksheet, true));
+
                             }
                         }
 
@@ -358,13 +367,17 @@ namespace Protean.Tools
                     }
                 }
             }
+
+
             catch (Exception ex)
             {
+                ex = null;
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
+
             finally
             {
-                if (oExcelConn is object)
+                if (oExcelConn != null)
                 {
                     if (oExcelConn.State != ConnectionState.Closed)
                     {
@@ -374,11 +387,12 @@ namespace Protean.Tools
             }
         }
 
+
         private void ConvertCSVToXml()
         {
             bool firstRow = true;
             char _separator = CSVseparator;
-            string _fieldnames = null;
+          //  string _fieldnames = null;
             long succeeded = 0L;
             long failed = 0L;
             var ResponseXml = new XmlDocument();
@@ -480,7 +494,7 @@ namespace Protean.Tools
                                     {
                                         XmlElement wtf1 = (XmlElement)rowElmt.SelectSingleNode("*[position() = " + (long)(ii + 1) + "]");
                                     }
-                                    else if (Conversions.ToBoolean(_fValue.startswith("<")))
+                                    else if (Conversions.ToBoolean(_fValue.ToString().StartsWith("<")))
                                     {
                                         rowElmt.SelectSingleNode("*[position() = " + (long)(ii + 1) + "]").InnerXml = Text.tidyXhtmlFrag(Conversions.ToString(_fValue), true, true);
                                         bHasHtml = true;
@@ -631,7 +645,7 @@ namespace Protean.Tools
                             if (oResource is string)
                             {
                                 // Expected input is a filepath in the form of a string
-                                if (Conversions.ToBoolean(!Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oResource, "", false), File.Exists(Conversions.ToString(oResource)))))
+                                if (!Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oResource, "", false), File.Exists(Conversions.ToString(oResource)))))
                                     bCheck = false;
                             }
                             else if (oResource is StreamReader)
@@ -890,7 +904,6 @@ namespace Protean.Tools
 
             return default;
         }
-
         private static string GetValueOfCell(SpreadsheetDocument spreadsheetdocument, Cell cell)
         {
             var sharedString = spreadsheetdocument.WorkbookPart.SharedStringTablePart;
@@ -965,25 +978,15 @@ namespace Protean.Tools
         private StreamReader m_objInputFile;
         private FileStream m_objTempFile;
         private BinaryReader m_objTempReader;
-        private long m_lngFilePointer = 0L;
+        private long m_lngFilePointer = 0;
 
         // Clean up our resources
 
         public void Dispose()
         {
-            ;
-#error Cannot convert OnErrorResumeNextStatementSyntax - see comment for details
-            /* Cannot convert OnErrorResumeNextStatementSyntax, CONVERSION ERROR: Conversion for OnErrorResumeNextStatement not implemented, please report this issue in 'On Error Resume Next' at character 35198
-
-
-            Input:
-
-                    'Clean up our resources
-
-                    On Error Resume Next
-
-             */
-            m_lngFilePointer = 0L;
+           
+            
+            m_lngFilePointer = 0;
             if (Information.IsNothing(m_objTempReader) == false)
             {
                 m_objTempReader.Close();
@@ -1023,18 +1026,7 @@ namespace Protean.Tools
 
         // Clean up our resources
         ~classFileLineReader()
-        {
-            ;
-#error Cannot convert OnErrorResumeNextStatementSyntax - see comment for details
-            /* Cannot convert OnErrorResumeNextStatementSyntax, CONVERSION ERROR: Conversion for OnErrorResumeNextStatement not implemented, please report this issue in 'On Error Resume Next' at character 36731
-
-
-            Input:
-
-                    'Clean up our resources
-                    On Error Resume Next
-
-             */
+        {          
             Dispose();
         }
 
@@ -1044,16 +1036,7 @@ namespace Protean.Tools
             // Replaces the End Of File test for a normal stream
 
             get
-            {
-                ;
-#error Cannot convert OnErrorResumeNextStatementSyntax - see comment for details
-                /* Cannot convert OnErrorResumeNextStatementSyntax, CONVERSION ERROR: Conversion for OnErrorResumeNextStatement not implemented, please report this issue in 'On Error Resume Next' at character 36955
-
-
-                Input:
-                            On Error Resume Next
-
-                 */
+            {               
                 return m_objInputFile.EndOfStream;
             }
         }

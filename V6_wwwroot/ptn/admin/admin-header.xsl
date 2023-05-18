@@ -122,6 +122,11 @@
               <xsl:text> </xsl:text>
             </ul>
           </div>
+			<div class="preview">
+				<xsl:apply-templates select="descendant-or-self::MenuItem[@cmd='PreviewOn']" mode="previewLink">
+					<xsl:with-param name="level">1</xsl:with-param>
+				</xsl:apply-templates>
+			</div>
           <div class="text-muted display-screen-size me-2">
             <div class="d-block d-sm-none">xs</div>
             <div class="d-none d-sm-block d-md-none">sm</div>
@@ -198,10 +203,11 @@
         <xsl:apply-templates select="MenuItem" mode="adminItem2">
           <xsl:with-param name="level">1</xsl:with-param>
         </xsl:apply-templates>
-        <li>
+        <li><!--
           <xsl:apply-templates select="MenuItem" mode="previewLink">
             <xsl:with-param name="level">1</xsl:with-param>
           </xsl:apply-templates>
+		  -->
         </li>
       </ul>
       <!--</xsl:if>-->
@@ -462,7 +468,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <a href="{$href}" title="{Description}" class="dropdown-item">
+      <a href="{$href}" title="{Description}" class="btn btn-default">
         <xsl:if test="/Page/@ewCmd='NormalMail'">
           <xsl:attribute name="target">_blank</xsl:attribute>
         </xsl:if>
@@ -693,12 +699,12 @@
             <xsl:choose>
               <xsl:when test="/Page/@previewHidden='on'">
                 <a href="?ewcmd=PreviewOn&amp;ewCmd2=hideHidden" class="btn btn-default">
-                  <i class="fas fa-eye-slash"> </i> Hide Hidden
+                  <i class="fas fa-eye-slash">&#160;</i>&#160;Hide Hidden
                 </a>
               </xsl:when>
               <xsl:otherwise>
                 <a href="?ewcmd=PreviewOn&amp;ewCmd2=showHidden" class="btn btn-default">
-                  <i class="fas fa-eye"> </i> Show Hidden
+                  <i class="fas fa-eye">&#160;</i>&#160;Show Hidden
                 </a>
               </xsl:otherwise>
             </xsl:choose>
@@ -707,7 +713,7 @@
         <xsl:text> </xsl:text>
         <xsl:text> </xsl:text>
         <a href="?ewCmd=Normal&amp;pgid={/Page/@id}" class="btn btn-default" id="previewBack">
-          <i class="fas fa-times"> </i> Exit Preview<xsl:text> </xsl:text>
+          <i class="fas fa-times">&#160;</i>&#160;Exit Preview<xsl:text> </xsl:text>
         </a>
       </div>
     </div>

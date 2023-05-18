@@ -16,6 +16,7 @@
   <!-- ############################################ THEME VARIABLES ############################################### -->
 
   <xsl:variable name="themeLayout">layout-header-banner</xsl:variable>
+	
   <xsl:template match="Page" mode="bodyDisplay">
     <xsl:variable name="nav-padding">
       <xsl:if test="$currentPage/DisplayName[@navpad='false'] and not($cartPage)">mt-0</xsl:if>
@@ -32,7 +33,7 @@
       </xsl:if>
       <!--################## HEADER ################## -->
 
-      <a class="sr-only" href="#content">Skip to main content</a>
+      <a class="skip" href="#content">Skip to main content</a>
       <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginTitle" aria-hidden="true">
         <div class="modal-dialog modal-md" role="document">
           <div class="modal-content">

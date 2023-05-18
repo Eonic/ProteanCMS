@@ -75,8 +75,17 @@ Partial Public Class Cms
                 Try
                     Dim cProcessInfo As String = ""
 
+                    'Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    'myCart.GetCart(CartXml.FirstChild)
+                    Dim cShipOptKey As String = "0"
+
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
+                    If (CartXml.SelectSingleNode("Order") IsNot Nothing AndAlso CartXml.SelectSingleNode("Order").Attributes("shippingType") IsNot Nothing) Then
+                        cShipOptKey = CartXml.SelectSingleNode("Order").Attributes("shippingType").Value
+                        myCart.updateGCgetValidShippingOptionsDS(cShipOptKey)
+                    End If
+
 
                     CartXml = updateCartforJSON(CartXml)
 
@@ -268,11 +277,13 @@ Partial Public Class Cms
                     Dim cProcessInfo As String = ""
                     Dim dsShippingOption As DataSet
 
-                    Dim cDestinationCountry As String = ""
+                    Dim cDestinationCountry As String = myCart.moCartConfig("DefaultDeliveryCountry")
                     ' call it from cart
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
+                    Dim promocode As String = ""
+
                     If (jObj IsNot Nothing) Then
                         If jObj("country") <> "" Then
                             cDestinationCountry = jObj("country")
@@ -298,9 +309,14 @@ Partial Public Class Cms
                             nWeight = 0
                         End If
 
+                        If jObj("promocode") IsNot Nothing Then
+                            promocode = jObj("promocode")
+                        Else
+                            promocode = ""
+                        End If
                     End If
 
-                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
+                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, promocode)
 
                     Dim ShippingOptionXml As String = dsShippingOption.GetXml()
                     Dim xmlDoc As New XmlDocument
@@ -358,9 +374,9 @@ Partial Public Class Cms
                     If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
                         RemoveDiscountCode(myApi, jObj)
                         'this will remove discount section from address page in vuemain.js
-                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#1"
+                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#1" & "#" & myCart.mnCartId
                     Else
-                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#0"
+                        cOrderofDeliveryOption = cOrderofDeliveryOption & "#0" & "#" & myCart.mnCartId
                     End If
 
                     Return cOrderofDeliveryOption
@@ -445,15 +461,15 @@ Partial Public Class Cms
                     'add product option
                     myCart.AddProductOption(jObj)
                     'myCart.UpdatePackagingANdDeliveryType()
-                    myCart.GetCart(CartXml.FirstChild)
-                    ''persist cart
+                    'myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
+                    '''persist cart
                     myCart.close()
 
-                    CartXml = updateCartforJSON(CartXml)
+                    'CartXml = updateCartforJSON(CartXml)
 
-                    jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    jsonString = jsonString.Replace("""@", """_")
-                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    'jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    'jsonString = jsonString.Replace("""@", """_")
+                    'jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
 
                 Catch ex As Exception
@@ -464,7 +480,7 @@ Partial Public Class Cms
 
             Public Function UpdatePackagingForRemovingFreeGiftDiscount(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-
+                    myCart.moDiscount.RemoveDiscountCode()
                     'update packaging while removing giftbox promocode
                     myCart.updatePackagingForRemovingFreeGiftDiscount(jObj("CartOrderId"), jObj("AmountToDiscount"))
 
@@ -947,6 +963,38 @@ Partial Public Class Cms
             End Function
 
             ''' <summary>
+            ''' Add Missing order 
+            ''' </summary>
+            ''' <param name="myApi"></param>
+            ''' <param name="jObj"></param>
+            ''' <returns></returns>
+            Public Function UpdateOrderWithPaymentResponse(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim josResult As String = ""
+                    Dim bIsAuthorized As Boolean = False
+                    Dim validGroup = IIf(jObj("validGroup") IsNot Nothing, CStr(jObj("validGroup")), "")
+                    bIsAuthorized = ValidateAPICall(myWeb, validGroup)
+
+                    'If bIsAuthorized = False Then Return "Error -Authorization Failed"
+
+                    'method name UpdateOrderWithPaymentResponse
+                    Dim receiptID = jObj("AuthNumber")
+                    Dim cProviderName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
+                    Dim strConsumerRef = ""
+                    If cProviderName <> "" And receiptID <> 0 Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, cProviderName)
+                        strConsumerRef = oPayProv.Activities.UpdateOrderWithPaymentResponse(receiptID)
+                        josResult = strConsumerRef
+                    End If
+                    Return josResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""))
+                    Return "Error" 'ex.Message
+                End Try
+
+            End Function
+
+            ''' <summary>
             ''' Process New payment
             ''' </summary>
             ''' <param name="myApi"></param>
@@ -999,6 +1047,7 @@ Partial Public Class Cms
                 End Try
 
             End Function
+
 #End Region
 
         End Class

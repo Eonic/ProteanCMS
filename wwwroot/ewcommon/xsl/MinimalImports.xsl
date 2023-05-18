@@ -6,9 +6,9 @@
   <!-- ## FILES REQUIRED FOR EVERY BOOTSTRAP3 SITE  #######################################################   -->
   
   <xsl:import href="Tools/Functions.xsl"/>
-  <xsl:import href="PageLayouts/MinimalLayouts.xsl"/>
+  <xsl:import href="PageLayouts/MinimalLayouts.xsl"/>	
   <xsl:import href="xForms/xForms-bs-mininal.xsl"/>
-  <xsl:import href="Admin/AdminWYSIWYG.xsl"/>
+  <xsl:import href="Admin/AdminWYSIWYG.xsl"/>  
   <xsl:import href="localisation/SystemTranslations.xsl"/>
-  
+
 </xsl:stylesheet>

@@ -135,6 +135,14 @@
     .ptn-edit.over-content {
         margin-bottom: -28px;
         //margin-top:4px;
+        z-index:10;
+    }
+
+    .not-over-content {
+        .ptn-edit.over-content {
+            margin-bottom: 0;
+            //margin-top:4px;
+        }
     }
 
     .ptn-edit > .btn-default,
@@ -279,10 +287,13 @@
         z-index: 5;
         float: right;
         width: 100px;
-        &:hover{z-index:6;}
+
+        &:hover {
+            z-index: 6;
+        }
     }
 
-    
+
 
     .ptn-edit.options.addmodule.droppable-hover {
         border-color: $primary;

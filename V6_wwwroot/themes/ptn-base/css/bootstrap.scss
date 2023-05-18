@@ -1,49 +1,8 @@
 ﻿// scss-docs-start import-stack
 // Configuration
 @import "variables";
-@import "../../../ptn/libs/bs5/scss/functions";
-@import "../../../ptn/libs/bs5/scss/variables";
-@import "../../../ptn/libs/bs5/scss/mixins";
-@import "../../../ptn/libs/bs5/scss/utilities";
 
-// Layout & components
-@import "../../../ptn/libs/bs5/scss/root";
-@import "../../../ptn/libs/bs5/scss/reboot";
-@import "../../../ptn/libs/bs5/scss/type";
-@import "../../../ptn/libs/bs5/scss/images";
-@import "../../../ptn/libs/bs5/scss/containers";
-@import "../../../ptn/libs/bs5/scss/grid";
-@import "../../../ptn/libs/bs5/scss/tables";
-@import "../../../ptn/libs/bs5/scss/forms";
-@import "../../../ptn/libs/bs5/scss/buttons";
-@import "../../../ptn/libs/bs5/scss/transitions";
-@import "../../../ptn/libs/bs5/scss/dropdown";
-@import "../../../ptn/libs/bs5/scss/button-group";
-@import "../../../ptn/libs/bs5/scss/nav";
-@import "../../../ptn/libs/bs5/scss/navbar";
-@import "../../../ptn/libs/bs5/scss/card";
-@import "../../../ptn/libs/bs5/scss/accordion";
-@import "../../../ptn/libs/bs5/scss/breadcrumb";
-@import "../../../ptn/libs/bs5/scss/pagination";
-@import "../../../ptn/libs/bs5/scss/badge";
-@import "../../../ptn/libs/bs5/scss/alert";
-@import "../../../ptn/libs/bs5/scss/progress";
-@import "../../../ptn/libs/bs5/scss/list-group";
-@import "../../../ptn/libs/bs5/scss/close";
-@import "../../../ptn/libs/bs5/scss/toasts";
-@import "../../../ptn/libs/bs5/scss/modal";
-@import "../../../ptn/libs/bs5/scss/tooltip";
-@import "../../../ptn/libs/bs5/scss/popover";
-@import "../../../ptn/libs/bs5/scss/carousel";
-@import "../../../ptn/libs/bs5/scss/spinners";
-@import "../../../ptn/libs/bs5/scss/offcanvas";
-@import "../../../ptn/libs/bs5/scss/placeholders";
-
-// Helpers
-@import "../../../ptn/libs/bs5/scss/helpers";
-
-// Utilities
-@import "../../../ptn/libs/bs5/scss/utilities/api";
+@import "../../../ptn/libs/bs5/scss/bootstrap";
 
 //Protean Modules
 @import "../../../ptn/core/modules/modules";
@@ -54,6 +13,7 @@
 @import "animate.css";
 @import "anim.css";
 @import "variables2";
+@import "accessibility";
 @import "utilities";
 @import "carousels";
 //@import "../layout-templates/utility";
@@ -71,4 +31,3 @@
 @import "forms";
 @import "cart";
 @import "header-nav";
-@import "new";

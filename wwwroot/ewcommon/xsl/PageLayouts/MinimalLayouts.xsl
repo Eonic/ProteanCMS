@@ -3,6 +3,7 @@
 
   <!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
   <xsl:template match="Page" mode="mainLayout">
+	
     <xsl:param name="containerClass"/>
     <xsl:choose>
       <!-- IF QUOTE CMD SHOW QUOTE -->
@@ -13,9 +14,11 @@
       </xsl:when>
       <!-- IF CART CMD SHOW CART -->
       <xsl:when test="Cart[@type='order']/Order/@cmd!=''">
+	
         <div class="container">
           <xsl:apply-templates select="Cart[@type='order']/Order" mode="cartFull"/>
         </div>
+
       </xsl:when>
       <!-- IF GIFT LIST CMD SHOW GIFT LIST -->
       <xsl:when test="Cart[@type='giftlist']/Order/@cmd!=''">
@@ -37,10 +40,12 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- Otherwise show page layout -->
+		 
         <xsl:apply-templates select="." mode="Layout">
           <xsl:with-param name="containerClass" select="$containerClass"/>
         </xsl:apply-templates>
-        <xsl:apply-templates select="." mode="socialBookmarks" />
+
+        <xsl:apply-templates select="." mode="socialBookmarks" />-->
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -685,6 +690,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="moduleBox">
+	  <!--mod box-->
     <xsl:choose>
       <xsl:when test="@linkBox='true'">
         <div id="mod_{@id}" class="module">
@@ -2131,9 +2137,7 @@
           </xsl:if>
           <h3 class="panel-title">
             <!--<i class="fa fa-ellipsis-v">&#160;</i>-->
-            <i class="fa fa-caret-down">
-              <xsl:text> </xsl:text>
-            </i>
+            <i class="fa fa-caret-down">&#160;</i>
             <span class="space">&#160;</span>
             <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
             <xsl:value-of select="@title"/>
@@ -2947,12 +2951,15 @@
            </xsl:otherwise>
         </xsl:choose>
        </xsl:variable>
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
-      <script type="text/javascript">
-        <xsl:text>function initialiseGMaps(){</xsl:text>
-        <xsl:apply-templates select="." mode="initialiseGoogleMap"/>
-        <xsl:text>};</xsl:text>
-      </script>
+
+      	  <xsl:if test="not(following-sibling::Content[@type='Module' and @moduleType='GoogleMapv3'])">
+		  <script type="text/javascript">
+            <xsl:text>function initialiseGMaps(){</xsl:text>
+            <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="initialiseGoogleMap"/>
+            <xsl:text>};</xsl:text>
+          </script>
+		  <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps">&#160;</script>
+	  </xsl:if>
   </xsl:template>
 
 	<xsl:template match="Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]" mode="contentDetailJS">
@@ -8052,26 +8059,45 @@
 
 	<!-- GA4 Ecommerce Events -->
 	<xsl:template match="Page[ContentDetail/Content[@type='Product']]" mode="google-ga4-event">
-		gtag("event", "view_item",
+		gtag("event", "view_item",{
+		currency: "<xsl:value-of select="Cart/@currency"/>",
+		value: <xsl:apply-templates  select="ContentDetail/Content[@type='Product']" mode="PriceNumberic"/>,
+		items:[
 		<xsl:apply-templates select="ContentDetail/Content[@type='Product']" mode="google-ga4-view-item"/>
-		);
+		]
+		});
 	</xsl:template>
 
 
 	<xsl:template match="Content[@type='Product']" mode="google-ga4-view-item">
 		{
-		item_id: "<xsl:value-of select="StockCode/node()"/>",
-		item_name: "<xsl:value-of select="Name/node()"/>",
-		affiliation: "",
-		currency: "$page/Cart/@currency",
-		discount: 0,
-		index: 0,
-		item_brand: "<xsl:value-of select="Manufacturer/node()"/>",
-		price: <xsl:apply-templates  select="." mode="PriceNumberic"/>
+		    item_id: "<xsl:value-of select="StockCode/node()"/>",
+		    item_name: "<xsl:value-of select="Name/node()"/>",
+		    currency: "<xsl:value-of select="$page/Cart/@currency"/>",
+		    discount: 0,
+		    index: 0,
+		    item_brand: "<xsl:value-of select="Manufacturer/node()"/>",
+		    item_category: "<xsl:value-of select="$sectionPage/@name"/>",
+			<xsl:if test="$subSectionPage">
+				item_category2: "<xsl:value-of select="$subSectionPage/@name"/>",
+			</xsl:if>
+		    <xsl:if test="$subSubSectionPage">
+			    item_category3: "<xsl:value-of select="$subSubSectionPage/@name"/>",
+		    </xsl:if>
+		    <xsl:if test="$subSubSubSectionPage">
+			    item_category4: "<xsl:value-of select="$subSubSubSectionPage/@name"/>",
+		    </xsl:if>
+		<xsl:if test="$subSubSubSubSectionPage">
+			item_category5: "<xsl:value-of select="$subSubSubSubSectionPage/@name"/>",
+		</xsl:if>
+		    price: <xsl:apply-templates  select="." mode="PriceNumberic"/>,
+		    item_list_id: "<xsl:value-of select="$page/@id"/>",
+		    item_list_name: "<xsl:value-of select="$currentPage/@name"/>",
+      	    quantity: 1
 		}
-		<!--<xsl:if test="following-sibling()::Item">
+		<xsl:if test="following-sibling::Content">
 			  <xsl:text>,</xsl:text>
-	    </xsl:if>-->
+	    </xsl:if>
 	</xsl:template>
 
 	<xsl:template match="Content" mode="scollerImage">
@@ -12836,7 +12862,7 @@
         </div>
         <xsl:apply-templates select="Content[@type='Review']" mode="displayBrief">
           <xsl:sort select="@publish" order="ascending"/>
-          <xsl:sort select="@update" order="ascending"/>
+			<xsl:sort select="@update" order="ascending"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
@@ -14613,17 +14639,12 @@
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+      <iframe frameborder="0" class="embed-responsive-item" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen="allowfullscreen" >
         <xsl:attribute name="src">
           <xsl:text>//player.vimeo.com/video/</xsl:text>
           <xsl:value-of select="$code"/>
           <!-- Turn all options off by default -->
-          <xsl:text>/?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=0&amp;loop=0</xsl:text>
-          <xsl:if test="Vimeo/@title='true'">&amp;title=1</xsl:if>
-          <xsl:if test="Vimeo/@byline='true'">&amp;byline=1</xsl:if>
-          <xsl:if test="Vimeo/@portrait='true'">&amp;portrait=1</xsl:if>
-          <xsl:if test="Vimeo/@autoplay='true'">&amp;autoplay=1</xsl:if>
-          <xsl:if test="Vimeo/@loop='true'">&amp;loop=1</xsl:if>
+          <xsl:text>&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
         </xsl:attribute>
         <xsl:choose>
           <xsl:when test="@size='Manual'">
@@ -14646,6 +14667,7 @@
         </xsl:choose>
         <xsl:text> </xsl:text>
       </iframe>
+		<script src="https://player.vimeo.com/api/player.js">&#160;</script>
     </div>
   </xsl:template>
 
@@ -15282,7 +15304,8 @@
       <!--  JPlayer  -->
       <xsl:if test="Path/node()!=''">
         <div class="jp-type-single">
-          <div id="jquery_jplayer_{@id}" class="jp-jplayer">&#160;</div>
+          <div id="jquery_jplayer_{@id}" class="jp-jplayer">&#160;
+	  </div>
           <div id="jp_interface_{@id}" class="jp-interface">
             <ul class="jp-controls nav navbar-nav">
               <li>
@@ -15537,7 +15560,7 @@
               <xsl:if test="position()=1">
                 <xsl:attribute name="class">active</xsl:attribute>
               </xsl:if>
-              <xsl:text></xsl:text>
+              <xsl:text> </xsl:text>
             </li>
           </xsl:for-each>
         </ol>
@@ -15639,7 +15662,7 @@
               <xsl:if test="position()=1">
                 <xsl:attribute name="class">active</xsl:attribute>
               </xsl:if>
-              <xsl:text></xsl:text>
+              <xsl:text> </xsl:text>
             </li>
           </xsl:for-each>
         </ol>

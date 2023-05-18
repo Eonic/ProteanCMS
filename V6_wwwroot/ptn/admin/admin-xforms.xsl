@@ -69,10 +69,12 @@
                   <xsl:apply-templates select="submit" mode="xform"/>
                   <div class="footer-status">
                     <span>
-                      <i class="fas fa-eye"> </i> Live
+                      <i class="fas fa-eye">
+						  <xsl:text> </xsl:text>
+					</i> Live
                     </span>
                     <span class="text-muted hidden">
-                      <i class="fas fa-eye-slash"> </i> Hidden
+                      <i class="fas fa-eye-slash"><xsl:text> </xsl:text></i> Hidden
                     </span>
                   </div>
                 </div>
@@ -265,7 +267,7 @@
 
 
 	<!-- Template for login, pick page-->
-	<xsl:template match="Content[@name='UserLogon' or @name='EditPageLayout' or @name='FindRelatedContent']" mode="xform">
+	<xsl:template match="Content[@name='UserLogon' or @name='EditPageLayout' or @name='FindRelatedContent' or @name='FindContentToRelate']" mode="xform">
 		<form method="{model/submission/@method}" action=""  novalidate="novalidate">
 			<xsl:attribute name="class">
 				<xsl:text>xform needs-validation</xsl:text>
@@ -2787,7 +2789,7 @@
     <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-2">
       <button name="{$ref}" value="{value/node()}" class="{$isSelected}">
         <!--<img src="{$imageURL}" class="card-img-top"/>-->
-        <i class="fas fa-3x {$icon}"> </i>
+        <i class="fas fa-3x {$icon}">&#160;</i>
         <h5>
           <xsl:value-of select="label/node()"/>
         </h5>

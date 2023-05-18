@@ -532,6 +532,43 @@
       </div>
     </div>
   </xsl:template>
+  
+  	<xsl:template match="Page[@ewCmd='RunTests']" mode="SetupBody">
+		<div id="mainLayout">
+			<div class="adminTemplate" id="template_1_Column">
+				<div id="header">
+					<h1>Run Tests</h1>
+				</div>
+				<div class="content">
+					<xsl:choose>
+						<xsl:when test="/Page/@Step=1">
+							<h3>Running</h3>
+							<xsl:call-template name="ProgressResponses"/>
+						</xsl:when>
+						<xsl:when test="/Page/@Step=2">
+							<h3>Error</h3>
+							An error occured.
+							<xsl:call-template name="ProgressResponses"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<p>
+								Test various features of the ProteanCMS Platform. <br/><br/><br/>
+								<strong>Are you sure you wish to continue?</strong>
+							</p>
+							<a href="/ptn/setup/default.ashx" class="btn btn-default">
+								<i class="fa fa-times">&#160;</i>&#160;
+								Cancel
+							</a>
+							&#160;&#160;&#160;
+							<a href="/ptn/setup/default.ashx?ewCmd=RunTests&amp;ewCmd2=Do"  class="btn btn-danger">
+								<i class="fa fa-warning">&#160;</i>&#160;Run Tests
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
 	
 	<xsl:template match="Page[@ewCmd='ShipLoc']" mode="SetupBody">
 		<div id="mainLayout">

@@ -1042,14 +1042,19 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function xFrmThemeSettings(ByVal ConfigType As String) As XmlElement
+            Public Function xFrmThemeSettings(ByVal ConfigPath As String) As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim oFsh As fsHelper
-                Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
+                Dim themePath As String = "/themes/"
+                If goConfig("cssFramework") <> "bs5" Then
+                    themePath = "/ewThemes/"
+                End If
+                Dim xFormPath As String = themePath & ConfigPath & ".xml"
                 Try
                     oFsh = New fsHelper
                     oFsh.open(moPageXML)
+
 
                     Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/theme")
                     Dim currentTheme As String = moThemeConfig("CurrentTheme")
@@ -1071,131 +1076,131 @@ Partial Public Class Cms
                         'all of the required config settings
 
                         Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
-                            oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
-                            Dim oCgfSectName As String = "protean/" & oTemplateInstance.FirstChild.Name
-                            Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
-                            cProcessInfo = "Getting Section Name:" & oCgfSectName
-                            'Get the current settings
-                            MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                        oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
+                        Dim oCgfSectName As String = "protean/" & oTemplateInstance.FirstChild.Name
+                        Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
+                        cProcessInfo = "Getting Section Name:" & oCgfSectName
+                        'Get the current settings
+                        MyBase.Instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
 
 
 
-                            Dim currentPresetName As String = ""
-                            Dim presetSetting As XmlElement = MyBase.Instance.SelectSingleNode("theme/add[@key='" & currentTheme & ".ThemePreset']")
-                            If Not presetSetting Is Nothing Then
-                                currentPresetName = presetSetting.GetAttribute("value")
-                            End If
+                        Dim currentPresetName As String = ""
+                        Dim presetSetting As XmlElement = MyBase.Instance.SelectSingleNode("theme/add[@key='" & currentTheme & ".ThemePreset']")
+                        If Not presetSetting Is Nothing Then
+                            currentPresetName = presetSetting.GetAttribute("value")
+                        End If
 
-                            If myWeb.moRequest("ThemePreset") <> currentPresetName Or currentPresetName = "" Then
-                                'replace Instance Elements WITH VALUES IN NAMED THEME PRESET FILE.
+                        If myWeb.moRequest("ThemePreset") <> currentPresetName Or currentPresetName = "" Then
+                            'replace Instance Elements WITH VALUES IN NAMED THEME PRESET FILE.
 
-                                If IO.File.Exists(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml")) Then
+                            If IO.File.Exists(goServer.MapPath(themePath & "/" & currentTheme & "/themeManifest.xml")) Then
 
 
 
-                                    Dim newXml As New XmlDocument
-                                    newXml.PreserveWhitespace = True
-                                    newXml.Load(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml"))
-                                    Dim oElmt2 As XmlElement
-                                    For Each oElmt2 In newXml.SelectNodes("/Theme/Presets/Preset[@name='" & myWeb.moRequest("ThemePreset") & "']/add")
-                                        '<add key="Bootswatch.Layout" value="TopNavSideSub"/>
-                                        Dim changeElmt As XmlElement = MyBase.Instance.SelectSingleNode("descendant-or-self::add[@key='" & oElmt2.GetAttribute("key") & "']")
-                                        If Not changeElmt Is Nothing Then
-                                            changeElmt.SetAttribute("value", oElmt2.GetAttribute("value"))
-                                        End If
-                                    Next
-                                End If
-                            End If
-
-                            Dim oTemplateElmt As XmlElement
-                            Dim oElmt As XmlElement
-                            Dim Key As String
-                            Dim ConfigSectionName As String
-                            Dim ConfigSection As System.Collections.Specialized.NameValueCollection
-
-                            For Each oTemplateElmt In oTemplateInstance.SelectNodes("*/add")
-                                ConfigSectionName = oTemplateElmt.ParentNode.Name
-                                ConfigSection = WebConfigurationManager.GetWebApplicationSection("protean/" & ConfigSectionName)
-                                Key = oTemplateElmt.GetAttribute("key")
-
-                                oElmt = MyBase.Instance.SelectSingleNode(ConfigSectionName & "/add[@key='" & Key & "']")
-                                'lets not write an empty value if inherited from machine level web.config
-                                If Not (ConfigSection(Key) <> "" And oTemplateElmt.GetAttribute("value") = "") Then
-                                    If oElmt Is Nothing Then
-                                        oElmt = moPageXML.CreateElement("add")
-                                        oElmt.SetAttribute("key", Key)
-                                        oElmt.SetAttribute("value", oTemplateElmt.GetAttribute("value"))
-                                        MyBase.Instance.SelectSingleNode(ConfigSectionName).AppendChild(oElmt)
+                                Dim newXml As New XmlDocument
+                                newXml.PreserveWhitespace = True
+                                newXml.Load(goServer.MapPath(themePath & "/" & currentTheme & "/themeManifest.xml"))
+                                Dim oElmt2 As XmlElement
+                                For Each oElmt2 In newXml.SelectNodes("/Theme/Presets/Preset[@name='" & myWeb.moRequest("ThemePreset") & "']/add")
+                                    '<add key="Bootswatch.Layout" value="TopNavSideSub"/>
+                                    Dim changeElmt As XmlElement = MyBase.Instance.SelectSingleNode("descendant-or-self::add[@key='" & oElmt2.GetAttribute("key") & "']")
+                                    If Not changeElmt Is Nothing Then
+                                        changeElmt.SetAttribute("value", oElmt2.GetAttribute("value"))
                                     End If
+                                Next
+                            End If
+                        End If
+
+                        Dim oTemplateElmt As XmlElement
+                        Dim oElmt As XmlElement
+                        Dim Key As String
+                        Dim ConfigSectionName As String
+                        Dim ConfigSection As System.Collections.Specialized.NameValueCollection
+
+                        For Each oTemplateElmt In oTemplateInstance.SelectNodes("*/add")
+                            ConfigSectionName = oTemplateElmt.ParentNode.Name
+                            ConfigSection = WebConfigurationManager.GetWebApplicationSection("protean/" & ConfigSectionName)
+                            Key = oTemplateElmt.GetAttribute("key")
+
+                            oElmt = MyBase.Instance.SelectSingleNode(ConfigSectionName & "/add[@key='" & Key & "']")
+                            'lets not write an empty value if inherited from machine level web.config
+                            If Not (ConfigSection(Key) <> "" And oTemplateElmt.GetAttribute("value") = "") Then
+                                If oElmt Is Nothing Then
+                                    oElmt = moPageXML.CreateElement("add")
+                                    oElmt.SetAttribute("key", Key)
+                                    oElmt.SetAttribute("value", oTemplateElmt.GetAttribute("value"))
+                                    MyBase.Instance.SelectSingleNode(ConfigSectionName).AppendChild(oElmt)
                                 End If
-                            Next
+                            End If
+                        Next
 
-                            If MyBase.isSubmitted Then
+                        If MyBase.isSubmitted Then
 
-                                'If myWeb.moRequest("ThemePreset") <> currentPresetName And Not (myWeb.moSession("presetView") = "true") Then
-                                '    MyBase.valid = False
-                                '    myWeb.moSession("presetView") = "true"
-                                'Else
-                                '    myWeb.moSession("presetView") = Nothing
-                                '    MyBase.updateInstanceFromRequest()
-                                '    MyBase.validate()
-                                'End If
+                            'If myWeb.moRequest("ThemePreset") <> currentPresetName And Not (myWeb.moSession("presetView") = "true") Then
+                            '    MyBase.valid = False
+                            '    myWeb.moSession("presetView") = "true"
+                            'Else
+                            '    myWeb.moSession("presetView") = Nothing
+                            '    MyBase.updateInstanceFromRequest()
+                            '    MyBase.validate()
+                            'End If
 
-                                MyBase.updateInstanceFromRequest()
-                                MyBase.validate()
+                            MyBase.updateInstanceFromRequest()
+                            MyBase.validate()
 
 
-                                If MyBase.valid Then
+                            If MyBase.valid Then
 
-                                    'check not read only
-                                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(goServer.MapPath("/protean.theme.config"))
-                                    oFileInfo.IsReadOnly = False
+                                'check not read only
+                                Dim oFileInfo As IO.FileInfo = New IO.FileInfo(goServer.MapPath("/protean.theme.config"))
+                                oFileInfo.IsReadOnly = False
 
-                                    oCgfSect.SectionInformation.RestartOnExternalChanges = False
-                                    oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
-                                    oCfg.Save()
+                                oCgfSect.SectionInformation.RestartOnExternalChanges = False
+                                oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
+                                oCfg.Save()
 
-                                    If myWeb.moRequest("newPresetName") <> "" Then
+                                If myWeb.moRequest("newPresetName") <> "" Then
 
-                                        If IO.File.Exists(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml")) Then
-                                            Dim newXml As New XmlDocument
-                                            newXml.PreserveWhitespace = True
-                                            newXml.Load(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml"))
-                                            Dim oElmt2 As XmlElement
-                                            Dim addNew As Boolean = True
-                                            'update existing
-                                            For Each oElmt2 In newXml.SelectNodes("/Theme/Presets/Preset[@name='" & myWeb.moRequest("newPresetName") & "']")
-                                                oElmt2.InnerXml = Instance.InnerXml
-                                                addNew = False
+                                    If IO.File.Exists(goServer.MapPath(themePath & currentTheme & "/themeManifest.xml")) Then
+                                        Dim newXml As New XmlDocument
+                                        newXml.PreserveWhitespace = True
+                                        newXml.Load(goServer.MapPath(themePath & currentTheme & "/themeManifest.xml"))
+                                        Dim oElmt2 As XmlElement
+                                        Dim addNew As Boolean = True
+                                        'update existing
+                                        For Each oElmt2 In newXml.SelectNodes("/Theme/Presets/Preset[@name='" & myWeb.moRequest("newPresetName") & "']")
+                                            oElmt2.InnerXml = Instance.InnerXml
+                                            addNew = False
+                                        Next
+                                        If addNew Then
+                                            Dim PresetsNode As XmlElement = newXml.SelectSingleNode("/Theme/Presets")
+                                            Dim NewPreset As XmlElement = PresetsNode.OwnerDocument.CreateElement("Preset")
+                                            NewPreset.SetAttribute("name", myWeb.moRequest("newPresetName"))
+                                            Dim matchingElmt As XmlElement
+                                            For Each matchingElmt In Instance.SelectNodes("descendant-or-self::add[starts-with(@key,'" & currentTheme & ".')]")
+                                                If matchingElmt.GetAttribute("key") = currentTheme & ".ThemePreset" Then
+                                                    matchingElmt.SetAttribute("value", myWeb.moRequest("newPresetName"))
+                                                End If
+                                                Protean.Tools.Xml.AddExistingNode(NewPreset, matchingElmt)
                                             Next
-                                            If addNew Then
-                                                Dim PresetsNode As XmlElement = newXml.SelectSingleNode("/Theme/Presets")
-                                                Dim NewPreset As XmlElement = PresetsNode.OwnerDocument.CreateElement("Preset")
-                                                NewPreset.SetAttribute("name", myWeb.moRequest("newPresetName"))
-                                                Dim matchingElmt As XmlElement
-                                                For Each matchingElmt In Instance.SelectNodes("descendant-or-self::add[starts-with(@key,'" & currentTheme & ".')]")
-                                                    If matchingElmt.GetAttribute("key") = currentTheme & ".ThemePreset" Then
-                                                        matchingElmt.SetAttribute("value", myWeb.moRequest("newPresetName"))
-                                                    End If
-                                                    Protean.Tools.Xml.AddExistingNode(NewPreset, matchingElmt)
-                                                Next
-                                                PresetsNode.AppendChild(NewPreset)
-                                            End If
-                                            'check not read only
-                                            Dim oFileInfo2 As IO.FileInfo = New IO.FileInfo(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml"))
-                                            oFileInfo2.IsReadOnly = False
-                                            newXml.Save(goServer.MapPath("/ewthemes/" & currentTheme & "/themeManifest.xml"))
+                                            PresetsNode.AppendChild(NewPreset)
                                         End If
-
-                                        MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "New Preset Saved")
-                                    Else
-                                        MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "Settings Saved")
+                                        'check not read only
+                                        Dim oFileInfo2 As IO.FileInfo = New IO.FileInfo(goServer.MapPath(themePath & currentTheme & "/themeManifest.xml"))
+                                        oFileInfo2.IsReadOnly = False
+                                        newXml.Save(goServer.MapPath(themePath & currentTheme & "/themeManifest.xml"))
                                     End If
-                                Else
-                                    MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "Form Invalid:" & MyBase.validationError)
 
+                                    MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "New Preset Saved")
+                                Else
+                                    MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "Settings Saved")
                                 End If
+                            Else
+                                MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, "Form Invalid:" & MyBase.validationError)
+
                             End If
+                        End If
 
                         endImp()
                         MyBase.addValues()
@@ -3119,7 +3124,6 @@ Partial Public Class Cms
                                     moDbHelper.setContentLocation(pgid, id, True, bCascade, )
                                 End If
 
-
                                 editResult = dbHelper.ActivityType.ContentEdited
 
                                 If updatedVersionId <> id Then
@@ -3460,6 +3464,7 @@ Partial Public Class Cms
                                     nRelId = relateCmdArr(1)
                                     myWeb.moDbHelper.RemoveContentRelation(nParId, nRelId)
                                     bResult = True
+
                                     Exit For
                                 ElseIf myItem.contains("RelateAdd") Then
 
@@ -4243,8 +4248,13 @@ Partial Public Class Cms
                 Dim cProcessInfo As String = ""
                 Try
                     MyBase.NewFrm("EditImage")
+                    If cImgHtml.Contains("</img>") Then
+                        'if image tag is closed properly for XHTML
+                        MyBase.Instance.InnerXml = cImgHtml.Replace("&", "&amp;")
+                    Else
+                        MyBase.Instance.InnerXml = cImgHtml.Replace(""">", """/>").Replace("&", "&amp;")
+                    End If
 
-                    MyBase.Instance.InnerXml = cImgHtml.Replace(""">", """/>").Replace("&", "&amp;")
                     If cClassName = "" Then
                         oElmt = MyBase.Instance.FirstChild
                         cClassName = oElmt.GetAttribute("class")
@@ -6301,7 +6311,7 @@ Partial Public Class Cms
                                         cartElement.AppendChild(carrierElmt)
                                     End If
                                     Dim CustomerEmailShippedTemplatePath As String = IIf(moCartConfig("CustomerEmailShippedTemplatePath") <> "", moCartConfig("CustomerEmailShippedTemplatePath"), "/xsl/Cart/mailOrderCustomerDelivery.xsl")
-                                    cProcessInfo = oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText), "Order Shipped")
+                                    cProcessInfo = oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText), "Order Shipped",,,,, moCartConfig("MerchantEmailShippedBcc"))
 
                                     oMsg = Nothing
                                 End If
@@ -7079,6 +7089,128 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            'New method added for new form for shipping group for product discounts.
+            Public Function xFrmProductShippingGroupRelations(ByVal id As Long, ByVal dname As String) As XmlElement
+
+                Dim oFrmElmt As XmlElement
+                Dim oFrmGrp1 As XmlElement
+                Dim oFrmGrp2 As XmlElement
+                Dim oFrmGrp3 As XmlElement
+                Dim oElmt2 As XmlElement
+                Dim oElmt4 As XmlElement
+                Dim oElmt5 As XmlElement
+                Dim sSql As String
+                Dim bDeny As Boolean
+                Dim cProcessInfo As String = ""
+                Dim cDenyFilter As String = ""
+                Try
+
+                    MyBase.NewFrm("EditShippingDirRelations")
+
+                    If moDbHelper.checkTableColumnExists("tblCartShippingProductCategoryRelations", "nRuleType") Then
+                        bDeny = True
+                        cDenyFilter = " and nRuleType <> 2"
+                    End If
+
+
+                    MyBase.submission("EditInputPageRights", "", "post")
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "EditDirs", "3col", "Shipping Group Relations for Shipping Method " & dname)
+
+                    oFrmGrp1 = MyBase.addGroup(oFrmElmt, "AllObjects", "", "Select the shipping groups you want to have access to this shipping method")
+                    MyBase.addNote(oFrmGrp1, xForm.noteTypes.Hint, "You can select multiple items by holding down CRTL whilse clicking the names")
+
+                    'add the buttons so we can test for submission
+                    oFrmGrp2 = MyBase.addGroup(oFrmElmt, "EditDirs", "DirButtons", "Buttons")
+                    MyBase.addSubmit(oFrmGrp2, "AddSelected", "Include Selected", "", "PermissionButtons btn-allow")
+                    If bDeny Then
+                        MyBase.addSubmit(oFrmGrp2, "DenySelected", "Exclude Selected", "", "PermissionButtons btn-deny")
+                    End If
+                    MyBase.addSubmit(oFrmGrp2, "RemoveSelected", "Remove Selected", "", "PermissionButtons btn-remove")
+
+                    Select Case MyBase.getSubmitted
+                        Case "AddSelected"
+                            If goRequest("Groups") <> "" Then
+                                moDbHelper.saveProductShippingGroupDirRelation(id, goRequest("Groups"))
+                            End If
+
+                        Case "DenySelected"
+                            If bDeny Then
+                                If goRequest("Groups") <> "" Then
+                                    moDbHelper.saveProductShippingGroupDirRelation(id, goRequest("Groups"), True, dbHelper.PermissionLevel.Denied)
+                                End If
+
+                            End If
+                        Case "RemoveSelected"
+                            moDbHelper.saveProductShippingGroupDirRelation(id, goRequest("Items"), False)
+                    End Select
+
+                    oElmt2 = MyBase.addSelect(oFrmGrp1, "Groups", False, "Shipping Groups", "scroll_10", xForm.ApperanceTypes.Minimal)
+                    'Dim nxxx As Integer = moDbhelper.exeProcessSQLScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " & id & ") AND (nDirId = 0)")
+                    If Not moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " & id & ") AND (nDirId = 0)") > 0 Then
+                        MyBase.addOption(oElmt2, "<<All Users>>", 0)
+                    End If
+                    sSql = "SELECT nCatKey as value, cCatName as name FROM tblCartProductCategories WHERE (cCatSchemaName = N'Shipping') AND" &
+                    " (((SELECT nShipProdCatRelKey" &
+                    " FROM tblCartShippingProductCategoryRelations" &
+                    " WHERE (nShipOptId  = " & id & ") AND (nCatId = tblCartProductCategories.nCatKey))) IS NULL)" &
+                    " ORDER BY cCatName"
+
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    End Using
+                    'oElmt2 = MyBase.addSelect(oFrmGrp1, "Roles", False, "User Roles", "scroll_10", xForm.ApperanceTypes.Minimal)
+
+                    'sSql = "SELECT nDirKey as value, cDirName as name FROM tblDirectory WHERE (cDirSchema = N'Role') AND" &
+                    '" (((SELECT nCartShippingPermissionKey" &
+                    '" FROM tblCartShippingPermission" &
+                    '" WHERE (nShippingMethodId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
+                    '"ORDER BY cDirName"
+
+                    'Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                    '    MyBase.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value")
+                    'End Using
+
+
+                    oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All Groups with include/exclude for Shipping Method")
+                    'MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
+
+                    oElmt4 = MyBase.addSelect(oFrmGrp3, "Items", False, "Included", "scroll_10", xForm.ApperanceTypes.Minimal)
+
+
+                    sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " &
+                    "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Users>>' ELSE tblCartProductCategories.cCatName END AS name" &
+                    " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" &
+                    " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" &
+                    " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " & id & ")" & cDenyFilter & " ORDER BY cCatName"
+
+                    Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                        MyBase.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value")
+                    End Using
+                    If bDeny Then
+
+                        oElmt5 = MyBase.addSelect(oFrmGrp3, "Items", False, "Excluded", "scroll_10", xForm.ApperanceTypes.Minimal)
+
+                        sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " &
+                    "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Users>>' ELSE tblCartProductCategories.cCatName END AS name" &
+                    " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" &
+                    " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" &
+                        " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " & id & ") and nRuleType = 2 ORDER BY cCatName"
+                        Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql) 'done by sonali at 12/7/22
+                            MyBase.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value")
+                        End Using
+
+                    End If
+
+                    MyBase.Instance.InnerXml = "<Dirs/>"
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmProductShippingGroupRelations", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
             Public Function xFrmEditDirectoryContact(Optional ByVal id As Long = 0, Optional ByVal nUID As Integer = 0, Optional xFormPath As String = "/xforms/directory/UserContact.xml") As XmlElement
                 Dim cProcessInfo As String = ""
                 Try
@@ -7777,6 +7909,11 @@ Partial Public Class Cms
 
                     MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
                     MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
+
+                    Dim oSkipPay As XmlElement = MyBase.addSelect(oFrmElmt, "skipPayment", True, "", "", ApperanceTypes.Full)
+                    MyBase.addOption(oSkipPay, "Renew Without Payment", "yes")
+                    'MyBase.addValue(oSkipPay, "no")
+
                     Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
                     MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
                     MyBase.addValue(oSelElmt, "yes")
@@ -7794,17 +7931,20 @@ Partial Public Class Cms
                             Dim bEmailClient As Boolean = False
                             If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
                             Dim RenewResponse As String
-                            RenewResponse = oSub.RenewSubscription(nSubscriptionId, bEmailClient)
-                            If RenewResponse = "Success" Then
-                                MyBase.valid = True
-                            Else
-                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Renewal Payment Failed")
-                                MyBase.valid = False
-                            End If
+                            Dim skipPayment As Boolean = False
+                            If myWeb.moRequest("skipPayment") = "yes" Then skipPayment = True
 
-                            Return MyBase.moXformElmt
+                            RenewResponse = oSub.RenewSubscription(nSubscriptionId, bEmailClient, skipPayment)
+                                If RenewResponse = "Success" Then
+                                    MyBase.valid = True
+                                Else
+                                    MyBase.addNote(oFrmElmt, noteTypes.Alert, RenewResponse)
+                                    MyBase.valid = False
+                                End If
+
+                                Return MyBase.moXformElmt
+                            End If
                         End If
-                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
@@ -9261,6 +9401,7 @@ Partial Public Class Cms
                     Dim cDefinitionName As String = ""
                     Dim cContentValueXpath As String = ""
                     Dim bBriefNotDetail As String = ""
+                    Dim bProductRefForSKU As String = ""
 
                     Dim sSqlcheck As String = ""
                     Dim lookupsSingleDataset As DataSet
@@ -9276,6 +9417,7 @@ Partial Public Class Cms
                             cDefinitionName = lookupsSingleDataset.Tables(0).Rows(0)("cDefinitionName").ToString
                             cContentValueXpath = lookupsSingleDataset.Tables(0).Rows(0)("cContentValueXpath").ToString
                             bBriefNotDetail = lookupsSingleDataset.Tables(0).Rows(0)("bBriefNotDetail").ToString
+                            bProductRefForSKU = lookupsSingleDataset.Tables(0).Rows(0)("bProductRefForSKU").ToString
 
                         End If
                     End If
@@ -9283,9 +9425,9 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditProductGroup")
                     If indexId > 0 Then
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType>" & nContentIndexDataType & "</nContentIndexDataType><cContentSchemaName>" & cContentSchemaName.Trim() & "</cContentSchemaName><cDefinitionName>" & cDefinitionName.Trim() & "</cDefinitionName><cContentValueXpath>" & cContentValueXpath.Trim() & "</cContentValueXpath><bBriefNotDetail>" & bBriefNotDetail & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" & bProductRefForSKU & "</bProductRefForSKU></tblContentIndexDef>"
                     Else
-                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/></tblContentIndexDef>"
+                        MyBase.Instance.InnerXml = "<tblContentIndexDef><nContentIndexDefKey/><nContentIndexDataType/><cContentSchemaName/><cDefinitionName/><cContentValueXpath/><bBriefNotDetail>" & "0" & "</bBriefNotDetail><nKeywordGroupName/><nAuditId/><bProductRefForSKU>" & "0" & "</bProductRefForSKU> </tblContentIndexDef>"
                     End If
 
                     If indexId > 0 Then
@@ -9322,10 +9464,16 @@ Partial Public Class Cms
                     MyBase.addInput(oGrp1Elmt, "cContentValueXpath", True, "XPath")
                     MyBase.addBind("cContentValueXpath", "tblContentIndexDef/cContentValueXpath", "true()")
 
-                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
+                    oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bProductRefForSKU", True, "Parent Ref", ApperanceTypes.Minimal)
                     MyBase.addOption(oSelElmt, "Yes", "1")
                     MyBase.addOption(oSelElmt, "No", "0",)
-                    MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
+                    MyBase.addBind("bProductRefForSKU", "tblContentIndexDef/bProductRefForSKU", "false()")
+
+
+                    'oSelElmt = MyBase.addSelect1(oGrp1Elmt, "bBriefNotDetail", True, "Brief Not Detail", "hidden", ApperanceTypes.Minimal)
+                    'MyBase.addOption(oSelElmt, "Yes", "1")
+                    'MyBase.addOption(oSelElmt, "No", "0",)
+                    'MyBase.addBind("bBriefNotDetail", "tblContentIndexDef/bBriefNotDetail", "false()")
 
                     MyBase.addInput(oGrp1Elmt, "nKeywordGroupName", True, "nKeywordGroupName", "hidden")
                     MyBase.addBind("nKeywordGroupName", "tblContentIndexDef/nKeywordGroupName")
@@ -9925,10 +10073,17 @@ Partial Public Class Cms
 
                             Dim msgHtml As String = msgNode.InnerXml
 
+
+                            Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
+
+
+                            Dim SettlementDate As Date = CDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText)
+                            SettlementDate = DateAdd(DateInterval.Day, CInt(moCartConfig("SettlementDays") * -1), SettlementDate)
+
                             msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText)
                             msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementID"))
                             msgHtml = msgHtml.Replace("{PaymentDue}", oCartListElmt.GetAttribute("payableAmount"))
-                            msgHtml = msgHtml.Replace("{PaymentDueDate}", CDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText).ToString("dd MMM yyyy"))
+                            msgHtml = msgHtml.Replace("{PaymentDueDate}", SettlementDate.ToString("dd MMM yyyy"))
                             msgHtml = msgHtml.Replace("{CourseName}", oCartListElmt.SelectSingleNode("Item[1]/Name").InnerText)
 
                             msgNode.InnerXml = msgHtml

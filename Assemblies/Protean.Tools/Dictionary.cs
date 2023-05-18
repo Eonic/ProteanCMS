@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-
+using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
+using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
 namespace Protean.Tools
 {
     public static class Dictionary
     {
+
         public enum Dimension
         {
             Key = 0,
@@ -14,18 +14,20 @@ namespace Protean.Tools
         }
 
         /// <summary>
-    ///     Creates a hashtable based on a colon and comma separated list of key/value string pairs.
-    /// </summary>
-    /// <param name="cCSVString">Format is "key1:value1,key2:value2,key3:value3 etc.</param>
-    /// <returns>Hashtable</returns>
-    /// <remarks></remarks>
+        ///     Creates a hashtable based on a colon and comma separated list of key/value string pairs.
+        /// </summary>
+        /// <param name="cCSVString">Format is "key1:value1,key2:value2,key3:value3 etc.</param>
+        /// <returns>Hashtable</returns>
+        /// <remarks></remarks>
         public static Hashtable getSimpleHashTable(string cCSVString)
         {
+
             try
             {
                 var hTable = new Hashtable();
-                var cArray = cCSVString.Trim(',').Split(',');
+                string[] cArray = cCSVString.Trim(',').Split(',');
                 string[] cItemSplit;
+
                 foreach (string cItem in cArray)
                 {
                     cItemSplit = cItem.Split(':');
@@ -37,30 +39,36 @@ namespace Protean.Tools
 
                 return hTable;
             }
+
             catch (Exception ex)
             {
+                ex = null;
                 return new Hashtable();
             }
+
         }
 
         /// <summary>
-    ///    Creates a CSV from a hashtable.
-    ///    If the key/value cannot be converted to a string, then this will fail.
-    ///    If the key/value contains the separator then it will be removed.
-    ///    
-    /// </summary>
-    /// <param name="hashTableToConvert">The hashtable to convert</param>
-    /// <param name="dimension">Determines whether to use the keys or values in the list </param>
-    /// <param name="separator">The separator character</param>
-    /// <returns>A CSV list of the hastable key or values</returns>
-    /// <remarks></remarks>
+        ///    Creates a CSV from a hashtable.
+        ///    If the key/value cannot be converted to a string, then this will fail.
+        ///    If the key/value contains the separator then it will be removed.
+        ///    
+        /// </summary>
+        /// <param name="hashTableToConvert">The hashtable to convert</param>
+        /// <param name="dimension">Determines whether to use the keys or values in the list </param>
+        /// <param name="separator">The separator character</param>
+        /// <returns>A CSV list of the hastable key or values</returns>
+        /// <remarks></remarks>
         public static string hashtableToCSV(ref Hashtable hashTableToConvert, Dimension dimension = Dimension.Value, char separator = ',')
         {
+
             string csvList = "";
             try
             {
+
                 foreach (DictionaryEntry Item in hashTableToConvert)
                 {
+
                     if (!string.IsNullOrEmpty(csvList))
                         csvList += Conversions.ToString(separator);
                     switch (dimension)
@@ -70,21 +78,23 @@ namespace Protean.Tools
                                 csvList += Strings.Replace(Conversions.ToString(Item.Key), Conversions.ToString(separator), "");
                                 break;
                             }
-
                         case Dimension.Value:
                             {
                                 csvList += Strings.Replace(Conversions.ToString(Item.Value), Conversions.ToString(separator), "");
                                 break;
                             }
                     }
+
                 }
 
                 return csvList;
             }
+
             catch (Exception ex)
             {
                 return "";
             }
         }
+
     }
 }

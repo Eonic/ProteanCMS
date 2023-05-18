@@ -413,7 +413,8 @@
             </i><xsl:text> </xsl:text>Back to Admin
           </a>
         </div>
-        <div class="terminus"> </div>
+        <div class="terminus">
+			<xsl:text> </xsl:text> </div>
       </div>
     </div>
   </xsl:template>
@@ -3613,7 +3614,7 @@
 									<xsl:text> </xsl:text>
 								</i> Save Locations
 							</button>
-							<div class="clearfix">&#160;</div>
+							<div class="clearfix">&#160; </div>
 						</div>
 						<ul id="MenuTree" class="list-group">
 							<xsl:apply-templates select="Menu/MenuItem" mode="LocateContent">
@@ -3629,7 +3630,7 @@
 									<xsl:text> </xsl:text>
 								</i> Save Locations
 							</button>
-							<div class="clearfix">&#160;</div>
+							<div class="clearfix">&#160; </div>
 						</div>
 					</div>
 				</div>
@@ -3830,28 +3831,17 @@
             <input type="hidden" name="id" value="{ContentDetail/RelatedResults/@nParentID}"/>
             <input type="hidden" name="type" value="{ContentDetail/RelatedResults/@cSchemaName}"/>
             <input type="hidden" name="redirect" value="{/Page/Request/Form/Item[@name='redirect']/node()}"/>
-            <div class="panel-heading">
-              <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-primary btn-xs pull-right">
-                <i class="fa fa-check fa-white">
-                  <xsl:text> </xsl:text>
-                </i> Check All
-              </button>
-              <xsl:text> </xsl:text>
-              <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-primary btn-xs pull-right">
-                <i class="fa fa-share fa-white">
-                  <xsl:text> </xsl:text>
-                </i> Uncheck All
-              </button>
+            <div class="panel-heading">             
               <h3 class="panel-title">Search Results</h3>
             </div>
 
             <table cellpadding="0" cellspacing="1" class="table">
               <tbody>
                 <tr>
-                  <th>
+                  <th colspan="4">
                     <xsl:choose>
                       <xsl:when test="ContentDetail/RelatedResults/Content">
-                        <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success principle">
+                        <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success pull-right">
                           <i class="fa fa-plus fa-white">
                             <xsl:text> </xsl:text>
                           </i><xsl:text> </xsl:text>Add
@@ -3869,7 +3859,33 @@
                 <tr>
                   <th>Name</th>
                   <th>Publish Date</th>
-                  <th>Tick to Relate</th>
+                  <th>Tick to Relate<br/>
+				   <button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-sm btn-success">
+                        <i class="fa fa-check fa-white">
+                          <xsl:text> </xsl:text>
+                        </i> All
+                      </button>
+                      <xsl:text> </xsl:text>
+                      <button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.list)" class="btn btn-sm  btn-warning">
+                        <i class="fa fa-close fa-white">
+                          <xsl:text> </xsl:text>
+                        </i> All
+                      </button>
+				  </th>
+
+					<th>Tick to UnRelate<br/>
+					<button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.unrelate)" class="btn btn-sm btn-success">
+						<i class="fa fa-check fa-white">
+							<xsl:text> </xsl:text>
+						</i> All
+					</button>
+					<xsl:text> </xsl:text>
+					<button type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.myform.unrelate)" class="btn btn-sm btn-warning">
+						<i class="fa fa-close fa-white">
+							<xsl:text> </xsl:text>
+						</i> All
+					</button>
+				</th>
                 </tr>
                 <tr>
                   <xsl:for-each select="ContentDetail/RelatedResults/Content">
@@ -3897,23 +3913,23 @@
                         </i> Uncheck All
                       </button>
                     </th>
-                    <th>
-                      <xsl:choose>
-                        <xsl:when test="ContentDetail/RelatedResults/Content">
-                          <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success principle">
-                            <i class="fa fa-plus fa-white">
-                              <xsl:text> </xsl:text>
-                            </i><xsl:text> </xsl:text>Add
-                            <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
-                          </button>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <label>
-                            <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
-                          </label>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </th>
+					  <th colspan="3">
+						  <xsl:choose>
+							  <xsl:when test="ContentDetail/RelatedResults/Content">
+								  <button type="submit" name="saveRelated" value="Add {ContentDetail/RelatedResults/@cSchemaName}s" class="btn btn-success pull-right">
+									  <i class="fa fa-plus fa-white">
+										  <xsl:text> </xsl:text>
+									  </i><xsl:text> </xsl:text>Add
+									  <xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s
+								  </button>
+							  </xsl:when>
+							  <xsl:otherwise>
+								  <label>
+									  <xsl:text>No </xsl:text><xsl:value-of select="ContentDetail/RelatedResults/@cSchemaName"/>s Found
+								  </label>
+							  </xsl:otherwise>
+						  </xsl:choose>
+					  </th>
                   </tr>
                 </xsl:if>
               </tbody>
@@ -3990,8 +4006,6 @@
         <td class="relate">
           <xsl:choose>
             <xsl:when test="@related=1">
-              <xsl:text>(Related)</xsl:text>
-              <xsl:value-of select="@sType"/>|<xsl:value-of select="$relationType"/>
             </xsl:when>
             <xsl:when test="@related=1 and not(contains(@sType,$relationType))">
               <xsl:text> </xsl:text>
@@ -3999,6 +4013,7 @@
               <xsl:text> (Related as </xsl:text>
               <xsl:value-of select="@sType"/>
               <xsl:text>)</xsl:text>
+				<input type="checkbox" name="unrelate" value="{@id}"/>
             </xsl:when>
             <xsl:otherwise>
               <!--<label>Relate</label>-->
@@ -4012,6 +4027,23 @@
             </xsl:otherwise>
           </xsl:choose>
         </td>
+		  <td class="unrelate">
+			  <xsl:choose>
+				  <xsl:when test="@related=1">
+					  <input type="checkbox" name="unrelate" value="{@id}"/>
+					  <xsl:text> </xsl:text>
+					  <xsl:text>(Related)</xsl:text> <xsl:value-of select="$relationType"/>
+				  </xsl:when>
+				  <xsl:when test="@related=1 and not(contains(@sType,$relationType))">
+					  <input type="checkbox" name="unrelate" value="{@id}"/>
+					  <xsl:text> </xsl:text>
+					  <xsl:text> (Related as </xsl:text>
+					  <xsl:value-of select="@sType"/>
+					  <xsl:text>)</xsl:text>
+				  </xsl:when>
+				  
+			  </xsl:choose>
+		  </td>
       </tr>
     </span>
 	  <!--
@@ -5356,7 +5388,7 @@
 		        $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
 		        ev.preventDefault();
 		        $('.modal-dialog').addClass('loading')
-		        $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...</h4></p>');
+		        $('.modal-body').html('<xsl:text disable-output-escaping="yes">&lt;</xsl:text>p class="text-center"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-cog fa-spin fa-2x fa-fw"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>;<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Loading ...<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/h4<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/p<xsl:text disable-output-escaping="yes">&gt;</xsl:text>');
 			        var target = $(this).attr("href");
 			        // load the url and show modal on success
 			        var currentModal = $('.pickImageModal')
@@ -5404,15 +5436,34 @@
 
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
-	  
-      var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
-	    
-		 var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
-          newItem = newItem + '<div class="description">'
-          newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
-          newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
-          newItem = newItem + '</div></div>';
-		   var filename = file.name;	      
+	
+		  var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
+
+		  <xsl:text disable-output-escaping="yes">var newItem=</xsl:text>'<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="item item-image col-md-2 col-sm-4"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+			  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="panel"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+				  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="image-thumbnail"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>img src="' + targetPath + '/' + file.name + '" class="img-responsive" /<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="popover-description"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+							  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>span class="image-description-name">' + file.name + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/span<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+							  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>br/<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>img src="' + targetPath + '/' + file.name + '" class="img-responsive" /<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/a<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+				  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
+				  newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="description"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
+				  newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-trash-o fa-white"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+							  <xsl:text> </xsl:text>
+						  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Delete<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/a<xsl:text disable-output-escaping="yes">&gt;</xsl:text>';
+					  newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="img-description"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>span class="image-description-name">' + file.name + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/span<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+					  <xsl:text disable-output-escaping="yes">&lt;</xsl:text>br/<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>';
+				  newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>';
+		  var filename = file.name;
+	
   </xsl:template>
 
   <xsl:template match="folder" mode="ImageFolder">
@@ -5651,10 +5702,12 @@
   </xsl:template>
 
  <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
-    var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '</td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
-    newItem = newItem + '<td><a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
+	
+    var newItem = '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>tr<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>td<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="icon-file-' + /[^.]+$/.exec(file.name) + '"<xsl:text disable-output-escaping="yes">&gt;</xsl:text> <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text> ' + file.name.replace(/\ /g,'-') + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/td<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>td<xsl:text disable-output-escaping="yes">&gt;</xsl:text>.' + /[^.]+$/.exec(file.name) + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/td<xsl:text disable-output-escaping="yes">&gt;</xsl:text>';
+    newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>td<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>a href="{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-trash-o fa-white"<xsl:text disable-output-escaping="yes">&gt;</xsl:text> <xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text> Delete<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/a<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/td<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/tr<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
 	
 	 var filename = file.name;	
+
   </xsl:template>
 
 
@@ -5663,9 +5716,9 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='MediaLib']" mode="newItemScript">
-    var newItem = '<div class="item col-md-2 col-sm-4"><div class="panel panel-default"><div class="panel-body"><div class="ItemThumbnail"><img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /></div>'
-    newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
-    newItem = newItem + '<a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
+    var newItem = '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="item col-md-2 col-sm-4"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="panel panel-default"><xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="panel-body"><xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="ItemThumbnail"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
+    newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>div class="description"<xsl:text disable-output-escaping="yes">&gt;</xsl:text>' + file.name + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>br /<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
+    newItem = newItem + '<xsl:text disable-output-escaping="yes">&lt;</xsl:text>a href="{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>i class="fa fa-trash-o fa-white"<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text> </xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/i<xsl:text disable-output-escaping="yes">&gt;</xsl:text>Delete<xsl:text disable-output-escaping="yes">&lt;</xsl:text>/a<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text><xsl:text disable-output-escaping="yes">&lt;</xsl:text>/div<xsl:text disable-output-escaping="yes">&gt;</xsl:text>'
 	
 	var filename = file.name;	
   </xsl:template>
@@ -5915,7 +5968,7 @@
                 </i>
                 <xsl:text> </xsl:text>Return
               </button>
-              <div class="clearfix">&#160;</div>
+              <div class="clearfix">&#160; </div>
             </div>
           </div>
         </form>
@@ -7386,9 +7439,7 @@
                   <xsl:value-of select="$title"/>
                 </h3>
                 
-                <div class="terminus">
-                  <xsl:text> </xsl:text>
-                </div>
+                <div class="terminus">&#160;</div>
             </div>
               <table class="panel-body table table-striped">
                 <tbody>
@@ -7429,15 +7480,17 @@
                   </xsl:apply-templates>
                 </div>
                 <div class="terminus">
-                  <xsl:text> </xsl:text>
-                </div>
+					<xsl:text> </xsl:text>
+				</div>
               </div>
             </xsl:when>
             <xsl:otherwise>
               <xsl:choose>
                 <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
                   <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
-                    <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
+                    <i class="fa fa-chevron-left">
+						<xsl:text> </xsl:text>
+					</i>&#160;Back to <xsl:value-of select="$title"/>
                   </a>
 
 					<xsl:apply-templates select="ContentDetail/ActivityLog" mode="activityReport"/>
@@ -8925,13 +8978,20 @@
           <i class="fa fa-user fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Select User Groups
-        </a>
+        </a>		  
         <xsl:text> </xsl:text>
+	    <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}&amp;name={@name}" class="btn btn-xs btn-primary">
+			  <i class="fa fa-user fa-white">
+				  <xsl:text> </xsl:text>
+			  </i><xsl:text> </xsl:text>Select Shipping Group
+		</a>
         <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete Method
         </a>
+		  <xsl:text> </xsl:text>
+		 
       </td>
     </tr>
   </xsl:template>
@@ -9220,13 +9280,7 @@
   <xsl:template match="Report" mode="defaultReport">
     <table class="table">
       <tr>
-        <xsl:for-each select="Item[1]/descendant-or-self::*">
-          <xsl:if test="count(*)=0">
-            <th>
-              <xsl:value-of select="local-name()"/>
-            </th>
-          </xsl:if>
-        </xsl:for-each>
+		  <xsl:apply-templates select="Item[1]/descendant-or-self::*" mode="Report_ColsHeading"/>       
       </tr>
       <xsl:for-each select="Item">
         <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
@@ -9246,13 +9300,7 @@
 				<th>
 					Date/Time
 				</th>
-				<xsl:for-each select="Item[last()]/cActivityXml/descendant-or-self::*">
-					<xsl:if test="count(*)=0 or local-name()='Attachements' or local-name()='Attachments'">
-						<th>
-							<xsl:value-of select="local-name()"/>
-						</th>
-		</xsl:if>
-				</xsl:for-each>
+				<xsl:apply-templates select="Item[last()]/cActivityXml/descendant-or-self::*" mode="Report_ColsHeading"/>
 				<th>
 					Refering Page
 				</th>
@@ -9268,9 +9316,35 @@
 			</xsl:for-each>
 		</table>
 	</xsl:template>
-	
 
-  <xsl:template match="*" mode ="Report_ColsValues">
+	<xsl:template match="*" mode ="Report_ColsHeading">
+		<xsl:if test="count(*)=0">
+				<th>
+					<xsl:value-of select="local-name()"/>
+				</th>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Attachments" mode ="Report_ColsHeading">
+		<th>
+			Document Title
+		</th>
+	</xsl:template>
+
+	<xsl:template match="Attachment" mode ="Report_ColsHeading">
+
+	</xsl:template>
+
+
+	<xsl:template match="Content[parent::Attachment]" mode ="Report_ColsHeading">
+
+	</xsl:template>
+	
+	<xsl:template match="Attachment" mode ="Report_ColsValues">
+
+	</xsl:template>
+
+	<xsl:template match="*" mode ="Report_ColsValues">
     <xsl:if test="count(*)=0">
       <td>
         <xsl:value-of select="node()"/>
@@ -9286,7 +9360,7 @@
 
 	<xsl:template match="Attachements | Attachments" mode ="Report_ColsValues">
 		<td>
-			<xsl:for-each select="Attachement | Attachments ">
+			<xsl:for-each select="Attachement | Attachment">
 				<xsl:value-of select="Content/@name"/>
 			</xsl:for-each>
 		</td>
@@ -10223,10 +10297,14 @@
         </textarea>
 
         <a href="{$appPath}?ewCmd=ScheduledItemRunNow&amp;type={$page/Request/QueryString/Item[@name='type']/node()}&amp;id={$page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-success btn-xs">
-          <i class="fa fa-play">&#160;</i>&#160;Run Again
+          <i class="fa fa-play">
+			  <xsl:text> </xsl:text>
+		  </i>&#160;Run Again
         </a>
         <a href="{$appPath}?ewCmd=ScheduledItems" class="btn btn-success btn-xs">
-          <i class="fa fa-chevron-left">&#160;</i>&#160;Back to List
+          <i class="fa fa-chevron-left">
+			  <xsl:text> </xsl:text>
+		  </i>&#160;Back to List
         </a>
       </div>
     </div>
@@ -13308,7 +13386,7 @@
     <body id="pg_{@id}" class="ewAdmin">
       <xsl:apply-templates select="AdminMenu"/>
       <div class="row" id="tpltCartActivity">
-        <div class="col-md-4">&#160;</div>
+        <div class="col-md-4">&#160; </div>
         <div class="col-md-4">
           <br/>
           <br/>
@@ -13317,7 +13395,7 @@
           <br/>
           <br/>
         </div>
-        <div class="col-md-4">&#160;</div>
+        <div class="col-md-4">&#160; </div>
       </div>
       <!--iframe class="pluginIframe" src="https://analytics.google.com/analytics/web/" width="100%" height="1000">
         <p>Your browser does not support iframes.</p>
@@ -13887,7 +13965,7 @@
 				<xsl:value-of select="cContentSchemaName/node()"/>
 			</td>
 			<td colspan="2">
-				<xsl:value-of select="cDefinitionName/node()"/>
+				<xsl:value-of select="@cDefinitionName"/>
 			</td>
 			<td colspan="2">
 				<xsl:value-of select="cContentValueXpath/node()"/>
@@ -13906,7 +13984,7 @@
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Edit
 				</a>
-				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
+				<a href="{$appPath}?ewCmd=FilterIndex&amp;ewCmd2=update&amp;pgid={/Page/@id}&amp;id={@nContentIndexDefKey}&amp;DefName={@cDefinitionName}&amp;SchemaName={../@Name}" class="btn btn-primary btn-xs pull-right">
 					<i class="fa fa-recycle fa-white">
 						<xsl:text> </xsl:text>
 					</i><xsl:text> </xsl:text>Re-Index

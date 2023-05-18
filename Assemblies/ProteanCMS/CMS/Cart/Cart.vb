@@ -14,6 +14,9 @@ Imports System.Reflection
 Imports Protean.Providers.Membership.EonicProvider
 Imports System.Collections.Generic
 Imports System.Windows
+Imports Microsoft.Ajax.Utilities
+Imports Protean.Cms
+Imports System.Configuration
 
 Partial Public Class Cms
 
@@ -457,6 +460,7 @@ Partial Public Class Cms
         End Sub
 
 
+
         Public Sub InitializeVariables()
             myWeb.PerfMon.Log("Cart", "InitializeVariables")
             'Author:        Trevor Spink
@@ -490,6 +494,8 @@ Partial Public Class Cms
                     End If
 
                     moDiscount = New Discount(Me)
+
+
                     mcPagePath = myWeb.mcPagePath
 
                     If mcPagePath = "" Then
@@ -499,7 +505,7 @@ Partial Public Class Cms
                             mcPagePath = mcCartURL & "/?"
                         End If
                     Else
-                        mcPagePath = mcCartURL & mcPagePath & "?"
+                        mcPagePath = mcCartURL.TrimEnd("/") & mcPagePath & "?"
                     End If
 
                     If moConfig("Membership") = "on" Then mbEwMembership = True
@@ -1492,9 +1498,6 @@ processFlow:
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
                         Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
-
-
-
 
                         If InStr(mcPaymentMethod, "Repeat_") > 0 Then
                             If ccPaymentXform.valid = True Then
@@ -2629,6 +2632,7 @@ processFlow:
             Dim ReceiptDeliveryType As Int16
             Dim oDs As DataSet
             Dim oDs2 As DataSet
+            Dim oDsShippingOptionKey As DataSet
 
             Dim sSql As String
             Dim oRow As DataRow
@@ -2661,6 +2665,8 @@ processFlow:
             End If
 
             Dim oldCartId As Long = mnCartId
+            Dim ShippingOptionKey As Long = moCartConfig("DefaultShippingMethod")
+            'Dim cCartType As String = String.Empty
 
             Dim cProcessInfo As String = "CartId=" & nCartIdUse
 
@@ -2716,23 +2722,21 @@ processFlow:
                     If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
                         additionalFields = ", i.nDepositAmount as nDepositAmount"
                     End If
+                    'Added Left Join with tblCartCatProductRelations to bring group assigned to that product  
                     If moDBHelper.checkTableColumnExists("tblCartItem", "xItemXml") Then
-                        sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, i.xItemXml as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, i.xItemXml.value('Content[1]/@type','nvarchar(50)') AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId " & additionalFields & "  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
+                        sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, i.xItemXml as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, i.xItemXml.value('Content[1]/@type','nvarchar(50)') AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId " & additionalFields & " ,A.nStatus As ProductStatus, '' As nShippingGroup,'' As nshippingType from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey where nCartOrderId=" & nCartIdUse
                     Else
                         sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, p.cContentXmlDetail as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, p.cContentSchemaName AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId " & additionalFields & " from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
                     End If
 
-
-
                     oDs = moDBHelper.getDataSetForUpdate(sSql, "Item", "Cart")
+
                     'add relationship for options
                     oDs.Relations.Add("Rel1", oDs.Tables("Item").Columns("id"), oDs.Tables("Item").Columns("nParentId"), False)
                     oDs.Relations("Rel1").Nested = True
                     '
                     For Each oRow In oDs.Tables("Item").Rows
                         Dim Discount As Double = 0
-
-
                         If Not oItemList.ContainsValue(oRow("contentId")) Then
                             oItemList.Add(oItemList.Count, oRow("contentId"))
                         End If
@@ -2867,6 +2871,21 @@ processFlow:
                         '    xstr &= oRow.Table.Columns(ix).ColumnName & "="
                         '    xstr &= oRow(ix) & ", "
                         'Next
+
+
+                        ' check if shipping group exists or not and then we set bydefault delivery option on cart
+                        ' Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
+                        If myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure) Then
+                            Dim sSqlShippingGroup As String = "select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId=" & nCartIdUse & " and nCartItemKey=" & oRow("id") & " and cCatSchemaName = 'Shipping' and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc"
+                            oDsShippingOptionKey = moDBHelper.getDataSetForUpdate(sSqlShippingGroup, "Item", "Cart")
+                            If oDsShippingOptionKey.Tables(0).Rows.Count > 0 Then
+                                ShippingOptionKey = Convert.ToInt64(oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0))
+                                oRow("nShippingGroup") = oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(1)
+                                oRow("nshippingType") = oDsShippingOptionKey.Tables(0).Rows(0).ItemArray(0)
+                                updateGCgetValidShippingOptionsDS(ShippingOptionKey)
+                            End If
+                        End If
+
 
                         Try
                             If oRow("price") <> Nothing Then
@@ -3021,6 +3040,10 @@ processFlow:
                         oCartElmt.SetAttribute("showDiscountCodeBox", "true")
                     End If
 
+                    Dim cPromoCode As String = ""
+                    Dim IsPromocodeValid As Boolean = False
+                    Dim oPromoElmt As XmlElement = oNotes.SelectSingleNode("//Notes/PromotionalCode")
+                    If Not oPromoElmt Is Nothing Then cPromoCode = oPromoElmt.InnerText
 
                     If mbNoDeliveryAddress Then oCartElmt.SetAttribute("hideDeliveryAddress", "True")
                     If mnGiftListId > 0 Then oCartElmt.SetAttribute("giftListId", mnGiftListId)
@@ -3033,6 +3056,7 @@ processFlow:
                         oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                         oCartElmt.SetAttribute("shippingDesc", oRow("cShippingDesc") & "")
+
                         If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
                             If IsDBNull(oRow("nReceiptType")) Then
                                 ReceiptDeliveryType = 1
@@ -3043,8 +3067,20 @@ processFlow:
 
                         End If
 
-                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Then
-                            shipCost = -1
+                        If oCartElmt.GetAttribute("NonDiscountedShippingCost") IsNot Nothing Then
+                            'As NonDiscountedShippingCost is initialized in CheckDiscount method, Free shipping promocode is valid so set the flag to True
+                            ' for setting default shipping option to the cart with updating the NonDiscountedShippingCost amount to the free shipping amount.
+                            If oCartElmt.GetAttribute("NonDiscountedShippingCost") = "0" Then
+                                IsPromocodeValid = True
+                            End If
+                        End If
+
+
+                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 5 Or IsPromocodeValid = True Then
+                            If oCartElmt.GetAttribute("bDiscountIsPercent") <> "" Then
+                                shipCost = -1
+                            End If
+
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")
                             cDestinationCountry = moCartConfig("DefaultCountry")
@@ -3053,7 +3089,7 @@ processFlow:
                             End If
                             If cDestinationCountry <> "" Then
                                 'Go and collect the valid shipping options available for this order
-                                Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
+                                Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight, cPromoCode)
                                 Dim oRowSO As DataRow
                                 If Not oDsShipOptions Is Nothing Then
                                     For Each oRowSO In oDsShipOptions.Tables(0).Rows
@@ -3063,14 +3099,43 @@ processFlow:
                                         End If
                                         If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
                                             'logic to overide below...
-                                            If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
-                                                If (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
-                                                    shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                                                    oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                                    oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
-                                                    oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                                                    oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                                                    oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                            'Add extra condition for checking shipping delievry method set by default
+                                            If ShippingOptionKey <> moCartConfig("DefaultShippingMethod") Then
+                                                If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
+                                                    If (oRowSO("nShipOptKey") = ShippingOptionKey) Then
+                                                        shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                        oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                        oCartElmt.SetAttribute("shippingType", ShippingOptionKey & "")
+                                                        oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                        oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                        oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                                        'oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
+                                                    End If
+                                                End If
+                                            Else
+                                                If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
+                                                    If (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
+                                                        shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                        oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                        oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
+                                                        oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                        oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                        oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                                    End If
+                                                    'Add extra condition only when promocode is valid
+                                                    'Set nondiscountedshippingcost to attribute when promocode is valid(include free shipping methods)
+                                                ElseIf IsPromocodeValid = True And oRowSO("NonDiscountedShippingCost") <> "0" Then
+                                                    If oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")) Then
+                                                        shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                        oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                        oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
+                                                        oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                        oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                        oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                                        If oRowSO("NonDiscountedShippingCost") <> "0" Then
+                                                            oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO("NonDiscountedShippingCost") & "")
+                                                        End If
+                                                    End If
                                                 End If
                                             End If
                                         ElseIf (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
@@ -3080,8 +3145,8 @@ processFlow:
                                             oCartElmt.SetAttribute("shippingCost", shipCost & "")
                                             oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                             oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                            ' oCartElmt.SetAttribute("cCatSchemaName", "" & "")
                                         End If
-
 
                                     Next
                                 End If
@@ -6678,20 +6743,20 @@ processFlow:
                                         nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
                                     End If
 
-                                    If (UniqueProduct) Then
+                                    'If (UniqueProduct) Then
 
-                                        If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
-                                            giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
-                                            oProdXml.DocumentElement.AppendChild(giftMessageNode)
-                                        Else
-                                            ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
-                                        End If
-                                    End If
+                                    '    If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                    '        giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                    '        oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                    '    Else
+                                    '        ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                    '    End If
+                                    'End If
 
                                     'Add Parent Product to cart if SKU.add
                                     If cContentType = "SKU" Or cContentType = "Ticket" Then
                                         'Then we need to add the Xml for the ParentProduct.
-                                        Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nContentChildId =" & nProductId & "Order by nContentParentId desc")
+                                        Dim sSQL2 As String = ("select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where nContentChildId =" & nProductId & "Order by nContentParentId desc")
 
                                         Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
                                         Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
@@ -8899,8 +8964,34 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Sub
 
-
-        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Long, nQuantity As Long, nWeight As Long) As DataSet
+        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Double, nQuantity As Long, nWeight As Double) As DataSet
+            Try
+                Dim dsShippingOption As DataSet = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, String.Empty, 0)
+                Return dsShippingOption
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, , "", gbDebug)
+                Return Nothing
+            End Try
+        End Function
+        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Double, nQuantity As Long, nWeight As Double, ProductId As Integer) As DataSet
+            Try
+                Dim dsShippingOption As DataSet = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, String.Empty, ProductId)
+                Return dsShippingOption
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, , "", gbDebug)
+                Return Nothing
+            End Try
+        End Function
+        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Double, nQuantity As Long, nWeight As Double, cPromoCode As String) As DataSet
+            Try
+                Dim dsShippingOption As DataSet = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, cPromoCode, 0)
+                Return dsShippingOption
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, , "", gbDebug)
+                Return Nothing
+            End Try
+        End Function
+        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Double, nQuantity As Long, nWeight As Double, cPromoCode As String, ProductId As Integer) As DataSet
 
             Try
                 Dim userId As Integer = 0
@@ -8914,77 +9005,105 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     userId = myWeb.mnUserId
 
                 End If
-                Dim sSql As String
                 Dim sCountryList As String = getParentCountries(cDestinationCountry, 1)
 
-                sSql = "select opt.*, dbo.fxn_shippingTotal(opt.nShipOptKey," & nAmount & "," & nQuantity & "," & nWeight & ") as nShippingTotal  from tblCartShippingLocations Loc "
-                sSql = sSql & "Inner Join tblCartShippingRelations rel ON Loc.nLocationKey = rel.nShpLocId "
-                sSql = sSql & "Inner Join tblCartShippingMethods opt ON rel.nShpOptId = opt.nShipOptKey "
-                sSql &= "INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey"
+                'Add code for checking shipping group is included/Excluded for delievry methods
+                Dim PublishExpireDate As DateTime = Now()
 
-                sSql = sSql & " WHERE (nShipOptQuantMin <= 0 or nShipOptQuantMin <= " & nQuantity & ") and (nShipOptQuantMax <= 0 or nShipOptQuantMax >= " & nQuantity & ") and "
-                sSql = sSql & "(nShipOptPriceMin <= 0 or nShipOptPriceMin <= " & nAmount & ") and (nShipOptPriceMax <= 0 or nShipOptPriceMax >= " & nAmount & ") and "
-                sSql = sSql & "(nShipOptWeightMin <= 0 or nShipOptWeightMin <= " & nWeight & ") and (nShipOptWeightMax <= 0 or nShipOptWeightMax >= " & nWeight & ") "
+                If myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure) Then
+                    '' call stored procedure else existing code.
+                    '' Passing parameter: nCartId
 
-                sSql &= " and ((opt.cCurrency Is Null) or (opt.cCurrency = '') or (opt.cCurrency = '" & mcCurrency & "'))"
-                'If myWeb.mnUserId > 0 Then
-                '    ' if user in group then return it
-                '    sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 1) > 0"
-                '    sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 0) > 0)"
-                If userId > 0 Then
-                    ' if user in group then return it
-                    sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                    Dim param As New Hashtable
+                    param.Add("CartOrderId", mnCartId)
+                    param.Add("Amount", nAmount)
+                    param.Add("Quantity", nQuantity)
+                    param.Add("Weight", nWeight)
+                    param.Add("Currency", mcCurrency)
+                    param.Add("userId", userId)
+                    param.Add("AuthUsers", gnAuthUsers)
+                    param.Add("NonAuthUsers", gnNonAuthUsers)
+                    param.Add("CountryList", sCountryList)
+                    param.Add("dValidDate", PublishExpireDate)
+                    param.Add("PromoCode", cPromoCode)
+                    param.Add("ProductId", ProductId)
+                    Return moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", False, param, CommandType.StoredProcedure)
+                    'End If
+                Else
+
+                    Dim sSql As String
+
+                    sSql = "select opt.*, dbo.fxn_shippingTotal(opt.nShipOptKey," & nAmount & "," & nQuantity & "," & nWeight & ") as nShippingTotal  from tblCartShippingLocations Loc "
+                    sSql = sSql & "Inner Join tblCartShippingRelations rel ON Loc.nLocationKey = rel.nShpLocId "
+                    sSql = sSql & "Inner Join tblCartShippingMethods opt ON rel.nShpOptId = opt.nShipOptKey "
+                    sSql &= "INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey"
+
+                    sSql = sSql & " WHERE (nShipOptQuantMin <= 0 or nShipOptQuantMin <= " & nQuantity & ") and (nShipOptQuantMax <= 0 or nShipOptQuantMax >= " & nQuantity & ") and "
+                    sSql = sSql & "(nShipOptPriceMin <= 0 or nShipOptPriceMin <= " & nAmount & ") and (nShipOptPriceMax <= 0 or nShipOptPriceMax >= " & nAmount & ") and "
+                    sSql = sSql & "(nShipOptWeightMin <= 0 or nShipOptWeightMin <= " & nWeight & ") and (nShipOptWeightMax <= 0 or nShipOptWeightMax >= " & nWeight & ") "
+
+                    sSql &= " and ((opt.cCurrency Is Null) or (opt.cCurrency = '') or (opt.cCurrency = '" & mcCurrency & "'))"
+                    'If myWeb.mnUserId > 0 Then
+                    '    ' if user in group then return it
+                    '    sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                    '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+                    '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 1) > 0"
+                    '    sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                    '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+                    '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 0) > 0)"
+                    If userId > 0 Then
+                        ' if user in group then return it
+                        sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                             " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
                             "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 1) > 0"
-                    sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                        sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                             " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
                             "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 0) > 0)"
-                    'method allowed for authenticated or imporsonating CS users.
-                    Dim shippingGroupCondition As String
+                        'method allowed for authenticated or imporsonating CS users.
+                        Dim shippingGroupCondition As String
 
-                    shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
+                        shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
 
-                    sSql &= " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                        sSql &= " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                            "  where perm.nShippingMethodId = opt.nShipOptKey And " & shippingGroupCondition & " And perm.nPermLevel = 1) > 0"
 
-                    ' if no group exists return it.
-                    sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
+                        ' if no group exists return it.
+                        sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
 
-                    sSql &= " And opt.nShipOptKey not in ( select nShippingMethodId
+                        sSql &= " And opt.nShipOptKey not in ( select nShippingMethodId
                                 from tblCartShippingPermission perm 
                                 Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId  
                                  and  nPermLevel = 0  and PermGroup.nDirChildId =" & userId & ")"
 
-                Else
-                    Dim nonAuthID As Long = gnNonAuthUsers
-                    Dim AuthID As Long = gnAuthUsers
-                    'method allowed for non-authenticated
-                    sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                    Else
+                        Dim nonAuthID As Long = gnNonAuthUsers
+                        Dim AuthID As Long = gnAuthUsers
+                        'method allowed for non-authenticated
+                        sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                            "  where perm.nShippingMethodId = opt.nShipOptKey and perm.nDirId = " & gnNonAuthUsers & "  and perm.nPermLevel = 1) > 0"
-                    ' method has no group 
-                    sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
+                        ' method has no group 
+                        sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
+
+                    End If
+                    ' Restrict the shipping options by looking at the delivery country currently selected.  
+                    ' Of course, if we are hiding the delivery address then this can be ignored.
+
+                    If sCountryList <> "" Then
+                        sSql = sSql & " and ((loc.cLocationNameShort IN " & sCountryList & ") or (loc.cLocationNameFull IN " & sCountryList & ")) "
+                    End If
+
+                    'Active methods
+
+                    sSql &= " AND (tblAudit.nStatus >0)"
+                    sSql &= " AND ((tblAudit.dPublishDate = 0) or (tblAudit.dPublishDate Is Null) or (tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & "))"
+                    sSql &= " AND ((tblAudit.dExpireDate = 0) or (tblAudit.dExpireDate Is Null) or (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & "))"
+                    'Build Form
+
+                    'Go and collect the valid shipping options available for this order
+                    Return moDBHelper.GetDataSet(sSql & " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping")
 
                 End If
-                ' Restrict the shipping options by looking at the delivery country currently selected.  
-                ' Of course, if we are hiding the delivery address then this can be ignored.
 
-                If sCountryList <> "" Then
-                    sSql = sSql & " and ((loc.cLocationNameShort IN " & sCountryList & ") or (loc.cLocationNameFull IN " & sCountryList & ")) "
-                End If
-
-                'Active methods
-
-                sSql &= " AND (tblAudit.nStatus >0)"
-                sSql &= " AND ((tblAudit.dPublishDate = 0) or (tblAudit.dPublishDate Is Null) or (tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & "))"
-                sSql &= " AND ((tblAudit.dExpireDate = 0) or (tblAudit.dExpireDate Is Null) or (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & "))"
-                'Build Form
-
-                'Go and collect the valid shipping options available for this order
-                Return moDBHelper.GetDataSet(sSql & " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping")
             Catch ex As Exception
 
                 returnException(myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, , "", gbDebug)
@@ -8992,6 +9111,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
 
         End Function
+
 
         Private Function makeShippingOptionsXML() As XmlElement
 
@@ -9087,13 +9207,17 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim cSqlUpdate As String
 
                 sSql = "select * from tblCartShippingMethods "
-                sSql = sSql & " where nShipOptKey = " & nShipOptKey
+                sSql = sSql & " where nShipOptKey in ( " & nShipOptKey & ")"
                 ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
 
+                'Check if shipping option contains multiple option then get lowest 
+                If InStr(1, nShipOptKey, ",") > 0 Then
+                    nShipOptKey = nShipOptKey.Split(","c)(0)
+                End If
                 For Each oRow In ods.Tables("Order").Rows
                     cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
                     nShippingCost = oRow("nShipOptCost")
-                    cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
+                    cSqlUpdate = "UPDATE tblCartOrder Set cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
                     moDBHelper.ExeProcessSql(cSqlUpdate)
                 Next
 
@@ -9291,7 +9415,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Public Function updateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String
+        Public Function UpdateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String
             Try
                 ''check if country is not default country
                 Dim DeliveryOption As String = ""
@@ -9420,22 +9544,24 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 If country <> "" Then
                     cDestinationCountry = country
+
                     '' pass other parameters as well-
                     ''get it from cart
                     Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
                     'sort dataset for applied delivery option
-                    If (oDsShipOptions.Tables(0) IsNot Nothing And cOrderofDeliveryOption = "1") Then
-                        Dim TempTable As New DataTable
-                        Dim dv As DataView
-                        TempTable = oDsShipOptions.Tables(0)
-                        dv = TempTable.DefaultView
-                        ' dv.Sort = " nShippingTotal DESC"
-                        dv.RowFilter = "nShipOptCost > 0"
-                        TempTable = dv.ToTable
+                    'code commented by sonali to set evoucher for other than uk country
+                    'If (oDsShipOptions.Tables(0) IsNot Nothing And cOrderofDeliveryOption = "1") Then
+                    '    Dim TempTable As New DataTable
+                    '    Dim dv As DataView
+                    '    TempTable = oDsShipOptions.Tables(0)
+                    '    dv = TempTable.DefaultView
+                    '    ' dv.Sort = " nShippingTotal DESC"
+                    '    dv.RowFilter = "nShipOptCost > 0"
+                    '    TempTable = dv.ToTable
 
-                        oDsShipOptions.Tables(0).Clear()
-                        oDsShipOptions.Tables(0).Merge(TempTable)
-                    End If
+                    '    oDsShipOptions.Tables(0).Clear()
+                    '    oDsShipOptions.Tables(0).Merge(TempTable)
+                    'End If
                     Dim oRowSO As DataRow
                     For Each oRowSO In oDsShipOptions.Tables(0).Rows
                         If bChangedDelivery Then
@@ -9457,6 +9583,121 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Function
 
 
+
+
+
+        'creating the duplicate order from old order
+        Public Function CreateDuplicateOrder(oldCartxml As XmlDocument, nOrderId As Integer, cMethodName As String, cNewAuthNumber As String) As String
+            Try
+                Dim cResult As String = "Success"
+                Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
+                GetCart(oCartListElmt, nOrderId)
+                'Insert code into tblcartOrder
+                Dim oInstance As XmlDocument = New XmlDocument
+                Dim oElmt As XmlElement
+                Dim oeResponseElmt As XmlElement = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response")
+                Dim ReceiptId As String = (oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value).ToString()
+                Dim Amount As Double = Convert.ToDouble(oCartListElmt.GetAttribute("total"))
+                Dim nItemID As Integer = 0 'ID of the cart item record
+                ' Dim oDs As DataSet
+
+                oInstance.AppendChild(oInstance.CreateElement("instance"))
+                oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)
+                addNewTextNode("cCurrency", oElmt, oCartListElmt.GetAttribute("currency"))
+                addNewTextNode("cCartSiteRef", oElmt, moCartConfig("OrderNoPrefix"))
+                addNewTextNode("cCartForiegnRef", oElmt)
+                addNewTextNode("nCartStatus", oElmt, oCartListElmt.GetAttribute("statusId"))
+                addNewTextNode("cCartSchemaName", oElmt, "Order")
+                addNewTextNode("cCartSessionId", oElmt, oCartListElmt.GetAttribute("session"))
+
+                addNewTextNode("nCartUserDirId", oElmt, "0")
+                addNewTextNode("nPayMthdId", oElmt, "0")
+                addNewTextNode("cPaymentRef", oElmt)
+                addNewTextNode("cCartXml", oElmt)
+                addNewTextNode("nShippingMethodId", oElmt, oCartListElmt.GetAttribute("shippingType"))
+                addNewTextNode("cShippingDesc", oElmt, oCartListElmt.GetAttribute("shippingDesc"))
+                addNewTextNode("nShippingCost", oElmt, oCartListElmt.GetAttribute("shippingCost"))
+                If (oCartListElmt.SelectSingleNode("/Notes") IsNot Nothing) Then
+                    addNewTextNode("cClientNotes", oElmt, oCartListElmt.SelectSingleNode("/Notes").OuterXml())
+                Else
+                    addNewTextNode("cClientNotes", oElmt, "")
+                End If
+                addNewTextNode("cSellerNotes", oElmt)
+                addNewTextNode("nTaxRate", oElmt, "0")
+                addNewTextNode("nGiftListId", oElmt, "-1")
+                addNewTextNode("nAuditId", oElmt)
+                'validate column exists then only
+                If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                    addNewTextNode("nReceiptType", oElmt, "0")
+                End If
+
+                mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
+
+                mnProcessId = 1
+                Dim oItem As XmlNode
+                Dim oOption As XmlElement
+                Dim oOptionName As String = String.Empty
+                Dim oOptionValue As Double = 0
+                If (oCartListElmt.SelectSingleNode("/Item") IsNot Nothing) Then
+                    For Each oItem In (oCartListElmt.SelectNodes("Item"))
+
+                        Dim nProductKey As Long = Convert.ToInt64(oItem.Attributes("contentId").InnerText)
+
+                        Dim nQuantity As Long = Convert.ToInt64(oItem.Attributes("quantity").InnerText)
+                        AddItem(nProductKey, nQuantity, Nothing, "",,, True,,)
+                        If (oItem.SelectSingleNode("/Item/Item") IsNot Nothing) Then
+
+                            Dim sSQL2 As String = ("select TOP 1 nCartItemKey  from tblCartItem  as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nParentId=0 and nCartOrderId =" & mnCartId.ToString() & "Order by nCartItemKey desc")
+
+                            Dim nCartItemId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+
+                            For Each oOption In oItem.SelectNodes("Item")
+
+                                If (oOption.SelectSingleNode("Name") IsNot Nothing) Then
+                                    oOptionName = oOption.SelectSingleNode("Name").InnerText
+                                End If
+                                If (oOption.Attributes("nPrice") IsNot Nothing) Then
+                                    oOptionValue = oOption.Attributes("nPrice").Value
+                                End If
+                                AddProductOption(nCartItemId, oOptionName, oOptionValue)
+                            Next
+                        End If
+                    Next
+                End If
+
+                Dim deliveryAddId As Integer = 0
+                Dim billingAddId As Integer = 0
+                Dim sSql As String = "select nContactKey, cContactType, nAuditKey from tblCartContact inner join tblAudit a on nAuditId = a.nAuditKey where nContactCartId = " & CStr(nOrderId)
+                Using oDr As SqlDataReader = moDBHelper.getDataReaderDisposable(sSql)
+                    While (oDr.Read())
+                        If oDr("cContactType") = "Billing Address" Then
+                            billingAddId = oDr("nContactKey")
+                        End If
+                        If LCase(moCartConfig("NoDeliveryAddress")) = "on" Then
+                            deliveryAddId = billingAddId
+                        Else
+                            If oDr("cContactType") = "Delivery Address" Then
+                                deliveryAddId = oDr("nContactKey")
+                            End If
+                        End If
+                    End While
+
+                End Using
+
+
+                If deliveryAddId <> 0 And billingAddId <> 0 Then
+                    useSavedAddressesOnCart(billingAddId, deliveryAddId)
+                End If
+                ConfirmPayment(oCartListElmt, oeResponseElmt, cNewAuthNumber, cMethodName, Amount)
+                GetCart(oCartListElmt, mnCartId)
+                oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber)
+                SaveCartXML(oCartListElmt, mnCartId)
+                Return cResult
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+                Return Nothing
+            End Try
+        End Function
     End Class
 End Class
 

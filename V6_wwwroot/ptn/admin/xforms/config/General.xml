@@ -62,6 +62,7 @@
         <add key="Scheduler" value="off" />
         <add key="ExpireAtEndOfDay" value="off" />
         <add key="GoogleAnalyticsUniversalID" value="" />
+		<add key="GoogleGA4MeasurementID" value="" />
         <add key="GoogleTagManagerID" value="" />
         <add key="GoogleOptimizeID" value="" />
         <add key="GoogleAPIKey" value="" />
@@ -84,9 +85,8 @@
         <add key="ServerSenderEmail" value="" />
         <add key="ServerSenderEmailName" value="" />
         <add key="DisableServerSenderEmail" value="" />
-        
-        
-      </web>
+ 	    <add key="ExcludeFoldersFromPaths" value="header,footer" />
+	  </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
     <bind id="ewSiteName" nodeset="web/add[@key='SiteName']/@value" required="false()" type="string" />
@@ -137,6 +137,7 @@
     <bind id="ewStatsUser" nodeset="web/add[@key='StatsUser']/@value" required="false()" type="string" />
     <bind id="ewStatsPassword" nodeset="web/add[@key='StatsPassword']/@value" required="false()" type="string" />
     <bind id="ewGoogleAnalyticsUniversalID" nodeset="web/add[@key='GoogleAnalyticsUniversalID']/@value" required="false()" type="string" />
+	  <bind id="ewGoogleGA4MeasurementID" nodeset="web/add[@key='GoogleGA4MeasurementID']/@value" required="false()" type="string" />
     <bind id="ewGoogleTagManagerID" nodeset="web/add[@key='GoogleTagManagerID']/@value" required="false()" type="string" />
     <bind id="ewGoogleOptimizeID" nodeset="web/add[@key='GoogleOptimizeID']/@value" required="false()" type="string" />
     <bind id="ewGoogleAPIKey" nodeset="web/add[@key='GoogleAPIKey']/@value" required="false()" type="string" />
@@ -166,13 +167,20 @@
     <bind id="ServerSenderEmail" nodeset="web/add[@key='ServerSenderEmail']/@value" required="false()" type="email" />
     <bind id="ServerSenderEmailName" nodeset="web/add[@key='ServerSenderEmailName']/@value" required="false()" type="email" />
     <bind id="DisableServerSenderEmail" nodeset="web/add[@key='DisableServerSenderEmail']/@value" required="false()" type="string" />
+	<bind id="ExcludeFoldersFromPaths" nodeset="web/add[@key='ExcludeFoldersFromPaths']/@value" required="false()" type="string" />
+	  <bind id="ptnCart" nodeset="web/add[@key='Cart']/@value" required="false()" type="string" />
+	  <bind id="ptnMembership" nodeset="web/add[@key='Membership']/@value" required="false()" type="string" />
+	  <bind id="ptnSearch" nodeset="web/add[@key='Search']/@value" required="false()" type="string" />
+
   </model>
   <group ref="WebSettings" class="admin-form-style">
     <label>Web Settings</label>
     <alert>Saving this form will log you out of the admin system.</alert>
     <alert>Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call Technical Support on the number below.</alert>
-    <group ref="Site Information" class="inline">
+    <group class="tabs">
+	  <group ref="Site Information">
       <label>Site Information</label>
+		  <group  class="row row-cols-md-2">
       <input bind="ewSiteName">
         <label>Site Name</label>
         <value></value>
@@ -209,9 +217,11 @@
         <label>Charity Registration No.</label>
         <value/>
       </input>
+		  </group>
     </group>
-    <group ref="Database" class="inline">
+    <group ref="Database">
       <label>Database</label>
+		<group  class="row row-cols-md-2">
       <input bind="ewDatabaseName">
         <label>DB Name</label>
         <value></value>
@@ -228,9 +238,12 @@
         <label>Root Page Id</label>
         <value>1</value>
       </input>
+		</group>
     </group>
     <group ref="Image" class="inline">
       <label>Image Handling</label>
+
+		<group  class="row row-cols-md-2">
       <select1 bind="ewEnableRetina" appearance="full">
         <label>Enable Retina Images</label>
         <item>
@@ -243,9 +256,12 @@
         </item>
         <value>on</value>
       </select1>
+			</group>
     </group>
     <group ref="Email" class="inline">
       <label>Email</label>
+
+		<group  class="row row-cols-md-2">
       <div class="long">These settings are usually inherited from the hosting provider and only need to be specified if you need a specific mailserver to send for this site.</div>
       <input bind="ewMailserver">
         <label>Mailserver</label>
@@ -287,24 +303,70 @@
         <label>Webmaster Email Address</label>
         <value></value>
       </input>
+			<input bind="EmailOverride">
+				<label>Email Override</label>
+				<value></value>
+				<hint>Will override destination of all email forms for site</hint>
+			</input>
+			<input bind="OverrideFromEmail">
+				<label>Override From Email</label>
+				<value></value>
+				<hint>Will override sender email of all email forms for site</hint>
+			</input>
+			<input bind="ServerSenderEmail">
+				<label>Server Sender Email</label>
+				<value></value>
+				<hint>Will override sender email of all email forms for site</hint>
+			</input>
+			<input bind="ServerSenderEmailName">
+				<label>Email Override</label>
+				<value></value>
+				<hint>Will override sender name of all email forms for site</hint>
+			</input>
+			<input bind="DisableServerSenderEmail">
+				<label>Disable Server Sender Email</label>
+				<value></value>
+				<hint>Will remove the server sender email address of all email forms for site</hint>
+			</input>
+			<select1 bind="ewLogEmail" appearance="full">
+				<label>Log Contact Form Submissions</label>
+				<item>
+					<label>On</label>
+					<value>on</value>
+				</item>
+				<item>
+					<label>Off</label>
+					<value>off</value>
+				</item>
+				<value />
+			</select1>
+			<select1 bind="ewLogEmailXml" appearance="full">
+				<label>Log Contact Form Submissions Xml</label>
+				<item>
+					<label>On</label>
+					<value>on</value>
+				</item>
+				<item>
+					<label>Off</label>
+					<value>off</value>
+				</item>
+				<value />
+			</select1>
+			</group>
     </group>
-    <group ref="WebStats" class="inline">
-      <label>WebStats</label>
-      <div class="long">Settings for SmarterStats Server</div>
-      <input bind="ewStatsID">
-        <label>Site ID</label>
-      </input>
-      <input bind="ewStatsUser">
-        <label>Username</label>
-      </input>
-      <input bind="ewStatsPassword">
-        <label>Password</label>
-      </input>
-      <div class="long">Settings Google Analytics</div>
+    <group ref="Analytics" class="inline">
+      <label>Analytics</label>
+
+		<group  class="row row-cols-md-2">
+     
       <input bind="ewGoogleAnalyticsUniversalID">
         <label>Google Site ID</label>
       </input>
-      <input bind="ewGoogleTagManagerID">
+		<input bind="ewGoogleGA4MeasurementID">
+			<label>Google GA4 MeasurementID</label>
+		</input>
+		
+		<input bind="ewGoogleTagManagerID">
         <label>Google Tag Manager ID</label>
       </input>
       <input bind="ewGoogleOptimizeID">
@@ -331,9 +393,12 @@
       <input bind="ewFeedOptimiseID">
         <label>Feed Optimise ID</label>
       </input>
+			</group>
     </group>
     <group ref="Paths" class="inline">
       <label>Default Paths</label>
+
+		<group  class="row row-cols-md-2">
       <input bind="ewBaseUrl">
         <label>Base URL</label>
         <value />
@@ -350,115 +415,209 @@
         <label>Media Directory</label>
         <value>/media/</value>
       </input>
+			</group>
     </group>
-    <group ref="Features" class="inline">
-      <label>Features</label>
-      <select1 bind="ewDebug" appearance="full">
-        <label>Debug</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value>on</value>
-      </select1>
-      <input bind="EmailOverride">
-        <label>Email Override</label>
-        <value></value>
-        <hint>Will override destination of all email forms for site</hint>
-      </input>
-      <input bind="OverrideFromEmail">
-        <label>Override From Email</label>
-        <value></value>
-        <hint>Will override sender email of all email forms for site</hint>
-      </input>
-      <input bind="ServerSenderEmail">
-        <label>Server Sender Email</label>
-        <value></value>
-        <hint>Will override sender email of all email forms for site</hint>
-      </input>
-      <input bind="ServerSenderEmailName">
-        <label>Email Override</label>
-        <value></value>
-        <hint>Will override sender name of all email forms for site</hint>
-      </input>
-      <input bind="DisableServerSenderEmail">
-        <label>Disable Server Sender Email</label>
-        <value></value>
-        <hint>Will remove the server sender email address of all email forms for site</hint>
-      </input>
-      <select1 bind="ewCompiledTransform" appearance="full">
-        <label>Compiled Transform</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value>off</value>
-      </select1>
-      <select1 bind="ewPageCache" appearance="full">
-        <label>Page Cache</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value>off</value>
-      </select1>
-      <input bind="ewPageCacheTimeout">
-        <label>Timeout of Cache in Hours</label>
-      </input>
-      <select1 bind="ewCheckDetailPath" appearance="full">
-        <label>Check Detail Path</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value>off</value>
-      </select1>
-      <select1 bind="ewTrailingSlash" appearance="full">
-        <label>Force Trailing Slash</label>
-        <help class="inline">
-          Forces all urls to contain a trailing slash
-        </help>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value>off</value>
-      </select1>
-      <select1 bind="ewLowerCaseUrl" appearance="full">
-        <label>Enable Lower Case Url</label>
-        <help class="inline">
-          Convert all urls to lower case and automatically redirect url with uppercase characters.
-        </help>
-         <item>
-           <label>On</label>
-           <value>on</value>
-         </item>
-         <item>
-           <label>Off</label>
-           <value>off</value>
-         </item>
-         <value>off</value>
-       </select1>
+		<group ref="Perforomance" class="inline">
+			<label>Performance</label>
+			<group  class="row row-cols-md-2">
+				<select1 bind="ewDebug" appearance="full">
+					<label>Debug</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value>on</value>
+				</select1>
+
+				<select1 bind="ewCompiledTransform" appearance="full">
+					<label>Compiled Transform</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value>off</value>
+				</select1>
+				<select1 bind="ewPageCache" appearance="full">
+					<label>Page Cache</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value>off</value>
+				</select1>
+				<input bind="ewPageCacheTimeout">
+					<label>Timeout of Cache in Hours</label>
+				</input>
+			</group>
+		</group>
+		<group ref="URLSettings" class="inline">
+			<label>URL Settings</label>
+			<group  class="row row-cols-md-2">
+
+				<select1 bind="ewCheckDetailPath" appearance="full">
+					<label>Check Detail Path</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value>off</value>
+				</select1>
+				<select1 bind="ewTrailingSlash" appearance="full">
+					<label>Force Trailing Slash</label>
+					<help class="inline">
+						Forces all urls to contain a trailing slash
+					</help>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value>off</value>
+				</select1>
+				<select1 bind="ewLowerCaseUrl" appearance="full">
+					<label>Enable Lower Case Url</label>
+					<help class="inline">
+						Convert all urls to lower case and automatically redirect url with uppercase characters.
+					</help>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value>off</value>
+				</select1>
+				<select1 bind="ewLegacyRedirect" appearance="full">
+					<label>Legacy URL Forwarding</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value />
+				</select1>
+				<select1 bind="ewPageURLFormat" appearance="full">
+					<label>Page URL Format for Spaces</label>
+					<item>
+						<label>Use Hyphens</label>
+						<value>hyphens</value>
+					</item>
+					<item>
+						<label>No preference</label>
+						<value>off</value>
+					</item>
+					<value />
+				</select1>
+			</group>
+		</group>
+		<group ref="Features" class="inline">
+			<label>Features</label>
+			<div>Enabling features may increase your support fees</div>
+			<group  class="row row-cols-md-2">
+				<select1 bind="ptnCart" appearance="full">
+					<label>Shopping Cart</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value />
+				</select1>
+				<select1 bind="ptnMembership" appearance="full">
+					<label>Membership</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value />
+				</select1>
+				<select1 bind="ptnSearch" appearance="full">
+					<label>Search</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value />
+				</select1>
+				<select1 bind="ewScheduler" appearance="full">
+					<label>Scheduler</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value />
+				</select1>
+				<select1 bind="ewVersionControl" appearance="full">
+					<label>Version Control</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value />
+				</select1>
+				<select1 bind="ewPageVersions" appearance="full">
+					<label>ewPageVersions</label>
+					<item>
+						<label>On</label>
+						<value>on</value>
+					</item>
+					<item>
+						<label>Off</label>
+						<value>off</value>
+					</item>
+					<value />
+				</select1>
+
+			</group>
+		</group>
+    <group ref="AdvancedSettings" class="inline">
+      <label>AdvancedSettings</label>
+
+		<group  class="row row-cols-md-2">
+    
         <select1 bind="ewExcludeCategoryFromSearch" appearance="full">
          <label>Exclude Category from the Search Result</label>
          <help class="inline">
@@ -517,54 +676,6 @@
         <label>Depth to get related content for detailed content.</label>
         <value />
       </input>
-      <select1 bind="ewVersionControl" appearance="full">
-        <label>Version Control</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-      <select1 bind="ewPageVersions" appearance="full">
-        <label>ewPageVersions</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-      <select1 bind="ewLegacyRedirect" appearance="full">
-        <label>Legacy URL Forwarding</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-      <select1 bind="ewPageURLFormat" appearance="full">
-        <label>Page URL Format for Spaces</label>
-        <item>
-          <label>Use Hyphens</label>
-          <value>hyphens</value>
-        </item>
-        <item>
-          <label>No preference</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
       <select1 bind="ewAllowContentDetailAccess" appearance="full">
         <label>Always allow access to content detail regardless of location and permissions</label>
         <item>
@@ -597,30 +708,7 @@
         </item>
         <value />
       </select1>
-      <select1 bind="ewLogEmail" appearance="full">
-        <label>Log Emails</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
-      <select1 bind="ewLogEmailXml" appearance="full">
-        <label>Log Email Xml</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
+
       <select1 bind="ewShowStructForiegnRef" appearance="full">
         <label>Show Foriegn Ref on Edit Page</label>
         <item>
@@ -640,18 +728,7 @@
       <input bind="XmlSettings">
         <label>Xml Settings i.e. section.value;section2.value2</label>
       </input>
-      <select1 bind="ewScheduler" appearance="full">
-        <label>Scheduler</label>
-        <item>
-          <label>On</label>
-          <value>on</value>
-        </item>
-        <item>
-          <label>Off</label>
-          <value>off</value>
-        </item>
-        <value />
-      </select1>
+
       <select1 bind="ewExpireAtEndOfDay" appearance="full">
         <label>Expiry Dates (expire at end of day)</label>
         <item>
@@ -664,7 +741,15 @@
         </item>
         <value />
       </select1>
+		<input bind="ExcludeFoldersFromPaths">
+			<label>Foldernames to be excluded from page paths</label>
+			<hint>Comma separated list of foldernames that you do not want to appear in paths</hint>
+			<value />
+		</input>
+			</group>
     </group>
+
+		</group>
     <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
     </submit>

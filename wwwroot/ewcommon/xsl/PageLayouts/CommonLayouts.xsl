@@ -13,6 +13,7 @@
       <xsl:when test="Cart[@type='quote']/Quote/@cmd!=''">
         <div class="container">
           <xsl:apply-templates select="Cart[@type='quote']/Quote" mode="cartFull"/>
+			<xsl:text> </xsl:text>
         </div>
        
       </xsl:when>
@@ -20,12 +21,14 @@
       <xsl:when test="Cart[@type='order']/Order/@cmd!=''">
         <div class="container">
           <xsl:apply-templates select="Cart[@type='order']/Order" mode="cartFull"/>
+			<xsl:text> </xsl:text>
         </div>
       </xsl:when>
       <!-- IF GIFT LIST CMD SHOW GIFT LIST -->
       <xsl:when test="Cart[@type='giftlist']/Order/@cmd!=''">
         <div class="container">
           <xsl:apply-templates select="Cart[@type='giftlist' and @name='cart']/Order" mode="giftlistDetail"/>
+			<xsl:text> </xsl:text>
         </div>
       </xsl:when>
       <!-- IF ContentDetail Show ContentDetail -->
@@ -34,6 +37,7 @@
         <div class="detail-container">
           <xsl:apply-templates select="ContentDetail" mode="ContentDetail"/>
           <xsl:apply-templates select="ContentDetail/Content" mode="socialBookmarks" />
+			<xsl:text> </xsl:text>
         </div>
       </xsl:when>
       <xsl:otherwise>
@@ -57,6 +61,7 @@
           <xsl:with-param name="position">header</xsl:with-param>
           <xsl:with-param name="class" select="$containerClass"/>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </xsl:if>
   </xsl:template>
@@ -81,6 +86,7 @@
           <xsl:with-param name="position">footer</xsl:with-param>
           <xsl:with-param name="class" select="$containerClass"/>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </xsl:if>
 
@@ -125,6 +131,7 @@
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
       <xsl:apply-templates select="." mode="socialBookmarks" />
+		<xsl:text> </xsl:text>
     </div>
   </xsl:template>
 
@@ -141,6 +148,7 @@
       <xsl:otherwise>
         <div class="template" id="Error" >
           <xsl:call-template name="term2003" />
+			<xsl:text> </xsl:text>
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -174,12 +182,13 @@
                   <xsl:with-param name="position">column1</xsl:with-param>
                   <xsl:with-param name="class">column1</xsl:with-param>
                 </xsl:apply-templates>
+				  <xsl:text> </xsl:text>
               </div>
             </div>
           </section>
         </xsl:otherwise>
       </xsl:choose>
-
+		<xsl:text> </xsl:text>
 
 
 
@@ -273,6 +282,7 @@
                   column1 <xsl:value-of select="$col1"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
             <div id="column2" class="column2 {$col2}">
               <xsl:apply-templates select="/Page" mode="addModule">
@@ -282,6 +292,7 @@
                   column2 <xsl:value-of select="$col2"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
             <div class="terminus">&#160;</div>
           </div>
@@ -290,6 +301,7 @@
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
+		<xsl:text> </xsl:text>
     </div>
   </xsl:template>
 
@@ -373,6 +385,7 @@
                   <xsl:value-of select="$col1"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
             <div id="column2" class="column2 {$col2}">
               <xsl:apply-templates select="/Page" mode="addModule">
@@ -383,6 +396,7 @@
                   <xsl:value-of select="$col2"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
             <div id="column3" class="column3 {$col3}">
               <xsl:apply-templates select="/Page" mode="addModule">
@@ -393,6 +407,7 @@
                   <xsl:value-of select="$col3"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
           </div>
         </div>
@@ -402,6 +417,7 @@
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
+		<xsl:text> </xsl:text>
     </div>
   </xsl:template>
 
@@ -433,6 +449,7 @@
                   <xsl:value-of select="$col4"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
             <div id="column2" class="column2 {$col4}">
               <xsl:apply-templates select="/Page" mode="addModule">
@@ -443,6 +460,7 @@
                   <xsl:value-of select="$col4"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
             <div id="column3" class="column3 {$col4}">
               <xsl:apply-templates select="/Page" mode="addModule">
@@ -453,6 +471,7 @@
                   <xsl:value-of select="$col4"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
             <div id="column4" class="column4 {$col4}">
               <xsl:apply-templates select="/Page" mode="addModule">
@@ -463,6 +482,7 @@
                   <xsl:value-of select="$col4"/>
                 </xsl:with-param>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
             <!-- Terminus class fix to floating columns -->
             <div class="terminus">&#160;</div>
@@ -472,6 +492,7 @@
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
+		<xsl:text> </xsl:text>
     </div>
   </xsl:template>
 
@@ -496,6 +517,7 @@
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
       </xsl:apply-templates>
+		<xsl:text> </xsl:text>
     </div>
     <script type="text/javascript">
       $('#isotope-module').isotope({
@@ -595,6 +617,7 @@
                         <xsl:apply-templates select="." mode="moduleLink"/>
                       </h3>
                     </xsl:if>
+					  <xsl:text> </xsl:text>
                   </div>
                 </xsl:when>
                 <xsl:otherwise>
@@ -617,6 +640,7 @@
                         <xsl:apply-templates select="." mode="moduleLink"/>
                       </h2>
                     </xsl:if>
+					  <xsl:text> </xsl:text>
                   </div>
                 </xsl:when>
                 <xsl:otherwise>
@@ -743,6 +767,7 @@
               <xsl:text>&#160;</xsl:text>
             </xsl:otherwise>
           </xsl:choose>
+			<xsl:text> </xsl:text>
         </div>
       </div>
       <div class="content">
@@ -771,7 +796,9 @@
         </div>
       </xsl:if>
       <div class="bl">
-        <div class="br">&#160;</div>
+        <div class="br">
+			&#160;
+	</div>
       </div>
     </div>
   </xsl:template>
@@ -790,6 +817,7 @@
               <xsl:apply-templates select="." mode="inlinePopupOptions">
                 <xsl:with-param name="class" select="'linkedPopUp'"/>
               </xsl:apply-templates>
+				<xsl:text> </xsl:text>
             </div>
           </xsl:if>
           <a>
@@ -848,6 +876,7 @@
               </xsl:if>
               <div class="panel-body">
                 <xsl:apply-templates select="." mode="displayBrief"/>
+				  <xsl:text> </xsl:text>
               </div>
 
               <xsl:if test="@linkText!=''">
@@ -882,6 +911,7 @@
                 </div>
 
               </xsl:if>
+				<xsl:text> </xsl:text>
             </div>
           </a>
         </div>
@@ -942,6 +972,7 @@
                 </xsl:apply-templates>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayBrief"/>
+				<xsl:text> </xsl:text>
             </div>
           </xsl:if>
           <xsl:if test="@listGroup='true'">
@@ -952,6 +983,7 @@
                 </xsl:apply-templates>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayBrief"/>
+				<xsl:text> </xsl:text>
             </div>
           </xsl:if>
           <xsl:if test="@linkText!='' and @link!=''">
@@ -979,6 +1011,7 @@
             </div>
 
           </xsl:if>
+			<xsl:text> </xsl:text>
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -1044,6 +1077,7 @@
                 </xsl:apply-templates>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayBrief"/>
+				<xsl:text> </xsl:text>
             </div>
           </xsl:if>
           <xsl:if test="@listGroup='true'">
@@ -1054,6 +1088,7 @@
                 </xsl:apply-templates>
               </xsl:if>
               <xsl:apply-templates select="." mode="displayBrief"/>
+				<xsl:text> </xsl:text>
             </div>
           </xsl:if>
           <xsl:if test="@linkText!='' and @link!=''">
@@ -1079,6 +1114,7 @@
               <xsl:text> </xsl:text>
             </div>
           </xsl:if>
+			<xsl:text> </xsl:text>
         </div>
   </xsl:template>
 
@@ -1095,6 +1131,7 @@
             <xsl:apply-templates select="." mode="inlinePopupOptions">
               <xsl:with-param name="class" select="'linkedPopUp'"/>
             </xsl:apply-templates>
+			  <xsl:text> </xsl:text>
           </div>
           <a>
             <xsl:attribute name="href">
@@ -1150,6 +1187,7 @@
               </xsl:if>
               <div class="alert-body">
                 <xsl:apply-templates select="." mode="displayBrief"/>
+				  <xsl:text> </xsl:text>
               </div>
 
             </div>
@@ -1209,6 +1247,7 @@
               </xsl:apply-templates>
             </xsl:if>
             <xsl:apply-templates select="." mode="displayBrief"/>
+			  <xsl:text> </xsl:text>
           </div>
           <xsl:if test="@linkText!='' and @link!=''">
             <div class="alert-footer">
@@ -1231,6 +1270,7 @@
               <xsl:text> </xsl:text>
             </div>
           </xsl:if>
+			<xsl:text> </xsl:text>
         </div>
       </xsl:otherwise>
     </xsl:choose>
@@ -1285,6 +1325,7 @@
           </xsl:apply-templates>
         </xsl:if>
         <xsl:apply-templates select="." mode="displayBrief"/>
+		  <xsl:text> </xsl:text>
       </div>
       <xsl:if test="@linkText!='' and @link!=''">
         <div class="well-footer">
@@ -1398,6 +1439,7 @@
             <xsl:text>column1 col-md-4</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-4">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1410,6 +1452,7 @@
             <xsl:text>column2 col-md-4</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column3-{@id}" class="column3 col-md-4">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1422,6 +1465,7 @@
             <xsl:text>column3 col-md-4</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
   </xsl:template>
@@ -1440,6 +1484,7 @@
             <xsl:text>column1 col-md-12</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1459,6 +1504,7 @@
             <xsl:text>column1 col-md-6</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-6">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1471,6 +1517,7 @@
             <xsl:text>column2 col-md-6</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1490,6 +1537,7 @@
             <xsl:text>column1 col-md-4</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-8">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1502,6 +1550,7 @@
             <xsl:text>column2 col-md-8</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1521,6 +1570,7 @@
             <xsl:text>column1 col-md-8</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-4">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1533,6 +1583,7 @@
             <xsl:text>column2 col-md-4</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1552,6 +1603,7 @@
             <xsl:text>column1 col-md-3</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-9">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1564,6 +1616,7 @@
             <xsl:text>column2 col-md-9</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1583,6 +1636,7 @@
             <xsl:text>column1 col-md-9</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-3">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1595,6 +1649,7 @@
             <xsl:text>column2 col-md-3</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1614,6 +1669,7 @@
             <xsl:text>column1 col-md-2</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-10">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1626,6 +1682,7 @@
             <xsl:text>column2 col-md-10</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1645,6 +1702,7 @@
             <xsl:text>column1 col-md-10</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-2">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1657,6 +1715,7 @@
             <xsl:text>column2 col-md-2</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1676,6 +1735,7 @@
             <xsl:text>column1 col-md-3</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-3">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1688,6 +1748,7 @@
             <xsl:text>column2 col-md-3</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column3-{@id}" class="column3 col-md-3">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1700,6 +1761,7 @@
             <xsl:text>column3 col-md-3</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column4-{@id}" class="column4 col-md-3">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1712,6 +1774,7 @@
             <xsl:text>column4 col-md-3</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
 
@@ -1731,6 +1794,7 @@
             <xsl:text>column1 col-md-4</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-6">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1743,6 +1807,7 @@
             <xsl:text>column2 col-md-6</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
 
     </div>
@@ -1763,6 +1828,7 @@
             <xsl:text>column1 col-md-6</xsl:text>
           </xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
       <div id="column2-{@id}" class="column2 col-md-4">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -2066,9 +2132,7 @@
           </xsl:if>
           <h3 class="panel-title">
             <!--<i class="fa fa-ellipsis-v">&#160;</i>-->
-            <i class="fa fa-caret-down">
-              <xsl:text> </xsl:text>
-            </i>&#160;
+            <i class="fa fa-caret-down">&#160;</i>
             <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
             <xsl:value-of select="@title"/>
           </h3>
@@ -3617,6 +3681,7 @@
         </xsl:attribute>
       </xsl:if>
       <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+		  <xsl:text> </xsl:text>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -6773,6 +6838,7 @@
         </xsl:attribute>
       </xsl:if>
       <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+		  <xsl:text> </xsl:text>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -8453,24 +8519,26 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="clearfix Links">
-      <xsl:if test="@carousel='true'">
-        <xsl:attribute name="class">
-          <xsl:text>clearfix Links content-scroller</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}">
-        <xsl:if test="@autoplay !=''">
-          <xsl:attribute name="data-autoplay">
-            <xsl:value-of select="@autoplay"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@autoPlaySpeed !=''">
-          <xsl:attribute name="data-autoPlaySpeed">
-            <xsl:value-of select="@autoPlaySpeed"/>
-          </xsl:attribute>
-        </xsl:if>
+	  <xsl:if test="@carousel='true'">
+		  <xsl:attribute name="class">
+			  <xsl:text>clearfix Links content-scroller</xsl:text>
+		  </xsl:attribute>
+	  </xsl:if>
+	  <xsl:if test="@autoplay !=''">
+		  <xsl:attribute name="data-autoplay">
+			  <xsl:value-of select="@autoplay"/>
+		  </xsl:attribute>
+	  </xsl:if>
+	  <xsl:if test="@autoPlaySpeed !=''">
+		  <xsl:attribute name="data-autoPlaySpeed">
+			  <xsl:value-of select="@autoPlaySpeed"/>
+		  </xsl:attribute>
+	  </xsl:if>
 
+	  <div class="clearfix Links">
+	 <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}">
+		   
+       
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="linkList" select="$contentList"/>
@@ -8483,6 +8551,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
+		  <xsl:text> </xsl:text>
       </div>
     </div>
   </xsl:template>
@@ -8750,6 +8819,7 @@
       </xsl:if>
 
       <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" height="{@carouselHeight}">
+		  <xsl:text> </xsl:text>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -14306,7 +14376,9 @@
   <xsl:template match="Content[@type='Module' and @moduleType='GooglePlusBadge']" mode="displayBrief">
     <div class="GooglePlusBadge">
       <!-- Place this tag where you want the badge to render. -->
-      <div class="g-plus" data-href="https://plus.google.com/{GooglePlusId/node()}" data-rel="publisher" data-theme="light"></div>
+      <div class="g-plus" data-href="https://plus.google.com/{GooglePlusId/node()}" data-rel="publisher" data-theme="light">
+		  <xsl:text> </xsl:text>
+	  </div>
 
       <!-- Place this tag after the last badge tag. -->
       <script type="text/javascript">

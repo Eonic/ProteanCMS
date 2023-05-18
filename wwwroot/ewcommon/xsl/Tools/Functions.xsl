@@ -195,6 +195,41 @@
     </xsl:call-template>
   </xsl:variable>
 
+	<xsl:template name="eonicwebLogo">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebLogo']/@value!=''">
+				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>/ewcommon/images/admin/skin/protean-admin-white.png</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="eonicwebCMSName">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebCMSName']/@value!=''">
+				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebCMSName']/@value"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="eonicwebProductName"/>
+				<xsl:text> - Content Management System</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="eonicwebProductName">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Protean</xsl:text>
+				<strong>CMS</strong>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <xsl:variable name="siteURL">
     <xsl:variable name="baseUrl">
       <xsl:call-template name="getXmlSettings">
@@ -461,11 +496,8 @@
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
         <!-- common css -->
-		  <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
-       
-
+		<xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
         <xsl:apply-templates select="." mode="headerOnlyJS"/>
-
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
@@ -489,12 +521,23 @@
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
   </xsl:template>
+
+	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event">
+		gtag('event', 'ptn_form_submission', {
+		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
+		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
+			'<xsl:value-of select="name()"/>':'<xsl:value-of select="node()"/>
+			<xsl:text>'</xsl:text>
+			<xsl:if test="position()!=last()">,</xsl:if>
+		</xsl:for-each>
+        });
+	</xsl:template>
 	
 		
   <xsl:template match="Page" mode="criticalPathCSS">
-    <style>
-      <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
-    </style>
+	  <style>
+        <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
+	  </style>
   </xsl:template>
 
   <xsl:template match="Page" mode="alternatePages">
@@ -688,8 +731,11 @@
 
 
   <xsl:template match="Page" mode="js">
+	  <xsl:param name="async"/>
     <!-- bring in jQuery and standard plugins -->
-    <xsl:apply-templates select="." mode="commonJs" />
+    <xsl:apply-templates select="." mode="commonJs">
+	    <xsl:with-param name="async" select="$async"/>
+	 </xsl:apply-templates>
 
     <!-- site specific javascripts -->
     <xsl:apply-templates select="." mode="siteJs"/>
@@ -720,6 +766,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="commonJs">
+	  <xsl:param name="async"/>
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
         <xsl:apply-templates select="." mode="commonJsFiles" />
@@ -727,6 +774,7 @@
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Jquery</xsl:text>
       </xsl:with-param>
+	<xsl:with-param name="async" select="$async"/>  
     </xsl:call-template>
   </xsl:template>
 
@@ -1276,7 +1324,7 @@
 	  <xsl:if test="$GoogleGA4MeasurementID!=''">
 		  <!-- GA4 Tag Manager -->
 		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-		  <script cookie-consent="tracking">
+		  <script id="GA4Code" cookie-consent="tracking">
 			  window.dataLayer = window.dataLayer || [];
 			  function gtag(){dataLayer.push(arguments);}
 			  gtag('js', new Date());
@@ -1374,7 +1422,7 @@
 
   <xsl:template match="Page" mode="metadata">
     <xsl:if test="@cssFramework='bs3' or $adminMode">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
     </xsl:if>
 
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
@@ -1832,18 +1880,19 @@
           <xsl:value-of select="@artid"/>
         </xsl:if>
       </xsl:attribute>
-      <xsl:if test="$GoogleTagManagerID!=''">
-        <!-- Google Tag Manager (noscript) -->
-        <noscript>
-          <iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-        </noscript>
-        <!-- End Google Tag Manager (noscript) -->
-      </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
+      <xsl:if test="$GoogleTagManagerID!=''">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden">
+			<xsl:text> </xsl:text>
+		</iframe>
+	</noscript>
+	<!-- End Google Tag Manager (noscript) -->
+      </xsl:if>
+      <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaLeadForensicsID']" mode="MetaLeadForensicsCode"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-		<xsl:apply-templates select="/Page" mode="footerCommonStyle"/>
-      
-
+      <xsl:apply-templates select="/Page" mode="footerCommonStyle"/>      
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
@@ -1864,7 +1913,6 @@
       </xsl:if>
       <xsl:if test="@previewMode='true'"> previewMode</xsl:if>
     </xsl:attribute>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaLeadForensicsID']" mode="MetaLeadForensicsCode"/>
   </xsl:template>
 
   <xsl:template match="Page" mode="bodyDisplay">
@@ -2687,11 +2735,13 @@
   <xsl:template match="Page" mode="BingTrackingCode">   
       <xsl:if test="$BingTrackingID!=''">
 		 <script cookie-consent="tracking">
-          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
+			
+          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp;s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
           <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
 			  window.uetq = window.uetq || [];
 			  window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
           </xsl:if>
+
 		 </script>
     </xsl:if>
   </xsl:template>
@@ -2857,7 +2907,7 @@
       <!-- Your customer chat code -->
       <div class="fb-customerchat"
         attribution="setup_tool"
-        page_id="{@page_id}">
+        page_id="{@page_id}"> <xsl:text> </xsl:text>
       </div>
 
 
@@ -3946,6 +3996,7 @@
         <xsl:copy-of select="$titleText"/>
       </h1>
     </xsl:if>
+	  <xsl:text> </xsl:text>
   </xsl:template>
 
 
@@ -6203,7 +6254,7 @@
       </xsl:if>
 
       <xsl:apply-templates mode="cleanXhtml"/>
-
+	    <xsl:text> </xsl:text>
     </xsl:element>
   </xsl:template>
 
@@ -6818,10 +6869,9 @@
     <xsl:variable name="max-height-lg">
       <xsl:apply-templates select="." mode="getThHeight-lg"/>
     </xsl:variable>
-    
-    
+
     <xsl:if test="Images/img[@src and @src!='']">
-      <xsl:call-template  name="displayResponsiveImage">
+		     <xsl:call-template  name="displayResponsiveImage">
         <xsl:with-param name="crop" select="$crop"/>
         <xsl:with-param name="width" select="$max-width"/>
         <xsl:with-param name="height" select="$max-height"/>
@@ -6865,6 +6915,7 @@
 		<xsl:param name="style"/>
     <xsl:param name="imageUrl"/>
     <xsl:param name="altText"/>
+	 <xsl:param name="noLazy"/>
    	<!-- IF SO THAT we don't get empty tags if NO IMAGE -->
 		<xsl:if test="$imageUrl!=''">
       	<!-- SRC VALUE -->
@@ -7316,13 +7367,13 @@
 								<img>
 									<!-- SRC -->
 									<xsl:choose>
-										<xsl:when test="$lazy='on'">
+										<xsl:when test="$lazy='on' and not($noLazy)">
 											<xsl:attribute name="data-src">
 												<xsl:value-of select="$newSrc"/>
 											</xsl:attribute>
 											<xsl:attribute name="src">
 												<xsl:value-of select="$lazyplaceholder"/>
-											</xsl:attribute>
+											</xsl:attribute>										
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:attribute name="src">
@@ -7330,9 +7381,13 @@
 											</xsl:attribute>
 										</xsl:otherwise>
 									</xsl:choose>
+									<xsl:if test="not($noLazy)">
+										<xsl:attribute name="loading">
+											<xsl:text>lazy</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
 									<!-- Width -->
-									<xsl:attribute name="width">
-										
+									<xsl:attribute name="width">										
 										<xsl:choose>
 											<xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
 												<xsl:value-of select="$max-width"/>
@@ -7643,13 +7698,17 @@
                 <img>
                   <!-- SRC -->
                   <xsl:choose>
-                    <xsl:when test="$lazy='on'">
+                    <xsl:when test="$lazy='on' and not($noLazy)">
                       <xsl:attribute name="data-src">
                         <xsl:value-of select="$newSrc"/>
                       </xsl:attribute>
                       <xsl:attribute name="src">
                         <xsl:value-of select="$lazyplaceholder"/>
                       </xsl:attribute>
+						
+						<xsl:attribute name="loading">
+							<xsl:text>lazy</xsl:text>
+						</xsl:attribute>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:attribute name="src">
@@ -7697,7 +7756,7 @@
                         <xsl:text>photo thumbnail resized</xsl:text>
                       </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:if test="$lazy='on'">
+                    <xsl:if test="$lazy='on' and not($noLazy)">
                       <xsl:text> lazy</xsl:text>
                     </xsl:if>
                   </xsl:attribute>
@@ -7706,6 +7765,12 @@
                       <xsl:value-of select="$style" />
                     </xsl:attribute>
                   </xsl:if>
+					
+					<xsl:if test="not($noLazy)">
+						<xsl:attribute name="loading">
+							<xsl:text>lazy</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
                 </img>
               </picture>
             </xsl:variable>
@@ -7754,6 +7819,9 @@
 										</xsl:attribute>
 										<xsl:attribute name="src">
 											<xsl:value-of select="$lazyplaceholder"/>
+										</xsl:attribute>
+										<xsl:attribute name="loading">
+											<xsl:text>lazy</xsl:text>
 										</xsl:attribute>
 									</xsl:when>
 									<xsl:otherwise>
@@ -7831,23 +7899,24 @@
     <xsl:param name="imageUrl"/>
     <xsl:param name="imageRetinaUrl"/>
     <!--New image tags-->
-    <source type="{$type}" media="{$media}" srcset="{ew:replacestring($imageUrl,' ','%20')} 1x, {$imageRetinaUrl} 2x" >
-      <xsl:choose>
+    <source type="{$type}" media="{$media}">
+      <!--
+	<xsl:choose>
         <xsl:when test="$lazy='on'">
-          <xsl:attribute name="data-src">
+          <xsl:attribute name="data-srcset">
             <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
           </xsl:attribute>
-          <xsl:attribute name="src">
+          <xsl:attribute name="srcset">
             <xsl:value-of select="$lazyplaceholder"/>
           </xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:attribute name="src">
+          <xsl:attribute name="srcset">
             <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
-
+        -->
       <xsl:attribute name="srcset">
         <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
         <xsl:if test="imageRetinaUrl!=''">
@@ -7856,20 +7925,23 @@
           <xsl:text> 2x</xsl:text>
         </xsl:if>
       </xsl:attribute>
-
+      <!--
       <xsl:attribute name="class">
         <xsl:if test="$class!=''">
           <xsl:value-of select="$class" />
-        </xsl:if>
+        </xsl:if>		 
         <xsl:if test="$lazy='on'">
           <xsl:text> lazy</xsl:text>
         </xsl:if>
+	
       </xsl:attribute>
+      
       <xsl:if test="$style!=''">
         <xsl:attribute name="style">
           <xsl:value-of select="$style" />
         </xsl:attribute>
       </xsl:if>
+      -->
     </source>
   </xsl:template>
 
@@ -7877,7 +7949,7 @@
     <xsl:value-of select="false()"/>
   </xsl:template>
 
-  <xsl:template match="Content[@type='Document' or @type='Review']" mode="displayThumbnail">
+  <xsl:template match="Content[@type='Document']" mode="displayThumbnail">
     <xsl:param name="crop" select="false()" />
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="width"/>
@@ -10522,7 +10594,7 @@
     <xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
     <xsl:if test="$first!=''">
       <script type="{$scriptType}" src="{$first}{$bundleVersion}">
-        <xsl:if test="$async!=''">
+        <xsl:if test="$async!='' and not($adminMode)">
           <xsl:attribute name="async">async</xsl:attribute>
         </xsl:if>
         <xsl:text>/* */</xsl:text>

@@ -25,7 +25,12 @@
       "ProjectGuid": "76e7c871-9cec-4795-b6f2-66439dcd9367",
       "DisplayName": "Protean.Tools",
       "ColorIndex": 3
+    },
+    "67f47060-427b-4d03-9607-0829cd6b8408": {
+      "ProjectGuid": "67f47060-427b-4d03-9607-0829cd6b8408",
+      "DisplayName": "Protean.Tools.UnitTests",
+      "ColorIndex": 4
     }
   },
-  "NextColorIndex": 4
+  "NextColorIndex": 5
 }

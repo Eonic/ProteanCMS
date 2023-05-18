@@ -633,7 +633,7 @@ ProcessFlow:
 
                         Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/theme")
 
-                        oPageDetail.AppendChild(moAdXfm.xFrmThemeSettings("../../ewThemes/" & moThemeConfig("CurrentTheme") & "/xforms/Config/SkinSettings"))
+                        oPageDetail.AppendChild(moAdXfm.xFrmThemeSettings(moThemeConfig("CurrentTheme") & "/xforms/Config/ThemeSettings"))
 
                         If moAdXfm.valid Then
 
@@ -790,8 +790,13 @@ ProcessFlow:
                                     Dim oXfrm As New xForm(myWeb)
                                     oXfrm.NewFrm("LocationFilter")
                                     oXfrm.submission("LocationFilter", "/?ewCmd=ByType." & ContentType & ".Location", "post", "")
-                                    Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
-                                    "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+                                    ' Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
+                                    '  "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+
+                                    Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure " &
+                                    "where ( select count(cl1.nContentID) from tblContentLocation cl1 inner join tblContent tc on tc.nContentKey = cl1.nContentId  where cl1.nStructId = nStructKey and tc.cContentSchemaName = '" & ContentType & "') > 0 order by name"
+
+
                                     Dim locSelect As XmlElement = oXfrm.addSelect1(oXfrm.moXformElmt, "Location", False, "Select Location", "submit-on-select")
 
                                     If myWeb.moRequest("Location") <> "" Then
@@ -820,7 +825,16 @@ ProcessFlow:
                                     'get a list of pages with this content on.
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
-                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
+                                        Dim nStart As Integer = 0
+                                        Dim nRows As Integer = 500
+
+                                        ' Set the paging variables, if provided.
+                                        If Not (myWeb.moRequest("startPos") Is Nothing) AndAlso IsNumeric(myWeb.moRequest("startPos")) Then nStart = CInt(myWeb.moRequest("startPos"))
+                                        If Not (myWeb.moRequest("rows") Is Nothing) AndAlso IsNumeric(myWeb.moRequest("rows")) Then nRows = CInt(myWeb.moRequest("rows"))
+
+                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, nStart, nRows, FilterSQL, "", oPageDetail)
+
+                                        ' myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                         Dim contentsNode = moPageXML.SelectSingleNode("/Page/Contents")
                                         If Not IsNothing(contentsNode) Then
                                             myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
@@ -948,8 +962,6 @@ ProcessFlow:
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
-
-
 
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
@@ -2763,25 +2775,25 @@ AfterProcessFlow:
                                         ImportDS = newDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
                                         oImportXml.LoadXml(ImportDS.GetXml())
                                     End If
-                                Case "mysql"
-                                    DBConn = "server=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
-                                            "port=" & oImportRootElmt.GetAttribute("databasePort") & "; " &
-                                            "database=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
-                                            "uid=" & oImportRootElmt.GetAttribute("databaseUsername") & "; pwd=" & oImportRootElmt.GetAttribute("databasePassword")
+                                    'Case "mysql"
+                                    '    DBConn = "server=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
+                                    '            "port=" & oImportRootElmt.GetAttribute("databasePort") & "; " &
+                                    '            "database=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
+                                    '            "uid=" & oImportRootElmt.GetAttribute("databaseUsername") & "; pwd=" & oImportRootElmt.GetAttribute("databasePassword")
 
-                                    Dim mysqlDb As New MySqlDatabase(DBConn)
-                                    If mysqlDb.ConnectionValid = False Then
-                                        moAdXfm.valid = False
-                                        sErrorMsg = "Bad DB Connection - " & DBConn
-                                    Else
-                                        Dim ImportDS As New DataSet
-                                        Dim sSql As String = oImportRootElmt.GetAttribute("select")
-                                        If sSql = "" Then
-                                            sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
-                                        End If
-                                        ImportDS = mysqlDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
-                                        oImportXml.LoadXml(ImportDS.GetXml())
-                                    End If
+                                    '    Dim mysqlDb As New MySqlDatabase(DBConn)
+                                    '    If mysqlDb.ConnectionValid = False Then
+                                    '        moAdXfm.valid = False
+                                    '        sErrorMsg = "Bad DB Connection - " & DBConn
+                                    '    Else
+                                    '        Dim ImportDS As New DataSet
+                                    '        Dim sSql As String = oImportRootElmt.GetAttribute("select")
+                                    '        If sSql = "" Then
+                                    '            sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
+                                    '        End If
+                                    '        ImportDS = mysqlDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
+                                    '        oImportXml.LoadXml(ImportDS.GetXml())
+                                    '    End If
                             End Select
                         End If
                     End If
@@ -3752,6 +3764,10 @@ AfterProcessFlow:
                         sAdminLayout = "AdminXForm"
                         oPageDetail.AppendChild(moAdXfm.xFrmShippingDirRelations(myWeb.moRequest.QueryString("id"), ""))
 
+                    Case "ShippingGroup"
+                        sAdminLayout = "AdminXForm"
+                        oPageDetail.AppendChild(moAdXfm.xFrmProductShippingGroupRelations(myWeb.moRequest.QueryString("id"), myWeb.moRequest.QueryString("name")))
+
                     Case "delete"
                         'xFrmDeleteDeliveryMethod
                         oPageDetail.AppendChild(moAdXfm.xFrmDeleteDeliveryMethod(myWeb.moRequest("id")))
@@ -4070,7 +4086,7 @@ listItems:
                             GoTo listItems
                         End If
                         GoTo listItems
-                    Case "update", "updateAllRules"
+                    Case "updateAllRules"
 
                         If Not myWeb.moRequest("SchemaName") = Nothing Then
 
@@ -4087,20 +4103,37 @@ listItems:
                             End If
                         End If
                         GoTo listItems
-                        'Case "updateAllRules"
+                    Case "update"
 
-                        '    SchemaNameForUpdate = "null"
-                        '    sSql = "spScheduleToUpdateIndexTable"
-                        '        Dim arrParms As Hashtable = New Hashtable
-                        '        arrParms.Add("SchemaName", SchemaNameForUpdate)
-                        '        myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
-                        '        If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
-                        '            oPageDetail.InnerXml = ""
-                        '            indexId = Nothing
-                        '            GoTo listItems
-                        '        End If
+                        If Not myWeb.moRequest("SchemaName") = Nothing Then
+                            SchemaNameForUpdate = myWeb.moRequest("SchemaName")
+                            If Not moConfig("FilterIndexITBCust") = "" Then
+                                sSql = "spUpdateFilterIndex"
+                                Dim arrParms As Hashtable = New Hashtable
+                                arrParms.Add("SchemaName", SchemaNameForUpdate)
+                                arrParms.Add("IndexId", indexId)
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
+                                If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                    oPageDetail.InnerXml = ""
+                                    indexId = Nothing
+                                    GoTo listItems
+                                End If
+                            Else
 
-                        '    GoTo listItems
+                                sSql = "spScheduleToUpdateIndexTable"
+                                Dim arrParms As Hashtable = New Hashtable
+                                arrParms.Add("SchemaName", SchemaNameForUpdate)
+                                myWeb.moDbHelper.ExeProcessSql(sSql, CommandType.StoredProcedure, arrParms)
+                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, myWeb.mnUserId, 0, 0, 0, "ReIndexing", True)
+                                If moAdXfm.valid = False And myWeb.moRequest("ewCmd2") = "update" Then
+                                    oPageDetail.InnerXml = ""
+                                    indexId = Nothing
+                                    GoTo listItems
+                                End If
+                            End If
+                        End If
+                        GoTo listItems
 
                     Case Else
 listItems:
@@ -4308,6 +4341,13 @@ from tblContentIndexDef"
         Private Sub updateLessVariables(ByVal ThemeName As String, ByRef settingsXml As XmlElement)
             Dim cProcessInfo As String = ""
             Dim ThemeLessFile As String = ""
+            Dim ThemePath As String = "/themes/"
+            Dim VariablePrefix As String = "\\$" ' $ needs escaping.
+            If myWeb.moConfig("cssFramework") <> "bs5" Then
+                ThemePath = "/ewThemes/"
+                VariablePrefix = "@"
+            End If
+
             Try
                 If Not settingsXml.SelectSingleNode("theme/add[@key='variablesPath']") Is Nothing Then
                     ThemeLessFile = settingsXml.SelectSingleNode("theme/add[@key='variablesPath']/@value").InnerText
@@ -4316,7 +4356,7 @@ from tblContentIndexDef"
                     Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
 
                     ThemeLessFile = fsHelper.checkLeadingSlash(ThemeLessFile)
-                    ThemeLessFile = "/ewThemes/" & ThemeName & "/" & ThemeLessFile
+                    ThemeLessFile = ThemePath & ThemeName & "/" & ThemeLessFile
                     If oFsH.VirtualFileExists(ThemeLessFile) Then
 
 
@@ -4342,7 +4382,7 @@ from tblContentIndexDef"
                         Dim oElmt As XmlElement
                         For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
                             Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
-                            Dim searchText As String = "(?<=@" & variableName & ":).*(?=;)"
+                            Dim searchText As String = "(?<=" & VariablePrefix & variableName & ":).*(?=;)"
                             Dim replaceText As String = oElmt.GetAttribute("value").Trim
 
                             'handle image files in CSS
@@ -4378,16 +4418,15 @@ from tblContentIndexDef"
 
         Private Sub updateStandardXslVariables(ByVal ThemeName As String, ByRef settingsXml As XmlElement)
             Dim cProcessInfo As String = ""
-            Dim ThemeXslFile As String = ""
+            Dim ThemeXslFile As String = "/themes/" & ThemeName & "/shared.xsl"
             Try
 
                 Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
+                If myWeb.moConfig("cssFramework") <> "bs5" Then
+                    ThemeXslFile = "/ewThemes/" & ThemeName & "/Standard.xsl"
+                End If
 
-
-                ThemeXslFile = "/ewThemes/" & ThemeName & "/Standard.xsl"
                 If oFsH.VirtualFileExists(ThemeXslFile) Then
-
-
 
                     Dim oImp As Protean.Tools.Security.Impersonate = Nothing
                     If myWeb.impersonationMode Then
@@ -4398,30 +4437,30 @@ from tblContentIndexDef"
 
                     Dim content As String
 
-                        'check not read only
-                        Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
-                        oFileInfo.IsReadOnly = False
+                    'check not read only
+                    Dim oFileInfo As IO.FileInfo = New IO.FileInfo(myWeb.goServer.MapPath(ThemeXslFile))
+                    oFileInfo.IsReadOnly = False
 
-                        Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeXslFile))
-                            content = reader.ReadToEnd()
-                            reader.Close()
-                        End Using
+                    Using reader As New StreamReader(myWeb.goServer.MapPath(ThemeXslFile))
+                        content = reader.ReadToEnd()
+                        reader.Close()
+                    End Using
 
-                        Dim oElmt As XmlElement
-                        For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
-                            Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
+                    Dim oElmt As XmlElement
+                    For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
+                        Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
 
-                            Dim searchText As String = "(?<=<xsl:variable name=""" & variableName & """>).*(?=</xsl:variable>)"
+                        Dim searchText As String = "(?<=<xsl:variable name=""" & variableName & """>).*(?=</xsl:variable>)"
 
-                            Dim replaceText As String = oElmt.GetAttribute("value").Trim
+                        Dim replaceText As String = oElmt.GetAttribute("value").Trim
 
-                            content = Regex.Replace(content, searchText, replaceText)
-                        Next
+                        content = Regex.Replace(content, searchText, replaceText)
+                    Next
 
-                        Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeXslFile))
-                            writer.Write(content)
-                            writer.Close()
-                        End Using
+                    Using writer As New StreamWriter(myWeb.goServer.MapPath(ThemeXslFile))
+                        writer.Write(content)
+                        writer.Close()
+                    End Using
                     If myWeb.impersonationMode Then
                         oImp.UndoImpersonation()
                         oImp = Nothing

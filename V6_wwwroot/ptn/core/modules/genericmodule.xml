@@ -34,6 +34,7 @@
 			<bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
 			<bind id="cModAnim" nodeset="@modAnim" required="false()" type="string"/>
 			<bind id="cModAnimDelay" nodeset="@modAnimDelay" required="false()" type="string"/>
+			<bind id="cModAnimSpeed" nodeset="@modAnimSpeed" required="false()" type="string"/>
 			<bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
 			<bind id="bMatchHeight" nodeset="@matchHeight" required="false()" type="string"/>
 			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
@@ -46,6 +47,7 @@
 			<bind id="linkWindow" nodeset="@linkWindow" required="false()" type="string"/>
 			<bind id="linkObject" nodeset="@linkObject" required="false()" type="string"/>
 			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
@@ -54,6 +56,7 @@
 			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
 			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
 			<bind id="bCascade" nodeset="bCascade" required="false()" type="string"/>
+
 			<bind nodeset="cContentXmlBrief/Content">
 				<bind id="Screens" nodeset="@screens" required="false()" type="string"/>
 				<bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
@@ -197,9 +200,113 @@
 				</group>
 				<group id="animate" class="row">
 					<group class="row">
-						<group class="col-lg-6">
+						<group class="col-lg-4">
 							<select1 bind="cModAnim" appearance="minimal">
 								<label>Animation Style</label>
+								<item>
+									<label>Bounce</label>
+									<value>bounce</value>
+								</item>
+								<item>
+									<label>Flash</label>
+									<value>flash</value>
+								</item>
+								<item>
+									<label>Pulse</label>
+									<value>pulse</value>
+								</item>
+								<item>
+									<label>Rubber Band</label>
+									<value>rubberBand</value>
+								</item>
+								<item>
+									<label>Shake X</label>
+									<value>shakeX</value>
+								</item>	
+								<item>
+									<label>Shake Y</label>
+									<value>shakeY</value>
+								</item>
+								<item>
+									<label>Head Shake</label>
+									<value>headShake</value>
+								</item>								
+								<item>
+									<label>Swing</label>
+									<value>swing</value>
+								</item>								
+								<item>
+									<label>Tada</label>
+									<value>tada</value>
+								</item>							
+								<item>
+									<label>Wobble</label>
+									<value>wobble</value>
+								</item>					
+								<item>
+									<label>Jello</label>
+									<value>jello</value>
+								</item>				
+								<item>
+									<label>Heartbeat</label>
+									<value>heartbeat</value>
+								</item>				
+								<item>
+									<label>Hinge</label>
+									<value>hinge</value>
+								</item>
+								<item>
+									<label>Jack in the Box</label>
+									<value>jackInTheBox</value>
+								</item>
+								<item>
+									<label>Roll In</label>
+									<value>rollIn</value>
+								</item>
+								<item>
+									<label>Roll Out</label>
+									<value>rollOut</value>
+								</item>
+								<item>
+									<label>Zoom In</label>
+									<value>zoomIn</value>
+								</item>
+								<item>
+									<label>Zoom In Up</label>
+									<value>zoomInUp</value>
+								</item>
+								<item>
+									<label>Zoom In Down</label>
+									<value>zoomInDown</value>
+								</item>
+								<item>
+									<label>Zoom In Left</label>
+									<value>zoomInLeft</value>
+								</item>
+								<item>
+									<label>Zoom In Right</label>
+									<value>zoomInRight</value>
+								</item>
+									<item>
+									<label>Zoom Out</label>
+									<value>zoomOut</value>
+								</item>
+								<item>
+									<label>Zoom Out Up</label>
+									<value>zoomOutUp</value>
+								</item>
+								<item>
+									<label>Zoom Out Down</label>
+									<value>zoomOutDown</value>
+								</item>
+								<item>
+									<label>Zoom Out Left</label>
+									<value>zoomOutLeft</value>
+								</item>
+								<item>
+									<label>Zoom Out Right</label>
+									<value>zoomOutRight</value>
+								</item>
 								<item>
 									<label>Fade In</label>
 									<value>fadeIn</value>
@@ -237,6 +344,10 @@
 									<value>fadeInRightBig</value>
 								</item>
 								<item>
+									<label>Slide In Up</label>
+									<value>slideInUp</value>
+								</item>
+								<item>
 									<label>Slide In Down</label>
 									<value>slideInDown</value>
 								</item>
@@ -270,10 +381,35 @@
 								</item>
 							</select1>
 						</group>
-						<group class="col-lg-6">
-							<range bind="cModAnimDelay" start="0" end="500" step="10" >
+						<group class="col-lg-4">
+							<range bind="cModAnimDelay" start="0" end="5000" step="10" >
 								<label>Delay</label>
 							</range>
+						</group>
+						<group class="col-lg-4">
+							<select1 bind="cModAnimSpeed" appearance="minimal">
+								<label>Animation Speed</label>
+								<item>
+									<label>Animate Faster (.5 sec)</label>
+									<value>animate__faster</value>
+								</item>
+								<item>
+									<label>Animate Fast (.8 sec)</label>
+									<value>animate__fast</value>
+								</item>
+								<item>
+									<label>Default (1 sec)</label>
+									<value/>
+								</item>
+								<item>
+									<label>Animate Slow (2 sec)</label>
+									<value>animate__slow</value>
+								</item>
+								<item>
+									<label>Animate Slower (3 sec)</label>
+									<value>animate__slower</value>
+								</item>
+							</select1>
 						</group>
 					</group>
 				</group>
@@ -390,6 +526,7 @@
 								<p>By default modules have a margin below them. If you would like to remove this for this module, please select "no"</p>
 							</help>
 						</select1>-->
+						
 					</group>
 					<group class="col-lg-4">
 						<select bind="Screens" appearance="full" class="multiline bs-only">
@@ -443,16 +580,51 @@
 						</select>
 					</group>
 					<group class="col-lg-4">
+						<select1 bind="heading" appearance="full" class="">
+							<label>Heading</label>
+							<item>
+								<label>Heading 1</label>
+								<value>h1</value>
+							</item>
+							<item>
+								<label>Heading 2</label>
+								<value>h2</value>
+							</item>
+							<item>
+								<label>Heading 3</label>
+								<value>h3</value>
+							</item>
+							<item>
+								<label>Heading 4</label>
+								<value>h4</value>
+							</item>
+							<item>
+								<label>Heading 5</label>
+								<value>h5</value>
+							</item>
+							<item>
+								<label>Heading 6</label>
+								<value>h6</value>
+							</item>
+
+						</select1>
+						
+					</group>
+					<group class="col-lg-4">
 						<input bind="dPublishDate" class="calendar short">
 							<label>Publish Date</label>
 						</input>
+					</group>
+					<group class="col-lg-4">
 						<input bind="dExpireDate" class="calendar short">
 							<label>Expire Date</label>
 						</input>
 					</group>
-					<input bind="cDescription" class="short">
-						<label>Change Notes</label>
-					</input>
+					<group class="col-lg-4">
+						<input bind="cDescription" class="short">
+							<label>Change Notes</label>
+						</input>
+					</group>
 				</group>
 				<group id="columns" class="inline-select">
 					<label>

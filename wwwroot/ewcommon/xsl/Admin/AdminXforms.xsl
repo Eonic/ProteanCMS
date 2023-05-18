@@ -89,7 +89,7 @@
 								</span>
 							</xsl:if>
 							<xsl:apply-templates select="submit" mode="xform"/>
-							<!--<div class="clearfix">&#160;</div>-->
+							<!--<div class="clearfix">&#160; </div>-->
 						</div>
 					</xsl:if>
 				</xsl:otherwise>
@@ -200,7 +200,7 @@
 							</span>
 						</xsl:if>
 						<xsl:apply-templates select="submit" mode="xform"/>
-						<!--<div class="clearfix">&#160;</div>-->
+						<!--<div class="clearfix">&#160; </div>-->
 					</div>
 				</xsl:if>
 			</xsl:for-each>
@@ -264,10 +264,9 @@
 				<xsl:attribute name="class">
 					<xsl:text>form-control pickImageInput </xsl:text>
 					<xsl:value-of select="@class"/>
-				</xsl:attribute>
-				<xsl:text></xsl:text>
+				</xsl:attribute> 
 				<xsl:apply-templates select="value/img" mode="jsNiceImage"/>
-				<xsl:text></xsl:text>
+				<xsl:text> </xsl:text>
 			</textarea>
 			<xsl:choose>
 				<xsl:when test="value/img/@src!=''">
@@ -1128,7 +1127,9 @@
 				</td>
 				{{else}}
 				<td class="progress">
-					<div></div>
+					<div>
+						<xsl:text></xsl:text>
+					</div>
 				</td>
 				<td class="start">
 					<button>Start</button>
@@ -1736,9 +1737,10 @@
 					</label>
 					</div>
 					<div class="col-md-6">
-						
+						<xsl:text> </xsl:text>
 					</div>
 					<div class="col-md-3">
+						<xsl:text> </xsl:text>
 				<xsl:choose>
 					<xsl:when test="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]">
 						<xsl:variable name="relatedContent" select="concat('FilterEdit_',$filterType)" />
