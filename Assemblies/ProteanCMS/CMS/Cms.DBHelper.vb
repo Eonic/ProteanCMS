@@ -4133,7 +4133,6 @@ restart:
             Dim oDs As DataSet
             'Dim oDr As SqlDataReader
             Dim oRow As DataRow
-            Dim oRowNext As DataRow
 
             Dim cSchemaName As String = ""
             Dim RecCount As Long
@@ -4141,7 +4140,7 @@ restart:
 
             Dim i As Integer
             Dim j As Integer
-            Dim k As Integer
+            Dim cnt As Integer
 
             Dim objectType As objectTypes
             Dim sKeyField As String
@@ -4255,11 +4254,11 @@ restart:
                                 If IsDBNull(oRow(getOrderFname(objectType))) = False Then
                                     nDisplayOrder = oRow(getOrderFname(objectType))
                                 End If
-                                k = i
-                                If oRow(sStatusField) = 1 Then    'If product is active
+                                cnt = i
+                                If oRow(sStatusField) = 1 Then    'If Content is active
                                     nStatus = 1
                                 End If
-                                If oRow(sStatusField) = 0 Then     'If product is hidden
+                                If oRow(sStatusField) = 0 Then     'If Content is InActive or hidden
                                     nStatus = 0
                                 End If
                                 For j = 0 To i     'Update one step up order
@@ -4280,7 +4279,7 @@ restart:
                                             skipnext = False
                                             sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " =  " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
                                             ExeProcessSql(sSql)
-                                            i = k
+                                            i = cnt
                                             Exit For
                                         End If
                                     Next
