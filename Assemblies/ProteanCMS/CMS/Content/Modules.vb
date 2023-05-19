@@ -412,7 +412,7 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     Dim whereSQL As String = ""
 
-                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "hidden-sm hidden-md hidden-lg filter-xs-btn showexperiences")
+                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "Show Experiences", "hidden-sm hidden-md hidden-lg filter-xs-btn showexperiences")
                     'filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
                     filterForm.addValues()
 
