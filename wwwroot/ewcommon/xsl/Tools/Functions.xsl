@@ -521,6 +521,17 @@
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
   </xsl:template>
+
+	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event">
+		gtag('event', 'ptn_form_submission', {
+		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
+		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
+			'<xsl:value-of select="name()"/>':'<xsl:value-of select="node()"/>
+			<xsl:text>'</xsl:text>
+			<xsl:if test="position()!=last()">,</xsl:if>
+		</xsl:for-each>
+        });
+	</xsl:template>
 	
 		
   <xsl:template match="Page" mode="criticalPathCSS">
@@ -1313,7 +1324,7 @@
 	  <xsl:if test="$GoogleGA4MeasurementID!=''">
 		  <!-- GA4 Tag Manager -->
 		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-		  <script cookie-consent="tracking">
+		  <script id="GA4Code" cookie-consent="tracking">
 			  window.dataLayer = window.dataLayer || [];
 			  function gtag(){dataLayer.push(arguments);}
 			  gtag('js', new Date());

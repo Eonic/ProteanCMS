@@ -2791,50 +2791,66 @@
 	</xsl:template>
   
   	<xsl:template match="Page[Cart/Order/@cmd='Cart']" mode="google-ga4-event">
-		gtag("event", "view_cart",
+		gtag("event", "begin_checkout",
 		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
 		);
 	</xsl:template>
   
-  <xsl:template match="Page" mode="google-ga4-transaction">
-		{
-		currency: "<xsl:value-of select="Cart/@currency"/>",
-		value: <xsl:value-of select="Cart/Order/@total"/>,
-		items: [
-		<xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
-		]
-		}
+	<xsl:template match="Page[Cart/Order/@cmd='Billing']" mode="google-ga4-event">
+		gtag("event", "add_shipping_info",
+		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		);
 	</xsl:template>
 
+	<xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails' or Cart/Order/@cmd='SubmitPaymentDetails']" mode="google-ga4-event">
+		gtag("event", "add_payment_info",
+		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		);
+	</xsl:template>
   
     <xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="google-ga4-event">
 		gtag("event", "purchase",
 		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
 		);
 	</xsl:template>
-
+	
 	<xsl:template match="Page" mode="google-ga4-transaction">
 		{
 		currency: "<xsl:value-of select="Cart/@currency"/>",
-		transaction_id: "<xsl:value-of select="Cart/Order/@InvoiceRef"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		items: [
 		<xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
 		]
 		}
 	</xsl:template>
-  
-  <xsl:template match="Page[Cart/Order/@cmd='Billing']" mode="google-ga4-event">
-		gtag("event", "add_shipping_info",
-		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
-		);
-	</xsl:template>
 
-	<xsl:template match="Page" mode="google-ga4-transaction">
+	<xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails' or Cart/Order/@cmd='SubmitPaymentDetails']" mode="google-ga4-transaction">
 		{
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
-    shipping_tier: "<xsl:value-of select="Cart/Order/Shipping/Carrier"/>",
+		shipping: "<xsl:value-of select="Cart/Order/@shippingCost"/>",
+		shipping_tier: "<xsl:value-of select="Cart/Order/@shippingDesc"/>",
+		<xsl:if test="Cart/Order/Notes/PromotionalCode!=''">
+		coupon: "<xsl:value-of select="Cart/Order/Notes/PromotionalCode"/>",
+		</xsl:if>
+		payment_type: "Credit Card",
+		items: [
+		<xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
+		]
+		}
+	</xsl:template>
+
+	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="google-ga4-transaction">
+		{
+		transaction_id: "<xsl:value-of select="Cart/Order/@invoiceRef"/>",
+		currency: "<xsl:value-of select="Cart/@currency"/>",
+		value: <xsl:value-of select="Cart/Order/@total"/>,
+		shipping: "<xsl:value-of select="Cart/Order/@shippingCost"/>",
+		shipping_tier: "<xsl:value-of select="Cart/Order/@shippingDesc"/>",
+		<xsl:if test="Cart/Order/Notes/PromotionalCode!=''">
+			coupon: "<xsl:value-of select="Cart/Order/Notes/PromotionalCode"/>",
+		</xsl:if>
+		payment_type: "Credit Card",
 		items: [
 		<xsl:apply-templates select="Cart/Order/Item" mode="google-ga4-transaction-item"/>
 		]

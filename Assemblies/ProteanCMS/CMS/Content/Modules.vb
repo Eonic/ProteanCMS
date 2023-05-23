@@ -8,6 +8,8 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Collections.Generic
+Imports Microsoft.Ajax.Utilities
+
 
 Partial Public Class Cms
     Public Class Content
@@ -15,6 +17,7 @@ Partial Public Class Cms
 #Region "Declarations"
 
         Dim myWeb As Protean.Cms
+
         Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         Private Const mcModuleName As String = "Protean.Cms.Content"
@@ -334,34 +337,30 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Dim cProcessInfo As String = "ContentFilter"
                 Try
                     'current contentfilter id
-
                     Dim oFilterElmt As XmlElement
                     Dim formName As String = "ContentFilter"
-                    'Dim cnt As Int16
+                    Dim cFilterTarget As String = "Product"
+                    Dim cWhereSql As String = String.Empty
                     Dim oFrmGroup As XmlElement
                     Dim filterForm As xForm = New xForm(myWeb)
                     Dim className As String = String.Empty
                     Dim oAdditionalFilterInput As New Hashtable()
                     filterForm.NewFrm(formName)
                     filterForm.submission(formName, "", "POST", "")
-
+                    If (oContentNode.Attributes("filterTarget") IsNot Nothing) Then
+                        cFilterTarget = oContentNode.Attributes("filterTarget").Value
+                    End If
                     If (myWeb.moRequest.Form("clearfilters") IsNot Nothing) Then
                         If (Convert.ToString(myWeb.moRequest.Form("clearfilters")) = "clearfilters") Then
-
                             myWeb.moResponse.Redirect(myWeb.moRequest.RawUrl)
 
                         End If
                     End If
+
+
                     oFrmGroup = filterForm.addGroup(filterForm.moXformElmt, "main-group")
 
-                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
-                        className = oFilterElmt.GetAttribute("className")
-                        If (myWeb.moRequest.Form(className) IsNot Nothing) Then
-                            oAdditionalFilterInput.Add(className, Convert.ToString(myWeb.moRequest.Form(className)))
 
-                        End If
-
-                    Next
 
                     For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
 
@@ -369,6 +368,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                         className = oFilterElmt.GetAttribute("className")
                         Dim providerName As String = oFilterElmt.GetAttribute("providerName")
 
+                        cWhereSql = GetFilterWhereClause(myWeb, filterForm, oContentNode, className)
                         If className <> "" Then
 
                             If providerName = "" Or LCase(providerName) = "default" Then
@@ -397,13 +397,13 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                             Dim o As Object = Activator.CreateInstance(calledType)
 
-                            Dim args(3) As Object
+                            Dim args(5) As Object
                             args(0) = myWeb
                             args(1) = oFilterElmt
                             args(2) = filterForm
                             args(3) = oFrmGroup
-                            'args(4) = oAdditionalFilterInput
-
+                            args(4) = oContentNode
+                            args(5) = cWhereSql
                             calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
                         End If
 
@@ -459,13 +459,13 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                                     Dim o As Object = Activator.CreateInstance(calledType)
 
-                                    Dim args(4) As Object
+                                    Dim args(5) As Object
                                     args(0) = myWeb
                                     args(1) = whereSQL
                                     args(2) = filterForm
                                     args(3) = oFrmGroup
                                     args(4) = oFilterElmt
-
+                                    args(5) = cFilterTarget
                                     whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
                                 End If
 
@@ -479,9 +479,9 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     ' now we go and get the results from the filter.
                     If (whereSQL <> String.Empty) Then
-
-                        myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, "Product")
-                        oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
+                        myWeb.moSession("FilterWhereCondition") = whereSQL
+                        myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
+                        'oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
 
                         If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
                             filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
@@ -494,7 +494,68 @@ where cl.nStructId = " & myWeb.mnPageId)
             End Sub
 
 
+            Public Function GetFilterWhereClause(ByRef myWeb As Protean.Cms, ByRef filterForm As xForm, ByRef oContentNode As XmlElement, ByVal excludeClassName As String) As String
+                Dim cWhereSQL As String = String.Empty
+                Dim className As String = String.Empty
+                Dim oFilterElmt As XmlElement
+                Dim cFilterTarget As String
 
+                Dim calledType As Type
+                If (oContentNode.Attributes("filterTarget") IsNot Nothing) Then
+                    cFilterTarget = oContentNode.Attributes("filterTarget").Value
+                End If
+
+
+                Try
+                    For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
+                        Dim providerName As String = oFilterElmt.GetAttribute("providerName")
+                        className = oFilterElmt.Attributes("className").Value.ToString()
+                        If myWeb.moRequest.Form(className) IsNot Nothing Then
+                            If (excludeClassName <> className) Then
+
+                                If providerName = "" Or LCase(providerName) = "default" Then
+                                    providerName = "Protean.Providers.Filters." & className
+                                    calledType = System.Type.GetType(providerName, True)
+                                Else
+                                    Dim castObject As Object = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders")
+                                    Dim moPrvConfig As Protean.ProviderSectionHandler = castObject
+                                    Dim ourProvider As Object = moPrvConfig.Providers(providerName)
+                                    Dim assemblyInstance As [Assembly]
+
+                                    If ourProvider.parameters("path") <> "" Then
+                                        assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(ourProvider.parameters("path")))
+                                    Else
+                                        assemblyInstance = [Assembly].Load(ourProvider.Type)
+                                    End If
+                                    If ourProvider.parameters("rootClass") = "" Then
+                                        calledType = assemblyInstance.GetType("Protean.Providers.Filters." & providerName, True)
+                                    Else
+
+                                        calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & "." & className, True)
+                                    End If
+                                End If
+
+                                Dim methodname As String = "GetFilterSQL"
+
+                                Dim o As Object = Activator.CreateInstance(calledType)
+
+                                Dim args(0) As Object
+                                args(0) = myWeb
+
+                                'If (cWhereSQL <> String.Empty) Then
+                                '    cWhereSQL = cWhereSQL & " AND "
+                                'End If
+                                cWhereSQL = cWhereSQL & calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
+                            End If
+                        End If
+
+
+                    Next
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetFilterWhereClause", ex, ""))
+                End Try
+                Return cWhereSQL
+            End Function
             Public Sub Conditional(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Try
                     If Not myWeb.mbAdminMode Then
@@ -510,6 +571,7 @@ where cl.nStructId = " & myWeb.mnPageId)
             End Sub
 
         End Class
+
 
 #End Region
 

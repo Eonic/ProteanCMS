@@ -12,31 +12,47 @@
 
 	 <!--Mail Form Activity Just Gets all the child nodes of cActivityXml - it's not a flat report--> 
 	<xsl:template match="Report" mode="reportHeaders">
-		<xsl:variable name="activityHeader">
-			<Item>
-				<xsl:for-each select="Item[1]/descendant::*[local-name()!='cActivityXml' and local-name()!='Items']">
-					<xsl:element name="{local-name()}"/>
-				</xsl:for-each>
-			</Item>
-		</xsl:variable>
-		<xsl:apply-templates select="ms:node-set($activityHeader)" mode="reportHeaderRow"/>
+		<xsl:apply-templates select="Item[1]/DateTime" mode="reportHeader"/>
+		<xsl:apply-templates select="Item[1]/cActivityXml/descendant::*" mode="reportHeader"/>
+		<xsl:text>&#xD;</xsl:text>
 	</xsl:template>
 
 
 	<!--ROW CELL CHOOSER-->
 	<xsl:template match="Item" mode="reportRowCellFilter">
 		<xsl:apply-templates select="DateTime" mode="reportCell"/>
-		<xsl:apply-templates select="cActivityXml/*/*" mode="reportCell"/>
+		<xsl:apply-templates select="cActivityXml/descendant::*" mode="reportCell"/>
+	</xsl:template>
+	
+	<xsl:template match="Items" mode ="reportHeader">
+	
+	</xsl:template>
+	
+	<xsl:template match="Attachment" mode ="reportHeader">	
+	
+	</xsl:template>
+	
+	<xsl:template match="Content" mode ="reportHeader">
+	
+	</xsl:template>
+	
+	<xsl:template match="Attachments" mode="reportHeader">
+		<xsl:text>,"Document Title"</xsl:text>
+	</xsl:template>	
+	
+	<xsl:template match="Items" mode ="reportCell">
+		
+	
 	</xsl:template>
 
-	<xsl:template match="AttachmentIds" mode ="reportCell">
-
+	<xsl:template match="AttachmentIds" mode="reportCell">
+		<xsl:text>"</xsl:text><xsl:value-of select="@ids"/><xsl:text>",</xsl:text>
 	</xsl:template>
-
-	<xsl:template match="Attachements" mode ="reportCell">
+	
+		
+	<xsl:template match="Attachements | Attachments" mode ="reportCell">
 		<xsl:text>"</xsl:text>
-
-		<xsl:for-each select="Attachement ">
+		<xsl:for-each select="Attachement | Attachment">
 			<xsl:value-of select="Content/@name"/>
 		</xsl:for-each>
 		<xsl:text>"</xsl:text>

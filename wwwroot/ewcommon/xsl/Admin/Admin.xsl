@@ -8980,7 +8980,7 @@
           </i><xsl:text> </xsl:text>Select User Groups
         </a>		  
         <xsl:text> </xsl:text>
-	    <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}" class="btn btn-xs btn-primary">
+	    <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}&amp;name={@name}" class="btn btn-xs btn-primary">
 			  <i class="fa fa-user fa-white">
 				  <xsl:text> </xsl:text>
 			  </i><xsl:text> </xsl:text>Select Shipping Group
@@ -9280,13 +9280,7 @@
   <xsl:template match="Report" mode="defaultReport">
     <table class="table">
       <tr>
-        <xsl:for-each select="Item[1]/descendant-or-self::*">
-          <xsl:if test="count(*)=0">
-            <th>
-              <xsl:value-of select="local-name()"/>
-            </th>
-          </xsl:if>
-        </xsl:for-each>
+		  <xsl:apply-templates select="Item[1]/descendant-or-self::*" mode="Report_ColsHeading"/>       
       </tr>
       <xsl:for-each select="Item">
         <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
@@ -9306,13 +9300,7 @@
 				<th>
 					Date/Time
 				</th>
-				<xsl:for-each select="Item[last()]/cActivityXml/descendant-or-self::*">
-					<xsl:if test="count(*)=0 or local-name()='Attachements' or local-name()='Attachments'">
-						<th>
-							<xsl:value-of select="local-name()"/>
-						</th>
-		</xsl:if>
-				</xsl:for-each>
+				<xsl:apply-templates select="Item[last()]/cActivityXml/descendant-or-self::*" mode="Report_ColsHeading"/>
 				<th>
 					Refering Page
 				</th>
@@ -9328,9 +9316,35 @@
 			</xsl:for-each>
 		</table>
 	</xsl:template>
-	
 
-  <xsl:template match="*" mode ="Report_ColsValues">
+	<xsl:template match="*" mode ="Report_ColsHeading">
+		<xsl:if test="count(*)=0">
+				<th>
+					<xsl:value-of select="local-name()"/>
+				</th>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Attachments" mode ="Report_ColsHeading">
+		<th>
+			Document Title
+		</th>
+	</xsl:template>
+
+	<xsl:template match="Attachment" mode ="Report_ColsHeading">
+
+	</xsl:template>
+
+
+	<xsl:template match="Content[parent::Attachment]" mode ="Report_ColsHeading">
+
+	</xsl:template>
+	
+	<xsl:template match="Attachment" mode ="Report_ColsValues">
+
+	</xsl:template>
+
+	<xsl:template match="*" mode ="Report_ColsValues">
     <xsl:if test="count(*)=0">
       <td>
         <xsl:value-of select="node()"/>
@@ -9346,7 +9360,7 @@
 
 	<xsl:template match="Attachements | Attachments" mode ="Report_ColsValues">
 		<td>
-			<xsl:for-each select="Attachement | Attachments ">
+			<xsl:for-each select="Attachement | Attachment">
 				<xsl:value-of select="Content/@name"/>
 			</xsl:for-each>
 		</td>
