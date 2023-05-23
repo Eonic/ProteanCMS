@@ -481,7 +481,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     If (whereSQL <> String.Empty) Then
                         myWeb.moSession("FilterWhereCondition") = whereSQL
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
-                        'oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
+
 
                         If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
                             filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
