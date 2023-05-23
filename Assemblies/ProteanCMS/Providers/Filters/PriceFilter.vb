@@ -123,11 +123,28 @@ Namespace Providers
                     oXform.addInput(oFromGroup, "PriceListCount", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceFilter", True, "", "hidden")
 
+                    'If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
+                    '    If (oXml.InnerText.Trim() <> String.Empty) Then
+                    '        Dim sText As String
 
+                    '        Dim aPrice() As String = oXml.InnerText.Split(",")
+                    '        If (aPrice.Length <> 0) Then
+                    '            For cnt = 0 To aPrice.Length - 1
+                    '                sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + aPrice(cnt) + "']").FirstChild().FirstChild().InnerText
+                    '                oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), " filter-applied", "fa-times")
+                    '            Next
+
+                    '        Else
+
+                    '            sText = oFromGroup.SelectSingleNode("select[@ref='PriceFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
+                    '            oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter_" & aPrice(cnt), "filter-applied", "fa-times")
+                    '        End If
+                    '    End If
+                    'End If
 
                     If (aWeb.moRequest.Form("MinPrice") IsNot Nothing And aWeb.moRequest.Form("MinPrice") <> "") Then
 
-                        Dim sText As String = "From " + oMinPrice.Value.Trim() + " to " + oMaxPrice.Value.Trim()
+                        Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()
                         oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter" + sText, "btnCrossForPrice filter-applied", "fa-times")
 
                     End If
