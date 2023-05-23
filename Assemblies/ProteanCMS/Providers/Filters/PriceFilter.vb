@@ -42,7 +42,7 @@ Namespace Providers
                     Dim oFilterElmt As XmlElement = Nothing
                     Dim className As String = String.Empty
 
-                    If aWeb.moRequest.Form("MinPrice") IsNot Nothing Then
+                    If aWeb.moRequest.Form("MaxPrice") IsNot Nothing Then
 
                         oMinPrice.Value = Convert.ToString(aWeb.moRequest.Form("MinPrice"))
                         oMaxPrice.Value = Convert.ToString(aWeb.moRequest.Form("MaxPrice"))
@@ -188,8 +188,9 @@ Namespace Providers
                             cSelectedMinPrice = "0"
                         End If
                         ' cPriceCond = " ci.nNumberValue between " + cSelectedMinPrice + " and " + cSelectedMaxPrice
-                        'If (cWhereSql <> String.Empty) Then
-                        '    cWhereSql = cWhereSql + " AND "
+                        If (cWhereSql <> String.Empty) Then
+                            cWhereSql = cWhereSql + " AND "
+                        End If
 
                         'ElseIf (cPageIds = String.Empty) Then
 
