@@ -521,6 +521,17 @@
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
   </xsl:template>
+
+	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event">
+		gtag('event', 'ptn_form_submission', {
+		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
+		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
+			'<xsl:value-of select="name()"/>':'<xsl:value-of select="node()"/>
+			<xsl:text>'</xsl:text>
+			<xsl:if test="position()!=last()">,</xsl:if>
+		</xsl:for-each>
+        });
+	</xsl:template>
 	
 		
   <xsl:template match="Page" mode="criticalPathCSS">
@@ -1321,7 +1332,6 @@
 			  <xsl:apply-templates select="." mode="google-ga4-event"/>
 		  </script>
 		  <!-- End GA4 Tag Manager -->
-		  CART CMD - <xsl:value-of select="Page/Cart/Order/@cmd"/>
 	  </xsl:if>
 	  
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>

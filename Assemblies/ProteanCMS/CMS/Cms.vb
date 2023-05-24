@@ -3781,6 +3781,9 @@ Public Class Cms
                     nAuthGroup = gnAuthUsers
                 End If
 
+                If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
+                    cFilterTarget = oContentsNode.Attributes("contentType").Value
+                End If
                 If (oContentsNode.Attributes("filterTarget") IsNot Nothing) Then
                     cFilterTarget = oContentsNode.Attributes("filterTarget").Value
                 End If
@@ -3831,9 +3834,17 @@ Public Class Cms
             Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
             oContentsNode.SetAttribute("resultCount", nTotal)
 
-            If cOrderBy <> "" Then sSql &= " ORDER BY " & cOrderBy
+            If cOrderBy <> "" Then
+                sSql &= " ORDER BY " & cOrderBy
+            Else
+                sSql &= " ORDER BY(SELECT NULL)"
+            End If
+            If nItemCount > 0 Then
 
-            sSql &= " offset " & nStartPos & " rows fetch next " & nItemCount & " rows only"
+                sSql &= " OFFSET " & nStartPos & " ROWS FETCH NEXT " & nItemCount & " ROWS ONLY"
+
+            End If
+
 
             sSql = Replace(sSql, "&lt;", "<")
 
