@@ -1708,6 +1708,7 @@ function getParameterByName(qStringName) {
 */
 function initialiseGeocoderButton() {
     $('.getGeocodeButton').click(function (e) {
+        alert('geocode');
         // Prevent form submission
         e.preventDefault();
 

@@ -470,5 +470,146 @@
       <div id="gmap{@id}" class="gmap-canvas" data-mapheight="300">To see this map you must have Javascript enabled</div>
     </div>
   </xsl:template>
+
+	<xsl:template match="Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]" mode="contentDetailJS">
+		<!-- Initialise any Google Maps -->
+		<xsl:variable name="apiKey">
+			<xsl:choose>
+				<xsl:when test="$GoogleAPIKey!=''">
+					<xsl:value-of select="$GoogleAPIKey"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
+		<script type="text/javascript">
+			<xsl:text>function initialiseGMaps(){</xsl:text>
+			<xsl:apply-templates select="." mode="initialiseGoogleMap"/>
+			<xsl:text>};</xsl:text>
+		</script>
+	</xsl:template>
+
+	<!-- Each Map has it's set of values - unique by content id -->
+	<xsl:template match="Content[@type='Organisation']" mode="initialiseGoogleMap">
+		<xsl:variable name="gMapId" select="concat('gmap',@id)"/>
+		<xsl:variable name="mOptionsName" select="concat('mOptions',@id)"/>
+		<xsl:variable name="mCentreLoc" select="concat('mCentreLoc',@id)"/>
+		<!-- Map Centering Co-ords -->
+		<!-- if geo (lat/long) - initialise straight -->
+		var <xsl:value-of select="$mCentreLoc"/> = new google.maps.LatLng(<xsl:value-of select="descendant-or-self::latitude/node()"/>
+		<xsl:text>,</xsl:text>
+		<xsl:value-of select="descendant-or-self::longitude/node()"/>
+		<xsl:text>);</xsl:text>
+		<!-- Map Options -->
+		<xsl:text>var </xsl:text>
+		<xsl:value-of select="$mOptionsName"/>
+		<xsl:text> = {</xsl:text>
+		<xsl:text>zoomControl:true</xsl:text>
+		<xsl:text>,zoom:10</xsl:text>
+		<xsl:text>,center:</xsl:text>
+		<xsl:value-of select="$mCentreLoc"/>
+		<xsl:text>,mapTypeControl:true</xsl:text>
+		<xsl:text>,mapTypeId:google.maps.MapTypeId.ROADMAP</xsl:text>
+		<xsl:text>};</xsl:text>
+		<!-- Initialise map item -->
+		<xsl:text>var </xsl:text>
+		<xsl:value-of select="$gMapId"/>
+		<xsl:text> = new google.maps.Map(document.getElementById("</xsl:text>
+		<xsl:value-of select="$gMapId"/>
+		<xsl:text>"), </xsl:text>
+		<xsl:value-of select="$mOptionsName"/>
+		<xsl:text>);</xsl:text>
+		<!-- Adjust CSS to size map correctly. -->
+		<xsl:text>adjustGMapSizes(</xsl:text>
+		<xsl:text>$("#</xsl:text>
+		<xsl:value-of select="$gMapId"/>
+		<xsl:text>"));</xsl:text>
+
+		<xsl:apply-templates select="." mode="getGmapLocation">
+			<xsl:with-param name="gMapId" select="$gMapId"/>
+		</xsl:apply-templates>
+
+	</xsl:template>
+
+	<!-- Gets Geocode from Postal Address  -->
+	<xsl:template match="Content[@type='Organisation']" mode="getGmapLocation">
+		<xsl:param name="gMapId" />
+		<!--
+			Form has already been set with default coords,
+			We are doing an address look up and resetting the centering.
+		-->
+
+		<xsl:variable name="jsLatLng">
+			<xsl:apply-templates select="Organization/location/GeoCoordinates" mode="getJsLatLng"/>
+		</xsl:variable>
+		<xsl:value-of select="$gMapId"/>.setCenter(<xsl:value-of select="$jsLatLng"/>);
+		<xsl:apply-templates select="." mode="setGMapMarker">
+			<xsl:with-param name="jsPositionValue" select="$jsLatLng"/>
+			<xsl:with-param name="mapId" select="$gMapId"/>
+		</xsl:apply-templates>
+	</xsl:template>
+
+
+	<!-- Returns the code for creating a new LatLng object based on the stored geocoordinates -->
+	<xsl:template match="Geo" mode="getJsLatLng">
+		<xsl:text>new google.maps.LatLng(</xsl:text>
+		<xsl:value-of select="@latitude"/>
+		<xsl:text>, </xsl:text>
+		<xsl:value-of select="@longitude"/>
+		<xsl:text>)</xsl:text>
+	</xsl:template>
+
+	<xsl:template match="GeoCoordinates" mode="getJsLatLng">
+		<xsl:text>new google.maps.LatLng(</xsl:text>
+		<xsl:value-of select="latitude"/>
+		<xsl:text>, </xsl:text>
+		<xsl:value-of select="longitude"/>
+		<xsl:text>)</xsl:text>
+	</xsl:template>
+
+	<!-- Gets Geocode from Postal Address  -->
+	<xsl:template match="Content[Location/@loc='address']" mode="getGmapLocation">
+		<xsl:param name="gMapId" />
+		<!--
+			Form has already been set with default coords,
+			We are doing an address look up and resetting the centering.
+		-->
+		<xsl:choose>
+			<xsl:when test="Location/Geo/@latitude != ''">
+				<xsl:variable name="jsLatLng">
+					<xsl:apply-templates select="Location/Geo" mode="getJsLatLng"/>
+				</xsl:variable>
+				<xsl:value-of select="$gMapId"/>.setCenter(<xsl:value-of select="$jsLatLng"/>);
+				<!-- IF NO LOCATIONS - Marker this location -->
+				<xsl:if test="Location/@marker='true'">
+					<xsl:apply-templates select="." mode="setGMapMarker">
+						<xsl:with-param name="jsPositionValue" select="$jsLatLng"/>
+						<xsl:with-param name="mapId" select="$gMapId"/>
+					</xsl:apply-templates>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				var geocoder<xsl:value-of select="@id"/> = new google.maps.Geocoder();
+				<!-- Goes and gets the Location of the Address -->
+				geocoder<xsl:value-of select="@id"/>.geocode({ 'address': '<xsl:apply-templates select="Location/Address" mode="csvAddress"/>' }, function (results, status) {
+				<!-- If result OK - Center map to location -->
+				if (status == google.maps.GeocoderStatus.OK) {
+				<xsl:value-of select="$gMapId"/>.setCenter(results[0].geometry.location);
+				<!-- IF NO LOCATIONS - Marker this location -->
+				<xsl:if test="Location/@marker='true'">
+					<xsl:apply-templates select="." mode="setGMapMarker">
+						<xsl:with-param name="jsPositionValue" select="'results[0].geometry.location'"/>
+					</xsl:apply-templates>
+				</xsl:if>
+				}
+				});
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:apply-templates select="Content[@type='Location']" mode="getLocationsLocation">
+			<xsl:with-param name="mapId" select="@id"/>
+		</xsl:apply-templates>
+	</xsl:template>
   
 </xsl:stylesheet>
