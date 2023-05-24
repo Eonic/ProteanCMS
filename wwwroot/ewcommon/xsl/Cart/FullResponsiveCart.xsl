@@ -2802,6 +2802,13 @@
 		);
 	</xsl:template>
 
+	<xsl:template match="Page[Cart/Order/@cmd='ChoosePaymentShippingOption']" mode="google-ga4-event">
+		gtag("event", "agree_terms",
+		<xsl:apply-templates select="." mode="google-ga4-transaction"/>
+		);
+	</xsl:template>
+	
+
 	<xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails' or Cart/Order/@cmd='SubmitPaymentDetails']" mode="google-ga4-event">
 		gtag("event", "add_payment_info",
 		<xsl:apply-templates select="." mode="google-ga4-transaction"/>

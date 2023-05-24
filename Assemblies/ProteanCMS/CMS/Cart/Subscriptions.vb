@@ -1807,14 +1807,18 @@ RedoCheck:
                             myWeb.moCart.GetCart()
                             myWeb.moCart.addDateAndRef(myWeb.moCart.moCartXml.FirstChild, dNewStart)
 
-                            'Send the invoice
-                            If bEmailClient Then
-                                myWeb.moCart.emailReceipts(myWeb.moCart.moCartXml)
+                        'Send the invoice
+                        If bEmailClient Then
+                            Dim RenewalEmailCC As String = ""
+                            If oSubConfig("RenewalEmailCCXpath") <> "" Then
+                                RenewalEmailCC = myWeb.moCart.moCartXml.SelectSingleNode(oSubConfig("RenewalEmailCCXpath")).Value
                             End If
+                            myWeb.moCart.emailReceipts(myWeb.moCart.moCartXml, RenewalEmailCC)
+                        End If
 
-                            'myWeb.moCart.updateCart("Success")
+                        'myWeb.moCart.updateCart("Success")
 
-                            myWeb.moCart.SaveCartXML(myWeb.moCart.moCartXml.FirstChild)
+                        myWeb.moCart.SaveCartXML(myWeb.moCart.moCartXml.FirstChild)
 
                             'On Success update subscription
                             Dim SubInstance As New XmlDocument()
