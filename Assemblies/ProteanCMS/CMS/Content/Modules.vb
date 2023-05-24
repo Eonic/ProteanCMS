@@ -338,6 +338,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Try
                     'current contentfilter id
                     Dim oFilterElmt As XmlElement
+                    Dim parentPageId As String = String.Empty
                     Dim formName As String = "ContentFilter"
                     Dim cFilterTarget As String = "Product"
                     Dim cWhereSql As String = String.Empty
@@ -418,11 +419,12 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     If (filterForm.isSubmitted) Then
 
+
+
                         filterForm.updateInstanceFromRequest()
                         filterForm.validate()
 
                         If (filterForm.valid) Then
-
 
 
                             For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
@@ -467,10 +469,17 @@ where cl.nStructId = " & myWeb.mnPageId)
                                     args(4) = oFilterElmt
                                     args(5) = cFilterTarget
                                     whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
+                                    If (oFilterElmt.Attributes("parId") IsNot Nothing) Then
+                                        parentPageId = oFilterElmt.Attributes("parId").Value
+                                    End If
+
                                 End If
 
                             Next
 
+                            If (parentPageId <> String.Empty And whereSQL <> String.Empty) Then
+                                whereSQL = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & parentPageId & ")) AND " & whereSQL
+                            End If
                         End If
                     End If
 
@@ -481,7 +490,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     If (whereSQL <> String.Empty) Then
                         myWeb.moSession("FilterWhereCondition") = whereSQL
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
-                        'oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
+
 
                         If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
                             filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
