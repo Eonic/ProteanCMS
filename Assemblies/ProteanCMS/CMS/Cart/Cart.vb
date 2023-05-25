@@ -1760,7 +1760,9 @@ processFlow:
             Return oEwProv
 
         End Function
-
+        Overridable Sub emailReceipts(ByRef oCartElmt As XmlElement)
+            emailReceipts(oCartElmt, "")
+        End Sub
         Overridable Sub emailReceipts(ByRef oCartElmt As XmlElement, Optional ByVal ccCustomerEmail As String = "")
             myWeb.PerfMon.Log("Cart", "emailReceipts")
             Dim sMessageResponse As String

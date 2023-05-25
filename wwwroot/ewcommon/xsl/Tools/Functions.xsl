@@ -518,6 +518,10 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="Page" mode="google-ga4-params">
+		<!-- for overloading on specific actions -->
+	</xsl:template>
+
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
   </xsl:template>
@@ -1328,7 +1332,7 @@
 			  window.dataLayer = window.dataLayer || [];
 			  function gtag(){dataLayer.push(arguments);}
 			  gtag('js', new Date());
-			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
+			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-params"/>);
 			  <xsl:apply-templates select="." mode="google-ga4-event"/>
 		  </script>
 		  <!-- End GA4 Tag Manager -->
