@@ -113,9 +113,6 @@
         <xsl:text>~/Bundles/Admin</xsl:text>
       </xsl:with-param>
     </xsl:call-template>
-    <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
-    </xsl:if>
     <xsl:apply-templates select="." mode="siteAdminJs"/>
     <xsl:apply-templates select="." mode="LayoutAdminJs"/>
   </xsl:template>

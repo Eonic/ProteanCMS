@@ -4218,7 +4218,7 @@ restart:
                         For Each oRow In oDs.Tables(getTable(objectType)).Rows
                             If oRow(sKeyField) = nContentId And i <> 1 Then
                                 ' Check config is ON then add status code
-                                If cExcludehiddenOnOrdering = "On" Then
+                                If cExcludehiddenOnOrdering.ToLower = "On" Then
                                     'Set original display order in one flag 
                                     If IsDBNull(oRow(getOrderFname(objectType))) = False Then
                                         nDisplayOrder = oRow(getOrderFname(objectType))
@@ -4272,7 +4272,7 @@ restart:
                     Case "MoveDown"
                         For Each oRow In oDs.Tables(getTable(objectType)).Rows
                             If oRow(sKeyField) = nContentId And i <> (RecCount) Then
-                                If cExcludehiddenOnOrdering = "On" Then
+                                If cExcludehiddenOnOrdering.ToLower = "On" Then
                                     'Set original display order in one flag and get next active product display order in one flag
                                     If IsDBNull(oRow(getOrderFname(objectType))) = False Then
                                         nDisplayOrder = oRow(getOrderFname(objectType))
@@ -4299,7 +4299,7 @@ restart:
                                     skipnext = True
                                 End If
                             Else
-                                If cExcludehiddenOnOrdering = "On" Then
+                                If cExcludehiddenOnOrdering.ToLower = "On" Then
                                     If Not skipnext Then    'Set all remaining products displayOrder if bydefault null
                                         oRow(getOrderFname(objectType)) = i
                                         skipnext = False
@@ -4351,7 +4351,7 @@ restart:
 
             Dim sSql As String = String.Empty
 
-            If cExcludehiddenOnOrdering = "On" Then
+            If cExcludehiddenOnOrdering.ToLower = "On" Then
                 'If config flag is ON then add status join in queries
                 'Get all locations of similar objects on the same page.
                 sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
