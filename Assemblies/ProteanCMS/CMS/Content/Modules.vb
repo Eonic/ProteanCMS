@@ -478,7 +478,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                             Next
 
                             If (parentPageId <> String.Empty And whereSQL <> String.Empty) Then
-                                whereSQL = " nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & parentPageId & ")) AND " & whereSQL
+                                whereSQL = " c.cContentSchemaName='" & cFilterTarget & "' and nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & parentPageId & ")) AND " & whereSQL
                             End If
                         End If
                     End If
