@@ -4137,32 +4137,23 @@ restart:
             Dim cSchemaName As String = ""
             Dim RecCount As Long
 
-
             Dim i As Integer
-            Dim j As Integer
-            Dim cnt As Integer
 
             Dim objectType As objectTypes
             Dim sKeyField As String
             Dim sStatusField As String
-            Dim nextDisplayOrder As Long
-            Dim nDisplayOrder As Long
-            Dim nStatus As Long
 
             If nGroupId <> 0 Then
                 objectType = objectTypes.CartCatProductRelations
                 sKeyField = "nContentId"
-                sStatusField = "nStatus"
             Else
                 If bIsRelatedContent Then
                     objectType = objectTypes.ContentRelation
                     'sKeyField = "nContentRelationKey"
                     sKeyField = "nContentChildId"
-                    sStatusField = "nStatus"
                 Else
                     objectType = objectTypes.ContentLocation
                     sKeyField = "nContentId"
-                    sStatusField = "nStatus"
                 End If
             End If
 
@@ -4179,10 +4170,45 @@ restart:
                     End While
                 End Using
 
-                ' Add new method to get sql query with status or without status column
-                sSql = ReorderContentQueries(cExcludehiddenOnOrdering, nPgId, nContentId, bIsRelatedContent, cPosition, nGroupId, cSchemaName)
+                'If config flag is ON then add status join in queries
+                'Get all locations of similar objects on the same page.
+                sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
 
+                If nGroupId <> 0 Then
+                    sSql = " Select *,a.nStatus From tblContent c " &
+                    " INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId  inner join tblAudit as a on c.nAuditId= a.nAuditKey " &
+                    " WHERE(tblCartCatProductRelations.nCatId = " & nGroupId & ") " &
+                    " And c.cContentSchemaName = '" & cSchemaName & "'" &
+                    " order by tblCartCatProductRelations.nDisplayOrder  "
+
+
+                Else
+                    If cPosition <> "" Then
+                        If cPosition.EndsWith("-") Then
+                            sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and CL.cPosition like'" & cPosition & "%' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
+                        Else
+                            sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and CL.cPosition ='" & cPosition & "' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
+                        End If
+                    End If
+
+                    If bIsRelatedContent Then
+                        sSql = "Select tblContentRelation.*, a.nStatus FROM tblContentRelation INNER JOIN" &
+                           " tblContent On tblContentRelation.nContentChildId = tblContent.nContentKey INNER JOIN" &
+                           " tblContent tblContent_1 On tblContent.cContentSchemaName = tblContent_1.cContentSchemaName inner join tblAudit as a on tblContent_1.nAuditId= a.nAuditKey" &
+                           " WHERE (tblContentRelation.nContentParentId = " & nPgId & ") And (tblContent_1.nContentKey = " & nContentId & ")" &
+                           " ORDER BY tblContentRelation.nDisplayOrder"
+                    End If
+                End If
                 oDs = getDataSetForUpdate(sSql, getTable(objectType), "results")
+
+                'Code added for active and inactive products swap accordingly. If config key is on then add status sorting and old code running as it is.
+                If cExcludehiddenOnOrdering.ToLower = "on" Then
+                    Dim TempTable As New DataTable
+                    oDs.Tables(getTable(objectType)).DefaultView.Sort = "nStatus DESC"
+                    TempTable = oDs.Tables(getTable(objectType)).DefaultView.ToTable
+                    oDs.Tables(getTable(objectType)).Clear()
+                    oDs.Tables(getTable(objectType)).Merge(TempTable)
+                End If
 
                 RecCount = oDs.Tables(getTable(objectType)).Rows.Count
                 i = 1
@@ -4217,51 +4243,14 @@ restart:
                     Case "MoveUp"
                         For Each oRow In oDs.Tables(getTable(objectType)).Rows
                             If oRow(sKeyField) = nContentId And i <> 1 Then
-                                ' Check config is ON then add status code
-                                If cExcludehiddenOnOrdering.ToLower = "On" Then
-                                    'Set original display order in one flag 
-                                    If IsDBNull(oRow(getOrderFname(objectType))) = False Then
-                                        nDisplayOrder = oRow(getOrderFname(objectType))
-                                    End If
-                                    cnt = i
-                                    If oRow(sStatusField) = 1 Then    'If Content is active
-                                        nStatus = 1
-                                    End If
-                                    If oRow(sStatusField) = 0 Then     'If Content is InActive or hidden
-                                        nStatus = 0
-                                    End If
-                                    For j = 0 To i     'check each back product status untill active or inactive, update 
-                                        If oDs.Tables(getTable(objectType)).Rows(i - 2)("nStatus") = nStatus Then
-                                            oRow(getOrderFname(objectType)) = oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType))
-                                            skipnext = True
-                                            sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
-                                            ExeProcessSql(sSql)
-                                            Exit For
-                                        End If
-                                        i = i - 1
-                                    Next
-                                    If skipnext Then
-                                        For j = 0 To i    'Update one step down order
-                                            If oDs.Tables(getTable(objectType)).Rows(i - 2)("nStatus") = nStatus Then
-                                                oRow(getOrderFname(objectType)) = nDisplayOrder
-                                                skipnext = False
-                                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " =  " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
-                                                ExeProcessSql(sSql)
-                                                i = cnt
-                                                Exit For
-                                            End If
-                                        Next
-                                    End If
-                                Else
-                                    'swap with previous  ' Old logic without status
-                                    oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) = i
-                                    sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
-                                    ExeProcessSql(sSql)
+                                'swap with previous
+                                oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) = i
+                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
+                                ExeProcessSql(sSql)
 
-                                    oRow(getOrderFname(objectType)) = i - 1
-                                    sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
-                                    ExeProcessSql(sSql)
-                                End If
+                                oRow(getOrderFname(objectType)) = i - 1
+                                sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
+                                ExeProcessSql(sSql)
                             Else
                                 oRow(getOrderFname(objectType)) = i
                                 sSql = "update " & getTable(objectType) & " Set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
@@ -4272,56 +4261,14 @@ restart:
                     Case "MoveDown"
                         For Each oRow In oDs.Tables(getTable(objectType)).Rows
                             If oRow(sKeyField) = nContentId And i <> (RecCount) Then
-                                If cExcludehiddenOnOrdering.ToLower = "On" Then
-                                    'Set original display order in one flag and get next active product display order in one flag
-                                    If IsDBNull(oRow(getOrderFname(objectType))) = False Then
-                                        nDisplayOrder = oRow(getOrderFname(objectType))
-                                    End If
-                                    If oRow(sStatusField) = 1 Then
-                                        nStatus = 1
-                                        skipnext = True
-                                    End If
-                                    If oRow(sStatusField) = 0 Then ' Add code for hidden product sorting
-                                        nStatus = 0
-                                        skipnextUpdate = True
-                                    End If
-                                    For j = i To RecCount   'Update order number as per product status
-                                        If oDs.Tables(getTable(objectType)).Rows(j)("nStatus") = nStatus Then
-                                            nextDisplayOrder = oDs.Tables(getTable(objectType)).Rows(j).Item(getOrderFname(objectType))
-                                            Exit For
-                                        End If
-                                    Next
-                                    oRow(getOrderFname(objectType)) = nextDisplayOrder
-                                Else
-                                    'swap with next   (Old logic without status)
-                                    oDs.Tables(getTable(objectType)).Rows(i).Item(getOrderFname(objectType)) = i
-                                    oRow(getOrderFname(objectType)) = i + 1
-                                    skipnext = True
-                                End If
+                                'swap with next
+                                oDs.Tables(getTable(objectType)).Rows(i).Item(getOrderFname(objectType)) = i
+                                oRow(getOrderFname(objectType)) = i + 1
+                                skipnext = True
                             Else
-                                If cExcludehiddenOnOrdering.ToLower = "On" Then
-                                    If Not skipnext Then    'Set all remaining products displayOrder if bydefault null
-                                        oRow(getOrderFname(objectType)) = i
-                                        skipnext = False
-                                    End If
-                                    If skipnext Then 'Active product sorting
-                                        If oDs.Tables(getTable(objectType)).Rows(i - 1)("nStatus") = 1 Then
-                                            oRow(getOrderFname(objectType)) = nDisplayOrder
-                                            skipnext = False
-                                        End If
-                                    End If
-                                    If skipnextUpdate Then   'Hidden product sorting
-                                        If oDs.Tables(getTable(objectType)).Rows(i - 1)("nStatus") = 0 Then
-                                            oRow(getOrderFname(objectType)) = nDisplayOrder
-                                            skipnextUpdate = False
-                                        End If
-                                    End If
-                                Else
-                                    ' Old logic without status
-                                    If Not skipnext Then
-                                        oRow(getOrderFname(objectType)) = i
-                                        skipnext = False
-                                    End If
+                                If Not skipnext Then
+                                    oRow(getOrderFname(objectType)) = i
+                                    skipnext = False
                                 End If
                             End If
 
@@ -4346,76 +4293,6 @@ restart:
 
             End Try
         End Sub
-
-        Public Function ReorderContentQueries(ByVal cExcludehiddenOnOrdering As String, ByVal nPgId As Long, ByVal nContentId As Long, Optional ByVal bIsRelatedContent As Boolean = False, Optional ByVal cPosition As String = "", Optional ByVal nGroupId As Int32 = 0, Optional ByVal cSchemaName As String = "")
-
-            Dim sSql As String = String.Empty
-
-            If cExcludehiddenOnOrdering.ToLower = "On" Then
-                'If config flag is ON then add status join in queries
-                'Get all locations of similar objects on the same page.
-                sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
-
-                If nGroupId <> 0 Then
-                    sSql = " Select *,a.nStatus From tblContent c " &
-                    " INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId  inner join tblAudit as a on c.nAuditId= a.nAuditKey " &
-                    " WHERE(tblCartCatProductRelations.nCatId = " & nGroupId & ") " &
-                    " And c.cContentSchemaName = '" & cSchemaName & "'" &
-                    " order by tblCartCatProductRelations.nDisplayOrder  "
-
-
-                Else
-                    If cPosition <> "" Then
-                        If cPosition.EndsWith("-") Then
-                            sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and CL.cPosition like'" & cPosition & "%' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
-                        Else
-                            sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" & nPgId & " and CL.cPosition ='" & cPosition & "' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
-                        End If
-                    End If
-
-                    If bIsRelatedContent Then
-                        sSql = "Select tblContentRelation.*, a.nStatus FROM tblContentRelation INNER JOIN" &
-                           " tblContent On tblContentRelation.nContentChildId = tblContent.nContentKey INNER JOIN" &
-                           " tblContent tblContent_1 On tblContent.cContentSchemaName = tblContent_1.cContentSchemaName inner join tblAudit as a on tblContent_1.nAuditId= a.nAuditKey" &
-                           " WHERE (tblContentRelation.nContentParentId = " & nPgId & ") And (tblContent_1.nContentKey = " & nContentId & ")" &
-                           " ORDER BY tblContentRelation.nDisplayOrder"
-                    End If
-                End If
-            Else
-                'Get all locations of similar objects on the same page.
-
-                sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
-
-                If nGroupId <> 0 Then
-                    sSql = " Select * From tblContent c " &
-                    " INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId " &
-                    " WHERE(tblCartCatProductRelations.nCatId = " & nGroupId & ") " &
-                    " And c.cContentSchemaName = '" & cSchemaName & "'" &
-                    " order by tblCartCatProductRelations.nDisplayOrder  "
-
-
-                Else
-                    If cPosition <> "" Then
-                        If cPosition.EndsWith("-") Then
-                            sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and CL.cPosition like'" & cPosition & "%' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
-                        Else
-                            sSql = "Select CL.* from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId where CL.nStructId =" & nPgId & " and CL.cPosition ='" & cPosition & "' and C.cContentSchemaName = '" & cSchemaName & "' order by nDisplayOrder"
-                        End If
-                    End If
-
-                    If bIsRelatedContent Then
-                        sSql = "Select tblContentRelation.* FROM tblContentRelation INNER JOIN" &
-                           " tblContent On tblContentRelation.nContentChildId = tblContent.nContentKey INNER JOIN" &
-                           " tblContent tblContent_1 On tblContent.cContentSchemaName = tblContent_1.cContentSchemaName" &
-                           " WHERE (tblContentRelation.nContentParentId = " & nPgId & ") And (tblContent_1.nContentKey = " & nContentId & ")" &
-                           " ORDER BY tblContentRelation.nDisplayOrder"
-                    End If
-                End If
-            End If
-
-            Return sSql
-
-        End Function
 
         Public Sub copyPageContent(ByVal nSourcePageId As Long, ByVal nTargetPageId As Long, ByVal bCopyDescendants As Boolean, ByVal mode As CopyContentType, Optional ByVal oMenuItem As XmlElement = Nothing)
             PerfMonLog("DBHelper", "copyPageContent")
