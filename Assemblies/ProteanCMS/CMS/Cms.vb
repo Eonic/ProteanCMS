@@ -3677,8 +3677,6 @@ Public Class Cms
         Dim nAuthUserId As Long
         Dim nAuthGroup As Long
         Dim cContentField As String = ""
-        Dim cFilterTarget As String = String.Empty
-
 
         Try
 
@@ -3779,10 +3777,6 @@ Public Class Cms
                 Else
                     nAuthUserId = mnUserId
                     nAuthGroup = gnAuthUsers
-                End If
-
-                If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
-                    cFilterTarget = oContentsNode.Attributes("contentType").Value
                 End If
 
                 ' Check the page is not denied
