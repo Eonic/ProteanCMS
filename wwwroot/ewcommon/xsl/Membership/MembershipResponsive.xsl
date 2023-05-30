@@ -2,6 +2,9 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 
   <!--   ###################################################   XForm Page Layouts   ##############################################   -->
+	<xsl:template match="Page[User]" mode="google-ga4-params">
+		<!-- for overloading on specific actions -->
+	</xsl:template>
   <!-- -->
   <xsl:template match="/" mode="List_User_Details">
     <span class="label">

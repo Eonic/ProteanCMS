@@ -1760,8 +1760,10 @@ processFlow:
             Return oEwProv
 
         End Function
-
         Overridable Sub emailReceipts(ByRef oCartElmt As XmlElement)
+            emailReceipts(oCartElmt, "")
+        End Sub
+        Overridable Sub emailReceipts(ByRef oCartElmt As XmlElement, Optional ByVal ccCustomerEmail As String = "")
             myWeb.PerfMon.Log("Cart", "emailReceipts")
             Dim sMessageResponse As String
             Dim cProcessInfo As String = ""
@@ -1780,7 +1782,7 @@ processFlow:
 
 
                     'send to customer
-                    sMessageResponse = emailCart(oCartElmt, CustomerEmailTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), cSubject,, moCartConfig("CustomerAttachmentTemplatePath"))
+                    sMessageResponse = emailCart(oCartElmt, CustomerEmailTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), cSubject,, moCartConfig("CustomerAttachmentTemplatePath"),, ccCustomerEmail)
 
                     'Send to merchant
                     sMessageResponse = emailCart(oCartElmt, MerchantEmailTemplatePath, (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), moCartConfig("MerchantEmail"), cSubject, False, moCartConfig("MerchantAttachmentTemplatePath"), moCartConfig("MerchantEmailBcc"))
@@ -7848,7 +7850,7 @@ processFlow:
             End Try
         End Sub
 
-        Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cAttachementTemplatePath As String = "", Optional ByVal cBCCEmail As String = "") As Object
+        Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cAttachementTemplatePath As String = "", Optional ByVal cBCCEmail As String = "", Optional ByVal cCCEmail As String = "") As Object
             myWeb.PerfMon.Log("Cart", "emailCart")
             Dim oXml As XmlDocument = New XmlDocument
             Dim cProcessInfo As String = "emailCart"
@@ -7865,7 +7867,7 @@ processFlow:
                 Dim oMsg As Messaging = New Messaging(myWeb.msException)
                 If cAttachementTemplatePath = "" Then
 
-                    cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed",,, cBCCEmail)
+                    cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed",, cCCEmail, cBCCEmail)
                 Else
                     cAttachementTemplatePath = moServer.MapPath(cAttachementTemplatePath)
                     Dim cFontPath As String = moServer.MapPath("/fonts")
@@ -7902,7 +7904,7 @@ processFlow:
                     FoDoc = Nothing
 
                     oMsg.addAttachment(oPDF.GetPDFstream(foNetXml, cFontPath), FileName)
-                    cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
+                    cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed",, cCCEmail, cBCCEmail)
 
                 End If
                 oMsg = Nothing
