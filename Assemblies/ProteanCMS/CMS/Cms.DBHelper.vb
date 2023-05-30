@@ -4201,7 +4201,8 @@ restart:
                 End If
                 oDs = getDataSetForUpdate(sSql, getTable(objectType), "results")
 
-                'Code added for active and inactive products swap accordingly. If config key is on then add status sorting and old code running as it is.
+                'Code added for active and inactive products swap accordingly.
+                'If config key is on then add status sorting and old code running as it is.
                 If cExcludehiddenOnOrdering.ToLower = "on" Then
                     Dim TempTable As New DataTable
                     oDs.Tables(getTable(objectType)).DefaultView.Sort = "nStatus DESC"
@@ -4213,7 +4214,6 @@ restart:
                 RecCount = oDs.Tables(getTable(objectType)).Rows.Count
                 i = 1
                 Dim skipnext As Boolean = False
-                Dim skipnextUpdate As Boolean = False
 
                 Select Case ReOrderCmd
                     Case "MoveTop"
