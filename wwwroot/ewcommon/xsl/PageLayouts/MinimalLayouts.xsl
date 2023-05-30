@@ -45,7 +45,7 @@
           <xsl:with-param name="containerClass" select="$containerClass"/>
         </xsl:apply-templates>
 
-        <xsl:apply-templates select="." mode="socialBookmarks" />-->
+        <xsl:apply-templates select="." mode="socialBookmarks" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
