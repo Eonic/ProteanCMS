@@ -4204,11 +4204,11 @@ restart:
                 'Code added for active and inactive products swap accordingly.
                 'If config key is on then add status sorting and old code running as it is.
                 If cExcludehiddenOnOrdering.ToLower = "on" Then
-                    Dim TempTable As New DataTable
+                    Dim oDt As New DataTable
                     oDs.Tables(getTable(objectType)).DefaultView.Sort = "nStatus DESC"
-                    TempTable = oDs.Tables(getTable(objectType)).DefaultView.ToTable
+                    oDt = oDs.Tables(getTable(objectType)).DefaultView.ToTable
                     oDs.Tables(getTable(objectType)).Clear()
-                    oDs.Tables(getTable(objectType)).Merge(TempTable)
+                    oDs.Tables(getTable(objectType)).Merge(oDt)
                 End If
 
                 RecCount = oDs.Tables(getTable(objectType)).Rows.Count
