@@ -3779,15 +3779,9 @@ Public Class Cms
                     nAuthGroup = gnAuthUsers
                 End If
 
-                If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
-                    cFilterTarget = oContentsNode.Attributes("contentType").Value
-                End If
-                If (oContentsNode.Attributes("filterTarget") IsNot Nothing) Then
-                    cFilterTarget = oContentsNode.Attributes("filterTarget").Value
-                End If
 
                 ' Check the page is not denied
-                sMembershipSql = " c.cContentSchemaName ='" & cFilterTarget & "' and NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = sMembershipSql & " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
