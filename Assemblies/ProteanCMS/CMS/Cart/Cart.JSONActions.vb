@@ -365,11 +365,22 @@ Partial Public Class Cms
                 If myCart.mnProcessId > 4 Then
                     Return ""
                 Else
-                    Dim country As String = jObj("country")
 
+                    Dim country As String = String.Empty
+                    Dim cOrderofDeliveryOption As String = myCart.moCartConfig("ShippingTotalIsNotZero")
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    If (jObj("country") IsNot Nothing) Then
+                        If (jObj("country") <> String.Empty) Then
+                            country = jObj("country")
+                        End If
+                    End If
+                    If (jObj("ShipOptKey") IsNot Nothing) Then
+                        If (jObj("ShipOptKey") <> String.Empty) Then
+                            cOrderofDeliveryOption = jObj("ShipOptKey")
+                        End If
+                    End If
                     'check config setting here so that it will take order option which is optional.
-                    Dim cOrderofDeliveryOption As String = jObj("ShipOptKey")  'myCart.moCartConfig("ShippingTotalIsNotZero")
+
                     cOrderofDeliveryOption = myCart.updateDeliveryOptionByCountry(CartXml.FirstChild, country, cOrderofDeliveryOption)
                     If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
                         RemoveDiscountCode(myApi, jObj)
