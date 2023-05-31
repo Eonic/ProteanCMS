@@ -4160,7 +4160,7 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                Dim bExcludehiddenOnOrdering As Boolean = String.Compare(goConfig("ExcludehiddenOnOrdering") & "", "on")
+                Dim bExcludehiddenOnOrdering As Boolean = String.Compare(goConfig("ExcludeHiddenOnOrdering") & "", "on")
                 'Lets go and get the content type
 
                 sSql = "Select cContentSchemaName from tblContent where nContentKey = " & nContentId
