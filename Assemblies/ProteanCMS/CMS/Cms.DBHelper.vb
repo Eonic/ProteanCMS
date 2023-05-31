@@ -4160,7 +4160,7 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                Dim cExcludehiddenOnOrdering As String = goConfig("ExcludehiddenOnOrdering") & ""
+                Dim bExcludehiddenOnOrdering As Boolean = String.Compare(goConfig("ExcludehiddenOnOrdering") & "", "on")
                 'Lets go and get the content type
 
                 sSql = "Select cContentSchemaName from tblContent where nContentKey = " & nContentId
@@ -4203,7 +4203,7 @@ restart:
 
                 'Code added for active and inactive products swap accordingly.
                 'If config key is on then add status sorting and old code running as it is.
-                If cExcludehiddenOnOrdering.ToLower = "on" Then
+                If bExcludehiddenOnOrdering Then
                     Dim oDt As New DataTable
                     oDs.Tables(getTable(objectType)).DefaultView.Sort = "nStatus DESC"
                     oDt = oDs.Tables(getTable(objectType)).DefaultView.ToTable
