@@ -3677,8 +3677,6 @@ Public Class Cms
         Dim nAuthUserId As Long
         Dim nAuthGroup As Long
         Dim cContentField As String = ""
-        Dim cFilterTarget As String = String.Empty
-
 
         Try
 
@@ -3780,33 +3778,21 @@ Public Class Cms
                     nAuthUserId = mnUserId
                     nAuthGroup = gnAuthUsers
                 End If
-                If oContentsNode IsNot Nothing Then
-                    If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
-                        cFilterTarget = oContentsNode.Attributes("contentType").Value
-                    End If
-                    If (oContentsNode.Attributes("filterTarget") IsNot Nothing) Then
-                        cFilterTarget = oContentsNode.Attributes("filterTarget").Value
-                    End If
-                End If
-                If cFilterTarget <> "" Then
-                    sMembershipSql = " c.cContentSchemaName ='" & cFilterTarget & "' and"
-                End If
 
 
                 ' Check the page is not denied
-                sMembershipSql = sMembershipSql & " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
-
+                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
                 ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"
                 ' add "and" if clause before
                 If sPrimarySql <> "" Then sMembershipSql = " and " & sMembershipSql
-                End If
+            End If
 
 
 
-                If ignoreActiveAndDate = False Then
+            If ignoreActiveAndDate = False Then
                 'show only live content that is within date, unless we are in admin mode.
                 sFilterSql = GetStandardFilterSQLForContent((sPrimarySql <> "" Or sMembershipSql <> ""))
             End If
@@ -3955,7 +3941,7 @@ Public Class Cms
                 End If
 
                 ' Check the page is not denied
-                sMembershipSql = " c.cContentSchemaName ='" & cShowSpecificContentTypes & "' and  NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
                 ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"

@@ -13965,7 +13965,7 @@
 				<xsl:value-of select="cContentSchemaName/node()"/>
 			</td>
 			<td colspan="2">
-				<xsl:value-of select="@cDefinitionName"/>
+				<xsl:value-of select="cDefinitionName/node()"/>
 			</td>
 			<td colspan="2">
 				<xsl:value-of select="cContentValueXpath/node()"/>

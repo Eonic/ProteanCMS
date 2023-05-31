@@ -341,6 +341,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Try
                     'current contentfilter id
                     Dim oFilterElmt As XmlElement
+                    Dim parentPageId As String = String.Empty
                     Dim formName As String = "ContentFilter"
                     Dim cFilterTarget As String = "Product"
                     Dim cWhereSql As String = String.Empty
@@ -415,17 +416,18 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                     Dim whereSQL As String = ""
 
-                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "submit", "hidden-sm hidden-md hidden-lg filter-xs-btn showexperiences")
+                    filterForm.addSubmit(oFrmGroup, "Show Experiences", "Show Experiences", "Show Experiences", "hidden-sm hidden-md hidden-lg filter-xs-btn showexperiences")
                     'filterForm.addSubmit(oFrmGroup, "Clear Filters", "Clear Filters", "submit", "ClearFilters")
                     filterForm.addValues()
 
                     If (filterForm.isSubmitted) Then
 
+
+
                         filterForm.updateInstanceFromRequest()
                         filterForm.validate()
 
                         If (filterForm.valid) Then
-
 
 
                             For Each oFilterElmt In oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']")
@@ -470,10 +472,17 @@ where cl.nStructId = " & myWeb.mnPageId)
                                     args(4) = oFilterElmt
                                     args(5) = cFilterTarget
                                     whereSQL = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args))
+                                    If (oFilterElmt.Attributes("parId") IsNot Nothing) Then
+                                        parentPageId = oFilterElmt.Attributes("parId").Value
+                                    End If
+
                                 End If
 
                             Next
 
+                            If (parentPageId <> String.Empty And whereSQL <> String.Empty) Then
+                                whereSQL = " c.cContentSchemaName='" & cFilterTarget & "' and nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" & parentPageId & ")) AND " & whereSQL
+                            End If
                         End If
                     End If
 
@@ -484,7 +493,7 @@ where cl.nStructId = " & myWeb.mnPageId)
                     If (whereSQL <> String.Empty) Then
                         myWeb.moSession("FilterWhereCondition") = whereSQL
                         myWeb.GetPageContentFromSelect(whereSQL,,,,,, oContentNode,,,,, cFilterTarget)
-                        'oContentNode.SetAttribute("resultCount", oContentNode.SelectNodes("Content[@type='Product']").Count)
+
 
                         If (oContentNode.SelectNodes("Content[@type='Product']").Count = 0) Then
                             filterForm.addSubmit(oFrmGroup, "Clear Filters", "No results found", "clearfilters", "clear-filters",, "clearfilters")
@@ -544,11 +553,17 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                                 Dim args(0) As Object
                                 args(0) = myWeb
+                                Dim cAdditionalCondition As String = String.Empty
+                                cAdditionalCondition = calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
+                                If (cAdditionalCondition <> String.Empty) Then
+                                    If (cWhereSQL <> String.Empty) Then
+                                        cWhereSQL = cWhereSQL & " AND " & cAdditionalCondition
+                                    Else
+                                        cWhereSQL = cAdditionalCondition
+                                    End If
 
-                                'If (cWhereSQL <> String.Empty) Then
-                                '    cWhereSQL = cWhereSQL & " AND "
-                                'End If
-                                cWhereSQL = cWhereSQL & calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
+                                    'cWhereSQL = cWhereSQL & calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, Nothing, o, args)
+                                End If
                             End If
                         End If
 
