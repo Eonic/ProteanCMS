@@ -4202,17 +4202,17 @@ restart:
 
                 'Code added for active and inactive products swap accordingly.
                 'If config key is on then add status sorting and old code running as it is.
-                'Check key is exists or not then check with String.Compare (It returns 0 when two values are equivalent)
-                If goConfig("ExcludeHiddenOnOrdering") IsNot Nothing Then
-                    If String.Compare(goConfig("ExcludeHiddenOnOrdering").ToLower & "", "on") = 0 Then
-                        Dim oDt As New DataTable
-                        oDs.Tables(getTable(objectType)).DefaultView.Sort = "nStatus DESC"
-                        oDt = oDs.Tables(getTable(objectType)).DefaultView.ToTable
-                        oDs.Tables(getTable(objectType)).Clear()
-                        oDs.Tables(getTable(objectType)).Merge(oDt)
-                        oDt.Dispose()
-                        oDt = Nothing
-                    End If
+
+                Dim bExcludeHiddenOnOrdering As Boolean = IIf(LCase(goConfig("ExcludeHiddenOnOrdering")) = "on", True, False)
+
+                If bExcludeHiddenOnOrdering Then
+                    Dim oDt As New DataTable
+                    oDs.Tables(getTable(objectType)).DefaultView.Sort = "nStatus DESC"
+                    oDt = oDs.Tables(getTable(objectType)).DefaultView.ToTable
+                    oDs.Tables(getTable(objectType)).Clear()
+                    oDs.Tables(getTable(objectType)).Merge(oDt)
+                    oDt.Dispose()
+                    oDt = Nothing
                 End If
 
                 RecCount = oDs.Tables(getTable(objectType)).Rows.Count
