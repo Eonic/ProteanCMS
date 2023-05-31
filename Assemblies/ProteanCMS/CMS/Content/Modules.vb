@@ -322,10 +322,13 @@ where cl.nStructId = " & myWeb.mnPageId)
                 Dim nCurrentPage As Long = 1
 
                 Try
-                    myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " and a.dExpireDate < GETDATE() and c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
+                    If PageId <> "" Then
+                        myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " and a.dExpireDate < GETDATE() and c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
                     ,,, nItemsPerPage,,,,, nCurrentPage,,, True)
 
-                    myWeb.bAllowExpired = True
+                        myWeb.bAllowExpired = True
+                    End If
+
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "ListHistoricEvents", ex, "", cProcessInfo, gbDebug)
