@@ -4160,9 +4160,8 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                Dim bExcludehiddenOnOrdering As Boolean = String.Compare(goConfig("ExcludeHiddenOnOrdering") & "", "on")
-                'Lets go and get the content type
 
+                'Lets go and get the content type
                 sSql = "Select cContentSchemaName from tblContent where nContentKey = " & nContentId
                 Using oDr As SqlDataReader = getDataReaderDisposable(sSql)  'Done by nita on 6/7/22
                     While oDr.Read
@@ -4203,12 +4202,17 @@ restart:
 
                 'Code added for active and inactive products swap accordingly.
                 'If config key is on then add status sorting and old code running as it is.
-                If bExcludehiddenOnOrdering Then
-                    Dim oDt As New DataTable
-                    oDs.Tables(getTable(objectType)).DefaultView.Sort = "nStatus DESC"
-                    oDt = oDs.Tables(getTable(objectType)).DefaultView.ToTable
-                    oDs.Tables(getTable(objectType)).Clear()
-                    oDs.Tables(getTable(objectType)).Merge(oDt)
+                'Check key is exists or not then check with String.Compare (It returns 0 when two values are equivalent)
+                If goConfig("ExcludeHiddenOnOrdering") IsNot Nothing Then
+                    If String.Compare(goConfig("ExcludeHiddenOnOrdering").ToLower & "", "on") = 0 Then
+                        Dim oDt As New DataTable
+                        oDs.Tables(getTable(objectType)).DefaultView.Sort = "nStatus DESC"
+                        oDt = oDs.Tables(getTable(objectType)).DefaultView.ToTable
+                        oDs.Tables(getTable(objectType)).Clear()
+                        oDs.Tables(getTable(objectType)).Merge(oDt)
+                        oDt.Dispose()
+                        oDt = Nothing
+                    End If
                 End If
 
                 RecCount = oDs.Tables(getTable(objectType)).Rows.Count
