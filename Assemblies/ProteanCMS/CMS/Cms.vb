@@ -3781,7 +3781,7 @@ Public Class Cms
 
 
                 ' Check the page is not denied
-                sMembershipSql = sMembershipSql & " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
