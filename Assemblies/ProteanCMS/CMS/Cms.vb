@@ -8,6 +8,7 @@ Imports System.IO
 Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Net
+Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
 
@@ -3376,6 +3377,7 @@ Public Class Cms
             End If
 
 
+            ' placeholder for a review request
 
 
             ' Count Relations
@@ -5538,8 +5540,9 @@ Public Class Cms
             Dim cCloneParent As String
             Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
             Dim oPageVerElmts As XmlElement
-
             Dim DomainURL As String = mcRequestDomain
+            Dim ExcludeFoldersFromPaths As String = LCase(moConfig("ExcludeFoldersFromPaths"))
+            Dim foldersExcludedFromPaths As String() = ExcludeFoldersFromPaths.Split(",")
 
             For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName)
                 Dim urlPrefix As String = ""
@@ -5700,6 +5703,8 @@ Public Class Cms
                 ' Only generate URLs for MneuItems that do not already have a url explicitly defined
                 If oMenuItem.GetAttribute("url") = "" Then
 
+
+
                     ' Start with the base path
                     sUrl = moConfig("BasePath") & urlPrefix & cFilePathModifier
 
@@ -5715,7 +5720,10 @@ Public Class Cms
                                 Else
                                     cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                                 End If
-                                sUrl = sUrl & "/" & cPageName
+                                If Not foldersExcludedFromPaths.Contains(LCase(cPageName)) Then
+                                    sUrl = sUrl & "/" & cPageName
+                                End If
+
                             End If
                         Next
                     End If
@@ -5831,7 +5839,9 @@ Public Class Cms
                                             cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                                         End If
                                     End If
-                                    sUrl = sUrl & "/" & cPageName
+                                    If Not foldersExcludedFromPaths.Contains(LCase(cPageName)) Then
+                                        sUrl = sUrl & "/" & cPageName
+                                    End If
                                     If moConfig("LowerCaseUrl") = "on" Then
                                         sUrl = sUrl.ToLower()
                                     End If

@@ -14667,8 +14667,102 @@
         </xsl:choose>
         <xsl:text> </xsl:text>
       </iframe>
-		<script src="https://player.vimeo.com/api/player.js">&#160;</script>
+	  <script src="https://player.vimeo.com/api/player.js">&#160;</script>
     </div>
+  </xsl:template>
+	
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="json-ld">
+  	  	<script type="application/ld+json" id="vimeo-{@id}">
+			
+		</script>
+  </xsl:template>
+	
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="contentJS">
+	     <xsl:variable name="code">
+          <xsl:variable name="raw" select="Vimeo/@code"/>
+          <xsl:choose>
+            <xsl:when test="contains($raw, 'vimeo.com/video/')">
+              <xsl:value-of select="substring(substring-after($raw, 'vimeo.com/video/'), 1, 9)"/>
+            </xsl:when>
+            <xsl:when test="contains($raw, 'vimeo.com/')">
+              <xsl:value-of select="substring(substring-after($raw, 'vimeo.com/'), 1, 9)"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$raw"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+	  <script id="vimeo-json-ld">
+(function($) {
+    var $vimeoURL = $('#vimeoURL'),
+        $getMeta = $('#getMeta'),
+        $resultJSON = $('#resultJSON'),
+        $videoName = $('#videoName'),
+        $videoDuration = $('#videoDuration'),
+        $videoDescription = $('#videoDescription'),
+        $videoThumbURL = $('#videoThumbURL'),
+        $videoEmbedURL = $('#videoEmbedURL'),
+        $videoUploadDate = $('#videoUploadDate'),
+        $JSON_LD = $("#JSON_LD");
+
+    function getVideoJSON(id) {
+        return $.getJSON("https://vimeo.com/api/v2/video/" + id + ".json");
+    }
+
+    function populateFields(JSON) {
+        var s = moment.duration(1000 * parseInt(JSON[0].duration)),
+            d = 'PT';
+
+        if (s.hours()) {
+            d += s.hours() + 'h';
+        }
+        if (s.minutes()) {
+            d += s.minutes() + 'm';
+        }
+        if (s.seconds()) {
+            d += s.seconds() + 's';
+        }
+
+        $videoName.val(JSON[0].title);
+        $videoDuration.val(d);
+        $videoDescription.val(JSON[0].description);
+        $videoThumbURL.val(JSON[0].thumbnail_large);
+        $videoEmbedURL.val('https://player.vimeo.com/video/' + JSON[0].id);
+        $videoUploadDate.val(JSON[0].upload_date.substring(0, 10));
+    }
+
+    function generateJSONLD() {
+        var obj = {
+            "@context": "http://schema.org/",
+            "@type" : "VideoObject",
+            "@id": $videoEmbedURL.val(),
+            "duration": $videoDuration.val(),
+            "name": $videoName.val(),
+            "thumbnailUrl": $videoThumbURL.val(),
+            "embedUrl": $videoEmbedURL.val(),
+            "uploadDate": $videoUploadDate.val(),
+            "description": $videoDescription.val()
+        };
+
+        $JSON_LD.val(JSON.stringify(obj, null, '\t'));
+    }
+
+    $(function() {
+
+                 getVideoJSON(videoID)
+                    .done(function(jsonobj) {
+                        populateFields(jsonobj);
+                        generateJSONLD();
+						alert($JSON_LD);
+                    })
+                    .fail(function(x) {
+                        alert('Cannot get information for video with ID: ' + videoID);
+                    });
+        });
+})(jQuery);
+		  </script>
+
+  
   </xsl:template>
 
   <!--HTML5-->
