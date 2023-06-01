@@ -155,7 +155,7 @@ Namespace Providers
                 Dim cPageIds As String = String.Empty
                 Try
                     If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
-                        cWhereSql = cWhereSql & " and nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
+                        cWhereSql = cWhereSql & "  nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
                     End If
 
                 Catch ex As Exception

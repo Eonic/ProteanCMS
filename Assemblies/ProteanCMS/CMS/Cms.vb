@@ -3679,8 +3679,6 @@ Public Class Cms
         Dim nAuthUserId As Long
         Dim nAuthGroup As Long
         Dim cContentField As String = ""
-        Dim cFilterTarget As String = String.Empty
-
 
         Try
 
@@ -3783,16 +3781,9 @@ Public Class Cms
                     nAuthGroup = gnAuthUsers
                 End If
 
-                If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
-                    cFilterTarget = oContentsNode.Attributes("contentType").Value
-                End If
-                If (oContentsNode.Attributes("filterTarget") IsNot Nothing) Then
-                    cFilterTarget = oContentsNode.Attributes("filterTarget").Value
-                End If
 
                 ' Check the page is not denied
-                sMembershipSql = " c.cContentSchemaName ='" & cFilterTarget & "' and NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
-
+                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
@@ -3823,18 +3814,19 @@ Public Class Cms
 
 
             sSql = sSql & " where (" & combinedWhereSQL & ")"
+            If oContentsNode IsNot Nothing Then
+                ' Quick call to get the total number of records
+                Dim cSQL As String = "SET ARITHABORT ON "
+                cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
+                cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
+                cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
+                '' Add the extra joins if specified.
+                If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then cSQL &= " " & cAdditionalJoins & " "
+                cSQL = cSQL & " where (" & combinedWhereSQL & ")"
 
-            ' Quick call to get the total number of records
-            Dim cSQL As String = "SET ARITHABORT ON "
-            cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
-            cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
-            cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
-            '' Add the extra joins if specified.
-            If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then cSQL &= " " & cAdditionalJoins & " "
-            cSQL = cSQL & " where (" & combinedWhereSQL & ")"
-
-            Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
-            oContentsNode.SetAttribute("resultCount", nTotal)
+                Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
+                oContentsNode.SetAttribute("resultCount", nTotal)
+            End If
 
             If cOrderBy <> "" Then
                 sSql &= " ORDER BY " & cOrderBy
@@ -3857,11 +3849,12 @@ Public Class Cms
             Else
                 oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents")
             End If
-            nCount = oDs.Tables("Content").Rows.Count
-            PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
 
-            moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
-
+            If oDs IsNot Nothing Then
+                nCount = oDs.Tables("Content").Rows.Count
+                PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
+                moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
+            End If
 
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
@@ -3950,7 +3943,7 @@ Public Class Cms
                 End If
 
                 ' Check the page is not denied
-                sMembershipSql = " c.cContentSchemaName ='" & cShowSpecificContentTypes & "' and  NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
+                sMembershipSql = " NOT(dbo.fxn_checkPermission(CL.nStructId," & nAuthUserId & "," & nAuthGroup & ") LIKE '%DENIED%')"
 
                 ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
                 ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"

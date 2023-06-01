@@ -1499,6 +1499,9 @@ Partial Public Class Cms
 
                     'Add the page name if passed through
                     If cName <> "" Then
+                        If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                            cName = cName.Replace("-", " ")
+                        End If
                         cProcessInfo = MyBase.Instance.InnerXml
                         MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText = cName
                     End If
