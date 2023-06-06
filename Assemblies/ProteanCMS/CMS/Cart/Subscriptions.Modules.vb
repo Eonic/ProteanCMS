@@ -177,15 +177,30 @@ processFlow:
                                 " from tblSubscription sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " &
                                 " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " &
                                 " where sub.nDirId = " & myWeb.mnUserId
+                            Dim cmd = myWeb.moRequest("subCmd")
+logicstart:
 
-
-                            Select Case myWeb.moRequest("subCmd")
+                            Select Case cmd
                                 Case "updateSubPayment"
                                     UpdateSubscriptionPaymentMethod(myWeb, contentNode)
                                     listSubs = False
                                 Case "cancelSub", "cancelSubscription"
                                     Dim oSubs As New Protean.Cms.Cart.Subscriptions(myWeb)
                                     oSubs.CancelSubscription(myWeb.moRequest("subId"))
+                                Case "edit"
+                                    myWeb.moContentDetail = myWeb.moPageXml.CreateElement("ContentDetail")
+                                    contentNode = myWeb.moContentDetail
+                                    myWeb.moPageXml.DocumentElement.AppendChild(contentNode)
+                                    Dim oADX As New Protean.Cms.Admin.AdminXforms(myWeb)
+                                    Dim subXform As XmlElement = oADX.xFrmEditUserSubscription(myWeb.moRequest("subId"), "/xforms/Subscription/EditUserSubscription.xml")
+                                    If oADX.valid Then
+                                        cmd = "details"
+                                        GoTo logicstart
+                                    Else
+                                        myWeb.moContentDetail.AppendChild(myWeb.moContentDetail.OwnerDocument.ImportNode(subXform, True))
+                                        listSubs = False
+                                    End If
+
                                 Case "details"
                                     myWeb.moContentDetail = myWeb.moPageXml.CreateElement("ContentDetail")
                                     contentNode = myWeb.moContentDetail

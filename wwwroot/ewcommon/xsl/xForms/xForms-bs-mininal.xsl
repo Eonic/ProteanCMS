@@ -9,18 +9,12 @@
         <div class="modal-dialog">
           <div class="modal-content  alert alert-danger" role="alert">
             <div class="modal-body">
-              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">
-				  <xsl:text> </xsl:text>
-			  </i>
-             
+              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
+              <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
               <button type="button" class="close" data-dismiss="modal">
-                <i class="fa fa-times">
-					<xsl:text> </xsl:text>
-				</i>
+                <i class="fa fa-times">&#160;</i>
               </button>
-              <span id="errorMessage">
-				  <xsl:text> </xsl:text>
-			  </span>
+              <span id="errorMessage">&#160;</span>
             </div>
           </div>
         </div>
@@ -281,6 +275,70 @@
   </xsl:template>
 
 
+	<xsl:template match="group[contains(@class,'panel')]" mode="xform">
+		<xsl:param name="class"/>
+		<div>
+			<xsl:if test=" @id!='' ">
+				<xsl:attribute name="id">
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$class!='' or @class!='' ">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$class"/>
+					<xsl:if test="@class!=''">
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="@class"/>
+					</xsl:if>
+					<xsl:for-each select="group">
+						<xsl:text> form-group li-</xsl:text>
+						<xsl:value-of select="./@class"/>
+					</xsl:for-each>
+				</xsl:attribute>
+			</xsl:if>
+			<div class="panel-heading">
+				
+			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
+			</div>
+			<div class="panel-body">
+			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+			</div>
+				<xsl:if test="count(submit) &gt; 0">
+				<xsl:choose>
+					<xsl:when test="contains(@class,'form-inline')">
+						<xsl:apply-templates select="submit" mode="xform"/>
+						<!-- Terminus needed for CHROME ! -->
+						<!-- Terminus needed for BREAKS IE 7! -->
+						<xsl:if test="$browserVersion!='MSIE 7.0'">
+							<div class="terminus">&#160;</div>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<div class="form-actions panel-footer">
+							<xsl:if test="not(submit[contains(@class,'hideRequired')])">
+								<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+									<label class="required">
+										<span class="req">*</span>
+										<xsl:text> </xsl:text>
+										<xsl:call-template name="msg_required"/>
+									</label>
+								</xsl:if>
+							</xsl:if>
+							<!-- For xFormQuiz change how these buttons work -->
+							<xsl:apply-templates select="submit" mode="xform"/>
+							<!-- Terminus needed for CHROME ! -->
+							<!-- Terminus needed for BREAKS IE 7! -->
+							<xsl:if test="$browserVersion!='MSIE 7.0'">
+								<div class="terminus">&#160;</div>
+							</xsl:if>
+						</div>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</div>
+	</xsl:template>
+	
+	
   <!-- ========================== GROUP Horizontal ========================== -->
   <!-- -->
   <xsl:template match="group[contains(@class,'horizontal_cols') and parent::group] | repeat[contains(@class,'horizontal_cols') and parent::group]" mode="xform">
@@ -330,9 +388,7 @@
           <xsl:if test="*/alert or */hint or */help">
             <div class="pt-row">
               <xsl:if test="label">
-                <div class="pt-col ">
-					<xsl:text>&#160;</xsl:text>
-			</div>
+                <div class="pt-col ">&#160;</div>
               </xsl:if>
               <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt"/>
             </div>

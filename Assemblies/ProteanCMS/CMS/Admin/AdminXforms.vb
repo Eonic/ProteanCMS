@@ -7770,7 +7770,7 @@ Partial Public Class Cms
 
             'Moved to edit content instead
 
-            Public Function xFrmEditUserSubscription(ByVal nSubId As Integer) As XmlElement
+            Public Function xFrmEditUserSubscription(ByVal nSubId As Integer, Optional xFormPath As String = "/xforms/Subscription/EditSubscription.xml") As XmlElement
                 Dim cProcessInfo As String = ""
                 Try
 
@@ -7780,7 +7780,7 @@ Partial Public Class Cms
 
                     MyBase.NewFrm("EditUserSubscription")
                     MyBase.bProcessRepeats = False
-                    MyBase.load("/xforms/Subscription/EditSubscription.xml", myWeb.maCommonFolders)
+                    MyBase.load(xFormPath, myWeb.maCommonFolders)
 
                     If nSubId > 0 Then
                         MyBase.bProcessRepeats = True
