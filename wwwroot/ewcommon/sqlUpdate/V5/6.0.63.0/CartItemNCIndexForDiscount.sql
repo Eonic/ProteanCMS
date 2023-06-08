@@ -1,0 +1,9 @@
+
+/****** Object:  Index [NC_CartOrderKey]    Script Date: 08-06-2023 12:03:45 ******/
+CREATE NONCLUSTERED INDEX [NC_CartOrderKey] ON [dbo].[tblCartItem]
+(
+	[nCartOrderId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+
