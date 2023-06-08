@@ -14706,25 +14706,15 @@
         $JSON_LD = $("#JSON_LD");
 
     function getVideoJSON(id) {
+	alert("https://vimeo.com/api/v2/video/" + id + ".json");
         return $.getJSON("https://vimeo.com/api/v2/video/" + id + ".json");
     }
 
     function populateFields(JSON) {
-        var s = moment.duration(1000 * parseInt(JSON[0].duration)),
-            d = 'PT';
 
-        if (s.hours()) {
-            d += s.hours() + 'h';
-        }
-        if (s.minutes()) {
-            d += s.minutes() + 'm';
-        }
-        if (s.seconds()) {
-            d += s.seconds() + 's';
-        }
 
         $videoName.val(JSON[0].title);
-        $videoDuration.val(d);
+        $videoDuration.val(JSON[0].duration);
         $videoDescription.val(JSON[0].description);
         $videoThumbURL.val(JSON[0].thumbnail_large);
         $videoEmbedURL.val('https://player.vimeo.com/video/' + JSON[0].id);
@@ -14744,19 +14734,25 @@
             "description": $videoDescription.val()
         };
 
-        $JSON_LD.val(JSON.stringify(obj, null, '\t'));
+
+        
+		$JSON_LD.val(JSON.stringify(obj, null, '\t'));
     }
 
     $(function() {
+	
+	videoId = '<xsl:value-of select="$code"/>';
+	videoId = videoId.split('?')[0];
 
-                 getVideoJSON(videoID)
+                 getVideoJSON(videoId)
                     .done(function(jsonobj) {
+					alert(JSON.stringify(jsonobj, null, '\t'))
                         populateFields(jsonobj);
                         generateJSONLD();
 						alert($JSON_LD);
                     })
                     .fail(function(x) {
-                        alert('Cannot get information for video with ID: ' + videoID);
+                        alert('Cannot get information for video with ID: ' + videoId);
                     });
         });
 })(jQuery);

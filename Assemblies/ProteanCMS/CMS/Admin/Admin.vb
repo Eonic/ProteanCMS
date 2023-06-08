@@ -4775,7 +4775,7 @@ SP:
                     End If
 
                 Case "ManageUserSubscription"
-
+                    myWeb.moSession("tempInstance") = Nothing
                     oSub.GetSubscriptionDetail(oPageDetail, myWeb.moRequest("id"))
                     sAdminLayout = "ManageUserSubscription"
                     'If oADX.valid Then
