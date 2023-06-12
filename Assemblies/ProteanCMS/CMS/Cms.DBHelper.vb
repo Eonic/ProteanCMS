@@ -4141,7 +4141,7 @@ restart:
 
             Dim objectType As objectTypes
             Dim sKeyField As String
-            Dim sStatusField As String
+            'Dim sStatusField As String
 
             If nGroupId <> 0 Then
                 objectType = objectTypes.CartCatProductRelations
