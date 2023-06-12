@@ -5534,7 +5534,7 @@ Public Class Cms
             Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
             Dim oPageVerElmts As XmlElement
             Dim DomainURL As String = mcRequestDomain
-            Dim ExcludeFoldersFromPaths As String = LCase(moConfig("ExcludeFoldersFromPaths"))
+            Dim ExcludeFoldersFromPaths As String = LCase("" & moConfig("ExcludeFoldersFromPaths"))
             Dim foldersExcludedFromPaths As String() = ExcludeFoldersFromPaths.Split(",")
 
             For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::" & cMenuItemNodeName)
