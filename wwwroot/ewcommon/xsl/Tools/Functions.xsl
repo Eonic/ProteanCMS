@@ -532,10 +532,11 @@
 		<xsl:if test="$page/Request/GoogleCampaign">
 		'{		
 		        <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
-					'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>',
+					'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
 				</xsl:if>
 				<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
-					'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
+					<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+					'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>'
 				</xsl:if>
 		}
 		</xsl:if>
@@ -546,12 +547,13 @@
 	
 		, {
 		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
-			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>',
+			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
 		</xsl:if>
 		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+			<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
 			'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
 		</xsl:if>
-		'user_id': '<xsl:value-of select="User/@id"/>>'
+		'user_id': '<xsl:value-of select="User/@id"/>'
 		}
 	</xsl:template>
 
