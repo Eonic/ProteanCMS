@@ -913,7 +913,7 @@
 		<xsl:variable name="previousURL">
 			<xsl:value-of select="$page/Request/ServerVariables/Item[@name='PREVIOUS_PAGE']"/>
 		</xsl:variable>
-
+<div class="container">
 		<div class="order orderdetail panel panel-default">
       			<div class="panel-body">
 			<xsl:apply-templates select="Order" mode="orderAddressesView"/>
@@ -928,6 +928,7 @@
 			</div>
 			 </div>
 		</div>
+</div>
 	</xsl:template>
 	<!-- ##### /Ecommerce List Orders module ##### -->
 
