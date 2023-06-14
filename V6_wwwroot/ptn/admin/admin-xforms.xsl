@@ -3535,6 +3535,9 @@
 
   </xsl:template>
 
+	<xsl:template match="submit[contains(@class,'getGeocodeButton')]" mode="xform_control_script">
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?key={$GoogleAPIKey}">&#160;</script>
+	</xsl:template>
 
   <xsl:template match="group[contains(@class,'PermissionButtons')]" mode="xform">
     <xsl:param name="class"/>

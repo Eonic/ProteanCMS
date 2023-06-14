@@ -600,7 +600,7 @@
 								<i class="fa fa-circle fa-stack-2x">
 									<xsl:text> </xsl:text>
 								</i>
-								<i class="fa fa-instagram fa-stack-1x fa-inverse">
+								<i class="fa-brands fa-instagram fa-stack-1x fa-inverse">
 									<xsl:text> </xsl:text>
 								</i>
 							</span>

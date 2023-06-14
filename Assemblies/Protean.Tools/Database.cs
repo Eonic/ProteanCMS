@@ -1547,25 +1547,28 @@ namespace Protean.Tools
             string cProcessInfo = "getDataReader";
             try
             {
-                foreach (DataTable oTable in ds.Tables)
+                if (ds != null)
                 {
-                    foreach (DataRow oRow in oTable.Rows)
+                    foreach (DataTable oTable in ds.Tables)
                     {
-                        foreach (DataColumn oColumn in oTable.Columns)
+                        foreach (DataRow oRow in oTable.Rows)
                         {
-                            // If IsDBNull(oRow.Item(oColumn.ColumnName)) Then
-                            switch (oColumn.DataType.ToString())
+                            foreach (DataColumn oColumn in oTable.Columns)
                             {
-                                case "System.DateTime":
-                                    {
-                                        if (!(oRow[oColumn.ColumnName] == null))
+                                // If IsDBNull(oRow.Item(oColumn.ColumnName)) Then
+                                switch (oColumn.DataType.ToString())
+                                {
+                                    case "System.DateTime":
                                         {
-                                            if ((DateTime)oRow[oColumn.ColumnName] == (DateTime)DateTime.Parse("0001-01-01"))
-                                                oRow[oColumn.ColumnName] = DBNull.Value;
-                                        }
+                                            if (!(oRow[oColumn.ColumnName] == null))
+                                            {
+                                                if ((DateTime)oRow[oColumn.ColumnName] == (DateTime)DateTime.Parse("0001-01-01"))
+                                                    oRow[oColumn.ColumnName] = DBNull.Value;
+                                            }
 
-                                        break;
-                                    }
+                                            break;
+                                        }
+                                }
                             }
                         }
                     }
@@ -1587,7 +1590,8 @@ namespace Protean.Tools
             string cProcessInfo = "returnNullsEmpty";
             try
             {
-                foreach (DataTable oTable in ds.Tables)
+                if (ds != null) { 
+                    foreach (DataTable oTable in ds.Tables)
                 {
                     foreach (DataRow oRow in oTable.Rows)
                     {
@@ -1600,7 +1604,7 @@ namespace Protean.Tools
                                 {
                                     case "System.DateTime":
                                         {
-                                            oRow[oColumn.ColumnName] = (DateTime)DateTime.Parse("0001-01-01");
+                                                oRow[oColumn.ColumnName] = (DateTime)DateTime.Parse("0001-01-01");
                                             break;
                                         }
 
@@ -1628,6 +1632,7 @@ namespace Protean.Tools
                             }
                         }
                     }
+                }
                 }
             }
             catch (Exception ex)

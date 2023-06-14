@@ -3766,7 +3766,7 @@ AfterProcessFlow:
 
                     Case "ShippingGroup"
                         sAdminLayout = "AdminXForm"
-                        oPageDetail.AppendChild(moAdXfm.xFrmProductShippingGroupRelations(myWeb.moRequest.QueryString("id"), ""))
+                        oPageDetail.AppendChild(moAdXfm.xFrmProductShippingGroupRelations(myWeb.moRequest.QueryString("id"), myWeb.moRequest.QueryString("name")))
 
                     Case "delete"
                         'xFrmDeleteDeliveryMethod
@@ -4775,7 +4775,7 @@ SP:
                     End If
 
                 Case "ManageUserSubscription"
-
+                    myWeb.moSession("tempInstance") = Nothing
                     oSub.GetSubscriptionDetail(oPageDetail, myWeb.moRequest("id"))
                     sAdminLayout = "ManageUserSubscription"
                     'If oADX.valid Then

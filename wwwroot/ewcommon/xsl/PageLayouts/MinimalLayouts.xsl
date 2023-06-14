@@ -45,7 +45,7 @@
           <xsl:with-param name="containerClass" select="$containerClass"/>
         </xsl:apply-templates>
 
-        <xsl:apply-templates select="." mode="socialBookmarks" />-->
+        <xsl:apply-templates select="." mode="socialBookmarks" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -14639,17 +14639,12 @@
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+      <iframe frameborder="0" class="embed-responsive-item" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen="allowfullscreen" >
         <xsl:attribute name="src">
           <xsl:text>//player.vimeo.com/video/</xsl:text>
           <xsl:value-of select="$code"/>
           <!-- Turn all options off by default -->
-          <xsl:text>/?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=0&amp;loop=0</xsl:text>
-          <xsl:if test="Vimeo/@title='true'">&amp;title=1</xsl:if>
-          <xsl:if test="Vimeo/@byline='true'">&amp;byline=1</xsl:if>
-          <xsl:if test="Vimeo/@portrait='true'">&amp;portrait=1</xsl:if>
-          <xsl:if test="Vimeo/@autoplay='true'">&amp;autoplay=1</xsl:if>
-          <xsl:if test="Vimeo/@loop='true'">&amp;loop=1</xsl:if>
+          <xsl:text>&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
         </xsl:attribute>
         <xsl:choose>
           <xsl:when test="@size='Manual'">
@@ -14672,7 +14667,98 @@
         </xsl:choose>
         <xsl:text> </xsl:text>
       </iframe>
+	  <script src="https://player.vimeo.com/api/player.js">&#160;</script>
     </div>
+  </xsl:template>
+	
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="json-ld">
+  	  	<script type="application/ld+json" id="vimeo-{@id}">
+			
+		</script>
+  </xsl:template>
+	
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="contentJS">
+	     <xsl:variable name="code">
+          <xsl:variable name="raw" select="Vimeo/@code"/>
+          <xsl:choose>
+            <xsl:when test="contains($raw, 'vimeo.com/video/')">
+              <xsl:value-of select="substring(substring-after($raw, 'vimeo.com/video/'), 1, 9)"/>
+            </xsl:when>
+            <xsl:when test="contains($raw, 'vimeo.com/')">
+              <xsl:value-of select="substring(substring-after($raw, 'vimeo.com/'), 1, 9)"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$raw"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+	  <script id="vimeo-json-ld">
+(function($) {
+    var $vimeoURL = $('#vimeoURL'),
+        $getMeta = $('#getMeta'),
+        $resultJSON = $('#resultJSON'),
+        $videoName = $('#videoName'),
+        $videoDuration = $('#videoDuration'),
+        $videoDescription = $('#videoDescription'),
+        $videoThumbURL = $('#videoThumbURL'),
+        $videoEmbedURL = $('#videoEmbedURL'),
+        $videoUploadDate = $('#videoUploadDate'),
+        $JSON_LD = $("#JSON_LD");
+
+    function getVideoJSON(id) {
+	alert("https://vimeo.com/api/v2/video/" + id + ".json");
+        return $.getJSON("https://vimeo.com/api/v2/video/" + id + ".json");
+    }
+
+    function populateFields(JSON) {
+
+
+        $videoName.val(JSON[0].title);
+        $videoDuration.val(JSON[0].duration);
+        $videoDescription.val(JSON[0].description);
+        $videoThumbURL.val(JSON[0].thumbnail_large);
+        $videoEmbedURL.val('https://player.vimeo.com/video/' + JSON[0].id);
+        $videoUploadDate.val(JSON[0].upload_date.substring(0, 10));
+    }
+
+    function generateJSONLD() {
+        var obj = {
+            "@context": "http://schema.org/",
+            "@type" : "VideoObject",
+            "@id": $videoEmbedURL.val(),
+            "duration": $videoDuration.val(),
+            "name": $videoName.val(),
+            "thumbnailUrl": $videoThumbURL.val(),
+            "embedUrl": $videoEmbedURL.val(),
+            "uploadDate": $videoUploadDate.val(),
+            "description": $videoDescription.val()
+        };
+
+
+        
+		$JSON_LD.val(JSON.stringify(obj, null, '\t'));
+    }
+
+    $(function() {
+	
+	videoId = '<xsl:value-of select="$code"/>';
+	videoId = videoId.split('?')[0];
+
+                 getVideoJSON(videoId)
+                    .done(function(jsonobj) {
+					alert(JSON.stringify(jsonobj, null, '\t'))
+                        populateFields(jsonobj);
+                        generateJSONLD();
+						alert($JSON_LD);
+                    })
+                    .fail(function(x) {
+                        alert('Cannot get information for video with ID: ' + videoId);
+                    });
+        });
+})(jQuery);
+		  </script>
+
+  
   </xsl:template>
 
   <!--HTML5-->

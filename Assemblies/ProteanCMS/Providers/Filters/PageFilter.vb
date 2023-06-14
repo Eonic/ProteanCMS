@@ -2,6 +2,8 @@
 
 Imports System.Data.SqlClient
 Imports System.Xml
+Imports Microsoft
+Imports Microsoft.ClearScript.Util
 Imports Protean.Cms
 Imports Protean.xForm
 
@@ -11,7 +13,7 @@ Namespace Providers
         Public Class PageFilter
 
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
-            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement)
+            Public Sub AddControl(ByRef aWeb As Cms, ByRef FilterConfig As XmlElement, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef oContentNode As XmlElement, ByVal cWhereSql As String)
                 Dim cProcessInfo As String = "AddControl"
                 Try
                     Dim pageFilterSelect As XmlElement
@@ -19,15 +21,25 @@ Namespace Providers
                     Dim sCotrolDisplayName As String = "Page Filter"
                     'Parent page id flag used to populate the root level pages or pages under current page.
                     Dim bParentPageId As Boolean = False
+                    Dim cFilterTarget As String = String.Empty
+
                     Dim nParentId As Integer = 1
                     Dim sSql As String = "spGetPagesByParentPageId"
                     Dim arrParams As New Hashtable
                     Dim oXml As XmlElement = oXform.moPageXML.CreateElement("PageFilter")
+                    Dim oFilterElmt As XmlElement = Nothing
+                    Dim className As String = String.Empty
 
+                    If (oContentNode.Attributes("filterTarget") IsNot Nothing) Then
+                        cFilterTarget = oContentNode.Attributes("filterTarget").Value
+                    End If
                     If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
                         oXml.InnerText = Convert.ToString(aWeb.moRequest.Form("PageFilter"))
 
                     End If
+
+
+
                     oXform.Instance.AppendChild(oXml)
 
 
@@ -45,28 +57,33 @@ Namespace Providers
                     End If
                     If (bParentPageId) Then
                         arrParams.Add("PageId", nParentId)
+                        arrParams.Add("FilterTarget", cFilterTarget)
+                        arrParams.Add("whereSql", cWhereSql)
                     End If
 
 
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)  'Done by nita on 6/7/22
                         'Adding controls to the form like dropdown, radiobuttons
+
                         If (oXml.InnerText <> String.Empty) Then
-                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox filter-selected", ApperanceTypes.Full)
+
+                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox SubmitPageFilter filter-selected", ApperanceTypes.Full)
                         Else
-                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox", ApperanceTypes.Full)
+                            pageFilterSelect = oXform.addSelect(oFromGroup, "PageFilter", False, sCotrolDisplayName, "checkbox SubmitPageFilter", ApperanceTypes.Full)
                         End If
 
                         'oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                         While oDr.Read
-                            Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ProductCount")) + "</span>"
+                            Dim name As String = Convert.ToString(oDr("cStructName")) + " <span class='ProductCount'>" + Convert.ToString(oDr("ContentCount")) + "</span>"
                             Dim value As String = Convert.ToString(oDr("nStructKey"))
 
                             oXform.addOption(pageFilterSelect, name, value, True)
+
                         End While
 
                     End Using
-                    If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']") IsNot Nothing) Then
-                        If (oXml.InnerText.Trim() <> String.Empty) Then
+                    If (oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item") IsNot Nothing) Then
+                        If (oXml.InnerText.Trim() <> "") Then
                             Dim sText As String
                             'Dim sValue As String
                             Dim cnt As Integer
@@ -75,14 +92,14 @@ Namespace Providers
                                 For cnt = 0 To aPages.Length - 1
                                     sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages(cnt) + "']").FirstChild().FirstChild().InnerText
 
-                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), "filter-applied", "fa-times")
+                                    oXform.addSubmit(oFromGroup, sText, sText, "PageFilter_" & aPages(cnt), " btnCross filter-applied", "fa-times")
 
                                 Next
 
                             Else
 
                                 sText = oFromGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild().FirstChild().InnerText
-                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", "filter-applied", "fa-times")
+                                oXform.addSubmit(oFromGroup, sText, sText, "PageFilter", " btnCross filter-applied", "fa-times")
                             End If
                         End If
                     End If
@@ -91,7 +108,7 @@ Namespace Providers
                 End Try
             End Sub
 
-            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement) As String
+            Public Function ApplyFilter(ByRef aWeb As Cms, ByRef cWhereSql As String, ByRef oXform As xForm, ByRef oFromGroup As XmlElement, ByRef FilterConfig As XmlElement, ByRef cFilterTarget As String) As String
                 Dim cProcessInfo As String = "ApplyFilter"
                 Try
 
@@ -131,34 +148,25 @@ Namespace Providers
 
             End Function
 
-            'Public Sub RemovePageFromFilter(ByRef aWeb As Cms, ByVal cPageId As String)
-            '    Dim cProcessInfo As String = "RemovePageFromFilter"
-            '    Try
-            '        Dim cnt As Integer
-            '        Dim cntPages As Integer = 0
-            '        Dim cPageIds As String = String.Empty
-            '        If (aWeb.moSession("PageFilter") IsNot Nothing) Then
-            '            cPageIds = aWeb.moSession("PageFilter")
-            '            cPageIds = cPageIds.Replace(cPageId, "")
 
-            '            Dim aPageId() As String = cPageIds.Split(",")
-            '            For cnt = 0 To aPageId.Length - 1 Step 1
-            '                If (aPageId(cnt) <> String.Empty) Then
-            '                    If aPageId(cnt) <> "" Then
-            '                        cPageIds = cPageIds + aPageId(cnt) + ","
-            '                    End If
-            '                End If
-            '            Next
-            '            aWeb.moSession("PageFilter") = Left(cPageIds, cPageIds.Length - 1)
-            '        End If
+            Public Function GetFilterSQL(ByRef aWeb As Cms) As String
+                Dim cWhereSql As String = String.Empty
+                Dim cProcessInfo As String = "GetFilterSQL"
+                Dim cPageIds As String = String.Empty
+                Try
+                    If (aWeb.moRequest.Form("PageFilter") IsNot Nothing) Then
+                        cWhereSql = cWhereSql & "  nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
+                    End If
 
-            '    Catch ex As Exception
-            '        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
-            '    End Try
-            'End Sub
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""))
+                End Try
+                Return cWhereSql
+            End Function
+
 
         End Class
-        ' End Class
+
     End Namespace
 End Namespace
 

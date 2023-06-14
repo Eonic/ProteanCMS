@@ -4957,24 +4957,33 @@
     <xsl:param name="desc"/>
     <xsl:param name="name"/>
     <xsl:param name="type"/>
+	  <xsl:for-each select="/Page/Contents/Content[@name=$name and @type=$type]">
+		  
+	  </xsl:for-each>
     <tr>
       <td>
         <xsl:value-of select="$desc"/>
       </td>
       <td>
-        <xsl:choose>
+		 <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@position = $name]">
-            <xsl:value-of select="/Page/Contents/Content[@position = $name]/@moduleType"/>
+			  <xsl:for-each select="/Page/Contents/Content[@position = $name]/@moduleType">
+			  <xsl:value-of select="@moduleType"/><br/>
+		  </xsl:for-each>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:copy-of select="/Page/Contents/Content[@name=$name and @type = $type and @type!='=CookiePolicy']/node()"/>
+			  <xsl:for-each select="/Page/Contents/Content[@name=$name and @type=$type and @type!='=CookiePolicy']">
+				  <xsl:copy-of select="node()"/>
+				  <br/>
+			  </xsl:for-each>
           </xsl:otherwise>
         </xsl:choose>
       </td>
       <td>
-        <xsl:choose>
-          <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type and @parId!=/Page/@id]">
-            <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name and @type = $type]/@parId]/@name}" class="btn btn-xs btn-primary">
+		  
+        
+          <xsl:for-each select="/Page/Contents/Content[@name=$name and @type=$type and @parId!=/Page/@id]">
+            <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name and @type = $type]/@parId]/@name}" class="btn btn-xs btn-primary">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit Master
@@ -4984,35 +4993,35 @@
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Add Here
             </a>
-          </xsl:when>
-          <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type] | /Page/Contents/Content[@type = 'Module' and @position = $name]">
+          </xsl:for-each>
+          <xsl:for-each select="/Page/Contents/Content[@name=$name and @type = $type] | /Page/Contents/Content[@type = 'Module' and @position = $name]">
             <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Click here to edit this content" class="btn btn-xs btn-primary">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit
             </a>
             <xsl:if test="/Page/Contents/Content[@name=$name and @type = $type and @status='1'] | /Page/Contents/Content[@type = 'Module' and @position = $name and @status='1']">
-              <a href="{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to hide this item" class="btn btn-xs btn-danger">
+              <a href="{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to hide this item" class="btn btn-xs btn-danger">
                 <i class="fa fa-ban fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Hide
               </a>
             </xsl:if>
             <xsl:if test="/Page/Contents/Content[@name=$name and @type = $type and @status='0'] | /Page/Contents/Content[@type = 'Module' and @position = $name and @status='0']">
-              <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to show this item" class="btn btn-xs btn-success">
+              <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item" class="btn btn-xs btn-success">
                 <i class="fa fa-check-circle-o fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Show
               </a>
-              <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
+              <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
                 <i class="fa fa-remove-circle fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Delete
               </a>
               <br/>
             </xsl:if>
-          </xsl:when>
-          <xsl:otherwise>
+          </xsl:for-each>
+          <xsl:if test="not(/Page/Contents/Content[@name=$name and @type=$type])">
             <xsl:choose>
               <xsl:when test="$type='Module'">
                 <a class="btn btn-default btn-xs pull-right" href="{$appPath}?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$name}">
@@ -5027,8 +5036,7 @@
                 </a>
               </xsl:otherwise>
             </xsl:choose>
-          </xsl:otherwise>
-        </xsl:choose>
+          </xsl:if>
       </td>
     </tr>
 
@@ -8980,7 +8988,7 @@
           </i><xsl:text> </xsl:text>Select User Groups
         </a>		  
         <xsl:text> </xsl:text>
-	    <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}" class="btn btn-xs btn-primary">
+	    <a href="{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=ShippingGroup&amp;id={@id}&amp;name={@name}" class="btn btn-xs btn-primary">
 			  <i class="fa fa-user fa-white">
 				  <xsl:text> </xsl:text>
 			  </i><xsl:text> </xsl:text>Select Shipping Group
@@ -9280,13 +9288,7 @@
   <xsl:template match="Report" mode="defaultReport">
     <table class="table">
       <tr>
-        <xsl:for-each select="Item[1]/descendant-or-self::*">
-          <xsl:if test="count(*)=0">
-            <th>
-              <xsl:value-of select="local-name()"/>
-            </th>
-          </xsl:if>
-        </xsl:for-each>
+		  <xsl:apply-templates select="Item[1]/descendant-or-self::*" mode="Report_ColsHeading"/>       
       </tr>
       <xsl:for-each select="Item">
         <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
@@ -9306,13 +9308,7 @@
 				<th>
 					Date/Time
 				</th>
-				<xsl:for-each select="Item[last()]/cActivityXml/descendant-or-self::*">
-					<xsl:if test="count(*)=0 or local-name()='Attachements' or local-name()='Attachments'">
-						<th>
-							<xsl:value-of select="local-name()"/>
-						</th>
-		</xsl:if>
-				</xsl:for-each>
+				<xsl:apply-templates select="Item[last()]/cActivityXml/descendant-or-self::*" mode="Report_ColsHeading"/>
 				<th>
 					Refering Page
 				</th>
@@ -9328,9 +9324,35 @@
 			</xsl:for-each>
 		</table>
 	</xsl:template>
-	
 
-  <xsl:template match="*" mode ="Report_ColsValues">
+	<xsl:template match="*" mode ="Report_ColsHeading">
+		<xsl:if test="count(*)=0">
+				<th>
+					<xsl:value-of select="local-name()"/>
+				</th>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="Attachments" mode ="Report_ColsHeading">
+		<th>
+			Document Title
+		</th>
+	</xsl:template>
+
+	<xsl:template match="Attachment" mode ="Report_ColsHeading">
+
+	</xsl:template>
+
+
+	<xsl:template match="Content[parent::Attachment]" mode ="Report_ColsHeading">
+
+	</xsl:template>
+	
+	<xsl:template match="Attachment" mode ="Report_ColsValues">
+
+	</xsl:template>
+
+	<xsl:template match="*" mode ="Report_ColsValues">
     <xsl:if test="count(*)=0">
       <td>
         <xsl:value-of select="node()"/>
@@ -9346,7 +9368,7 @@
 
 	<xsl:template match="Attachements | Attachments" mode ="Report_ColsValues">
 		<td>
-			<xsl:for-each select="Attachement | Attachments ">
+			<xsl:for-each select="Attachement | Attachment">
 				<xsl:value-of select="Content/@name"/>
 			</xsl:for-each>
 		</td>
@@ -13951,7 +13973,7 @@
 				<xsl:value-of select="cContentSchemaName/node()"/>
 			</td>
 			<td colspan="2">
-				<xsl:value-of select="@cDefinitionName"/>
+				<xsl:value-of select="cDefinitionName/node()"/>
 			</td>
 			<td colspan="2">
 				<xsl:value-of select="cContentValueXpath/node()"/>
