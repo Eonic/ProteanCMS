@@ -66,50 +66,64 @@
 					<xsl:if test="@facebookURL!=''">
 						<a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
 							<i class="fab fa-2x fa-facebook">
-								<xsl:text> </xsl:text>
+								<span class="d-none">
+									<xsl:value-of select="$myName"/> on Facebook
+								</span>
 							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
-							<i class="fab fa-2x fa-twitter">
-								<xsl:text> </xsl:text>
-							</i>
+							<span class="d-none">
+								<i class="fab fa-2x fa-twitter">
+									<xsl:value-of select="$myName"/> on Twitter
+								</i>
+							</span>
 						</a>
 					</xsl:if>
 					<xsl:if test="@linkedInURL!=''">
 						<a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
-							<i class="fab fa-2x fa-linkedin">
-								<xsl:text> </xsl:text>
-							</i>
+							<span class="d-none">
+								<i class="fab fa-2x fa-linkedin">
+									<xsl:value-of select="$myName"/> on LinkedIn
+								</i>
+							</span>
 						</a>
 					</xsl:if>
 					<xsl:if test="@googlePlusURL!=''">
 						<a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
-							<i class="fab fa-2x fa-google-plus">
-								<xsl:text> </xsl:text>
-							</i>
+							<span class="d-none">
+								<i class="fab fa-2x fa-google-plus">
+									<xsl:value-of select="$myName"/> on Google+
+								</i>
+							</span>
 						</a>
 					</xsl:if>
 					<xsl:if test="@pinterestURL!=''">
 						<a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-li">
-							<i class="fab fa-2x fa-pinterest">
-								<xsl:text> </xsl:text>
-							</i>
+							<span class="d-none">
+								<i class="fab fa-2x fa-pinterest">
+									<xsl:value-of select="$myName"/> on Pintrest
+								</i>
+							</span>
 						</a>
 					</xsl:if>
 					<xsl:if test="@youtubeURL!=''">
 						<a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" id="social-id-yt">
-							<i class="fab fa-2x fa-youtube">
-								<xsl:text> </xsl:text>
-							</i>
+							<span class="d-none">
+								<i class="fab fa-2x fa-youtube">
+									<xsl:value-of select="$myName"/> on Youtube
+								</i>
+							</span>
 						</a>
 					</xsl:if>
 					<xsl:if test="@instagramURL!=''">
 						<a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
-							<i class="fab fa-2x fa-instagram">
-								<xsl:text> </xsl:text>
-							</i>
+							<span class="d-none">
+								<i class="fab fa-2x fa-instagram">
+									<xsl:value-of select="$myName"/> on Instagram
+								</i>
+							</span>
 						</a>
 					</xsl:if>
 				</xsl:when>
@@ -254,49 +268,63 @@
 					<xsl:if test="@facebookURL!=''">
 						<a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
 							<i class="fab fa-facebook">
-								<xsl:text> </xsl:text>
+								<span class="d-none">
+									<xsl:value-of select="$myName"/> on Facebook
+								</span>
 							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
 							<i class="fab fa-twitter">
-								<xsl:text> </xsl:text>
+								<span class="d-none">
+									<xsl:value-of select="$myName"/> on Twitter
+								</span>
 							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@linkedInURL!=''">
 						<a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
 							<i class="fab fa-linkedin">
-								<xsl:text> </xsl:text>
+								<span class="d-none">
+									<xsl:value-of select="$myName"/> on LinkedIn
+								</span>
 							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@googlePlusURL!=''">
 						<a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
 							<i class="fab fa-google-plus">
-								<xsl:text> </xsl:text>
+								<span class="d-none">
+									<xsl:value-of select="$myName"/> on Google+
+								</span>
 							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@pinterestURL!=''">
 						<a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
 							<i class="fab fa-pinterest">
-								<xsl:text> </xsl:text>
+								<span class="d-none">
+									<xsl:value-of select="$myName"/> on Pintrest
+								</span>
 							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@youtubeURL!=''">
 						<a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
 							<i class="fab fa-youtube ">
-								<xsl:text> </xsl:text>
+								<span class="d-none">
+									<xsl:value-of select="$myName"/> on Youtube
+								</span>
 							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@instagramURL!=''">
 						<a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
 							<i class="fab fa-instagram">
-								<xsl:text> </xsl:text>
+								<span class="d-none">
+									<xsl:value-of select="$myName"/> on Instagram
+								</span>
 							</i>
 						</a>
 					</xsl:if>
@@ -689,5 +717,5 @@
 			</xsl:choose>
 		</div>
 	</xsl:template>
-  
+
 </xsl:stylesheet>
