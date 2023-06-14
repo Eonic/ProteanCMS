@@ -1203,7 +1203,7 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
+    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/> 
 
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
@@ -1365,7 +1365,7 @@
 			  window.dataLayer = window.dataLayer || [];
 			  function gtag(){dataLayer.push(arguments);}
 			  gtag('js', new Date());
-			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
+			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');<xsl:apply-templates select="." mode="google-ga4-config-params"/>
 			  <xsl:apply-templates select="." mode="google-ga4-event"/>
 		  </script>
 		  <!-- End GA4 Tag Manager -->
