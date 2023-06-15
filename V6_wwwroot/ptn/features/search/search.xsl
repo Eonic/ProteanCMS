@@ -215,7 +215,7 @@
     <xsl:param name="searchResults"/>
     <xsl:variable name="contentType" select="SearchResult" />
     <xsl:variable name="startPos" select="0" />
-    <div class="search-results">
+    <div class="search-results list-group list-group-flush">
       <xsl:apply-templates select="ms:node-set($searchResults)/*" mode="displayBrief">
         <xsl:with-param name="sortBy" select="@sortBy"/>
       </xsl:apply-templates>
@@ -226,8 +226,8 @@
 
   <xsl:template match="Content[@type='SearchResult']" mode="displayBrief">
     <xsl:if test="@url!=''">
-      <div class="searchResult">
-        <a href="{translate(@url,'\','/')}" alt="Click here to go to {@pagetitle}">
+      <div class="search-result list-group-item">
+        <a href="{translate(@url,'\','/')}" alt="Click here to go to {@pagetitle}" class="float-start">
           <xsl:choose>
             <xsl:when test="@contenttype!='Download'">
               <xsl:choose>
@@ -236,23 +236,23 @@
                   <span class="space">&#160;</span>
                 </xsl:when>
                 <xsl:when test="@contenttype='Event'">
-                  <i class="fa fa-calendar fa-lg">&#160;</i>
+                  <i class="fa fa-calendar fa-2xl">&#160;</i>
                   <span class="space">&#160;</span>
                 </xsl:when>
                 <xsl:when test="@contenttype='NewsArticle' or @contenttype='RegularNewsArticle' or @contenttype='PressRelease'">
-                  <i class="fa fa-newspaper-o fa-lg">&#160;</i>
+                  <i class="fas fa-newspaper fa-2xl">&#160;</i>
                   <span class="space">&#160;</span>
                 </xsl:when>
                 <xsl:when test="@contenttype='Contact'">
-                  <i class="fa fa-user fa-lg">&#160;</i>
+                  <i class="fa fa-user fa-2xl">&#160;</i>
                   <span class="space">&#160;</span>
                 </xsl:when>
                 <xsl:when test="@contenttype='Company'">
-                  <i class="fa fa-building fa-lg">&#160;</i>
+                  <i class="fa fa-building fa-2xl">&#160;</i>
                   <span class="space">&#160;</span>
                 </xsl:when>
                 <xsl:otherwise>
-                  <i class="fa fa-file-o fa-lg">&#160;</i>
+                  <i class="far fa-file fa-2xl">&#160;</i>
                   <span class="space">&#160;</span>
                 </xsl:otherwise>
               </xsl:choose>
@@ -293,21 +293,27 @@
               </xsl:if>
             </xsl:otherwise>
           </xsl:choose>
-          <span>
-            <xsl:value-of select="@name"/>
-          </span>
+
         </a>
+		  <div class="result-text">
+		  <a href="{translate(@url,'\','/')}" alt="Click here to go to {@pagetitle}">
+		  <span>
+			  <xsl:value-of select="@name"/>
+		  </span>
+		  </a>
         <xsl:variable name="desc">
           <xsl:call-template name="truncateString">
             <xsl:with-param name="string" select="node()"/>
             <xsl:with-param name="length" select="'150'"/>
           </xsl:call-template>
         </xsl:variable>
-        <xsl:if test="$desc!=''">
-          <p>
+       
+          <p> <xsl:if test="$desc!=''">
             <xsl:value-of select="$desc"/>
-          </p>
         </xsl:if>
+			  &#160;
+          </p>
+		  </div>
       </div>
     </xsl:if>
   </xsl:template>
