@@ -1045,7 +1045,7 @@
             </xsl:if>
             <xsl:if test="@instagramURL!=''">
               <li class="nav-item">
-                <a href="{@instagramURL}" title="{$myName} on Instagram" id="nav-link social-id-ig">
+                <a href="{@instagramURL}" title="{$myName} on Instagram" class="nav-link social-id-ig">
                   <i class="fab fa-instagram">
                     <xsl:text> </xsl:text>
                   </i>
@@ -1054,7 +1054,7 @@
             </xsl:if>
             <xsl:if test="@spotifyURL!=''">
               <li class="nav-item">
-                <a href="{@spotifyURL}" title="{$myName} on Spotify" id="nav-link social-id-ig">
+                <a href="{@spotifyURL}" title="{$myName} on Spotify" class="nav-link social-id-ig">
                   <i class="fab fa-spotify">
                     <xsl:text> </xsl:text>
                   </i>

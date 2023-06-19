@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes">
-  <xsl:import href="../../core/functions.xsl"/>
-  <xsl:import href="../../core/Layouts.xsl"/>
-  <xsl:import href="../../admin/admin-wysiwyg.xsl"/>
+	<xsl:import href="../../core/functions.xsl"/>
+	<xsl:import href="../../core/Layouts.xsl"/>
+	<xsl:import href="../../admin/admin-wysiwyg.xsl"/>
 	<xsl:import href="../../core/modules/modules.xsl"/>
 	<xsl:import href="../../modules/modules.xsl"/>
-  <xsl:import href="search.xsl"/>
-  <xsl:import href="../../core/localisation.xsl"/>
+	<xsl:import href="search.xsl"/>
+	<xsl:import href="../../core/localisation.xsl"/>
 
   <xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" encoding="UTF-8"/>
 

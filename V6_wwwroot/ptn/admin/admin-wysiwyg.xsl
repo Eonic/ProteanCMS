@@ -457,6 +457,7 @@
 		<xsl:param name="text"/>
 		<xsl:param name="position"/>
 		<xsl:param name="class"/>
+		<xsl:param name="id"/>
 		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
 			<xsl:attribute name="class">
 				<xsl:text>moduleContainer</xsl:text>
@@ -481,7 +482,9 @@
 		</xsl:if>
 
 		<xsl:if test="/Page/Contents/Content[@position = $position]">
-			<xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
+			<xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule">
+				<xsl:with-param name="id" select="$id"/>
+			</xsl:apply-templates>
 		</xsl:if>
 
 	</xsl:template>

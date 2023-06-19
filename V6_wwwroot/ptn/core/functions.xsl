@@ -375,7 +375,7 @@
 					<xsl:value-of select="@userlang"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="@translang"/>
+					<xsl:value-of select="@lang"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
