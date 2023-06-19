@@ -1497,6 +1497,8 @@ Partial Public Class Cms
                         End If
                     End If
 
+
+
                     'Add the page name if passed through
                     If cName <> "" Then
                         If myWeb.moConfig("PageURLFormat") = "hyphens" Then
@@ -1541,6 +1543,12 @@ Partial Public Class Cms
                     'End If
 
                     cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                        cName = cName.Replace("-", " ")
+                        MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText = cName
+                    End If
+
+
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
