@@ -529,6 +529,7 @@
 
 	<xsl:template match="Page" mode="google-ga4-config-params">
 		<!-- for overloading on specific actions -->
+		<!--
 		<xsl:if test="$page/Request/GoogleCampaign">
 		'{		
 		        <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
@@ -540,6 +541,7 @@
 				</xsl:if>
 		}
 		</xsl:if>
+		-->
 	</xsl:template>
 
 
