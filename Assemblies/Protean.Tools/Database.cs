@@ -1604,7 +1604,7 @@ namespace Protean.Tools
                                 {
                                     case "System.DateTime":
                                         {
-                                            oRow[oColumn.ColumnName] = (DateTime)DateTime.Parse("0001-01-01");
+                                                oRow[oColumn.ColumnName] = (DateTime)DateTime.Parse("0001-01-01");
                                             break;
                                         }
 

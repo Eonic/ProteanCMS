@@ -909,24 +909,26 @@
 		</xsl:choose>
 	</xsl:template>
 
+
 	<xsl:template match="Content[@type='order']" mode="ContentDetail">
 		<xsl:variable name="previousURL">
 			<xsl:value-of select="$page/Request/ServerVariables/Item[@name='PREVIOUS_PAGE']"/>
 		</xsl:variable>
-
-		<div class="order orderdetail panel panel-default">
-      			<div class="panel-body">
-			<xsl:apply-templates select="Order" mode="orderAddressesView"/>
-			<xsl:apply-templates select="Order" mode="orderItems"/>
-			<xsl:if test="Order/Item/productDetail/@type='Ticket' and Order/Item/productDetail/Ticket">
-				<a href="/ewcommon/tools/pageAsPDF.ashx?path=My-Account&amp;OrderId={Order/@cartId}&amp;filename=Tickets-{Order/@cartId}" class="btn btn-primary btn-sm pull-right" target="_new">
-					<i class="fas fa-file-pdf">&#160;</i>&#160;Reprint Tickets
-				</a>
-			</xsl:if>
-			<div class="morelink">
-				<a href="{$previousURL}" class="btn btn-primary">Back to orders</a>
+		<div class="container">
+			<div class="order orderdetail panel panel-default">
+				<div class="panel-body">
+					<xsl:apply-templates select="Order" mode="orderAddressesView"/>
+					<xsl:apply-templates select="Order" mode="orderItems"/>
+					<xsl:if test="Order/Item/productDetail/@type='Ticket' and Order/Item/productDetail/Ticket">
+						<a href="/ewcommon/tools/pageAsPDF.ashx?path={$currentPage/@url}&amp;OrderId={Order/@cartId}&amp;filename=Tickets-{Order/@cartId}" class="btn btn-primary btn-sm pull-right" target="_new">
+							<i class="fas fa-file-pdf">&#160;</i>&#160;Reprint Tickets
+						</a>
+					</xsl:if>
+					<div class="morelink">
+						<a href="{$previousURL}" class="btn btn-primary">Back to orders</a>
+					</div>
+				</div>
 			</div>
-			 </div>
 		</div>
 	</xsl:template>
 	<!-- ##### /Ecommerce List Orders module ##### -->

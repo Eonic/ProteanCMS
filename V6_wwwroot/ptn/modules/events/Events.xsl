@@ -398,13 +398,13 @@
   <!-- Event Detail -->
   <xsl:template match="Content[@type='Event']" mode="ContentDetail">
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
-    <div class="detail vevent">
+    <div class="detail event">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'detail vevent'"/>
+        <xsl:with-param name="class" select="'detail event'"/>
       </xsl:apply-templates>
-      <h2 class="content-title">
+      <h1 class="content-title">
         <xsl:apply-templates select="Headline" mode="displayBrief"/>
-      </h2>
+      </h1>
       <!--RELATED CONTENT-->
       <div class="row">
         <div>

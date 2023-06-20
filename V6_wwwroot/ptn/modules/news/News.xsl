@@ -427,9 +427,9 @@
 			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="displayDetailImage"/>
 			<div class="detail-text">
-				<h2 class="entry-title content-title" itemprop="headline">
+				<h1 class="entry-title content-title" itemprop="headline">
 					<xsl:apply-templates select="." mode="getDisplayName" />
-				</h2>
+				</h1>
 				<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
 				<xsl:if test="@publish!=''">
 					<p class="dtstamp" title="{@publish}" itemprop="datePublished">

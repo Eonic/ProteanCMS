@@ -375,7 +375,7 @@
 					<xsl:value-of select="@userlang"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="@translang"/>
+					<xsl:value-of select="@lang"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -1061,7 +1061,7 @@
 
 	<xsl:template match="Page" mode="metadata">
 		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 		<xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
 			<xsl:apply-templates select="." mode="getMetaDescription"/>

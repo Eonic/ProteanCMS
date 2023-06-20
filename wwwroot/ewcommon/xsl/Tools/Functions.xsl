@@ -529,16 +529,19 @@
 
 	<xsl:template match="Page" mode="google-ga4-config-params">
 		<!-- for overloading on specific actions -->
+		<!--
 		<xsl:if test="$page/Request/GoogleCampaign">
 		'{		
 		        <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
-					'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>',
+					'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
 				</xsl:if>
 				<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
-					'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
+					<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+					'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>'
 				</xsl:if>
 		}
 		</xsl:if>
+		-->
 	</xsl:template>
 
 
@@ -546,12 +549,13 @@
 	
 		, {
 		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
-			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>',
+			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
 		</xsl:if>
 		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+			<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
 			'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
 		</xsl:if>
-		'user_id': '<xsl:value-of select="User/@id"/>>'
+		'user_id': '<xsl:value-of select="User/@id"/>'
 		}
 	</xsl:template>
 
@@ -10752,9 +10756,11 @@
               <xsl:text>wrapper-sm </xsl:text>
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
+			 
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> margin-bottom-0 </xsl:text>
               </xsl:if>
+
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>
               </xsl:if>

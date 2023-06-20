@@ -317,9 +317,9 @@
 			</xsl:when>
 			<!-- IF ContentDetail Show ContentDetail -->
 			<xsl:when test="ContentDetail">
-				<div class="detail-container">
+				<div class="container detail-container" role="main">
 					<xsl:attribute name="class">
-						<xsl:text>detail-container </xsl:text>
+						<xsl:text>container detail-container </xsl:text>
 						<xsl:value-of select="$page/ContentDetail/Content/@type"/>
 						<xsl:text>-detail-container</xsl:text>
 					</xsl:attribute>
@@ -368,7 +368,7 @@
 	<!-- ## Default Layout  ############################################################################   -->
 	<xsl:template match="Page" mode="Layout">
 		<xsl:param name="containerClass"/>
-		<div class="template" id="template_1_Column">
+		<div class="template" id="template_1_Column"  role="main">
 			<xsl:apply-templates select="." mode="layoutHeader">
 				<xsl:with-param name="containerClass" select="$containerClass"/>
 			</xsl:apply-templates>
@@ -419,7 +419,7 @@
 	<xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @type='default']" mode="Layout">
 		<xsl:param name="containerClass"/>
 
-		<div id="template_1_Column" class="template template_1_Column">
+		<div id="template_1_Column" class="template template_1_Column"  role="main">
 			<xsl:apply-templates select="." mode="layoutHeader">
 				<xsl:with-param name="containerClass" select="$containerClass"/>
 			</xsl:apply-templates>
@@ -478,7 +478,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<div class="template">
+		<div class="template" role="main">
 			<xsl:choose>
 				<xsl:when test="contains(/Page/@layout,'66_33')">
 					<xsl:attribute name="id">template_2_Columns_66_33</xsl:attribute>
@@ -782,6 +782,7 @@
 	<xsl:template match="Content[@type='Module']" mode="displayModule">
 		<xsl:param name="auto-col"/>
 		<xsl:param name="width"/>
+		<xsl:param name="id"/>
 		<xsl:choose>
 			<xsl:when test="$auto-col='true'">
 				<div class="col">
@@ -794,10 +795,14 @@
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="@box!='false' and @box!=''">
-							<xsl:apply-templates select="." mode="moduleBox"/>
+							<xsl:apply-templates select="." mode="moduleBox">
+								<xsl:with-param name="id" select="$id"/>
+							</xsl:apply-templates>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:apply-templates select="." mode="displayModuleContent"/>
+							<xsl:apply-templates select="." mode="displayModuleContent">
+								<xsl:with-param name="id" select="$id"/>
+							</xsl:apply-templates>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
@@ -805,17 +810,22 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="@box!='false' and @box!=''">
-						<xsl:apply-templates select="." mode="moduleBox"/>
+						<xsl:apply-templates select="." mode="moduleBox">
+								<xsl:with-param name="id" select="$id"/>
+							</xsl:apply-templates>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:apply-templates select="." mode="displayModuleContent"/>
+						<xsl:apply-templates select="." mode="displayModuleContent">
+							<xsl:with-param name="id" select="$id"/>
+						</xsl:apply-templates>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
 	<xsl:template match="Content" mode="displayModuleContent">
-
+		<xsl:param name="id"/>
 		<xsl:variable name="thisClass">
 			<xsl:if test="@iconStyle='Centre'"> module-centred</xsl:if>
 			<xsl:if test="@iconStyle='CentreSmall'"> module-centred</xsl:if>
@@ -823,7 +833,7 @@
 			<xsl:if test="@iconStyle='Left'"> module-left</xsl:if>
 			<xsl:if test="@icon!='' or @uploadIcon!=''"> module-containing-icon</xsl:if>
 		</xsl:variable>
-		<div id="mod_{@id}" class="module nobox pos-{@position} {$thisClass}">
+		<div id="mod_{@id}{$id}" class="module nobox pos-{@position} {$thisClass}">
 			<xsl:apply-templates select="." mode="themeModuleExtras"/>
 			<xsl:if test="@mobileview!=''">
 				<xsl:attribute name="data-isMobileView">
@@ -1099,12 +1109,13 @@
 	</xsl:template>
 
 	<xsl:template match="Content" mode="moduleBox">
+		<xsl:param name="id"/>
 		<xsl:choose>
 			<xsl:when test="@linkBox='true'">
 
 			</xsl:when>
 			<xsl:otherwise>
-				<div id="mod_{@id}">
+				<div id="mod_{@id}{$id}">
 					<xsl:apply-templates select="." mode="themeModuleExtras"/>
 					<!-- define classes for box -->
 					<xsl:attribute name="class">
@@ -1198,12 +1209,13 @@
 	</xsl:template>
 
 	<xsl:template match="Content[starts-with(@box,'bg') or starts-with(@box,'border') or starts-with(@box,'Default') or starts-with(@box,'card')]" mode="moduleBox">
+		<xsl:param name="id"/>
 		<xsl:choose>
 			<xsl:when test="@linkBox='true'">
 
 			</xsl:when>
 			<xsl:otherwise>
-				<div id="mod_{@id}" class="card">
+				<div id="mod_{@id}{$id}" class="card">
 					<xsl:apply-templates select="." mode="themeModuleExtras"/>
 					<!-- define classes for box -->
 					<xsl:attribute name="class">
@@ -1426,9 +1438,10 @@
   </xsl:template>
 
 	<xsl:template match="Content[starts-with(@box,'alert')]" mode="moduleBox">
+		<xsl:param name="id"/>
 		<xsl:choose>
 			<xsl:when test="@linkBox='true'">
-				<div id="mod_{@id}" class="module">
+				<div id="mod_{@id}{$id}" class="module">
 					<xsl:apply-templates select="." mode="themeModuleExtras"/>
 					<div class="linkedPopUp">
 						<xsl:apply-templates select="." mode="inlinePopupOptions">
@@ -1586,6 +1599,7 @@
 
 
 	<xsl:template match="Content[starts-with(@box,'well')]" mode="moduleBox">
+		<xsl:param name="id"/>
 		<xsl:variable name="class">
 			<xsl:text>well </xsl:text>
 			<xsl:if test="@panelImage!=''">
@@ -1606,7 +1620,7 @@
 			<xsl:apply-templates select="." mode="hideScreens" />
 			<xsl:apply-templates select="." mode="marginBelow" />
 		</xsl:variable>
-		<div id="mod_{@id}" class="{$class}">
+		<div id="mod_{@id}{$id}" class="{$class}">
 			<xsl:apply-templates select="." mode="themeModuleExtras"/>
 			<xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
 				<div class="panel-image alert-image">
@@ -1663,6 +1677,7 @@
 	</xsl:template>
 
 	<xsl:template match="Content[starts-with(@box,'jumbotron')]" mode="moduleBox">
+		<xsl:param name="id"/>
 		<xsl:variable name="class">
 			<xsl:text>jumbotron </xsl:text>
 			<xsl:text> module</xsl:text>
@@ -1679,7 +1694,7 @@
 			<xsl:apply-templates select="." mode="hideScreens" />
 			<xsl:apply-templates select="." mode="marginBelow" />
 		</xsl:variable>
-		<div id="mod_{@id}" class="{$class}">
+		<div id="mod_{@id}{$id}" class="{$class}">
 			<xsl:apply-templates select="." mode="themeModuleExtras"/>
 			<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
 				<div class="jumbotron-heading">

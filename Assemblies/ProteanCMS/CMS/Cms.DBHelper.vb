@@ -2412,7 +2412,7 @@ Partial Public Class Cms
                             oElmt.InnerXml = tidyXhtmlFrag(sContent, True, False)
                         End Try
                         'empty empty dates
-                        If oElmt.InnerXml = "0001-01-01T00:00:00+00:00" Then oElmt.InnerXml = ""
+                        If oElmt.InnerXml.StartsWith("0001-01-01T00:00:00") Then oElmt.InnerXml = ""
                     End If
 
                     If ObjectType = objectTypes.Directory Then
