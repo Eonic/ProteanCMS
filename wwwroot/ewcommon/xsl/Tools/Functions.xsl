@@ -1207,7 +1207,7 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
+    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/> 
 
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
