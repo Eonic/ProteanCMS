@@ -227,7 +227,7 @@
   <xsl:template match="Content[@type='SearchResult']" mode="displayBrief">
     <xsl:if test="@url!=''">
       <div class="search-result list-group-item">
-        <a href="{translate(@url,'\','/')}" alt="Click here to go to {@pagetitle}" class="float-start">
+        <a href="{translate(@url,'\','/')}" alt="{@name}" class="float-start">
           <xsl:choose>
             <xsl:when test="@contenttype!='Download'">
               <xsl:choose>
@@ -296,7 +296,7 @@
 
         </a>
 		  <div class="result-text">
-		  <a href="{translate(@url,'\','/')}" alt="Click here to go to {@pagetitle}">
+		  <a href="{translate(@url,'\','/')}" alt="{@name}">
 		  <span>
 			  <xsl:value-of select="@name"/>
 		  </span>
