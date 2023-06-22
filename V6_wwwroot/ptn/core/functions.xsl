@@ -519,7 +519,11 @@
 
 	<xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
-	<xsl:template match="Page" mode="headerOnlyJS"></xsl:template>
+	<xsl:template match="Page" mode="headerOnlyJS">
+		<xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
+	</xsl:template>
+	
+	<xsl:template match="Content" mode="headerOnlyContentJS"></xsl:template>
 
 	<xsl:template match="Content" mode="opengraph-namespace">
 		<xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>

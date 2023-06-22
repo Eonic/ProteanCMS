@@ -3788,6 +3788,11 @@
             <xsl:with-param name="name">CookiePolicy</xsl:with-param>
             <xsl:with-param name="type">CookiePolicy</xsl:with-param>
           </xsl:call-template>
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc"><span>CookieFirst from <a href="https://www.cookiefirst.com/">https://www.cookiefirst.com//</a></span></xsl:with-param>
+				<xsl:with-param name="name">CookieFirst</xsl:with-param>
+				<xsl:with-param name="type">CookieFirst</xsl:with-param>
+			</xsl:call-template>
         </table>
       </div>
       <div class="tab-pane" id="settings">

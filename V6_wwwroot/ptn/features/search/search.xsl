@@ -23,9 +23,13 @@
         <xsl:with-param name="searchString" select="$searchString" />
       </xsl:apply-templates>-->
 
+			<h1>
+				Search Results for "<xsl:value-of select="$searchString"/>"
+			</h1>
 			<xsl:choose>
 				<!-- Display Results -->
 				<xsl:when test="count(ms:node-set($searchResults)/*) &gt; 0">
+					
 					<xsl:apply-templates select="Content[@type='SearchHeader']" mode="searchSummary">
 						<xsl:with-param name="searchFormId" select="$searchFormId" />
 						<xsl:with-param name="searchString" select="$searchString" />
@@ -142,9 +146,6 @@
 		<xsl:variable name="LastLoadResultCount" select="@loadedResult" />
 		<xsl:variable name="pageSize" select="@pageSize" />
 		<xsl:variable name="resultsReturned" select="@resultsReturned" />
-		<h4>
-			Search Results for "<xsl:value-of select="$searchString"/>"
-		</h4>
 		<div class="clearfix search-results-area" id="ResultDiv">
 			<!--<xsl:text> Total </xsl:text>
       <xsl:value-of select="$resultTotalCount" />
