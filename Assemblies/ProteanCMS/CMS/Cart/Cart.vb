@@ -2888,15 +2888,13 @@ processFlow:
                             '    updateGCgetValidShippingOptionsDS(ShippingOptionKey)
                             'End If
 
-                            Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSql)
+                            Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup)
                                 If oDr IsNot Nothing Then
                                     While oDr.Read()
-                                        If (oDr(20) <> String.Empty) Then
-                                            ShippingOptionKey = Convert.ToInt64(oDr(20))
-                                            oRow("nShippingGroup") = oDr(21)
-                                            oRow("nshippingType") = ShippingOptionKey
-                                            updateGCgetValidShippingOptionsDS(ShippingOptionKey)
-                                        End If
+                                        ShippingOptionKey = Convert.ToInt64(oDr("nShipOptKey"))
+                                        oRow("nShippingGroup") = oDr("cCatName")
+                                        oRow("nshippingType") = ShippingOptionKey
+                                        updateGCgetValidShippingOptionsDS(ShippingOptionKey)
                                     End While
                                 End If
                             End Using
