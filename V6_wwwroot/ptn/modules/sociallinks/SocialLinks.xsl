@@ -66,7 +66,7 @@
 					<xsl:if test="@facebookURL!=''">
 						<a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
 							<i class="fab fa-2x fa-facebook">
-								<span class="d-none">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Facebook
 								</span>
 							</i>
@@ -74,56 +74,57 @@
 					</xsl:if>
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
-							<span class="d-none">
-								<i class="fab fa-2x fa-twitter">
+
+							<i class="fab fa-2x fa-twitter">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Twitter
-								</i>
-							</span>
+								</span>
+							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@linkedInURL!=''">
 						<a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
-							<span class="d-none">
-								<i class="fab fa-2x fa-linkedin">
+							<i class="fab fa-2x fa-linkedin">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on LinkedIn
-								</i>
-							</span>
+								</span>
+							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@googlePlusURL!=''">
 						<a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
-							<span class="d-none">
-								<i class="fab fa-2x fa-google-plus">
+							<i class="fab fa-2x fa-google-plus">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Google+
-								</i>
-							</span>
+								</span>
+							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@pinterestURL!=''">
 						<a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-li">
-							<span class="d-none">
-								<i class="fab fa-2x fa-pinterest">
+							<i class="fab fa-2x fa-pinterest">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Pintrest
-								</i>
-							</span>
+								</span>
+							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@youtubeURL!=''">
 						<a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
-							<span class="d-none">
-								<i class="fab fa-2x fa-youtube">
+							<i class="fab fa-2x fa-youtube">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Youtube
-								</i>
-							</span>
+								</span>
+							</i>
 						</a>
 					</xsl:if>
 					<xsl:if test="@instagramURL!=''">
 						<a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" class="social-id-ig">
-							<span class="d-none">
-								<i class="fab fa-2x fa-instagram">
+							<i class="fab fa-2x fa-instagram">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Instagram
-								</i>
-							</span>
+								</span>
+							</i>
 						</a>
 					</xsl:if>
 				</xsl:when>
@@ -268,7 +269,7 @@
 					<xsl:if test="@facebookURL!=''">
 						<a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
 							<i class="fab fa-facebook">
-								<span class="d-none">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Facebook
 								</span>
 							</i>
@@ -277,7 +278,7 @@
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
 							<i class="fab fa-twitter">
-								<span class="d-none">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Twitter
 								</span>
 							</i>
@@ -286,7 +287,7 @@
 					<xsl:if test="@linkedInURL!=''">
 						<a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
 							<i class="fab fa-linkedin">
-								<span class="d-none">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on LinkedIn
 								</span>
 							</i>
@@ -295,7 +296,7 @@
 					<xsl:if test="@googlePlusURL!=''">
 						<a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
 							<i class="fab fa-google-plus">
-								<span class="d-none">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Google+
 								</span>
 							</i>
@@ -304,7 +305,7 @@
 					<xsl:if test="@pinterestURL!=''">
 						<a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
 							<i class="fab fa-pinterest">
-								<span class="d-none">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Pintrest
 								</span>
 							</i>
@@ -313,7 +314,7 @@
 					<xsl:if test="@youtubeURL!=''">
 						<a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
 							<i class="fab fa-youtube ">
-								<span class="d-none">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Youtube
 								</span>
 							</i>
@@ -322,7 +323,7 @@
 					<xsl:if test="@instagramURL!=''">
 						<a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" class="social-id-ig">
 							<i class="fab fa-instagram">
-								<span class="d-none">
+								<span class="visually-hidden">
 									<xsl:value-of select="$myName"/> on Instagram
 								</span>
 							</i>

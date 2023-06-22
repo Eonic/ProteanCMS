@@ -4211,7 +4211,7 @@
 							<xsl:call-template name="term2042" />
 						</xsl:otherwise>
 					</xsl:choose>
-					<span class="d-none">
+					<span class="visually-hidden">
 						<xsl:text>about </xsl:text>
 						<xsl:value-of select="$altText"/>
 					</span>
@@ -4341,7 +4341,7 @@
 						<xsl:otherwise>
 							<xsl:call-template name="term2042" />
 							<xsl:text> </xsl:text>
-							<span class="d-none">
+							<span class="visually-hidden">
 								<xsl:text>about </xsl:text>
 								<xsl:value-of select="altText"/>
 							</span>
@@ -4385,7 +4385,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:if test="$altText !=''">
-						<span class="d-none">
+						<span class="visually-hidden">
 							<!-- about -->
 							<xsl:call-template name="term2023" />
 							<xsl:text>&#160;</xsl:text>
