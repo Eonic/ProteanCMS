@@ -157,7 +157,7 @@ Partial Public Class Cms
                                     dProductOptionPrice = item("productOptionPrice")
                                 End If
 
-                                myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL)
+                                myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL, sProductOptionName, dProductOptionPrice)
 
                             Next
                         End If
