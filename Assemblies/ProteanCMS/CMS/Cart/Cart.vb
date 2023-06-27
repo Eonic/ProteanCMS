@@ -6631,7 +6631,7 @@ processFlow:
 
         End Sub
 
-        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional bDepositOnly As Boolean = False) As Boolean
+        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "", Optional bDepositOnly As Boolean = False, Optional cProductOption As String = "", Optional dProductOptionPrice As Double = 0) As Boolean
             myWeb.PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
@@ -6902,6 +6902,8 @@ processFlow:
 
                             If (myWeb.moRequest("OptionName_" & nProductId) IsNot Nothing) Then
                                 AddProductOption(nItemID, myWeb.moRequest("OptionName_" & nProductId), myWeb.moRequest("OptionValue_" & nProductId))
+                            ElseIf (cProductOption <> String.Empty) Then
+                                AddProductOption(nItemID, cProductOption, dProductOptionPrice)
                             End If
                         Else
                             'Existing
