@@ -49,6 +49,7 @@
       <bind id="ThemePreset" nodeset="add[@key='ptn-base.ThemePreset']/@value" required="true()" type="string" />
       <bind id="ThemeSkin" nodeset="add[@key='ptn-base.ThemeSkin']/@value" required="true()" type="string" />
           -->
+		<bind id="color-mode" nodeset="add[@key='ptn-base.color-mode']/@value" required="true()" type="string" />
       <bind id="brand-primary" nodeset="add[@key='ptn-base.primary']/@value" required="true()" type="string" />
       <bind id="brand-secondary" nodeset="add[@key='ptn-base.secondary']/@value" required="true()" type="string" />
       <bind id="brand-info" nodeset="add[@key='ptn-base.info']/@value" required="true()" type="string" />
@@ -174,6 +175,17 @@
     <group class="inline">
       <label>Main Colours</label>
 		<group  class="row row-cols-md-2">
+					<select1 bind="color-mode" appearance="full" class="fontSelect">
+				<label>Colour Mode</label>
+				<item>
+					<label>Default</label>
+					<value>default</value>
+				</item>
+				<item>
+					<label>Dark</label>
+					<value>dark</value>
+				</item>
+				</select1>
       <input bind="brand-primary" class="colorPicker">
         <label>Brand Primary Colour</label>
       </input>
