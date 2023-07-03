@@ -18,6 +18,9 @@
         <add key="ptn-base.success" value="#18BC9C" />
         <add key="ptn-base.warning" value="#F39C12" />
         <add key="ptn-base.danger" value="#E74C3C" />
+		<add key="ptn-base.light" value="#f5f5f5" />
+		<add key="ptn-base.dark" value="#1c1c1c" />
+		  <add key="ptn-base.white" value="#ffffff" />
     <!--
         <add key="ptn-base.link-color" value="#18BC9C" />
         <add key="ptn-base.text-color" value="#333" />
@@ -48,7 +51,10 @@
       <bind id="brand-info" nodeset="add[@key='ptn-base.info']/@value" required="true()" type="string" />
       <bind id="brand-success" nodeset="add[@key='ptn-base.success']/@value" required="true()" type="string" />
       <bind id="brand-warning" nodeset="add[@key='ptn-base.warning']/@value" required="true()" type="string" />
-      <bind id="brand-danger" nodeset="add[@key='ptn-base.danger']/@value" required="true()" type="string" />
+		<bind id="brand-danger" nodeset="add[@key='ptn-base.danger']/@value" required="true()" type="string" />
+      <bind id="brand-light" nodeset="add[@key='ptn-base.light']/@value" required="true()" type="string" />
+	  <bind id="brand-dark" nodeset="add[@key='ptn-base.dark']/@value" required="true()" type="string" />
+	  <bind id="brand-white" nodeset="add[@key='ptn-base.white']/@value" required="true()" type="string" />
 <!--
       <bind id="link-color" nodeset="add[@key='ptn-base.link-color']/@value" required="true()" type="string" />
       <bind id="text-color" nodeset="add[@key='ptn-base.text-color']/@value" required="true()" type="string" />
@@ -151,6 +157,15 @@
       <input bind="brand-danger" class="colorPicker">
         <label>Brand Danger Colour</label>
       </input>
+			<input bind="brand-light" class="colorPicker">
+				<label>Brand Light Colour</label>
+			</input>
+			<input bind="brand-dark" class="colorPicker">
+				<label>Brand Dark Colour</label>
+			</input>
+			<input bind="brand-white" class="colorPicker">
+				<label>Brand White Colour</label>
+			</input>
 			</group>
     </group>
 		  <!--

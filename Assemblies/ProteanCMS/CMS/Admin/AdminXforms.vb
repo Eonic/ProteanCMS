@@ -3634,12 +3634,13 @@ Partial Public Class Cms
 
                     MyBase.submission("DeleteContent", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "DeleteItem", "", "Delete Content")
-                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Are you sure you want to delete below items ?", , "alert-error")
+                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Are you sure you want to delete below items ?", , "alert-danger")
                     For i As Integer = 0 To UBound(artid)
                         sContentName = moDbHelper.getNameByKey(dbHelper.objectTypes.Content, artid(i))
                         sContentSchemaName = moDbHelper.getContentType(artid(i))
                         bulkContentName = Tools.Xml.encodeAllHTML(sContentName)
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, bulkContentName, , "alert-danger")
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, bulkContentName, , "item-deleted")
+                        oFrmElmt.LastChild.InnerXml = moDbHelper.getContentBrief(artid(i))
                         If sContentSchemaName = "xFormQuiz" Then
                             MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "By deleting the Exam you will also delete all the user results from the database ""ARE YOU SURE"" !", , "alert-danger")
                         End If
