@@ -2177,6 +2177,7 @@
         <xsl:with-param name="valueName" select="'MenuTreeDepth'"/>
       </xsl:call-template>
     </xsl:variable>
+	  
     <xsl:variable name="menuLevelDepth">
       <xsl:choose>
         <xsl:when test="$getMenuLevelDepth = ''">
@@ -2187,6 +2188,51 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+	  
+	  <xsl:variable name="siteURL">
+		  <xsl:call-template name="getSiteURL"/>
+	  </xsl:variable>
+	  
+	  <xsl:variable name="adminUrl">
+
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="@url"/>
+						  <xsl:value-of select="/Page/@pageExt"/>
+						  <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
+							  <xsl:text>?pgid=</xsl:text>
+							  <xsl:value-of select="@id"/>
+						  </xsl:if>
+				
+	  </xsl:variable>
+	  <xsl:variable name="redirectUrl">
+		  <xsl:choose>
+			  <xsl:when test="@url!=''">
+				  <xsl:choose>
+					  <xsl:when test="format-number(@url,'0')!='NaN'">
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+					  </xsl:when>
+					  <xsl:when test="contains(@url,'http')">
+						  <xsl:value-of select="@url"/>
+					  </xsl:when>
+					  <xsl:otherwise>
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="@url"/>
+						  <xsl:value-of select="/Page/@pageExt"/>
+						  <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
+							  <xsl:text>?pgid=</xsl:text>
+							  <xsl:value-of select="@id"/>
+						  </xsl:if>
+					  </xsl:otherwise>
+				  </xsl:choose>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="$siteURL"/>
+				  <xsl:text>/</xsl:text>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
+	  
 
     <li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
       <xsl:attribute name="class">
@@ -2202,7 +2248,7 @@
 
       <div class="pageCell">
         <xsl:variable name="pageLink">
-          <xsl:apply-templates select="." mode="getHref" />
+			<xsl:value-of select="$adminUrl"/>
           <xsl:text>&amp;ewCmd=Normal</xsl:text>
           <xsl:if test="@cloneparent &gt; 0">
             <xsl:text>&amp;context=</xsl:text>
@@ -2234,6 +2280,9 @@
 
 
         </a>
+		  
+		  
+		  
       </div>
       <div class="optionButtons">
 
