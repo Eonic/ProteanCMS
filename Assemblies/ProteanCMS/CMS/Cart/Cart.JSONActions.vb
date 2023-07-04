@@ -135,6 +135,8 @@ Partial Public Class Cms
                                 Dim sProductName As String = ""
                                 Dim bPackegingRequired As Boolean = False
                                 Dim sOverideURL As String = ""
+                                Dim sProductOptionName As String = ""
+                                Dim dProductOptionPrice As Double = 0
                                 If item.ContainsKey("UniqueProduct") Then
                                     bUnique = item("UniqueProduct")
                                 End If
@@ -147,7 +149,15 @@ Partial Public Class Cms
                                 If item.ContainsKey("url") Then
                                     sOverideURL = item("url")
                                 End If
-                                myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL)
+
+                                If item.ContainsKey("productOption") Then
+                                    sProductOptionName = item("productOption")
+                                End If
+                                If item.ContainsKey("productOptionPrice") Then
+                                    dProductOptionPrice = item("productOptionPrice")
+                                End If
+
+                                myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL, False, sProductOptionName, dProductOptionPrice)
 
                             Next
                         End If

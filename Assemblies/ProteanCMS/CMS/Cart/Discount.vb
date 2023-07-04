@@ -547,7 +547,9 @@ Partial Public Class Cms
                         'dDisountAmount = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountValue")
                         Using oDr As SqlDataReader = myWeb.moDbHelper.getDataReaderDisposable(strSQL.ToString)
                             If oDr.HasRows Then
-                                dDisountAmount = oDr("nDiscountValue")
+                                While oDr.Read()
+                                    dDisountAmount = oDr("nDiscountValue")
+                                End While
                             End If
                         End Using
                         Return dDisountAmount

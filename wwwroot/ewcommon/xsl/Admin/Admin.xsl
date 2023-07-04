@@ -184,7 +184,6 @@
         <xsl:text>~/Bundles/Admin</xsl:text>
       </xsl:with-param>
     </xsl:call-template>
-
     <xsl:apply-templates select="." mode="siteAdminJs"/>
     <xsl:apply-templates select="." mode="LayoutAdminJs"/>
   </xsl:template>

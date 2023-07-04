@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+	<ContentTypes>
+		<ContentTypeGroup name="Cookie First">
+			<ContentType type="CookieFirst" formPath="cookiefirst" name="cookiefirst">cookie first</ContentType>
+		</ContentTypeGroup>
+	</ContentTypes>
+</PageLayouts>
