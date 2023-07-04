@@ -2036,7 +2036,7 @@ Partial Public Module xmlTools
 
                 'End If
                 ' Next
-
+                Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                 Dim bReset As Boolean = False
                 If myWeb Is Nothing Or gbDebug Then
                     'likely to be in error condition
@@ -2151,17 +2151,36 @@ Partial Public Module xmlTools
                         '  Dim instance As New CustomBundleResolver(Bundles, CtxBase)
 
                         Dim scriptFile As String
-
                         scriptFile = TargetPath & "/script.js"
 
-                        Dim fsh As New Protean.fsHelper(myWeb.moCtx)
+                        'Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                         fsh.initialiseVariables(fsHelper.LibraryType.Scripts)
 
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
                         Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
-                        'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile.TrimStart("~")))
+                        Dim pathSplitString As String() = TargetPath.Split(New Char() {"/"c})
+
+                        Dim paths As String = myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1))
+                        Dim rootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1)))
+                        If rootfolder.Exists Then
+                            ' fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "")))
+                            For Each filepath As String In Directory.GetFiles(paths)
+                                File.Delete(filepath)
+                            Next
+                            'Delete all child Directories
+                            For Each dir As String In Directory.GetDirectories(paths)
+                                For Each filepath As String In Directory.GetFiles(dir)
+                                    File.Delete(filepath)
+                                Next
+                            Next
+                            'Delete a Directory
+                            ' Directory.Delete(paths)
+                        End If
+
+
 
                         scriptFile = fsh.SaveFile("script.js", TargetPath, info)
+
 
                         If scriptFile.StartsWith("ERROR: ") Then
                             myWeb.bPageCache = False
