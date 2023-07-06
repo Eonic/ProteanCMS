@@ -429,7 +429,7 @@
     <xsl:param name="social-links" />
     <header class="navbar navbar-expand-lg navbar-light bg-light">
       <xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
-        <xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top</xsl:attribute>
+        <xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top navbar-light bg-light</xsl:attribute>
       </xsl:if>
       <!--LOGO-->
       <div class="container">
