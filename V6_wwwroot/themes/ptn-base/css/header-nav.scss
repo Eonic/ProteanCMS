@@ -3,7 +3,7 @@
     @include media-breakpoint-down($nav-breakpoint) {
         display: none;
     }
-}
+}  
 
 .xs-only {
     @include media-breakpoint-up($nav-breakpoint) {
