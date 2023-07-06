@@ -4402,6 +4402,7 @@
       $('.lazy').lazy();
       });
     </script>
+
   </xsl:template>
 
 

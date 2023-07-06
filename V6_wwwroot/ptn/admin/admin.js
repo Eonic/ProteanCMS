@@ -302,68 +302,15 @@ $(document).ready(function () {
     $("a.popup").adminPopup();
 
     initialiseHelptips();
-    //   $('.pickImageModal').on('shown.bs.modal', function () {
-    $('.pickImageModal').on('loaded', function () {
-        var currentModal = $(this);
-        //fix for bootstrap5 loading into .modal-content not replacing .modal
-        if ($(this).find(".modal-content:first .modal-content").exists()) {
-            $(this).find(".modal-content:first").replaceWith($(this).find(".modal-content:first .modal-content"));
-        };
-      
-        //activateTreeview
-        $('#template_FileSystem #MenuTree').ajaxtreeview({
-            loadPath: treeviewPath,
-            ajaxCmd: '',
-            openLevel: 2,
-            hide: true
-        });
 
-        $('#files .item-image .panel').prepareLibImages();
+    $('.pickImageModal').on('shown.bs.modal', function () {
 
-        $(this).find("[data-bs-toggle=popover]").popover({
-            html: true,
-            container: '#files',
-            trigger: 'hover',
-            viewport: '#files',
-            content: function () {
-                return $(this).prev('.popoverContent').html();
-            }
-        });
+      //   preparePickImageModal($(this));
 
-        $(this).find('a[data-bs-toggle!="popover"]').click(function (ev) {
-            ev.preventDefault();
-            $(this).find('.modal-dialog').addClass('loading')
-            $(this).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
-            var target = $(this).attr("href");
-            // load the url and show modal on success
-            if (target != '#') {
-                currentModal.load(target, function () {
-                    $('.modal-dialog').removeClass('loading')
-                    currentModal.modal("show");
-                });
-            };
-        });
-
-        $(this).find('form:not([id="imageDetailsForm"])').on('submit', function (event) {
-
-            event.preventDefault()
-            var formData = $(this).serialize();
-            var targetUrl = $(this).attr("action") + '&contentType=popup';
-            currentModal.find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
-
-            $.ajax({
-                type: 'post',
-                url: targetUrl,
-                data: formData,
-                dataType: 'html',
-                success: function (msg) {
-                    //$(this).find('.modal-dialog').removeClass('loading')
-                    currentModal.find(".modal-body").html(msg);
-                    currentModal.trigger('loaded');
-                }
-            });
-        });
     });
+
+    //   $('.pickImageModal').on('shown.bs.modal', function () {
+
 
     //    $('.pickImageModal').on('hidden.bs.modal', function () {
     //       // alert('bye');
@@ -443,6 +390,68 @@ $(document).ready(function () {
     prepareAjaxModals()
 
 });
+
+function preparePickImageModal(currentModal) {
+    var treeviewPath = getAdminAjaxTreeViewPath();
+        //fix for bootstrap5 loading into .modal-content not replacing .modal
+        if (currentModal.find(".modal-content:first .modal-content").exists()) {
+         //   currentModal.find(".modal-content:first").replaceWith(currentModal.find(".modal-content:first .modal-content"));
+        };
+        //activateTreeview
+        $('#template_FileSystem #MenuTree').ajaxtreeview({
+            loadPath: treeviewPath,
+            ajaxCmd: '',
+            openLevel: 3,
+            hide: true
+        });
+
+        $('#files .item-image .panel').prepareLibImages();
+
+    currentModal.find("[data-bs-toggle=popover]").popover({
+            html: true,
+            container: '#files',
+            trigger: 'hover',
+            viewport: '#files',
+            content: function () {
+                return currentModal.prev('.popoverContent').html();
+            }
+        });
+
+    currentModal.find('a[data-bs-toggle!="popover"]').click(function (ev) {
+            ev.preventDefault();
+            $(this).find('.modal-dialog').addClass('loading')
+            $(this).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+            var target = $(this).attr("href");
+            // load the url and show modal on success
+            if (target != '#') {
+                currentModal.load(target, function () {
+                    $('.modal-dialog').removeClass('loading')
+                    currentModal.modal("show");
+                });
+            };
+        });
+
+    currentModal.find('form:not([id="imageDetailsForm"])').on('submit', function (event) {
+
+            event.preventDefault()
+            var formData = $(this).serialize();
+            var targetUrl = $(this).attr("action") + '&contentType=popup';
+        $(this).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+
+            $.ajax({
+                type: 'post',
+                url: targetUrl,
+                data: formData,
+                dataType: 'html',
+                success: function (msg) {
+                    //$(this).find('.modal-dialog').removeClass('loading')
+                    $(this).find(".modal-body").html(msg);
+                    $(this).trigger('loaded');
+                }
+            });
+    });
+}
+
 
 function prepareAjaxModals() {
     $('a[data-bs-toggle="modal"]').off('click');
@@ -1201,8 +1210,10 @@ Original preload function has been kept but is unused.
         // This function handles the tree's classes and mouse bindings for the "hit area"'s
         buildTree: function (settings) {
             // Add Hit area's (the clickable part)
+
             $('#MenuTree li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
             $('#MenuTree li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+
             // Sort out assignments of the last tag
             $('#MenuTree').applyLast();
             // Remove any mouse bindings currently on the hitarea's
@@ -1288,9 +1299,16 @@ Original preload function has been kept but is unused.
 
         // Same as above, prototype buildTree for no reloads      
         buildTree_noreload: function (settings) {
+
+            alert("buildTree_noreload");
+            $('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').each(function () {
+                alert($(this).html())
+            });
+          
             // Add Hit area's (the clickable part)
             $('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
             $('#MenuTree li.expandable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+
             // Sort out assignments of the last tag
             $('#MenuTree').applyLast();
             // Remove any mouse bindings currently on the hitarea's
