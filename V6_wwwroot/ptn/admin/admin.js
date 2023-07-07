@@ -303,20 +303,6 @@ $(document).ready(function () {
 
     initialiseHelptips();
 
-    $('.pickImageModal').on('shown.bs.modal', function () {
-
-      //   preparePickImageModal($(this));
-
-    });
-
-    //   $('.pickImageModal').on('shown.bs.modal', function () {
-
-
-    //    $('.pickImageModal').on('hidden.bs.modal', function () {
-    //       // alert('bye');
-    //        $(this).removeData('bs.modal');
-    //    });
-
     setEditImage();
 
     $('.update-content-value-dd').each(function () {
@@ -392,22 +378,19 @@ $(document).ready(function () {
 });
 
 function preparePickImageModal(currentModal) {
+
     var treeviewPath = getAdminAjaxTreeViewPath();
-        //fix for bootstrap5 loading into .modal-content not replacing .modal
-        if (currentModal.find(".modal-content:first .modal-content").exists()) {
-         //   currentModal.find(".modal-content:first").replaceWith(currentModal.find(".modal-content:first .modal-content"));
-        };
-        //activateTreeview
-        $('#template_FileSystem #MenuTree').ajaxtreeview({
+
+    $('.pickImageModal #MenuTree').ajaxtreeview({
             loadPath: treeviewPath,
             ajaxCmd: '',
-            openLevel: 3,
+            openLevel: 2,
             hide: true
         });
 
         $('#files .item-image .panel').prepareLibImages();
 
-    currentModal.find("[data-bs-toggle=popover]").popover({
+        currentModal.find("[data-bs-toggle=popover]").popover({
             html: true,
             container: '#files',
             trigger: 'hover',
@@ -417,18 +400,10 @@ function preparePickImageModal(currentModal) {
             }
         });
 
-    currentModal.find('a[data-bs-toggle!="popover"]').click(function (ev) {
-            ev.preventDefault();
-            $(this).find('.modal-dialog').addClass('loading')
-            $(this).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
-            var target = $(this).attr("href");
-            // load the url and show modal on success
-            if (target != '#') {
-                currentModal.load(target, function () {
-                    $('.modal-dialog').removeClass('loading')
-                    currentModal.modal("show");
-                });
-            };
+        currentModal.find('a[data-bs-toggle!="popover"]').click(function (ev) {
+            currentModal.find('.modal-dialog').addClass('loading')
+            currentModal.find('.modal-content div').html('<div><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
+            currentModal.show();
         });
 
     currentModal.find('form:not([id="imageDetailsForm"])').on('submit', function (event) {
@@ -1167,7 +1142,7 @@ Original preload function has been kept but is unused.
 
         startLevel: function (settings) {
 
-            $("#MenuTree li[data-tree-level='" + settings.openLevel + "']").each(function () {
+            $(this).find("li[data-tree-level='" + settings.openLevel + "']").each(function () {
                 //unless you have an active descendant
                 if ($(this).activeChild() == false) {
                     $(this).hideChildren();
@@ -1178,7 +1153,7 @@ Original preload function has been kept but is unused.
         activeChild: function () {
             var isActive = false;
             var nodeId = $(this).attr('id').replace(/node/, "");
-            $("#MenuTree li[data-tree-parent='" + nodeId + "']").each(function () {
+            $(this).find("li[data-tree-parent='" + nodeId + "']").each(function () {
                 if ($(this).hasClass('active') || $(this).activeChild()) {
                     isActive = true;
                 }
@@ -1189,7 +1164,7 @@ Original preload function has been kept but is unused.
         // Method for if the level param is in play
         expandToLevel: function (settings) {
 
-            $('#MenuTree li.levelExpandable:has(".activeParent,.inactiveParent")').each(function () {
+            $(this).find('li.levelExpandable:has(".activeParent,.inactiveParent")').each(function () {
                 $(this).removeClass('levelExpandable');
                 $(this).removeClass('expandable');
                 var ewPageId = $(this).attr('id').replace(/node/, "");
@@ -1211,16 +1186,16 @@ Original preload function has been kept but is unused.
         buildTree: function (settings) {
             // Add Hit area's (the clickable part)
 
-            $('#MenuTree li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            $('#MenuTree li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            $(this).find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            $(this).find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
 
             // Sort out assignments of the last tag
             $('#MenuTree').applyLast();
             // Remove any mouse bindings currently on the hitarea's
-            $('#MenuTree li div.hitarea').unbind("click");
+            $(this).find('li div.hitarea').unbind("click");
 
             //Mouse binding for open nodes
-            $('#MenuTree li.collapsable').find('.hitarea').unbind("click").click(function () {
+            $(this).find('li.collapsable').find('.hitarea').unbind("click").click(function () {
                 // Remove old class assingments
 
                 $(this).removeClass('collapsable-hitarea').addClass('expandable-hitarea');
@@ -1242,7 +1217,7 @@ Original preload function has been kept but is unused.
 
 
             //Mouse binding for closed nodes
-            $('#MenuTree li.expandable').find('.hitarea').unbind("click").click(function () {
+            $(this).find('li.expandable').find('.hitarea').unbind("click").click(function () {
                 // Unbind after first click to prevent stupid users multiclicking
                 $('#MenuTree li i.hitarea').unbind("click");
                 // Remove current classes from the hit-area
@@ -1300,14 +1275,9 @@ Original preload function has been kept but is unused.
         // Same as above, prototype buildTree for no reloads      
         buildTree_noreload: function (settings) {
 
-            alert("buildTree_noreload");
-            $('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').each(function () {
-                alert($(this).html())
-            });
-          
             // Add Hit area's (the clickable part)
-            $('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            $('#MenuTree li.expandable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            $(this).find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            $(this).find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
 
             // Sort out assignments of the last tag
             $('#MenuTree').applyLast();
@@ -1317,10 +1287,9 @@ Original preload function has been kept but is unused.
             // alert('treeload');
 
             //Mouse binding for open nodes
-            $('#MenuTree').find('.collapsable-hitarea').unbind("click").click(function () {
+            $(this).find('.collapsable-hitarea').unbind("click").click(function () {
 
-
-                $(this).parent().hideChildren();
+               $(this).parent().hideChildren();
 
                 // Reset Class Status
 
@@ -1333,7 +1302,7 @@ Original preload function has been kept but is unused.
 
 
             //Mouse binding for closed nodes (First Time)
-            $('#MenuTree li.expandable').find('.hitarea').unbind("click").click(function () {
+            $(this).find('li.expandable').find('.hitarea').unbind("click").click(function () {
                 // Unbind after first click to prevent stupid users multiclicking
                 $('#MenuTree li i.hitarea').unbind("click");
                 // Remove current classes from the hit-area
@@ -1368,7 +1337,7 @@ Original preload function has been kept but is unused.
                         // Find out which of the kids have kids
                         $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
                         // Rebuild the tree
-                        $("#MenuTree").buildTree_noreload(settings)
+                        $(this).buildTree_noreload(settings)
                     });
                 }
                 else {
@@ -1388,7 +1357,7 @@ Original preload function has been kept but is unused.
                         // Find out which of the kids have kids
                         loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
                         // Rebuild the tree
-                        $("#MenuTree").buildTree_noreload(settings)
+                        $(this).buildTree_noreload(settings)
                     });
 
 
@@ -1397,7 +1366,7 @@ Original preload function has been kept but is unused.
             });
 
             //Mouse binding for closed nodes (No Reload)
-            $('#MenuTree li.expandable_loaded').find('.hitarea').unbind("click").click(function () {
+            $(this).find('li.expandable_loaded').find('.hitarea').unbind("click").click(function () {
                 $('#MenuTree li i.hitarea').unbind("click");
                 $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
                 $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
@@ -1431,7 +1400,7 @@ Original preload function has been kept but is unused.
         },
 
         checkChildren: function () {
-            $('#MenuTree li').each(function () {
+            $(this).find('li').each(function () {
                 var thisParentId = $(this).data('tree-parent')
 
                 if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length == 0) {
@@ -1455,7 +1424,7 @@ Original preload function has been kept but is unused.
         //This function sorts the flagging of "last" nodes (used for the gfx)
         applyLast: function () {
             //Hide and show Up Down Buttons
-            $('#MenuTree li').each(function () {
+            $(this).find('li').each(function () {
 
                 var thisParentId = $(this).data('tree-parent')
                 //if this not has a previous sibling with the same data-tree-parent then hide the up arrows

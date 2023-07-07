@@ -13,12 +13,11 @@
   </xsl:template>
 
   <xsl:template match="Page">
-    <div class="modal-dialog" id="popup1">
-      <div class="modal-content">
+ <div>
           <xsl:apply-templates select="." mode="Admin"/>
-      </div>
+    
       <xsl:apply-templates select="." mode="LayoutAdminJs"/>
-    </div>
+</div>
   </xsl:template>
 
   <xsl:template match="Page" mode="SubmitPath">
@@ -306,7 +305,7 @@
 			  <xsl:text> expandable</xsl:text>
 		  </xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
+      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-bs-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
         <i>
           <xsl:attribute name="class">
             <xsl:text>fa fa-lg</xsl:text>
@@ -541,7 +540,7 @@
                     </xsl:if>
                   </div>
                 </div>
-                <a rel="popover" data-toggle="popover" data-trigger="hover" data-container=".pickImageModal" data-contentwrapper="#imgpopover{position()}" data-placement="top">
+                <a rel="popover" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container=".pickImageModal" data-bs-contentwrapper="#imgpopover{position()}" data-bs-placement="top">
                   <xsl:choose>
 					  <xsl:when test="@width&gt;125 and @height&gt;125">
 						  <img class="lazy" src="/ptn/core/images/loader.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
@@ -868,36 +867,8 @@
 			<xsl:apply-templates select="." mode="newItemScript"/>
 			$('#files').prepend(newItem);
 			$('#files .item-image .panel').prepareLibImages();
-			$("[data-bs-toggle=popover]").popover({
-			html: true,
-			container: '#files',
-			trigger: 'hover',
-			viewport: '#files',
-			content: function () {
-			return $(this).prev('.popoverContent').html();
-			}
-			});
-			if ($('.pickImageModal').exists()) {
-			$('.pickImageModal').find('a[data-bs-toggle!="popover"]').click(function (ev) {
-			ev.preventDefault();
-			$('.modal-dialog').addClass('loading')
-			var modalhtml = '<p class="text-center">
-				';
-				modalhtml += '<h4>
-					';
-					modalhtml += '<i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...';
-					modalhtml += '
-				</h4>';
-				modalhtml += '
-			</p>';
-			$('.modal-body').html(modalhtml);
-			var target = $(this).attr("href");
-			// load the url and show modal on success
-			var currentModal = $('.pickImageModal')
-			currentModal.load(target, function () {
-			$('.modal-dialog').removeClass('loading')
-			currentModal.modal("show");
-			});
+		
+
 			});
 			};
 			});
@@ -919,8 +890,7 @@
 		</script>
 
 		<script>
-			alert('preparemodal');
-			preparePickImageModal($('.pickImageModal'));
+			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
 		</script>
 	</xsl:template>
 	
