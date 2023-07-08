@@ -303,20 +303,6 @@ $(document).ready(function () {
 
     initialiseHelptips();
 
-    $('.pickImageModal').on('shown.bs.modal', function () {
-
-      //   preparePickImageModal($(this));
-
-    });
-
-    //   $('.pickImageModal').on('shown.bs.modal', function () {
-
-
-    //    $('.pickImageModal').on('hidden.bs.modal', function () {
-    //       // alert('bye');
-    //        $(this).removeData('bs.modal');
-    //    });
-
     setEditImage();
 
     $('.update-content-value-dd').each(function () {
@@ -392,22 +378,19 @@ $(document).ready(function () {
 });
 
 function preparePickImageModal(currentModal) {
+
     var treeviewPath = getAdminAjaxTreeViewPath();
-        //fix for bootstrap5 loading into .modal-content not replacing .modal
-        if (currentModal.find(".modal-content:first .modal-content").exists()) {
-         //   currentModal.find(".modal-content:first").replaceWith(currentModal.find(".modal-content:first .modal-content"));
-        };
-        //activateTreeview
-        $('#template_FileSystem #MenuTree').ajaxtreeview({
+
+    currentModal.find('#MenuTree').ajaxtreeview({
             loadPath: treeviewPath,
             ajaxCmd: '',
-            openLevel: 3,
+            openLevel: 2,
             hide: true
         });
 
         $('#files .item-image .panel').prepareLibImages();
 
-    currentModal.find("[data-bs-toggle=popover]").popover({
+        currentModal.find("[data-bs-toggle=popover]").popover({
             html: true,
             container: '#files',
             trigger: 'hover',
@@ -418,17 +401,19 @@ function preparePickImageModal(currentModal) {
         });
 
     currentModal.find('a[data-bs-toggle!="popover"]').click(function (ev) {
-            ev.preventDefault();
-            $(this).find('.modal-dialog').addClass('loading')
-            $(this).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
-            var target = $(this).attr("href");
-            // load the url and show modal on success
-            if (target != '#') {
-                currentModal.load(target, function () {
-                    $('.modal-dialog').removeClass('loading')
-                    currentModal.modal("show");
-                });
-            };
+        ev.preventDefault();
+            currentModal.find('.modal-dialog').addClass('loading')
+            currentModal.find('.modal-content div').html('<div><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
+        var target = $(this).attr("href");
+        // load the url and call this again on success
+        if (target != '#') {
+            currentModal.find(".modal-content div").load(target, function () {
+                $('.modal-dialog').removeClass('loading')
+                preparePickImageModal(currentModal)
+                $('.lazy').lazy();
+                primeFileUpload();
+            });
+        };
         });
 
     currentModal.find('form:not([id="imageDetailsForm"])').on('submit', function (event) {
@@ -522,7 +507,7 @@ function getUploadedImageHtmlPopup(appPath, fld, targetPath, targetField, filena
     newItem = newItem + '  <span class="image-description-name">' + filename.replace(/\ /g, '-') + '</span>';
     newItem = newItem + '	  </div>';
     newItem = newItem + '<div class="pick-btn">      ';
-    newItem = newItem + '<a href="' + appPath + '?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld=' + fld + '&amp;file=' + filename.replace(/\ /g, '-') + '" data-bs-toggle="modal" data-bs-target="#modal-' + targetField + '" class="btn btn-sm btn-primary pickImage">';
+    newItem = newItem + '<a href="' + appPath + '?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld=' + fld + '&amp;file=' + filename.replace(/\ /g, '-') + '" class="btn btn-sm btn-primary pickImage">';
     newItem = newItem + '<i class="fa fa-picture-o fa-white"> ';
     newItem = newItem + '<xsl:text> </xsl:text>';
     newItem = newItem + ' </i> Pick Image';
@@ -1124,6 +1109,9 @@ Original preload function has been kept but is unused.
 
         // Constructor
         ajaxtreeview: function (settings) {
+
+            ThisTree = $(this);
+
             if ($(this).length > 0) {
                 $(this).addClass("treeview");
                 // Check if levels have been defined, if so, pre-open			
@@ -1167,7 +1155,7 @@ Original preload function has been kept but is unused.
 
         startLevel: function (settings) {
 
-            $("#MenuTree li[data-tree-level='" + settings.openLevel + "']").each(function () {
+            $(this).find("li[data-tree-level='" + settings.openLevel + "']").each(function () {
                 //unless you have an active descendant
                 if ($(this).activeChild() == false) {
                     $(this).hideChildren();
@@ -1178,7 +1166,7 @@ Original preload function has been kept but is unused.
         activeChild: function () {
             var isActive = false;
             var nodeId = $(this).attr('id').replace(/node/, "");
-            $("#MenuTree li[data-tree-parent='" + nodeId + "']").each(function () {
+            $(this).find("li[data-tree-parent='" + nodeId + "']").each(function () {
                 if ($(this).hasClass('active') || $(this).activeChild()) {
                     isActive = true;
                 }
@@ -1189,18 +1177,18 @@ Original preload function has been kept but is unused.
         // Method for if the level param is in play
         expandToLevel: function (settings) {
 
-            $('#MenuTree li.levelExpandable:has(".activeParent,.inactiveParent")').each(function () {
+            $(this).find('li.levelExpandable:has(".activeParent,.inactiveParent")').each(function () {
                 $(this).removeClass('levelExpandable');
                 $(this).removeClass('expandable');
                 var ewPageId = $(this).attr('id').replace(/node/, "");
                 $(this).insertAfter('<div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-fw"> </i></div>')
                     .load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId }, function () {
                         $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
-                        $("#MenuTree").buildTree(settings);
+                        ThisTree.buildTree(settings);
                         settings.level = settings.level - 1;
                         if (settings.level > 0) {
                             $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('levelExpandable');
-                            $("#MenuTree").expandToLevel(settings);
+                            ThisTree.expandToLevel(settings);
                         }
                     });
             });
@@ -1211,16 +1199,17 @@ Original preload function has been kept but is unused.
         buildTree: function (settings) {
             // Add Hit area's (the clickable part)
 
-            $('#MenuTree li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            $('#MenuTree li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+
+            $(this).find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            $(this).find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
 
             // Sort out assignments of the last tag
             $('#MenuTree').applyLast();
             // Remove any mouse bindings currently on the hitarea's
-            $('#MenuTree li div.hitarea').unbind("click");
+            $(this).find('li div.hitarea').unbind("click");
 
             //Mouse binding for open nodes
-            $('#MenuTree li.collapsable').find('.hitarea').unbind("click").click(function () {
+            $(this).find('li.collapsable').find('.hitarea').unbind("click").click(function () {
                 // Remove old class assingments
 
                 $(this).removeClass('collapsable-hitarea').addClass('expandable-hitarea');
@@ -1235,14 +1224,14 @@ Original preload function has been kept but is unused.
                 // Set kids to be closed again
                 $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
                 // Calling a rebuild assings the correct functionality
-                $("#MenuTree").buildTree(settings)
+                ThisTree.buildTree(settings)
                 //settings doesn't work in the next line? so used above
                 //setTimeout('$("#MenuTree").buildTree()',1);
             });
 
 
             //Mouse binding for closed nodes
-            $('#MenuTree li.expandable').find('.hitarea').unbind("click").click(function () {
+            $(this).find('li.expandable').find('.hitarea').unbind("click").click(function () {
                 // Unbind after first click to prevent stupid users multiclicking
                 $('#MenuTree li i.hitarea').unbind("click");
                 // Remove current classes from the hit-area
@@ -1273,7 +1262,7 @@ Original preload function has been kept but is unused.
                         // Find out which of the kids have kids
                         $(this).children().find('li').has('i.activeParent').addClass('expandable');
                         // Rebuild the tree
-                        $("#MenuTree").buildTree(settings)
+                        ThisTree.buildTree(settings)
 
                     });
                 }
@@ -1286,7 +1275,7 @@ Original preload function has been kept but is unused.
                         //alert('test');
                         $(this).children().find('li').has('i.activeParent,i.inactiveParent').addClass('expandable');
                         // Rebuild the tree
-                        $("#MenuTree").buildTree(settings)
+                        ThisTree.buildTree(settings)
 
                     });
                 }
@@ -1300,14 +1289,9 @@ Original preload function has been kept but is unused.
         // Same as above, prototype buildTree for no reloads      
         buildTree_noreload: function (settings) {
 
-            alert("buildTree_noreload");
-            $('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').each(function () {
-                alert($(this).html())
-            });
-          
             // Add Hit area's (the clickable part)
-            $('#MenuTree li.collapsable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
-            $('#MenuTree li.expandable:not(:has(.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
+            $(this).find('li.collapsable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea collapsable-hitarea fa fa-chevron-down"> </i>');
+            $(this).find('li.expandable:not(:has(i.hitarea)):has(".activeParent,.inactiveParent")').prepend('<i class="hitarea expandable-hitarea fa fa-chevron-right"> </i>');
 
             // Sort out assignments of the last tag
             $('#MenuTree').applyLast();
@@ -1317,10 +1301,9 @@ Original preload function has been kept but is unused.
             // alert('treeload');
 
             //Mouse binding for open nodes
-            $('#MenuTree').find('.collapsable-hitarea').unbind("click").click(function () {
+            $(this).find('.collapsable-hitarea').unbind("click").click(function () {
 
-
-                $(this).parent().hideChildren();
+               $(this).parent().hideChildren();
 
                 // Reset Class Status
 
@@ -1328,12 +1311,12 @@ Original preload function has been kept but is unused.
                 ///////////////////////////// !!! what happens here? assume that they aren't open?
                 //$(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');			
                 // Calling a rebuild assings the correct functionality
-                $("#MenuTree").buildTree_noreload(settings)
+                ThisTree.buildTree_noreload(settings)
             });
 
 
             //Mouse binding for closed nodes (First Time)
-            $('#MenuTree li.expandable').find('.hitarea').unbind("click").click(function () {
+            $(this).find('li.expandable').find('.hitarea').unbind("click").click(function () {
                 // Unbind after first click to prevent stupid users multiclicking
                 $('#MenuTree li i.hitarea').unbind("click");
                 // Remove current classes from the hit-area
@@ -1368,7 +1351,7 @@ Original preload function has been kept but is unused.
                         // Find out which of the kids have kids
                         $(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');
                         // Rebuild the tree
-                        $("#MenuTree").buildTree_noreload(settings)
+                        $(this).buildTree_noreload(settings)
                     });
                 }
                 else {
@@ -1388,7 +1371,7 @@ Original preload function has been kept but is unused.
                         // Find out which of the kids have kids
                         loadNode.children().find('li').has('.activeParent,.inactiveParent').addClass('expandable');
                         // Rebuild the tree
-                        $("#MenuTree").buildTree_noreload(settings)
+                        $(this).buildTree_noreload(settings)
                     });
 
 
@@ -1397,7 +1380,7 @@ Original preload function has been kept but is unused.
             });
 
             //Mouse binding for closed nodes (No Reload)
-            $('#MenuTree li.expandable_loaded').find('.hitarea').unbind("click").click(function () {
+            $(this).find('li.expandable_loaded').find('.hitarea').unbind("click").click(function () {
                 $('#MenuTree li i.hitarea').unbind("click");
                 $(this).removeClass('expandable-hitarea').addClass('collapsable-hitarea');
                 $(this).removeClass('fa-chevron-right').addClass('fa-chevron-down');
@@ -1408,7 +1391,7 @@ Original preload function has been kept but is unused.
                 var ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
                 $(this).parent().parent().find('li[data-tree-parent="' + ewPageId + '"]').show();
 
-                $("#MenuTree").buildTree_noreload(settings)
+                ThisTree.buildTree_noreload(settings)
             });
         },
 
@@ -1431,20 +1414,20 @@ Original preload function has been kept but is unused.
         },
 
         checkChildren: function () {
-            $('#MenuTree li').each(function () {
+            $(this).find('li').each(function () {
                 var thisParentId = $(this).data('tree-parent')
 
                 if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length == 0) {
                     //if first amoung siblings
                     if ($(this).prev('li[id="node' + thisParentId + '"]').length == 0) {
                         //if incorrect parent
-                        if ($('#MenuTree li[id="node' + thisParentId + '"] li[data-tree-parent="' + thisParentId + '"]').length == 0) {
+                        if (ThisTree.find('li[id="node' + thisParentId + '"] li[data-tree-parent="' + thisParentId + '"]').length == 0) {
                             //no siblings moved allready
                             // $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
                             $(this).nextAll('li[data-tree-parent="' + thisParentId + '"]').reverse().each(function () {
-                                $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
+                                ThisTree.find('li[id="node' + thisParentId + '"]').after($(this))
                             });
-                            $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
+                            ThisTree.find('li[id="node' + thisParentId + '"]').after($(this))
                         }
                     }
                 }
@@ -1455,7 +1438,7 @@ Original preload function has been kept but is unused.
         //This function sorts the flagging of "last" nodes (used for the gfx)
         applyLast: function () {
             //Hide and show Up Down Buttons
-            $('#MenuTree li').each(function () {
+            $(this).find('li').each(function () {
 
                 var thisParentId = $(this).data('tree-parent')
                 //if this not has a previous sibling with the same data-tree-parent then hide the up arrows
@@ -1484,11 +1467,11 @@ Original preload function has been kept but is unused.
         moveUp: function (moveId) {
             var moveIdNode = "node" + moveId;
 
-            if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + moveIdNode).addClass("locked");
-                var thisParentId = $('#MenuTree li#' + moveIdNode).data('tree-parent')
+            if (!(ThisTree.find('li#' + moveIdNode).hasClass("locked"))) {
+                ThisTree.find('li#' + moveIdNode).addClass("locked");
+                var thisParentId = ThisTree.find('li#' + moveIdNode).data('tree-parent')
                 //Construct the node name
-                $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
+                ThisTree.find('li#' + moveIdNode).fadeTo("fast", 0.25);
                 //IE is stupid, so append random numbers to the end
                 var i = Math.round(10000 * Math.random());
                 // Pass out the command to move the node
@@ -1496,12 +1479,12 @@ Original preload function has been kept but is unused.
                     url: '?ewCmd=MoveUp' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
                     success: function () {
                         //Animate
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().hide().fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().before($('#MenuTree li#' + moveIdNode));
-                        $('#MenuTree').applyLast();
-                        $('#MenuTree').checkChildren();
-                        $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
+                        ThisTree.find('li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().hide().fadeIn("fast");
+                        ThisTree.find('li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().before($('#MenuTree li#' + moveIdNode));
+                        ThisTree.applyLast();
+                        ThisTree.checkChildren();
+                        ThisTree.find('li#' + moveIdNode).fadeTo("fast", 1.0);
+                        ThisTree.find('li#' + moveIdNode).removeClass("locked");
                         // alert('move up');
 
                     }
@@ -1515,22 +1498,22 @@ Original preload function has been kept but is unused.
         moveDown: function (moveId) {
             var moveIdNode = "node" + moveId;
 
-            if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + moveIdNode).addClass("locked");
+            if (!(ThisTree.find('li#' + moveIdNode).hasClass("locked"))) {
+                ThisTree.find(' li#' + moveIdNode).addClass("locked");
 
-                var thisParentId = $('#MenuTree li#' + moveIdNode).data('tree-parent')
+                var thisParentId = ThisTree.find('li#' + moveIdNode).data('tree-parent')
 
-                $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
+                ThisTree.find('li#' + moveIdNode).fadeTo("fast", 0.25);
                 var i = Math.round(10000 * Math.random());
                 $.ajax({
                     url: '?ewCmd=MoveDown' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
                     success: function () {
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().hide().fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).nextAll('li[data-tree-parent="' + thisParentId + '"]').first().after($('#MenuTree li#' + moveIdNode));
-                        $('#MenuTree').applyLast();
-                        $('#MenuTree').checkChildren();
-                        $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
+                        ThisTree.find('li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]').first().hide().fadeIn("fast");
+                        ThisTree.find('li#' + moveIdNode).nextAll('li[data-tree-parent="' + thisParentId + '"]').first().after(ThisTree.find('li#' + moveIdNode));
+                        ThisTree.applyLast();
+                        ThisTree.checkChildren();
+                        ThisTree.find('li#' + moveIdNode).fadeTo("fast", 1.0);
+                        ThisTree.find('li#' + moveIdNode).removeClass("locked");
                         // alert('move down');
 
                     }
@@ -1542,20 +1525,20 @@ Original preload function has been kept but is unused.
         moveTop: function (moveId) {
             var moveIdNode = "node" + moveId;
             //alert(moveId);
-            if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + moveIdNode).addClass("locked");
-                $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
-                var thisParentId = $('#MenuTree li#' + moveIdNode).data('tree-parent')
+            if (!(ThisTree.find('li#' + moveIdNode).hasClass("locked"))) {
+                ThisTree.find('li#' + moveIdNode).addClass("locked");
+                ThisTree.find('li#' + moveIdNode).fadeTo("fast", 0.25);
+                var thisParentId = ThisTree.find('li#' + moveIdNode).data('tree-parent')
                 var i = Math.round(10000 * Math.random());
                 $.ajax({
                     url: '?ewCmd=MoveTop' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
                     success: function () {
-                        $('#MenuTree li#' + moveIdNode).prev('li[data-tree-parent="' + thisParentId + '"]').hide().fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]:last').before($('#MenuTree li#' + moveIdNode));
-                        $('#MenuTree').applyLast();
-                        $('#MenuTree').checkChildren();
-                        $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
+                        ThisTree.find('li#' + moveIdNode).prev('li[data-tree-parent="' + thisParentId + '"]').hide().fadeIn("fast");
+                        ThisTree.find('li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]:last').before(ThisTree.find('li#' + moveIdNode));
+                        ThisTree.applyLast();
+                        ThisTree.checkChildren();
+                        ThisTree.find('li#' + moveIdNode).fadeTo("fast", 1.0);
+                        ThisTree.find('li#' + moveIdNode).removeClass("locked");
                     }
                 });
             }
@@ -1564,20 +1547,20 @@ Original preload function has been kept but is unused.
         moveBottom: function (moveId) {
             var moveIdNode = "node" + moveId;
 
-            if (!($('#MenuTree li#' + moveIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + moveIdNode).addClass("locked");
-                $('#MenuTree li#' + moveIdNode).fadeTo("fast", 0.25);
-                var thisParentId = $('#MenuTree li#' + moveIdNode).data('tree-parent')
+            if (!(ThisTree.find('li#' + moveIdNode).hasClass("locked"))) {
+                ThisTree.find('li#' + moveIdNode).addClass("locked");
+                ThisTree.find('li#' + moveIdNode).fadeTo("fast", 0.25);
+                var thisParentId = ThisTree.find('li#' + moveIdNode).data('tree-parent')
                 var i = Math.round(10000 * Math.random());
                 $.ajax({
                     url: '?ewCmd=MoveBottom' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
                     success: function () {
-                        $('#MenuTree li#' + moveIdNode).next().hide('li[data-tree-parent="' + thisParentId + '"]').fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).nextAll('li[data-tree-parent="' + thisParentId + '"]:last').after($('#MenuTree li#' + moveIdNode));
-                        $('#MenuTree').applyLast();
-                        $('#MenuTree').checkChildren();
-                        $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
+                        ThisTree.find('li#' + moveIdNode).next().hide('li[data-tree-parent="' + thisParentId + '"]').fadeIn("fast");
+                        ThisTree.find('li#' + moveIdNode).nextAll('li[data-tree-parent="' + thisParentId + '"]:last').after(ThisTree.find('li#' + moveIdNode));
+                        ThisTree.applyLast();
+                        ThisTree.checkChildren();
+                        ThisTree.find('li#' + moveIdNode).fadeTo("fast", 1.0);
+                        ThisTree.find('li#' + moveIdNode).removeClass("locked");
                     }
                 });
             }
@@ -1586,35 +1569,35 @@ Original preload function has been kept but is unused.
         hideButton: function (hideId) {
 
             var hideIdNode = "node" + hideId;
-            if (!($('#MenuTree li#' + hideIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + hideIdNode).addClass("locked");
+            if (!(ThisTree.find('li#' + hideIdNode).hasClass("locked"))) {
+                ThisTree.find('li#' + hideIdNode).addClass("locked");
 
-                $('#MenuTree li#' + hideIdNode).fadeTo("fast", 0.25);
+                ThisTree.find('li#' + hideIdNode).fadeTo("fast", 0.25);
                 var i = Math.round(10000 * Math.random());
                 $.ajax({
                     url: '?ewCmd=HidePage' + decodeURIComponent("%26") + 'pgid=' + hideId + '&a=' + i,
                     success: function () {
 
-                        $('#MenuTree li#' + hideIdNode + ' a.btn-hide').remove();
-                        $('#MenuTree li#' + hideIdNode + ' a.btn-show').remove();
-                        $('#MenuTree li#' + hideIdNode + ' div.optionButtons:first').append(' <a onclick="$(\'#MenuTree\').showButton(' + hideId + ');" class="btn btn-xs btn-success btn-show" title="Click here to show this page"><i class="fa fa-check-circle fa-white"> </i> Show</a>');
-                        $('#MenuTree li#' + hideIdNode + ' div.optionButtons:first').append(' <a href="?ewCmd=DeletePage&amp;pgid=' + hideId + '" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page"><i class="fa fa-trash-o fa-white"> </i> Delete</a>');
+                        ThisTree.find('li#' + hideIdNode + ' a.btn-hide').remove();
+                        ThisTree.find('li#' + hideIdNode + ' a.btn-show').remove();
+                        ThisTree.find('li#' + hideIdNode + ' div.optionButtons:first').append(' <a onclick="$(\'#MenuTree\').showButton(' + hideId + ');" class="btn btn-xs btn-success btn-show" title="Click here to show this page"><i class="fa fa-check-circle fa-white"> </i> Show</a>');
+                        ThisTree.find('li#' + hideIdNode + ' div.optionButtons:first').append(' <a href="?ewCmd=DeletePage&amp;pgid=' + hideId + '" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page"><i class="fa fa-trash-o fa-white"> </i> Delete</a>');
 
-                        if ($('#MenuTree li#' + hideIdNode + ' i.status').hasClass('active')) {
-                            $('#MenuTree li#' + hideIdNode + ' i.status').removeClass('active')
-                            $('#MenuTree li#' + hideIdNode + ' i.status').addClass('inactive')
-                            $('#MenuTree li#' + hideIdNode + ' i.status').addClass('text-muted')
+                        if (ThisTree.find('li#' + hideIdNode + ' i.status').hasClass('active')) {
+                            ThisTree.find('li#' + hideIdNode + ' i.status').removeClass('active')
+                            ThisTree.find('li#' + hideIdNode + ' i.status').addClass('inactive')
+                            ThisTree.find('li#' + hideIdNode + ' i.status').addClass('text-muted')
 
                         }
-                        else if ($('#MenuTree li#' + hideIdNode + ' i.status').hasClass('activeParent')) {
-                            $('#MenuTree li#' + hideIdNode + ' i.status').removeClass('activeParent')
-                            $('#MenuTree li#' + hideIdNode + ' i.status').addClass('inactiveParent')
-                            $('#MenuTree li#' + hideIdNode + ' i.status').addClass('text-muted')
+                        else if (ThisTree.find('li#' + hideIdNode + ' i.status').hasClass('activeParent')) {
+                            ThisTree.find('li#' + hideIdNode + ' i.status').removeClass('activeParent')
+                            ThisTree.find('li#' + hideIdNode + ' i.status').addClass('inactiveParent')
+                            ThisTree.find('li#' + hideIdNode + ' i.status').addClass('text-muted')
                         }
 
-                        $('#MenuTree li#' + hideIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + hideIdNode).removeClass("locked");
-                        $('#MenuTree').applyLast();
+                        ThisTree.find('li#' + hideIdNode).fadeTo("fast", 1.0);
+                        ThisTree.find('li#' + hideIdNode).removeClass("locked");
+                        ThisTree.applyLast();
                     }
                 });
             }
@@ -1622,33 +1605,33 @@ Original preload function has been kept but is unused.
 
         showButton: function (showId) {
             var showIdNode = "node" + showId;
-            if (!($('#MenuTree li#' + showIdNode).hasClass("locked"))) {
-                $('#MenuTree li#' + showIdNode).addClass("locked");
+            if (!(ThisTree.find('li#' + showIdNode).hasClass("locked"))) {
+                ThisTree.find('li#' + showIdNode).addClass("locked");
 
-                $('#MenuTree li#' + showIdNode).fadeTo("fast", 0.25);
+                ThisTree.find('li#' + showIdNode).fadeTo("fast", 0.25);
                 var i = Math.round(10000 * Math.random());
                 $.ajax({
                     url: '?ewCmd=ShowPage' + decodeURIComponent("%26") + 'pgid=' + showId + '&a=' + i,
                     success: function () {
                         //Sort out removal of button and then addition of others
-                        $('#MenuTree li#' + showIdNode + ' a.btn-del:first').remove();
-                        $('#MenuTree li#' + showIdNode + ' a.btn-show').remove();
-                        $('#MenuTree li#' + showIdNode + ' div.optionButtons:first').append('<a onclick="$(\'#MenuTree\').hideButton(' + showId + ');" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page"><i class="fa fa-times-circle fa-white"> </i> Hide</a>');
+                        ThisTree.find('li#' + showIdNode + ' a.btn-del:first').remove();
+                        ThisTree.find('li#' + showIdNode + ' a.btn-show').remove();
+                        ThisTree.find('li#' + showIdNode + ' div.optionButtons:first').append('<a onclick="$(\'#MenuTree\').hideButton(' + showId + ');" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page"><i class="fa fa-times-circle fa-white"> </i> Hide</a>');
 
-                        if ($('#MenuTree li#' + showIdNode + ' i.status').hasClass('inactive')) {
-                            $('#MenuTree li#' + showIdNode + ' i.status').removeClass('inactive')
-                            $('#MenuTree li#' + showIdNode + ' i.status').addClass('active')
-                            $('#MenuTree li#' + showIdNode + ' i.status').removeClass('text-muted')
+                        if (ThisTree.find('li#' + showIdNode + ' i.status').hasClass('inactive')) {
+                            ThisTree.find('li#' + showIdNode + ' i.status').removeClass('inactive')
+                            ThisTree.find('li#' + showIdNode + ' i.status').addClass('active')
+                            ThisTree.find('li#' + showIdNode + ' i.status').removeClass('text-muted')
                         }
-                        else if ($('#MenuTree li#' + showIdNode + ' i.status').hasClass('inactiveParent')) {
-                            $('#MenuTree li#' + showIdNode + ' i.status').removeClass('inactiveParent')
-                            $('#MenuTree li#' + showIdNode + ' i.status').addClass('activeParent')
-                            $('#MenuTree li#' + showIdNode + ' i.status').removeClass('text-muted')
+                        else if (ThisTree.find('li#' + showIdNode + ' i.status').hasClass('inactiveParent')) {
+                            ThisTree.find('li#' + showIdNode + ' i.status').removeClass('inactiveParent')
+                            ThisTree.find('li#' + showIdNode + ' i.status').addClass('activeParent')
+                            ThisTree.find('li#' + showIdNode + ' i.status').removeClass('text-muted')
                         }
 
-                        $('#MenuTree li#' + showIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + showIdNode).removeClass("locked");
-                        $('#MenuTree').applyLast();
+                        ThisTree.find('li#' + showIdNode).fadeTo("fast", 1.0);
+                        ThisTree.find('li#' + showIdNode).removeClass("locked");
+                        ThisTree.applyLast();
                     }
                 });
             }

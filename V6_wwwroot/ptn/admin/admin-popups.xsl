@@ -13,12 +13,11 @@
   </xsl:template>
 
   <xsl:template match="Page">
-    <div class="modal-dialog" id="popup1">
-      <div class="modal-content">
+ <div>
           <xsl:apply-templates select="." mode="Admin"/>
-      </div>
+    
       <xsl:apply-templates select="." mode="LayoutAdminJs"/>
-    </div>
+</div>
   </xsl:template>
 
   <xsl:template match="Page" mode="SubmitPath">
@@ -306,7 +305,7 @@
 			  <xsl:text> expandable</xsl:text>
 		  </xsl:if>
       </xsl:attribute>
-      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
+      <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
         <i>
           <xsl:attribute name="class">
             <xsl:text>fa fa-lg</xsl:text>
@@ -541,7 +540,7 @@
                     </xsl:if>
                   </div>
                 </div>
-                <a rel="popover" data-toggle="popover" data-trigger="hover" data-container=".pickImageModal" data-contentwrapper="#imgpopover{position()}" data-placement="top">
+                <a rel="popover" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container=".pickImageModal" data-bs-contentwrapper="#imgpopover{position()}" data-bs-placement="top">
                   <xsl:choose>
 					  <xsl:when test="@width&gt;125 and @height&gt;125">
 						  <img class="lazy" src="/ptn/core/images/loader.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
@@ -842,7 +841,7 @@
 			<xsl:text>
 
         var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
-
+function primeFileUpload(){
         $('#fileupload').fileupload({
         url: uploadUrl,
         dataType: 'json',
@@ -863,7 +862,7 @@
 			<xsl:text>
         done: function (e, data) {
         $.each(data.files, function (index, file) {
-        var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
+			var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
 			var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
 			<xsl:apply-templates select="." mode="newItemScript"/>
 			$('#files').prepend(newItem);
@@ -877,31 +876,12 @@
 			return $(this).prev('.popoverContent').html();
 			}
 			});
-			if ($('.pickImageModal').exists()) {
-			$('.pickImageModal').find('a[data-bs-toggle!="popover"]').click(function (ev) {
-			ev.preventDefault();
-			$('.modal-dialog').addClass('loading')
-			var modalhtml = '<p class="text-center">
-				';
-				modalhtml += '<h4>
-					';
-					modalhtml += '<i class="fa fa-cog fa-spin fa-2x fa-fw">&#160;</i>Loading ...';
-					modalhtml += '
-				</h4>';
-				modalhtml += '
-			</p>';
-			$('.modal-body').html(modalhtml);
-			var target = $(this).attr("href");
-			// load the url and show modal on success
-			var currentModal = $('.pickImageModal')
-			currentModal.load(target, function () {
-			$('.modal-dialog').removeClass('loading')
-			currentModal.modal("show");
+
 			});
-			});
-			};
-			});
+			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+
 			},
+
 			progressall: function (e, data) {
 			var progress = parseInt(data.loaded / data.total * 100, 10);
 			$('.progress .progress-bar').css('width',progress + '%');
@@ -910,6 +890,9 @@
 			$('.progress .loading-counter .count').html(progress);
 			}
 			});
+			
+			};
+			primeFileUpload();
 		</script>
 
 		<script>
@@ -919,8 +902,7 @@
 		</script>
 
 		<script>
-			alert('preparemodal');
-			preparePickImageModal($('.pickImageModal'));
+			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
 		</script>
 	</xsl:template>
 	
