@@ -5,7 +5,7 @@
 
     .card.bg-primary,
     .card.bg-dark {
-        @extend .text-white;
+        //@extend .text-white;
 
         a {
             @extend .link-light;
@@ -14,5 +14,25 @@
         .btn-primary {
             @extend .btn-dark;
         }
+    }
+
+    .card.bg-primary {
+        @extend .text-bg-primary;
+    }
+
+    .card.bg-secondary {
+        @extend .text-bg-secondary;
+    }
+
+    .card.bg-info {
+        @extend .text-bg-info;
+    }
+
+    .card.bg-light {
+        @extend .text-bg-light;
+    }
+
+    .card.bg-dark {
+        @extend .text-bg-dark;
     }
 }
