@@ -1601,6 +1601,15 @@ function initialiseGeocoderButton() {
 
 }
 
+function initialise-get-vimeo-data-button() {
+    $('.get-vimeo-data').click(function (e) {
+        e.preventDefault();
+        var id = $("#cVimeoCode").value()
+        alert(id);
+    });
+ };
+
+
 //User Guide
 
 $(function () {

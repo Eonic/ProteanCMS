@@ -61,6 +61,8 @@
 				<bind id="cVimeoPortrait" nodeset="@portrait" required="false()" type="string"/>
 				<bind id="cVimeoAutoplay" nodeset="@autoplay" required="false()" type="string"/>
 				<bind id="cVimeoLoop" nodeset="@loop" required="false()" type="string"/>
+				<bind id="cVimeoDuration" nodeset="@duration" required="false()" type="string"/>
+				<bind id="cVimeoThumbnail" nodeset="@thumbnail" required="false()" type="string"/>
 			</bind>
       <bind nodeset="HTML5">
         <bind id="cVideoMp4" nodeset="@videoMp4" required="false()" type="string"/>
@@ -179,6 +181,7 @@
 
             <!-- Vimeo-->
             <case id="cTypeVimeo">
+				<group class="inline">
               <input bind="cVimeoCode">
                 <label>Video code</label>
                 <help>
@@ -224,6 +227,16 @@
                   <value>true</value>
                 </item>
               </select>
+				<input bind="cVimeoDuration">
+					<label>Video Duration</label>
+				</input>
+				<input bind="cVimeoThumbnail">
+					<label>Video Thumbnail URL</label>
+				</input>
+					<submit submission="" ref="" class="hideRequired get-vimeo-data btn-primary" icon="fa-vimeo">
+						<label>Get Vimeo Data</label>
+					</submit>
+				</group>
             </case>
 
           <!--HTML5-->

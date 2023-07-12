@@ -3167,5 +3167,11 @@
 
 	</xsl:template>
 
+	<xsl:template match="submit[contains(@class,'get-vimeo-data')]" mode="xform_control_script">
+		<script type="text/javascript">
+			initialise-get-vimeo-data-button()
+		</script>
+	</xsl:template>
+
 
 </xsl:stylesheet>

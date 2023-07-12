@@ -14673,11 +14673,22 @@
 	
   <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="json-ld">
   	  	<script type="application/ld+json" id="vimeo-{@id}">
-			
+			{
+              "@context": "https://schema.org",
+              "@type": "VideoObject",
+              "name": "<xsl:value-of select="Name/node()"/>",
+              "description": "<xsl:value-of select="Description"/>",
+              "thumbnailUrl": "<xsl:value-of select="Vimeo/@thumbnail"/>",
+              "uploadDate": "<xsl:value-of select="Vimeo/@publishDate"/>",
+              "duration": "<xsl:value-of select="Vimeo/@duration"/>",
+              "contentUrl": "https://player.vimeo.com/video/<xsl:value-of select="Vimeo/@id"/>",
+              "embedUrl": "https://player.vimeo.com/video/<xsl:value-of select="Vimeo/@id"/>",
+              "interactionCount": "2347"
+            }
 		</script>
   </xsl:template>
 	
-  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="contentJS">
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="contentJSxxx">
 	     <xsl:variable name="code">
           <xsl:variable name="raw" select="Vimeo/@code"/>
           <xsl:choose>
