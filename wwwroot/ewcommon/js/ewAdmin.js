@@ -1601,11 +1601,18 @@ function initialiseGeocoderButton() {
 
 }
 
-function initialise-get-vimeo-data-button() {
-    $('.get-vimeo-data').click(function (e) {
+function initialiseGetVimeoDataButton() {
+    $('a.get-vimeo-data').click(function (e) {
         e.preventDefault();
-        var id = $("#cVimeoCode").value()
-        alert(id);
+        var id = $("input#cVimeoCode").val();
+        id = id.split('?')[0];
+        jsonURL = "https://vimeo.com/api/v2/video/" + id + ".json";
+        $.getJSON(jsonURL, function (result) {
+            $("#cVimeoDuration").val(result[0].duration);
+            $("#cVimeoDescrtipion").val(result[0].description);
+            $("#cVimeoThumbnail").val(result[0].thumbnail_medium);
+            $("#cModuleTitle").val(result[0].title);
+        });
     });
  };
 

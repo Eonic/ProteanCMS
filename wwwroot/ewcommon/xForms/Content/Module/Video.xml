@@ -182,7 +182,7 @@
             <!-- Vimeo-->
             <case id="cTypeVimeo">
 				<group class="inline">
-              <input bind="cVimeoCode">
+              <input bind="cVimeoCode" class="get-vimeo-data">
                 <label>Video code</label>
                 <help>
                   <p>
@@ -192,6 +192,15 @@
                   </p>
                 </help>
               </input>
+					<input bind="cVimeoDuration">
+						<label>Vimeo Video Duration</label>
+					</input>
+					<input bind="cVimeoDescription">
+						<label>Vimeo Video Description</label>
+					</input>
+					<input bind="cVimeoThumbnail">
+						<label>Vimeo Video Thumbnail URL</label>
+					</input>
               <select bind="cVimeoTitle" appearance="full">
                 <label>Show title</label>
                 <item>
@@ -227,15 +236,7 @@
                   <value>true</value>
                 </item>
               </select>
-				<input bind="cVimeoDuration">
-					<label>Video Duration</label>
-				</input>
-				<input bind="cVimeoThumbnail">
-					<label>Video Thumbnail URL</label>
-				</input>
-					<submit submission="" ref="" class="hideRequired get-vimeo-data btn-primary" icon="fa-vimeo">
-						<label>Get Vimeo Data</label>
-					</submit>
+
 				</group>
             </case>
 

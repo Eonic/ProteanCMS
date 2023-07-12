@@ -3167,9 +3167,35 @@
 
 	</xsl:template>
 
-	<xsl:template match="submit[contains(@class,'get-vimeo-data')]" mode="xform_control_script">
+	<xsl:template match="input[contains(@class,'get-vimeo-data')]" mode="xform_control">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<xsl:apply-templates select="self::node()[not(item[toggle])]" mode="xform_legend"/>
+		<div class="input-group" id="{$ref}">
+			<input name="{$ref}" id="{$ref}" value="{value/node()}">
+				<xsl:attribute name="class">
+					<xsl:text>form-control get-vimeo-data-input</xsl:text>
+					<xsl:value-of select="@class"/>
+				</xsl:attribute>
+				<xsl:text> </xsl:text>
+			</input>
+	
+					<span class="input-group-btn get-vimeo-data">
+						<a class="btn btn-primary get-vimeo-data">
+							<i class="fa fa-vimeo">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Get Vimeo Data
+						</a>
+					</span>
+			
+		</div>
+		
+	</xsl:template>
+
+	<xsl:template match="input[contains(@class,'get-vimeo-data')]" mode="xform_control_script">
 		<script type="text/javascript">
-			initialise-get-vimeo-data-button()
+			initialiseGetVimeoDataButton();
 		</script>
 	</xsl:template>
 
