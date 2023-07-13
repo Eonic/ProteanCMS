@@ -538,10 +538,10 @@
 					<xsl:if test="@twitterURL!=''">
 						<a href="{@twitterURL}" title="{$myName} on Twitter" class="social-id-tw">
 							<span class="fa-stack fa-lg">
-								<i class="fab fa-circle fa-stack-2x">
+								<i class="fa fa-circle fa-stack-2x">
 									<xsl:text> </xsl:text>
 								</i>
-								<i class="fa fa-twitter fa-stack-1x fa-inverse">
+								<i class="fab fa-twitter fa-stack-1x fa-inverse">
 									<xsl:text> </xsl:text>
 								</i>
 							</span>
