@@ -33,7 +33,7 @@
         <input type="hidden" name="qty_{@id}" id="qty_{@id}" value="1" size="3" class="qtybox form-control" />          
       </div>
 		<div class="input-group">
-			<span class="input-group-addon">
+			<span class="input-group-text">
 				£
 			</span>
              <select name="donationAmount" id="donationAmount" class="form-control" placeholder="amount">
@@ -45,10 +45,10 @@
                     <option value="Other">Other</option>
 			    </select>
 			<input name="donationAmount-x" id="donationAmount-x" disabled="disabled" class="form-control" style="display:none" value="50.00"/>
-			<div class="input-group-btn">
+		
       <button type="submit" name="cartAdd" class="btn btn-primary" value="Add to Cart">
         Donate
-      </button></div>
+      </button>
 			</div>
     </form>
     
