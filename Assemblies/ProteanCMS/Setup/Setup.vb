@@ -841,12 +841,13 @@ Recheck:
     Public Function UpdateDatabase(ByVal filePath As String) As Boolean
         Dim bRes As Boolean = True
         Try
-            Dim cCurrentVersion As String
+            Dim cCurrentVersion As String = String.Empty
 
 
             Dim oUpgrdXML As New XmlDocument
             Dim errormsg As String
             Dim cCon As String = String.Empty
+            Dim mConfig As System.Collections.Specialized.NameValueCollection = Nothing
             If IO.File.Exists(goServer.MapPath(filePath)) Then
 
                 oUpgrdXML.Load(goServer.MapPath(filePath))
@@ -856,15 +857,28 @@ Recheck:
                 Dim oAlternanteDatabase As XmlNode = oUpgrdXML.DocumentElement.SelectSingleNode("AlternateDatabase")
 
                 If oAlternanteDatabase IsNot Nothing Then
-                    Dim oDBName As String = Convert.ToString(oAlternanteDatabase.Attributes("configName").Value)
-                    Dim oDBServerName As String = Convert.ToString(oAlternanteDatabase.Attributes("configServer").Value)
-                    Dim oDBUserName As String = Convert.ToString(oAlternanteDatabase.Attributes("configUser").Value)
-                    Dim oDBPassword As String = Convert.ToString(oAlternanteDatabase.Attributes("configPassword").Value)
+                    Dim oDBName As String
+                    Dim oDBServerName As String
+                    Dim oDBUserName As String
+                    Dim oDBPassword As String
 
-                    cCon = "Data Source=" & oDBServerName & "; Initial Catalog=" & oDBName & ";"
-                    cCon &= "user id=" & oDBUserName & "; password=" & oDBPassword
+                    If (oAlternanteDatabase.Attributes("configName") IsNot Nothing) Then
+                        If (oAlternanteDatabase.Attributes("configName").Value <> String.Empty) Then
+                            mConfig = WebConfigurationManager.GetWebApplicationSection(oAlternanteDatabase.Attributes("configName").Value + "/web")
+                        End If
+                    End If
+                    If mConfig IsNot Nothing Then
+                        oDBServerName = Convert.ToString(mConfig("DatabaseServer"))
+                        oDBName = Convert.ToString(mConfig("DatabaseName"))
+                        oDBUserName = Convert.ToString(mConfig("DatabaseUser"))
+                        oDBPassword = Convert.ToString(mConfig("DatabasePassword"))
 
-                    cCurrentVersion = getVersionNumber(cCon)
+                        cCon = "Data Source=" & oDBServerName & "; Initial Catalog=" & oDBName & ";"
+                        cCon &= "user id=" & oDBUserName & "; password=" & oDBPassword
+
+                        cCurrentVersion = getVersionNumber(cCon)
+                    End If
+
                 Else
                     cCurrentVersion = getVersionNumber()
                 End If
