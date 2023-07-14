@@ -550,6 +550,162 @@
       </div>
     </xsl:if>
   </xsl:template>
+
+
+	<xsl:template match="Order" mode="orderTotals">
+		<div class="product-totals">
+			<strong>Product Total:</strong>
+			<span class="amount">
+				<xsl:apply-templates select="/Page" mode="formatPrice">
+					<xsl:with-param name="price" select="@total - @shippingCost"/>
+					<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+				</xsl:apply-templates>
+			</span>
+		</div>
+		<xsl:if test="@shippingType &gt; 0">
+			<div class="shipping">
+				<strong>
+					<xsl:choose>
+						<xsl:when test="/Page/Contents/Content[@name='shippingCostLabel']!=''">
+							<xsl:value-of select="/Page/Contents/Content[@name='shippingCostLabel']"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<!--Shipping Cost-->
+							<xsl:call-template name="term3044" />
+							<xsl:text>:</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text>&#160;</xsl:text>
+					<br/>
+				</strong>
+				<span class="shipping-desc">
+					<xsl:choose>
+						<xsl:when test="/Page/Cart/Order/Shipping">
+							<xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
+							<strong>&#160;-&#160;</strong>
+							<xsl:value-of select="/Page/Cart/Order/Shipping/Carrier/node()"/>
+							<strong>&#160;-&#160;</strong>
+							<xsl:value-of select="/Page/Cart/Order/Shipping/DeliveryTime/node()"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</span>
+				<span class="amount">
+					<xsl:text>&#160;</xsl:text>
+					<xsl:apply-templates select="/Page" mode="formatPrice">
+						<xsl:with-param name="price" select="@shippingCost"/>
+						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+					</xsl:apply-templates>
+				</span>
+			</div>
+		</xsl:if>
+		<div class="totals-row">
+			<xsl:if test="@vatRate &gt; 0">
+				<div class="vat-row">
+					<div class="subTotal">
+						<span>
+							<!--Sub Total-->
+							<xsl:call-template name="term3045" />
+							<xsl:text>: </xsl:text>
+						</span>
+						<span class=" amount">
+							<!--  Remmed by Rob<xsl:value-of select="/Page/Cart/@currencySymbol"/>
+                <xsl:value-of select="format-number(@totalNet, '0.00')"/>-->
+							<xsl:apply-templates select="/Page" mode="formatPrice">
+								<xsl:with-param name="price" select="@totalNet"/>
+								<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+							</xsl:apply-templates>
+						</span>
+					</div>
+
+					<div class="vat">
+						<span>
+							<xsl:choose>
+								<xsl:when test="//Cart/Contact/Address/Country='United Kingdom'">
+									<!--VAT at-->
+									<xsl:call-template name="term3046" />
+									<xsl:text>&#160;</xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<!--Tax at-->
+									<xsl:call-template name="term3047" />
+									<xsl:text>&#160;</xsl:text>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:value-of select="format-number(@vatRate, '#.00')"/>%:
+						</span>
+						<span class="amount">
+							<!--  Remmed by Rob
+				<span class="currency">
+                  <xsl:value-of select="/Page/Cart/@currencySymbol"/>
+                </span>
+                <xsl:value-of select="format-number(@vatAmt, '0.00')"/>
+				-->
+							<xsl:apply-templates select="/Page" mode="formatPrice">
+								<xsl:with-param name="price" select="@vatAmt"/>
+								<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+							</xsl:apply-templates>
+						</span>
+					</div>
+				</div>
+			</xsl:if>
+			<div class="total">
+				<span>
+					<xsl:text>Total Payable:&#160;</xsl:text>
+				</span>
+				<span class="amount">
+
+					<xsl:apply-templates select="/Page" mode="formatPrice">
+						<xsl:with-param name="price" select="@total"/>
+						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+					</xsl:apply-templates>
+				</span>
+			</div>
+			<xsl:if test="@paymentMade &gt; 0">
+				<div class="cart-row">
+					<div class="total">
+						<xsl:choose>
+							<xsl:when test="@transStatus">
+								<!--Transaction Made-->
+								<xsl:call-template name="term3049" />
+							</xsl:when>
+							<xsl:when test="@payableType='settlement' and not(@transStatus)">
+								<!--Payment Received-->
+								<xsl:call-template name="term3050" />
+							</xsl:when>
+						</xsl:choose>
+					</div>
+					<div class="total amount">
+						<xsl:value-of select="$currency"/>
+						<xsl:value-of select="format-number(@paymentMade, '0.00')"/>
+					</div>
+				</div>
+			</xsl:if>
+			<xsl:if test="@payableAmount &gt; 0">
+
+				<div class="total">
+					<xsl:choose>
+						<xsl:when test="@payableType='deposit' and not(@transStatus)">
+							<!--Deposit Payable-->
+							<xsl:call-template name="term3051" />
+						</xsl:when>
+						<xsl:when test="@payableType='settlement' or (@payableType='deposit' and @transStatus)">
+							<!--Amount Outstanding-->
+							<xsl:call-template name="term3052" />
+						</xsl:when>
+					</xsl:choose>
+				</div>
+				<div class="total amount">
+					<xsl:value-of select="$currency"/>
+					<xsl:value-of select="format-number(@payableAmount, '0.00')"/>
+				</div>
+			</xsl:if>
+		</div>
+
+	</xsl:template>
+	
   <!--#-->
   <!--############################## Quote Procees - Logon ################################-->
   <!--#-->
@@ -567,43 +723,102 @@
       </xsl:for-each>
     </xsl:variable>
 
-    <div id="template_1_Column" class="template template_1_Column">
-      <div id="column1">
+	  <div class="row">
+		  <div class="col-md-8">
+			  <form method="post" id="cart" class="ewXform">
+				  <xsl:apply-templates select="." mode="orderItems">
+					  <xsl:with-param name="editQty">true</xsl:with-param>
+				  </xsl:apply-templates>
 
-        <xsl:if test="$anySub=''">
-          <div class="account-btns-top clearfix">
-            <xsl:if test="not($page/Cart/Order/Item/productDetail/UserGroups)">
-              <!--Remove for subscritpions-->
-              <a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn pull-right btn-primary">
-                Continue with my order <i class="fa fa-chevron-right">
-                  <xsl:text> </xsl:text>
-                </i>
-              </a>
-            </xsl:if>
-          </div>
-        </xsl:if>
-        <div class="row">
-          <div class="col-md-6">
-            <div id="cartLogonBox" class="card cartBox">
+				  <div class="cart-btns-btm clearfix hidden-xs">
 
-              <h4 class="card-header">Logon - I have an account</h4>
-              <div class="card-body">
-                <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div id="cartRegisterBox" class="card cartBox">
+					  <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty pull-left">
+						  <i class="fa fa-trash-o">
+							  <xsl:text> </xsl:text>
+						  </i><xsl:text> </xsl:text>Quit Order
+					  </button>
+					  <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue pull-left">
+						  <i class="fa fa-chevron-left">
+							  <xsl:text> </xsl:text>
+						  </i>
+						  <xsl:text> </xsl:text>
+						  <xsl:call-template name="term3060" />
+					  </button>
+				  </div>
+			  </form>
+			  <br/>
+			  <xsl:if test="@showDiscountCodeBox='true'">
+				  <div class="row">
+					  <div class="basket-promo form-group col-md-4">
+						  <label name="promotionalcode" id="promotionalcode" for="ex1" class="sr-only">Promo Code</label>
+						  <div class="input-group">
+							  <input id="txtPromoCode" placeholder="Enter promo code" class="form-control" type="text" value="{Notes/PromotionalCode/node()}"/>
+							  <div class="input-group-btn">
+								  <a href="#" class="btn btn-primary " id="addPromoCode">Add</a>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+			  </xsl:if>
+		  </div>
+		  <div class="col-md-4">
+			  <div class="card card-brand">
+				  <div class="card-body d-grid gap-2">
+					  <xsl:apply-templates select="." mode="orderTotals"/>
+					  <a data-bs-toggle="modal" data-bs-target="#cartLogonBox" role="button" class="btn btn-primary btn-block">
+						  <i class="fas fa-sign-in-alt">&#160;</i>&#160;
+						  Login with your account
+					  </a>
+					  <a data-bs-toggle="modal" data-bs-target="#cartRegisterBox" role="button" class="btn btn-primary btn-block">
+						  <i class="fas fa-user">&#160;</i>&#160;
+						  Create a new account
+					  </a>
+					  <a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn btn-action btn-block">
+						  <i class="fas fa-arrow-right">&#160;</i>&#160;
+						  Continue without account
+					  </a>
+					  <xsl:apply-templates select="." mode="orderProcessSkipButton"/>
+				  </div>
 
-              <h4 class="card-header">Create new account</h4>
+			  </div>
 
-              <div class="card-body">
-                <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='CartRegistration']" mode="xform"/>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+			  <div id="cartLogonBox" class="modal fade" tabindex="-1" role="dialog">
+				  <div class="modal-dialog" role="document">
+					  <div class="modal-content">
+						  <div class="modal-header">
+							  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+								  <i class="fas fa-times-circle">&#160;</i>
+							  </button>
+							  <h4 class="modal-title">Logon</h4>
+						  </div>
+						  <div class="modal-body">
+							  <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
+						  </div>
+						  <a href="/Information/Register/Password-Reminder" class="btn btn-primary btn-block">
+							  Forgotten Password <i class="fa fa-mail">
+								  <xsl:text> </xsl:text>
+							  </i>
+						  </a>
+					  </div>
+				  </div>
+			  </div>
+
+			  <div id="cartRegisterBox" class="modal fade" tabindex="-1" role="dialog">
+				  <div class="modal-dialog" role="document">
+					  <div class="modal-content">
+						  <div class="modal-header">
+							  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+								  <i class="fas fa-times-circle">&#160;</i>
+							  </button>
+							  <h3 class="modal-title">Create new account</h3>
+						  </div>
+						  <div class="modal-body">
+							  <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='CartRegistration']" mode="xform"/>
+						  </div>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
       <xsl:if test="/Page/Cart/Order/Notes/PromotionalCode!=''">
         <xsl:apply-templates select="." mode="principleButton"/>
         <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
@@ -633,6 +848,10 @@
       </xsl:if>
     </div>
   </xsl:template>
+
+	<xsl:template match="Order[@cmd='Logon']" mode="orderProcessSkipButton">
+		<!-- Overriden in Payment Provider-->
+	</xsl:template>
 
   <!--#-->
   <!--############################## Order Procees - Notes ################################-->

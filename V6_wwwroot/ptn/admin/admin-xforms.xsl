@@ -3582,4 +3582,15 @@
   </xsl:template>
 
 
+	<xsl:template match="alert[@class='item-deleted']" mode="xform">
+		<div class="alert alert-warning">			
+			<span class="alert-msg">
+				<xsl:if test="Content/@moduleType">
+				Module Type: <xsl:value-of select="Content/@moduleType"/>
+				</xsl:if>
+			</span>
+		</div>
+	</xsl:template>
+
+
 </xsl:stylesheet>

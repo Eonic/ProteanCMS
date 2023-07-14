@@ -269,7 +269,9 @@
 			<div class="lIinner">
 				<xsl:if test="Images/img/@src!=''">
 					<a href="{$parentURL}" title="Read More - {Headline/node()}" class="list-image-link">
-						<xsl:apply-templates select="." mode="displayThumbnail"/>
+						<xsl:apply-templates select="." mode="displayThumbnail">
+							<xsl:with-param name="class">img-fluid</xsl:with-param>
+						</xsl:apply-templates>
 					</a>
 					<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
 					<span class="hidden">|</span>
@@ -353,7 +355,9 @@
 								</a>
 							</h3>
 							<xsl:if test="Images/img/@src!=''">
-								<xsl:apply-templates select="." mode="displayThumbnail"/>
+								<xsl:apply-templates select="." mode="displayThumbnail">
+									<xsl:with-param name="class">img-fluid</xsl:with-param>
+								</xsl:apply-templates>
 								<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
 								<span class="hidden">|</span>
 							</xsl:if>
