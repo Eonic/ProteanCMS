@@ -1532,20 +1532,20 @@
         <xsl:if test="@status='1'">
 
           <a href="{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to hide this item" class="btn btn-xs btn-primary">
-            <i class="fa fa-eye-slash">&#160;</i>&#160;Hide
+            <i class="fas fa-eye-slash">&#160;</i>&#160;Hide
           </a>
 
         </xsl:if>
         <xsl:if test="@status='0'">
 
           <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item" class="btn btn-xs btn-primary">
-            <i class="fa fa-eye">&#160;</i>&#160;Show
+            <i class="fas fa-eye">&#160;</i>&#160;Show
           </a>
         </xsl:if>
         <xsl:if test="@status='0'">
 
           <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
-            <i class="fa fa-trash-o">&#160;</i>
+            <i class="fas fa-trash">&#160;</i>
           </a>
 
         </xsl:if>
@@ -1810,14 +1810,14 @@
         <xsl:if test="@status='0'">
           <li>
             <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item">
-              <i class="fa fa-check-square-o">&#160;</i>&#160;Show
+              <i class="fas fa-check-square">&#160;</i>&#160;Show
             </a>
           </li>
         </xsl:if>
         <xsl:if test="@status='0'">
           <li>
             <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item">
-              <i class="fa fa-trash-o">&#160;</i>&#160;Delete
+              <i class="fas fa-trash">&#160;</i>&#160;Delete
             </a>
           </li>
         </xsl:if>
@@ -2360,7 +2360,7 @@
               <!--span class="hidden"> | </span-->
               <xsl:if test="@status='1'">
                 <!--a href="{$appPath}?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
-                <a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-primary btn-hide" title="Click here to hide this page">
+                <a class="btn btn-xs btn-primary btn-hide" title="Click here to hide this page">
                   <i class="fas fa-eye-slash fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
@@ -2370,13 +2370,13 @@
               </xsl:if>
               <xsl:if test="@status='0'">
                 <!--a href="{$appPath}?ewCmd=ShowPage&amp;pgid={@id}" class="adminButton show" title="Click here to hide this page">Show</a-->
-                <a onclick="$('#MenuTree').showButton({@id});" class="btn btn-xs btn-primary btn-show" title="Click here to show this page">
+                <a class="btn btn-xs btn-primary btn-show" title="Click here to show this page">
                   <i class="fas fa-eye fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Show
                 </a>
                 <!--span class="hidden"> | </span-->
-                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="text-danger plain-link" title="Click here to delete this page">
+                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="text-danger plain-link btn-del" title="Click here to delete this page">
                   <i class="fas fa-trash-alt">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Delete

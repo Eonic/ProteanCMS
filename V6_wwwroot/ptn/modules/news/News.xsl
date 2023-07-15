@@ -138,107 +138,7 @@
 	</xsl:template>
 
 
-	<xsl:template match="Content[@type='Module' and @moduleType='NewsListDateMenu']" mode="displayBrief">
-		<xsl:variable name="contentType" select="@contentType" />
-		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-		<xsl:variable name="dateQuery" select="@dateQuery"/>
-		<div class="NewsListDateMenu" id="subMenu">
-			<ul class="nav nav-pills nav-stacked">
-				<xsl:apply-templates select="Menu/MenuItem" mode="submenuitem2"/>
-			</ul>
-		</div>
-	</xsl:template>
 
-	<xsl:template match="Content[@type='Module' and @title='NewsListDateMenu']" mode="moduleTitle">
-		<xsl:variable name="dateQuery" select="$page/Contents/Content[@type='Module' and @moduleType='NewsListDateMenu']/@dateQuery"/>
-		<xsl:variable name="dateTitle">
-			<xsl:for-each select="$page/Contents/Content[@type='Module' and @moduleType='NewsListDateMenu']/Menu/MenuItem[@id=$dateQuery]">
-				<xsl:value-of select="@name"/>
-			</xsl:for-each>
-		</xsl:variable>
-		<xsl:variable name="title">
-			<span>
-				<xsl:value-of select="$dateTitle"/>
-				<xsl:text> </xsl:text>
-			</span>
-		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="@iconStyle='Centre'">
-				<div class="center-block">
-					<xsl:if test="@icon!=''">
-						<i>
-							<xsl:attribute name="class">
-								<xsl:text>fa fa-3x center-block </xsl:text>
-								<xsl:value-of select="@icon"/>
-							</xsl:attribute>
-							<xsl:text> </xsl:text>
-						</i>
-						<xsl:text> </xsl:text>
-					</xsl:if>
-					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
-						<span class="upload-icon">
-							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
-						</span>
-					</xsl:if>
-					<xsl:if test="@title!=''">
-						<span>
-							<xsl:copy-of select="ms:node-set($title)" />
-							<xsl:text> </xsl:text>
-						</span>
-					</xsl:if>
-				</div>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:if test="@icon!=''">
-					<i>
-						<xsl:attribute name="class">
-							<xsl:text>fa </xsl:text>
-							<xsl:value-of select="@icon"/>
-						</xsl:attribute>
-						<xsl:text> </xsl:text>
-					</i>
-					<span class="space">&#160;</span>
-				</xsl:if>
-				<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'  and @uploadIcon!=' '">
-					<img src="{@uploadIcon}" alt="icon"/>
-				</xsl:if>
-				<xsl:copy-of select="ms:node-set($title)" />
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="MenuItem" mode="submenuitem2">
-		<xsl:variable name="dateQuery" select="ancestor::Content/@dateQuery"/>
-		<li>
-			<xsl:variable name="class">
-				<xsl:if test="position()=1">
-					<xsl:text>first </xsl:text>
-				</xsl:if>
-				<xsl:if test="position()=last()">
-					<xsl:text>last </xsl:text>
-				</xsl:if>
-				<xsl:if test="@id=$dateQuery">
-					<xsl:text>active </xsl:text>
-				</xsl:if>
-				<xsl:if test="descendant::MenuItem[@id=$dateQuery] and @url!='/'">
-					<xsl:text>active </xsl:text>
-				</xsl:if>
-			</xsl:variable>
-			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
-				<xsl:with-param name="class" select="$class"/>
-			</xsl:apply-templates>
-			<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">
-				<ul>
-					<xsl:attribute name="class">
-						<xsl:text>nav nav-pills</xsl:text>
-						<!--TS Theme specfic setting must not be here - Moved to Layout XSL -->
-					</xsl:attribute>
-					<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
-				</ul>
-			</xsl:if>
-		</li>
-	</xsl:template>
 
 	<!-- NewsArticle Brief -->
 	<xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
@@ -276,16 +176,12 @@
 					<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
 					<span class="hidden">|</span>
 				</xsl:if>
-				<h3 class="title" itemprop="headline">
+				<h3 class="title">
 					<a href="{$parentURL}" title="Read More - {Headline/node()}">
 						<xsl:apply-templates select="." mode="getDisplayName"/>
 					</a>
 				</h3>
-				<span class="hidden" itemtype="Organization" itemprop="publisher">
-					<span itemprop="name">
-						<xsl:value-of select="$sitename"/>
-					</span>
-				</span>
+
 				<span class="news-brief-info">
 					<xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
 					<xsl:if test="@publish!=''">
@@ -680,5 +576,107 @@
 				<script type='text/javascript' src='//www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
 			</xsl:when>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='NewsListDateMenu']" mode="displayBrief">
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<xsl:variable name="dateQuery" select="@dateQuery"/>
+		<div class="NewsListDateMenu" id="subMenu">
+			<ul class="nav nav-pills nav-stacked">
+				<xsl:apply-templates select="Menu/MenuItem" mode="submenuitem2"/>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @title='NewsListDateMenu']" mode="moduleTitle">
+		<xsl:variable name="dateQuery" select="$page/Contents/Content[@type='Module' and @moduleType='NewsListDateMenu']/@dateQuery"/>
+		<xsl:variable name="dateTitle">
+			<xsl:for-each select="$page/Contents/Content[@type='Module' and @moduleType='NewsListDateMenu']/Menu/MenuItem[@id=$dateQuery]">
+				<xsl:value-of select="@name"/>
+			</xsl:for-each>
+		</xsl:variable>
+		<xsl:variable name="title">
+			<span>
+				<xsl:value-of select="$dateTitle"/>
+				<xsl:text> </xsl:text>
+			</span>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="@iconStyle='Centre'">
+				<div class="center-block">
+					<xsl:if test="@icon!=''">
+						<i>
+							<xsl:attribute name="class">
+								<xsl:text>fa fa-3x center-block </xsl:text>
+								<xsl:value-of select="@icon"/>
+							</xsl:attribute>
+							<xsl:text> </xsl:text>
+						</i>
+						<xsl:text> </xsl:text>
+					</xsl:if>
+					<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
+						<span class="upload-icon">
+							<img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+						</span>
+					</xsl:if>
+					<xsl:if test="@title!=''">
+						<span>
+							<xsl:copy-of select="ms:node-set($title)" />
+							<xsl:text> </xsl:text>
+						</span>
+					</xsl:if>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="@icon!=''">
+					<i>
+						<xsl:attribute name="class">
+							<xsl:text>fa </xsl:text>
+							<xsl:value-of select="@icon"/>
+						</xsl:attribute>
+						<xsl:text> </xsl:text>
+					</i>
+					<span class="space">&#160;</span>
+				</xsl:if>
+				<xsl:if test="@uploadIcon!='' and @uploadIcon!='_'  and @uploadIcon!=' '">
+					<img src="{@uploadIcon}" alt="icon"/>
+				</xsl:if>
+				<xsl:copy-of select="ms:node-set($title)" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="MenuItem" mode="submenuitem2">
+		<xsl:variable name="dateQuery" select="ancestor::Content/@dateQuery"/>
+		<li>
+			<xsl:variable name="class">
+				<xsl:if test="position()=1">
+					<xsl:text>first </xsl:text>
+				</xsl:if>
+				<xsl:if test="position()=last()">
+					<xsl:text>last </xsl:text>
+				</xsl:if>
+				<xsl:if test="@id=$dateQuery">
+					<xsl:text>active </xsl:text>
+				</xsl:if>
+				<xsl:if test="descendant::MenuItem[@id=$dateQuery] and @url!='/'">
+					<xsl:text>active </xsl:text>
+				</xsl:if>
+			</xsl:variable>
+			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
+				<xsl:with-param name="class" select="$class"/>
+			</xsl:apply-templates>
+			<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">
+				<ul>
+					<xsl:attribute name="class">
+						<xsl:text>nav nav-pills</xsl:text>
+						<!--TS Theme specfic setting must not be here - Moved to Layout XSL -->
+					</xsl:attribute>
+					<xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem"/>
+				</ul>
+			</xsl:if>
+		</li>
 	</xsl:template>
 </xsl:stylesheet>

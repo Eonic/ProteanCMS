@@ -293,14 +293,14 @@
     <div id="Video{@id}" class="Video">
       <xsl:if test="@size!='Manual'">
         <xsl:attribute name="class">
-          <xsl:text>embed-responsive </xsl:text>
+          <xsl:text>ratio </xsl:text>
           <xsl:choose>
-            <xsl:when test="@ratio='FourThree'">embed-responsive-4by3</xsl:when>
-            <xsl:otherwise>embed-responsive-16by9</xsl:otherwise>
+            <xsl:when test="@ratio='FourThree'">ratio-4x3</xsl:when>
+            <xsl:otherwise>ratio-16x9</xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+      <iframe frameborder="0" allowfullscreen="allowfullscreen" >
         <xsl:attribute name="src">
           <xsl:text>http</xsl:text>
           <xsl:if test="YouTube/@useHttps='true'">
@@ -354,14 +354,14 @@
     <div id="Video{@id}" class="Video">
       <xsl:if test="@size!='Manual'">
         <xsl:attribute name="class">
-          <xsl:text>embed-responsive </xsl:text>
+          <xsl:text>ratio </xsl:text>
           <xsl:choose>
-            <xsl:when test="@ratio='FourThree'">embed-responsive-4by3</xsl:when>
-            <xsl:otherwise>embed-responsive-16by9</xsl:otherwise>
+            <xsl:when test="@ratio='FourThree'">ratio-4x3</xsl:when>
+            <xsl:otherwise>ratio-16x9</xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+      <iframe frameborder="0" allowfullscreen="allowfullscreen" >
         <xsl:attribute name="src">
           <xsl:text>//player.vimeo.com/video/</xsl:text>
           <xsl:value-of select="$code"/>
@@ -403,10 +403,10 @@
       <div>
         <xsl:if test="@size!='Manual'">
           <xsl:attribute name="class">
-            <xsl:text>embed-responsive </xsl:text>
+            <xsl:text>ratio </xsl:text>
             <xsl:choose>
-              <xsl:when test="@ratio='FourThree'">embed-responsive-4by3</xsl:when>
-              <xsl:otherwise>embed-responsive-16by9</xsl:otherwise>
+              <xsl:when test="@ratio='FourThree'">ratio-4x3</xsl:when>
+              <xsl:otherwise>ratio-16x9</xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:if>
@@ -424,11 +424,6 @@
                 </xsl:attribute>
               </xsl:if>
             </xsl:when>
-            <xsl:otherwise>
-              <xsl:attribute name="class">
-                <xsl:text>embed-responsive-item</xsl:text>
-              </xsl:attribute>
-            </xsl:otherwise>
           </xsl:choose>
           <xsl:if test="HTML5/@autoplay='autoplay'">
             <xsl:attribute name="autoplay">
@@ -504,8 +499,8 @@
           <xsl:attribute name="class">
             <xsl:text>embed-responsive </xsl:text>
             <xsl:choose>
-              <xsl:when test="VideoRatio='FourThree'">embed-responsive-4by3</xsl:when>
-              <xsl:otherwise>embed-responsive-16by9 2</xsl:otherwise>
+              <xsl:when test="VideoRatio='FourThree'">embed-responsive-4x3</xsl:when>
+              <xsl:otherwise>embed-responsive-16x9 2</xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:if>
@@ -562,8 +557,8 @@
           <xsl:attribute name="class">
             <xsl:text>embed-responsive </xsl:text>
             <xsl:choose>
-              <xsl:when test="VideoRatio='FourThree'">embed-responsive-4by3</xsl:when>
-              <xsl:otherwise>embed-responsive-16by9 1</xsl:otherwise>
+              <xsl:when test="VideoRatio='FourThree'">embed-responsive-4x3</xsl:when>
+              <xsl:otherwise>embed-responsive-16x9 1</xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:if>
@@ -662,8 +657,8 @@
         <xsl:attribute name="class">
           <xsl:text>embed-responsive </xsl:text>
           <xsl:choose>
-            <xsl:when test="VideoRatio='FourThree'">embed-responsive-4by3</xsl:when>
-            <xsl:otherwise>embed-responsive-16by9 </xsl:otherwise>
+            <xsl:when test="VideoRatio='FourThree'">embed-responsive-4x3</xsl:when>
+            <xsl:otherwise>embed-responsive-16x9 </xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
@@ -729,8 +724,8 @@
         <xsl:attribute name="class">
           <xsl:text>embed-responsive </xsl:text>
           <xsl:choose>
-            <xsl:when test="VideoRatio='FourThree'">embed-responsive-4by3</xsl:when>
-            <xsl:otherwise>embed-responsive-16by9 </xsl:otherwise>
+            <xsl:when test="VideoRatio='FourThree'">embed-responsive-4x3</xsl:when>
+            <xsl:otherwise>embed-responsive-16x9 </xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>

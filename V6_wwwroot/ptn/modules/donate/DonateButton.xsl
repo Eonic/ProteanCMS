@@ -1,20 +1,21 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
   
-  <xsl:template match="Content[@type='Module' and (@moduleType='DonateButton')]" mode="contentJS">
+  <xsl:template match="Content[@type='Module' and (@moduleType='DonateButton')][1]" mode="contentJS">
 	<script type="text/javascript">
     $(function () {
         $("#donationAmount").change(function () {
             if ($(this).val() == 'Other') {
-			    $("#donationAmount").attr("disabled");
-                $("#donationAmount").hide();
-				 $("#donationAmount").attr("name",'donationAmount-y');
-				 $("#donationAmount").attr("id",'donationAmount-y');
-                $("#donationAmount-x").removeAttr("disabled");
-				
+                 $("#donationAmount-x").removeAttr("disabled");				
 				 $("#donationAmount-x").show();
 				 $("#donationAmount-x").attr("id",'donationAmount');
 				 $("#donationAmount").attr("name",'donationAmount');
+				 
+			    $("#donationAmount").attr("disabled");
+                $("#donationAmount").hide();
+				 $("#donationAmount").attr("name","donationAmount-y");
+				 $("#donationAmount").attr("id","donationAmount-y");
+				 
                
             } else {
                 $("#txtOther").attr("disabled", "disabled");
