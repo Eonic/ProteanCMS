@@ -42,4 +42,5 @@
   <xsl:import href="xform/xForm.xsl"/>
   <xsl:import href="documentrequest/DocumentRequest.xsl"/>
   <xsl:import href="cookiefirst/cookiefirst.xsl"/>
+	<xsl:import href="donate/donatebutton.xsl"/>
 </xsl:stylesheet>

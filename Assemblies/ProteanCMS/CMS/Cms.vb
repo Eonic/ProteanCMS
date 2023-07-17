@@ -5723,12 +5723,10 @@ Public Class Cms
 
 
                 ' Only generate URLs for MneuItems that do not already have a url explicitly defined
-                If oMenuItem.GetAttribute("url") = "" Then
 
 
-
-                    ' Start with the base path
-                    sUrl = moConfig("BasePath") & urlPrefix & cFilePathModifier
+                ' Start with the base path
+                sUrl = moConfig("BasePath") & urlPrefix & cFilePathModifier
 
                     If moConfig("UsePageIdsForURLs") = "on" Then
                         ' Use the page ID instead of a Pretty URL
@@ -5784,11 +5782,19 @@ Public Class Cms
                         sUrl = sUrl.ToLower()
                     End If
 
+                If oMenuItem.GetAttribute("url") = "" Then
                     oMenuItem.SetAttribute("url", sUrl)
+                Else
+                    oMenuItem.SetAttribute("adminUrl", sUrl)
+                End If
 
-                    ' If oMenuItem.GetAttribute("id") = "609" Then
-                    ' mbIgnorePath = mbIgnorePath
-                    ' If
+
+                ' If oMenuItem.GetAttribute("id") = "609" Then
+                ' mbIgnorePath = mbIgnorePath
+                ' If
+
+                'Stuff that just doesn't happen if we are redirecting.
+                If oMenuItem.GetAttribute("url") = "" Then
 
                     If Not mbIgnorePath Then
                         If moRequest.QueryString.Count > 0 Then

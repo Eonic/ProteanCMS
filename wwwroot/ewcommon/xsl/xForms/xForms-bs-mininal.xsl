@@ -34,6 +34,7 @@
 	<xsl:apply-templates select="descendant-or-self::select1[@class='siteTree']" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
+	  <xsl:apply-templates select="descendant-or-self::input" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[contains(@class,'has-script')]" mode="xform_control_script"/>
 	  <xsl:apply-templates select="descendant-or-self::input[contains(@class,'userUploadImage')]" mode="xform_control_script"/>
 	  <h1>End of templete</h1>

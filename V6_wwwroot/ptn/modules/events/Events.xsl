@@ -25,96 +25,42 @@
       </xsl:choose>
     </xsl:variable>
     <!--responsive columns variables-->
-    <xsl:variable name="xsColsToShow">
-      <xsl:choose>
-        <xsl:when test="@xsCol='2'">2</xsl:when>
-        <xsl:otherwise>1</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="smColsToShow">
-      <xsl:choose>
-        <xsl:when test="@smCol and @smCol!=''">
-          <xsl:value-of select="@smCol"/>
-        </xsl:when>
-        <xsl:otherwise>2</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="mdColsToShow">
-      <xsl:choose>
-        <xsl:when test="@mdCol and @mdCol!=''">
-          <xsl:value-of select="@mdCol"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@cols"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+  
     <!--end responsive columns variables-->
     <div class="clearfix EventsList">
-      <xsl:if test="@carousel='true'">
-        <xsl:attribute name="class">
-          <xsl:text>clearfix EventsList content-scroller</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
-      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
-        <!--responsive columns-->
-        <xsl:attribute name="class">
-          <xsl:text>cols</xsl:text>
-          <xsl:choose>
-            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
-            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
-          </xsl:choose>
-          <xsl:if test="@smCol and @smCol!=''">
-            <xsl:text> sm-content-</xsl:text>
-            <xsl:value-of select="@smCol"/>
-          </xsl:if>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> md-content-</xsl:text>
-            <xsl:value-of select="@mdCol"/>
-          </xsl:if>
-          <xsl:text> cols</xsl:text>
-          <xsl:value-of select="@cols"/>
-          <xsl:if test="@mdCol and @mdCol!=''">
-            <xsl:text> content-cols-responsive</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
-        <!--end responsive columns-->
-        <xsl:if test="@autoplay !=''">
-          <xsl:attribute name="data-autoplay">
-            <xsl:value-of select="@autoplay"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@autoPlaySpeed !=''">
-          <xsl:attribute name="data-autoPlaySpeed">
-            <xsl:value-of select="@autoPlaySpeed"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:choose>
-          <xsl:when test="@linkArticle='true'">
-            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-              <xsl:with-param name="sortBy" select="@sortBy"/>
-            </xsl:apply-templates>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-              <xsl:with-param name="sortBy" select="@sortBy"/>
-            </xsl:apply-templates>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="@stepCount != '0'">
-          <div class="terminus">&#160;</div>
-          <xsl:apply-templates select="/" mode="genericStepper">
-            <xsl:with-param name="articleList" select="$contentList"/>
-            <xsl:with-param name="noPerPage" select="@stepCount"/>
-            <xsl:with-param name="startPos" select="$startPos"/>
-            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-            <xsl:with-param name="totalCount" select="$totalCount"/>
-          </xsl:apply-templates>
-        </xsl:if>
-        <xsl:text> </xsl:text>
-      </div>
-    </div>
-  </xsl:template>
+     
+	<div>
+				<!--responsive columns -->
+				<xsl:apply-templates select="." mode="contentColumns"/>
+				<!--end responsive columns-->
+
+				<!-- If Stepper, display Stepper -->
+				<xsl:choose>
+					<xsl:when test="@linkArticle='true'">
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+							<xsl:with-param name="parentId" select="@id"/>
+						</xsl:apply-templates>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="@stepCount != '0'">
+					<xsl:apply-templates select="/" mode="genericStepper">
+						<xsl:with-param name="articleList" select="$contentList"/>
+						<xsl:with-param name="noPerPage" select="@stepCount"/>
+						<xsl:with-param name="startPos" select="$startPos"/>
+						<xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+						<xsl:with-param name="totalCount" select="$totalCount"/>
+					</xsl:apply-templates>
+				</xsl:if>
+				<xsl:text> </xsl:text>
+			</div>
+		</div>
+	</xsl:template>
 
 
   <!-- month heading-->
@@ -138,20 +84,109 @@
     </xsl:choose>
   </xsl:template>
 
+	<xsl:template match="Content[@type='Module' and @moduleType='EventList']" mode="themeModuleExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	</xsl:template>
+	
+	<xsl:template match="Content[@type='Module' and @moduleType='EventList']" mode="themeModuleClassExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='EventList' and @carousel='true']" mode="displayBrief">
+		<!-- Set Variables -->
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<xsl:variable name="contentList">
+			<xsl:apply-templates select="." mode="getContent">
+				<xsl:with-param name="contentType" select="$contentType" />
+				<xsl:with-param name="startPos" select="$startPos" />
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="totalCount">
+			<xsl:choose>
+				<xsl:when test="@display='related'">
+					<xsl:value-of select="count(Content[@type=$contentType])"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<!--responsive columns variables-->
+
+		<!--end responsive columns variables-->
+		<!-- Output Module -->
+		<div class="swiper-container EventList content-carousel ">
+			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
+				<div class="swiper-wrapper">
+					<xsl:apply-templates select="." mode="contentColumns">
+						<xsl:with-param name="carousel" select="@carousel"/>
+					</xsl:apply-templates>
+					<xsl:choose>
+						<xsl:when test="@linkArticle='true'">
+							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+								<xsl:with-param name="sortBy" select="@sortBy"/>
+								<xsl:with-param name="class" select="'swiper-slide'"/>
+							</xsl:apply-templates>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+								<xsl:with-param name="sortBy" select="@sortBy"/>
+								<xsl:with-param name="class" select="'swiper-slide'"/>
+							</xsl:apply-templates>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text> </xsl:text>
+				</div>
+</div>
+				<xsl:if test="@carouselBullets='true'">
+					<div class="swiper-pagination" id="swiper-pagination-{@id}">
+						<xsl:text> </xsl:text>
+					</div>
+				</xsl:if>
+			
+			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="swiper-button-next" id="swiper-button-next-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="row">
+				<span>&#160;</span>
+			</div>
+		</div>
+	</xsl:template>
+
   <!-- Event Brief -->
   <xsl:template match="Content[@type='Event']" mode="displayBrief">
-    <xsl:param name="sortBy"/>
+		<xsl:param name="sortBy"/>
+		<xsl:param name="class"/>
+		<xsl:param name="parentId"/>
     <!-- articleBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
 
-    <div class="listItem vevent">
-      <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem vevent'"/>
-        <xsl:with-param name="sortBy" select="$sortBy"/>
-      </xsl:apply-templates>
-      <div class="lIinner media">
+		<xsl:variable name="classValues">
+			<xsl:text>listItem newsarticle </xsl:text>
+			<xsl:value-of select="$class"/>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<div class="{$classValues}">
+			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+				<xsl:with-param name="pos" select="position()"/>
+			</xsl:apply-templates>
+			<xsl:apply-templates select="." mode="inlinePopupOptions">
+				<xsl:with-param name="class" select="concat('listItem event',$class)"/>
+				<xsl:with-param name="sortBy" select="$sortBy"/>
+			</xsl:apply-templates>
+
+      <div class="lIinner">
         <xsl:if test="$page/Contents/Content[@moduleType='EventList' and @groupEventsByMonth='true']">
           <xsl:variable name="thisDate">
             <xsl:value-of select="StartDate/node()"/>
@@ -178,16 +213,18 @@
         </xsl:if>
         <xsl:if test="Images/img/@src!=''">
           <a href="{$parentURL}" title="Read More - {Headline/node()}">
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
+						<xsl:apply-templates select="." mode="displayThumbnail">
+							<xsl:with-param name="class">img-fluid</xsl:with-param>
+						</xsl:apply-templates>
           </a>
+					<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
+					<span class="hidden">|</span>
         </xsl:if>
-        <div class="media-body">
-          <h4 class="media-heading">
-            <a href="{$parentURL}" title="Read More - {Headline/node()}" class="url summary">
+          <h3 class="title">
+            <a href="{$parentURL}" title="Read More - {Headline/node()}">
               <xsl:apply-templates select="." mode="getDisplayName"/>
             </a>
-
-          </h4>
+          </h3>
 
           <xsl:if test="StartDate/node()!=''">
             <p class="date">
@@ -239,6 +276,7 @@
             </div>
           </xsl:if>
           <div class="entryFooter">
+	  <xsl:apply-templates select="." mode="displayTags"/>
             <xsl:apply-templates select="." mode="moreLink">
               <xsl:with-param name="link" select="$parentURL"/>
               <xsl:with-param name="altText">
@@ -254,9 +292,8 @@
           </div>
         </div>
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus">&#160;</div>
       </div>
-    </div>
+      
   </xsl:template>
 
   <!-- Event Brief Linked -->
@@ -408,24 +445,9 @@
       <!--RELATED CONTENT-->
       <div class="row">
         <div>
-          <xsl:choose>
-            <xsl:when test="Content[@type='Ticket']">
+
               <xsl:attribute name="class">col-md-8</xsl:attribute>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:attribute name="class">col-md-12</xsl:attribute>
-              <div class="col-md-5 pull-right">
-                <xsl:apply-templates select="." mode="displayDetailImage"/>
-                <xsl:if test="@bookingURL!=''">
-                  <xsl:text> </xsl:text>
-                  <a href="{@bookingURL}" class="btn btn-success btn-block">
-                    Book Here&#160;&#160;<i class="fa fa-mouse-pointer">&#160;</i>
-                  </a>
-                </xsl:if>
-                <xsl:apply-templates select="Content[@type='Contact']" mode="displayContributor"/>
-              </div>
-            </xsl:otherwise>
-          </xsl:choose>
+         
           <xsl:if test="StartDate!=''">
             <p class="date">
               <xsl:if test="StartDate/node()!=''">
@@ -484,17 +506,17 @@
           </div>
         </div>
         <!-- Tickets  -->
-        <xsl:if test="Content[@type='Ticket']">
+
           <div class="col-md-4">
             <div class="clearfix">
               <xsl:apply-templates select="." mode="displayDetailImage"/>
             </div>
+	
             <xsl:apply-templates select="." mode="RelatedTickets">
               <xsl:with-param name="parTicketID" select="@id"/>
               <xsl:with-param name="sortBy" select="@sortBy"/>
             </xsl:apply-templates>
           </div>
-        </xsl:if>
       </div>
       <div class="terminus">&#160;</div>
       <div class="entryFooter">
@@ -526,6 +548,7 @@
           <xsl:with-param name="name"></xsl:with-param>
           <xsl:with-param name="find">false</xsl:with-param>
         </xsl:apply-templates>
+		  <xsl:if test="Content[@type='Ticket']">
         <table class="ticketsGrouped table">
           <tr>
             <th>
@@ -562,6 +585,7 @@
             <xsl:apply-templates select="/" mode="addtoCartButtons"/>
           </span>
         </div>
+			  </xsl:if>
       </div>
     </form>
   </xsl:template>

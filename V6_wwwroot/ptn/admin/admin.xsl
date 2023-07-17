@@ -1532,20 +1532,20 @@
         <xsl:if test="@status='1'">
 
           <a href="{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to hide this item" class="btn btn-xs btn-primary">
-            <i class="fa fa-eye-slash">&#160;</i>&#160;Hide
+            <i class="fas fa-eye-slash">&#160;</i>&#160;Hide
           </a>
 
         </xsl:if>
         <xsl:if test="@status='0'">
 
           <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item" class="btn btn-xs btn-primary">
-            <i class="fa fa-eye">&#160;</i>&#160;Show
+            <i class="fas fa-eye">&#160;</i>&#160;Show
           </a>
         </xsl:if>
         <xsl:if test="@status='0'">
 
           <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
-            <i class="fa fa-trash-o">&#160;</i>
+            <i class="fas fa-trash">&#160;</i>
           </a>
 
         </xsl:if>
@@ -1810,14 +1810,14 @@
         <xsl:if test="@status='0'">
           <li>
             <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item">
-              <i class="fa fa-check-square-o">&#160;</i>&#160;Show
+              <i class="fas fa-check-square">&#160;</i>&#160;Show
             </a>
           </li>
         </xsl:if>
         <xsl:if test="@status='0'">
           <li>
             <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item">
-              <i class="fa fa-trash-o">&#160;</i>&#160;Delete
+              <i class="fas fa-trash">&#160;</i>&#160;Delete
             </a>
           </li>
         </xsl:if>
@@ -2177,6 +2177,7 @@
         <xsl:with-param name="valueName" select="'MenuTreeDepth'"/>
       </xsl:call-template>
     </xsl:variable>
+	  
     <xsl:variable name="menuLevelDepth">
       <xsl:choose>
         <xsl:when test="$getMenuLevelDepth = ''">
@@ -2187,6 +2188,51 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+	  
+	  <xsl:variable name="siteURL">
+		  <xsl:call-template name="getSiteURL"/>
+	  </xsl:variable>
+	  
+	  <xsl:variable name="adminUrl">
+
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="@url"/>
+						  <xsl:value-of select="/Page/@pageExt"/>
+						  <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
+							  <xsl:text>?pgid=</xsl:text>
+							  <xsl:value-of select="@id"/>
+						  </xsl:if>
+				
+	  </xsl:variable>
+	  <xsl:variable name="redirectUrl">
+		  <xsl:choose>
+			  <xsl:when test="@url!=''">
+				  <xsl:choose>
+					  <xsl:when test="format-number(@url,'0')!='NaN'">
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+					  </xsl:when>
+					  <xsl:when test="contains(@url,'http')">
+						  <xsl:value-of select="@url"/>
+					  </xsl:when>
+					  <xsl:otherwise>
+						  <xsl:value-of select="$siteURL"/>
+						  <xsl:value-of select="@url"/>
+						  <xsl:value-of select="/Page/@pageExt"/>
+						  <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
+							  <xsl:text>?pgid=</xsl:text>
+							  <xsl:value-of select="@id"/>
+						  </xsl:if>
+					  </xsl:otherwise>
+				  </xsl:choose>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="$siteURL"/>
+				  <xsl:text>/</xsl:text>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
+	  
 
     <li id="node{@id}" data-tree-level="{$level}" data-tree-parent="{./parent::MenuItem/@id}">
       <xsl:attribute name="class">
@@ -2202,7 +2248,7 @@
 
       <div class="pageCell">
         <xsl:variable name="pageLink">
-          <xsl:apply-templates select="." mode="getHref" />
+			<xsl:value-of select="$adminUrl"/>
           <xsl:text>&amp;ewCmd=Normal</xsl:text>
           <xsl:if test="@cloneparent &gt; 0">
             <xsl:text>&amp;context=</xsl:text>
@@ -2234,6 +2280,9 @@
 
 
         </a>
+		  
+		  
+		  
       </div>
       <div class="optionButtons">
 
@@ -2311,7 +2360,7 @@
               <!--span class="hidden"> | </span-->
               <xsl:if test="@status='1'">
                 <!--a href="{$appPath}?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
-                <a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-primary btn-hide" title="Click here to hide this page">
+                <a class="btn btn-xs btn-primary btn-hide" title="Click here to hide this page">
                   <i class="fas fa-eye-slash fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
@@ -2321,13 +2370,13 @@
               </xsl:if>
               <xsl:if test="@status='0'">
                 <!--a href="{$appPath}?ewCmd=ShowPage&amp;pgid={@id}" class="adminButton show" title="Click here to hide this page">Show</a-->
-                <a onclick="$('#MenuTree').showButton({@id});" class="btn btn-xs btn-primary btn-show" title="Click here to show this page">
+                <a class="btn btn-xs btn-primary btn-show" title="Click here to show this page">
                   <i class="fas fa-eye fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Show
                 </a>
                 <!--span class="hidden"> | </span-->
-                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="text-danger plain-link" title="Click here to delete this page">
+                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="text-danger plain-link btn-del" title="Click here to delete this page">
                   <i class="fas fa-trash-alt">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Delete
@@ -4353,6 +4402,7 @@
       $('.lazy').lazy();
       });
     </script>
+
   </xsl:template>
 
 
