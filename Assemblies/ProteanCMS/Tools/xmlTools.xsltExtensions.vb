@@ -2044,23 +2044,23 @@ Partial Public Module xmlTools
                 Else
                     If Not myWeb.moRequest("rebundle") Is Nothing Then
                         bReset = True
-                        Dim oFs As New fsHelper(myWeb.moCtx)
-                        oFs.initialiseVariables(fsHelper.LibraryType.Scripts)
-                        Dim path As String = TargetPath.Replace("~", "")
-                        Dim length As Integer = path.LastIndexOf("/")
+                        'Dim oFs As New fsHelper(myWeb.moCtx)
+                        'oFs.initialiseVariables(fsHelper.LibraryType.Scripts)
+                        'Dim path As String = TargetPath.Replace("~", "")
+                        'Dim length As Integer = path.LastIndexOf("/")
 
-                        path = path.Substring(0, length)
-                        Dim sValidResponse As String = oFs.DeleteFolder("", path)
-                        myWeb.moCtx.Application.Remove(TargetPath)
-                        Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
-                        'Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
-                        Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
-                        If flag = "True" Then
-                            myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
-                        Else
-                            myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
-                        End If
-                        myConfiguration.Save()
+                        'path = path.Substring(0, length)
+                        'Dim sValidResponse As String = oFs.DeleteFolder("", path)
+                        'myWeb.moCtx.Application.Remove(TargetPath)
+                        'Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
+                        ''Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
+                        'Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
+                        'If flag = "True" Then
+                        '    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
+                        'Else
+                        '    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
+                        'End If
+                        'myConfiguration.Save()
 
                     End If
                     Dim bAppVarExists As Boolean = False
@@ -2158,24 +2158,24 @@ Partial Public Module xmlTools
 
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
                         Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
-                        Dim pathSplitString As String() = TargetPath.Split(New Char() {"/"c})
+                        'Dim pathSplitString As String() = TargetPath.Split(New Char() {"/"c})
 
-                        Dim paths As String = myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1))
-                        Dim rootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1)))
-                        If rootfolder.Exists Then
-                            ' fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "")))
-                            For Each filepath As String In Directory.GetFiles(paths)
-                                File.Delete(filepath)
-                            Next
-                            'Delete all child Directories
-                            For Each dir As String In Directory.GetDirectories(paths)
-                                For Each filepath As String In Directory.GetFiles(dir)
-                                    File.Delete(filepath)
-                                Next
-                            Next
-                            'Delete a Directory
-                            ' Directory.Delete(paths)
-                        End If
+                        'Dim paths As String = myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1))
+                        'Dim rootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1)))
+                        'If rootfolder.Exists Then
+                        '    ' fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "")))
+                        '    For Each filepath As String In Directory.GetFiles(paths)
+                        '        File.Delete(filepath)
+                        '    Next
+                        '    'Delete all child Directories
+                        '    For Each dir As String In Directory.GetDirectories(paths)
+                        '        For Each filepath As String In Directory.GetFiles(dir)
+                        '            File.Delete(filepath)
+                        '        Next
+                        '    Next
+                        '    'Delete a Directory
+                        '    ' Directory.Delete(paths)
+                        'End If
 
 
 
