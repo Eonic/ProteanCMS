@@ -2536,6 +2536,20 @@ Public Class Cms
             End If
 
             Select Case AjaxCmd
+                Case "ReviewFileUpload"
+                    Try
+
+                        Dim oFsh As fsHelper = New fsHelper
+                        oFsh.initialiseVariables(fsHelper.LibraryType.Image)
+                        oFsh.moPageXML = moPageXml
+                        Dim ProductName As String = moRequest("cProductName")
+                        If ProductName IsNot Nothing Then
+                            oFsh.UploadRequest(moCtx, ProductName)
+                        End If
+                        oFsh = Nothing
+                    Catch ex As Exception
+                        returnException(msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
+                    End Try
                 Case "BespokeProvider"
                     'Dim assemblyInstance As [Assembly]
                     Dim calledType As Type
@@ -2603,6 +2617,10 @@ Public Class Cms
 
                     ' Check if the permissions are valid
                     bUserValid = dbHelper.CanAddUpdate(nContentPermLevel) And mnUserId > 0
+                    'Dim IsReview As String = moRequest("cIsReview")
+                    'If IsReview = 1 Then
+                    bUserValid = True ' set true for submitting review functionality
+                    ' End If
 
                     ' We need to set this for version control
                     moDbHelper.CurrentPermissionLevel = nContentPermLevel
@@ -2610,6 +2628,7 @@ Public Class Cms
                     If bUserValid Then
 
                         Select Case AjaxCmd
+
                             Case "Edit"
                                 Dim xFrmContent As XmlElement
                                 xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest("type"), nPageId, moRequest("name"), , nContentId, , moRequest("formName"), "0" & moRequest("verId"))
@@ -3216,6 +3235,14 @@ Public Class Cms
         End Try
     End Sub
 
+    Private Sub CollectReview()
+        ' Create an object of protean xform 
+        ' Load ReviewFeedback.xml xform in the created object
+        ' Submit and validate the xform 
+        ' Append the xform to the template of product detail
+
+
+    End Sub
     Public Overridable Sub AddSearch(ByRef aWeb As Protean.Cms)
         oSrch = New Protean.Cms.Search(Me)
         oSrch.apply()
@@ -3378,7 +3405,9 @@ Public Class Cms
 
 
             ' placeholder for a review request
-
+            If moRequest("review") <> "" Then
+                CollectReview()
+            End If
 
             ' Count Relations
             Dim cContentIdsForRelatedCount As String = ""

@@ -35,6 +35,8 @@
     <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[contains(@class,'has-script')]" mode="xform_control_script"/>
+	  <xsl:apply-templates select="descendant-or-self::input[contains(@class,'userUploadImage')]" mode="xform_control_script"/>
+	  <h1>End of templete</h1>
   </xsl:template>
 
   <xsl:template match="*" mode="xform_control_script"></xsl:template>
@@ -4045,5 +4047,8 @@
     </script>
 
   </xsl:template>
+	<!--<xsl:template match="input[contains(@class,'userUploadImage')]" mode="xform_control_script">
+	</xsl:template>-->
+		
 
 </xsl:stylesheet>

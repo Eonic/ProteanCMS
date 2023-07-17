@@ -3,7 +3,7 @@ Option Explicit On
 Imports System.Xml
 Imports System.Web.Configuration
 Imports System.Data.SqlClient
-
+Imports System.Drawing.Imaging
 
 Partial Public Class Cms
 
@@ -263,6 +263,38 @@ Partial Public Class Cms
 
             End Function
 
+
+            'Review Path
+            Public Function ReviewImagePath(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim oFsh As fsHelper = New fsHelper
+                    Dim nFileName As String = jObj("filename").ToString()
+                    Dim storageRoot As String = jObj("storageRoot").ToString()
+                    Dim ProductName As String = jObj("ProductName").ToString()
+
+                    Dim cReviewImagePath As String = String.Empty
+
+                    If ProductName IsNot Nothing Then
+                        nFileName = Replace(nFileName, "\", "/")
+                        If Not nFileName.StartsWith("/") Then
+                            nFileName = "/" & nFileName
+                            cReviewImagePath = storageRoot + ProductName.Replace("\", "/").Replace("""", "") + nFileName
+
+                            'If cReviewImagePath.EndsWith(".svg") Then
+                            '    Return "<img src=""" & cReviewImagePath & """ alt=""""/> "
+                            'Else
+                            '    Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(myWeb.goServer.MapPath("/" & oFsh.mcRoot & nFileName))
+                            '    Return "<img src=""" & cReviewImagePath & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
+                            'End If
+                            Return cReviewImagePath
+                        End If
+
+                    End If
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
         End Class
 
 
