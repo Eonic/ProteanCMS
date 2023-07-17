@@ -2,7 +2,7 @@
 <PageLayouts imgPath="/ewcommon/images/pagelayouts">
   <ContentTypes>
     <ContentTypeGroup name="Subscriptions">
-      <ContentType type="Subscription" formPath="subscription" name="Subscription">Subscription</ContentType>
+      <ContentType type="Subscription" formPath="Subscription" name="Subscription">Subscription</ContentType>
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>

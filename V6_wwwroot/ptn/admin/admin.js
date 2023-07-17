@@ -1107,6 +1107,7 @@ Original preload function has been kept but is unused.
 
     $.extend($.fn, {
 
+        
         // Constructor
         ajaxtreeview: function (settings) {
 
@@ -1282,6 +1283,19 @@ Original preload function has been kept but is unused.
 
             });
 
+
+            $(this).find('.btn-hide').unbind("click").click(function () {
+                var pageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
+                alert(pageId);
+                $(this).hideButton(pageId);
+            });
+
+            $(this).find('.btn-show').unbind("click").click(function () {
+                var pageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
+                alert(pageId);
+                $(this).showButton(pageId);
+            });
+
         },
 
 
@@ -1393,6 +1407,19 @@ Original preload function has been kept but is unused.
 
                 ThisTree.buildTree_noreload(settings)
             });
+
+           $(this).find('.btn-hide').unbind("click").click(function () {
+               var pageId = this.parentNode.parentNode.getAttribute('id').replace("node", "");           
+               $(this).hideButton(pageId);
+               $(this).buildTree_noreload(settings)
+            });
+
+            $(this).find('.btn-show').unbind("click").click(function () {
+                var pageId = this.parentNode.parentNode.getAttribute('id').replace("node", "");     
+                $(this).showButton(pageId);
+                $(this).buildTree_noreload(settings)
+            });
+
         },
 
         hideChildren: function () {
@@ -1466,7 +1493,7 @@ Original preload function has been kept but is unused.
         // Take in the node's id as input			
         moveUp: function (moveId) {
             var moveIdNode = "node" + moveId;
-
+            var ThisTree = $('#MenuTree');
             if (!(ThisTree.find('li#' + moveIdNode).hasClass("locked"))) {
                 ThisTree.find('li#' + moveIdNode).addClass("locked");
                 var thisParentId = ThisTree.find('li#' + moveIdNode).data('tree-parent')
@@ -1498,6 +1525,7 @@ Original preload function has been kept but is unused.
         moveDown: function (moveId) {
             var moveIdNode = "node" + moveId;
 
+            var ThisTree = $('#MenuTree');
             if (!(ThisTree.find('li#' + moveIdNode).hasClass("locked"))) {
                 ThisTree.find(' li#' + moveIdNode).addClass("locked");
 
@@ -1524,6 +1552,7 @@ Original preload function has been kept but is unused.
 
         moveTop: function (moveId) {
             var moveIdNode = "node" + moveId;
+            var ThisTree = $('#MenuTree');
             //alert(moveId);
             if (!(ThisTree.find('li#' + moveIdNode).hasClass("locked"))) {
                 ThisTree.find('li#' + moveIdNode).addClass("locked");
@@ -1546,6 +1575,7 @@ Original preload function has been kept but is unused.
 
         moveBottom: function (moveId) {
             var moveIdNode = "node" + moveId;
+            var ThisTree = $('#MenuTree');
 
             if (!(ThisTree.find('li#' + moveIdNode).hasClass("locked"))) {
                 ThisTree.find('li#' + moveIdNode).addClass("locked");
@@ -1569,35 +1599,33 @@ Original preload function has been kept but is unused.
         hideButton: function (hideId) {
 
             var hideIdNode = "node" + hideId;
+            var ThisTree = $('#MenuTree');
             if (!(ThisTree.find('li#' + hideIdNode).hasClass("locked"))) {
-                ThisTree.find('li#' + hideIdNode).addClass("locked");
-
+                ThisTree.find('li#' + hideIdNode).addClass("locked");               
                 ThisTree.find('li#' + hideIdNode).fadeTo("fast", 0.25);
                 var i = Math.round(10000 * Math.random());
+                var callUrl = '?ewCmd=HidePage&pgid=' + hideId + '&a=' + i;               
                 $.ajax({
-                    url: '?ewCmd=HidePage' + decodeURIComponent("%26") + 'pgid=' + hideId + '&a=' + i,
+                    url: callUrl,
                     success: function () {
-
                         ThisTree.find('li#' + hideIdNode + ' a.btn-hide').remove();
                         ThisTree.find('li#' + hideIdNode + ' a.btn-show').remove();
-                        ThisTree.find('li#' + hideIdNode + ' div.optionButtons:first').append(' <a onclick="$(\'#MenuTree\').showButton(' + hideId + ');" class="btn btn-xs btn-success btn-show" title="Click here to show this page"><i class="fa fa-check-circle fa-white"> </i> Show</a>');
-                        ThisTree.find('li#' + hideIdNode + ' div.optionButtons:first').append(' <a href="?ewCmd=DeletePage&amp;pgid=' + hideId + '" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page"><i class="fa fa-trash-o fa-white"> </i> Delete</a>');
+                        ThisTree.find('li#' + hideIdNode + ' div.optionButtons:first').append(' <a class="btn btn-xs btn-primary btn-show" title="Click here to show this page"><i class="fas fa-eye fa-white"> </i> Show</a>');
+                        ThisTree.find('li#' + hideIdNode + ' div.optionButtons:first').append(' <a href="?ewCmd=DeletePage&amp;pgid=' + hideId + '" class="text-danger plain-link btn-del" title="Click here to delete this page"><i class="fas fa-trash-alt fa-white"> </i> Delete</a>');
 
-                        if (ThisTree.find('li#' + hideIdNode + ' i.status').hasClass('active')) {
-                            ThisTree.find('li#' + hideIdNode + ' i.status').removeClass('active')
-                            ThisTree.find('li#' + hideIdNode + ' i.status').addClass('inactive')
-                            ThisTree.find('li#' + hideIdNode + ' i.status').addClass('text-muted')
-
+                        if (ThisTree.find('li#' + hideIdNode + ' .pageCell i').hasClass('active')) {
+                            ThisTree.find('li#' + hideIdNode + ' .pageCell i').removeClass('active');
+                            ThisTree.find('li#' + hideIdNode + ' .pageCell i').addClass('inactive');
+                            ThisTree.find('li#' + hideIdNode + ' .pageCell i').removeClass('fas');
+                            ThisTree.find('li#' + hideIdNode + ' .pageCell i').addClass('far');
                         }
-                        else if (ThisTree.find('li#' + hideIdNode + ' i.status').hasClass('activeParent')) {
-                            ThisTree.find('li#' + hideIdNode + ' i.status').removeClass('activeParent')
-                            ThisTree.find('li#' + hideIdNode + ' i.status').addClass('inactiveParent')
-                            ThisTree.find('li#' + hideIdNode + ' i.status').addClass('text-muted')
-                        }
-
+                        ThisTree.find('li#' + hideIdNode).addClass('inactive-row');
                         ThisTree.find('li#' + hideIdNode).fadeTo("fast", 1.0);
                         ThisTree.find('li#' + hideIdNode).removeClass("locked");
                         ThisTree.applyLast();
+                        ThisTree.find('li#' + hideIdNode + ' .btn-show').click(function () {
+                            $(this).showButton(hideId);
+                        });
                     }
                 });
             }
@@ -1605,33 +1633,34 @@ Original preload function has been kept but is unused.
 
         showButton: function (showId) {
             var showIdNode = "node" + showId;
+            var ThisTree = $('#MenuTree');
             if (!(ThisTree.find('li#' + showIdNode).hasClass("locked"))) {
                 ThisTree.find('li#' + showIdNode).addClass("locked");
-
                 ThisTree.find('li#' + showIdNode).fadeTo("fast", 0.25);
                 var i = Math.round(10000 * Math.random());
+                var callurl = '?ewCmd=ShowPage&pgid=' + showId + '&a=' + i;             
                 $.ajax({
-                    url: '?ewCmd=ShowPage' + decodeURIComponent("%26") + 'pgid=' + showId + '&a=' + i,
+                    url: callurl,
                     success: function () {
                         //Sort out removal of button and then addition of others
                         ThisTree.find('li#' + showIdNode + ' a.btn-del:first').remove();
                         ThisTree.find('li#' + showIdNode + ' a.btn-show').remove();
-                        ThisTree.find('li#' + showIdNode + ' div.optionButtons:first').append('<a onclick="$(\'#MenuTree\').hideButton(' + showId + ');" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page"><i class="fa fa-times-circle fa-white"> </i> Hide</a>');
+                        ThisTree.find('li#' + showIdNode + ' div.optionButtons:first').append('<a class="btn btn-xs btn-primary btn-hide" title="Click here to hide this page"><i class="fas fa-eye-slash fa-white"> </i> Hide</a>');
 
-                        if (ThisTree.find('li#' + showIdNode + ' i.status').hasClass('inactive')) {
-                            ThisTree.find('li#' + showIdNode + ' i.status').removeClass('inactive')
-                            ThisTree.find('li#' + showIdNode + ' i.status').addClass('active')
-                            ThisTree.find('li#' + showIdNode + ' i.status').removeClass('text-muted')
-                        }
-                        else if (ThisTree.find('li#' + showIdNode + ' i.status').hasClass('inactiveParent')) {
-                            ThisTree.find('li#' + showIdNode + ' i.status').removeClass('inactiveParent')
-                            ThisTree.find('li#' + showIdNode + ' i.status').addClass('activeParent')
-                            ThisTree.find('li#' + showIdNode + ' i.status').removeClass('text-muted')
+                        if (ThisTree.find('li#' + showIdNode + ' .pageCell i').hasClass('inactive')) {
+                            ThisTree.find('li#' + showIdNode + ' .pageCell i').removeClass('inactive');
+                            ThisTree.find('li#' + showIdNode + ' .pageCell i').addClass('active');
+                            ThisTree.find('li#' + showIdNode + ' .pageCell i').removeClass('far');
+                            ThisTree.find('li#' + showIdNode + ' .pageCell i').addClass('fas');
                         }
 
+                        ThisTree.find('li#' + showIdNode).removeClass('inactive-row');
                         ThisTree.find('li#' + showIdNode).fadeTo("fast", 1.0);
                         ThisTree.find('li#' + showIdNode).removeClass("locked");
                         ThisTree.applyLast();
+                        ThisTree.find('li#' + showIdNode + ' .btn-hide').click(function () {
+                            $(this).hideButton(showId);
+                        });
                     }
                 });
             }
