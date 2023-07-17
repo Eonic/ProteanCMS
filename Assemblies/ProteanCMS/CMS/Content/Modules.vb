@@ -318,6 +318,9 @@ where cl.nStructId = " & myWeb.mnPageId)
             Public Sub ListHistoricEvents(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Dim cProcessInfo As String = "ListHistoricEvents"
                 Dim PageId As String = oContentNode.GetAttribute("grabberRoot")
+                If PageId = "" Then
+                    PageId = myWeb.mnPageId
+                End If
                 Dim nItemsPerPage As Long = 0
                 Dim nCurrentPage As Long = 1
 

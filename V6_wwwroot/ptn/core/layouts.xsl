@@ -116,8 +116,11 @@
 					<xsl:variable name="backgroundResized-xxl-webp" select="ew:CreateWebP(@backgroundImage)"/>
 					<section class="wrapper-sm {@background}">
 						<xsl:attribute name="class">
-							<xsl:text>wrapper-sm </xsl:text>
+							<xsl:text>wrapper-sm section-spacing </xsl:text>
+							<xsl:if test="@background!='false'">
 							<xsl:value-of select="@background"/>
+							<xsl:text> </xsl:text>
+							</xsl:if>
 							<xsl:apply-templates select="." mode="hideScreens" />
 							<xsl:if test="@marginBelow='false'">
 								<xsl:text> mb-0 </xsl:text>
