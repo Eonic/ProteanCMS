@@ -1151,6 +1151,38 @@ Public Class Cms
         End If
     End Sub
 
+    '1) Set CompiledTransform mode= off, in protean.web.config.
+    '2) toggle reset flag in web.config
+    '3) delete all files from xsltc
+    '4) Rebundle the js file
+    '5) Set CompiledTransform mode= on, in protean.web.config.
+    '6) toggle reset flag in web.config
+
+
+    Private Sub ResetCompiledModeInConfig(ByRef sflag As String)
+        Dim sProcessInfo As String = ""
+        Dim oFsH As New Protean.fsHelper(moAdmin.myWeb.moCtx)
+        Dim oDefaultCfgXml As New XmlDocument
+        Try
+
+
+            If File.Exists(moAdmin.myWeb.goServer.MapPath("/protean.web.config")) Then
+                Dim vPath As String = moAdmin.myWeb.goServer.MapPath("/protean.web.config")
+                oDefaultCfgXml.Load(vPath)
+                If sflag = "on" Then
+                    oDefaultCfgXml.SelectSingleNode("descendant-or-self::web/add[@key='CompiledTransform']").Attributes("value").Value = "on"
+
+                ElseIf sflag = "off" Then
+                    oDefaultCfgXml.SelectSingleNode("descendant-or-self::web/add[@key='CompiledTransform']").Attributes("value").Value = "off"
+                End If
+
+                oDefaultCfgXml.Save(vPath)
+            End If
+
+        Catch ex As Exception
+            returnException(moAdmin.myWeb.msException, mcModuleName, "ResetCompiledModeInConfig", ex, "", sProcessInfo, gbDebug)
+        End Try
+    End Sub
 
 
     Public Overridable Sub GetPageHTML()
@@ -1365,6 +1397,24 @@ Public Class Cms
                                     End If
 
                                     Dim brecompile As Boolean = False
+
+                                    If moRequest("resetxslt") <> "" Then
+
+                                        If moRequest("resetxslt") = "del" Then
+                                            Dim oFS As New Protean.fsHelper(moCtx)
+                                            oFS.mcRoot = gcProjectPath
+                                            oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
+                                            oFS.DeleteFolderContents("", "")
+                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
+                                            moAdmin.ResetFlagInWebConfig()
+                                        Else
+                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
+                                            moAdmin.ResetFlagInWebConfig()
+                                            msRedirectOnEnd = "/?resetxslt=del"
+                                        End If
+
+
+                                    End If
 
                                     If moRequest("recompile") <> "" Then
                                         'add delete xsltc flag to web.config
