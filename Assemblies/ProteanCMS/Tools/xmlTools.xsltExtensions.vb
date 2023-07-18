@@ -2032,6 +2032,7 @@ Partial Public Module xmlTools
                     'likely to be in error condition
                     sReturnString = CommaSeparatedFilenames.Replace("~", "")
                 Else
+                    'Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                     If Not myWeb.moRequest("rebundle") Is Nothing Then
                         bReset = True
 
