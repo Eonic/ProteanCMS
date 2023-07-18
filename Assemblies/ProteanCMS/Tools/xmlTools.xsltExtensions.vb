@@ -2036,12 +2036,13 @@ Partial Public Module xmlTools
 
                 'End If
                 ' Next
-                Dim fsh As New Protean.fsHelper(myWeb.moCtx)
+
                 Dim bReset As Boolean = False
                 If myWeb Is Nothing Or gbDebug Then
                     'likely to be in error condition
                     sReturnString = CommaSeparatedFilenames.Replace("~", "")
                 Else
+                    'Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                     If Not myWeb.moRequest("rebundle") Is Nothing Then
                         bReset = True
                         'Dim oFs As New fsHelper(myWeb.moCtx)
@@ -2153,7 +2154,7 @@ Partial Public Module xmlTools
                         Dim scriptFile As String
                         scriptFile = TargetPath & "/script.js"
 
-                        'Dim fsh As New Protean.fsHelper(myWeb.moCtx)
+                        Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                         fsh.initialiseVariables(fsHelper.LibraryType.Scripts)
 
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
