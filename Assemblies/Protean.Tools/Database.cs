@@ -351,30 +351,7 @@ namespace Protean.Tools
             }
         }
 
-        private void ResetConnection(string cConn)
-        {
-            try
-            {
-                CloseConnection();
-                // This was calling an error and am not sure if it is needed. so have removed whilst evalutating
-                // CloseConnectionPool()
-                if (cConn == string.Empty)
-                {
-                    ResetConnection();
-                }
-                else
-                {
-                    oConn = new SqlConnection(cConn);
-                    ConnectionStringChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-            catch (Exception ex)
-            {
-
-                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetConnection", ex, "Setting Connection Info", 0));
-            }
-        }
-
+       
         public bool CreateDatabase(string databasename)
         {
             string cProcessInfo = "createDB";
@@ -708,44 +685,7 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
-        public int ExeProcessSql(string sql, string cConn)
-        {
-            int nUpdateCount = 0;
-            string cProcessInfo = "Running: " + sql;
-            SqlConnection oConnection = null;
-
-            try
-            {
-
-                if (cConn != string.Empty)
-                {
-                    oConnection = new SqlConnection(cConn);
-                }
-                else
-                {
-                    oConnection = oConn;
-                }
-
-
-                SqlCommand oCmd = new SqlCommand(sql, oConnection);
-
-                if (oConnection.State == System.Data.ConnectionState.Closed)
-                    oConnection.Open();
-                cProcessInfo = "Running Sql: " + sql;
-                nUpdateCount = oCmd.ExecuteNonQuery();
-
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
-            }
-            catch (Exception ex)
-            {
-                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSql", ex, cProcessInfo));
-            }
-            finally
-            {
-                CloseConnection();
-            }
-            return nUpdateCount;
-        }
+        
 
         public void ExeProcessSql(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null)
         {
@@ -792,15 +732,10 @@ namespace Protean.Tools
         public int ExeProcessSqlfromFile(string filepath)
         {
             string errmsg = "";
-            return ExeProcessSqlfromFile(filepath, ref errmsg, String.Empty);
+            return ExeProcessSqlfromFile(filepath, ref errmsg);
         }
 
-        public int ExeProcessSqlfromFile(string filepath, string cCon)
-        {
-            string errmsg = "";
-            return ExeProcessSqlfromFile(filepath, ref errmsg, cCon);
-        }
-
+    
         public int ExeProcessSqlfromFile(string filepath, ref string errmsg)
         {
             int nUpdateCount;
@@ -837,51 +772,7 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
-        public int ExeProcessSqlfromFile(string filepath, ref string errmsg, string cCon)
-        {
-            int nUpdateCount;
-            string vstrSql;
-            System.IO.StreamReader oFr;
-            SqlConnection oConnection = null;
-            string cProcessInfo = filepath;
-            try
-            {
-
-                // Dot Net version will only work with Sql Server at the moment, we'll need to cater for other connectors here.
-
-                if (cCon != string.Empty)
-                {
-                    oConnection = new SqlConnection(cCon);
-                }
-                else
-                {
-                    oConnection = oConn;
-                }
-
-                oFr = System.IO.File.OpenText(filepath);
-                vstrSql = oFr.ReadToEnd();
-                oFr.Close();
-                SqlCommand oCmd = new SqlCommand(vstrSql, oConnection);
-                if (oConnection.State == ConnectionState.Closed)
-                    oConnection.Open();
-                cProcessInfo = "Running Sql ('" + filepath + "'): "; // & vstrSql
-                nUpdateCount = oCmd.ExecuteNonQuery();
-
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
-            }
-            catch (Exception ex)
-            {
-                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSqlfromFile", ex, cProcessInfo));
-                errmsg = ex.Message;
-                nUpdateCount = -1;
-            }
-            finally
-            {
-                CloseConnection();
-            }
-            return nUpdateCount;
-        }
-
+      
         public int ExeProcessSqlorIgnore(string sql)
         {
             int nUpdateCount;
@@ -1046,7 +937,7 @@ namespace Protean.Tools
                 SqlConnection oConnection = null;
                 oConnection = oConn;
                 if (oConnection == null)
-                    ResetConnection(cConn);
+                    ResetConnection();
                 if(cConn!=string.Empty)
                 {
                     oConnection = new SqlConnection(cConn);

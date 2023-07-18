@@ -846,7 +846,6 @@ Recheck:
 
             Dim oUpgrdXML As New XmlDocument
             Dim errormsg As String
-            Dim cCon As String = String.Empty
             Dim mConfig As System.Collections.Specialized.NameValueCollection = Nothing
             If IO.File.Exists(goServer.MapPath(filePath)) Then
 
@@ -873,10 +872,14 @@ Recheck:
                         oDBUserName = Convert.ToString(mConfig("DatabaseUser"))
                         oDBPassword = Convert.ToString(mConfig("DatabasePassword"))
 
-                        cCon = "Data Source=" & oDBServerName & "; Initial Catalog=" & oDBName & ";"
-                        cCon &= "user id=" & oDBUserName & "; password=" & oDBPassword
+                        'cCon = "Data Source=" & oDBServerName & "; Initial Catalog=" & oDBName & ";"
+                        'cCon &= "user id=" & oDBUserName & "; password=" & oDBPassword
+                        myWeb.moDbHelper.DatabaseName = oDBName
+                        myWeb.moDbHelper.DatabaseServer = oDBServerName
+                        myWeb.moDbHelper.DatabaseUser = oDBUserName
+                        myWeb.moDbHelper.DatabasePassword = oDBPassword
 
-                        cCurrentVersion = getVersionNumber(cCon)
+                        cCurrentVersion = getVersionNumber()
                     End If
 
                 Else
@@ -886,11 +889,11 @@ Recheck:
                 Dim oCurrentVersion() As String = Split(cCurrentVersion, ".")
                 Dim cLatestVersion As String = oUpgrdXML.DocumentElement.GetAttribute("LatestVersion")
                 If cLatestVersion = cCurrentVersion Then Return True
-                If (cCon = String.Empty) Then
-                    'Remove all foreign keys
-                    myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & "/toV4/DropAllForeignKeys.sql")
+
+                'Remove all foreign keys
+                myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & "/toV4/DropAllForeignKeys.sql")
                     myWeb.msException = ""
-                End If
+
                 AddResponse("Running updates to version: " & cLatestVersion)
                     AddResponse("Running File: " & filePath)
 
@@ -916,23 +919,18 @@ Recheck:
                                                     Dim oActionElmt As XmlElement
                                                     Dim cConn As String = String.Empty
                                                     For Each oActionElmt In Sub3.SelectNodes("Action")
-                                                        If oActionElmt.GetAttribute("dbref") IsNot Nothing Then
-                                                            If oActionElmt.GetAttribute("dbref") <> String.Empty Then
-                                                                cConn = cCon
-                                                            End If
-                                                        End If
-                                                        Try
+                                                              Try
                                                             Select Case oActionElmt.GetAttribute("Type")
                                                                 Case "Drop"
-                                                                    ifSqlObjectExistsDropIt(oActionElmt.GetAttribute("ObjectName"), oActionElmt.GetAttribute("ObjectType"), cConn)
-                                                                    AddResponse("dropped '" & oActionElmt.GetAttribute("ObjectName") & "'")
+                                                                ifSqlObjectExistsDropIt(oActionElmt.GetAttribute("ObjectName"), oActionElmt.GetAttribute("ObjectType"))
+                                                                AddResponse("dropped '" & oActionElmt.GetAttribute("ObjectName") & "'")
                                                                 Case "File"
                                                                     Dim nCount As Long
                                                                     AddResponse("Run File '" & oActionElmt.GetAttribute("ObjectName") & "'")
                                                                     errormsg = ""
-                                                                    nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & oActionElmt.GetAttribute("ObjectName"), errormsg, cConn)
+                                                                nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(rootPath & oActionElmt.GetAttribute("ObjectName"), errormsg)
 
-                                                                    If errormsg <> "" Then
+                                                                If errormsg <> "" Then
                                                                         AddResponse("<strong style=""color:#ff0000"">WARNING: File execution generated an error</strong>")
                                                                         AddResponse("<p style=""color:#ff0000"">" & errormsg & "</p>")
                                                                     Else
@@ -978,7 +976,7 @@ Recheck:
                         End If
                     Next
                     If oUpgrdXML.DocumentElement.GetAttribute("update") <> "false" Then
-                    saveVersionNumber(cLatestVersion, cCon)
+                    saveVersionNumber(cLatestVersion)
                     mnCurrentVersion = cLatestVersion
                         cLatestVersion = cLatestVersion & " - Updated DB version"
                     Else
@@ -1148,7 +1146,7 @@ Recheck:
             'create the version table if not exists
             Dim sFilePath As String = dbUpdatePath & "/toV4/4.1.1.35/tblSchemaVersion.sql"
             If Not myWeb.moDbHelper.checkDBObjectExists("tblSchemaVersion", Tools.Database.objectTypes.Table, cConn) Then
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(sFilePath), "", cConn)
+                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(sFilePath))
             End If
 
             Dim aVersionNumber() As String = Split(cVersionNumber, ".")
@@ -1933,7 +1931,7 @@ DoOptions:
             AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "ifTableExistsDropIt", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
-    Private Sub ifSqlObjectExistsDropIt(ByRef sName As String, ByRef sObjectType As String, ByRef cCon As String)
+    Private Sub ifSqlObjectExistsDropIt(ByRef sName As String, ByRef sObjectType As String)
 
         Dim sSqlStr As String
         Dim cProcessInfo As String = "ifTableExistsDropIt"
@@ -1951,7 +1949,7 @@ DoOptions:
 
             sSqlStr = "if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[" & sName & "]') and " & sObjProperty & ")"
             sSqlStr = sSqlStr & "drop " & LCase(sObjectType) & " [dbo].[" & sName & "] "
-            myWeb.moDbHelper.ExeProcessSql(sSqlStr, cCon)
+            myWeb.moDbHelper.ExeProcessSql(sSqlStr)
 
         Catch ex As Exception
             AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
