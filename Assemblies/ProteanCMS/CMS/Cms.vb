@@ -2617,10 +2617,12 @@ Public Class Cms
 
                     ' Check if the permissions are valid
                     bUserValid = dbHelper.CanAddUpdate(nContentPermLevel) And mnUserId > 0
-                    'Dim IsReview As String = moRequest("cIsReview")
-                    'If IsReview = 1 Then
-                    bUserValid = True ' set true for submitting review functionality
-                    ' End If
+
+                    If moRequest("type") IsNot Nothing Then
+                        If moRequest("type").ToLower() = "review" Then
+                            bUserValid = True ' set true for submitting review functionality
+                        End If
+                    End If
 
                     ' We need to set this for version control
                     moDbHelper.CurrentPermissionLevel = nContentPermLevel

@@ -268,17 +268,27 @@ Partial Public Class Cms
             Public Function ReviewImagePath(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim oFsh As fsHelper = New fsHelper
-                    Dim nFileName As String = jObj("filename").ToString()
-                    Dim storageRoot As String = jObj("storageRoot").ToString()
-                    Dim ProductName As String = jObj("ProductName").ToString()
+                    Dim cFileName As String = String.Empty
+                    Dim cStorageRoot As String = String.Empty
+                    Dim cProductName As String = String.Empty
+
+                    If jObj("filename").ToString() IsNot Nothing Then
+                        cFileName = jObj("filename").ToString()
+                    End If
+                    If jObj("storageRoot").ToString() IsNot Nothing Then
+                        cStorageRoot = jObj("storageRoot").ToString()
+                    End If
+                    If jObj("ProductName").ToString() IsNot Nothing Then
+                        cProductName = jObj("ProductName").ToString()
+                    End If
 
                     Dim cReviewImagePath As String = String.Empty
 
-                    If ProductName IsNot Nothing Then
-                        nFileName = Replace(nFileName, "\", "/")
-                        If Not nFileName.StartsWith("/") Then
-                            nFileName = "/" & nFileName
-                            cReviewImagePath = storageRoot + ProductName.Replace("\", "/").Replace("""", "") + nFileName
+                    If cProductName IsNot Nothing Then
+                        cFileName = Replace(cFileName, "\", "/")
+                        If Not cFileName.StartsWith("/") Then
+                            cFileName = "/" & cFileName
+                            cReviewImagePath = cStorageRoot + cProductName.Replace("\", "/").Replace("""", "") + cFileName
 
                             'If cReviewImagePath.EndsWith(".svg") Then
                             '    Return "<img src=""" & cReviewImagePath & """ alt=""""/> "
@@ -291,7 +301,7 @@ Partial Public Class Cms
 
                     End If
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""))
                     Return ex.Message
                 End Try
             End Function
