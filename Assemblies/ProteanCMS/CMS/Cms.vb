@@ -12,6 +12,7 @@ Imports System.Linq
 Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
 
+
 Public Class Cms
     Inherits Base
     Implements IDisposable
@@ -1153,6 +1154,9 @@ Public Class Cms
 
 
 
+
+
+
     Public Overridable Sub GetPageHTML()
         PerfMon.Log("Web", "GetPageHTML - start")
         Dim sProcessInfo As String = ""
@@ -1367,17 +1371,39 @@ Public Class Cms
                                     Dim brecompile As Boolean = False
 
                                     If moRequest("recompile") <> "" Then
-                                        'add delete xsltc flag to web.config
+
                                         If moRequest("recompile") = "del" Then
-                                            brecompile = True
-                                            msRedirectOnEnd = Nothing
+                                            Dim oFS As New Protean.fsHelper(moCtx)
+                                            oFS.mcRoot = gcProjectPath
+                                            oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
+                                            oFS.DeleteFolderContents("", "")
+                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
+                                            Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
+                                            msRedirectOnEnd = "/?rebundle=true"
+
                                         Else
+                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
+                                            'just sent value as it might be true when user did ResetConfig
+                                            'to avoid skipping update functionality, we are just set it differently
+                                            Protean.Config.UpdateConfigValue(Me, "", "recompile", "recompiling")
                                             msRedirectOnEnd = "/?recompile=del"
-                                            bRestartApp = True
-                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "rebuild")
                                         End If
 
+
                                     End If
+
+                                    'If moRequest("recompile") <> "" Then
+                                    '    'add delete xsltc flag to web.config
+                                    '    If moRequest("recompile") = "del" Then
+                                    '        brecompile = True
+                                    '        msRedirectOnEnd = Nothing
+                                    '    Else
+                                    '        msRedirectOnEnd = "/?recompile=del"
+                                    '        bRestartApp = True
+                                    '        Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "rebuild")
+                                    '    End If
+
+                                    'End If
 
                                     Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
                                     If moConfig("XslTimeout") <> "" Then
@@ -5730,59 +5756,59 @@ Public Class Cms
                 ' Start with the base path
                 sUrl = moConfig("BasePath") & urlPrefix & cFilePathModifier
 
-                    If moConfig("UsePageIdsForURLs") = "on" Then
-                        ' Use the page ID instead of a Pretty URL
-                        sUrl = sUrl & "/?pgid=" & oMenuItem.GetAttribute("id")
-                    Else
-                        ' Get all the descendant menuitems and append the names onto the Url string
-                        For Each oDescendant As XmlElement In oMenuItem.SelectNodes("ancestor-or-self::" & cMenuItemNodeName & "[ancestor::MenuItem[@id=" & nRootId & "]]")
-                            If Not oDescendant.ParentNode.Name = "Menu" Then
-                                If moConfig("PageURLFormat") = "hyphens" Then
-                                    cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-")
-                                Else
-                                    cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
-                                End If
-                                If Not foldersExcludedFromPaths.Contains(LCase(cPageName)) Then
-                                    sUrl = sUrl & "/" & cPageName
-                                End If
-
+                If moConfig("UsePageIdsForURLs") = "on" Then
+                    ' Use the page ID instead of a Pretty URL
+                    sUrl = sUrl & "/?pgid=" & oMenuItem.GetAttribute("id")
+                Else
+                    ' Get all the descendant menuitems and append the names onto the Url string
+                    For Each oDescendant As XmlElement In oMenuItem.SelectNodes("ancestor-or-self::" & cMenuItemNodeName & "[ancestor::MenuItem[@id=" & nRootId & "]]")
+                        If Not oDescendant.ParentNode.Name = "Menu" Then
+                            If moConfig("PageURLFormat") = "hyphens" Then
+                                cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-")
+                            Else
+                                cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"))
                             End If
-                        Next
-                    End If
+                            If Not foldersExcludedFromPaths.Contains(LCase(cPageName)) Then
+                                sUrl = sUrl & "/" & cPageName
+                            End If
 
-                    If moConfig("TrailingSlash") = "on" Then
-                        sUrl = "/" & sUrl.Trim("/") & "/"
-                    End If
-
-                    ' Account for a root url
-                    If sUrl = "" Then
-                        sUrl = "/"
-                    End If
-
-                    If sUrl = "//" Then
-                        sUrl = "/"
-                    End If
-
-                    If sUrl = "/" Then
-                        sUrl = DomainURL
-                        If moRequest.ServerVariables("SERVER_PORT") <> "80" And moRequest.ServerVariables("SERVER_PORT") <> "443" Then
-                            sUrl = sUrl & ":" & moRequest.ServerVariables("SERVER_PORT")
                         End If
+                    Next
+                End If
+
+                If moConfig("TrailingSlash") = "on" Then
+                    sUrl = "/" & sUrl.Trim("/") & "/"
+                End If
+
+                ' Account for a root url
+                If sUrl = "" Then
+                    sUrl = "/"
+                End If
+
+                If sUrl = "//" Then
+                    sUrl = "/"
+                End If
+
+                If sUrl = "/" Then
+                    sUrl = DomainURL
+                    If moRequest.ServerVariables("SERVER_PORT") <> "80" And moRequest.ServerVariables("SERVER_PORT") <> "443" Then
+                        sUrl = sUrl & ":" & moRequest.ServerVariables("SERVER_PORT")
                     End If
-                    If moConfig("LowerCaseUrl") = "on" Then
-                        sUrl = sUrl.ToLower()
-                    End If
-                    'for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
-                    If mbAdminMode _
-                        And moConfig("pageExt") = "" _
-                        And moConfig("UsePageIdsForURLs") <> "on" _
-                        Then sUrl = sUrl & "?pgid=" & oMenuItem.GetAttribute("id")
+                End If
+                If moConfig("LowerCaseUrl") = "on" Then
+                    sUrl = sUrl.ToLower()
+                End If
+                'for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
+                If mbAdminMode _
+                    And moConfig("pageExt") = "" _
+                    And moConfig("UsePageIdsForURLs") <> "on" _
+                    Then sUrl = sUrl & "?pgid=" & oMenuItem.GetAttribute("id")
 
 
 
-                    If moConfig("LowerCaseUrl") = "on" Then
-                        sUrl = sUrl.ToLower()
-                    End If
+                If moConfig("LowerCaseUrl") = "on" Then
+                    sUrl = sUrl.ToLower()
+                End If
 
                 If oMenuItem.GetAttribute("url") = "" Then
                     oMenuItem.SetAttribute("url", sUrl)

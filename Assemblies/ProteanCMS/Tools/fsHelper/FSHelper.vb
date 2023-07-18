@@ -521,7 +521,9 @@ Partial Public Class fsHelper
 
             If dir.Exists Then
                 Dim f As FileInfo
+                dir.Attributes = FileAttributes.Normal
                 For Each f In dir.GetFiles()
+                    f.Attributes = FileAttributes.Normal
                     f.Delete()
                 Next f
                 Dim d As DirectoryInfo

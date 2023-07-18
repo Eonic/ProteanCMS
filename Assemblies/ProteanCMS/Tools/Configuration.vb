@@ -56,8 +56,16 @@ Public Class Config
                 oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup"))
             End If
 
+            If (configPath = "") Then
+                If (oCfg.AppSettings.Settings(name) IsNot Nothing) Then
+                    oCfg.AppSettings.Settings(name).Value = value
+                Else
+                    oCfg.AppSettings.Settings.Add(name, value)
+                End If
 
-            Dim oConfigDoc As New XmlDocument
+            Else
+
+                Dim oConfigDoc As New XmlDocument
                 oConfigDoc.LoadXml(oCgfSect.SectionInformation.GetRawXml)
                 Dim oelmt As XmlElement
                 oelmt = oConfigDoc.DocumentElement.SelectSingleNode("add[@key='" & name & "']")
@@ -70,8 +78,8 @@ Public Class Config
                     oConfigDoc.DocumentElement.AppendChild(oelmt)
                 End If
                 oCgfSect.SectionInformation.RestartOnExternalChanges = False
-            oCgfSect.SectionInformation.SetRawXml(oConfigDoc.DocumentElement.OuterXml)
-
+                oCgfSect.SectionInformation.SetRawXml(oConfigDoc.DocumentElement.OuterXml)
+            End If
             oCfg.Save()
 
             If myWeb.impersonationMode Then

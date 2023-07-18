@@ -2026,16 +2026,6 @@ Partial Public Module xmlTools
 
             Try
 
-                'Convert JSX files
-                'Dim bundleFilePaths As String() = Split(CommaSeparatedFilenames, ",")
-                '  Dim filename As String
-                ' For Each filename In bundleFilePaths
-                ' If filename.EndsWith(".jsx") Then
-                '    Dim ReactEnv As React.IReactEnvironment =
-                '    React.IReactEnvironment.Babel.TransformAndSaveFile(filename)
-
-                'End If
-                ' Next
 
                 Dim bReset As Boolean = False
                 If myWeb Is Nothing Or gbDebug Then
@@ -2045,24 +2035,24 @@ Partial Public Module xmlTools
                     'Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                     If Not myWeb.moRequest("rebundle") Is Nothing Then
                         bReset = True
-                        'Dim oFs As New fsHelper(myWeb.moCtx)
-                        'oFs.initialiseVariables(fsHelper.LibraryType.Scripts)
-                        'Dim path As String = TargetPath.Replace("~", "")
-                        'Dim length As Integer = path.LastIndexOf("/")
 
-                        'path = path.Substring(0, length)
-                        'Dim sValidResponse As String = oFs.DeleteFolder("", path)
-                        'myWeb.moCtx.Application.Remove(TargetPath)
-                        'Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
-                        ''Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
-                        'Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
-                        'If flag = "True" Then
-                        '    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
-                        'Else
-                        '    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
-                        'End If
-                        'myConfiguration.Save()
+                        'code for deleting script.js file from the bundle folders.
+                        Dim pathSplitString As String() = TargetPath.Split(New Char() {"/"c})
 
+                        Dim paths As String = myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1))
+                        Dim rootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1)))
+                        If rootfolder.Exists Then
+                            For Each filepath As String In Directory.GetFiles(paths)
+                                File.Delete(filepath)
+                            Next
+                            'Delete all child Directories
+                            For Each dir As String In Directory.GetDirectories(paths)
+                                For Each filepath As String In Directory.GetFiles(dir)
+                                    File.Delete(filepath)
+                                Next
+                            Next
+                        End If
+                        myWeb.moCtx.Application.Remove(TargetPath)
                     End If
                     Dim bAppVarExists As Boolean = False
                     If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
@@ -2159,24 +2149,7 @@ Partial Public Module xmlTools
 
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
                         Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
-                        'Dim pathSplitString As String() = TargetPath.Split(New Char() {"/"c})
 
-                        'Dim paths As String = myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1))
-                        'Dim rootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1)))
-                        'If rootfolder.Exists Then
-                        '    ' fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "")))
-                        '    For Each filepath As String In Directory.GetFiles(paths)
-                        '        File.Delete(filepath)
-                        '    Next
-                        '    'Delete all child Directories
-                        '    For Each dir As String In Directory.GetDirectories(paths)
-                        '        For Each filepath As String In Directory.GetFiles(dir)
-                        '            File.Delete(filepath)
-                        '        Next
-                        '    Next
-                        '    'Delete a Directory
-                        '    ' Directory.Delete(paths)
-                        'End If
 
 
 
