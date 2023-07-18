@@ -36,6 +36,8 @@
     <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
 	  <xsl:apply-templates select="descendant-or-self::input" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[contains(@class,'has-script')]" mode="xform_control_script"/>
+	  <xsl:apply-templates select="descendant-or-self::input[contains(@class,'userUploadImage')]" mode="xform_control_script"/>
+	  
   </xsl:template>
 
   <xsl:template match="*" mode="xform_control_script"></xsl:template>

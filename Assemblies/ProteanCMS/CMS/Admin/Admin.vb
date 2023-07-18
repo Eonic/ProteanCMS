@@ -25,6 +25,8 @@ Imports System
 Imports System.Reflection
 Imports Lucene.Net.Support
 Imports System.ServiceModel.Channels
+Imports ICSharpCode.SharpZipLib.Zip.ExtendedUnixData
+
 
 Partial Public Class Cms
     Public Class Admin
@@ -43,12 +45,12 @@ Partial Public Class Cms
         'Public moXformEditor As XFormEditor
 
         Private mcPagePath As String
-
+        Public goServer As System.Web.HttpServerUtility
         'preview mode info
         Public mbPreviewMode As Boolean 'Is Preview mode on?
         Public myWeb As Cms
         Public moConfig As System.Collections.Specialized.NameValueCollection
-
+        Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
         Public nAdditionId As Integer
         Public moDeniedAdminMenuElmt As XmlElement
 
@@ -2305,7 +2307,10 @@ ProcessFlow:
                         FilterIndex(oPageDetail, sAdminLayout)
 
                     Case "ResetWebConfig"
-                        ResetWebConfig(oPageDetail, sAdminLayout)
+                        ResetWebConfig()
+
+                    Case "ResetXsltc"
+                        ResetXSLTC(oPageDetail, sAdminLayout)
                 End Select
 
                 SupplimentalProcess(sAdminLayout, oPageDetail)
@@ -5120,22 +5125,12 @@ SP:
         End Sub
 
 
-        Private Sub ResetWebConfig(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+        Private Sub ResetWebConfig()
             Dim sProcessInfo As String = ""
 
             Try
-                Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
-                'Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
-                Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
-                If flag = "True" Then
-                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
-                Else
-                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
-                End If
-                myConfiguration.Save()
-
+                ResetFlagInWebConfig()
                 myWeb.moResponse.Redirect(myWeb.mcRequestDomain)
-
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug)
@@ -5177,6 +5172,108 @@ SP:
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
+        '1) Set CompiledTransform mode= off, in protean.web.config.
+        '2) toggle reset flag in web.config
+        '3) delete all files from xsltc
+        '4) Rebundle the js file
+        '5) Set CompiledTransform mode= on, in protean.web.config.
+        '6) toggle reset flag in web.config
+
+        Private Sub ResetXSLTC(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+            Dim sProcessInfo As String = ""
+            Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
+            Dim oDefaultCfgXml As New XmlDocument
+
+            Try
+                '1. Set CompiledTransform mode= off, in protean.web.config.
+                ResetCompiledModeInConfig("off")
+
+                '2. toggle reset flag in web.config
+
+                ResetFlagInWebConfig()
+
+                '3.delete all files from xsltc
+                Dim paths As String = myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "xsltc/")
+                Dim rootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "xsltc/"))
+                If rootfolder.Exists Then
+                    ' fsh.DeleteFile(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "xsltc/"))
+                    For Each filepath As String In Directory.GetFiles(paths)
+                        oFsH.DeleteFile(filepath)
+                    Next
+                End If
+
+                '4. Rebundle the js file
+
+                Dim bundlePath As String = myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/Bundles/")
+                Dim bundleRootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/Bundles/"))
+                If bundleRootfolder.Exists Then
+                    ' fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "")))
+                    For Each filepath As String In Directory.GetFiles(bundlePath)
+                        File.Delete(filepath)
+                    Next
+                    'Delete all child Directories
+                    For Each dir As String In Directory.GetDirectories(bundlePath)
+                        For Each filepath As String In Directory.GetFiles(dir)
+                            File.Delete(filepath)
+                        Next
+                    Next
+
+                End If
+                '5. Set CompiledTransform mode= on, in protean.web.config.
+                ResetCompiledModeInConfig("on")
+                '6. toggle reset flag in web.config
+
+                ResetFlagInWebConfig()
+
+                myWeb.moResponse.Redirect(myWeb.mcRequestDomain)
+
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ResetXSLTC", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
+        Private Sub ResetCompiledModeInConfig(ByRef sflag As String)
+            Dim sProcessInfo As String = ""
+            Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
+            Dim oDefaultCfgXml As New XmlDocument
+            Try
+                If oFsH.VirtualFileExists("/protean.web.config") Then
+                    Dim vPath As String = myWeb.goServer.MapPath("/protean.web.config")
+                    oDefaultCfgXml.Load(vPath)
+                    If sflag = "on" Then
+                        oDefaultCfgXml.SelectSingleNode("descendant-or-self::web/add[@key='CompiledTransform']").Attributes("value").Value = "on"
+
+                    ElseIf sflag = "off" Then
+                        oDefaultCfgXml.SelectSingleNode("descendant-or-self::web/add[@key='CompiledTransform']").Attributes("value").Value = "off"
+                    End If
+
+                    oDefaultCfgXml.Save(vPath)
+                End If
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ResetCompiledModeInConfig", ex, "", sProcessInfo, gbDebug)
+            End Try
+        End Sub
+        Private Sub ResetFlagInWebConfig()
+            Dim sProcessInfo As String = ""
+            Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
+            Dim oDefaultCfgXml As New XmlDocument
+            Try
+                Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
+                'Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
+                Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
+                If flag = "True" Then
+                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
+                Else
+                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
+                End If
+                myConfiguration.Save()
+
+
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "ResetCompiledModeInConfig", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
     End Class

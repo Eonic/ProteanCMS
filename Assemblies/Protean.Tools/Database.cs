@@ -7,9 +7,6 @@ using System.Data.SqlClient;
 using System.Collections;
 using System.Collections.Generic;
 
-
-
-
 namespace Protean.Tools
 {
     public class Database : IDisposable
@@ -354,6 +351,30 @@ namespace Protean.Tools
             }
         }
 
+        private void ResetConnection(string cConn)
+        {
+            try
+            {
+                CloseConnection();
+                // This was calling an error and am not sure if it is needed. so have removed whilst evalutating
+                // CloseConnectionPool()
+                if (cConn == string.Empty)
+                {
+                    ResetConnection();
+                }
+                else
+                {
+                    oConn = new SqlConnection(cConn);
+                    ConnectionStringChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetConnection", ex, "Setting Connection Info", 0));
+            }
+        }
+
         public bool CreateDatabase(string databasename)
         {
             string cProcessInfo = "createDB";
@@ -687,6 +708,45 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
+        public int ExeProcessSql(string sql, string cConn)
+        {
+            int nUpdateCount = 0;
+            string cProcessInfo = "Running: " + sql;
+            SqlConnection oConnection = null;
+
+            try
+            {
+
+                if (cConn != string.Empty)
+                {
+                    oConnection = new SqlConnection(cConn);
+                }
+                else
+                {
+                    oConnection = oConn;
+                }
+
+
+                SqlCommand oCmd = new SqlCommand(sql, oConnection);
+
+                if (oConnection.State == System.Data.ConnectionState.Closed)
+                    oConnection.Open();
+                cProcessInfo = "Running Sql: " + sql;
+                nUpdateCount = oCmd.ExecuteNonQuery();
+
+                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSql", ex, cProcessInfo));
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return nUpdateCount;
+        }
+
         public void ExeProcessSql(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null)
         {
             string cProcessInfo = "Running Sql: " + sql;
@@ -732,7 +792,13 @@ namespace Protean.Tools
         public int ExeProcessSqlfromFile(string filepath)
         {
             string errmsg = "";
-            return ExeProcessSqlfromFile(filepath, ref errmsg);
+            return ExeProcessSqlfromFile(filepath, ref errmsg, String.Empty);
+        }
+
+        public int ExeProcessSqlfromFile(string filepath, string cCon)
+        {
+            string errmsg = "";
+            return ExeProcessSqlfromFile(filepath, ref errmsg, cCon);
         }
 
         public int ExeProcessSqlfromFile(string filepath, ref string errmsg)
@@ -753,6 +819,51 @@ namespace Protean.Tools
                 SqlCommand oCmd = new SqlCommand(vstrSql, oConn);
                 if (oConn.State == ConnectionState.Closed)
                     oConn.Open();
+                cProcessInfo = "Running Sql ('" + filepath + "'): "; // & vstrSql
+                nUpdateCount = oCmd.ExecuteNonQuery();
+
+                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSqlfromFile", ex, cProcessInfo));
+                errmsg = ex.Message;
+                nUpdateCount = -1;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return nUpdateCount;
+        }
+
+        public int ExeProcessSqlfromFile(string filepath, ref string errmsg, string cCon)
+        {
+            int nUpdateCount;
+            string vstrSql;
+            System.IO.StreamReader oFr;
+            SqlConnection oConnection = null;
+            string cProcessInfo = filepath;
+            try
+            {
+
+                // Dot Net version will only work with Sql Server at the moment, we'll need to cater for other connectors here.
+
+                if (cCon != string.Empty)
+                {
+                    oConnection = new SqlConnection(cCon);
+                }
+                else
+                {
+                    oConnection = oConn;
+                }
+
+                oFr = System.IO.File.OpenText(filepath);
+                vstrSql = oFr.ReadToEnd();
+                oFr.Close();
+                SqlCommand oCmd = new SqlCommand(vstrSql, oConnection);
+                if (oConnection.State == ConnectionState.Closed)
+                    oConnection.Open();
                 cProcessInfo = "Running Sql ('" + filepath + "'): "; // & vstrSql
                 nUpdateCount = oCmd.ExecuteNonQuery();
 
@@ -909,6 +1020,9 @@ namespace Protean.Tools
                 return null/* TODO Change to default(_) if this is not a reference type */;
             }
         }
+
+
+
         /// <summary>
         /// Returns a dataset
         /// </summary>
@@ -920,19 +1034,30 @@ namespace Protean.Tools
         /// <param name="bHandleTimeouts">Indicates whether to pass timeouts through the standard error handling, or ignore them.</param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0)
+        
+
+        public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0, string cConn ="")
         {
             string cProcessInfo = "Running Sql:  " + sql;
             DataSet oDs = new DataSet();
             int nStartIndex = (pageSize * pageNumber) - pageSize + 1;
             try
             {
-                if (oConn == null)
-                    ResetConnection();
-                SqlDataAdapter oDataAdpt = new SqlDataAdapter(sql, oConn);
+                SqlConnection oConnection = null;
+                oConnection = oConn;
+                if (oConnection == null)
+                    ResetConnection(cConn);
+                if(cConn!=string.Empty)
+                {
+                    oConnection = new SqlConnection(cConn);
+                }
+                SqlDataAdapter oDataAdpt = new SqlDataAdapter(sql, oConnection);
 
                 if (oConn.State == ConnectionState.Closed)
                     oConn.Open();
+
+                if (oConnection.State == ConnectionState.Closed)
+                    oConnection.Open();
 
                 if (datasetname != "")
                     oDs.DataSetName = datasetname;
@@ -1004,6 +1129,75 @@ namespace Protean.Tools
 
                 oScalarValue = oCmd.ExecuteScalar();
                 oConn.Close();
+                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+
+                // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
+                if ((!(nullreturnvalue == null)) & (oScalarValue == null | oScalarValue == null))
+                    oScalarValue = nullreturnvalue;
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo));
+                oScalarValue = nullreturnvalue;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            if (oScalarValue != nullreturnvalue)
+            {
+                if (oScalarValue.GetType() != typeof(DBNull))
+                {
+                    return oScalarValue;
+                }
+                else
+                {
+                    return nullreturnvalue;
+                };
+
+            }
+            else
+            {
+                return nullreturnvalue;
+            };
+        }
+
+
+
+        public object GetDataValue(string sql, string cConn, CommandType commandtype = CommandType.Text,  Hashtable parameters = null, object nullreturnvalue = null)
+        {
+            string cProcessInfo = "Running Sql: " + sql;
+            SqlConnection oConnection = null;
+            object oScalarValue;
+            try
+            {
+                if (cConn != string.Empty)
+                {
+                    oConnection = new SqlConnection(cConn);
+                }
+                else
+                {
+                    oConnection = oConn;
+                }
+                SqlCommand oCmd = new SqlCommand(sql, oConnection);
+
+                // Set the command type
+                oCmd.CommandType = commandtype;
+
+                // Set the Paremeters if any
+                if (!(parameters == null))
+                {
+
+                    foreach (DictionaryEntry oEntry in parameters)
+                        oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                }
+
+                // Open the connection
+                if (oConnection.State == ConnectionState.Closed)
+                    oConnection.Open();
+
+                oScalarValue = oCmd.ExecuteScalar();
+                oConnection.Close();
                 oCmd = null/* TODO Change to default(_) if this is not a reference type */;
 
                 // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
@@ -1416,6 +1610,64 @@ namespace Protean.Tools
                         }
                         cSql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(cObjectName) + ")" + cObjectProperty;
                         bReturn = ((int)this.GetDataValue(cSql, nullreturnvalue: 0) > 0);
+                    }
+                }
+                return bReturn;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool checkDBObjectExists(string cObjectName, objectTypes nObjectType,string cConn)
+        {
+            string cObjectProperty = "";
+            string cSql = "";
+            bool bReturn = false;
+
+            try
+            {
+                
+                if (cObjectName != "")
+                {
+                    if (nObjectType == objectTypes.Database)
+                    {
+                        if (GetDataSet(string.Format("select name from master..sysdatabases where name = '{0}'", SqlFmt(cObjectName)), "db").Tables[0].Rows.Count > 0)
+                            return true;
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        switch (nObjectType)
+                        {
+                            case objectTypes.Table:
+                                {
+                                    cObjectProperty = " AND OBJECTPROPERTY(id, N'IsUserTable') = 1";
+                                    break;
+                                }
+
+                            case objectTypes.View:
+                                {
+                                    cObjectProperty = " AND OBJECTPROPERTY(id, N'IsView') = 1";
+                                    break;
+                                }
+
+                            case objectTypes.StoredProcedure:
+                                {
+                                    cObjectProperty = " AND OBJECTPROPERTY(id, N'IsProcedure') = 1";
+                                    break;
+                                }
+
+                            case objectTypes.UserFunction:
+                                {
+                                    cObjectProperty = " AND xtype in (N'FN', N'IF', N'TF')";
+                                    break;
+                                }
+                        }
+                        cSql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(cObjectName) + ")" + cObjectProperty;
+                        bReturn = ((int)this.GetDataValue(cSql, cConn, nullreturnvalue: 0) > 0);
                     }
                 }
                 return bReturn;

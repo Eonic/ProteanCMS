@@ -27,6 +27,7 @@ Imports System.Web.UI
 Imports System.Web
 Imports Microsoft.Ajax.Utilities
 Imports DelegateWrappers
+Imports System.Drawing.Imaging
 
 Partial Public Class fsHelper
 
@@ -955,16 +956,25 @@ Partial Public Class fsHelper
     End Function
 
 
-    Public Sub UploadRequest(ByVal context As System.Web.HttpContext)
+    Public Sub UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal ProductName As String = "")
         Try
 
 
             context.Response.AddHeader("Pragma", "no-cache")
             context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
-            mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
-            mcRoot = context.Server.MapPath("/")
-
+            If ProductName IsNot Nothing Then
+                Dim UploadDir As String = context.Request("storageRoot") + ProductName.Replace("\", "/").Replace("""", "")
+                Dim dirpath As String = context.Server.MapPath(UploadDir)
+                If Not Directory.Exists(dirpath) Then
+                    Directory.CreateDirectory(dirpath)
+                End If
+                mcStartFolder = dirpath
+                mcRoot = context.Server.MapPath("/")
+            Else
+                mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
+                mcRoot = context.Server.MapPath("/")
+            End If
             HandleUploads(context)
 
         Catch ex As Exception

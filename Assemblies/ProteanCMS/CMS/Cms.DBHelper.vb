@@ -10353,10 +10353,11 @@ ReturnMe:
 
 
 
-        Public Function getDataSetForUpdate(ByVal sSql As String, ByVal tableName As String, Optional ByVal datasetName As String = "") As DataSet
+        Public Function getDataSetForUpdate(ByVal sSql As String, ByVal tableName As String, Optional ByVal datasetName As String = "", Optional ByVal cConn As String = "") As DataSet
             'myWeb.PerfMon.Log("dbTools", "getDataSetForUpdate")
             Dim oDs As DataSet
             Dim cProcessInfo As String = "Running SQL:  " & sSql
+            Dim oConnection As SqlConnection = Nothing
             Try
 
                 moDataAdpt = New SqlDataAdapter
@@ -10366,10 +10367,17 @@ ReturnMe:
                     oDs = New DataSet(datasetName)
                 End If
 
-                If oConn.State = ConnectionState.Closed Then oConn.Open()
+                If cConn <> String.Empty Then
+                    oConnection = New SqlConnection(cConn)
+                Else
+                    oConnection = oConn
+                End If
 
-                Dim oSqlCmd As SqlCommand = New SqlCommand(sSql, oConn)
-                moDataAdpt.SelectCommand = oSqlCmd
+
+                If oConnection.State = ConnectionState.Closed Then oConnection.Open()
+
+                    Dim oSqlCmd As SqlCommand = New SqlCommand(sSql, oConnection)
+                    moDataAdpt.SelectCommand = oSqlCmd
                 Dim cb As SqlCommandBuilder = New SqlCommandBuilder(moDataAdpt)
                 moDataAdpt.TableMappings.Add(tableName, tableName)
 
@@ -10383,6 +10391,8 @@ ReturnMe:
             End Try
 
         End Function
+
+
 
         Public Function updateDataset(ByRef oDs As DataSet, ByVal sTableName As String, Optional ByVal bReUse As Boolean = False) As Boolean
             'myWeb.PerfMon.Log("dbTools", "updateDataset")

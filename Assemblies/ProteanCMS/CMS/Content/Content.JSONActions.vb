@@ -3,7 +3,7 @@ Option Explicit On
 Imports System.Xml
 Imports System.Web.Configuration
 Imports System.Data.SqlClient
-
+Imports System.Drawing.Imaging
 
 Partial Public Class Cms
 
@@ -263,6 +263,48 @@ Partial Public Class Cms
 
             End Function
 
+
+            'Review Path
+            Public Function ReviewImagePath(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim oFsh As fsHelper = New fsHelper
+                    Dim cFileName As String = String.Empty
+                    Dim cStorageRoot As String = String.Empty
+                    Dim cProductName As String = String.Empty
+
+                    If jObj("filename").ToString() IsNot Nothing Then
+                        cFileName = jObj("filename").ToString()
+                    End If
+                    If jObj("storageRoot").ToString() IsNot Nothing Then
+                        cStorageRoot = jObj("storageRoot").ToString()
+                    End If
+                    If jObj("ProductName").ToString() IsNot Nothing Then
+                        cProductName = jObj("ProductName").ToString()
+                    End If
+
+                    Dim cReviewImagePath As String = String.Empty
+
+                    If cProductName IsNot Nothing Then
+                        cFileName = Replace(cFileName, "\", "/")
+                        If Not cFileName.StartsWith("/") Then
+                            cFileName = "/" & cFileName
+                            cReviewImagePath = cStorageRoot + cProductName.Replace("\", "/").Replace("""", "") + cFileName
+
+                            'If cReviewImagePath.EndsWith(".svg") Then
+                            '    Return "<img src=""" & cReviewImagePath & """ alt=""""/> "
+                            'Else
+                            '    Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(myWeb.goServer.MapPath("/" & oFsh.mcRoot & nFileName))
+                            '    Return "<img src=""" & cReviewImagePath & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
+                            'End If
+                            Return cReviewImagePath
+                        End If
+
+                    End If
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
         End Class
 
 
