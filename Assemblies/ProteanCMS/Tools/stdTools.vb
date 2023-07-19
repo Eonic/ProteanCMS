@@ -493,7 +493,7 @@ Public Module stdTools
         Catch ex As Exception
             'cant do diddly but cry 
             Try
-                System.IO.File.WriteAllText("F:\HostingSpaces\ProteanError.txt", cMessage)
+                System.IO.File.WriteAllText("D:\HostingSpaces\ProteanError.txt", cMessage)
             Catch ex2 As Exception
                 thisError = ex2.Message
             End Try
