@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl ew"
                 xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
                 xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
@@ -310,8 +311,8 @@
   <xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-        <xsl:call-template name="eonicwebAdminSystemName"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
+        <xsl:call-template name="proteanAdminSystemName"/>
       </xsl:when>
       <xsl:otherwise>
         <div class="text-center">
@@ -567,20 +568,20 @@
   <!-- -->
   <xsl:template match="Page" mode="adminFooter">
     <xsl:variable name="supportEmail">
-      <xsl:call-template name="eonicwebSupportEmail"/>
+      <xsl:call-template name="proteanSupportEmail"/>
     </xsl:variable>
     <xsl:variable name="supportWebsite">
-      <xsl:call-template name="eonicwebWebsite"/>
+      <xsl:call-template name="proteanWebsite"/>
     </xsl:variable>
     <div id="footer">
       <div id="footerCopyright" class="text-muted">
 
         <xsl:text>© </xsl:text>
-        <xsl:call-template name="eonicwebCopyright"/>
+        <xsl:call-template name="proteanCopyright"/>
         <xsl:text> 2002-</xsl:text>
         <xsl:value-of select="substring(//ServerVariables/Item[@name='Date'],1,4)"/>
         <xsl:text> | </xsl:text>
-        <xsl:call-template name="eonicwebSupportTelephone"/>
+        <xsl:call-template name="proteanSupportTelephone"/>
         <xsl:text> | </xsl:text>
         <a href="mailto:{$supportEmail}" title="Email Support">
           <xsl:value-of select="$supportEmail"/>
@@ -681,10 +682,10 @@
   </xsl:template>
   <xsl:template match="Page[@layout='AdmHome']" mode="Admin">
     <xsl:variable name="supportEmail">
-      <xsl:call-template name="eonicwebSupportEmail"/>
+      <xsl:call-template name="proteanSupportEmail"/>
     </xsl:variable>
     <xsl:variable name="supportWebsite">
-      <xsl:call-template name="eonicwebWebsite"/>
+      <xsl:call-template name="proteanWebsite"/>
     </xsl:variable>  
     <section>
       <div class="container-fluid">
@@ -746,8 +747,8 @@
                     </div>
                     <div class="card-body">
                       <xsl:choose>
-                        <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-                          <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
+                        <xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
+                          <!--xsl:value-of select="$page/Settings/add[@key='web.proteanProductName']/@value"/-->
                         </xsl:when>
                         <xsl:otherwise>
                           <h3>
@@ -764,7 +765,7 @@
                       <h4 >Get Help</h4>
                     </div>
                     <div class="card-body">
-                      <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
+                      <xsl:if test="not($page/Settings/add[@key='web.proteanProductName']/@value!='')">
                         <p>
                           <a href="https://www.facebook.com/proteancms" class="" target="_new">
                             <i class="fab fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS
@@ -780,7 +781,7 @@
                       </xsl:if>
                       <p>
                         <i class="fa fa-phone">&#160;</i>
-                        <xsl:call-template name="eonicwebSupportTelephone"/>
+                        <xsl:call-template name="proteanSupportTelephone"/>
                       </p>
                       <p>
                         <a href="mailto:{$supportEmail}" title="Email Support">
@@ -8138,7 +8139,7 @@
           <div class="card card-default">
             <div class="card-body">
               <p>
-                <xsl:call-template name="eonicwebProductName"/>allows for sophisticated reports to be developed and deployed for whatever you might need.
+                <xsl:call-template name="proteanProductName"/>allows for sophisticated reports to be developed and deployed for whatever you might need.
               </p>
               <p>If you require additional reports please contact your website developer for a quote.</p>
             </div>
@@ -9207,8 +9208,8 @@
               </p>
               <p>
                 <strong>
-                  <xsl:call-template name="eonicwebProductName"/> Error
-                </strong> will be presented when <xsl:call-template name="eonicwebProductName"/> encounters an error.
+                  <xsl:call-template name="proteanProductName"/> Error
+                </strong> will be presented when <xsl:call-template name="proteanProductName"/> encounters an error.
               </p>
             </div>
           </div>
@@ -12221,8 +12222,8 @@
         <div class="card-body">
           <xsl:choose>
             <xsl:when test="Images/img[@class='detail']/@src!=''">
-              <a href="http://www.eonicweb.com/{Images/img[@class='detail']/@src}" class="responsive-lightbox">
-                <img src="http://www.eonicweb.com/{Images/img[@class='detail']/@src}" class="img-fluid"/>
+              <a href="http://www.proteancms.com/{Images/img[@class='detail']/@src}" class="responsive-lightbox">
+                <img src="http://www.proteancms.com/{Images/img[@class='detail']/@src}" class="img-fluid"/>
               </a>
             </xsl:when>
             <xsl:otherwise>
