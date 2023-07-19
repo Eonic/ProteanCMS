@@ -2205,6 +2205,7 @@
 				
 	  </xsl:variable>
 	  <xsl:variable name="redirectUrl">
+		  <xsl:variable name="url" select="@url"/>
 		  <xsl:choose>
 			  <xsl:when test="@url!=''">
 				  <xsl:choose>
