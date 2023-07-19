@@ -533,7 +533,8 @@ Partial Public Class fsHelper
             Else
                 Return "this folder does not exist"
             End If
-            oImp.UndoImpersonation()
+
+
             If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
