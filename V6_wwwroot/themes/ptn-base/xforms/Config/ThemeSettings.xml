@@ -44,12 +44,12 @@
       <bind id="Theme" nodeset="add[@key='CurrentTheme']/@value" required="true()" type="string" />-->
 		<bind id="SiteXsl" nodeset="add[@key='SiteXsl']/@value" required="true()" type="string" />
 		
-      <bind id="header-layout" nodeset="add[@key='ptn-base.header-layout']/@value" required="true()" type="string" />
+      <bind id="header-layout" nodeset="add[@key='ptn-base.header-layout']/@value" required="false()" type="string" />
 		<!--
       <bind id="ThemePreset" nodeset="add[@key='ptn-base.ThemePreset']/@value" required="true()" type="string" />
       <bind id="ThemeSkin" nodeset="add[@key='ptn-base.ThemeSkin']/@value" required="true()" type="string" />
           -->
-		<bind id="color-mode" nodeset="add[@key='ptn-base.color-mode']/@value" required="true()" type="string" />
+		<bind id="color-mode" nodeset="add[@key='ptn-base.color-mode']/@value" required="false()" type="string" />
       <bind id="brand-primary" nodeset="add[@key='ptn-base.primary']/@value" required="true()" type="string" />
       <bind id="brand-secondary" nodeset="add[@key='ptn-base.secondary']/@value" required="true()" type="string" />
       <bind id="brand-info" nodeset="add[@key='ptn-base.info']/@value" required="true()" type="string" />
