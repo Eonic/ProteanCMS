@@ -1153,7 +1153,36 @@ Public Class Cms
     End Sub
 
 
+    Public Function RestoreRedirectSession(ByVal sSessionId As String, ByVal nStandardDuration As Integer, Optional ByVal isAdmin As Boolean = False) As Boolean
+        ' we check the activity log for recompile with same session id, check the datetime is within 5 seconds.
+        Try
+            Dim nDuration As Integer = 0
+            Dim nUserId As Integer = 0
+            Dim sSql = "select top 1 nUserDirId, datediff(SS,getdate(),dDateTime) as Duration from tblActivityLog where cSessionId='" & sSessionId & "' order by dDateTime desc"
+            Using oDr As SqlDataReader = moDbHelper.getDataReaderDisposable(sSql)
+                If (oDr IsNot Nothing) Then
+                    While (oDr.Read())
+                        nDuration = Convert.ToInt32(oDr("Duration"))
+                        nUserId = oDr("nUserDirId")
+                    End While
 
+                End If
+            End Using
+            If (nDuration <= nStandardDuration And nUserId <> 0) Then
+
+                mnUserId = nUserId
+                If (isAdmin) Then
+                    moSession("adminMode") = "true"
+                    mbAdminMode = True
+                End If
+                Return True
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
 
 
 
@@ -1374,23 +1403,19 @@ Public Class Cms
 
                                         If moRequest("recompile") = "del" Then
 
-                                            ' we check the activity log for recompile with same session id, check the datetime is within 5 seconds.
-                                            ' we then take the user id from the activity log and log the user back in to admin mode which needs to happen before a rebundle. 
-                                            ' If restoreRedirectSession(SessionID,5,true) = True Then
 
-                                            ' End If
-
-
-                                            Dim oFS As New Protean.fsHelper(moCtx)
-                                            oFS.mcRoot = gcProjectPath
-                                            oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
-                                            oFS.DeleteFolderContents("", "")
-                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
-                                            Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
-                                            msRedirectOnEnd = "/?rebundle=true&SessionId=" & SessionID
+                                            If RestoreRedirectSession(moRequest("SessionId"), 5, True) = True Then
+                                                Dim oFS As New Protean.fsHelper(moCtx)
+                                                oFS.mcRoot = gcProjectPath
+                                                oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
+                                                oFS.DeleteFolderContents("", "")
+                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
+                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
+                                                msRedirectOnEnd = "/?rebundle=true&SessionId=" & SessionID
+                                            End If
 
                                         Else
-                                            If mbAdminMode Then
+                                                If mbAdminMode Then
                                                 Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
                                                 'just sent value as it might be true when user did ResetConfig
                                                 'to avoid skipping update functionality, we are just set it differently
