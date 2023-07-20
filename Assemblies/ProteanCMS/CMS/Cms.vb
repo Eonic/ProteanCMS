@@ -1209,7 +1209,7 @@ Public Class Cms
 
                     If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
-                        If Not moRequest("reBundle") Is Nothing Then
+                        If Not moRequest("reBundle") Is Nothing And mbAdminMode Then
                             ClearPageCache()
                         End If
                         sCachePath = goServer.UrlDecode(mcOriginalURL)
@@ -1373,6 +1373,9 @@ Public Class Cms
                                     If moRequest("recompile") <> "" Then
 
                                         If moRequest("recompile") = "del" Then
+
+                                            ' we check the activity log for recompile with same session id.
+
                                             Dim oFS As New Protean.fsHelper(moCtx)
                                             oFS.mcRoot = gcProjectPath
                                             oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) + "xsltc"
@@ -1382,14 +1385,16 @@ Public Class Cms
                                             msRedirectOnEnd = "/?rebundle=true"
 
                                         Else
-                                            Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
-                                            'just sent value as it might be true when user did ResetConfig
-                                            'to avoid skipping update functionality, we are just set it differently
-                                            Protean.Config.UpdateConfigValue(Me, "", "recompile", "recompiling")
-                                            msRedirectOnEnd = "/?recompile=del"
+                                            If mbAdminMode Then
+                                                Protean.Config.UpdateConfigValue(Me, "protean/web", "CompliedTransform", "off")
+                                                'just sent value as it might be true when user did ResetConfig
+                                                'to avoid skipping update functionality, we are just set it differently
+                                                Protean.Config.UpdateConfigValue(Me, "", "recompile", "recompiling")
+                                                moDbHelper.logActivity(dbHelper.ActivityType.Recompile, mnUserId, 0)
+                                                'we log to the activity log this action
+                                                msRedirectOnEnd = "/?recompile=del&SessionId=" & SessionID
+                                            End If
                                         End If
-
-
                                     End If
 
                                     'If moRequest("recompile") <> "" Then
