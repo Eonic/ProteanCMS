@@ -1374,7 +1374,8 @@ Public Class Cms
 
                                         If moRequest("recompile") = "del" Then
 
-                                            ' we check the activity log for recompile with same session id.
+                                            ' we check the activity log for recompile with same session id, check the datetime is within 5 seconds.
+                                            ' we then take the user id from the activity log and log the user back in to admin mode which needs to happen before a rebundle. 
 
                                             Dim oFS As New Protean.fsHelper(moCtx)
                                             oFS.mcRoot = gcProjectPath
