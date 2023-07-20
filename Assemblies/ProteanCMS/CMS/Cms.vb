@@ -1376,6 +1376,10 @@ Public Class Cms
 
                                             ' we check the activity log for recompile with same session id, check the datetime is within 5 seconds.
                                             ' we then take the user id from the activity log and log the user back in to admin mode which needs to happen before a rebundle. 
+                                            ' If restoreRedirectSession(SessionID,5,true) = True Then
+
+                                            ' End If
+
 
                                             Dim oFS As New Protean.fsHelper(moCtx)
                                             oFS.mcRoot = gcProjectPath
@@ -1383,7 +1387,7 @@ Public Class Cms
                                             oFS.DeleteFolderContents("", "")
                                             Protean.Config.UpdateConfigValue(Me, "protean/web", "CompiledTransform", "on")
                                             Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
-                                            msRedirectOnEnd = "/?rebundle=true"
+                                            msRedirectOnEnd = "/?rebundle=true&SessionId=" & SessionID
 
                                         Else
                                             If mbAdminMode Then
