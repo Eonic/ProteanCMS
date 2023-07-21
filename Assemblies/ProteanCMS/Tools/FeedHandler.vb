@@ -97,12 +97,17 @@ Public Class FeedHandler
     End Sub
 
     Private Sub InitialiseCounters()
-        Dim ctr As Counter
-        _counters.Clear()
-        For Each countertype As String In _countertypes
-            ctr = _counters.Add(countertype)
-            AddHandler ctr.OnChange, AddressOf _OnCounterChange
-        Next
+        Try
+            Dim ctr As Counter
+            _counters.Clear()
+            For Each countertype As String In _countertypes
+                ' ctr = _counters.Add(countertype)
+                ctr = _counters.Add(CStr(countertype))
+                AddHandler ctr.OnChange, AddressOf _OnCounterChange
+            Next
+        Catch ex As Exception
+            AddExternalError(ex)
+        End Try
     End Sub
 
 
