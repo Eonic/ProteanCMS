@@ -268,6 +268,7 @@ Partial Public Class Cms
             Public Function ReviewImagePath(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim oFsh As fsHelper = New fsHelper
+                    'oFsh.initialiseVariables(fsHelper.LibraryType.Image)
                     Dim cFileName As String = String.Empty
                     Dim cStorageRoot As String = String.Empty
                     Dim cProductName As String = String.Empty
@@ -290,13 +291,13 @@ Partial Public Class Cms
                             cFileName = "/" & cFileName
                             cReviewImagePath = cStorageRoot + cProductName.Replace("\", "/").Replace("""", "") + cFileName
 
-                            'If cReviewImagePath.EndsWith(".svg") Then
-                            '    Return "<img src=""" & cReviewImagePath & """ alt=""""/> "
-                            'Else
-                            '    Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(myWeb.goServer.MapPath("/" & oFsh.mcRoot & nFileName))
-                            '    Return "<img src=""" & cReviewImagePath & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
-                            'End If
-                            Return cReviewImagePath
+                            If cReviewImagePath.EndsWith(".svg") Then
+                                Return "<img src=""" & cReviewImagePath & """ alt=""""/> "
+                            Else
+                                ' Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(myWeb.goServer.MapPath("/" & cStorageRoot & cFileName))
+                                Return "<img src=""" & cReviewImagePath & """ height=""200"" width=""200"" alt=""""/> "
+                            End If
+                            'Return cReviewImagePath
                         End If
 
                     End If
