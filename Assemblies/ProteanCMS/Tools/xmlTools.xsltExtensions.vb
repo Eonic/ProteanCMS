@@ -2035,32 +2035,10 @@ Partial Public Module xmlTools
                     'Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                     If Not myWeb.moRequest("rebundle") Is Nothing Then
                         ''code for deleting script.js file from the bundle folders.
-                        Dim sSessionId As String = String.Empty
-                        Dim nDuration As Integer = 5
-                        Dim bIsAdmin As Boolean = False
-                        If (myWeb.moRequest("SessionId") IsNot Nothing) Then
-                            sSessionId = myWeb.moRequest("SessionId")
-                            bIsAdmin = myWeb.RestoreRedirectSession(sSessionId, nDuration, True)
-                        End If
 
 
                         If myWeb.mbAdminMode Then
                             bReset = True
-                            Dim pathSplitString As String() = TargetPath.Split(New Char() {"/"c})
-                            Dim paths As String = myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1))
-                            Dim rootfolder As New DirectoryInfo(myWeb.goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js/" & pathSplitString(1)))
-                            If rootfolder.Exists Then
-                                For Each filepath As String In Directory.GetFiles(paths)
-                                    File.Delete(filepath)
-                                Next
-                                'Delete all child Directories
-                                For Each dir As String In Directory.GetDirectories(paths)
-                                    For Each filepath As String In Directory.GetFiles(dir)
-                                        File.Delete(filepath)
-                                    Next
-                                Next
-                            End If
-                            myWeb.moCtx.Application.Remove(TargetPath)
                         End If
                     End If
                         Dim bAppVarExists As Boolean = False
