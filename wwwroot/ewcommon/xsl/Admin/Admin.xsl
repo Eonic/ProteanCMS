@@ -1952,30 +1952,6 @@
 			</div>
 		</div>
 	</xsl:template>
-	<xsl:template match="Page[@layout='ResetXsltc']" mode="Admin">
-		<div class="row">
-			<div class="col-md-3 panel">
-				<div class="panel-body">
-					<ul class="nav nav-stacked">
-						<xsl:for-each select="AdminMenu/descendant-or-self::MenuItem[@cmd='ResetXsltc']/MenuItem">
-							<xsl:apply-templates select="." mode="button">
-								<xsl:with-param name="level">1</xsl:with-param>
-							</xsl:apply-templates>
-						</xsl:for-each>
-						<li>
-
-							<a href="{$appPath}?ewCmd=ResetXsltc&amp;pgid={/Page/@id}" title="" class="btn btn-lg btn-primary">
-								<i class="fa fa-gift fa-large">
-									<xsl:text> </xsl:text>
-								</i><xsl:text> </xsl:text>
-								Reset xslt
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</xsl:template>
   <!-- -->
   <xsl:template match="Page[@layout='Advanced' or @layout='AdvancedMail']" mode="Admin">
     <div class="row" id="tpltAdvancedMode">

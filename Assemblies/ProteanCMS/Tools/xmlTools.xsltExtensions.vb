@@ -2266,8 +2266,9 @@ Partial Public Module xmlTools
                         Dim oImp As Protean.Tools.Security.Impersonate = Nothing
                         If myWeb.impersonationMode Then
                             oImp = New Protean.Tools.Security.Impersonate
-                            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
-                                sReturnString = "Admin Account logon Failure"
+                            If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) = False Then
+                                sReturnString = "Admin-Account-Logon-Failure"
+                                Return sReturnString
                                 Exit Try
                             End If
                         End If

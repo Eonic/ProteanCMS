@@ -1,6 +1,6 @@
 ﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 
-  <!--   ################   Events   ###############   -->
+  <!--   ##############   Events   ##############   -->
 
   <!-- Event Module -->
   <xsl:template match="Content[@type='Module' and @moduleType='EventList']" mode="displayBrief">
@@ -27,7 +27,7 @@
     <!--responsive columns variables-->
   
     <!--end responsive columns variables-->
-    <div class="clearfix EventsList">
+    <div class="clearfix {@moduleType}">
      
 	<div>
 				<!--responsive columns -->
@@ -91,73 +91,6 @@
 	<xsl:template match="Content[@type='Module' and @moduleType='EventList']" mode="themeModuleClassExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
-
-	<xsl:template match="Content[@type='Module' and @moduleType='EventList' and @carousel='true']" mode="displayBrief">
-		<!-- Set Variables -->
-		<xsl:variable name="contentType" select="@contentType" />
-		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-		<xsl:variable name="contentList">
-			<xsl:apply-templates select="." mode="getContent">
-				<xsl:with-param name="contentType" select="$contentType" />
-				<xsl:with-param name="startPos" select="$startPos" />
-			</xsl:apply-templates>
-		</xsl:variable>
-		<xsl:variable name="totalCount">
-			<xsl:choose>
-				<xsl:when test="@display='related'">
-					<xsl:value-of select="count(Content[@type=$contentType])"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<!--responsive columns variables-->
-
-		<!--end responsive columns variables-->
-		<!-- Output Module -->
-		<div class="swiper-container EventList content-carousel ">
-			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
-				<div class="swiper-wrapper">
-					<xsl:apply-templates select="." mode="contentColumns">
-						<xsl:with-param name="carousel" select="@carousel"/>
-					</xsl:apply-templates>
-					<xsl:choose>
-						<xsl:when test="@linkArticle='true'">
-							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-								<xsl:with-param name="sortBy" select="@sortBy"/>
-								<xsl:with-param name="class" select="'swiper-slide'"/>
-							</xsl:apply-templates>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-								<xsl:with-param name="sortBy" select="@sortBy"/>
-								<xsl:with-param name="class" select="'swiper-slide'"/>
-							</xsl:apply-templates>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:text> </xsl:text>
-				</div>
-</div>
-				<xsl:if test="@carouselBullets='true'">
-					<div class="swiper-pagination" id="swiper-pagination-{@id}">
-						<xsl:text> </xsl:text>
-					</div>
-				</xsl:if>
-			
-			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
-				<xsl:text> </xsl:text>
-			</div>
-			<div class="swiper-button-next" id="swiper-button-next-{@id}">
-				<xsl:text> </xsl:text>
-			</div>
-			<div class="row">
-				<span>&#160;</span>
-			</div>
-		</div>
-	</xsl:template>
-
   <!-- Event Brief -->
   <xsl:template match="Content[@type='Event']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
@@ -212,7 +145,7 @@
           </xsl:if>
         </xsl:if>
         <xsl:if test="Images/img/@src!=''">
-          <a href="{$parentURL}" title="Read More - {Headline/node()}">
+          <a href="{$parentURL}" title="Read More - {Headline/node()}" class="list-image-link">
 						<xsl:apply-templates select="." mode="displayThumbnail">
 							<xsl:with-param name="class">img-fluid</xsl:with-param>
 						</xsl:apply-templates>
