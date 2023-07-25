@@ -144,8 +144,8 @@ Namespace Providers
 
                     If (aWeb.moRequest.Form("MinPrice") IsNot Nothing And aWeb.moRequest.Form("MinPrice") <> "") Then
 
-                        Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()
-                        ' Dim sText As String = "From " + oMinPrice.Value.Trim() + " to " + oMaxPrice.Value.Trim()
+                        '  Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()
+                        Dim sText As String = "From " + oMinPrice.Value.Trim() + " to " + oMaxPrice.Value.Trim()
                         oXform.addSubmit(oFromGroup, sText, sText, "PriceFilter" + sText, "btnCrossForPrice filter-applied", "fa-times")
 
                     End If
