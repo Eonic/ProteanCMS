@@ -1384,7 +1384,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JsonWebTokens.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Tinify.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.pdb
-C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.dll.config
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\BundleTransformer.SassAndScss.xml
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\ClearScript.Core.xml
