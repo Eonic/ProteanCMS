@@ -178,7 +178,7 @@
         <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
         <xsl:text>~/ewcommon/js/vuejs/protean-vue.js,</xsl:text>
-		  <xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
+		<xsl:text>~/ewcommon/js/ewAdmin.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
@@ -1878,7 +1878,7 @@
                 <xsl:otherwise>
                   <li>
                     <a href="{$appPath}?rebundle=true" class="btn btn-warning">
-                      <i class="fa fa-recycle">
+                      <i class="fas fa-recycle">
                         <xsl:text> </xsl:text>
                       </i>
                       <xsl:text> </xsl:text>Rebundle JS / CSS files
@@ -1886,6 +1886,14 @@
                   </li>
                 </xsl:otherwise>
               </xsl:choose>
+				<li>
+					<a href="{$appPath}?recompile=true" class="btn btn-warning bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
+						<i class="fas fa-recycle">
+							<xsl:text> </xsl:text>
+						</i>
+						<xsl:text> </xsl:text>Recompile XSLT and Rebundle
+					</a>
+				</li>
               <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
                 <li>
                   <a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-default">
@@ -1945,30 +1953,6 @@
 									<xsl:text> </xsl:text>
 								</i><xsl:text> </xsl:text>
 								Reset WebConfig
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</xsl:template>
-	<xsl:template match="Page[@layout='ResetXsltc']" mode="Admin">
-		<div class="row">
-			<div class="col-md-3 panel">
-				<div class="panel-body">
-					<ul class="nav nav-stacked">
-						<xsl:for-each select="AdminMenu/descendant-or-self::MenuItem[@cmd='ResetXsltc']/MenuItem">
-							<xsl:apply-templates select="." mode="button">
-								<xsl:with-param name="level">1</xsl:with-param>
-							</xsl:apply-templates>
-						</xsl:for-each>
-						<li>
-
-							<a href="{$appPath}?ewCmd=ResetXsltc&amp;pgid={/Page/@id}" title="" class="btn btn-lg btn-primary">
-								<i class="fa fa-gift fa-large">
-									<xsl:text> </xsl:text>
-								</i><xsl:text> </xsl:text>
-								Reset xslt
 							</a>
 						</li>
 					</ul>

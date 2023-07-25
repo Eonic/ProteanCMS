@@ -28,6 +28,7 @@ Imports System.Web
 Imports Microsoft.Ajax.Utilities
 Imports DelegateWrappers
 Imports System.Drawing.Imaging
+Imports System.Net
 
 Partial Public Class fsHelper
 
@@ -533,7 +534,8 @@ Partial Public Class fsHelper
             Else
                 Return "this folder does not exist"
             End If
-            oImp.UndoImpersonation()
+
+
             If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
@@ -720,7 +722,7 @@ Partial Public Class fsHelper
             End If
             'here we will fix any unsafe web charactors in the name
             filename = Replace(filename, " ", "-")
-
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
             If IO.File.Exists(mcStartFolder & cFolderPath & "\" & filename) Then
                 Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
             Else

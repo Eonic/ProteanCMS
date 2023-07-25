@@ -25,55 +25,48 @@
       </xsl:choose>
     </xsl:variable>
 
-    <!-- Output Module -->
-    <div class="clearfix TestimonialList">
-      <xsl:if test="@carousel='true'">
-        <xsl:attribute name="class">
-          <xsl:text>clearfix TestimonialList content-scroller</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" height="{@carouselHeight}">
-        <!--responsive columns-->
+		<!--end responsive columns variables-->
+		<div class="clearfix {@moduleType}">
+			<div>
+				<!--responsive columns -->
+				<xsl:apply-templates select="." mode="contentColumns"/>
+				<!--end responsive columns-->
 
-        <xsl:apply-templates select="." mode="contentColumns"/>
-        <!--end responsive columns-->
-        <xsl:if test="@autoplay !=''">
-          <xsl:attribute name="data-autoplay">
-            <xsl:value-of select="@autoplay"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@autoPlaySpeed !=''">
-          <xsl:attribute name="data-autoPlaySpeed">
-            <xsl:value-of select="@autoPlaySpeed"/>
-          </xsl:attribute>
-        </xsl:if>
-        <!-- If Stepper, display Stepper -->
-        <xsl:choose>
-          <xsl:when test="@linkArticle='true'">
-            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefTestimonialLinked">
-              <xsl:with-param name="sortBy" select="@sortBy"/>
-            </xsl:apply-templates>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-              <xsl:with-param name="sortBy" select="@sortBy"/>
-            </xsl:apply-templates>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="@stepCount != '0'">
-          <xsl:apply-templates select="/" mode="genericStepper">
-            <xsl:with-param name="articleList" select="$contentList"/>
-            <xsl:with-param name="noPerPage" select="@stepCount"/>
-            <xsl:with-param name="startPos" select="$startPos"/>
-            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-            <xsl:with-param name="totalCount" select="$totalCount"/>
-          </xsl:apply-templates>
-        </xsl:if>
-        <xsl:text> </xsl:text>
-      </div>
-    </div>
-  </xsl:template>
+				<!-- If Stepper, display Stepper -->
+				<xsl:choose>
+					<xsl:when test="@linkArticle='true'">
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+							<xsl:with-param name="sortBy" select="@sortBy"/>
+							<xsl:with-param name="parentId" select="@id"/>
+						</xsl:apply-templates>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="@stepCount != '0'">
+					<xsl:apply-templates select="/" mode="genericStepper">
+						<xsl:with-param name="articleList" select="$contentList"/>
+						<xsl:with-param name="noPerPage" select="@stepCount"/>
+						<xsl:with-param name="startPos" select="$startPos"/>
+						<xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+						<xsl:with-param name="totalCount" select="$totalCount"/>
+					</xsl:apply-templates>
+				</xsl:if>
+				<xsl:text> </xsl:text>
+			</div>
+		</div>
+	</xsl:template>
 
+	<xsl:template match="Content[@type='Module' and @moduleType='TestimonialList']" mode="themeModuleExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='TestimonialList']" mode="themeModuleClassExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	</xsl:template>
   <!-- Testimonial Brief -->
   <xsl:template match="Content[@type='Testimonial']" mode="displayBrief">
     <xsl:param name="sortBy"/>

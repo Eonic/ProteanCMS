@@ -2319,9 +2319,9 @@ Public Class xForm
             'If sLabel <> "" Then
             oLabelElmt = moPageXML.CreateElement("label")
             If bXmlLabel Then
-                oLabelElmt.InnerXml = sLabel & " "
+                oLabelElmt.InnerXml = convertEntitiesToCodes(sLabel) & " "
             Else
-                oLabelElmt.InnerText = sLabel & " "
+                oLabelElmt.InnerText = convertEntitiesToCodes(sLabel) & " "
             End If
             oOptElmt.AppendChild(oLabelElmt)
             'End If
