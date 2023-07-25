@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  
+  <ModuleTypes>
+	  <ModuleGroup name="Ecommerce controls" icon="fas fa-shopping-cart">
+		  <Module type="DonateButton" formPath="donatebutton" icon="fas fa-hand-heart" name="Donate Button"></Module>
+	  </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

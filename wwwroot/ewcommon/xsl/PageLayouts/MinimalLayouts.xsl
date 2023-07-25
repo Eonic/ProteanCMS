@@ -45,7 +45,7 @@
           <xsl:with-param name="containerClass" select="$containerClass"/>
         </xsl:apply-templates>
 
-        <xsl:apply-templates select="." mode="socialBookmarks" />-->
+        <xsl:apply-templates select="." mode="socialBookmarks" />
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -14639,17 +14639,12 @@
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+      <iframe frameborder="0" class="embed-responsive-item" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen="allowfullscreen" >
         <xsl:attribute name="src">
           <xsl:text>//player.vimeo.com/video/</xsl:text>
           <xsl:value-of select="$code"/>
           <!-- Turn all options off by default -->
-          <xsl:text>/?title=0&amp;byline=0&amp;portrait=0&amp;autoplay=0&amp;loop=0</xsl:text>
-          <xsl:if test="Vimeo/@title='true'">&amp;title=1</xsl:if>
-          <xsl:if test="Vimeo/@byline='true'">&amp;byline=1</xsl:if>
-          <xsl:if test="Vimeo/@portrait='true'">&amp;portrait=1</xsl:if>
-          <xsl:if test="Vimeo/@autoplay='true'">&amp;autoplay=1</xsl:if>
-          <xsl:if test="Vimeo/@loop='true'">&amp;loop=1</xsl:if>
+          <xsl:text>&amp;badge=0&amp;portrait=0&amp;autopause=0&amp;player id=0&amp;app_id=58479</xsl:text>
         </xsl:attribute>
         <xsl:choose>
           <xsl:when test="@size='Manual'">
@@ -14672,9 +14667,26 @@
         </xsl:choose>
         <xsl:text> </xsl:text>
       </iframe>
+	  <script src="https://player.vimeo.com/api/player.js">&#160;</script>
     </div>
   </xsl:template>
-
+	
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="json-ld">
+  	  	<script type="application/ld+json" id="vimeo-{@id}">
+			{
+              "@context": "https://schema.org",
+              "@type": "VideoObject",
+              "name": "<xsl:value-of select="@title"/>",
+              "description": "<xsl:value-of select="Description"/>",
+              "thumbnailUrl": "<xsl:value-of select="Vimeo/@thumbnail"/>",
+              "uploadDate": "<xsl:value-of select="@publish"/>",
+              "duration": "<xsl:value-of select="Vimeo/@duration"/>",
+              "contentUrl": "https://player.vimeo.com/video/<xsl:value-of select="Vimeo/@code"/>",
+              "embedUrl": "https://player.vimeo.com/video/<xsl:value-of select="Vimeo/@code"/>"
+            }
+		</script>
+  </xsl:template>
+	
   <!--HTML5-->
   <xsl:template match="Content[@moduleType='Video' and @videoType='HTML5']" mode="displayBrief">
     <xsl:if test="HTML5/@videoMp4!='' or HTML5/@videoGG!='' or  HTML5/@videoWebm!=''">

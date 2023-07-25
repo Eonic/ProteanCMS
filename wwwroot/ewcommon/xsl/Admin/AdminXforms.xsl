@@ -264,10 +264,9 @@
 				<xsl:attribute name="class">
 					<xsl:text>form-control pickImageInput </xsl:text>
 					<xsl:value-of select="@class"/>
-				</xsl:attribute>
-				<xsl:text></xsl:text>
+				</xsl:attribute> 
 				<xsl:apply-templates select="value/img" mode="jsNiceImage"/>
-				<xsl:text></xsl:text>
+				<xsl:text> </xsl:text>
 			</textarea>
 			<xsl:choose>
 				<xsl:when test="value/img/@src!=''">
@@ -3166,6 +3165,38 @@
 			</xsl:otherwise>
 		</xsl:choose>
 
+	</xsl:template>
+
+	<xsl:template match="input[contains(@class,'get-vimeo-data')]" mode="xform_control">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<xsl:apply-templates select="self::node()[not(item[toggle])]" mode="xform_legend"/>
+		<div class="input-group" id="{$ref}">
+			<input name="{$ref}" id="{$ref}" value="{value/node()}">
+				<xsl:attribute name="class">
+					<xsl:text>form-control get-vimeo-data-input</xsl:text>
+					<xsl:value-of select="@class"/>
+				</xsl:attribute>
+				<xsl:text> </xsl:text>
+			</input>
+	
+					<span class="input-group-btn get-vimeo-data">
+						<a class="btn btn-primary get-vimeo-data">
+							<i class="fa fa-vimeo">
+								<xsl:text> </xsl:text>
+							</i><xsl:text> </xsl:text>Get Vimeo Data
+						</a>
+					</span>
+			
+		</div>
+		
+	</xsl:template>
+
+	<xsl:template match="input[contains(@class,'get-vimeo-data')]" mode="xform_control_script">
+		<script type="text/javascript">
+			initialiseGetVimeoDataButton();
+		</script>
 	</xsl:template>
 
 

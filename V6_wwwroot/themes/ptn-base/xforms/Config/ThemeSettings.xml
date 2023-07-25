@@ -1,0 +1,397 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Content type="xform" name="ThemeSettings">
+  <model>
+    <instance>
+      <theme>]
+	    <!--
+        <add key="CurrentTheme" value="ptn-base"/>
+        <add key="variablesPath" value="/css/variables.scss"/>
+        <add key="SiteXsl" value="/ewthemes/ptn-base/layout-header-banner.xsl" />
+        <add key="ptn-base.HeaderLayout" value="header-template1"/>
+        <add key="ptn-base.ThemePreset" value="Default" />
+        <add key="ptn-base.ThemeSkin" value="" />
+        -->
+        <add key="ptn-base.primary" value="#2C3E50" />
+        <add key="ptn-base.secondary" value="#18BC9C" />
+        <add key="ptn-base.info" value="#3498DB" />
+        <add key="ptn-base.success" value="#18BC9C" />
+        <add key="ptn-base.warning" value="#F39C12" />
+        <add key="ptn-base.danger" value="#E74C3C" />
+		<add key="ptn-base.light" value="#f5f5f5" />
+		<add key="ptn-base.dark" value="#1c1c1c" />
+		<add key="ptn-base.white" value="#ffffff" />
+		<add key="ptn-base.body-color" value="#666666" />
+    <!--
+        <add key="ptn-base.link-color" value="#18BC9C" />
+        <add key="ptn-base.text-color" value="#333" />
+        <add key="ptn-base.headings-font" value="'Lato', sans-serif" />
+        <add key="ptn-base.headings-font-family" value="'Lato', sans-serif" />
+        <add key="ptn-base.headings-font-import" value="Lato:300,400,700" />
+        <add key="ptn-base.base-font" value="'Lato', sans-serif" />
+        <add key="ptn-base.font-family-base" value="'Lato', sans-serif" />
+        <add key="ptn-base.font-import-base" value="Lato:300,400,700" />
+
+        <add key="ptn-base.btn-default-bg" value="#444" />
+        <add key="ptn-base.btn-default-color" value="#fff" />
+        <add key="ptn-base.headings-color" value="#333" />
+        -->
+      </theme>
+    </instance>
+    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+    <bind nodeset="theme">
+		<!--
+      <bind id="Theme" nodeset="add[@key='CurrentTheme']/@value" required="true()" type="string" />-->
+		<bind id="SiteXsl" nodeset="add[@key='SiteXsl']/@value" required="true()" type="string" />
+		
+      <bind id="header-layout" nodeset="add[@key='ptn-base.header-layout']/@value" required="false()" type="string" />
+		<!--
+      <bind id="ThemePreset" nodeset="add[@key='ptn-base.ThemePreset']/@value" required="true()" type="string" />
+      <bind id="ThemeSkin" nodeset="add[@key='ptn-base.ThemeSkin']/@value" required="true()" type="string" />
+          -->
+		<bind id="color-mode" nodeset="add[@key='ptn-base.color-mode']/@value" required="false()" type="string" />
+      <bind id="brand-primary" nodeset="add[@key='ptn-base.primary']/@value" required="true()" type="string" />
+      <bind id="brand-secondary" nodeset="add[@key='ptn-base.secondary']/@value" required="true()" type="string" />
+      <bind id="brand-info" nodeset="add[@key='ptn-base.info']/@value" required="true()" type="string" />
+      <bind id="brand-success" nodeset="add[@key='ptn-base.success']/@value" required="true()" type="string" />
+      <bind id="brand-warning" nodeset="add[@key='ptn-base.warning']/@value" required="true()" type="string" />
+		<bind id="brand-danger" nodeset="add[@key='ptn-base.danger']/@value" required="true()" type="string" />
+      <bind id="brand-light" nodeset="add[@key='ptn-base.light']/@value" required="true()" type="string" />
+	  <bind id="brand-dark" nodeset="add[@key='ptn-base.dark']/@value" required="true()" type="string" />
+	  <bind id="brand-white" nodeset="add[@key='ptn-base.white']/@value" required="true()" type="string" />
+		<bind id="brand-body-color" nodeset="add[@key='ptn-base.body-color']/@value" required="true()" type="string" />
+
+      <bind id="link-color" nodeset="add[@key='ptn-base.link-color']/@value" required="true()" type="string" />
+      <bind id="text-color" nodeset="add[@key='ptn-base.text-color']/@value" required="true()" type="string" />
+      <bind id="headings-font" nodeset="add[@key='ptn-base.headings-font']/@value" required="false()" type="string" />
+      <bind id="headings-font-family" nodeset="add[@key='ptn-base.headings-font-family']/@value" required="true()" type="string" />
+      <bind id="headings-font-import" nodeset="add[@key='ptn-base.headings-font-import']/@value" required="true()" type="string" />
+      <bind id="base-font" nodeset="add[@key='ptn-base.base-font']/@value" required="false()" type="string" />
+      <bind id="base-font-family" nodeset="add[@key='ptn-base.font-family-base']/@value" required="true()" type="string" />
+      <bind id="base-font-import" nodeset="add[@key='ptn-base.font-import-base']/@value" required="true()" type="string" />
+<!--
+      <bind id="btn-default-bg" nodeset="add[@key='ptn-base.btn-default-bg']/@value" required="true()" type="string" />
+      <bind id="btn-default-color" nodeset="add[@key='ptn-base.btn-default-color']/@value" required="true()" type="string" />
+      <bind id="headings-color" nodeset="add[@key='ptn-base.headings-color']/@value" required="true()" type="string" />
+      -->
+    </bind>
+  </model>
+  <group ref="WebSettings">
+    <label>ptn-base Theme Settings</label>
+	  <group class="tabs">
+		  <!--
+    <group class="inline">
+      <label>Preset Colour Themes</label>
+		<group  class="row row-cols-md-2">
+			<select1 bind="ThemePreset" class="ewQuery" appearance="minimal" query="themePresets">
+				<label>Load Existing Preset Colour Theme</label>
+				<item>
+					<label></label>
+					<value></value>
+				</item>
+			</select1>
+			<input ref="newPresetName">
+				<help class="inline">this saves the current configuration as a new preset</help>
+				<label>Save As New Preset - Name</label>
+			</input>
+		</group>
+    </group>
+    <group>
+      <label>Overall Layout</label>
+		<group  class="row row-cols-md-2">
+        <select1 bind="SiteXsl" appearance="minimal">
+          <label>Sub Menu Layout</label>
+          <item>
+            <label>Top Navigation Sub Menu Dropdown</label>
+            <value>/ewthemes/ptn-base/NoMenuWithBanner.xsl</value>
+          </item>
+          <item>
+            <label>Top Navigation Sub Navigation on the Left</label>
+            <value>/ewthemes/ptn-base/TopNavSideSub.xsl</value>
+          </item>
+        </select1>
+        <select1 bind="HeaderLayout" appearance="minimal">
+          <label>Header Layout</label>
+          <item>
+            <label>Long menu below header content</label>
+            <value>header-template1</value>
+          </item>
+          <item>
+            <label>Short menu to right of logo</label>
+            <value>header-flex1</value>
+          </item>
+        </select1>
+      </group>
+    </group>
+	-->
+		  <!--group class="inline">
+      <label>Theme Style</label>
+      <select1 bind="ThemeSkin" appearance="minimal">
+        <item>
+          <label>Default</label>
+          <value></value>
+        </item>
+        <item>
+          <label>Bold</label>
+          <value>/ewthemes/ptn-base/css/skins/bold.less</value>
+        </item>
+        <item>
+          <label>Clean</label>
+          <value>/ewthemes/ptn-base/css/skins/clean.less</value>
+        </item>
+      </select1>
+    </group>-->
+	<group class="inline">
+			  <label>Page Layout</label>
+		<group class="row row-cols-md-2">
+			<select1 bind="SiteXsl" appearance="full" class="fontSelect">
+				<label>Theme Layout</label>
+				<item>
+					<label>Top Banner</label>
+					<value>/themes/ptn-base/layout-header-banner.xsl</value>
+				</item>
+				<item>
+					<label>Side Menu</label>
+					<value>/themes/ptn-base/layout-side-menu.xsl</value>
+				</item>
+			</select1>
+			<select1 bind="header-layout" appearance="full" class="fontSelect">
+				<label>Header Layout</label>
+				<item>
+					<label>header menu right</label>
+					<value>header-menu-right</value>
+				</item>
+				<item>
+					<label>header menu below</label>
+					<value>header-menu-below</value>
+				</item>
+				<item>
+					<label>header basic</label>
+					<value>header-basic</value>
+				</item>
+				</select1>
+		</group>
+	</group>
+    <group class="inline">
+      <label>Main Colours</label>
+		<group  class="row row-cols-md-2">
+					<select1 bind="color-mode" appearance="full" class="fontSelect">
+				<label>Colour Mode</label>
+				<item>
+					<label>Default</label>
+					<value>default</value>
+				</item>
+				<item>
+					<label>Dark</label>
+					<value>dark</value>
+				</item>
+				</select1>
+      <input bind="brand-primary" class="colorPicker">
+        <label>Brand Primary Colour</label>
+      </input>
+      <input bind="brand-secondary" class="colorPicker">
+        <label>Brand Secondary Colour</label>
+      </input>
+      <input bind="brand-info" class="colorPicker">
+        <label>Brand Info Colour</label>
+      </input>
+      <input bind="brand-success" class="colorPicker">
+        <label>Brand Success Colour [Green]</label>
+      </input>
+      <input bind="brand-warning" class="colorPicker">
+        <label>Brand Warning Colour [Yellow]</label>
+      </input>
+      <input bind="brand-danger" class="colorPicker">
+        <label>Brand Danger Colour [Red]</label>
+      </input>
+			<input bind="brand-light" class="colorPicker">
+				<label>Brand Light Colour</label>
+			</input>
+			<input bind="brand-dark" class="colorPicker">
+				<label>Brand Dark Colour</label>
+			</input>
+			<input bind="brand-white" class="colorPicker">
+				<label>Brand White Colour</label>
+			</input>
+			<input bind="brand-body-color" class="colorPicker">
+				<label>Body Colour</label>
+			</input>
+			</group>
+    </group>
+		
+    <group class="inline">
+      <label>Fonts Settings</label>
+		<group  class="row row-cols-md-2">
+      <input bind="text-color" class="colorPicker">
+        <label>Theme text colour</label>
+      </input>
+      <input bind="headings-color" class="colorPicker">
+        <label>Headings Colour</label>
+      </input>
+      <select1 bind="base-font" appearance="minimal" class="fontSelect">
+        <label>Body Fonts</label>
+        <item>
+          <label>Lato</label>
+          <value>'Lato', sans-serif|Lato:300,400,700,300italic,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Open Sans </label>
+          <value>'Open Sans', sans-serif|Open+Sans:300italic,400italic,700italic,400,700,300</value>
+        </item>
+        <item>
+          <label>Roboto </label>
+          <value>'Roboto', sans-serif|Roboto:300italic,400italic,500italic,700italic,300,400,500,700</value>
+        </item>
+        <item>
+          <label>Source Sans Pro </label>
+          <value>'Source Sans Pro', sans-serif|Source+Sans+Pro:400,300,300italic,400italic,600,600italic,700,700italic</value>
+        </item>
+        <item>
+          <label>Droid Sans</label>
+          <value>'Droid Sans', sans-serif|Driod+Slab:400,700,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Roboto Slab</label>
+          <value>'Roboto Slab', sans-serif|Roboto+Slab:400,700,300</value>
+        </item>
+        <item>
+          <label>Cabin</label>
+          <value>'Cabin', sans-serif|Cabin:400,700,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Lobster</label>
+          <value>'Lobster', cursive|Lobster</value>
+        </item>
+        <item>
+          <label>Arial Black/Gadget</label>
+          <value>Arial Black, Arial Black, Gadget, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Courier New/Newlinespace</label>
+          <value>Courier New, Courier New, Newlinespace|none</value>
+        </item>
+        <item>
+          <label>Georgia</label>
+          <value>Georgia1, Georgia, serif|none</value>
+        </item>
+        <item>
+          <label>Lucida Sans/Lucida Grande</label>
+          <value>Lucida Sans Unicode, Lucida Grande, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Tahoma/Geneva</label>
+          <value>Tahoma, Geneva, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Times New Roman/Times</label>
+          <value>Times New Roman, Times New Roman, Times, serif|none</value>
+        </item>
+        <item>
+          <label>Verdana/Geneva</label>
+          <value>Verdana, Geneva, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Add New Google Font</label>
+          <value>'Font Name Here', sans-serif|Font+Name+Here:300,400,700,300italic,400italic,700italic</value>
+        </item>
+        <value />
+      </select1>
+      <select1 bind="headings-font" appearance="minimal" class="fontSelect">
+        <label>Heading Fonts</label>
+        <item>
+          <label>Lato</label>
+          <value>'Lato', sans-serif|Lato:300,400,700,300italic,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Open Sans </label>
+          <value>'Open Sans', sans-serif|Open+Sans:300italic,400italic,700italic,400,700,300</value>
+        </item>
+        <item>
+          <label>Droid Sans</label>
+          <value>'Droid Sans', sans-serif|Driod+Slab:400,700,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Roboto Slab</label>
+          <value>'Roboto Slab', sans-serif|Roboto+Slab:400,700,300</value>
+        </item>
+        <item>
+          <label>Cabin</label>
+          <value>'Cabin', sans-serif|Cabin:400,700,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Lobster</label>
+          <value>'Lobster', cursive|Lobster</value>
+        </item>
+        <item>
+          <label>Arial Black/Gadget</label>
+          <value>Arial Black, Arial Black, Gadget, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Courier New/Newlinespace</label>
+          <value>Courier New, Courier New, Newlinespace|none</value>
+        </item>
+        <item>
+          <label>Georgia</label>
+          <value>Georgia1, Georgia, serif|none</value>
+        </item>
+        <item>
+          <label>Lucida Sans/Lucida Grande</label>
+          <value>Lucida Sans Unicode, Lucida Grande, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Tahoma/Geneva</label>
+          <value>Tahoma, Geneva, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Times New Roman/Times</label>
+          <value>Times New Roman, Times New Roman, Times, serif|none</value>
+        </item>
+        <item>
+          <label>Verdana/Geneva</label>
+          <value>Verdana, Geneva, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Add New Google Font</label>
+          <value>'Font Name Here', sans-serif|Font+Name+Here:300,400,700,300italic,400italic,700italic</value>
+        </item>
+        <value />
+      </select1>
+			</group>
+
+ 
+		<group  class="row row-cols-md-2">
+			<input bind="base-font-family">
+				<label>Text Font Name</label>
+			</input>
+			<input bind="headings-font-family">
+				<label>Heading Font Name</label>
+			</input>
+			<input bind="base-font-import">
+				<label>Text Font Import</label>
+			</input>
+			<input bind="headings-font-import">
+				<label>Heading Font Import</label>
+			</input>
+		</group>
+    </group>
+		  <group class="inline">
+			  <label>Links and buttons</label>
+			  <group  class="row row-cols-md-2">
+				  <input bind="link-color" class="colorPicker">
+					  <label>Link Colour</label>
+				  </input>
+				  <input bind="btn-default-bg" class="colorPicker">
+					  <label>Button Background Colour</label>
+				  </input>
+				  <input bind="btn-default-color" class="colorPicker">
+					  <label>Button Text Colour</label>
+				  </input>
+			  </group>
+		  </group>
+	
+    </group>
+    <submit submission="" ref="WebSettings" class="principle">
+      <label>Save Settings</label>
+    </submit>
+  </group>
+</Content>

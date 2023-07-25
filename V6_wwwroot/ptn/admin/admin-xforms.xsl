@@ -936,17 +936,17 @@
 			theme: "silver",
 			width: "auto",
 			relative_urls: false,
-			plugins: "table paste link image ewimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount",
+			plugins: "table paste link image ptnimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount",
 			entity_enconding: "numeric",
-      image_advtab: true,
-      menubar: "edit insert view format table tools",
-      toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image ewimage",
+            image_advtab: true,
+            menubar: "edit insert view format table tools",
+            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | ptnimage",
 			convert_fonts_to_spans: true,
 			gecko_spellcheck: true,
 			theme_advanced_toolbar_location: "top",
 			theme_advanced_toolbar_align: "left",
 			paste_create_paragraphs: false,
-      link_list: tinymcelinklist,
+            link_list: tinymcelinklist,
 			paste_use_dialog: true,</xsl:text>
     <xsl:apply-templates select="." mode="tinymceStyles"/>
     <xsl:apply-templates select="." mode="tinymceContentCSS"/>
@@ -3535,6 +3535,9 @@
 
   </xsl:template>
 
+	<xsl:template match="submit[contains(@class,'getGeocodeButton')]" mode="xform_control_script">
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?key={$GoogleAPIKey}">&#160;</script>
+	</xsl:template>
 
   <xsl:template match="group[contains(@class,'PermissionButtons')]" mode="xform">
     <xsl:param name="class"/>
@@ -3577,6 +3580,17 @@
       </div>
     </fieldset>
   </xsl:template>
+
+
+	<xsl:template match="alert[@class='item-deleted']" mode="xform">
+		<div class="alert alert-warning">			
+			<span class="alert-msg">
+				<xsl:if test="Content/@moduleType">
+				Module Type: <xsl:value-of select="Content/@moduleType"/>
+				</xsl:if>
+			</span>
+		</div>
+	</xsl:template>
 
 
 </xsl:stylesheet>

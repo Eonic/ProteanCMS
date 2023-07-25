@@ -16,6 +16,7 @@
   <!-- ############################################ THEME VARIABLES ############################################### -->
 
   <xsl:variable name="themeLayout">layout-header-banner</xsl:variable>
+	
   <xsl:template match="Page" mode="bodyDisplay">
     <xsl:variable name="nav-padding">
       <xsl:if test="$currentPage/DisplayName[@navpad='false'] and not($cartPage)">mt-0</xsl:if>
@@ -75,7 +76,7 @@
             <xsl:with-param name="social-links">true</xsl:with-param>
           </xsl:apply-templates>
         </xsl:when>
-        <xsl:otherwise>
+        <xsl:otherwise>			
           <xsl:apply-templates select="." mode="header-menu-below">
             <xsl:with-param name="nav-collapse">false</xsl:with-param>
           </xsl:apply-templates>

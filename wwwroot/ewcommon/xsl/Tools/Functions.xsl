@@ -284,13 +284,22 @@
   </xsl:variable>
 	
   <xsl:variable name="GoogleGA4MeasurementID">
-    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+    <xsl:if test="not(/Page/@adminMode)">
       <xsl:call-template name="getXmlSettings">
         <xsl:with-param name="sectionName" select="'web'"/>
         <xsl:with-param name="valueName" select="'GoogleGA4MeasurementID'"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
+
+	<xsl:variable name="GoogleAdConversionID">
+		<xsl:if test="not(/Page/@adminMode)">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'GoogleAdConversionID'"/>
+			</xsl:call-template>
+		</xsl:if>
+	</xsl:variable>
 
   <xsl:variable name="GoogleOptimizeID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -518,9 +527,53 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="Page" mode="google-ga4-config-params">
+		<!-- for overloading on specific actions -->
+		<!--
+		<xsl:if test="$page/Request/GoogleCampaign">
+		'{		
+		        <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+					'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
+				</xsl:if>
+				<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+					<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+					'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>'
+				</xsl:if>
+		}
+		</xsl:if>
+		-->
+	</xsl:template>
+
+
+	<xsl:template match="Page[User]" mode="google-ga4-config-params">
+	
+		, {
+		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+			'campaign_source': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>'
+		</xsl:if>
+		<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+			<xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">,</xsl:if>
+			'campaign_medium': '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>',
+		</xsl:if>
+		'user_id': '<xsl:value-of select="User/@id"/>'
+		}
+	</xsl:template>
+
+
   <xsl:template match="Page" mode="google-ga4-event">
       <!-- for overloading on specific actions -->
   </xsl:template>
+
+	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event">
+		gtag('event', 'ptn_form_submission', {
+		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
+		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
+			'<xsl:value-of select="name()"/>':'<xsl:value-of select="node()"/>
+			<xsl:text>'</xsl:text>
+			<xsl:if test="position()!=last()">,</xsl:if>
+		</xsl:for-each>
+        });
+	</xsl:template>
 	
 		
   <xsl:template match="Page" mode="criticalPathCSS">
@@ -761,7 +814,7 @@
         <xsl:apply-templates select="." mode="commonJsFiles" />
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/Jquery</xsl:text>
+        <xsl:text>~/Bundles/common</xsl:text>
       </xsl:with-param>
 	<xsl:with-param name="async" select="$async"/>  
     </xsl:call-template>
@@ -1154,7 +1207,7 @@
       </xsl:otherwise>
     </xsl:choose>
 
-    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
+    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/> 
 
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
@@ -1309,18 +1362,22 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
       </xsl:otherwise>
     </xsl:choose>
-
 	  <xsl:if test="$GoogleGA4MeasurementID!=''">
 		  <!-- GA4 Tag Manager -->
 		  <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-		  <script cookie-consent="tracking">
+		  <script id="GA4Code" cookie-consent="tracking">
 			  window.dataLayer = window.dataLayer || [];
 			  function gtag(){dataLayer.push(arguments);}
 			  gtag('js', new Date());
-			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>');
+			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
 			  <xsl:apply-templates select="." mode="google-ga4-event"/>
 		  </script>
 		  <!-- End GA4 Tag Manager -->
+	  </xsl:if>
+	  <xsl:if test="$GoogleAdConversionID!=''">
+		  <script id="GadCode" cookie-consent="tracking">
+			  gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
+		  </script>
 	  </xsl:if>
 	  
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
@@ -2725,7 +2782,7 @@
       <xsl:if test="$BingTrackingID!=''">
 		 <script cookie-consent="tracking">
 			
-          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState; s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
+          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp;s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
           <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
 			  window.uetq = window.uetq || [];
 			  window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
@@ -6858,10 +6915,9 @@
     <xsl:variable name="max-height-lg">
       <xsl:apply-templates select="." mode="getThHeight-lg"/>
     </xsl:variable>
-    
-    
+
     <xsl:if test="Images/img[@src and @src!='']">
-      <xsl:call-template  name="displayResponsiveImage">
+		     <xsl:call-template  name="displayResponsiveImage">
         <xsl:with-param name="crop" select="$crop"/>
         <xsl:with-param name="width" select="$max-width"/>
         <xsl:with-param name="height" select="$max-height"/>
@@ -7939,7 +7995,7 @@
     <xsl:value-of select="false()"/>
   </xsl:template>
 
-  <xsl:template match="Content[@type='Document' or @type='Review']" mode="displayThumbnail">
+  <xsl:template match="Content[@type='Document']" mode="displayThumbnail">
     <xsl:param name="crop" select="false()" />
     <xsl:param name="no-stretch" select="true()" />
     <xsl:param name="width"/>
@@ -10700,9 +10756,11 @@
               <xsl:text>wrapper-sm </xsl:text>
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
+			 
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> margin-bottom-0 </xsl:text>
               </xsl:if>
+
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>
               </xsl:if>

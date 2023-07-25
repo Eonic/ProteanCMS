@@ -4,8 +4,7 @@
 		<ContentTypeGroup name="Media">
 			<ContentType type="SwiperSlide" formPath="swiperslide" name="Swiper Slide"></ContentType>
 		</ContentTypeGroup>
-	</ContentTypes>
-  
+	</ContentTypes>  
   <ModuleTypes>
     <ModuleGroup name="Image Galleries" icon="fas fa-images">     
       <Module type="SwiperCarousel" formPath="swipercarousel" icon="fas fa-images" name="Carousel">Create a carousel of images with optional captions and links</Module>

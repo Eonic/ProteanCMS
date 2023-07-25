@@ -375,7 +375,7 @@
 					<xsl:value-of select="@userlang"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="@translang"/>
+					<xsl:value-of select="@lang"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -519,7 +519,11 @@
 
 	<xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
-	<xsl:template match="Page" mode="headerOnlyJS"></xsl:template>
+	<xsl:template match="Page" mode="headerOnlyJS">
+		<xsl:apply-templates select="/Page/Contents/Content" mode="headerOnlyContentJS"/>
+	</xsl:template>
+	
+	<xsl:template match="Content" mode="headerOnlyContentJS"></xsl:template>
 
 	<xsl:template match="Content" mode="opengraph-namespace">
 		<xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
@@ -1061,7 +1065,7 @@
 
 	<xsl:template match="Page" mode="metadata">
 		<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 		<xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
 			<xsl:apply-templates select="." mode="getMetaDescription"/>
@@ -4211,7 +4215,7 @@
 							<xsl:call-template name="term2042" />
 						</xsl:otherwise>
 					</xsl:choose>
-					<span class="sr-only">
+					<span class="visually-hidden">
 						<xsl:text>about </xsl:text>
 						<xsl:value-of select="$altText"/>
 					</span>
@@ -4341,7 +4345,7 @@
 						<xsl:otherwise>
 							<xsl:call-template name="term2042" />
 							<xsl:text> </xsl:text>
-							<span class="sr-only">
+							<span class="visually-hidden">
 								<xsl:text>about </xsl:text>
 								<xsl:value-of select="altText"/>
 							</span>
@@ -4385,7 +4389,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:if test="$altText !=''">
-						<span class="sr-only">
+						<span class="visually-hidden">
 							<!-- about -->
 							<xsl:call-template name="term2023" />
 							<xsl:text>&#160;</xsl:text>
@@ -6959,10 +6963,10 @@
 				<xsl:choose>
 					<xsl:when test="$detailSrc!=''">
 
-						<span class="picture {$class}">
+						<span class="img-fluid {$class}">
 							<xsl:if test="$showImage = 'noshow'">
 								<xsl:attribute name="class">
-									<xsl:text>picture hidden</xsl:text>
+									<xsl:text>hidden</xsl:text>
 								</xsl:attribute>
 							</xsl:if>
 							<a data-src="{$detailSrc}" data-fancybox="">
@@ -6988,7 +6992,7 @@
 						<xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
 						<xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
 						<xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-						<img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" id="{$imgId}"/>
+						<img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="img-fluid" id="{$imgId}"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -9265,9 +9269,9 @@
 							</xsl:call-template>
 						</xsl:if>
 					</xsl:variable>
-					<section class="wrapper-sm {@background}">
+					<section>
 						<xsl:attribute name="class">
-							<xsl:text>wrapper-sm </xsl:text>
+							<xsl:text>wrapper-sm section-spacing </xsl:text>
 							<xsl:value-of select="@background"/>
 							<xsl:apply-templates select="." mode="hideScreens" />
 							<xsl:if test="@marginBelow='false'">

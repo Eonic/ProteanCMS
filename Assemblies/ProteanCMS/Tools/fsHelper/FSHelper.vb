@@ -27,6 +27,8 @@ Imports System.Web.UI
 Imports System.Web
 Imports Microsoft.Ajax.Utilities
 Imports DelegateWrappers
+Imports System.Drawing.Imaging
+Imports System.Net
 
 Partial Public Class fsHelper
 
@@ -520,7 +522,9 @@ Partial Public Class fsHelper
 
             If dir.Exists Then
                 Dim f As FileInfo
+                dir.Attributes = FileAttributes.Normal
                 For Each f In dir.GetFiles()
+                    f.Attributes = FileAttributes.Normal
                     f.Delete()
                 Next f
                 Dim d As DirectoryInfo
@@ -530,7 +534,8 @@ Partial Public Class fsHelper
             Else
                 Return "this folder does not exist"
             End If
-            oImp.UndoImpersonation()
+
+
             If ImpersonationMode Then
                 oImp.UndoImpersonation()
                 oImp = Nothing
@@ -717,7 +722,7 @@ Partial Public Class fsHelper
             End If
             'here we will fix any unsafe web charactors in the name
             filename = Replace(filename, " ", "-")
-
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
             If IO.File.Exists(mcStartFolder & cFolderPath & "\" & filename) Then
                 Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
             Else
@@ -955,16 +960,25 @@ Partial Public Class fsHelper
     End Function
 
 
-    Public Sub UploadRequest(ByVal context As System.Web.HttpContext)
+    Public Sub UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal ProductName As String = "")
         Try
 
 
             context.Response.AddHeader("Pragma", "no-cache")
             context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
-            mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
-            mcRoot = context.Server.MapPath("/")
-
+            If ProductName IsNot Nothing Then
+                Dim UploadDir As String = context.Request("storageRoot") + ProductName.Replace("\", "/").Replace("""", "")
+                Dim dirpath As String = context.Server.MapPath(UploadDir)
+                If Not Directory.Exists(dirpath) Then
+                    Directory.CreateDirectory(dirpath)
+                End If
+                mcStartFolder = dirpath
+                mcRoot = context.Server.MapPath("/")
+            Else
+                mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
+                mcRoot = context.Server.MapPath("/")
+            End If
             HandleUploads(context)
 
         Catch ex As Exception

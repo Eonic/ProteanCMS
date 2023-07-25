@@ -25,6 +25,8 @@ Imports System
 Imports System.Reflection
 Imports Lucene.Net.Support
 Imports System.ServiceModel.Channels
+Imports ICSharpCode.SharpZipLib.Zip.ExtendedUnixData
+
 
 Partial Public Class Cms
     Public Class Admin
@@ -43,12 +45,11 @@ Partial Public Class Cms
         'Public moXformEditor As XFormEditor
 
         Private mcPagePath As String
-
+        Public goServer As System.Web.HttpServerUtility
         'preview mode info
         Public mbPreviewMode As Boolean 'Is Preview mode on?
         Public myWeb As Cms
         Public moConfig As System.Collections.Specialized.NameValueCollection
-
         Public nAdditionId As Integer
         Public moDeniedAdminMenuElmt As XmlElement
 
@@ -633,7 +634,7 @@ ProcessFlow:
 
                         Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/theme")
 
-                        oPageDetail.AppendChild(moAdXfm.xFrmThemeSettings("../../ewThemes/" & moThemeConfig("CurrentTheme") & "/xforms/Config/SkinSettings"))
+                        oPageDetail.AppendChild(moAdXfm.xFrmThemeSettings(moThemeConfig("CurrentTheme") & "/xforms/Config/ThemeSettings"))
 
                         If moAdXfm.valid Then
 
@@ -657,6 +658,7 @@ ProcessFlow:
                         mcEwCmd = "Normal"
                         sAdminLayout = ""
                         EditContext = "Normal"
+                        myWeb.moSession("ContentEdit") = ""
 
                         If Not myWeb.mbPopupMode Then
                             If myWeb.moRequest("pgid") <> "" Then
@@ -2304,7 +2306,9 @@ ProcessFlow:
                         FilterIndex(oPageDetail, sAdminLayout)
 
                     Case "ResetWebConfig"
-                        ResetWebConfig(oPageDetail, sAdminLayout)
+                        ResetWebConfig()
+
+
                 End Select
 
                 SupplimentalProcess(sAdminLayout, oPageDetail)
@@ -3766,7 +3770,7 @@ AfterProcessFlow:
 
                     Case "ShippingGroup"
                         sAdminLayout = "AdminXForm"
-                        oPageDetail.AppendChild(moAdXfm.xFrmProductShippingGroupRelations(myWeb.moRequest.QueryString("id"), ""))
+                        oPageDetail.AppendChild(moAdXfm.xFrmProductShippingGroupRelations(myWeb.moRequest.QueryString("id"), myWeb.moRequest.QueryString("name")))
 
                     Case "delete"
                         'xFrmDeleteDeliveryMethod
@@ -4341,6 +4345,13 @@ from tblContentIndexDef"
         Private Sub updateLessVariables(ByVal ThemeName As String, ByRef settingsXml As XmlElement)
             Dim cProcessInfo As String = ""
             Dim ThemeLessFile As String = ""
+            Dim ThemePath As String = "/themes/"
+            Dim VariablePrefix As String = "\$" ' $ needs escaping.
+            If myWeb.moConfig("cssFramework") <> "bs5" Then
+                ThemePath = "/ewThemes/"
+                VariablePrefix = "@"
+            End If
+
             Try
                 If Not settingsXml.SelectSingleNode("theme/add[@key='variablesPath']") Is Nothing Then
                     ThemeLessFile = settingsXml.SelectSingleNode("theme/add[@key='variablesPath']/@value").InnerText
@@ -4349,7 +4360,7 @@ from tblContentIndexDef"
                     Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
 
                     ThemeLessFile = fsHelper.checkLeadingSlash(ThemeLessFile)
-                    ThemeLessFile = "/ewThemes/" & ThemeName & "/" & ThemeLessFile
+                    ThemeLessFile = ThemePath & ThemeName & "/" & ThemeLessFile
                     If oFsH.VirtualFileExists(ThemeLessFile) Then
 
 
@@ -4375,7 +4386,7 @@ from tblContentIndexDef"
                         Dim oElmt As XmlElement
                         For Each oElmt In settingsXml.SelectNodes("theme/add[starts-with(@key,'" & ThemeName & ".')]")
                             Dim variableName As String = oElmt.GetAttribute("key").Replace(ThemeName & ".", "")
-                            Dim searchText As String = "(?<=@" & variableName & ":).*(?=;)"
+                            Dim searchText As String = "(?<=" & VariablePrefix & variableName & ":).*(?=;)"
                             Dim replaceText As String = oElmt.GetAttribute("value").Trim
 
                             'handle image files in CSS
@@ -4411,16 +4422,15 @@ from tblContentIndexDef"
 
         Private Sub updateStandardXslVariables(ByVal ThemeName As String, ByRef settingsXml As XmlElement)
             Dim cProcessInfo As String = ""
-            Dim ThemeXslFile As String = ""
+            Dim ThemeXslFile As String = "/themes/" & ThemeName & "/shared.xsl"
             Try
 
                 Dim oFsH As New Protean.fsHelper(myWeb.moCtx)
+                If myWeb.moConfig("cssFramework") <> "bs5" Then
+                    ThemeXslFile = "/ewThemes/" & ThemeName & "/Standard.xsl"
+                End If
 
-
-                ThemeXslFile = "/ewThemes/" & ThemeName & "/Standard.xsl"
                 If oFsH.VirtualFileExists(ThemeXslFile) Then
-
-
 
                     Dim oImp As Protean.Tools.Security.Impersonate = Nothing
                     If myWeb.impersonationMode Then
@@ -4769,7 +4779,7 @@ SP:
                     End If
 
                 Case "ManageUserSubscription"
-
+                    myWeb.moSession("tempInstance") = Nothing
                     oSub.GetSubscriptionDetail(oPageDetail, myWeb.moRequest("id"))
                     sAdminLayout = "ManageUserSubscription"
                     'If oADX.valid Then
@@ -5113,27 +5123,25 @@ SP:
         End Sub
 
 
-        Private Sub ResetWebConfig(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String)
+        Private Sub ResetWebConfig()
             Dim sProcessInfo As String = ""
 
             Try
                 Dim myConfiguration As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~")
-                'Dim appSettingsSection As DefaultSection = DirectCast(WebConfigurationManager.GetSection("ABC"), DefaultSection)
-                Dim flag As String = myConfiguration.AppSettings.Settings.Item("resetFlag").Value.ToString()
-                If flag = "True" Then
-                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "False"
+                Dim flag As String = myConfiguration.AppSettings.Settings.Item("recompile").Value.ToString()
+                If flag.ToLower() = "true" Then
+                    Protean.Config.UpdateConfigValue(myWeb, "", "recompile", "false")
                 Else
-                    myConfiguration.AppSettings.Settings.Item("resetFlag").Value = "True"
+                    Protean.Config.UpdateConfigValue(myWeb, "", "recompile", "true")
                 End If
-                myConfiguration.Save()
-
                 myWeb.moResponse.Redirect(myWeb.mcRequestDomain)
-
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
+
+
 
         Private Sub ReIndexing(ByRef aWeb As Protean.Cms)
             myWeb = aWeb
@@ -5172,6 +5180,7 @@ SP:
                 returnException(myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
+
     End Class
 
 

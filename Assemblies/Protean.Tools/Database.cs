@@ -7,9 +7,6 @@ using System.Data.SqlClient;
 using System.Collections;
 using System.Collections.Generic;
 
-
-
-
 namespace Protean.Tools
 {
     public class Database : IDisposable
@@ -354,6 +351,7 @@ namespace Protean.Tools
             }
         }
 
+       
         public bool CreateDatabase(string databasename)
         {
             string cProcessInfo = "createDB";
@@ -687,6 +685,8 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
+        
+
         public void ExeProcessSql(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null)
         {
             string cProcessInfo = "Running Sql: " + sql;
@@ -735,6 +735,7 @@ namespace Protean.Tools
             return ExeProcessSqlfromFile(filepath, ref errmsg);
         }
 
+    
         public int ExeProcessSqlfromFile(string filepath, ref string errmsg)
         {
             int nUpdateCount;
@@ -771,6 +772,7 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
+      
         public int ExeProcessSqlorIgnore(string sql)
         {
             int nUpdateCount;
@@ -909,6 +911,9 @@ namespace Protean.Tools
                 return null/* TODO Change to default(_) if this is not a reference type */;
             }
         }
+
+
+
         /// <summary>
         /// Returns a dataset
         /// </summary>
@@ -920,19 +925,30 @@ namespace Protean.Tools
         /// <param name="bHandleTimeouts">Indicates whether to pass timeouts through the standard error handling, or ignore them.</param>
         /// <returns></returns>
         /// <remarks></remarks>
-        public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0)
+        
+
+        public DataSet GetDataSet(string sql, string tablename, string datasetname = "", bool bHandleTimeouts = false, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, CommandType querytype = CommandType.Text, int pageSize = 0, int pageNumber = 0, string cConn ="")
         {
             string cProcessInfo = "Running Sql:  " + sql;
             DataSet oDs = new DataSet();
             int nStartIndex = (pageSize * pageNumber) - pageSize + 1;
             try
             {
-                if (oConn == null)
+                SqlConnection oConnection = null;
+                oConnection = oConn;
+                if (oConnection == null)
                     ResetConnection();
-                SqlDataAdapter oDataAdpt = new SqlDataAdapter(sql, oConn);
+                if(cConn!=string.Empty)
+                {
+                    oConnection = new SqlConnection(cConn);
+                }
+                SqlDataAdapter oDataAdpt = new SqlDataAdapter(sql, oConnection);
 
                 if (oConn.State == ConnectionState.Closed)
                     oConn.Open();
+
+                if (oConnection.State == ConnectionState.Closed)
+                    oConnection.Open();
 
                 if (datasetname != "")
                     oDs.DataSetName = datasetname;
@@ -1004,6 +1020,75 @@ namespace Protean.Tools
 
                 oScalarValue = oCmd.ExecuteScalar();
                 oConn.Close();
+                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+
+                // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
+                if ((!(nullreturnvalue == null)) & (oScalarValue == null | oScalarValue == null))
+                    oScalarValue = nullreturnvalue;
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo));
+                oScalarValue = nullreturnvalue;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            if (oScalarValue != nullreturnvalue)
+            {
+                if (oScalarValue.GetType() != typeof(DBNull))
+                {
+                    return oScalarValue;
+                }
+                else
+                {
+                    return nullreturnvalue;
+                };
+
+            }
+            else
+            {
+                return nullreturnvalue;
+            };
+        }
+
+
+
+        public object GetDataValue(string sql, string cConn, CommandType commandtype = CommandType.Text,  Hashtable parameters = null, object nullreturnvalue = null)
+        {
+            string cProcessInfo = "Running Sql: " + sql;
+            SqlConnection oConnection = null;
+            object oScalarValue;
+            try
+            {
+                if (cConn != string.Empty)
+                {
+                    oConnection = new SqlConnection(cConn);
+                }
+                else
+                {
+                    oConnection = oConn;
+                }
+                SqlCommand oCmd = new SqlCommand(sql, oConnection);
+
+                // Set the command type
+                oCmd.CommandType = commandtype;
+
+                // Set the Paremeters if any
+                if (!(parameters == null))
+                {
+
+                    foreach (DictionaryEntry oEntry in parameters)
+                        oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                }
+
+                // Open the connection
+                if (oConnection.State == ConnectionState.Closed)
+                    oConnection.Open();
+
+                oScalarValue = oCmd.ExecuteScalar();
+                oConnection.Close();
                 oCmd = null/* TODO Change to default(_) if this is not a reference type */;
 
                 // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
@@ -1426,6 +1511,64 @@ namespace Protean.Tools
             }
         }
 
+        public bool checkDBObjectExists(string cObjectName, objectTypes nObjectType,string cConn)
+        {
+            string cObjectProperty = "";
+            string cSql = "";
+            bool bReturn = false;
+
+            try
+            {
+                
+                if (cObjectName != "")
+                {
+                    if (nObjectType == objectTypes.Database)
+                    {
+                        if (GetDataSet(string.Format("select name from master..sysdatabases where name = '{0}'", SqlFmt(cObjectName)), "db").Tables[0].Rows.Count > 0)
+                            return true;
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        switch (nObjectType)
+                        {
+                            case objectTypes.Table:
+                                {
+                                    cObjectProperty = " AND OBJECTPROPERTY(id, N'IsUserTable') = 1";
+                                    break;
+                                }
+
+                            case objectTypes.View:
+                                {
+                                    cObjectProperty = " AND OBJECTPROPERTY(id, N'IsView') = 1";
+                                    break;
+                                }
+
+                            case objectTypes.StoredProcedure:
+                                {
+                                    cObjectProperty = " AND OBJECTPROPERTY(id, N'IsProcedure') = 1";
+                                    break;
+                                }
+
+                            case objectTypes.UserFunction:
+                                {
+                                    cObjectProperty = " AND xtype in (N'FN', N'IF', N'TF')";
+                                    break;
+                                }
+                        }
+                        cSql = "SELECT COUNT(*) As c FROM sysobjects WHERE id = OBJECT_ID(N" + SqlString(cObjectName) + ")" + cObjectProperty;
+                        bReturn = ((int)this.GetDataValue(cSql, cConn, nullreturnvalue: 0) > 0);
+                    }
+                }
+                return bReturn;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool checkDBObjectExists(string dbObjectName)
         {
             string objectProperty = "";
@@ -1547,25 +1690,28 @@ namespace Protean.Tools
             string cProcessInfo = "getDataReader";
             try
             {
-                foreach (DataTable oTable in ds.Tables)
+                if (ds != null)
                 {
-                    foreach (DataRow oRow in oTable.Rows)
+                    foreach (DataTable oTable in ds.Tables)
                     {
-                        foreach (DataColumn oColumn in oTable.Columns)
+                        foreach (DataRow oRow in oTable.Rows)
                         {
-                            // If IsDBNull(oRow.Item(oColumn.ColumnName)) Then
-                            switch (oColumn.DataType.ToString())
+                            foreach (DataColumn oColumn in oTable.Columns)
                             {
-                                case "System.DateTime":
-                                    {
-                                        if (!(oRow[oColumn.ColumnName] == null))
+                                // If IsDBNull(oRow.Item(oColumn.ColumnName)) Then
+                                switch (oColumn.DataType.ToString())
+                                {
+                                    case "System.DateTime":
                                         {
-                                            if ((DateTime)oRow[oColumn.ColumnName] == (DateTime)DateTime.Parse("0001-01-01"))
-                                                oRow[oColumn.ColumnName] = DBNull.Value;
-                                        }
+                                            if (!(oRow[oColumn.ColumnName] == null))
+                                            {
+                                                if ((DateTime)oRow[oColumn.ColumnName] == (DateTime)DateTime.Parse("0001-01-01"))
+                                                    oRow[oColumn.ColumnName] = DBNull.Value;
+                                            }
 
-                                        break;
-                                    }
+                                            break;
+                                        }
+                                }
                             }
                         }
                     }
@@ -1587,7 +1733,8 @@ namespace Protean.Tools
             string cProcessInfo = "returnNullsEmpty";
             try
             {
-                foreach (DataTable oTable in ds.Tables)
+                if (ds != null) { 
+                    foreach (DataTable oTable in ds.Tables)
                 {
                     foreach (DataRow oRow in oTable.Rows)
                     {
@@ -1600,7 +1747,7 @@ namespace Protean.Tools
                                 {
                                     case "System.DateTime":
                                         {
-                                            oRow[oColumn.ColumnName] = (DateTime)DateTime.Parse("0001-01-01");
+                                                oRow[oColumn.ColumnName] = (DateTime)DateTime.Parse("0001-01-01");
                                             break;
                                         }
 
@@ -1628,6 +1775,7 @@ namespace Protean.Tools
                             }
                         }
                     }
+                }
                 }
             }
             catch (Exception ex)

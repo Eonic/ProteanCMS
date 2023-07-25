@@ -139,6 +139,10 @@ Public Class Indexer
         Dim cPageExtract As String = ""
         Dim cPageXsl As String = "/xsl/search/cleanPage.xsl"
         Dim cExtractXsl As String = "/xsl/search/extract.xsl"
+        If myWeb.bs5 Then
+            cPageXsl = "/features/search/cleanPage.xsl"
+            cExtractXsl = "/features/search/extract.xsl"
+        End If
         Dim oPageXml As New XmlDocument
         Dim oElmtRules As XmlElement = Nothing
         Dim oElmtURL As XmlElement = Nothing
@@ -185,13 +189,17 @@ Public Class Indexer
             Me.StartIndex()
 
             If bIsError Then Exit Sub
+            Dim CommonPath As String = "/ewcommon"
+            If myWeb.bs5 Then
+                CommonPath = "/ptn"
+            End If
 
             'Check for local xsl or go to common
             If Not IO.File.Exists(goServer.MapPath(cPageXsl)) Then
-                cPageXsl = "/ewcommon" & cPageXsl
+                cPageXsl = CommonPath & cPageXsl
             End If
             If Not IO.File.Exists(goServer.MapPath(cExtractXsl)) Then
-                cExtractXsl = "/ewcommon" & cExtractXsl
+                cExtractXsl = CommonPath & cExtractXsl
             End If
 
 
@@ -615,7 +623,13 @@ Public Class Indexer
                     recipientEmail = moConfig("IndexAlertEmail")
                 End If
 
-                msg.emailer(oInfoElmt, "/ewcommon/xsl/Email/IndexerAlert.xsl", "EonicWebIndexer", serverSenderEmail, recipientEmail, myWeb.moRequest.ServerVariables("SERVER_NAME") & " Indexer Report")
+                Dim indexerAlertXsltPath = "/ewcommon/xsl/Email/IndexerAlert.xsl"
+                If myWeb.bs5 Then
+                    indexerAlertXsltPath = "/ptn/features/search/indexer-alert-email.xsl"
+                End If
+
+
+                msg.emailer(oInfoElmt, indexerAlertXsltPath, "EonicWebIndexer", serverSenderEmail, recipientEmail, myWeb.moRequest.ServerVariables("SERVER_NAME") & " Indexer Report")
                 msg = Nothing
 
             Catch ex As Exception
