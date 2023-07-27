@@ -217,6 +217,9 @@ section.bg-primary {
         color: $body-color;
     }
 }
+.linked-listItem {
+    position: relative;
+}
 // GRIDS
 .Grid {
     .grid-item a.grid-link {

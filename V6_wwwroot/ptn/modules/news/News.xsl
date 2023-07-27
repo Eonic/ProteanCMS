@@ -34,7 +34,7 @@
 				<!--end responsive columns-->
 
 				<!-- If Stepper, display Stepper -->
-				<xsl:choose>
+				<!--<xsl:choose>
 					<xsl:when test="@linkArticle='true'">
 						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
 							<xsl:with-param name="sortBy" select="@sortBy"/>
@@ -46,7 +46,12 @@
 							<xsl:with-param name="parentId" select="@id"/>
 						</xsl:apply-templates>
 					</xsl:otherwise>
-				</xsl:choose>
+				</xsl:choose>-->
+				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+					<xsl:with-param name="sortBy" select="@sortBy"/>
+					<xsl:with-param name="parentId" select="@id"/>
+					<xsl:with-param name="linked" select="@linkArticle"/>
+				</xsl:apply-templates>
 				<xsl:if test="@stepCount != '0'">
 					<xsl:apply-templates select="/" mode="genericStepper">
 						<xsl:with-param name="articleList" select="$contentList"/>
@@ -63,6 +68,7 @@
 
 	<!-- NewsArticle Module Swiper -->
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList' and @carousel='true']" mode="displayBrief">
+		<xsl:param name="linked"/>
 		<!-- Set Variables -->
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
@@ -93,7 +99,7 @@
 					<xsl:apply-templates select="." mode="contentColumns">
 						<xsl:with-param name="carousel" select="@carousel"/>
 					</xsl:apply-templates>
-					<xsl:choose>
+					<!--<xsl:choose>
 						<xsl:when test="@linkArticle='true'">
 							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
 								<xsl:with-param name="sortBy" select="@sortBy"/>
@@ -104,9 +110,15 @@
 							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 								<xsl:with-param name="sortBy" select="@sortBy"/>
 								<xsl:with-param name="class" select="'swiper-slide'"/>
+								<xsl:with-param name="linked" select="$linked"/>
 							</xsl:apply-templates>
 						</xsl:otherwise>
-					</xsl:choose>
+					</xsl:choose>-->
+					<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+						<xsl:with-param name="sortBy" select="@sortBy"/>
+						<xsl:with-param name="class" select="'swiper-slide'"/>
+						<xsl:with-param name="linked" select="$linked"/>
+					</xsl:apply-templates>
 					<xsl:text> </xsl:text>
 				</div>
 			</div>
@@ -142,12 +154,16 @@
 		<xsl:param name="sortBy"/>
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
+		<xsl:param name="linked"/>
 		<!-- articleBrief -->
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
 		<xsl:variable name="classValues">
 			<xsl:text>listItem newsarticle </xsl:text>
+			<xsl:if test="$linked='true'">
+				<xsl:text> linked-listItem </xsl:text>
+			</xsl:if>
 			<xsl:value-of select="$class"/>
 			<xsl:text> </xsl:text>
 			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
@@ -208,6 +224,7 @@
 					<xsl:apply-templates select="." mode="displayTags"/>
 					<xsl:apply-templates select="." mode="moreLink">
 						<xsl:with-param name="link" select="$parentURL"/>
+						<xsl:with-param name="stretchLink" select="$linked"/>
 						<xsl:with-param name="altText">
 							<xsl:value-of select="Headline/node()"/>
 						</xsl:with-param>
@@ -228,9 +245,21 @@
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
-		<div class="grid-item newsarticle">
+		<xsl:variable name="classValues">
+			<xsl:text>listItem newsarticle </xsl:text>
+			<xsl:value-of select="$class"/>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<div class="{$classValues}">
+			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+				<xsl:with-param name="pos" select="position()"/>
+			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="'grid-item newsarticle'"/>
+				<xsl:with-param name="class" select="'listItem newsarticle'"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 
 			</xsl:apply-templates>
