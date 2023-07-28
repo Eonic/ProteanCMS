@@ -233,7 +233,7 @@ section.bg-video-wrapper {
     display: flex;
     flex-direction: column;
 
-    div:nth-last-child(2) {
+    *:nth-last-child(2) {
         flex-grow: 2;
     }
 
