@@ -814,7 +814,7 @@
         <xsl:apply-templates select="." mode="commonJsFiles" />
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/Jquery</xsl:text>
+        <xsl:text>~/Bundles/common</xsl:text>
       </xsl:with-param>
 	<xsl:with-param name="async" select="$async"/>  
     </xsl:call-template>

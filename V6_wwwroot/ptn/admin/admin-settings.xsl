@@ -9,10 +9,10 @@
 
 
 
-  <xsl:template name="eonicwebProductName">
+  <xsl:template name="proteanProductName">
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.proteanProductName']/@value"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>Protean</xsl:text>
@@ -21,34 +21,34 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="eonicwebCMSName">
+  <xsl:template name="proteanCMSName">
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebCMSName']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCMSName']/@value"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanCMSName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.proteanCMSName']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="eonicwebProductName"/>
+        <xsl:call-template name="proteanProductName"/>
         <xsl:text> - Content Management System</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="eonicwebAdminSystemName">
+  <xsl:template name="proteanAdminSystemName">
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebAdminSystemName']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebAdminSystemName']/@value"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanAdminSystemName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.proteanAdminSystemName']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:call-template name="eonicwebProductName"/>
+        <xsl:call-template name="proteanProductName"/>
         <xsl:text> admin system</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="eonicwebCopyright">
+  <xsl:template name="proteanCopyright">
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebCopyright']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCopyright']/@value"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanCopyright']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.proteanCopyright']/@value"/>
       </xsl:when>
       <xsl:otherwise>
         Eonic Digital LLP.
@@ -56,21 +56,21 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="eonicwebSupportTelephone">
+  <xsl:template name="proteanSupportTelephone">
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebSupportTelephone']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportTelephone']/@value"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanSupportTelephone']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.proteanSupportTelephone']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        +44 (0)1892 534044
-      </xsl:otherwise>
+		  +44 (0)1273 761 586
+	  </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="eonicwebWebsite">
+  <xsl:template name="proteanWebsite">
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebWebsite']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanWebsite']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.proteanWebsite']/@value"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>eonic.com</xsl:text>
@@ -78,10 +78,10 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="eonicwebSupportEmail">
+  <xsl:template name="proteanSupportEmail">
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanSupportEmail']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.proteanSupportEmail']/@value"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>support@eonic.co.uk</xsl:text>
@@ -89,10 +89,10 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="eonicwebLogo">
+  <xsl:template name="proteanLogo">
     <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebLogo']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
+      <xsl:when test="$page/Settings/add[@key='web.proteanLogo']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.proteanLogo']/@value"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>/ptn/admin/skin/images/ptn-logo.png</xsl:text>

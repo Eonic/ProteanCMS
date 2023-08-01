@@ -34,6 +34,12 @@
       </xsl:if>
       <xsl:text>White background</xsl:text>
     </option>
+	<option value="videoBG">
+      <xsl:if test="$value='videoBG'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>Video background</xsl:text>
+    </option>
   </xsl:template>
   <!-- ############################################ TinyMCE styles ############################################### -->
   <!-- Example Follows www.tinymce.com/tryit/custom_formats.php -->

@@ -1736,3 +1736,22 @@ $grid-float-breakpoint: $screen-md-min;
         }
     }
 }
+.setup.ptn-edit {
+
+    #adminHeader {
+        .navbar-brand {
+            padding: 0px 25px;
+        }
+
+        .admin-sub-menu {
+            height: 50px;
+        }
+
+        margin-bottom: 50px;
+    }
+
+    #adminLayout {
+        margin-top: 75px;
+        padding-top: 100px !important;
+    }
+}

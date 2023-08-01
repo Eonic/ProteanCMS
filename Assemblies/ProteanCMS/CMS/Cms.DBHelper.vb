@@ -375,6 +375,7 @@ Partial Public Class Cms
             SessionReconnectFromCookie = 15
             LogonInvalidPassword = 16
             HistoricPassword = 17
+            Recompile = 18
 
             ' Audit changes 
             StatusChangeLive = 30
