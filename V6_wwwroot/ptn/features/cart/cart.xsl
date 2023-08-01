@@ -786,10 +786,10 @@
 				  <div class="modal-dialog" role="document">
 					  <div class="modal-content">
 						  <div class="modal-header">
+							  <h4 class="modal-title">Log in</h4>
 							  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-								  <i class="fas fa-times-circle">&#160;</i>
+								  <i class="fas fa-times" aria-hidden="true">&#160;</i>
 							  </button>
-							  <h4 class="modal-title">Logon</h4>
 						  </div>
 						  <div class="modal-body">
 							  <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
@@ -807,10 +807,10 @@
 				  <div class="modal-dialog" role="document">
 					  <div class="modal-content">
 						  <div class="modal-header">
-							  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-								  <i class="fas fa-times-circle">&#160;</i>
-							  </button>
 							  <h3 class="modal-title">Create new account</h3>
+							  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+								  <i class="fas fa-times" aria-hidden="true">&#160;</i>
+							  </button>
 						  </div>
 						  <div class="modal-body">
 							  <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='CartRegistration']" mode="xform"/>

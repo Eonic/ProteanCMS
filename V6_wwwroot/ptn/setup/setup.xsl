@@ -16,7 +16,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.proteanCmsLogo']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>/ptn/admin/skin/images/protean-admin-white.png</xsl:text>
+        <xsl:text>/ptn/admin/skin/images/ptn-logo.png</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -136,35 +136,17 @@
         <link rel="stylesheet" type="text/css" href="/ptn/setup/setup.scss" />
 	    </head>
         <body class="ptn-edit setup layout-{@ewCmd}">
+			<xsl:if test="AdminMenu/MenuItem">
           <div id="adminHeader" class="navbar navbar-expand-lg sticky-top">
           <div id="adminLogo" class="navbar-brand">
-            <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo"/>
-            <span class="d-none"><xsl:call-template name="proteanCmsCMSName"/></span>
-             <h5>Setup &amp; Maintainance</h5>
-          </div>
+			  <span class="text-light logo-text login-logo">
+				  <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo-dd"/>
+					  <strong>Protean</strong>CMS
+				  </span>
+             </div>
+			  <div>
             <nav class="admin-main-menu" role="navigation">
-              <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-admin-navbar-collapse-1">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar">
-                  </span>
-                  <span class="icon-bar">
-                  </span>
-                  <span class="icon-bar">
-                  </span>
-                </button>
-                <a class="navbar-brand" href="#">
-                  <span class="admin-logo-text">
-                    <xsl:call-template name="proteanCmsCMSName"/>
-                  </span>
-                  <span class="visible-xs xs-admin-switch">
-                    <span class="sectionName">Setup</span>
-                    <span class="switch">
-                      switch <i class="fa fa-ellipsis-v"></i>
-                    </span>
-                  </span>
-                </a>
-              </div>
+              
               <ul class="nav navbar-nav">
 			            <xsl:apply-templates select="AdminMenu/MenuItem" mode="adminMenuItem"/>
 	            </ul>
@@ -179,32 +161,17 @@
               </ul>
               </xsl:if>
             </nav>
-            <nav class="navbar navbar-inverse admin-sub-menu hidden-xs" role="navigation">
-              <div class="navbar-header">
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#bs-admin-navbar-collapse-2">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar">
-                  </span>
-                  <span class="icon-bar">
-                  </span>
-                  <span class="icon-bar">
-                  </span>
-                </button>
-                <a class="navbar-brand" href="#">
-                  <span class="sectionName">Setup and Configuration</span>
-                </a>
-              </div>
+            <nav class="navbar navbar-inverse admin-sub-menu hidden-xs" role="navigation">        
               <div class="collapse navbar-collapse" id="bs-admin-navbar-collapse-2">
                 <ul class="nav navbar-nav">
                   <xsl:apply-templates select="AdminMenu/MenuItem" mode="Menu3" />
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                  <li>
-                  </li>
-                </ul>
+                
               </div>
             </nav>
+			  </div>
 			</div>
+			</xsl:if>
 			<div id="adminLayout" class="mt-5">
         <div class="container">
 			    <xsl:apply-templates select="."  mode="SetupBody"/>
@@ -305,9 +272,21 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='AdminXForm']" mode="SetupBody">
+  <xsl:template match="Page[@layout='AdminXForm' and ContentDetail/Content[@name='UserLogon']]" mode="SetupBody">
       <div class="admin-body" id="template_AdminXForm">
-         <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+		  <span class="text-light logo-text login-logo">
+			  <img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>
+			  <strong>Protean</strong>CMS
+		  </span>
+			  <div class="card">
+				  <div class="card-header">
+					  <h5>Log in</h5>
+				  </div>
+				  <div class="card-body">
+					  <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+					  <xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
+				  </div>
+			  </div>
       </div>
   </xsl:template>
   

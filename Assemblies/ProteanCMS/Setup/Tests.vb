@@ -40,7 +40,7 @@ Public Class Tests
             oBodyXml.LoadXml("<Items><Name>ProteanCMS Test</Name><Telephone /><Email>" & goConfig("SiteAdminEmail") & "</Email><Message>This is a test</Message></Items>")
             Dim emailerMsg As String
             Dim bodyXml As XmlElement = CType(oBodyXml.FirstChild, XmlElement)
-            Dim emailXSL As String = "/ptn/core/email/mailform.xsl"
+            Dim emailXSL As String = "/ptn/email/mailform.xsl"
             If goConfig("cssFramework") <> "bs5" Then
                 emailXSL = "/ewcommon/xsl/email/mailform.xsl"
             End If

@@ -118,9 +118,10 @@ body.normalMode, #adminLayout {
         margin: 5px;
     }
 
-    .preview{
-        margin-right:10px;
+    .preview {
+        margin-right: 10px;
     }
+
     .navbar-nav {
         > li > a {
             padding-left: 14px;
@@ -364,4 +365,9 @@ body.normalMode, #adminLayout {
             box-shadow: none;
         }
     }
+
+
+}
+.ptn-edit #footerCopyright {
+    color: #999 !important;
 }
