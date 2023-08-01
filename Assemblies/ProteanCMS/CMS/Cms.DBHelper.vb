@@ -275,6 +275,7 @@ Partial Public Class Cms
             indexkey = 200
             'indexdefkey = 201
             nShipProdCatRelKey = 202
+            nEmailActivityKey = 203
         End Enum
 
         Enum TableNames
@@ -324,6 +325,7 @@ Partial Public Class Cms
             'tblContentIndex = 200
             tblContentIndexDef = 200
             tblCartShippingProductCategoryRelations = 202
+            tblEmailActivityLog = 203
         End Enum
 
         Enum PermissionLevel
