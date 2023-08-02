@@ -65,7 +65,7 @@
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind nodeset="tblContent">
 			<bind id="cContentReviewer" nodeset="cContentName" required="true()" type="string"/>
-			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="true()" type="string"/>
 			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
 			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
 			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
@@ -97,7 +97,7 @@
 				<bind id="nEmailSent" nodeset="EmailSent" required="false()" type="string"/>
 				<bind id="nShowImage" nodeset="ShowImage" required="false()" type="string"/>
 			</bind>
-			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="true()" type="string"/>
 		</bind>
 	</model>
 	<group ref="EditContent" class="2col">
@@ -108,7 +108,7 @@
 					<label>ContentId</label>
 				</input>
 				<label>Settings</label>
-				<input bind="dPublishDate" class="calendar short">
+				<input bind="dPublishDate" class="calendar short required">
 					<label>Publish Date</label>
 				</input>
 				<input bind="dExpireDate" class="calendar short">
