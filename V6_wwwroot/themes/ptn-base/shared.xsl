@@ -17,7 +17,7 @@
   <!--menu below header-->
   <!--<xsl:variable name="header-layout">header-menu-right</xsl:variable>-->
   <!--menu within header-->
-  <xsl:variable name="header-layout">header-menu-right</xsl:variable>
+  <xsl:variable name="header-layout">header-menu-below</xsl:variable>
   <xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
   <xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
   <xsl:variable name="color-mode">default</xsl:variable>

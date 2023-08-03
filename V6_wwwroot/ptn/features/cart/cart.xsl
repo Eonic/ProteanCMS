@@ -1898,13 +1898,13 @@
         <xsl:text>&#160;</xsl:text>
       </label>
       <div class="input-group">
-        <button class="btn btn-info qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">
+        <button class="btn qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">
           <i class="fa fa-minus">
             <xsl:text> </xsl:text>
           </i>
         </button>
         <input type="text" name="qty_{@id}" id="qty_{@id}" value="1" size="3" class="qtybox form-control"/>
-        <button class="btn btn-info qty-plus" type="button" value="+" onClick="incrementQuantity('qty_{@id}','+')">
+        <button class="btn qty-plus" type="button" value="+" onClick="incrementQuantity('qty_{@id}','+')">
           <i class="fa fa-plus">
             <xsl:text> </xsl:text>
           </i>

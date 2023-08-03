@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
   <!-- HEADER TEMPLATE 1-->
   <!-- main menu full width below logo -->
-  <xsl:template match="Page" mode="header-menu-below">
+  <xsl:template match="Page" mode="header-menu-below-old">
     <xsl:param name="nav-collapse" />
     <xsl:param name="cart-style" />
     <!--<xsl:if test="/Page/User[@id!='']">
@@ -39,14 +39,14 @@
             <div class="header-tier1 clearfix">
               <div class="header-tier1-inner">
                 <!--INFO NAV-->
-                <xsl:if test="Menu/MenuItem/MenuItem[@name='Information']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+                <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
                   <ul class="nav navbar-nav info-nav not-xs">
                     <xsl:if test="$HomeInfo='true'">
                       <li class="first not-xs">
                         <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
                       </li>
                     </xsl:if>
-                    <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Information']/MenuItem[not(DisplayName/@exclude='true')]">
+                    <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
                       <li>
                         <xsl:apply-templates select="." mode="menuLink"/>
                       </li>
@@ -145,22 +145,22 @@
               </xsl:if>
               <xsl:choose>
                 <xsl:when test="$nav-dropdown='true'">
-                  <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenudropdown">
+                  <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
                     <xsl:with-param name="overviewLink">true</xsl:with-param>
                   </xsl:apply-templates>
                 </xsl:when>
                 <xsl:when test="$nav-dropdown='hover'">
-                  <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenudropdown">
+                  <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
                     <xsl:with-param name="hover">true</xsl:with-param>
                   </xsl:apply-templates>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenu"/>
+                  <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenu"/>
                 </xsl:otherwise>
               </xsl:choose>
             </ul>
             <!--~~~~~~~~~~~~~~ XS INFO MENU ~~~~~~~~~~~~~~ -->
-            <xsl:if test="Menu/MenuItem/MenuItem[@name='Information']/MenuItem">
+            <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem">
               <ul class="nav navbar-nav info-nav xs-only">
                 <!--<xsl:if test="$HomeInfo='true'">
                   <li class="first not-xs">
@@ -170,7 +170,7 @@
                     <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
                   </li>
                 </xsl:if>-->
-                <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Information']/MenuItem[not(DisplayName/@exclude='true')]">
+                <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
                   <li>
                     <xsl:apply-templates select="." mode="menuLink"/>
                   </li>
@@ -197,6 +197,172 @@
     </header>
   </xsl:template>
 
+	<xsl:template match="Page" mode="header-menu-below">
+		<xsl:param name="nav-collapse" />
+		<xsl:param name="cart-style" />
+		<xsl:param name="social-links" />
+		<header class="navbar navbar-expand-lg navbar-light header-menu-below">
+			<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
+				<xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top navbar-light header-menu-below</xsl:attribute>
+			</xsl:if>
+			<!--LOGO-->
+			<div class="container">
+				<div class="navbar-brand">
+					<xsl:apply-templates select="/Page" mode="inlinePopupSingle">
+						<xsl:with-param name="type">Image</xsl:with-param>
+						<xsl:with-param name="text">Add Logo</xsl:with-param>
+						<xsl:with-param name="name">Logo</xsl:with-param>
+						<xsl:with-param name="class">navbar-brand</xsl:with-param>
+					</xsl:apply-templates>
+					<xsl:apply-templates select="/Page/Contents/Content[@name='Logo']" mode="displayBrief">
+						<xsl:with-param name="maxWidth" select="'300'"/>
+						<xsl:with-param name="maxHeight" select="'200'"/>
+					</xsl:apply-templates>
+				</div>
+				<div class="navbar-content">
+					<div class="header-tier1">
+						<!--INFO NAV-->
+						<xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+							<nav class="info-nav" aria-label="Additional Navigation">
+								<ul class="navbar-nav not-xs">
+									<xsl:if test="$HomeInfo='true'">
+										<li class="nav-item">
+											<xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
+										</li>
+									</xsl:if>
+									<xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
+										<li class="nav-item">
+											<xsl:apply-templates select="." mode="menuLink">
+												<xsl:with-param name="class">nav-link</xsl:with-param>
+											</xsl:apply-templates>
+										</li>
+									</xsl:for-each>
+								</ul>
+							</nav>
+						</xsl:if>
+						<!--LOGON BUTTON (DESKTOP)-->
+						<xsl:if test="$membership='on'">
+							<xsl:apply-templates select="/" mode="loginSimple"/>
+						</xsl:if>
+						<!--CART (DESKTOP)-->
+						<xsl:if test="$cart='on' and not($cartPage)">
+							<xsl:apply-templates select="/" mode="cartSimple"/>
+						</xsl:if>
+						<!--SEARCH (DESKTOP)-->
+						<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+							<div class="not-xs search-wrapper">
+								<xsl:apply-templates select="/" mode="searchSimple"/>
+							</div>
+						</xsl:if>
+
+						<!--SOCIAL-->
+						<xsl:if test="$social-links='true'">
+							<div class="socialLinksHeader not-xs" id="socialLinksHeader">
+								<!--<xsl:apply-templates select="Contents/Content[@name='socialLinks']" mode="displayBrief"/>-->
+								<xsl:apply-templates select="/Page" mode="addSingleModule">
+									<xsl:with-param name="text">Add Social Links</xsl:with-param>
+									<xsl:with-param name="position">socialLinksHeader</xsl:with-param>
+									<xsl:with-param name="class">socialLinksHeader not-xs</xsl:with-param>
+								</xsl:apply-templates>
+							</div>
+						</xsl:if>
+					</div>
+					<div class="header-tier2">
+						<!--CART (MOBILE)-->
+						<div class="cart-brief-wrapper-xs xs-only">
+							<xsl:if test="$cart='on' and not($cartPage)">
+								<xsl:apply-templates select="/" mode="cartSimple"/>
+							</xsl:if>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--NAV TOGGLE (MOBILE)-->
+			<nav class="navbar main-nav" aria-label="Main Navigation">
+				<div class="container">
+					<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+						<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"> </span>
+						</button>
+					</xsl:if>
+					<div class="offcanvas offcanvas-end" id="navbarSupportedContent">
+						<button type="button" class="btn-close text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+						<!--SEARCH (MOBILE)-->
+						<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+							<div class="xs-only search-wrapper">
+								<xsl:apply-templates select="/" mode="searchSimple"/>
+							</div>
+						</xsl:if>
+						<!-- MENU -->
+						<ul class="navbar-nav">
+							<xsl:if test="$HomeNav='true' or $HomeInfo='true'">
+								<li>
+									<xsl:attribute name="class"> nav-item </xsl:attribute>
+									<xsl:if test="$currentPage/@name='Home'">
+										<xsl:attribute name="class">active </xsl:attribute>
+									</xsl:if>
+									<xsl:if test="$HomeInfo='true'">
+										<xsl:attribute name="class">xs-only </xsl:attribute>
+									</xsl:if>
+									<xsl:if test="$HomeInfo='true' and $currentPage/@name='Home'">
+										<xsl:attribute name="class">first active xs-only </xsl:attribute>
+									</xsl:if>
+									<xsl:apply-templates select="Menu/MenuItem" mode="menuLink">
+										<xsl:with-param name="class">nav-link</xsl:with-param>
+									</xsl:apply-templates>
+								</li>
+							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="$nav-dropdown='true'">
+									<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
+										<xsl:with-param name="overviewLink">true</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:when>
+								<xsl:when test="$nav-dropdown='hover'">
+									<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
+										<xsl:with-param name="hover">true</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenu"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</ul>
+						<!--INFO NAV-->
+						<xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+							<ul class="navbar-nav info-nav-xs xs-only">
+								<xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
+									<li class="nav-item">
+										<xsl:apply-templates select="." mode="menuLink">
+											<xsl:with-param name="class">nav-link</xsl:with-param>
+										</xsl:apply-templates>
+									</li>
+								</xsl:for-each>
+							</ul>
+						</xsl:if>
+						<!--LOGON BUTTON (MOBILE)-->
+						<xsl:if test="$membership='on'">
+							<div class="xs-only">
+								<xsl:apply-templates select="/" mode="loginSimple"/>
+							</div>
+						</xsl:if>
+						<!--SOCIAL (MOBILE)-->
+						<xsl:if test="$social-links='true'">
+							<div class="socialLinksHeader xs-only" id="socialLinksHeader">
+								<!--<xsl:apply-templates select="Contents/Content[@name='socialLinks']" mode="displayBrief"/>-->
+								<xsl:apply-templates select="/Page" mode="addSingleModule">
+									<xsl:with-param name="text">Add Social Links</xsl:with-param>
+									<xsl:with-param name="position">socialLinksHeader</xsl:with-param>
+									<xsl:with-param name="class">socialLinksHeader xs-only</xsl:with-param>
+								</xsl:apply-templates>
+							</div>
+						</xsl:if>
+					</div>
+				</div>
+			</nav>
+		</header>
+	</xsl:template>
 
 
   <!--HEADER FLEX 1-->
@@ -284,14 +450,14 @@
                   </div>
                 </xsl:if>
                 <!--INFO NAV-->
-                <xsl:if test="Menu/MenuItem/MenuItem[@name='Information']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+                <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
                   <ul class="nav navbar-nav info-nav not-xs">
                     <xsl:if test="$HomeInfo='true'">
                       <li class="first not-xs">
                         <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
                       </li>
                     </xsl:if>
-                    <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Information']/MenuItem[not(DisplayName/@exclude='true')]">
+                    <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
                       <li>
                         <xsl:apply-templates select="." mode="menuLink"/>
                       </li>
@@ -364,22 +530,22 @@
                     </xsl:if>
                     <xsl:choose>
                       <xsl:when test="$nav-dropdown='true'">
-                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenudropdown">
+                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
                           <xsl:with-param name="overviewLink">true</xsl:with-param>
                         </xsl:apply-templates>
                       </xsl:when>
                       <xsl:when test="$nav-dropdown='hover'">
-                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenudropdown">
+                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
                           <xsl:with-param name="hover">true</xsl:with-param>
                         </xsl:apply-templates>
                       </xsl:when>
                       <xsl:otherwise>
-                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenu"/>
+                        <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenu"/>
                       </xsl:otherwise>
                     </xsl:choose>
                   </ul>
                   <!--~~~~~~~~~~~~~~ XS INFO MENU ~~~~~~~~~~~~~~ -->
-                  <xsl:if test="Menu/MenuItem/MenuItem[@name='Information']/MenuItem">
+                  <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem">
                     <ul class="nav navbar-nav info-nav xs-only">
                       <!--<xsl:if test="$HomeInfo='true'">
                   <li class="first not-xs">
@@ -389,7 +555,7 @@
                     <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
                   </li>
                 </xsl:if>-->
-                      <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Information']/MenuItem[not(DisplayName/@exclude='true')]">
+                      <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
                         <li>
                           <xsl:apply-templates select="." mode="menuLink"/>
                         </li>
@@ -448,7 +614,7 @@
         <div class="navbar-content">
           <div class="header-tier1">
             <!--INFO NAV-->
-            <xsl:if test="Menu/MenuItem/MenuItem[@name='Information']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+            <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
               <nav class="info-nav" aria-label="Additional Navigation">
                 <ul class="navbar-nav not-xs">
                   <xsl:if test="$HomeInfo='true'">
@@ -456,7 +622,7 @@
                       <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
                     </li>
                   </xsl:if>
-                  <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Information']/MenuItem[not(DisplayName/@exclude='true')]">
+                  <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
                     <li class="nav-item">
                       <xsl:apply-templates select="." mode="menuLink">
                         <xsl:with-param name="class">nav-link</xsl:with-param>
@@ -480,6 +646,18 @@
                 <xsl:apply-templates select="/" mode="searchSimple"/>
               </div>
             </xsl:if>
+
+			  <!--SOCIAL-->
+			  <xsl:if test="$social-links='true'">
+				  <div class="socialLinksHeader not-xs" id="socialLinksHeader">
+					  <!--<xsl:apply-templates select="Contents/Content[@name='socialLinks']" mode="displayBrief"/>-->
+					  <xsl:apply-templates select="/Page" mode="addSingleModule">
+						  <xsl:with-param name="text">Add Social Links</xsl:with-param>
+						  <xsl:with-param name="position">socialLinksHeader</xsl:with-param>
+						  <xsl:with-param name="class">socialLinksHeader not-xs</xsl:with-param>
+					  </xsl:apply-templates>
+				  </div>
+			  </xsl:if>
           </div>
           <div class="header-tier2">
             <!--CART (MOBILE)-->
@@ -532,24 +710,24 @@
                   </xsl:if>
                   <xsl:choose>
                     <xsl:when test="$nav-dropdown='true'">
-                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenudropdown">
+                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
                         <xsl:with-param name="overviewLink">true</xsl:with-param>
                       </xsl:apply-templates>
                     </xsl:when>
                     <xsl:when test="$nav-dropdown='hover'">
-                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenudropdown">
+                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
                         <xsl:with-param name="hover">true</xsl:with-param>
                       </xsl:apply-templates>
                     </xsl:when>
                     <xsl:otherwise>
-                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenu"/>
+                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenu"/>
                     </xsl:otherwise>
                   </xsl:choose>
                 </ul>
                 <!--INFO NAV-->
-                <xsl:if test="Menu/MenuItem/MenuItem[@name='Information']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
+                <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
                   <ul class="navbar-nav info-nav-xs xs-only">
-                    <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Information']/MenuItem[not(DisplayName/@exclude='true')]">
+                    <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
                       <li class="nav-item">
                         <xsl:apply-templates select="." mode="menuLink">
                           <xsl:with-param name="class">nav-link</xsl:with-param>
@@ -577,17 +755,6 @@
                 </xsl:if>
               </div>
             </nav>
-            <!--SOCIAL-->
-            <xsl:if test="$social-links='true'">
-              <div class="socialLinksHeader not-xs" id="socialLinksHeader">
-                <!--<xsl:apply-templates select="Contents/Content[@name='socialLinks']" mode="displayBrief"/>-->
-                <xsl:apply-templates select="/Page" mode="addSingleModule">
-                  <xsl:with-param name="text">Add Social Links</xsl:with-param>
-                  <xsl:with-param name="position">socialLinksHeader</xsl:with-param>
-                  <xsl:with-param name="class">socialLinksHeader not-xs</xsl:with-param>
-                </xsl:apply-templates>
-              </div>
-            </xsl:if>
           </div>
         </div>
       </div>
@@ -646,17 +813,17 @@
             </xsl:if>
             <xsl:choose>
               <xsl:when test="$nav-dropdown='true'">
-                <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenudropdown">
+                <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
                   <xsl:with-param name="overviewLink">true</xsl:with-param>
                 </xsl:apply-templates>
               </xsl:when>
               <xsl:when test="$nav-dropdown='hover'">
-                <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenudropdown">
+                <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
                   <xsl:with-param name="hover">true</xsl:with-param>
                 </xsl:apply-templates>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Information' and @name!='Footer']" mode="mainmenu"/>
+                <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenu"/>
               </xsl:otherwise>
             </xsl:choose>
           </ul>
