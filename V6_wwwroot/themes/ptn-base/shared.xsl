@@ -346,7 +346,7 @@
   </xsl:template>
 
   <xsl:template match="/" mode="loginSimple">
-    <a class="nav-link login-btn" data-bs-toggle="modal" href="#LoginModal" role="button">
+    <a class="nav-link login-btn not-xs" data-bs-toggle="modal" href="#LoginModal" role="button">
       <xsl:choose>
         <xsl:when test="/Page/User">My Account</xsl:when>
         <xsl:otherwise>Log in</xsl:otherwise>
