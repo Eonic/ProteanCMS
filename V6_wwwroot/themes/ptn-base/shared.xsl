@@ -318,7 +318,7 @@
   <!-- ############################################ LOGIN ############################################### -->
 
 
-  <xsl:template match="/" mode="loginTop">
+  <!--<xsl:template match="/" mode="loginTop">
     <div id="signin">
       <a class="loginText login-btn" data-bs-toggle="modal" href="#LoginModal" role="button">
         <xsl:if test="/Page/User[@id!='']">
@@ -343,7 +343,7 @@
         </xsl:choose>
       </a>
     </li>
-  </xsl:template>
+  </xsl:template>-->
 
   <xsl:template match="/" mode="loginSimple">
     <a class="nav-link login-btn not-xs" data-bs-toggle="modal" href="#LoginModal" role="button">

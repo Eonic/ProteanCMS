@@ -1,22 +1,35 @@
-$primary: #029fc1;
+//theme colours
+//$body-bg: $white !default;
+$primary: #02809C;
 $secondary: #1b19be;
 $info: #3498db;
-$action: #d309c2;
-$warning: #f39c12;
+//$light: $gray-100 !default;
+//$dark: $gray-900 !default;
+
+$min-contrast-ratio: 3;
+
+//form colours
 $success: #19be1b;
+$warning: #f39c12;
 $danger: #e74c3c;
 
-//$light: #dbeeff;
-$dark: #1c1c1c;
-$white: #ffffff;
+//text
 $body-color: #242424;
+$link-color: $primary !default;
 
+//header
 $header-menu: "header-menu-right";
 
+//grid
 $spacer: 1.5rem;
 $grid-gutter-width:3rem;
 $grid-gutter-y:3rem;
-$min-contrast-ratio: 3;
+
+//forms
+$input-border-color: #919191;
+
+
+
 
 //$font-family-base: 'Lato', sans-serif;
 //$font-weight-base: 300;

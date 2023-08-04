@@ -243,9 +243,12 @@ section.bg-video-wrapper {
         margin-right: -$listItem-padding;
     }
 }
-
+.nobox .listItem .lIinner {
+    @include boxed-listItem;
+}
 .listItem {
     margin-bottom: $grid-gutter-width;
+    &:last-child{margin-bottom:0;}
 
     h1, h2, h3, h4, h5, h6 {
         a {
@@ -257,9 +260,7 @@ section.bg-video-wrapper {
         @extend .align-btn-footer;
     }
 
-    .lIinner {
-        @include boxed-listItem;
-    }
+    
 
     .list-image-link {
         margin-bottom: 1rem;
@@ -489,6 +490,7 @@ section.bg-video-wrapper {
     margin-top: auto;
     background: $footer-bg;
     padding-top: $spacer;
+    padding-bottom: $spacer;
 
     .footer-nav {
         margin-left: -1rem;
@@ -513,7 +515,12 @@ section.bg-video-wrapper {
 .modal-body #Login legend {
     display: none;
 }
-
+.modal{
+    .modal-header{
+        padding-bottom:0;
+        border-bottom:0;
+    }
+}
 .MembershipUserContacts .add {
     margin-bottom: 1rem;
 }

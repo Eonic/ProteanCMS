@@ -4,3 +4,17 @@ form.ewXform {
         margin-bottom: 1rem;
     }
 }
+#Login {
+    form .principle {
+        float: right;
+    }
+
+    .morelink a {
+        @extend .btn-clean;
+    }
+}
+.forgotten-password-link {
+    display: block;
+    margin-bottom: 1rem;
+    margin-top: -1rem;
+}

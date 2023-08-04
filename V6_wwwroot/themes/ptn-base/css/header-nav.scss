@@ -13,163 +13,16 @@
 }
 
 // Header Layout Options
-$header-item-spacing: 10px;
-
-.header-menu-below-old {
-    .navbar-header {
-        padding-bottom: 20px;
-
-        &.cart-header {
-            border-bottom: 4px solid $light;
-        }
-
-        button.navbar-toggle {
-            padding: 9px 0 0;
-        }
-
-        .navbar-brand {
-            padding: 20px 0 0 0;
-        }
-
-        .header-tier1-inner {
-            padding-bottom: 15px;
-        }
-
-        .header-tier1 {
-            .header-tier1-inner {
-                float: right;
-                display: flex;
-                align-items: center;
-            }
-        }
-
-        .header-tier1-inner,
-        .header-tier2 {
-            @media(min-width:$nav-breakpoint) {
-                margin-left: -($header-item-spacing/2);
-                margin-right: -($header-item-spacing/2);
-            }
-        }
-
-        @media(max-width:$nav-breakpoint) {
-            border-bottom: 4px solid $light;
-            padding: 15px 0;
-
-            .header-tier1-inner {
-                padding-bottom: 0;
-            }
-
-            .navbar-brand {
-                padding: 0 10px 0 0;
-                align-self: center;
-            }
-
-            > .container {
-                display: flex;
-            }
-
-            .container .header-right {
-                flex-grow: 2;
-                align-self: center;
-
-                .header-tier2 {
-                    display: flex;
-                    justify-content: flex-end;
-                }
-            }
-        }
-    }
-}
-
-.header-menu-right-old {
-    min-height: auto;
-
-    .flex-container {
-        position: relative;
-        display: flex;
-
-        .header-right {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            flex: auto;
-        }
-    }
-
-    .navbar-header {
-
-
-        .navbar-brand {
-            padding: 0 20px 0 0;
-            align-self: center;
-
-            @media(min-width:$nav-breakpoint) {
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-        }
-
-        button.navbar-toggle {
-            padding: 0;
-        }
-    }
-
-    nav.navbar-collapse {
-        @media(min-width:$nav-breakpoint) {
-            background: transparent;
-
-            ul.main-nav {
-                // margin-right: -$navbar-padding-horizontal-md;
-                // @media(min-width:$screen-lg-min) {
-                //    margin-right: -$navbar-padding-horizontal;
-                // }
-            }
-        }
-    }
-
-    .searchBrief {
-        min-width: 200px;
-    }
-
-    @media(min-width:$nav-breakpoint) {
-        .info-nav {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .main-nav {
-            float: right;
-        }
-    }
-
-    .header-tier1 {
-        .header-tier1-inner {
-            float: right;
-            display: flex;
-            align-items: center;
-
-            @media(min-width:$nav-breakpoint) {
-                padding-top: 10px;
-            }
-        }
-    }
-
-    @media(max-width:$nav-breakpoint) {
-        padding: 15px 0;
-
-        .header-tier1-inner {
-            padding-bottom: 0;
-        }
-
-        .flex-container .header-right {
-            align-self: center;
-        }
-    }
-}
-
 .header-menu-below {
     display: block !important;
 
+
+    .main-nav ul.navbar-nav {
+        @include media-breakpoint-up($nav-breakpoint) {
+            margin-left: -$nav-padding-x;
+            margin-right: -$nav-padding-x;
+        }
+    }
 }
 
 .header-menu-right {
@@ -188,16 +41,23 @@ header {
         padding-bottom: 0.5rem;
     }
 
-    .main-nav {
-        padding: 0;
-    }
-
     .module.nobox {
         margin-bottom: 0;
     }
 
     .navbar-brand {
         max-width: 50%;
+    }
+
+    .navbar-content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: right;
+
+        @include media-breakpoint-up($nav-breakpoint) {
+            margin-top: -0.5rem;
+        }
     }
 
     .navbar-toggler {
@@ -207,34 +67,10 @@ header {
     }
 }
 
-.navbar {
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
-}
-
-.navbar-content {
-    display: flex;
-    //flex-direction: column;
-
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: right;
-
-    .header-tier1,
-    .header-tier2 {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        justify-content: right;
-
-        @include media-breakpoint-up($nav-breakpoint) {
-            float: right;
-            margin-right: -($header-spacing/2);
-        }
-    }
-}
-
+//Navigation
 .main-nav {
+    padding: 0;
+
     @include media-breakpoint-up(lg) {
         font-size: $main-nav-size;
         padding: 0;
@@ -246,14 +82,24 @@ header {
         ul.navbar-nav {
             flex-wrap: wrap;
 
-
             .nav-link {
-                padding: $nav-padding;
+                padding: $nav-padding-y $nav-padding-x;
             }
         }
     }
 
+    .dropdown-menu {
+        margin-top: 0;
+        border-radius: 0;
+        border: 0;
 
+        .dropdown-item {
+            &:hover,
+            &:active {
+                background: none;
+            }
+        }
+    }
 
     @include media-breakpoint-down(lg) {
         .offcanvas {
@@ -263,12 +109,6 @@ header {
         .navbar-nav .nav-link {
             padding-left: 1rem;
             padding-right: 1rem;
-        }
-
-        .dropdown-menu {
-            border-left: 0;
-            border-right: 0;
-            border-radius: 0;
         }
 
         .btn-close {
@@ -307,12 +147,6 @@ header {
 
 .login-btn {
     white-space: nowrap;
-    /*&:before {
-        content: '\f007';
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-        margin-right: 5px;
-    }*/
 }
 
 .socialLinks.iconset-plain {
@@ -342,7 +176,7 @@ header {
                 position: absolute;
                 top: 0.2rem;
                 right: 0.2rem;
-                font-size: 0.6rem;
+                font-size: 0.65rem;
             }
         }
     }
