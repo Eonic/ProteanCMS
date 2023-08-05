@@ -320,9 +320,9 @@
 			</xsl:when>
 			<!-- IF ContentDetail Show ContentDetail -->
 			<xsl:when test="ContentDetail">
-				<div class="container detail-container" role="main">
+				<div class="detail-container" role="main">
 					<xsl:attribute name="class">
-						<xsl:text>container detail-container </xsl:text>
+						<xsl:text>detail-container </xsl:text>
 						<xsl:value-of select="$page/ContentDetail/Content/@type"/>
 						<xsl:text>-detail-container</xsl:text>
 					</xsl:attribute>

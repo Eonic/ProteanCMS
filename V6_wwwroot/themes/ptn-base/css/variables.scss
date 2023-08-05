@@ -7,6 +7,8 @@ $info: #3498db;
 //$dark: $gray-900 !default;
 
 $min-contrast-ratio: 3;
+$border-radius: .375rem !default;
+$img-border-radius: $border-radius;
 
 //form colours
 $success: #19be1b;
@@ -17,8 +19,14 @@ $danger: #e74c3c;
 $body-color: #242424;
 $link-color: $primary !default;
 
+
+
 //header
 $header-menu: "header-menu-right";
+
+//buttons
+//$btn-border-radius: var(--#{$prefix}border-radius) !default;
+//$btn-border-width: $input-btn-border-width !default;
 
 //grid
 $spacer: 1.5rem;
@@ -27,6 +35,10 @@ $grid-gutter-y:3rem;
 
 //forms
 $input-border-color: #919191;
+//$input-border-radius: var(--#{$prefix}border-radius) !default;
+
+//cards
+//$card-border-radius: var(--#{$prefix}border-radius) !default;
 
 
 

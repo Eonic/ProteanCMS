@@ -6967,13 +6967,13 @@
 				<xsl:choose>
 					<xsl:when test="$detailSrc!=''">
 
-						<span class="img-fluid {$class}">
+						<span class="{$class}">
 							<xsl:if test="$showImage = 'noshow'">
 								<xsl:attribute name="class">
 									<xsl:text>hidden</xsl:text>
 								</xsl:attribute>
 							</xsl:if>
-							<a data-src="{$detailSrc}" data-fancybox="">
+							<a data-src="{$detailSrc}" data-fancybox="" class="detail-img">
 								<xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
 								<xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
 								<xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>

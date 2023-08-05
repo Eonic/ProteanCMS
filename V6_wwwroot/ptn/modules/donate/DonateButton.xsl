@@ -57,7 +57,8 @@
 
 
   <!-- Product Brief -->
-  <xsl:template match="Content[@type='Product']" mode="displayBrief">
+	<!--COMMENTED OUT AS IT OVERRIDES MAIN PRODUCT TEMPLATE-->
+  <!--<xsl:template match="Content[@type='Product']" mode="displayBrief">
     <xsl:param name="sortBy"/>
     <xsl:param name="pos"/>
     <xsl:variable name="parId">
@@ -129,11 +130,11 @@
         <div class="entryFooter">
           <xsl:apply-templates select="." mode="addToCartButton"/>
         </div>
-        <!-- Terminus class fix to floating columns -->
+        --><!-- Terminus class fix to floating columns --><!--
         <div class="terminus">&#160;</div>
       </div>
     </div>
-  </xsl:template>
+  </xsl:template>-->
 
   <xsl:template match="Content" mode="showQuantity">
     <xsl:variable name="id">
