@@ -15,6 +15,10 @@
         text-decoration-color: #c2a5c9;
     }
 }
+.btn-link {
+    padding: 0;
+    text-underline-offset: 4px;
+}
 @mixin btn-clean($color: $link-color, $hover: $link-hover-color) {
     background: none;
     border: none;

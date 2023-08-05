@@ -5,6 +5,7 @@ $secondary: #1b19be;
 $info: #3498db;
 //$light: $gray-100 !default;
 //$dark: $gray-900 !default;
+//$link-color: #fa6677;
 
 $min-contrast-ratio: 3;
 $border-radius: .375rem !default;
@@ -18,8 +19,14 @@ $danger: #e74c3c;
 //text
 $body-color: #242424;
 $link-color: $primary !default;
+//$font-family-base: 'Lato', sans-serif;
+//$font-weight-base: 300;
+//$font-size-base: 1.1rem !default;
+//$line-height-base: 1.4;
 
-
+//buttons
+//$btn-border-radius: 100px;
+//$btn-padding-x: 1.5rem;
 
 //header
 $header-menu: "header-menu-right";
@@ -28,6 +35,9 @@ $header-menu: "header-menu-right";
 //$btn-border-radius: var(--#{$prefix}border-radius) !default;
 //$btn-border-width: $input-btn-border-width !default;
 
+//nav
+//$navbar-light-color: $body-color;
+
 //grid
 $spacer: 1.5rem;
 $grid-gutter-width:3rem;
@@ -35,19 +45,10 @@ $grid-gutter-y:3rem;
 
 //forms
 $input-border-color: #919191;
+$form-check-input-border: 1px solid $input-border-color;
 //$input-border-radius: var(--#{$prefix}border-radius) !default;
 
 //cards
 //$card-border-radius: var(--#{$prefix}border-radius) !default;
 
 
-
-
-//$font-family-base: 'Lato', sans-serif;
-//$font-weight-base: 300;
-//$font-size-base: 1.1rem !default;
-//$border-radius: 15px;
-//$btn-border-radius: 100px;
-//$btn-padding-x: 1.5rem;
-//$link-color: #fa6677;
-//$line-height-base: 1.4;

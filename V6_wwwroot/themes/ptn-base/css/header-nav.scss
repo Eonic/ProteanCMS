@@ -95,9 +95,26 @@ header {
 
         .dropdown-item {
             &:hover,
-            &:active {
+            &:active,
+            &.active {
                 background: none;
             }
+
+            &.active,
+            &.on,
+            &:focus {
+                color: $primary;
+            }
+
+            &:first-child {
+                &.on {
+                    color: $navbar-light-color;
+                }
+            }
+        }
+
+        ul {
+            display: none;
         }
     }
 
