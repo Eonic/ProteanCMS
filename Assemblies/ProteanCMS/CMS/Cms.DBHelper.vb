@@ -3157,6 +3157,8 @@ restart:
                         .Columns("currentLiveVersion").ColumnMapping = Data.MappingType.Attribute
                         .Columns("pageid").ColumnMapping = Data.MappingType.Attribute
                         .Columns("page").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("reviewProductID").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("Type").ColumnMapping = Data.MappingType.Attribute
                     End With
 
                     '   With oDS.Tables("Location")

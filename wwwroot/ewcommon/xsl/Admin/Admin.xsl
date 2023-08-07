@@ -12201,22 +12201,37 @@
         <xsl:value-of select="@versionid"/>
       </xsl:if>
     </xsl:variable>
-    <td class="btn-group">
+	<xsl:variable name="reviewproductid">
+		<xsl:if test="@reviewProductID!=''">			 
+			<xsl:value-of select="@reviewProductID"/>
+		</xsl:if>
+	</xsl:variable>	
+    <td class="btn-group">		
+	 <xsl:choose>
+			<xsl:when test="@Type='Review'">
+				<a href="{$appPath}?ewCmd=EditContent&amp;id={$reviewproductid}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-default" title="Click here to edit this content">
+					<i class="fa fa-eye">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>Releated Product
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
+					<i class="fa fa-eye">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>Preview
+				</a>
 
-
-      <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
-        <i class="fa fa-eye">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>Preview
-      </a>
-
-      <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
-        <i class="fa fa-history">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>History
-      </a>
+				<a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
+					<i class="fa fa-history">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>History
+				</a>
+			</xsl:otherwise>
+	  </xsl:choose>     
 
       <a href="{$appPath}?ewCmd=EditContent&amp;id={@id}{$versionId}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-primary" title="Click here to edit this content">
         <i class="fa fa-pencil fa-white">
