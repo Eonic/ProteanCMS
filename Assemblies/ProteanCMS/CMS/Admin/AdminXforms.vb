@@ -843,6 +843,9 @@ Partial Public Class Cms
                 Dim oFsh As fsHelper
                 Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
                 Try
+                    If myWeb.mcEWCommonFolder = "/ptn" Then
+                        xFormPath = "/admin/xforms/config/" & ConfigType & ".xml"
+                    End If
                     oFsh = New fsHelper
                     oFsh.open(moPageXML)
 
@@ -864,172 +867,172 @@ Partial Public Class Cms
 
                         Dim rewriteXml As New XmlDocument
 
-                            rewriteXml.Load(goServer.MapPath("/rewriteMaps.config"))
+                        rewriteXml.Load(goServer.MapPath("/rewriteMaps.config"))
 
 
-                            Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
-                            oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
-                            Dim oCgfSectName As String = "system.webServer"
-                            Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
-                            ' Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
-                            cProcessInfo = "Getting Section Name:" & oCgfSectPath
-                            Dim sectionMissing As Boolean = False
+                        Dim oTemplateInstance As XmlElement = moPageXML.CreateElement("Instance")
+                        oTemplateInstance.InnerXml = MyBase.Instance.InnerXml
+                        Dim oCgfSectName As String = "system.webServer"
+                        Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
+                        ' Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
+                        cProcessInfo = "Getting Section Name:" & oCgfSectPath
+                        Dim sectionMissing As Boolean = False
 
-                            'Get the current settings
-                            If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
-                                MyBase.bProcessRepeats = True
-                                If goSession("oTempInstance") Is Nothing Then
+                        'Get the current settings
+                        If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
+                            MyBase.bProcessRepeats = True
+                            If goSession("oTempInstance") Is Nothing Then
 
 
-                                    Dim PerPageCount As Integer = 50
-                                    If goSession("totalCountTobeLoad") IsNot Nothing Then
-                                        PerPageCount = goSession("totalCountTobeLoad")
-                                    End If
-                                    Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                    Dim TotalCount As Integer = props.ChildNodes.Count
-
-                                    If props.ChildNodes.Count >= PerPageCount Then
-                                        Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
-                                        Dim xmlstringend As String = "</rewriteMap>"
-                                        Dim count As Integer = 0
-
-                                        For i As Integer = 0 To (PerPageCount) - 1
-                                            xmlstring = xmlstring & props.ChildNodes(i).OuterXml
-                                        Next
-
-                                        MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
-                                    Else
-                                        MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
-                                    End If
-
-                                    Me.bProcessRepeats = False
-                                Else
-                                    Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
-                                    oTempInstance = goSession("oTempInstance")
-                                    MyBase.updateInstance(oTempInstance)
+                                Dim PerPageCount As Integer = 50
+                                If goSession("totalCountTobeLoad") IsNot Nothing Then
+                                    PerPageCount = goSession("totalCountTobeLoad")
                                 End If
+                                Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                                Dim TotalCount As Integer = props.ChildNodes.Count
+
+                                If props.ChildNodes.Count >= PerPageCount Then
+                                    Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
+                                    Dim xmlstringend As String = "</rewriteMap>"
+                                    Dim count As Integer = 0
+
+                                    For i As Integer = 0 To (PerPageCount) - 1
+                                        xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                    Next
+
+                                    MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
+                                Else
+                                    MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
+                                End If
+
+                                Me.bProcessRepeats = False
                             Else
-                                'no current settings create them
-                                sectionMissing = True
-                                oFrmElmt = MyBase.moXformElmt
-                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.")
+                                Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
+                                oTempInstance = goSession("oTempInstance")
+                                MyBase.updateInstance(oTempInstance)
                             End If
+                        Else
+                            'no current settings create them
+                            sectionMissing = True
+                            oFrmElmt = MyBase.moXformElmt
+                            MyBase.addNote(oFrmElmt, noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.")
+                        End If
 
 
-                            Dim oElmt As XmlElement
+                        Dim oElmt As XmlElement
 
 
-                            If MyBase.isSubmitted Then
+                        If MyBase.isSubmitted Then
 
-                                MyBase.updateInstanceFromRequest()
-                                MyBase.validate()
-                                'Check for loop
-                                For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
-                                    Dim newURL = oElmt.GetAttribute("value")
-                                    If Not MyBase.Instance.FirstChild.SelectSingleNode("descendant-or-self::add[@key='" & newURL & "']") Is Nothing Then
-                                        MyBase.valid = False
-                                        Dim alertGrp As XmlElement = MyBase.addGroup(moXformElmt.SelectSingleNode("group[1]"), "alert",,, moXformElmt.SelectSingleNode("group[1]/group[1]"))
-                                        MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "<strong>" & newURL & "</strong> cannot match an old URL")
-                                    End If
-                                Next
-
-
-                                If MyBase.valid Then
-                                    Dim replacerNode As XmlElement = rewriteXml.ImportNode(MyBase.Instance.FirstChild, True)
-                                    Dim folderRules As New ArrayList
-                                    If ConfigType = "301Redirect" Then
-                                        'step through and create rules to deal with paths
-                                        Dim rulesXml As New XmlDocument
-                                        rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
-                                        Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
-                                        Dim oRule As XmlElement
-                                        For Each oRule In replacerNode.SelectNodes("add")
-                                            Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & oRule.GetAttribute("key") & "']")
-                                            Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
-                                            Dim matchString As String = oRule.GetAttribute("key")
-                                            If matchString.StartsWith("/") Then
-                                                matchString = matchString.TrimStart("/")
-                                            End If
-                                            folderRules.Add("Folder: " & oRule.GetAttribute("key"))
-                                            newRule.InnerXml = "<rule name=""Folder: " & oRule.GetAttribute("key") & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & oRule.GetAttribute("value") & "{R:1}"" /></rule>"
-                                            If CurrentRule Is Nothing Then
-                                                insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
-                                            Else
-                                                CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
-                                            End If
-                                        Next
-
-                                        For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
-                                            If Not folderRules.Contains(oRule.GetAttribute("name")) Then
-                                                oRule.ParentNode.RemoveChild(oRule)
-                                            End If
-                                        Next
-
-                                        rulesXml.Save(goServer.MapPath("/RewriteRules.config"))
-                                        myWeb.bRestartApp = True
-
-                                    End If
-
-                                    'Dim replacingNode As XmlElement = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                    'If replacingNode Is Nothing Then
-                                    '    rewriteXml.FirstChild.AppendChild(replacerNode)
-                                    'Else
-                                    '    rewriteXml.FirstChild.ReplaceChild(replacerNode, replacingNode)
-                                    'End If
-                                    'rewriteXml.Save(goServer.MapPath("/rewriteMaps.config"))
-
-                                    ''Check we do not have a redirect for the OLD URL allready. Remove if exists
-                                    ' Dim addValue As XmlElement
+                            MyBase.updateInstanceFromRequest()
+                            MyBase.validate()
+                            'Check for loop
+                            For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                Dim newURL = oElmt.GetAttribute("value")
+                                If Not MyBase.Instance.FirstChild.SelectSingleNode("descendant-or-self::add[@key='" & newURL & "']") Is Nothing Then
+                                    MyBase.valid = False
+                                    Dim alertGrp As XmlElement = MyBase.addGroup(moXformElmt.SelectSingleNode("group[1]"), "alert",,, moXformElmt.SelectSingleNode("group[1]/group[1]"))
+                                    MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "<strong>" & newURL & "</strong> cannot match an old URL")
+                                End If
+                            Next
 
 
-                                    For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
-                                        Dim oldUrl = oElmt.GetAttribute("key")
-
-                                        'If Not MyBase.Instance.FirstChild.SelectSingleNode("descendant-or-self::add[@key='" & newURL & "']") Is Nothing Then
-                                        Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & ConfigType & "']/add[@key='" & oldUrl & "']")
-                                        If Not existingRedirects Is Nothing Then
-
-                                            For Each existingNode As XmlNode In existingRedirects
-                                                existingNode.ParentNode.RemoveChild(existingNode)
-                                                'existingNode.RemoveAll()
-                                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
-                                            Next
+                            If MyBase.valid Then
+                                Dim replacerNode As XmlElement = rewriteXml.ImportNode(MyBase.Instance.FirstChild, True)
+                                Dim folderRules As New ArrayList
+                                If ConfigType = "301Redirect" Then
+                                    'step through and create rules to deal with paths
+                                    Dim rulesXml As New XmlDocument
+                                    rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                                    Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
+                                    Dim oRule As XmlElement
+                                    For Each oRule In replacerNode.SelectNodes("add")
+                                        Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & oRule.GetAttribute("key") & "']")
+                                        Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
+                                        Dim matchString As String = oRule.GetAttribute("key")
+                                        If matchString.StartsWith("/") Then
+                                            matchString = matchString.TrimStart("/")
+                                        End If
+                                        folderRules.Add("Folder: " & oRule.GetAttribute("key"))
+                                        newRule.InnerXml = "<rule name=""Folder: " & oRule.GetAttribute("key") & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & oRule.GetAttribute("value") & "{R:1}"" /></rule>"
+                                        If CurrentRule Is Nothing Then
+                                            insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
+                                        Else
+                                            CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
                                         End If
                                     Next
 
-                                    'Add redirect
-                                    Dim oCgfSectPathobj As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
-                                    Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPathobj)
-                                    If Not redirectSectionXmlNode Is Nothing Then
-                                        For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
-                                            Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
-                                            replacingElement.InnerXml = oElmt.OuterXml
+                                    For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
+                                        If Not folderRules.Contains(oRule.GetAttribute("name")) Then
+                                            oRule.ParentNode.RemoveChild(oRule)
+                                        End If
+                                    Next
 
-                                            ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
-                                            rewriteXml.SelectSingleNode(oCgfSectPathobj).AppendChild(replacingElement.FirstChild)
+                                    rulesXml.Save(goServer.MapPath("/RewriteRules.config"))
+                                    myWeb.bRestartApp = True
 
+                                End If
+
+                                'Dim replacingNode As XmlElement = rewriteXml.SelectSingleNode(oCgfSectPath)
+                                'If replacingNode Is Nothing Then
+                                '    rewriteXml.FirstChild.AppendChild(replacerNode)
+                                'Else
+                                '    rewriteXml.FirstChild.ReplaceChild(replacerNode, replacingNode)
+                                'End If
+                                'rewriteXml.Save(goServer.MapPath("/rewriteMaps.config"))
+
+                                ''Check we do not have a redirect for the OLD URL allready. Remove if exists
+                                ' Dim addValue As XmlElement
+
+
+                                For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                    Dim oldUrl = oElmt.GetAttribute("key")
+
+                                    'If Not MyBase.Instance.FirstChild.SelectSingleNode("descendant-or-self::add[@key='" & newURL & "']") Is Nothing Then
+                                    Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & ConfigType & "']/add[@key='" & oldUrl & "']")
+                                    If Not existingRedirects Is Nothing Then
+
+                                        For Each existingNode As XmlNode In existingRedirects
+                                            existingNode.ParentNode.RemoveChild(existingNode)
+                                            'existingNode.RemoveAll()
                                             rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
                                         Next
                                     End If
+                                Next
 
+                                'Add redirect
+                                Dim oCgfSectPathobj As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
+                                Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPathobj)
+                                If Not redirectSectionXmlNode Is Nothing Then
+                                    For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                        Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
+                                        replacingElement.InnerXml = oElmt.OuterXml
 
+                                        ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                                        rewriteXml.SelectSingleNode(oCgfSectPathobj).AppendChild(replacingElement.FirstChild)
 
-
-
-
-                                    Dim alertGrp As XmlElement = MyBase.addGroup(moXformElmt.SelectSingleNode("group[1]"), "alert",,, moXformElmt.SelectSingleNode("group[1]/group[1]"))
-                                    MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "Settings Saved")
-                                    goSession("oTempInstance") = Nothing
+                                        rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                    Next
                                 End If
-                            ElseIf MyBase.isTriggered Then
-                                'we have clicked a trigger so we must update the instance
-                                MyBase.updateInstanceFromRequest()
-                                'lets save the instance
-                                goSession("oTempInstance") = MyBase.Instance
-                            Else
-                                'clear this if we are loading the first form
+
+
+
+
+
+
+                                Dim alertGrp As XmlElement = MyBase.addGroup(moXformElmt.SelectSingleNode("group[1]"), "alert",,, moXformElmt.SelectSingleNode("group[1]/group[1]"))
+                                MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "Settings Saved")
                                 goSession("oTempInstance") = Nothing
                             End If
+                        ElseIf MyBase.isTriggered Then
+                            'we have clicked a trigger so we must update the instance
+                            MyBase.updateInstanceFromRequest()
+                            'lets save the instance
+                            goSession("oTempInstance") = MyBase.Instance
+                        Else
+                            'clear this if we are loading the first form
+                            goSession("oTempInstance") = Nothing
+                        End If
                         endImp()
                         MyBase.addValues()
                     End If
