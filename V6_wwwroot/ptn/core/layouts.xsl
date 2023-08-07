@@ -116,10 +116,10 @@
 					<xsl:variable name="backgroundResized-xxl-webp" select="ew:CreateWebP(@backgroundImage)"/>
 					<section class="wrapper-sm {@background}">
 						<xsl:attribute name="class">
-							<xsl:text>wrapper-sm section-spacing </xsl:text>
+							<xsl:text>wrapper-sm </xsl:text>
 							<xsl:if test="@background!='false'">
-							<xsl:value-of select="@background"/>
-							<xsl:text> </xsl:text>
+								<xsl:value-of select="@background"/>
+								<xsl:text> </xsl:text>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="hideScreens" />
 							<xsl:if test="@marginBelow='false'">
@@ -239,62 +239,62 @@
 						  <xsl:text>px;</xsl:text>
 					  </xsl:if>
 				  </xsl:attribute>-->
-				  <video preload="true" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" poster="{@backgroundImage}" id="bgvid-{@id}" class="bg-video">
-					  <xsl:if test="@backgroundVideo-mp4!=''">
-						  <source src="{@backgroundVideo-mp4}" type="video/mp4"/>
-					  </xsl:if>
-					  <xsl:if test="@backgroundVideo-webm!=''">
-						  <source src="{@backgroundVideo-webm}" type="video/webm"/>
-					  </xsl:if>
-				  </video>
-			    <script>
-                    document.getElementById('bgvid-<xsl:value-of select="@id"/>').play();
-                </script>
-			  </xsl:if>
-			  <xsl:choose>
-              <xsl:when test="@fullWidth='true'">
-                <div class="fullwidthContainer">
-                  <xsl:apply-templates select="." mode="displayModule"/>
-                  <xsl:text> </xsl:text>
-                </div>
-              </xsl:when>
-              <xsl:otherwise>
-                <div class="{$class} content">
-                  <xsl:apply-templates select="." mode="displayModule"/>
-                  <xsl:text> </xsl:text>
-                </div>
-              </xsl:otherwise>
-            </xsl:choose>
-          </section>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="." mode="addModuleControls">
-          <xsl:with-param name="text" select="$text"/>
-          <xsl:with-param name="class" select="$class"/>
-          <xsl:with-param name="position" select="$position"/>
-        </xsl:apply-templates>
-        <xsl:choose>
-          <xsl:when test="/Page/Contents/Content[@position = $position]">
-            <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule">
-              <xsl:with-param name="auto-col">
-                <xsl:if test="$module-type='AutoColumn'">true</xsl:if>
-              </xsl:with-param>
-              <xsl:with-param name="width">
-                <xsl:value-of select="$width"/>
-              </xsl:with-param>
-            </xsl:apply-templates>
-          </xsl:when>
-          <xsl:otherwise>
-            <!-- if no contnet, need a space for the compiling of the XSL. -->
-            <span class="hidden">
-              <xsl:text>&#160;</xsl:text>
-            </span>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
+							<video preload="true" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop" poster="{@backgroundImage}" id="bgvid-{@id}" class="bg-video">
+								<xsl:if test="@backgroundVideo-mp4!=''">
+									<source src="{@backgroundVideo-mp4}" type="video/mp4"/>
+								</xsl:if>
+								<xsl:if test="@backgroundVideo-webm!=''">
+									<source src="{@backgroundVideo-webm}" type="video/webm"/>
+								</xsl:if>
+							</video>
+							<script>
+								document.getElementById('bgvid-<xsl:value-of select="@id"/>').play();
+							</script>
+						</xsl:if>
+						<xsl:choose>
+							<xsl:when test="@fullWidth='true'">
+								<div class="fullwidthContainer">
+									<xsl:apply-templates select="." mode="displayModule"/>
+									<xsl:text> </xsl:text>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>
+								<div class="{$class} content">
+									<xsl:apply-templates select="." mode="displayModule"/>
+									<xsl:text> </xsl:text>
+								</div>
+							</xsl:otherwise>
+						</xsl:choose>
+					</section>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="." mode="addModuleControls">
+					<xsl:with-param name="text" select="$text"/>
+					<xsl:with-param name="class" select="$class"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+				<xsl:choose>
+					<xsl:when test="/Page/Contents/Content[@position = $position]">
+						<xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule">
+							<xsl:with-param name="auto-col">
+								<xsl:if test="$module-type='AutoColumn'">true</xsl:if>
+							</xsl:with-param>
+							<xsl:with-param name="width">
+								<xsl:value-of select="$width"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>
+						<!-- if no contnet, need a space for the compiling of the XSL. -->
+						<span class="hidden">
+							<xsl:text>&#160;</xsl:text>
+						</span>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
 	<!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
 	<xsl:template match="Page" mode="mainLayout">
@@ -320,9 +320,9 @@
 			</xsl:when>
 			<!-- IF ContentDetail Show ContentDetail -->
 			<xsl:when test="ContentDetail">
-				<div class="container detail-container" role="main">
+				<div class="detail-container" role="main">
 					<xsl:attribute name="class">
-						<xsl:text>container detail-container </xsl:text>
+						<xsl:text>detail-container </xsl:text>
 						<xsl:value-of select="$page/ContentDetail/Content/@type"/>
 						<xsl:text>-detail-container</xsl:text>
 					</xsl:attribute>
@@ -814,8 +814,8 @@
 				<xsl:choose>
 					<xsl:when test="@box!='false' and @box!=''">
 						<xsl:apply-templates select="." mode="moduleBox">
-								<xsl:with-param name="id" select="$id"/>
-							</xsl:apply-templates>
+							<xsl:with-param name="id" select="$id"/>
+						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:apply-templates select="." mode="displayModuleContent">
@@ -826,7 +826,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="Content" mode="displayModuleContent">
 		<xsl:param name="id"/>
 		<xsl:variable name="thisClass">
@@ -1299,7 +1299,7 @@
 								</xsl:apply-templates>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="displayBrief"/>
-						
+
 							<xsl:text> </xsl:text>
 						</div>
 					</xsl:if>
@@ -1311,7 +1311,7 @@
 								</xsl:apply-templates>
 							</xsl:if>
 							<xsl:apply-templates select="." mode="displayBrief"/>
-						
+
 							<xsl:text> </xsl:text>
 						</div>
 					</xsl:if>
@@ -1343,102 +1343,102 @@
 		</xsl:choose>
 	</xsl:template>
 
-  <xsl:template match="Content" mode="modalBox">
-    <div id="mod_{@id}">
-      <xsl:apply-templates select="." mode="themeModuleExtras"/>
-      <!-- define classes for box -->
-      <xsl:attribute name="class">
-        <xsl:text>modal-content </xsl:text>
-        <xsl:if test="@icon!='' or @uploadIcon!=''">
-          <xsl:text>panel-icon </xsl:text>
-        </xsl:if>
-        <xsl:choose>
-          <xsl:when test="@box='Default Box'">card</xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="translate(@box,' ','-')"/>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:text> module</xsl:text>
-        <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
+	<xsl:template match="Content" mode="modalBox">
+		<div id="mod_{@id}">
+			<xsl:apply-templates select="." mode="themeModuleExtras"/>
+			<!-- define classes for box -->
+			<xsl:attribute name="class">
+				<xsl:text>modal-content </xsl:text>
+				<xsl:if test="@icon!='' or @uploadIcon!=''">
+					<xsl:text>panel-icon </xsl:text>
+				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="@box='Default Box'">card</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="translate(@box,' ','-')"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text> module</xsl:text>
+				<!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
               stled differently to a title bar. -->
-        <xsl:if test="@title=''">
-          <xsl:text> boxnotitle</xsl:text>
-        </xsl:if>
-        pos-<xsl:value-of select="@position"/>
-        <xsl:apply-templates select="." mode="hideScreens" />
-        <xsl:apply-templates select="." mode="marginBelow" />
-       <!-- <xsl:apply-templates select="." mode="themeModuleExtras"/>-->
-      </xsl:attribute>
-      <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
-        <div class="modal-header">
-          <xsl:apply-templates select="." mode="inlinePopupOptions">
-            <xsl:with-param name="class" select="'panel-heading'"/>
-          </xsl:apply-templates>
-          <xsl:if test="@rss and @rss!='false'">
-            <xsl:apply-templates select="." mode="rssLink" />
-          </xsl:if>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">
-              <i class="fa fa-times">&#160;</i>
-            </span>
-          </button>
-          <h4 class="modal-title">
-            <xsl:apply-templates select="." mode="moduleLink"/>
-          </h4>
-        </div>
-      </xsl:if>
-      <xsl:if test="not(@listGroup='true')">
-        <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
-          <div class="panel-image">
-            <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
-          </div>
-        </xsl:if>
-        <div class="modal-body">
-          <xsl:if test="not(@title!='')">
-            <xsl:apply-templates select="." mode="inlinePopupOptions">
-              <xsl:with-param name="class" select="'panel-body'"/>
-            </xsl:apply-templates>
-          </xsl:if>
-          <xsl:apply-templates select="." mode="displayBrief"/>
-        </div>
-      </xsl:if>
-      <xsl:if test="@listGroup='true'">
-        <div class="card-body">
-          <xsl:if test="not(@title!='')">
-            <xsl:apply-templates select="." mode="inlinePopupOptions">
-              <xsl:with-param name="class" select="'card-body'"/>
-            </xsl:apply-templates>
-          </xsl:if>
-          <xsl:apply-templates select="." mode="displayBrief"/>
-		
-							<xsl:text> </xsl:text>
-        </div>
-      </xsl:if>
-      <xsl:if test="@linkText!='' and @link!=''">
-        <div class="card-footer">
-          <xsl:if test="@iconStyle='Centre'">
-            <xsl:attribute name="class">panel-footer center-block-footer</xsl:attribute>
-          </xsl:if>
-          <xsl:apply-templates select="." mode="moreLink">
-            <xsl:with-param name="link">
-              <xsl:choose>
-                <xsl:when test="format-number(@link,'0')!='NaN'">
-                  <xsl:variable name="pageId" select="@link"/>
-                  <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="@link"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:with-param>
-            <xsl:with-param name="linkText" select="@linkText"/>
-            <xsl:with-param name="altText" select="@title"/>
-          </xsl:apply-templates>
-          <xsl:text> </xsl:text>
-        </div>
-      </xsl:if>
-    </div>
-  </xsl:template>
+				<xsl:if test="@title=''">
+					<xsl:text> boxnotitle</xsl:text>
+				</xsl:if>
+				pos-<xsl:value-of select="@position"/>
+				<xsl:apply-templates select="." mode="hideScreens" />
+				<xsl:apply-templates select="." mode="marginBelow" />
+				<!-- <xsl:apply-templates select="." mode="themeModuleExtras"/>-->
+			</xsl:attribute>
+			<xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
+				<div class="modal-header">
+					<xsl:apply-templates select="." mode="inlinePopupOptions">
+						<xsl:with-param name="class" select="'panel-heading'"/>
+					</xsl:apply-templates>
+					<xsl:if test="@rss and @rss!='false'">
+						<xsl:apply-templates select="." mode="rssLink" />
+					</xsl:if>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">
+							<i class="fa fa-times">&#160;</i>
+						</span>
+					</button>
+					<h4 class="modal-title">
+						<xsl:apply-templates select="." mode="moduleLink"/>
+					</h4>
+				</div>
+			</xsl:if>
+			<xsl:if test="not(@listGroup='true')">
+				<xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
+					<div class="panel-image">
+						<img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+					</div>
+				</xsl:if>
+				<div class="modal-body">
+					<xsl:if test="not(@title!='')">
+						<xsl:apply-templates select="." mode="inlinePopupOptions">
+							<xsl:with-param name="class" select="'panel-body'"/>
+						</xsl:apply-templates>
+					</xsl:if>
+					<xsl:apply-templates select="." mode="displayBrief"/>
+				</div>
+			</xsl:if>
+			<xsl:if test="@listGroup='true'">
+				<div class="card-body">
+					<xsl:if test="not(@title!='')">
+						<xsl:apply-templates select="." mode="inlinePopupOptions">
+							<xsl:with-param name="class" select="'card-body'"/>
+						</xsl:apply-templates>
+					</xsl:if>
+					<xsl:apply-templates select="." mode="displayBrief"/>
+
+					<xsl:text> </xsl:text>
+				</div>
+			</xsl:if>
+			<xsl:if test="@linkText!='' and @link!=''">
+				<div class="card-footer">
+					<xsl:if test="@iconStyle='Centre'">
+						<xsl:attribute name="class">panel-footer center-block-footer</xsl:attribute>
+					</xsl:if>
+					<xsl:apply-templates select="." mode="moreLink">
+						<xsl:with-param name="link">
+							<xsl:choose>
+								<xsl:when test="format-number(@link,'0')!='NaN'">
+									<xsl:variable name="pageId" select="@link"/>
+									<xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="@link"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:with-param>
+						<xsl:with-param name="linkText" select="@linkText"/>
+						<xsl:with-param name="altText" select="@title"/>
+					</xsl:apply-templates>
+					<xsl:text> </xsl:text>
+				</div>
+			</xsl:if>
+		</div>
+	</xsl:template>
 
 	<xsl:template match="Content[starts-with(@box,'alert')]" mode="moduleBox">
 		<xsl:param name="id"/>
@@ -1753,6 +1753,6 @@
 		<span class="alert">* Module type unknown *</span>
 	</xsl:template>
 
-	
+
 
 </xsl:stylesheet>
