@@ -7752,6 +7752,11 @@ restart:
                             For Each oRelation In oInstance.SelectNodes("ProductGroups")
                                 insertProductGroupRelation(savedId, oRelation.GetAttribute("ids"))
                             Next
+                            Dim oRelatedLibraryImages As XmlElement
+                            For Each oRelatedLibraryImages In oInstance.SelectNodes("RelatedLibraryImages")
+                                ' createGalleryImages(savedId, oRelatedGalleryImages.InnerText,oRelatedGalleryImages.attribute("skipFirst"))
+                                ' function to step through each image in the array, check it exists, get width and height, open LibraryImage Xform, Get the instance, set /images/img[@class=display] with src and width and height then use setObjectInstance, get the new id and related to the savedId setcontentrelation(newid,savedid).
+                            Next
                         Case objectTypes.Directory
 
                             Dim oRelation As XmlElement

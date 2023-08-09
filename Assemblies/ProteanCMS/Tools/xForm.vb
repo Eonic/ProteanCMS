@@ -1275,6 +1275,9 @@ Public Class xForm
                                                     oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDateTime(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
                                                 Case "date"
                                                     oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
+                                                Case "string-before-comma"
+                                                    'pull the first value in an array and populate the instance
+                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = submittedValue.Trim()
                                                 Case Else
                                                     'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
                                                     If bIsXml Then

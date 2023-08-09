@@ -2609,8 +2609,15 @@ Public Class Cms
             End If
 
             Select Case AjaxCmd
-                Case "ReviewFileUpload"
+                Case "ContentImageUpload"
                     Try
+                        'get the content id
+                        'we build the save path from the contentname making it a safeurl
+                        'check that that contentID is saved in the session as relatable.
+                        'get the customer upload image path
+                        'create the save path
+                        'upload the images
+                        'return comma separated of image paths with clean file names.
 
                         Dim oFsh As fsHelper = New fsHelper
                         oFsh.initialiseVariables(fsHelper.LibraryType.Image)
@@ -2619,6 +2626,7 @@ Public Class Cms
                         If ProductName IsNot Nothing Then
                             oFsh.UploadRequest(moCtx, ProductName)
                         End If
+                        'return the clean paths from array on oFsh.cleanUploadedPaths
                         oFsh = Nothing
                     Catch ex As Exception
                         returnException(msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
