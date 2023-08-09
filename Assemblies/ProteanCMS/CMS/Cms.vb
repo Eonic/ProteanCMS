@@ -2615,7 +2615,7 @@ Public Class Cms
                         Dim oFsh As fsHelper = New fsHelper
                         oFsh.initialiseVariables(fsHelper.LibraryType.Image)
                         oFsh.moPageXML = moPageXml
-                        Dim ProductName As String = moRequest("cProductName")
+                        Dim ProductName As String = moRequest("cProductNameforPath")
                         If ProductName IsNot Nothing Then
                             oFsh.UploadRequest(moCtx, ProductName)
                         End If

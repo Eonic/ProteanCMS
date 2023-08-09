@@ -290,7 +290,7 @@ Partial Public Class Cms
                         cFileName = Replace(cFileName, "\", "/")
                         cFileName = oFsh.CleanfileName(cFileName)
                         If Not cFileName.StartsWith("/") Then
-                            'cFileName = "/" & cFileName
+                            cFileName = "/" & cFileName
                             cReviewImagePath = cStorageRoot + cProductName.Replace("\", "/").Replace("""", "") + cFileName
 
                             If cReviewImagePath.EndsWith(".svg") Then
