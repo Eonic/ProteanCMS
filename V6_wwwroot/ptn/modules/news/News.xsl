@@ -351,7 +351,6 @@
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="'detail newsarticle'"/>
 			</xsl:apply-templates>
-			<xsl:apply-templates select="." mode="displayDetailImage"/>
 			<div class="detail-text">
 				<h1 class="entry-title content-title" itemprop="headline">
 					<xsl:apply-templates select="." mode="getDisplayName" />
@@ -364,6 +363,8 @@
 						</xsl:call-template>
 					</p>
 				</xsl:if>
+
+				<xsl:apply-templates select="." mode="displayDetailImage"/>
 				<span class="strapline-detail" itemprop="description">
 					<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
 				</span>
