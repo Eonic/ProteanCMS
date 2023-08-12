@@ -3119,26 +3119,20 @@
     </xsl:variable>
 	  <xsl:choose>
 		  <xsl:when test="help">
-			  <xsl:text>&#160;</xsl:text>
-			  <a data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
+			  <button type="button" class="btn form-tip" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{help/node()}">
 				  <i class="fas fa-question-circle">
 					  <xsl:text> </xsl:text>
 				  </i>
-			  </a>
-			  <div class="popover-content" role="tooltip">
-				  <xsl:copy-of select="help/node()"/>
-			  </div>
+			  </button>
+			  <xsl:text> </xsl:text>
 		  </xsl:when>
 		  <xsl:when test="hint">
-			  <xsl:text>&#160;</xsl:text>
-			  <a data-bs-toggle="popover" data-bs-placement="right" data-container="body" rel="frmPopover" title="{label/node()}" class="form-tip">
+			  <button type="button" class="btn form-tip" data-container="body" data-toggle="popover" data-placement="bottom" data-content="{hint/node()}">
 				  <i class="fas fa-info-circle">
 					  <xsl:text> </xsl:text>
 				  </i>
-			  </a>
-			  <div class="popover-content" role="tooltip">
-				  <xsl:copy-of select="hint/node()"/>
-			  </div>
+			  </button>
+			  <xsl:text> </xsl:text>
 		  </xsl:when>
 	  </xsl:choose>
   </xsl:template>

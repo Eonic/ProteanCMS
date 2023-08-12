@@ -17,7 +17,7 @@
   <!--menu below header-->
   <!--<xsl:variable name="header-layout">header-menu-right</xsl:variable>-->
   <!--menu within header-->
-  <xsl:variable name="header-layout">header-menu-right</xsl:variable>
+  <xsl:variable name="header-layout">header-menu-below</xsl:variable>
   <xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
   <xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
   <xsl:variable name="color-mode">default</xsl:variable>
@@ -151,7 +151,7 @@
     <xsl:value-of select="$thHeight"/>
   </xsl:template>
 
-  <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">600</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">800</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">600</xsl:template>
 
   <xsl:template match="Item" mode="cartThumbWidth">150</xsl:template>
@@ -318,7 +318,7 @@
   <!-- ############################################ LOGIN ############################################### -->
 
 
-  <xsl:template match="/" mode="loginTop">
+  <!--<xsl:template match="/" mode="loginTop">
     <div id="signin">
       <a class="loginText login-btn" data-bs-toggle="modal" href="#LoginModal" role="button">
         <xsl:if test="/Page/User[@id!='']">
@@ -343,10 +343,10 @@
         </xsl:choose>
       </a>
     </li>
-  </xsl:template>
+  </xsl:template>-->
 
   <xsl:template match="/" mode="loginSimple">
-    <a class="nav-link login-btn" data-bs-toggle="modal" href="#LoginModal" role="button">
+    <a class="nav-link login-btn not-xs" data-bs-toggle="modal" href="#LoginModal" role="button">
       <xsl:choose>
         <xsl:when test="/Page/User">My Account</xsl:when>
         <xsl:otherwise>Log in</xsl:otherwise>

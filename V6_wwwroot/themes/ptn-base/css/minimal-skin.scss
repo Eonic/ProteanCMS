@@ -1,0 +1,20 @@
+﻿header {
+    border-bottom: 1px solid $grey;
+}
+footer#pagefooter {
+    border-top: 1px solid $grey;
+}
+.main-nav .dropdown-menu {
+    border-top: 1px solid $grey;
+    border-bottom: 1px solid $grey;
+
+    @include media-breakpoint-up($nav-breakpoint) {
+        border: 1px solid $grey;
+    }
+}
+.header-menu-below .main-nav {
+    @include media-breakpoint-up($nav-breakpoint) {
+        border-top: 1px solid $grey;
+        //border-bottom: 1px solid $grey;
+    }
+}

@@ -275,6 +275,7 @@ Partial Public Class Cms
             indexkey = 200
             'indexdefkey = 201
             nShipProdCatRelKey = 202
+            nEmailActivityKey = 203
         End Enum
 
         Enum TableNames
@@ -324,6 +325,7 @@ Partial Public Class Cms
             'tblContentIndex = 200
             tblContentIndexDef = 200
             tblCartShippingProductCategoryRelations = 202
+            tblEmailActivityLog = 203
         End Enum
 
         Enum PermissionLevel
@@ -375,6 +377,7 @@ Partial Public Class Cms
             SessionReconnectFromCookie = 15
             LogonInvalidPassword = 16
             HistoricPassword = 17
+            Recompile = 18
 
             ' Audit changes 
             StatusChangeLive = 30
@@ -2749,7 +2752,38 @@ restart:
                 Else
                     nKey = nVersionId
                 End If
-
+                'Add code to remove emailactivityid from review email activityxml when one review 
+                ' feedback is submitted.
+                If goRequest("type") IsNot Nothing Then
+                    If goRequest("type").ToLower() = "review" Then
+                        Dim custEmail As String = String.Empty
+                        Dim EncryptedKey As String = myWeb.moRequest.UrlReferrer.Query
+                        Dim logArray() As String
+                        logArray = Split(EncryptedKey, "=")
+                        EncryptedKey = logArray(1)
+                        custEmail = oInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/ReviewerEmail/node()").Value
+                        Dim dtCheckLognode As New DataTable
+                        Dim sSql As String = "select nEmailActivityKey, cActivityXml from tblEmailActivityLog where cEmailRecipient='" & custEmail & "' and CONVERT(XML, cActivityXml).value('(/OrderContacts/OrderContact/ReviewTokenKey)[1]', 'Nvarchar(500)')='" & EncryptedKey & "'"
+                        dtCheckLognode = GetDataSet(sSql, "Application", "JobApplications").Tables(0)
+                        If dtCheckLognode.Rows.Count > 0 Then
+                            Dim oDRreview As DataRow
+                            For Each oDRreview In dtCheckLognode.Rows
+                                Dim nEmailActivityKey As String = oDRreview("nEmailActivityKey")
+                                Dim cActivityXML As String = oDRreview("cActivityXml")
+                                Dim oActivityInstance As XmlElement = moPageXml.CreateElement("instance")
+                                oActivityInstance.InnerXml = cActivityXML
+                                If oActivityInstance.InnerXml <> Nothing Then
+                                    If oActivityInstance.SelectSingleNode("OrderContacts/reviewActivityID") IsNot Nothing Then
+                                        Dim nodeReviewlog As XmlNode = oActivityInstance.SelectSingleNode("/OrderContacts")
+                                        nodeReviewlog.RemoveChild(nodeReviewlog.LastChild)
+                                        Dim sqlUpdateXML As String = "update tblEmailActivityLog set cActivityXml = '" & nodeReviewlog.OuterXml & "' where nEmailActivityKey=" + nEmailActivityKey
+                                        ExeProcessSql(sqlUpdateXML.ToString())
+                                    End If
+                                End If
+                            Next
+                        End If
+                    End If
+                End If
                 PerfMonLog("DBHelper", "setObjectInstance", "endsave")
 
                 If ObjectType = objectTypes.ContentStructure Then
@@ -3123,6 +3157,8 @@ restart:
                         .Columns("currentLiveVersion").ColumnMapping = Data.MappingType.Attribute
                         .Columns("pageid").ColumnMapping = Data.MappingType.Attribute
                         .Columns("page").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("reviewProductID").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("Type").ColumnMapping = Data.MappingType.Attribute
                     End With
 
                     '   With oDS.Tables("Location")
@@ -7715,6 +7751,11 @@ restart:
                             Next
                             For Each oRelation In oInstance.SelectNodes("ProductGroups")
                                 insertProductGroupRelation(savedId, oRelation.GetAttribute("ids"))
+                            Next
+                            Dim oRelatedLibraryImages As XmlElement
+                            For Each oRelatedLibraryImages In oInstance.SelectNodes("RelatedLibraryImages")
+                                ' createGalleryImages(savedId, oRelatedGalleryImages.InnerText,oRelatedGalleryImages.attribute("skipFirst"))
+                                ' function to step through each image in the array, check it exists, get width and height, open LibraryImage Xform, Get the instance, set /images/img[@class=display] with src and width and height then use setObjectInstance, get the new id and related to the savedId setcontentrelation(newid,savedid).
                             Next
                         Case objectTypes.Directory
 

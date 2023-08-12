@@ -4,3 +4,61 @@ form.ewXform {
         margin-bottom: 1rem;
     }
 }
+
+#Login {
+    form .principle {
+        float: right;
+    }
+
+    .morelink a {
+        @extend .btn-clean;
+    }
+}
+
+.forgotten-password-link {
+    display: block;
+    margin-bottom: 1rem;
+    margin-top: -1rem;
+}
+//date picker
+.ui-datepicker {
+    background: #fff;
+    padding: 1rem;
+    border: 1px solid $grey;
+
+    .ui-datepicker-next {
+        float: right;
+    }
+
+    .ui-datepicker-title {
+        text-align: center;
+    }
+
+    .ui-datepicker-current {
+        @extend .btn;
+        @extend .btn-link;
+    }
+
+    .ui-datepicker-close {
+        float: right;
+        background: none;
+        border: 0;
+    }
+    th,
+    td {
+        width: calc(100% / 7);
+        text-align: center;
+
+        a {
+            color: $body-color;
+            text-decoration: none;
+            width: 100%;
+            display: block;
+        }
+    }
+
+    .ui-state-active {
+        background: $primary;
+        color: #fff;
+    }
+}

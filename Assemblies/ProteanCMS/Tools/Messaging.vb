@@ -777,6 +777,31 @@ Public Class Messaging
                             ' check optional para 'isTrackActivityEmailLogKey =true' for review and then 
                             ' Add update Activity Xml with inserted activity id
                             ' Add new node in xml for this id
+                            If logId > 0 Then
+                                If isTrackActivityEmailLogKey = True Then
+                                    'load in a saved instance
+                                    Dim strSql2 As New Text.StringBuilder
+                                    strSql2.Append("SELECT cActivityXml FROM [tblEmailActivityLog] ")
+                                    strSql2.Append("where nEmailActivityKey = " & logId)
+
+                                    Dim loadedInstance As String = odbHelper.GetDataValue(strSql2.ToString)
+                                    If loadedInstance <> "" Then
+                                        Dim oReviewActivityInstance As XmlElement = oXml.CreateElement("Instance")
+                                        oReviewActivityInstance.InnerXml = loadedInstance
+                                        Dim cReviewActivityXML As XmlElement
+                                        cReviewActivityXML = oReviewActivityInstance.SelectSingleNode("OrderContacts")
+                                        Dim reviewActivityID As XmlNode = oXml.CreateElement("reviewActivityID")
+                                        reviewActivityID.InnerText = logId
+                                        cReviewActivityXML.AppendChild(reviewActivityID)
+
+                                        Dim strSql3 As New Text.StringBuilder
+                                        strSql3.Append("update tblEmailActivityLog set cActivityXml = '" & SqlFmt(cReviewActivityXML.OuterXml) & "'")
+                                        strSql3.Append("where nEmailActivityKey = " & logId)
+                                        odbHelper.ExeProcessSql(strSql3.ToString)
+                                    End If
+                                End If
+                            End If
+
                         Else
                             odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString)
                             odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, 0, 0, "")

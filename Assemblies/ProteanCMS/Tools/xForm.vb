@@ -1103,15 +1103,41 @@ Public Class xForm
                                                     ElseIf submittedValue = "" Then
                                                         oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     Else
-                                                        Try
-                                                            oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
-                                                        Catch
-                                                            oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
-                                                        End Try
+                                                        If goRequest("type") IsNot Nothing Then
+                                                            If goRequest("type").ToLower() = "review" Then
+                                                                'check cContentDisplay is not empty
+                                                                'check intance if images node is exists
+                                                                'get all images and split '/images'
+                                                                'Create img tag for each image and append to the images node
+                                                                Dim cContentDisplay As String = submittedValue
+                                                                If cContentDisplay.Contains("<img") Then
+                                                                    Dim sSingleImage As String
+                                                                    Dim res() As String = cContentDisplay.Split(New String() {"<img"}, StringSplitOptions.None)
+                                                                    For Each sSingleImage In res
+                                                                        If Not sSingleImage = " " Then
+                                                                            sSingleImage = sSingleImage.Replace(">", "/>")
+                                                                            sSingleImage = "<img " & sSingleImage
+                                                                            Try
+                                                                                oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(sSingleImage) & "").Trim
+                                                                            Catch
+                                                                                oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(sSingleImage) & "").Trim)
+                                                                            End Try
+                                                                            oInstance.SelectSingleNode(sXpath, nsMgr).AppendChild(oElmtTemp.FirstChild.Clone)
+                                                                        End If
+                                                                    Next
+                                                                End If
+                                                            Else
+                                                                Try
+                                                                    oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
+                                                                Catch
+                                                                    oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
+                                                                End Try
+                                                                oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
 
+                                                            End If
 
+                                                        End If
 
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     End If
                                                     oElmtTemp = Nothing
 
@@ -1249,6 +1275,9 @@ Public Class xForm
                                                     oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDateTime(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
                                                 Case "date"
                                                     oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
+                                                Case "string-before-comma"
+                                                    'pull the first value in an array and populate the instance
+                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = submittedValue.Trim()
                                                 Case Else
                                                     'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
                                                     If bIsXml Then
@@ -2319,9 +2348,9 @@ Public Class xForm
             'If sLabel <> "" Then
             oLabelElmt = moPageXML.CreateElement("label")
             If bXmlLabel Then
-                oLabelElmt.InnerXml = sLabel & " "
+                oLabelElmt.InnerXml = convertEntitiesToCodes(sLabel) & " "
             Else
-                oLabelElmt.InnerText = sLabel & " "
+                oLabelElmt.InnerText = convertEntitiesToCodes(sLabel) & " "
             End If
             oOptElmt.AppendChild(oLabelElmt)
             'End If

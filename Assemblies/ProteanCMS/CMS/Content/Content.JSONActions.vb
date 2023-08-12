@@ -284,9 +284,11 @@ Partial Public Class Cms
                     End If
 
                     Dim cReviewImagePath As String = String.Empty
+                    Dim cReturnPath As String = String.Empty
 
                     If cProductName IsNot Nothing Then
                         cFileName = Replace(cFileName, "\", "/")
+                        cFileName = oFsh.CleanfileName(cFileName)
                         If Not cFileName.StartsWith("/") Then
                             cFileName = "/" & cFileName
                             cReviewImagePath = cStorageRoot + cProductName.Replace("\", "/").Replace("""", "") + cFileName
@@ -295,9 +297,9 @@ Partial Public Class Cms
                                 Return "<img src=""" & cReviewImagePath & """ alt=""""/> "
                             Else
                                 ' Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(myWeb.goServer.MapPath("/" & cStorageRoot & cFileName))
-                                Return "<img src=""" & cReviewImagePath & """ height=""200"" width=""200"" alt=""""/> "
+                                cReturnPath = "<img src=""" & cReviewImagePath & """ height=""200"" width=""200"" alt="""" class=""display""/> "
                             End If
-                            'Return cReviewImagePath
+                            Return cReturnPath
                         End If
 
                     End If

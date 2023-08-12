@@ -10,8 +10,9 @@
 				<cContentName/>
 				<cContentSchemaName>Review</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content showRelated="Tag">
+					<Content showRelated="Tag" recommendToAFriend="">
 						<Reviewer/>
+						<ReviewerEmail/>
 						<ReviewDate/>
 						<Url/>
 						<Summary/>
@@ -65,7 +66,7 @@
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind nodeset="tblContent">
 			<bind id="cContentReviewer" nodeset="cContentName" required="true()" type="string"/>
-			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="true()" type="string"/>
 			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
 			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
 			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
@@ -97,7 +98,7 @@
 				<bind id="nEmailSent" nodeset="EmailSent" required="false()" type="string"/>
 				<bind id="nShowImage" nodeset="ShowImage" required="false()" type="string"/>
 			</bind>
-			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="true()" type="string"/>
 		</bind>
 	</model>
 	<group ref="EditContent" class="2col">
@@ -108,7 +109,7 @@
 					<label>ContentId</label>
 				</input>
 				<label>Settings</label>
-				<input bind="dPublishDate" class="calendar short">
+				<input bind="dPublishDate" class="calendar short required">
 					<label>Publish Date</label>
 				</input>
 				<input bind="dExpireDate" class="calendar short">
@@ -160,6 +161,11 @@
 				<input bind="cContentDisplay" class="short pickImage">
 					<label>Alternative Picture</label>
 				</input>
+				<group>
+					<label>Image gallery</label>
+					<help class="inline">Besides the main review images, You can add additional images below to display as a gallery.</help>
+					<relatedContent search="add" type="LibraryImage" relationType="" direction="1way"/>
+				</group>
 				<group ref="Content2">
 					<label>Document</label>
 					<input bind="cContentDocPath" class=" pickDocument">
