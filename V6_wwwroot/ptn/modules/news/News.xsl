@@ -14,6 +14,16 @@
 				<xsl:with-param name="startPos" select="$startPos" />
 			</xsl:apply-templates>
 		</xsl:variable>
+		<xsl:variable name="cropSetting">
+			<xsl:choose>
+				<xsl:when test="@crop='true'">
+					<xsl:text>true</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>false</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="totalCount">
 			<xsl:choose>
 				<xsl:when test="@display='related'">
@@ -24,9 +34,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<!--responsive columns variables-->
-
-		<!--end responsive columns variables-->
+		
 		<div class="clearfix {@moduleType}">
 			<div>
 				<!--responsive columns -->
@@ -54,7 +62,6 @@
 
 	<!-- NewsArticle Module Swiper -->
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList' and @carousel='true']" mode="displayBrief">
-		<!-- Set Variables -->
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
 		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
@@ -63,6 +70,16 @@
 				<xsl:with-param name="contentType" select="$contentType" />
 				<xsl:with-param name="startPos" select="$startPos" />
 			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="cropSetting">
+			<xsl:choose>
+				<xsl:when test="@crop='true'">
+					<xsl:text>true</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>false</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="totalCount">
 			<xsl:choose>
@@ -74,10 +91,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<!--responsive columns variables-->
-
-		<!--end responsive columns variables-->
-		<!-- Output Module -->
+		
 		<div class="swiper-container {@moduleType} content-carousel ">
 			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
 				<div class="swiper-wrapper">
@@ -122,6 +136,7 @@
 	<!-- NewsArticle Brief -->
 	<xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
+		<xsl:param name="crop"/>
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
@@ -140,6 +155,16 @@
 				<xsl:with-param name="parentId" select="$parentId"/>
 			</xsl:apply-templates>
 		</xsl:variable>
+		<xsl:variable name="cropSetting">
+			<xsl:choose>
+				<xsl:when test="$crop='true'">
+					<xsl:value-of select="true()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="false()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="{$classValues}">
 			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
 				<xsl:with-param name="parentId" select="$parentId"/>
@@ -153,6 +178,7 @@
 				<xsl:if test="Images/img/@src!=''">
 					<a href="{$parentURL}" title="Read more about {Headline/node()}" class="list-image-link">
 						<xsl:apply-templates select="." mode="displayThumbnail">
+							<xsl:with-param name="crop" select="$cropSetting" />
 							<xsl:with-param name="class">img-fluid</xsl:with-param>
 						</xsl:apply-templates>
 					</a>
