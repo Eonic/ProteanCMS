@@ -33,20 +33,6 @@
 				<xsl:apply-templates select="." mode="contentColumns"/>
 				<!--end responsive columns-->
 
-				<!-- If Stepper, display Stepper -->
-				<!--<xsl:choose>
-					<xsl:when test="@linkArticle='true'">
-						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-							<xsl:with-param name="sortBy" select="@sortBy"/>
-						</xsl:apply-templates>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-							<xsl:with-param name="sortBy" select="@sortBy"/>
-							<xsl:with-param name="parentId" select="@id"/>
-						</xsl:apply-templates>
-					</xsl:otherwise>
-				</xsl:choose>-->
 				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 					<xsl:with-param name="sortBy" select="@sortBy"/>
 					<xsl:with-param name="parentId" select="@id"/>
@@ -68,7 +54,6 @@
 
 	<!-- NewsArticle Module Swiper -->
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList' and @carousel='true']" mode="displayBrief">
-		<xsl:param name="linked"/>
 		<!-- Set Variables -->
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
@@ -99,25 +84,10 @@
 					<xsl:apply-templates select="." mode="contentColumns">
 						<xsl:with-param name="carousel" select="@carousel"/>
 					</xsl:apply-templates>
-					<!--<xsl:choose>
-						<xsl:when test="@linkArticle='true'">
-							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-								<xsl:with-param name="sortBy" select="@sortBy"/>
-								<xsl:with-param name="class" select="'swiper-slide'"/>
-							</xsl:apply-templates>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-								<xsl:with-param name="sortBy" select="@sortBy"/>
-								<xsl:with-param name="class" select="'swiper-slide'"/>
-								<xsl:with-param name="linked" select="$linked"/>
-							</xsl:apply-templates>
-						</xsl:otherwise>
-					</xsl:choose>-->
 					<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 						<xsl:with-param name="sortBy" select="@sortBy"/>
 						<xsl:with-param name="class" select="'swiper-slide'"/>
-						<xsl:with-param name="linked" select="$linked"/>
+						<xsl:with-param name="linked" select="@linkArticle"/>
 					</xsl:apply-templates>
 					<xsl:text> </xsl:text>
 				</div>
@@ -181,16 +151,14 @@
 			</xsl:apply-templates>
 			<div class="lIinner">
 				<xsl:if test="Images/img/@src!=''">
-					<a href="{$parentURL}" title="Read More - {Headline/node()}" class="list-image-link">
+					<a href="{$parentURL}" title="Read more about {Headline/node()}" class="list-image-link">
 						<xsl:apply-templates select="." mode="displayThumbnail">
 							<xsl:with-param name="class">img-fluid</xsl:with-param>
 						</xsl:apply-templates>
 					</a>
-					<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-					<span class="hidden">|</span>
 				</xsl:if>
 				<h3 class="title">
-					<a href="{$parentURL}" title="Read More - {Headline/node()}">
+					<a href="{$parentURL}" title="Read more about {Headline/node()}">
 						<xsl:apply-templates select="." mode="getDisplayName"/>
 					</a>
 				</h3>
@@ -232,109 +200,6 @@
 					<xsl:text> </xsl:text>
 				</div>
 			</div>
-			<!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-		</div>
-	</xsl:template>
-
-	<xsl:template match="Content[@type='NewsArticle']" mode="displayBriefLinked">
-		<xsl:param name="sortBy"/>
-		<xsl:param name="link"/>
-		<xsl:param name="altText"/>
-		<xsl:param name="linkType"/>
-		<!-- articleBrief -->
-		<xsl:variable name="parentURL">
-			<xsl:apply-templates select="." mode="getHref"/>
-		</xsl:variable>
-		<xsl:variable name="classValues">
-			<xsl:text>listItem newsarticle </xsl:text>
-			<xsl:value-of select="$class"/>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
-				<xsl:with-param name="parentId" select="$parentId"/>
-			</xsl:apply-templates>
-		</xsl:variable>
-		<div class="{$classValues}">
-			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
-				<xsl:with-param name="parentId" select="$parentId"/>
-				<xsl:with-param name="pos" select="position()"/>
-			</xsl:apply-templates>
-			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="'listItem newsarticle'"/>
-				<xsl:with-param name="sortBy" select="$sortBy"/>
-
-			</xsl:apply-templates>
-			<xsl:choose>
-				<xsl:when test="Strapline/descendant-or-self::a">
-					<div class="straphaslinks">
-						<xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
-							<xsl:attribute name="rel">external</xsl:attribute>
-							<xsl:attribute name="class">extLink listItem list-group-item newsarticle straphaslinks</xsl:attribute>
-						</xsl:if>
-						<div class="lIinner">
-							<h3 class="title">
-								<a href="{$parentURL}">
-									<xsl:apply-templates select="." mode="getDisplayName"/>
-								</a>
-							</h3>
-							<xsl:if test="Images/img/@src!=''">
-								<xsl:apply-templates select="." mode="displayThumbnail">
-									<xsl:with-param name="class">img-fluid</xsl:with-param>
-								</xsl:apply-templates>
-								<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-								<span class="hidden">|</span>
-							</xsl:if>
-							<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
-							<xsl:if test="@publish!=''">
-								<p class="date">
-									<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-									<xsl:call-template name="DisplayDate">
-										<xsl:with-param name="date" select="@publish"/>
-									</xsl:call-template>
-								</p>
-							</xsl:if>
-							<xsl:if test="Strapline/node()!=''">
-								<div class="summary">
-									<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-								</div>
-							</xsl:if>
-						</div>
-					</div>
-				</xsl:when>
-				<xsl:otherwise>
-					<a href="{$parentURL}">
-						<xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
-							<xsl:attribute name="rel">external</xsl:attribute>
-							<xsl:attribute name="class">extLink listItem list-group-item newsarticle</xsl:attribute>
-						</xsl:if>
-						<div class="lIinner">
-							<h3 class="title">
-								<xsl:apply-templates select="." mode="getDisplayName"/>
-							</h3>
-							<xsl:if test="Images/img/@src!=''">
-								<xsl:apply-templates select="." mode="displayThumbnail"/>
-								<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-								<span class="hidden">|</span>
-							</xsl:if>
-							<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
-							<xsl:if test="@publish!=''">
-								<p class="date">
-									<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-									<xsl:call-template name="DisplayDate">
-										<xsl:with-param name="date" select="@publish"/>
-									</xsl:call-template>
-								</p>
-							</xsl:if>
-							<xsl:if test="Strapline/node()!=''">
-								<div class="summary">
-									<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-								</div>
-							</xsl:if>
-							<xsl:apply-templates select="." mode="displayTagsNoLink"/>
-						</div>
-					</a>
-				</xsl:otherwise>
-			</xsl:choose>
-
 		</div>
 	</xsl:template>
 
@@ -363,7 +228,6 @@
 						</xsl:call-template>
 					</p>
 				</xsl:if>
-
 				<xsl:apply-templates select="." mode="displayDetailImage"/>
 				<span class="strapline-detail" itemprop="description">
 					<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
@@ -372,7 +236,7 @@
 					<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
 				</div>
 				<xsl:if test="Content[@type='FAQ']">
-					<div class="faq-list">
+					<!--<div class="faq-list">
 						<a name="pageTop" class="pageTop">&#160;</a>
 						<h3>Question and Answer</h3>
 						<ul>
@@ -380,6 +244,11 @@
 						</ul>
 						<xsl:apply-templates select="Content[@type='FAQ']" mode="displayBrief">
 							<xsl:with-param name="sortBy" select="@sortBy"/>
+						</xsl:apply-templates>
+					</div>-->
+					<div class="faqList panel-group accordion-module" id="accordion-{@id}" role="tablist" aria-multiselectable="true">
+						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQAccordianBrief">
+							<xsl:with-param name="parId" select="@id"/>
 						</xsl:apply-templates>
 					</div>
 				</xsl:if>
