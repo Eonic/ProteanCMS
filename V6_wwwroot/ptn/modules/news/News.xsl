@@ -2,9 +2,8 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 	<!-- ############## News Articles ##############   -->
 
-	<!-- NewsArticle Module -->
-	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
-		<!-- Set Variables -->
+	<!-- News Module -->
+	<!--<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
 		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
@@ -34,16 +33,13 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
 		<div class="clearfix {@moduleType}">
 			<div>
-				<!--responsive columns -->
 				<xsl:apply-templates select="." mode="contentColumns"/>
-				<!--end responsive columns-->
-
 				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 					<xsl:with-param name="sortBy" select="@sortBy"/>
 					<xsl:with-param name="parentId" select="@id"/>
+					<xsl:with-param name="crop" select="$cropSetting"/>
 					<xsl:with-param name="linked" select="@linkArticle"/>
 				</xsl:apply-templates>
 				<xsl:if test="@stepCount != '0'">
@@ -60,7 +56,6 @@
 		</div>
 	</xsl:template>
 
-	<!-- NewsArticle Module Swiper -->
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList' and @carousel='true']" mode="displayBrief">
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
@@ -101,6 +96,7 @@
 					<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 						<xsl:with-param name="sortBy" select="@sortBy"/>
 						<xsl:with-param name="class" select="'swiper-slide'"/>
+						<xsl:with-param name="crop" select="$cropSetting"/>
 						<xsl:with-param name="linked" select="@linkArticle"/>
 					</xsl:apply-templates>
 					<xsl:text> </xsl:text>
@@ -122,7 +118,7 @@
 				<span>&#160;</span>
 			</div>
 		</div>
-	</xsl:template>
+	</xsl:template>-->
 
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
@@ -131,7 +127,6 @@
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleClassExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
-
 
 	<!-- NewsArticle Brief -->
 	<xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
@@ -243,7 +238,7 @@
 				<xsl:with-param name="class" select="'detail newsarticle'"/>
 			</xsl:apply-templates>
 			<div class="detail-text">
-				<h1 class="entry-title content-title" itemprop="headline">
+				<h1 class="detail-title" itemprop="headline">
 					<xsl:apply-templates select="." mode="getDisplayName" />
 				</h1>
 				<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
@@ -279,10 +274,12 @@
 					</div>
 				</xsl:if>
 				<div class="entryFooter">
-					<div class="tags">
-						<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
-						<xsl:text> </xsl:text>
-					</div>
+					<xsl:if test="Content[@type='Tag']">
+						<div class="tags">
+							<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
+							<xsl:text> </xsl:text>
+						</div>
+					</xsl:if>
 					<xsl:apply-templates select="." mode="backLink">
 						<xsl:with-param name="link" select="$thisURL"/>
 						<xsl:with-param name="altText">

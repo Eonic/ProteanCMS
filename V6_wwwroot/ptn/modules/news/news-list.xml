@@ -53,6 +53,7 @@
 			<bind id="grabberRoot" nodeset="@grabberRoot" required="false()" type="string"/>
 			<bind id="grabberItems" nodeset="@grabberItems" required="false()" type="string"/>
 			<bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
+			<bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
 		</bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>

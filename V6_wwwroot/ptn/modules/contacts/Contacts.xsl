@@ -3,7 +3,7 @@
 	<!--   ################   Contact   ###############   -->
 
 	<!-- Contact Module -->
-	<xsl:template match="Content[@type='Module' and @moduleType='ContactList']" mode="displayBrief">
+	<!--<xsl:template match="Content[@type='Module' and @moduleType='ContactList']" mode="displayBrief">
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
 		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
@@ -36,9 +36,7 @@
 
 		<div class="clearfix {@moduleType}">
 			<div>
-				<!--responsive columns -->
 				<xsl:apply-templates select="." mode="contentColumns"/>
-				<!--end responsive columns-->
 
 				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 					<xsl:with-param name="sortBy" select="@sortBy"/>
@@ -59,7 +57,6 @@
 		</div>
 	</xsl:template>
 
-	<!-- Contact Module -->
 	<xsl:template match="Content[@type='Module' and @moduleType='ContactList' and @carousel='true']" mode="displayBrief">
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
@@ -100,6 +97,7 @@
 
 					<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
 						<xsl:with-param name="sortBy" select="@sortBy"/>
+						<xsl:with-param name="class" select="'swiper-slide'"/>
 						<xsl:with-param name="crop" select="$cropSetting"/>
 						<xsl:with-param name="linked" select="@linkArticle"/>
 					</xsl:apply-templates>
@@ -122,7 +120,7 @@
 				<span>&#160;</span>
 			</div>
 		</div>
-	</xsl:template>
+	</xsl:template>-->
 
 	<!-- Contact Brief -->
 	<xsl:template match="Content[@type='Contact']" mode="displayBrief">
@@ -150,7 +148,7 @@
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="classValues">
-			<xsl:text>listItem newsarticle </xsl:text>
+			<xsl:text>listItem contact </xsl:text>
 			<xsl:if test="$linked='true'">
 				<xsl:text> linked-listItem </xsl:text>
 			</xsl:if>
@@ -481,7 +479,7 @@
 			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="displayDetailImage"/>
 			<div class="contact-text">
-				<h1 class="entry-title content-title">
+				<h1 class="detail-text">
 					<span class="given-name">
 						<xsl:apply-templates select="GivenName" mode="displayBrief"/>
 					</span>
