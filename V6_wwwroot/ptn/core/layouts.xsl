@@ -1871,7 +1871,9 @@
 				<xsl:text> </xsl:text>
 			</div>
 			<div class="row">
-				<span>&#160;</span>
+				<span>
+					<xsl:text> </xsl:text>
+				</span>
 			</div>
 		</div>
 	</xsl:template>

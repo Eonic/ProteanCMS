@@ -185,28 +185,8 @@ section.bg-video-wrapper {
     }
 }
 // CONTENT LISTS
-.swiper {
-    padding: 0;
-}
 
-.swiper-slide {
-    align-items: start;
-    height: auto !important
-}
 
-.swiper-wrapper {
-    //padding-right:35px;
-}
-
-.swiper-wrapper > .swiper-slide {
-    // padding-right: 10px;
-    // padding-left: 10px;
-    padding-right: 2rem;
-}
-
-.swiper-loaded .swiper-wrapper > .swiper-slide {
-    padding-right: 0;
-}
 
 .date,
 .dtstamp {
@@ -272,15 +252,13 @@ section.bg-video-wrapper {
 .listItem {
     margin-bottom: $grid-gutter-width;
 
-
-
     .lIinner {
         position: relative;
         transition: transform .2s;
+        overflow:hidden;
         
     }
 
-    
 
     h1, h2, h3, h4, h5, h6 {
         a {
