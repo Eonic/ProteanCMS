@@ -1,9 +1,11 @@
 ﻿header {
     border-bottom: 1px solid $grey;
 }
+
 footer#pagefooter {
     border-top: 1px solid $grey;
 }
+
 .main-nav .dropdown-menu {
     border-top: 1px solid $grey;
     border-bottom: 1px solid $grey;
@@ -12,9 +14,65 @@ footer#pagefooter {
         border: 1px solid $grey;
     }
 }
+
 .header-menu-below .main-nav {
     @include media-breakpoint-up($nav-breakpoint) {
         border-top: 1px solid $grey;
         //border-bottom: 1px solid $grey;
+    }
+}
+
+.TestimonialList .linked-listItem:hover .lIinner {
+    transform: none !important;
+}
+
+.TestimonialList .listItem .lIinner {
+    @include unboxed-listItem;
+
+    .btn-custom {
+        @extend .btn-link;
+    }
+
+    .entryFooter {
+        line-height: 1;
+    }
+
+    .summary {
+        font-size: 1.2rem;
+        position: relative;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+
+        p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        &:before {
+            content: '“';
+            color: $primary;
+            float: left;
+            font-size: 2.5rem;
+            line-height: 1;
+            vertical-align: top;
+            position: absolute;
+            top: -5px;
+            left: 0;
+        }
+
+        &:after {
+            //   content: '”';
+        }
+    }
+
+    .quote-credit {
+        padding-left: 1rem;
+
+        .quote-name {
+            font-weight: 600;
+        }
+
+        .quote-company {
+            font-size: 0.8rem;
+        }
     }
 }
