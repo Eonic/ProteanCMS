@@ -1,7 +1,7 @@
 ﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 
 	<!--   ################   Products   ###############   -->
-	
+
 
 	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
@@ -61,13 +61,16 @@
 				<xsl:with-param name="pos" select="position()"/>
 			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="concat($class, ' listItem product ')"/>
+				<xsl:with-param name="class" select="concat($classValues,' ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
 				<xsl:if test="Images/img/@src!=''">
-					<a href="{$parentURL}" class="url list-image-link">
-						<xsl:apply-templates select="." mode="displayThumbnail"/>
+					<a href="{$parentURL}" class="list-image-link">
+						<xsl:apply-templates select="." mode="displayThumbnail">
+							<xsl:with-param name="crop" select="$cropSetting" />
+							<xsl:with-param name="class">list-image</xsl:with-param>
+						</xsl:apply-templates>
 					</a>
 				</xsl:if>
 				<h3 class="title">
@@ -108,10 +111,10 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<!--<xsl:if test="ShortDescription/node()!=''">
-          <div class="description">
-            <xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
-          </div>
-        </xsl:if>-->
+					<div class="description">
+						<xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
+					</div>
+				</xsl:if>-->
 				<div class="entryFooter">
 					<xsl:apply-templates select="." mode="moreLink">
 						<xsl:with-param name="link" select="$parentURL"/>

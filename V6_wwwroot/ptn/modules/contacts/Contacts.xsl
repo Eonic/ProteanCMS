@@ -54,7 +54,7 @@
 				<xsl:with-param name="pos" select="position()"/>
 			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="'listItem contact'"/>
+				<xsl:with-param name="class" select="concat($classValues,' ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
@@ -63,12 +63,14 @@
 						<xsl:when test="@noLink='true'">
 							<xsl:apply-templates select="." mode="displayThumbnail">
 								<xsl:with-param name="crop" select="$cropSetting" />
+								<xsl:with-param name="class">list-image</xsl:with-param>
 							</xsl:apply-templates>
 						</xsl:when>
 						<xsl:otherwise>
 							<a href="{$parentURL}" title="View more details on {GivenName/node()} {Surname/node()}" class="list-image-link">
 								<xsl:apply-templates select="." mode="displayThumbnail">
 									<xsl:with-param name="crop" select="$cropSetting" />
+									<xsl:with-param name="class">list-image</xsl:with-param>
 								</xsl:apply-templates>
 							</a>
 						</xsl:otherwise>

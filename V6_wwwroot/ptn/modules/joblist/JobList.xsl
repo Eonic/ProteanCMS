@@ -40,11 +40,15 @@
 				<xsl:with-param name="pos" select="position()"/>
 			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="'listItem'"/>
+				<xsl:with-param name="class" select="concat($classValues,' ',$class)"/>
+				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
 				<a href="{$parentURL}" title="Read more about {JobTitle/node()}" class="list-image-link job-image">
-					<xsl:apply-templates select="." mode="displayThumbnail"/>
+					<xsl:apply-templates select="." mode="displayThumbnail">
+						<xsl:with-param name="crop" select="$cropSetting" />
+						<xsl:with-param name="class">list-image</xsl:with-param>
+					</xsl:apply-templates>
 				</a>
 				<h3 class="title">
 					<a href="{$parentURL}" title="{JobTitle/node()}">
@@ -153,9 +157,11 @@
 					<h1 class="detail-title d-lg-none" itemprop="title">
 						<xsl:value-of select="JobTitle/node()"/>
 					</h1>
-					<span class="detail-img ">
-						<xsl:apply-templates select="." mode="displayDetailImage"/>
-					</span>
+					<xsl:apply-templates select="." mode="displayDetailImage">
+						<xsl:with-param name="class">
+							detail-img
+						</xsl:with-param>
+					</xsl:apply-templates>
 					<div class="card job-card">
 						<div class="card-body">
 							<dl class="dl-horizontal">
