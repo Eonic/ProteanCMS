@@ -2,7 +2,7 @@
 
 	<!--   ################   Products   ###############   -->
 	<!-- Product Module -->
-	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="displayBrief">
+	<!--<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="displayBrief">
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
 		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
@@ -43,7 +43,6 @@
 		</div>
 	</xsl:template>
 
-	<!-- Product Module With Carousel -->
 	<xsl:template match="Content[@type='Module' and @moduleType='ProductList' and @carousel='true']" mode="displayBrief">
 		<xsl:variable name="contentType" select="@contentType" />
 		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
@@ -93,13 +92,24 @@
 				<span>&#160;</span>
 			</div>
 		</div>
+	</xsl:template>-->
+
+	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="themeModuleExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
+	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="themeModuleClassExtras">
+		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
 
 	<!-- Product Brief -->
 	<xsl:template match="Content[@type='Product']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
-		<xsl:param name="pos"/>
+		<xsl:param name="crop"/>
 		<xsl:param name="class"/>
+		<xsl:param name="pos"/>
+		<xsl:param name="parentId"/>
+		<xsl:param name="linked"/>
 		<xsl:variable name="parId">
 			<xsl:choose>
 				<xsl:when test="@parId &gt; 0">
@@ -115,7 +125,32 @@
 				<xsl:with-param name="parId" select="$parId"/>
 			</xsl:apply-templates>
 		</xsl:variable>
-		<div class="{$class} listItem product">
+		<xsl:variable name="classValues">
+			<xsl:text>listItem product </xsl:text>
+			<xsl:if test="$linked='true'">
+				<xsl:text> linked-listItem </xsl:text>
+			</xsl:if>
+			<xsl:value-of select="$class"/>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="cropSetting">
+			<xsl:choose>
+				<xsl:when test="$crop='true'">
+					<xsl:value-of select="true()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="false()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<div class="{$classValues}">
+			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
+				<xsl:with-param name="parentId" select="$parentId"/>
+				<xsl:with-param name="pos" select="position()"/>
+			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="concat($class, ' listItem product ')"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
@@ -168,15 +203,16 @@
             <xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
           </div>
         </xsl:if>-->
-				<!--<div class="entryFooter">
-          <xsl:apply-templates select="." mode="moreLink">
-            <xsl:with-param name="link" select="$parentURL"/>
-            <xsl:with-param name="altText">
-              <xsl:apply-templates select="." mode="getDisplayName"/>
-            </xsl:with-param>
-          </xsl:apply-templates>
-          <xsl:text> </xsl:text>
-        </div>-->
+				<div class="entryFooter">
+					<xsl:apply-templates select="." mode="moreLink">
+						<xsl:with-param name="link" select="$parentURL"/>
+						<xsl:with-param name="stretchLink" select="$linked"/>
+						<xsl:with-param name="altText">
+							<xsl:apply-templates select="." mode="getDisplayName"/>
+						</xsl:with-param>
+					</xsl:apply-templates>
+					<xsl:text> </xsl:text>
+				</div>
 			</div>
 		</div>
 	</xsl:template>
@@ -285,15 +321,15 @@
 						<xsl:text>row</xsl:text>
 					</xsl:attribute>
 				</xsl:if>
-				<div class="">
+				<div class="detail-text">
 					<xsl:if test="Images/img[@class='detail']/@src!=''">
 						<xsl:attribute name="class">
 							<xsl:text>col-lg-6 col-product-info</xsl:text>
 						</xsl:attribute>
 					</xsl:if>
-					<h2 class="fn content-title">
+					<h1 class="detail-title content-title">
 						<xsl:value-of select="Name/node()"/>
-					</h2>
+					</h1>
 					<xsl:if test="StockCode/node()!=''">
 						<p class="stockCode">
 							<span class="label">
@@ -383,13 +419,14 @@
 						<xsl:text> </xsl:text>
 					</div>
 				</xsl:if>
-				<xsl:apply-templates select="." mode="backLink">
-					<xsl:with-param name="link" select="$thisURL"/>
-					<xsl:with-param name="altText">
-						<xsl:call-template name="term2047" />
-					</xsl:with-param>
-				</xsl:apply-templates>
-				<xsl:text> </xsl:text>
+				<xsl:if test="not(Content[@type='LibraryImage'])">
+					<xsl:apply-templates select="." mode="backLink">
+						<xsl:with-param name="link" select="$thisURL"/>
+						<xsl:with-param name="altText">
+							<xsl:call-template name="term2047" />
+						</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:if>
 			</div>
 			<xsl:if test="Content[@type='LibraryImage']">
 				<h2>
