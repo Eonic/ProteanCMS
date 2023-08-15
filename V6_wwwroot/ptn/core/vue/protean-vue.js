@@ -26,10 +26,8 @@ Vue.mixin({
 ////Edit Page
 
 $(document).on("click", ".btnSavePage", function (event) {
-
     var newStructName = $("#cStructName").val();
     editPage.structNameOnChange(newStructName);
-
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
@@ -40,8 +38,7 @@ $(document).on("click", "#btnRedirectSave", function (event) {
     if ($(".btnSubmitPage").length > 0) {
         $(".btnSubmitPage").click();
     }
-
-    $("#redirectModal").modal("hide");
+   $("#redirectModal").modal("hide");
 });
 
 $(document).on("click", "#btnRedirectDontSave", function (event) {
@@ -64,8 +61,8 @@ $(document).on("click", "#btnRedirectDontSave", function (event) {
 
 
 $(document).on("click", ".addRedirectbtn", function (event) {
-    $(".countLable").addClass("hidden");
-    $(".modalLable").addClass("hidden");
+    $(".countLabel").addClass("hidden");
+    $(".modalLabel").addClass("hidden");
     RedirectPage.SaveNewUrl();
 });
 $(".close").click(function () {
