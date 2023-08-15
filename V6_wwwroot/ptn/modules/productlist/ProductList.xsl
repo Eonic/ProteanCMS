@@ -1,98 +1,7 @@
 ﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 
 	<!--   ################   Products   ###############   -->
-	<!-- Product Module -->
-	<!--<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="displayBrief">
-		<xsl:variable name="contentType" select="@contentType" />
-		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-		<xsl:variable name="contentList">
-			<xsl:apply-templates select="." mode="getContent">
-				<xsl:with-param name="contentType" select="$contentType" />
-				<xsl:with-param name="startPos" select="$startPos" />
-			</xsl:apply-templates>
-		</xsl:variable>
-		<xsl:variable name="totalCount">
-			<xsl:choose>
-				<xsl:when test="@display='related'">
-					<xsl:value-of select="count(Content[@type=$contentType])"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<div class="clearfix ProductList">
-			<div>
-				<xsl:apply-templates select="." mode="contentColumns"/>
-				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-					<xsl:with-param name="sortBy" select="@sortBy"/>
-				</xsl:apply-templates>
-				<xsl:if test="@stepCount != '0'">
-					<xsl:apply-templates select="/" mode="genericStepper">
-						<xsl:with-param name="articleList" select="$contentList"/>
-						<xsl:with-param name="noPerPage" select="@stepCount"/>
-						<xsl:with-param name="startPos" select="$startPos"/>
-						<xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-						<xsl:with-param name="totalCount" select="$totalCount"/>
-					</xsl:apply-templates>
-				</xsl:if>
-				<xsl:text> </xsl:text>
-			</div>
-		</div>
-	</xsl:template>
-
-	<xsl:template match="Content[@type='Module' and @moduleType='ProductList' and @carousel='true']" mode="displayBrief">
-		<xsl:variable name="contentType" select="@contentType" />
-		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-		<xsl:variable name="contentList">
-			<xsl:apply-templates select="." mode="getContent">
-				<xsl:with-param name="contentType" select="$contentType" />
-				<xsl:with-param name="startPos" select="$startPos" />
-			</xsl:apply-templates>
-		</xsl:variable>
-		<xsl:variable name="totalCount">
-			<xsl:choose>
-				<xsl:when test="@display='related'">
-					<xsl:value-of select="count(Content[@type=$contentType])"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<div class="swiper-container content-carousel ProductList">
-			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
-				<div class="swiper-wrapper">
-					<xsl:apply-templates select="." mode="contentColumns">
-						<xsl:with-param name="carousel" select="@carousel"/>
-					</xsl:apply-templates>
-					<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-						<xsl:with-param name="sortBy" select="@sortBy"/>
-						<xsl:with-param name="class" select="'swiper-slide'"/>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
-				</div>
-			</div>
-			<xsl:if test="@carouselBullets='true'">
-				<div class="swiper-pagination" id="swiper-pagination-{@id}">
-					<xsl:text> </xsl:text>
-				</div>
-			</xsl:if>
-			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
-				<xsl:text> </xsl:text>
-			</div>
-			<div class="swiper-button-next" id="swiper-button-next-{@id}">
-				<xsl:text> </xsl:text>
-			</div>
-			<div class="row">
-				<span>&#160;</span>
-			</div>
-		</div>
-	</xsl:template>-->
+	
 
 	<xsl:template match="Content[@type='Module' and @moduleType='ProductList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
@@ -165,7 +74,7 @@
 					<xsl:variable name="title">
 						<xsl:apply-templates select="." mode="getDisplayName"/>
 					</xsl:variable>
-					<a href="{$parentURL}" title="{$title}">
+					<a href="{$parentURL}">
 						<xsl:value-of select="$title"/>
 					</a>
 				</h3>
@@ -377,34 +286,36 @@
 							<xsl:text>col-lg-6 col-product-img</xsl:text>
 						</xsl:attribute>
 					</xsl:if>
-					<xsl:choose>
-						<!-- Test whether product has SKU's -->
-						<xsl:when test="Content[@type='SKU']">
-							<xsl:choose>
-								<!--Test whether there're any detailed SKU images-->
-								<xsl:when test="count(Content[@type='SKU']/Images/img[@class='detail' and @src != '']) &gt; 0">
-									<xsl:for-each select="Content[@type='SKU']">
-										<xsl:apply-templates select="." mode="displayDetailImage">
-											<!-- hide all but the first image -->
-											<xsl:with-param name="showImage">
-												<xsl:if test="position() != 1">
-													<xsl:text>noshow</xsl:text>
-												</xsl:if>
-											</xsl:with-param>
-										</xsl:apply-templates>
-									</xsl:for-each>
-								</xsl:when>
-								<xsl:otherwise>
-									<!-- If no SKU's have detailed images show default product image -->
-									<xsl:apply-templates select="." mode="displayDetailImage"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:otherwise>
-							<!-- Display Default Image -->
-							<xsl:apply-templates select="." mode="displayDetailImage"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<span class="detail-img ">
+						<xsl:choose>
+							<!-- Test whether product has SKU's -->
+							<xsl:when test="Content[@type='SKU']">
+								<xsl:choose>
+									<!--Test whether there're any detailed SKU images-->
+									<xsl:when test="count(Content[@type='SKU']/Images/img[@class='detail' and @src != '']) &gt; 0">
+										<xsl:for-each select="Content[@type='SKU']">
+											<xsl:apply-templates select="." mode="displayDetailImage">
+												<!-- hide all but the first image -->
+												<xsl:with-param name="showImage">
+													<xsl:if test="position() != 1">
+														<xsl:text>noshow</xsl:text>
+													</xsl:if>
+												</xsl:with-param>
+											</xsl:apply-templates>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<!-- If no SKU's have detailed images show default product image -->
+										<xsl:apply-templates select="." mode="displayDetailImage"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- Display Default Image -->
+								<xsl:apply-templates select="." mode="displayDetailImage"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
 				</div>
 			</div>
 			<xsl:if test="Body/node()!=''">
