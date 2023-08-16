@@ -22,6 +22,11 @@ footer#pagefooter {
     }
 }
 
+.back-link{
+    @extend .btn;
+    @extend .btn-outline-primary;
+}
+
 .TestimonialList .linked-listItem:hover .lIinner {
     transform: none !important;
 }

@@ -473,6 +473,18 @@
 						</xsl:if>
 						<xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
 					</div>
+					<div class="entryFooter">
+						<div class="tags">
+							<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
+							<xsl:text> </xsl:text>
+						</div>
+						<xsl:apply-templates select="." mode="backLink">
+							<xsl:with-param name="link" select="$thisURL"/>
+							<xsl:with-param name="altText">
+								<xsl:call-template name="term2012" />
+							</xsl:with-param>
+						</xsl:apply-templates>
+					</div>
 				</div>
 			</div>
 			
@@ -483,18 +495,7 @@
 					</xsl:apply-templates>
 				</div>
 			</div>
-			<div class="entryFooter">
-				<div class="tags">
-					<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
-					<xsl:text> </xsl:text>
-				</div>
-				<xsl:apply-templates select="." mode="backLink">
-					<xsl:with-param name="link" select="$thisURL"/>
-					<xsl:with-param name="altText">
-						<xsl:call-template name="term2012" />
-					</xsl:with-param>
-				</xsl:apply-templates>
-			</div>
+			
 		</div>
 	</xsl:template>
 </xsl:stylesheet>
