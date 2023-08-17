@@ -107,63 +107,42 @@
 						<xsl:apply-templates select="Title" mode="displayBrief"/>
 					</h4>
 				</xsl:if>
-				<div class="address">
-					<xsl:apply-templates mode="getAddress" select="Location/Address"/>
+
+				<dl class="clearfix dl-horizontal">
 					<xsl:if test="Telephone/node()!=''">
-						<p class="tel">
-							<strong>
-								<xsl:call-template name="term2007" />
-								<xsl:text>: </xsl:text>
-							</strong>
+						<dt class="tel">
+							<xsl:call-template name="term2007" />
+							<xsl:text>: </xsl:text>
+						</dt>
+						<dd class="tel">
 							<xsl:apply-templates select="Telephone" mode="displayBrief"/>
-						</p>
+						</dd>
+
 					</xsl:if>
 					<xsl:if test="Mobile/node()!=''">
-						<p class="mobile">
-							<strong>
-								<xsl:call-template name="term2080" />
-								<xsl:text>: </xsl:text>
-							</strong>
+						<dt class="mobile">
+							<xsl:call-template name="term2080" />
+							<xsl:text>: </xsl:text>
+						</dt>
+						<dd>
 							<xsl:apply-templates select="Mobile" mode="displayBrief"/>
-						</p>
-					</xsl:if>
-					<xsl:if test="Fax/node()!=''">
-						<p class="fax">
-							<strong>
-								<xsl:call-template name="term2008" />
-								<xsl:text>:&#160;</xsl:text>
-							</strong>
-							<xsl:apply-templates select="Fax" mode="displayBrief"/>
-						</p>
+						</dd>
 					</xsl:if>
 					<xsl:if test="Email/node()!=''">
-						<p>
-							<strong>
-								<xsl:call-template name="term2009" />
-								<xsl:text>: </xsl:text>
-							</strong>
-							<a href="mailto:{Email/node()}" class="email">
+						<dt class="email">
+							<xsl:call-template name="term2009" />
+							<xsl:text>: </xsl:text>
+						</dt>
+						<dd>
+							<a href="mailto:{Email/node()}">
 								<xsl:apply-templates select="Email" mode="displayBrief"/>
 							</a>
-						</p>
+						</dd>
 					</xsl:if>
-					<xsl:if test="Website/node()!=''">
-						<p class="web">
-							<strong>
-								<xsl:call-template name="term2010" />
-								<xsl:text>:&#160;</xsl:text>
-							</strong>
-							<a href="{$linkURL}">
-								<xsl:apply-templates select="Website" mode="displayBrief"/>
-							</a>
-						</p>
-					</xsl:if>
-					<xsl:text> </xsl:text>
-				</div>
+				</dl>
+
 				<xsl:if test="Profile/node()!=''">
-					<p>
-						<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
-					</p>
+					<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
 				</xsl:if>
 				<xsl:if test="not(@noLink='true')">
 					<div class="entryFooter">
@@ -360,101 +339,111 @@
 				<xsl:with-param name="class" select="'detail contact'"/>
 			</xsl:apply-templates>
 			<div class="row">
-				<div class="col-lg-3">
+				<div class="col-lg-5 col-xl-4">
 					<h1 class="detail-title d-lg-none" itemprop="title">
-						<xsl:value-of select="JobTitle/node()"/>
+						<span class="given-name">
+							<xsl:apply-templates select="GivenName" mode="displayBrief"/>
+						</span>
+						<xsl:text> </xsl:text>
+						<span class="family-name">
+							<xsl:apply-templates select="Surname" mode="displayBrief"/>
+						</span>
 					</h1>
+					<xsl:if test="Title/node()!=''">
+						<h2 class="d-lg-none" >
+							<xsl:apply-templates select="Company" mode="displayBrief"/>
+							<span class="title">
+								<xsl:apply-templates select="Title" mode="displayBrief"/>
+							</span>
+						</h2>
+					</xsl:if>
 					<span class="detail-img ">
 						<xsl:apply-templates select="." mode="displayDetailImage"/>
 					</span>
 					<xsl:if test="Department/node() or Telephone/node() or Mobile/node() or Fax/node() or Email/node() or Website/node()">
 						<div class="card contact-card">
 							<div class="card-body">
-								<xsl:if test="Department/node()!=''">
-									<p class="department">
-										<span class="label">
+								<dl class="clearfix dl-horizontal">
+									<xsl:if test="Department/node()!=''">
+										<dt class="department">
 											<!-- Department -->
 											<xsl:call-template name="term2011" />
-											<xsl:text>:&#160;</xsl:text>
-										</span>
-										<span class="roll">
+											<xsl:text>: </xsl:text>
+										</dt>
+										<dd>
 											<xsl:apply-templates select="Department" mode="displayBrief"/>
-										</span>
-									</p>
-								</xsl:if>
-								<xsl:apply-templates select="." mode="socialLinks">
-									<xsl:with-param name="iconSet">default</xsl:with-param>
-									<xsl:with-param name="myName">
-										<xsl:apply-templates select="GivenName" mode="displayBrief"/>
-										<xsl:text> </xsl:text>
-										<xsl:apply-templates select="Surname" mode="displayBrief"/>
-									</xsl:with-param>
-								</xsl:apply-templates>
+										</dd>
+									</xsl:if>
+									<xsl:if test="Telephone/node()!=''">
+										<dt class="tel">
+											<xsl:call-template name="term2007" />
+											<xsl:text>: </xsl:text>
+										</dt>
+										<dd class="tel">
+											<xsl:apply-templates select="Telephone" mode="displayBrief"/>
+										</dd>
+
+									</xsl:if>
+									<xsl:if test="Mobile/node()!=''">
+										<dt class="mobile">
+											<xsl:call-template name="term2080" />
+											<xsl:text>: </xsl:text>
+										</dt>
+										<dd>
+											<xsl:apply-templates select="Mobile" mode="displayBrief"/>
+										</dd>
+									</xsl:if>
+									<xsl:if test="Fax/node()!=''">
+										<dt class="fax">
+											<xsl:call-template name="term2008" />
+											<xsl:text>: </xsl:text>
+										</dt>
+										<dd>
+											<xsl:apply-templates select="Fax" mode="displayBrief"/>
+										</dd>
+									</xsl:if>
+									<xsl:if test="Email/node()!=''">
+										<dt class="email">
+											<xsl:call-template name="term2009" />
+											<xsl:text>: </xsl:text>
+										</dt>
+										<dd>
+											<a href="mailto:{Email/node()}">
+												<xsl:apply-templates select="Email" mode="displayBrief"/>
+											</a>
+										</dd>
+									</xsl:if>
+									<xsl:if test="Website/node()!=''">
+										<dt>
+											<xsl:call-template name="term2010" />
+											<xsl:text>: </xsl:text>
+										</dt>
+										<dd>
+											<a href="{Website/node()}" class="url">
+												<xsl:apply-templates select="Website" mode="displayBrief"/>
+											</a>
+										</dd>
+									</xsl:if>
+								</dl>
+
 								<xsl:apply-templates mode="getAddress" select="Location/Address"/>
-								<xsl:if test="Telephone/node() or Mobile/node() or Fax/node() or Email/node() or Website/node()">
-									<div class="telecoms">
-										<xsl:if test="Telephone/node()!=''">
-											<p>
-												<span class="label">
-													<xsl:call-template name="term2007" />
-													<xsl:text>:&#160;</xsl:text>
-												</span>
-												<span class="tel">
-													<xsl:apply-templates select="Telephone" mode="displayBrief"/>
-												</span>
-											</p>
-										</xsl:if>
-										<xsl:if test="Mobile/node()!=''">
-											<p class="mobile">
-												<span class="label">
-													<xsl:call-template name="term2080" />
-													<xsl:text>:&#160;</xsl:text>
-												</span>
-												<xsl:apply-templates select="Mobile" mode="displayBrief"/>
-											</p>
-										</xsl:if>
-										<xsl:if test="Fax/node()!=''">
-											<p class="fax">
-												<span class="label">
-													<xsl:call-template name="term2008" />
-													<xsl:text>:&#160;</xsl:text>
-												</span>
-												<xsl:apply-templates select="Fax" mode="displayBrief"/>
-											</p>
-										</xsl:if>
-										<xsl:if test="Email/node()!=''">
-											<p>
-												<span class="label">
-													<xsl:call-template name="term2009" />
-													<xsl:text>: </xsl:text>
-												</span>
-												<a href="mailto:{Email/node()}">
-													<span class="email">
-														<xsl:apply-templates select="Email" mode="displayBrief"/>
-													</span>
-												</a>
-											</p>
-										</xsl:if>
-										<xsl:if test="Website/node()!=''">
-											<p>
-												<span class="label">
-													<xsl:call-template name="term2010" />
-													<xsl:text>:&#160;</xsl:text>
-												</span>
-												<a href="{Website/node()}" class="url">
-													<xsl:apply-templates select="Website" mode="displayBrief"/>
-												</a>
-											</p>
-										</xsl:if>
-									</div>
+								<xsl:if test="@facebookURL!='' or @twitterURL!='' or instagramURL!='' or linkedInURL!='' or pinterestURL!=''">
+									<xsl:apply-templates select="." mode="socialLinks">
+										<xsl:with-param name="iconSet">plain</xsl:with-param>
+										<xsl:with-param name="myName">
+											<xsl:apply-templates select="GivenName" mode="displayBrief"/>
+											<xsl:text> </xsl:text>
+											<xsl:apply-templates select="Surname" mode="displayBrief"/>
+										</xsl:with-param>
+									</xsl:apply-templates>
 								</xsl:if>
 							</div>
 						</div>
 					</xsl:if>
 				</div>
-				<div class="col-lg-9">
+				<div class="col-lg-7 col-xl-8">
 					<div class="contact-text">
-						<h1 class="detail-text">
+						<h1 class="detail-title d-none d-lg-block">
 							<span class="given-name">
 								<xsl:apply-templates select="GivenName" mode="displayBrief"/>
 							</span>
@@ -464,7 +453,7 @@
 							</span>
 						</h1>
 						<xsl:if test="Title/node()!=''">
-							<h2>
+							<h2 class="d-none d-lg-block">
 								<xsl:apply-templates select="Company" mode="displayBrief"/>
 								<span class="title">
 									<xsl:apply-templates select="Title" mode="displayBrief"/>
@@ -487,7 +476,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="NewsList">
 				<div class="row cols row-cols-1  row-cols-md-2 row-cols-lg-3">
 					<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
@@ -495,7 +484,7 @@
 					</xsl:apply-templates>
 				</div>
 			</div>
-			
+
 		</div>
 	</xsl:template>
 </xsl:stylesheet>

@@ -56,9 +56,9 @@
 					</a>
 				</h3>
 				<div class="job-intro">
-					<dl class="dl-horizontal">
+					<dl class="clearfix dl-horizontal">
 						<xsl:if test="@publish and @publish!=''">
-							<dt class="date">
+							<dt class="job-date">
 								<!--Added on-->
 								<xsl:call-template name="term2062" />
 								<xsl:text>: </xsl:text>
@@ -153,7 +153,7 @@
 				<xsl:with-param name="class" select="'detail job'"/>
 			</xsl:apply-templates>
 			<div class="row">
-				<div class="col-lg-3">
+				<div class="col-lg-5 col-xl-4">
 					<h1 class="detail-title d-lg-none" itemprop="title">
 						<xsl:value-of select="JobTitle/node()"/>
 					</h1>
@@ -166,7 +166,7 @@
 						<div class="card-body">
 							<dl class="dl-horizontal">
 								<xsl:if test="@publish and @publish!=''">
-									<dt class="date" itemprop="datePosted">
+									<dt class="job-date" itemprop="datePosted">
 										<xsl:call-template name="term2068" />
 										<xsl:text>: </xsl:text>
 									</dt>
@@ -294,7 +294,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-9">
+				<div class="col-lg-7 col-xl-8">
 					<h1 class="detail-title d-none d-lg-block" itemprop="title">
 						<xsl:value-of select="JobTitle/node()"/>
 					</h1>
@@ -356,20 +356,21 @@
 							<xsl:apply-templates select="Incentives/node()" mode="cleanXhtml"/>
 						</div>
 					</xsl:if>
+
+					<div class="entryFooter">
+						<div class="tags">
+							<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
+							<xsl:text> </xsl:text>
+						</div>
+						<xsl:apply-templates select="." mode="backLink">
+							<xsl:with-param name="link" select="$thisURL"/>
+							<xsl:with-param name="altText">
+								<!--click here to return to the news article list-->
+								<xsl:call-template name="term2071" />
+							</xsl:with-param>
+						</xsl:apply-templates>
+					</div>
 				</div>
-			</div>
-			<div class="entryFooter">
-				<div class="tags">
-					<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
-					<xsl:text> </xsl:text>
-				</div>
-				<xsl:apply-templates select="." mode="backLink">
-					<xsl:with-param name="link" select="$thisURL"/>
-					<xsl:with-param name="altText">
-						<!--click here to return to the news article list-->
-						<xsl:call-template name="term2071" />
-					</xsl:with-param>
-				</xsl:apply-templates>
 			</div>
 		</div>
 	</xsl:template>

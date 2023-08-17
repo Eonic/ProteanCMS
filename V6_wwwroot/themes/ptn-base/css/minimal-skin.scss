@@ -22,7 +22,21 @@ footer#pagefooter {
     }
 }
 
-.back-link{
+.detail-container > .detail {
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.1rem;
+    }
+}
+/*dl {
+    border-bottom: 1px solid $grey;
+    padding-bottom:1rem;
+    margin-bottom:1rem;
+}*/
+.backlink{
+    margin-bottom:2rem;
+}
+.back-link {
     @extend .btn;
     @extend .btn-outline-primary;
 }

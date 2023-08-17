@@ -286,6 +286,14 @@ section.bg-video-wrapper {
         }
     }
 
+    h3 {
+        font-size: 1.5rem;
+    }
+    h4.job-title{
+        font-size:1.2rem;
+        margin-top:-0.9rem;
+    }
+
     @if $content-btn-align==true {
         @extend .align-btn-footer;
     }
@@ -321,6 +329,21 @@ section.bg-video-wrapper {
 
 .linked-listItem {
     position: relative;
+}
+
+.faqList {
+    #pageMenu ul {
+        padding: 0;
+        margin-bottom: 1.5rem;
+
+        li {
+            list-style: none;
+        }
+    }
+
+    .listItem.faq {
+        margin-bottom: 0.5rem;
+    }
 }
 // GRIDS
 .Grid {
@@ -421,6 +444,29 @@ section.bg-video-wrapper {
     }
 }
 
+dl {
+    margin-bottom: 0.5rem;
+}
+
+dt {
+    font-weight: 600;
+    //width: 100px;
+    float: left;
+    //text-align: right;
+    line-height: 1.1;
+    clear: left;
+    padding-bottom: 7px;
+}
+
+dd {
+    margin-bottom: 0.5rem;
+    margin-left: 0;
+    line-height: 1.1;
+    margin-left: 5px;
+    float: left;
+    clear: right;
+}
+
 .detail-container > .detail {
     @extend .container;
 
@@ -448,11 +494,24 @@ section.bg-video-wrapper {
         }
     }
 
-    .card{
-        *:last-child{
-            margin-bottom:0;
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .card {
+        p {
+            margin-bottom: 0.6rem;
+        }
+
+        .card-body {
+            *:last-child {
+                margin-bottom: 0;
+                border-bottom: 0;
+                padding-bottom:0;
+            }
         }
     }
+
     .detail-text {
         max-width: 45rem;
         //margin-left: auto;

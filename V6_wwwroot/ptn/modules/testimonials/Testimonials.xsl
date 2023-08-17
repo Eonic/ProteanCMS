@@ -47,9 +47,8 @@
 		</xsl:variable>
 		<xsl:if test="not(@noLink='true')">
 
-
 			<!-- Modal -->
-			<div class="modal fade" id="quoteModal{$parentId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal fade" id="quoteModal{@id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -57,7 +56,7 @@
 						</div>
 						<div class="modal-body">
 
-							<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+							<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
 						</div>
 					</div>
 				</div>
@@ -105,7 +104,7 @@
 							</xsl:with-param>
 						</xsl:apply-templates>
 						<xsl:text> </xsl:text>-->
-							<button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#quoteModal{$parentId}">
+							<button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#quoteModal{@id}">
 								<xsl:if test="$linked='true'">
 									<xsl:attribute name="class">btn btn-custom stretched-link</xsl:attribute>
 								</xsl:if>
