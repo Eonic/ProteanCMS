@@ -12476,88 +12476,68 @@
         </div>
         &#160;   &#160;   &#160;
       </div>
-
       <div class="col-md-4">
-        <lable class="countLable hidden"></lable>
+        <lable class="countLabel hidden"></lable>
         &#160;   &#160;   &#160;
         <!--<lable class="endLable hidden">You reached at end</lable>-->
       </div>
     </div>
 
 
-    <div class="control-wrapper RedirectPage" id="RedirectPage">
-      <div id="loadSpin" class="loadSpin modal " tabindex="-1" >
+    <div class="control-wrapper RedirectPage" id="RedirectPage">      
+		<div id="loadSpin" class="modal loadSpin fade" tabindex="-1" >
         <div class="modal-dialog">
           <div class="modal-content">
             <!--<div class="modal-body">-->
-            <lable class="modalLable hidden"></lable>
+            <lable class="modalLabel hidden"></lable>
             <!--<div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
               <i class="fas fa-spinner fa-spin"> </i>
             </div>-->
-
-
             <!--</div>-->
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <div class="form-group input-containing col-md-6">
-          <label >Old URL</label>
-        </div>
-        <div class="form-group input-containing col-md-6">
-          <label  >New URL</label>
-        </div>
-
-      </div>
+		
       <div id="addNewUrl" class="form-group  repeat-group newAddFormInline">
-        <fieldset class="rpt-00 row">
-          <div class="form-group input-containing col-md-5">
-
+        <fieldset class="form-group rpt-00 row">
+          <div class=" input-containing col-md-5">
             <div class="control-wrapper input-wrapper appearance-">
-
+			 <label for="OldUrlform">Old URL</label>
               <input type="text" name="OldUrlform" id="OldUrlmodal" class="textbox form-control"/>
             </div>
           </div>
-          <div class="form-group input-containing col-md-5">
-
+          <div class=" input-containing col-md-5">
             <div class="control-wrapper input-wrapper appearance-">
+				<label for="NewUrlform">Old URL</label>
               <input type="text" name="NewUrlform" id="NewUrlModal" class="textbox form-control"/>
             </div>
           </div>
-          <div class="form-group input-containing col-md-2">
-
+          <div class="input-containing col-md-2">
             <div class="control-wrapper input-wrapper appearance-">
               <button type="button"  class="btn btn-primary addRedirectbtn">
                 Add new Url
               </button>
             </div>
           </div>
-
         </fieldset>
       </div>
       <div>
-        <div class="form-group repeat-group ListOfNewAddedUrls"  v-for="(urls,index) in newAddedUrlList">
-          <fieldset>
+        <div class="row form-group repeat-group ListOfNewAddedUrls"  v-for="(urls,index) in newAddedUrlList">
             <div class="form-group input-containing col-md-5" >
-
               <div class="control-wrapper input-wrapper">
-
                 <input type="text" name="OldUrl" v-bind:id="'Old_' + index"  class="form-control addUrlText" v-bind:value="urls.oldUrl"/>
               </div>
             </div>
             <div class="form-group input-containing col-md-5">
-
               <div class="control-wrapper input-wrapper">
                 <input type="text" name="NewUrl" v-bind:id="'New_' + index"  class="form-control addUrlText" v-bind:value="urls.NewUrl"/>
               </div>
             </div>
-            <div class="form-group input-containing col-md-1">
+            <div class="form-group input-containing col-md-2">
               <button type="button"  class="btn btn-primary btn-updateNewUrl hidden" >
                 Update
               </button>
-              <lable class="tempLableSaveNew hidden">Saved..</lable>
-            </div>
-            <div class="form-group input-containing col-md-1">
+              <label class="tempLableSaveNew hidden">Saved..</label>
 
               <div class="control-wrapper input-wrapper">
                 <button type="button"  class="btn btn-danger delAddNewUrl">
@@ -12565,8 +12545,6 @@
                 </button>
               </div>
             </div>
-
-          </fieldset>
         </div>
       </div>
       <div class="scolling-pane">

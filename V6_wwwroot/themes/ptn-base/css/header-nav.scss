@@ -1,64 +1,122 @@
-﻿$nav-breakpoint:lg;
+﻿$nav-breakpoint: lg;
+
 .not-xs {
     @include media-breakpoint-down($nav-breakpoint) {
         display: none;
     }
-}  
+}
 
 .xs-only {
     @include media-breakpoint-up($nav-breakpoint) {
         display: none;
     }
 }
+
+// Header Layout Options
+.header-menu-below {
+    display: block !important;
+
+
+    .main-nav ul.navbar-nav {
+        @include media-breakpoint-up($nav-breakpoint) {
+            margin-left: -$nav-padding-x;
+            margin-right: -$nav-padding-x;
+        }
+    }
+}
+
+.header-menu-right {
+    .main-nav ul.navbar-nav {
+        justify-content: flex-end;
+    }
+}
+//General Header Settings
 header {
+    &.navbar {
+        padding: 0;
+    }
+
+    .header-inner {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
     .module.nobox {
         margin-bottom: 0;
     }
-}
-.navbar {
-    padding-top:0.4rem;
-    padding-bottom:0.4rem;
-}
-.navbar-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
 
-    .header-tier1,
-    .header-tier2 {
+    .navbar-brand {
+        max-width: 50%;
+    }
+
+    .navbar-content {
         display: flex;
-        align-items: center;
         flex-wrap: wrap;
+        align-items: center;
         justify-content: right;
 
         @include media-breakpoint-up($nav-breakpoint) {
-            float: right;
-            margin-right: -($header-spacing/2);
+            margin-top: -0.5rem;
         }
     }
 
-    .header-tier1 {
-        @include media-breakpoint-down(lg) {
-            display: none;
-        }
+    .navbar-toggler {
+        border: 0;
+        padding: 0.1rem 0.2rem;
+        margin: -0.1rem -0.2rem;
     }
 }
+
+//Navigation
 .main-nav {
+    padding: 0;
+
     @include media-breakpoint-up(lg) {
         font-size: $main-nav-size;
-
+        padding: 0;
 
         .offcanvas-end {
             width: auto;
         }
 
-        ul {
+        ul.navbar-nav {
             flex-wrap: wrap;
-            justify-content: flex-end;
+
+            .nav-link {
+                padding: $nav-padding-y $nav-padding-x;
+            }
         }
     }
 
+    .dropdown-menu {
+        margin-top: 0;
+        border-radius: 0;
+        border: 0;
 
+        .dropdown-item {
+            &:hover,
+            &:active,
+            &.active {
+                background: none;
+            }
+
+            &.active,
+            &.on,
+            &:focus {
+                color: $primary;
+            }
+
+            &:first-child {
+                &.on {
+                    color: $navbar-light-color;
+                }
+            }
+        }
+
+        ul {
+            display: none;
+        }
+    }
 
     @include media-breakpoint-down(lg) {
         .offcanvas {
@@ -68,12 +126,6 @@ header {
         .navbar-nav .nav-link {
             padding-left: 1rem;
             padding-right: 1rem;
-        }
-
-        .dropdown-menu {
-            border-left: 0;
-            border-right: 0;
-            border-radius: 0;
         }
 
         .btn-close {
@@ -111,13 +163,7 @@ header {
 }
 
 .login-btn {
-    white-space:nowrap;
-    &:before {
-        content: '\f007';
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-        margin-right: 5px;
-    }
+    white-space: nowrap;
 }
 
 .socialLinks.iconset-plain {
@@ -147,31 +193,39 @@ header {
                 position: absolute;
                 top: 0.2rem;
                 right: 0.2rem;
-                font-size: 0.6rem;
+                font-size: 0.65rem;
             }
         }
     }
 }
+
 .cart-brief-wrapper-xs {
     display: flex;
     align-items: center;
 
     @include media-breakpoint-up(lg) {
-        display:none;
+        display: none;
     }
 }
+
 .search-wrapper {
     margin: 0 ($header-spacing/2);
 }
+
 .tabbed-module {
     .nav {
-        margin-bottom:1rem;
+        margin-bottom: 1rem;
     }
 }
+
 .accordion-module {
     margin-bottom: $spacer;
+    .entryFooter{
+        margin-top:1rem;
+    }
 }
+
 .LinkListSimple {
-    margin-left:-1rem;
-    margin-right:-1rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
 }

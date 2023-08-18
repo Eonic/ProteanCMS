@@ -4200,12 +4200,16 @@
 		<xsl:param name="linkText"/>
 		<xsl:param name="altText"/>
 		<xsl:param name="linkType"/>
+		<xsl:param name="stretchLink"/>
 		<div class="morelink">
 			<span>
 				<a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
 					<xsl:if test="not(substring($link,1,1)='/') and ((contains($link,'http://') or contains($link,'tel:')) and $linkType='external')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 						<xsl:attribute name="class">extLink</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="$stretchLink='true'">
+						<xsl:attribute name="class">btn btn-custom stretched-link</xsl:attribute>
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="$linkText!=''">
@@ -6963,13 +6967,13 @@
 				<xsl:choose>
 					<xsl:when test="$detailSrc!=''">
 
-						<span class="img-fluid {$class}">
+						<span class="{$class}">
 							<xsl:if test="$showImage = 'noshow'">
 								<xsl:attribute name="class">
 									<xsl:text>hidden</xsl:text>
 								</xsl:attribute>
 							</xsl:if>
-							<a data-src="{$detailSrc}" data-fancybox="">
+							<a data-src="{$detailSrc}" data-fancybox="" class="detail-img">
 								<xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
 								<xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
 								<xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>

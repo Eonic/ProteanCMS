@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content contentType="Reviews" moduleType="ReviewsList" box="" title="" link="" linkType="internal" linkText="More reviews" sortBy="Company" order="ascending" cols="" stepBy="" stepCount="0" display="all" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000"/>
+					<Content contentType="Reviews" moduleType="ReviewsList" box="" title="" link="" linkType="internal" linkText="More reviews" sortBy="Company" order="ascending" cols="" stepBy="" stepCount="0" display="all" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000" linkArticle="true"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>

@@ -1,38 +1,68 @@
-﻿.Site {
-    .card {
-        margin-bottom: $grid-gutter-y;
+﻿@mixin card-contrast($color) {
+    color: color-contrast($color);
+
+    h1, h2, h3, h4, h5, h6 {
+        color: color-contrast($color);
     }
 
-    .card.bg-primary,
-    .card.bg-dark {
-        //@extend .text-white;
+    a {
+        color: color-contrast($color);
+    }
 
-        a {
-            @extend .link-light;
-        }
+    a.btn-custom {
+        border: 2px solid color-contrast($color);
+        background: transparent;
+    }
+}
 
-        .btn-primary {
-            @extend .btn-dark;
-        }
+@mixin card-color-bg {
+    .card-header,
+    .card-footer {
+        background: none;
+        border: none;
     }
 
     .card.bg-primary {
-        @extend .text-bg-primary;
+        @include card-contrast($primary);
     }
 
     .card.bg-secondary {
-        @extend .text-bg-secondary;
+        @include card-contrast($secondary);
     }
 
     .card.bg-info {
-        @extend .text-bg-info;
+        @include card-contrast($info);
     }
 
     .card.bg-light {
-        @extend .text-bg-light;
+        @include card-contrast($light);
     }
 
     .card.bg-dark {
-        @extend .text-bg-dark;
+        @include card-contrast($dark);
     }
+}
+
+.Site {
+    .card {
+        margin-bottom: $grid-gutter-y;
+
+        .card-header {
+            h5 {
+                margin-bottom: 0;
+            }
+
+            a {
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                    text-underline-offset: 0.2rem;
+                    text-decoration-thickness: 1px;
+                }
+            }
+        }
+    }
+
+    @include card-color-bg;
 }
