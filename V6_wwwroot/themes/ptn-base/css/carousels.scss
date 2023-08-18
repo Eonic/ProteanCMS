@@ -6,11 +6,16 @@ SWIPER
     position: relative;
 }
 
-.swiper {
+.content-carousel .swiper {
     height: 100%;
     padding: 2rem 2rem 0;
     margin: -2rem -2rem 0;
     width: calc(100% + 4rem);
+
+    .swiper-button-prev,
+    .swiper-button-next {
+        color: $primary;
+    }
 }
 
 .swiper-wrapper {
@@ -43,10 +48,6 @@ SWIPER
     display: flex;
 }
 
-.swiper-button-prev,
-.swiper-button-next {
-    color: $primary;
-}
 
 .swiper-pagination-bullet-active {
     background-color: $primary;
@@ -80,9 +81,17 @@ SWIPER
         display: flex;
     }
 
+    .swiper-slide > a {
+        text-decoration: none;
+
+        .swiper-caption.plain-slide,
+        .swiper-caption.nobg-slide {
+            color: #fff;
+        }
+    }
+
     .swiper-caption {
         //color: #fff;
-        text-shadow: 1px 1px #000;
         /*&.full-slide {
             position: absolute;
             top: 0;
@@ -91,8 +100,10 @@ SWIPER
             bottom: 0;
             display: flex;
         }*/
-        &.plain-slide {
+        &.plain-slide,
+        &.nobg-slide {
             color: #fff;
+            text-shadow: 1px 1px #000;
         }
 
         .swiper-btn-left {
@@ -113,7 +124,6 @@ SWIPER
         padding: 15px 20px;
         border-radius: $border-radius;
         //color: color-contrast(#fff);
-        text-shadow: none;
 
         *:first-child {
             margin-top: 0;
@@ -121,6 +131,18 @@ SWIPER
 
         *:last-child {
             margin-bottom: 0;
+        }
+    }
+
+    .bg-light-o {
+        button.btn-outline-light {
+            color: color-contrast($light);
+            border-color: $dark;
+
+            &:hover {
+                background: $dark;
+                color: color-contrast($dark);
+            }
         }
     }
     //controls

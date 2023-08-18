@@ -23,7 +23,14 @@ h1, h2, h3 {
         text-underline-offset: 0.4rem;
     }
 }
-
+.center-block{
+    text-align:center;
+}
+.FormattedText {
+    .table-responsive{
+        margin-bottom:1rem;
+    }
+}
 //images
 img {
     max-width: 100%;
