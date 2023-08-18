@@ -462,11 +462,23 @@
 						</xsl:if>
 						<xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
 					</div>
-					<div class="entryFooter">
-						<div class="tags">
-							<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
-							<xsl:text> </xsl:text>
+					<div class="relatedcontent NewsList">
+						<h2>
+							Articles by <xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>
+						</h2>
+						<div class="row cols row-cols-1 row-cols-lg-2">
+							<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
+								<xsl:with-param name="sortBy" select="@publishDate"/>
+							</xsl:apply-templates>
 						</div>
+					</div>
+					<div class="entryFooter">
+						<xsl:if test="Content[@type='Tag']">
+							<div class="tags">
+								<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
+								<xsl:text> </xsl:text>
+							</div>
+						</xsl:if>
 						<xsl:apply-templates select="." mode="backLink">
 							<xsl:with-param name="link" select="$thisURL"/>
 							<xsl:with-param name="altText">
@@ -477,13 +489,7 @@
 				</div>
 			</div>
 
-			<div class="NewsList">
-				<div class="row cols row-cols-1  row-cols-md-2 row-cols-lg-3">
-					<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
-						<xsl:with-param name="sortBy" select="@publishDate"/>
-					</xsl:apply-templates>
-				</div>
-			</div>
+			
 
 		</div>
 	</xsl:template>

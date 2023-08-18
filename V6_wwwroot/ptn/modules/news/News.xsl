@@ -120,29 +120,31 @@
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="'detail newsarticle'"/>
 			</xsl:apply-templates>
-			<div class="detail-text">
-				<h1 class="detail-title" itemprop="headline">
-					<xsl:apply-templates select="." mode="getDisplayName" />
-				</h1>
-				<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
-				<xsl:if test="@publish!=''">
-					<p class="dtstamp" title="{@publish}" itemprop="datePublished">
-						<xsl:call-template name="DisplayDate">
-							<xsl:with-param name="date" select="@publish"/>
-						</xsl:call-template>
-					</p>
-				</xsl:if>
-				<span class="detail-img ">
-					<xsl:apply-templates select="." mode="displayDetailImage"/>
-				</span>
-				<span class="strapline-detail" itemprop="description">
-					<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-				</span>
-				<div class="description entry-content" itemprop="text">
-					<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-				</div>
-				<xsl:if test="Content[@type='FAQ']">
-					<!--<div class="faq-list">
+			<div class="row">
+				<div class="col-lg-8">
+					<h1 class="detail-title" itemprop="headline">
+						<xsl:apply-templates select="." mode="getDisplayName" />
+					</h1>
+					<xsl:if test="@imgPosition='main'">
+						<span class="detail-img ">
+							<xsl:apply-templates select="." mode="displayDetailImage"/>
+						</span>
+					</xsl:if>
+					<xsl:if test="@publish!=''">
+						<p class="dtstamp" title="{@publish}" itemprop="datePublished">
+							<xsl:call-template name="DisplayDate">
+								<xsl:with-param name="date" select="@publish"/>
+							</xsl:call-template>
+						</p>
+					</xsl:if>
+					<span class="strapline-detail" itemprop="description">
+						<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+					</span>
+					<div class="description entry-content" itemprop="text">
+						<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
+					</div>
+					<xsl:if test="Content[@type='FAQ']">
+						<!--<div class="faq-list">
 						<a name="pageTop" class="pageTop">&#160;</a>
 						<h3>Question and Answer</h3>
 						<ul>
@@ -152,29 +154,55 @@
 							<xsl:with-param name="sortBy" select="@sortBy"/>
 						</xsl:apply-templates>
 					</div>-->
-					<div class="faqList panel-group accordion-module" id="accordion-{@id}" role="tablist" aria-multiselectable="true">
-						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQAccordianBrief">
-							<xsl:with-param name="parId" select="@id"/>
-						</xsl:apply-templates>
-					</div>
-				</xsl:if>
-				<div class="entryFooter">
-					<xsl:if test="Content[@type='Tag']">
-						<div class="tags">
-							<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
-							<xsl:text> </xsl:text>
+						<div class="faqList panel-group accordion-module" id="accordion-{@id}" role="tablist" aria-multiselectable="true">
+							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQAccordianBrief">
+								<xsl:with-param name="parId" select="@id"/>
+							</xsl:apply-templates>
 						</div>
 					</xsl:if>
-					<xsl:apply-templates select="." mode="backLink">
-						<xsl:with-param name="link" select="$thisURL"/>
-						<xsl:with-param name="altText">
-							<xsl:call-template name="term2006" />
-						</xsl:with-param>
+					<div class="entryFooter">
+						<xsl:if test="Content[@type='Tag']">
+							<div class="tags">
+								<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
+								<xsl:text> </xsl:text>
+							</div>
+						</xsl:if>
+						<xsl:apply-templates select="." mode="backLink">
+							<xsl:with-param name="link" select="$thisURL"/>
+							<xsl:with-param name="altText">
+								<xsl:call-template name="term2006" />
+							</xsl:with-param>
+						</xsl:apply-templates>
+					</div>
+					<xsl:apply-templates select="." mode="ContentDetailCommenting">
+						<xsl:with-param name="commentPlatform" select="$page/Contents/Content[@moduleType='NewsList']/@commentPlatform"/>
 					</xsl:apply-templates>
 				</div>
-				<xsl:apply-templates select="." mode="ContentDetailCommenting">
-					<xsl:with-param name="commentPlatform" select="$page/Contents/Content[@moduleType='NewsList']/@commentPlatform"/>
-				</xsl:apply-templates>
+				<div class="col-lg-4">
+					<xsl:if test="not(@imgPosition='main')">
+						<span class="detail-img ">
+							<xsl:apply-templates select="." mode="displayDetailImage"/>
+						</span>
+					</xsl:if>
+					<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
+					<xsl:if test="Extract/node() and Extract/node()!=''">
+						<aside class="extract">
+							<blockquote>
+								<xsl:apply-templates select="Extract/node()" mode="cleanXhtml"/>
+							</blockquote>
+						</aside>
+					</xsl:if>
+					<xsl:if test="Content[@type='NewsArticle']">
+						<div class="relatedcontent NewsList">
+							<h2>Related Articles</h2>
+							<div class="row cols row-cols-1">
+								<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
+									<xsl:with-param name="sortBy" select="@publishDate"/>
+								</xsl:apply-templates>
+							</div>
+						</div>
+					</xsl:if>
+				</div>
 			</div>
 		</div>
 	</xsl:template>

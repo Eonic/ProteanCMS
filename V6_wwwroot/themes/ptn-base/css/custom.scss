@@ -232,9 +232,7 @@ section.bg-video-wrapper {
     padding: 0;
     border: 0;
     border-radius: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    display: block;
 
     *:nth-last-child(2) {
         flex-grow: 2;
@@ -248,23 +246,90 @@ section.bg-video-wrapper {
     }
 }
 
+@mixin testimonial1 {
+    @include unboxed-listItem;
+    position: relative;
+
+    &.quote-with-image {
+        padding-left: 120px;
+    }
+
+    img {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .btn-custom {
+        @extend .btn-link;
+    }
+
+    .entryFooter {
+        line-height: 1;
+    }
+
+    .summary {
+        font-size: 1.2rem;
+        position: relative;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+
+        p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        &:before {
+            content: '“';
+            color: $primary;
+            float: left;
+            font-size: 2.5rem;
+            line-height: 1;
+            vertical-align: top;
+            position: absolute;
+            top: -5px;
+            left: 0;
+        }
+
+        &:after {
+            //   content: '”';
+        }
+    }
+
+    .quote-credit {
+        padding-left: 1rem;
+
+        .quote-name {
+            font-weight: 600;
+        }
+
+        .quote-company {
+            font-size: 0.8rem;
+        }
+    }
+}
+
 .nobox .listItem .lIinner,
 .relatedcontent .listItem .lIinner {
     @include boxed-listItem;
 }
 
+.TestimonialList .listItem .lIinner {
+    @include testimonial1;
+}
+
+.TestimonialList .linked-listItem:hover .lIinner {
+    transform: none !important;
+}
+
 .linked-listItem {
     &:hover {
         .lIinner {
-            transform: scale(1.07);
-            z-index: 8;
+            transform: scale(1.04);
+            //z-index: 2;
         }
     }
 }
 
-.relatedcontent {
-    margin-bottom: 2rem;
-}
 
 .grid-item {
     margin-bottom: $grid-gutter-width;
@@ -289,9 +354,10 @@ section.bg-video-wrapper {
     h3 {
         font-size: 1.5rem;
     }
-    h4.job-title{
-        font-size:1.2rem;
-        margin-top:-0.9rem;
+
+    h4.job-title {
+        font-size: 1.2rem;
+        margin-top: -0.9rem;
     }
 
     @if $content-btn-align==true {
@@ -326,7 +392,9 @@ section.bg-video-wrapper {
     display: block;
     margin-bottom: 0.5rem;
 }
-
+.item-label{
+    font-weight:600;
+}
 .linked-listItem {
     position: relative;
 }
@@ -507,7 +575,7 @@ dd {
             *:last-child {
                 margin-bottom: 0;
                 border-bottom: 0;
-                padding-bottom:0;
+                padding-bottom: 0;
             }
         }
     }
@@ -525,7 +593,7 @@ dd {
         font-size: 0.8rem;
 
         @include media-breakpoint-up(sm) {
-            float: right;
+            //  float: right;
         }
 
         img {
@@ -536,9 +604,13 @@ dd {
 
         p {
             margin-bottom: 0;
+            display: inline;
         }
 
         .author-role {
+            &:before {
+                content: ', ';
+            }
         }
     }
 
@@ -563,6 +635,37 @@ dd {
 
     .relatedcontent {
         padding-top: 3rem;
+
+        h2 {
+            margin-bottom: 1rem;
+        }
+    }
+}
+.newsarticle {
+    .relatedcontent {
+        padding-top: 0rem;
+    }
+}
+.extract {
+    font-size: 1.2rem;
+    position: relative;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+
+    p:last-of-type {
+        margin-bottom: 0;
+    }
+
+    &:before {
+        content: '“';
+        color: $primary;
+        float: left;
+        font-size: 2.5rem;
+        line-height: 1;
+        vertical-align: top;
+        position: absolute;
+        top: -5px;
+        left: 0;
     }
 }
 //product
@@ -577,6 +680,9 @@ dd {
     @include media-breakpoint-up(lg) {
         order: 1;
     }
+}
+.product-facts{
+    font-size:0.8rem;
 }
 
 .cartButtons {

@@ -46,7 +46,6 @@
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:if test="not(@noLink='true')">
-
 			<!-- Modal -->
 			<div class="modal fade" id="quoteModal{@id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
@@ -72,10 +71,9 @@
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
-
-
 				<xsl:if test="Images/img/@src!=''">
-					<a href="{$parentURL}">
+					<xsl:attribute name="class">lIinner quote-with-image</xsl:attribute>
+					<!--<a href="{$parentURL}">
 						<xsl:attribute name="title">
 							<xsl:call-template name="term2042" />
 							<xsl:text> - </xsl:text>
@@ -85,7 +83,13 @@
 							<xsl:with-param name="crop" select="$cropSetting" />
 							<xsl:with-param name="class">list-image</xsl:with-param>
 						</xsl:apply-templates>
-					</a>
+					</a>-->
+					<span class="detail-img ">
+						<xsl:apply-templates select="." mode="displayThumbnail">
+							<xsl:with-param name="crop" select="$cropSetting" />
+							<xsl:with-param name="class">list-image</xsl:with-param>
+						</xsl:apply-templates>
+					</span>
 				</xsl:if>
 				<div class="summary">
 					<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>

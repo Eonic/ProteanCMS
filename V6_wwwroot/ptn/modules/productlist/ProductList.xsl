@@ -81,25 +81,32 @@
 						<xsl:value-of select="$title"/>
 					</a>
 				</h3>
-				<xsl:if test="Manufacturer/node()!=''">
-					<p class="manufacturer">
-						<xsl:if test="/Page/Contents/Content[@name='makeLabel']">
-							<span class="label">
-								<xsl:value-of select="/Page/Contents/Content[@name='makeLabel']"/>
-							</span>&#160;
+				<xsl:if test="StockCode/node()!='' or Manufacturer/node()!=''">
+					<p class="product-facts">
+						<xsl:if test="StockCode/node()!=''">
+							<span class="stockCode">
+								<span class="item-label">
+									<xsl:call-template name="term2014" />
+								</span>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="StockCode/node()"/>
+							</span>
 						</xsl:if>
-						<span class="brand">
-							<xsl:value-of select="Manufacturer/node()"/>
-						</span>
-					</p>
-				</xsl:if>
-				<xsl:if test="StockCode/node()!=''">
-					<p class="sku stockCode">
-						<span class="label">
-							<xsl:call-template name="term2014" />
-							<xsl:text>: </xsl:text>
-						</span>
-						<xsl:value-of select="StockCode/node()"/>
+						<xsl:if test="StockCode/node()!='' and Manufacturer/node()!=''">
+							<br/>
+						</xsl:if>
+						<xsl:if test="Manufacturer/node()!=''">
+							<span class="manufacturer">
+								<xsl:if test="/Page/Contents/Content[@name='makeLabel']">
+									<span class="label">
+										<xsl:value-of select="/Page/Contents/Content[@name='makeLabel']"/>&#160;
+									</span>
+								</xsl:if>
+								<span class="brand">
+									<xsl:value-of select="Manufacturer/node()"/>
+								</span>
+							</span>
+						</xsl:if>
 					</p>
 				</xsl:if>
 				<xsl:choose>
@@ -167,25 +174,32 @@
 						<xsl:apply-templates select="." mode="displayThumbnail"/>
 					</a>
 				</xsl:if>
-				<xsl:if test="Manufacturer/node()!=''">
-					<p class="manufacturer">
-						<xsl:if test="/Page/Contents/Content[@name='makeLabel']">
-							<span class="label">
-								<xsl:value-of select="/Page/Contents/Content[@name='makeLabel']"/>
-							</span>&#160;
+				<xsl:if test="StockCode/node()!='' or Manufacturer/node()!=''">
+					<p class="product-facts">
+						<xsl:if test="StockCode/node()!=''">
+							<span class="stockCode">
+								<span class="item-label">
+									<xsl:call-template name="term2014" />
+								</span>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="StockCode/node()"/>
+							</span>
 						</xsl:if>
-						<span class="brand">
-							<xsl:value-of select="Manufacturer/node()"/>
-						</span>
-					</p>
-				</xsl:if>
-				<xsl:if test="StockCode/node()!=''">
-					<p class="sku stockCode">
-						<span class="label">
-							<xsl:call-template name="term2014" />
-							<xsl:text>: </xsl:text>
-						</span>
-						<xsl:value-of select="StockCode/node()"/>
+						<xsl:if test="StockCode/node()!='' and Manufacturer/node()!=''">
+							<br/>
+						</xsl:if>
+						<xsl:if test="Manufacturer/node()!=''">
+							<span class="manufacturer">
+								<xsl:if test="/Page/Contents/Content[@name='makeLabel']">
+									<span class="label">
+										<xsl:value-of select="/Page/Contents/Content[@name='makeLabel']"/>&#160;
+									</span>
+								</xsl:if>
+								<span class="brand">
+									<xsl:value-of select="Manufacturer/node()"/>
+								</span>
+							</span>
+						</xsl:if>
 					</p>
 				</xsl:if>
 				<xsl:choose>
@@ -242,26 +256,38 @@
 					<h1 class="detail-title content-title">
 						<xsl:value-of select="Name/node()"/>
 					</h1>
-					<xsl:if test="StockCode/node()!=''">
-						<p class="stockCode">
-							<span class="label">
-								<xsl:call-template name="term2014" />
-							</span>
-							<xsl:text>&#160;</xsl:text>
-							<xsl:value-of select="StockCode/node()"/>
-						</p>
-					</xsl:if>
-					<xsl:if test="Manufacturer/node()!=''">
-						<p class="manufacturer">
-							<xsl:if test="/Page/Contents/Content[@name='makeLabel']">
-								<span class="label">
-									<xsl:value-of select="/Page/Contents/Content[@name='makeLabel']"/>&#160;
+					<xsl:if test="StockCode/node()!='' or Manufacturer/node()!=''">
+						<p class="product-facts">
+							<xsl:if test="StockCode/node()!=''">
+								<span class="stockCode">
+									<span class="item-label">
+										<xsl:call-template name="term2014" />
+									</span>
+									<xsl:text>: </xsl:text>
+									<xsl:value-of select="StockCode/node()"/>
 								</span>
 							</xsl:if>
-							<span class="brand">
-								<xsl:value-of select="Manufacturer/node()"/>
-							</span>
+							<xsl:if test="StockCode/node()!='' and Manufacturer/node()!=''">
+								<br/>
+							</xsl:if>
+							<xsl:if test="Manufacturer/node()!=''">
+								<span class="manufacturer">
+									<xsl:if test="/Page/Contents/Content[@name='makeLabel']">
+										<span class="label">
+											<xsl:value-of select="/Page/Contents/Content[@name='makeLabel']"/>&#160;
+										</span>
+									</xsl:if>
+									<span class="brand">
+										<xsl:value-of select="Manufacturer/node()"/>
+									</span>
+								</span>
+							</xsl:if>
 						</p>
+					</xsl:if>
+					<xsl:if test="ShortDescription/node()!=''">
+						<div class="description">
+							<xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
+						</div>
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="Content[@type='SKU']">
@@ -276,50 +302,120 @@
 					<xsl:if test="/Page/Cart">
 						<xsl:apply-templates select="." mode="addToCartButton"/>
 					</xsl:if>
-					<xsl:if test="ShortDescription/node()!=''">
-						<div class="description">
-							<xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
-						</div>
-					</xsl:if>
 					<xsl:apply-templates select="." mode="SpecLink"/>
 				</div>
-				<div class="">
-					<xsl:if test="Images/img[@class='detail']/@src!=''">
+				<xsl:if test="Images/img[@class='detail']/@src!=''">
+					<div class="">
 						<xsl:attribute name="class">
 							<xsl:text>col-lg-6 col-product-img</xsl:text>
 						</xsl:attribute>
-					</xsl:if>
-					<span class="detail-img ">
 						<xsl:choose>
-							<!-- Test whether product has SKU's -->
-							<xsl:when test="Content[@type='SKU']">
-								<xsl:choose>
-									<!--Test whether there're any detailed SKU images-->
-									<xsl:when test="count(Content[@type='SKU']/Images/img[@class='detail' and @src != '']) &gt; 0">
-										<xsl:for-each select="Content[@type='SKU']">
-											<xsl:apply-templates select="." mode="displayDetailImage">
-												<!-- hide all but the first image -->
-												<xsl:with-param name="showImage">
-													<xsl:if test="position() != 1">
-														<xsl:text>noshow</xsl:text>
-													</xsl:if>
-												</xsl:with-param>
-											</xsl:apply-templates>
-										</xsl:for-each>
-									</xsl:when>
-									<xsl:otherwise>
-										<!-- If no SKU's have detailed images show default product image -->
-										<xsl:apply-templates select="." mode="displayDetailImage"/>
-									</xsl:otherwise>
-								</xsl:choose>
+							<xsl:when test="Content[@type='LibraryImage']">
+								<div id="productScroller">
+									<!--<div class="swiper swiper1" thumbs-swiper=".swiper2" space-between="10" navigation="true">-->
+									<div class="swiper" navigation="true">
+
+										<div class="swiper-wrapper">
+											<div class="swiper-slide">
+												<!--<xsl:choose>
+													<xsl:when test="Content[@type='SKU']">
+														<xsl:choose>
+															<xsl:when test="count(Content[@type='SKU']/Images/img[@class='detail' and @src != '']) &gt; 0">
+																<xsl:for-each select="Content[@type='SKU']">
+																	<xsl:apply-templates select="." mode="displayDetailImage">
+																		<xsl:with-param name="showImage">
+																			<xsl:if test="position() != 1">
+																				<xsl:text>noshow</xsl:text>
+																			</xsl:if>
+																		</xsl:with-param>
+																	</xsl:apply-templates>
+																</xsl:for-each>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:apply-templates select="." mode="displayDetailImage"/>
+															</xsl:otherwise>
+														</xsl:choose>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:apply-templates select="." mode="displayDetailImage"/>
+													</xsl:otherwise>
+												</xsl:choose>-->
+
+												<!--<xsl:apply-templates select="." mode="displayDetailImage"/>-->
+												<img src="{Images/img[@class='detail']/@src}"/>
+											</div>
+											<xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
+										</div>
+										<div class="swiper-button-prev"></div>
+										<div class="swiper-button-next"></div>
+									</div>
+									<!--<div class="swiper swiper2" space-between="10" slides-per-view="4" free-mode="true" watch-slides-progress="true">
+										<div class="swiper-wrapper">
+											<div class="swiper-slide">
+												<xsl:choose>
+													<xsl:when test="Content[@type='SKU']">
+														<xsl:choose>
+															<xsl:when test="count(Content[@type='SKU']/Images/img[@class='detail' and @src != '']) &gt; 0">
+																<xsl:for-each select="Content[@type='SKU']">
+																	<xsl:apply-templates select="." mode="displayDetailImage">
+																		<xsl:with-param name="showImage">
+																			<xsl:if test="position() != 1">
+																				<xsl:text>noshow</xsl:text>
+																			</xsl:if>
+																		</xsl:with-param>
+																	</xsl:apply-templates>
+																</xsl:for-each>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:apply-templates select="." mode="displayDetailImage"/>
+															</xsl:otherwise>
+														</xsl:choose>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:apply-templates select="." mode="displayDetailImage"/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</div>
+											<xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
+										</div>
+									</div>-->
+								</div>
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- Display Default Image -->
-								<xsl:apply-templates select="." mode="displayDetailImage"/>
+								<span class="detail-img ">
+									<xsl:choose>
+										<!-- Test whether product has SKU's -->
+										<xsl:when test="Content[@type='SKU']">
+											<xsl:choose>
+												<!--Test whether there're any detailed SKU images-->
+												<xsl:when test="count(Content[@type='SKU']/Images/img[@class='detail' and @src != '']) &gt; 0">
+													<xsl:for-each select="Content[@type='SKU']">
+														<xsl:apply-templates select="." mode="displayDetailImage">
+															<!-- hide all but the first image -->
+															<xsl:with-param name="showImage">
+																<xsl:if test="position() != 1">
+																	<xsl:text>noshow</xsl:text>
+																</xsl:if>
+															</xsl:with-param>
+														</xsl:apply-templates>
+													</xsl:for-each>
+												</xsl:when>
+												<xsl:otherwise>
+													<!-- If no SKU's have detailed images show default product image -->
+													<xsl:apply-templates select="." mode="displayDetailImage"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:when>
+										<xsl:otherwise>
+											<!-- Display Default Image -->
+											<xsl:apply-templates select="." mode="displayDetailImage"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</span>
 							</xsl:otherwise>
 						</xsl:choose>
-					</span>
-				</div>
+					</div>
+				</xsl:if>
 			</div>
 			<xsl:if test="Body/node()!=''">
 				<div class="description">
@@ -333,36 +429,7 @@
 						<xsl:text> </xsl:text>
 					</div>
 				</xsl:if>
-				<xsl:if test="not(Content[@type='LibraryImage'])">
-					<xsl:apply-templates select="." mode="backLink">
-						<xsl:with-param name="link" select="$thisURL"/>
-						<xsl:with-param name="altText">
-							<xsl:call-template name="term2047" />
-						</xsl:with-param>
-					</xsl:apply-templates>
-				</xsl:if>
 			</div>
-			<xsl:if test="Content[@type='LibraryImage']">
-				<h2>
-					<xsl:call-template name="term2073" />
-				</h2>
-				<div id="productScroller">
-					<table id="productScrollerInner">
-						<tr>
-							<xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
-						</tr>
-					</table>
-				</div>
-				<div class="entryFooter">
-					<xsl:apply-templates select="." mode="backLink">
-						<xsl:with-param name="link" select="/Page/Request/ServerVariables/Item[@name='PREVIOUS_PAGE']/node()"/>
-						<xsl:with-param name="altText">
-							<xsl:call-template name="term2015" />
-						</xsl:with-param>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
-				</div>
-			</xsl:if>
 
 			<!--RELATED CONTENT-->
 			<xsl:if test="Content">
@@ -378,7 +445,7 @@
 							<xsl:with-param name="text">Add Title for Related Products</xsl:with-param>
 							<xsl:with-param name="name">relatedProductsTitle</xsl:with-param>
 						</xsl:apply-templates>
-						<h4>
+						<h2>
 							<xsl:choose>
 								<xsl:when test="/Page/Contents/Content[@name='relatedProductsTitle']">
 									<xsl:apply-templates select="/Page/Contents/Content[@name='relatedProductsTitle']" mode="displayBrief"/>
@@ -387,16 +454,22 @@
 									<xsl:text>Related Products</xsl:text>
 								</xsl:otherwise>
 							</xsl:choose>
-						</h4>
-
-						<div class="">
-							<xsl:apply-templates select="/" mode="List_Related_Products">
-								<xsl:with-param name="parProductID" select="@id"/>
-							</xsl:apply-templates>
-						</div>
+						</h2>
+						<xsl:apply-templates select="/" mode="List_Related_Products">
+							<xsl:with-param name="parProductID" select="@id"/>
+						</xsl:apply-templates>
 					</div>
 				</xsl:if>
 			</xsl:if>
+			<div class="entryFooter">
+				<xsl:apply-templates select="." mode="backLink">
+					<xsl:with-param name="link" select="/Page/Request/ServerVariables/Item[@name='PREVIOUS_PAGE']/node()"/>
+					<xsl:with-param name="altText">
+						<xsl:call-template name="term2015" />
+					</xsl:with-param>
+				</xsl:apply-templates>
+				<xsl:text> </xsl:text>
+			</div>
 		</div>
 	</xsl:template>
 
@@ -467,8 +540,8 @@
 				<xsl:with-param name="quality" select="100"/>
 			</xsl:call-template>
 		</xsl:variable>
-		<td>
-			<a href="{$largeSrc}" class="responsive-lightbox">
+		<div class="swiper-slide">
+			<!--<a href="{$largeSrc}" class="responsive-lightbox">
 				<xsl:if test="$parId != ''">
 					<xsl:attribute name="rel">
 						<xsl:text>lightbox[</xsl:text>
@@ -483,8 +556,15 @@
 						</xsl:attribute>
 					</xsl:if>
 				</img>
-			</a>
-		</td>
+			</a>-->
+			<img src="{$newSrc}" width="{ew:ImageWidth($newSrc)}" height="{ew:ImageHeight($newSrc)}" alt="{$alt}" class="detail">
+				<xsl:if test="$imgId != ''">
+					<xsl:attribute name="id">
+						<xsl:value-of select="$imgId"/>
+					</xsl:attribute>
+				</xsl:if>
+			</img>
+		</div>
 	</xsl:template>
 
 	<!-- List Related Products-->
@@ -495,14 +575,16 @@
 			<xsl:sort select="@displayOrder" order="ascending"/>
 			<xsl:choose>
 				<xsl:when test="@type='Product'">
-					<xsl:apply-templates select="." mode="displayBriefRelated"/>
+					<div class="row cols row-cols-1  row-cols-md-2 row-cols-lg-3">
+						<xsl:apply-templates select="." mode="displayBrief"/>
+					</div>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:for-each>
 	</xsl:template>
 
 	<!-- Product Brief -->
-	<xsl:template match="Content[@type='Product']" mode="displayBriefRelated">
+	<!--<xsl:template match="Content[@type='Product']" mode="displayBriefRelated">
 		<xsl:param name="sortBy"/>
 		<xsl:param name="pos"/>
 		<xsl:variable name="parId">
@@ -587,6 +669,6 @@
 				</div>
 			</div>
 		</div>
-	</xsl:template>
+	</xsl:template>-->
 
 </xsl:stylesheet>
