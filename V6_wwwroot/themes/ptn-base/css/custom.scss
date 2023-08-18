@@ -15,10 +15,14 @@ body {
 a {
     //text-decoration: none;
     text-underline-offset: 0.2rem;
-    text-decoration-thickness: 1px;
+    text-decoration-thickness: 0px;
 }
-.sitemap a{
-    text-decoration-thickness:0px;
+.sitemap a {
+    text-decoration-thickness: 0px;
+
+    &:visited {
+        color: $visited;
+    }
 }
 h1, h2, h3 {
     a {
@@ -29,8 +33,12 @@ h1, h2, h3 {
     text-align:center;
 }
 .FormattedText {
-    .table-responsive{
-        margin-bottom:1rem;
+    .table-responsive {
+        margin-bottom: 1rem;
+    }
+
+    a:visited {
+        color: $visited;
     }
 }
 //images
@@ -169,7 +177,7 @@ section.bg-video-wrapper {
     padding-bottom: 0;
 
     > .container {
-        padding-top: $section-padding;
+     //   padding-top: $section-padding;
     }
 }
 
@@ -386,6 +394,12 @@ section.bg-video-wrapper {
     a .description {
         color: $body-color;
     }
+
+    .summary, .description {
+        a:visited {
+            color: $visited;
+        }
+    }
 }
 
 .ProductList {
@@ -546,6 +560,12 @@ dd {
 
 .detail-container > .detail {
     @extend .container;
+
+    .description {
+        a:visited {
+            color: $visited;
+        }
+    }
 
     .detail-img {
         position: relative;
