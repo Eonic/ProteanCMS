@@ -51,7 +51,10 @@ Partial Public Class fsHelper
     Public ImpersonationMode As Boolean = False
 
     Private _thumbnailPath As String = "/~ptn"
+    'Public cleanUploadedPaths As New List(Of String)()
 
+    Public uploadReviewImageRootPath As String = ""
+    Public cleanUploadedPaths As String
     Shared _libraryTypeExtensions()() As String = {
                                                  New String() {},
                                                  New String() {"png", "jpg", "gif", "jpeg", "bmp"},
@@ -960,31 +963,36 @@ Partial Public Class fsHelper
     End Function
 
 
-    Public Sub UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal ProductName As String = "")
+    Public Function UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal UploadDirPath As String = "") As String
         Try
 
 
             context.Response.AddHeader("Pragma", "no-cache")
             context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
-            If ProductName IsNot Nothing Then
-                Dim UploadDir As String = context.Request("storageRoot") + ProductName.Replace("\", "/").Replace("""", "")
+            If UploadDirPath IsNot Nothing Then
+                Dim UploadDir As String = UploadDirPath
+                uploadReviewImageRootPath = UploadDir
                 Dim dirpath As String = context.Server.MapPath(UploadDir)
                 If Not Directory.Exists(dirpath) Then
                     Directory.CreateDirectory(dirpath)
                 End If
                 mcStartFolder = dirpath
                 mcRoot = context.Server.MapPath("/")
+                HandleUploads(context)
+                Return cleanUploadedPaths
             Else
                 mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
                 mcRoot = context.Server.MapPath("/")
+                HandleUploads(context)
+                Return String.Empty
             End If
-            HandleUploads(context)
+
 
         Catch ex As Exception
             'catch errorr
         End Try
-    End Sub
+    End Function
 
     Private Sub HandleUploads(ByVal context As System.Web.HttpContext)
 
@@ -1091,6 +1099,9 @@ Partial Public Class fsHelper
                 Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
 
+                Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/" & uploadReviewImageRootPath & "/" & cfileName))
+                'cleanUploadedPaths = "<img src=""" & uploadReviewImageRootPath & "/" & cfileName & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
+                cleanUploadedPaths = uploadReviewImageRootPath & "/" & cfileName
 
 
                 '    Else
