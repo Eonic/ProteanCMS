@@ -1,6 +1,18 @@
-﻿img{
+﻿img {
     @extend .img-fluid;
 }
+
+.skip {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    @extend .btn;
+    @extend .btn-primary;
+}
+
 .link-underline {
     text-decoration: underline;
     text-underline-offset: 4px;
@@ -15,6 +27,7 @@
         text-decoration-color: #c2a5c9;
     }
 }
+
 .btn-link {
     padding: 0;
     text-underline-offset: 4px;
@@ -25,6 +38,7 @@
         color: $link-hover-color;
     }
 }
+
 @mixin btn-clean($color: $link-color, $hover: $link-hover-color) {
     background: none;
     border: none;

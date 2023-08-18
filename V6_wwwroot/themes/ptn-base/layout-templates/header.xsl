@@ -88,7 +88,7 @@
 							<!--SEARCH (MOBILE)-->
 							<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 								<div class="xs-only search-wrapper">
-									<xsl:apply-templates select="/" mode="searchSimple"/>
+									<xsl:apply-templates select="/" mode="searchSimpleXS"/>
 								</div>
 							</xsl:if>
 							<!-- MENU -->
@@ -243,7 +243,7 @@
 								<!--SEARCH (MOBILE)-->
 								<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 									<div class="xs-only search-wrapper">
-										<xsl:apply-templates select="/" mode="searchSimple"/>
+										<xsl:apply-templates select="/" mode="searchSimpleXS"/>
 									</div>
 								</xsl:if>
 								<!-- MENU -->

@@ -304,8 +304,9 @@
 	</xsl:template>
 
 	<xsl:template match="/" mode="searchSimple">
-		<form method="post" action="/information/search" id="searchInputxs" class="input-group">
-			<input type="text" class="form-control CTAsearch" name="searchString" id="searchStringxs" value="" placeholder="Search" />
+		<form method="post" action="/information/search" id="searchInput" class="input-group">
+      <label for="searchString" class="visually-hidden">Search</label>
+			<input type="text" class="form-control CTAsearch" name="searchString" id="searchString" value="" placeholder="Search" />
 			<input type="hidden" name="searchMode" value="REGEX" class="d-none" />
 			<input type="hidden" name="contentType" value="Product" class="d-none"/>
 			<input type="hidden" name="searchFormId" value="8923" class="d-none"/>
@@ -317,6 +318,22 @@
 			</button>
 		</form>
 	</xsl:template>
+
+  <xsl:template match="/" mode="searchSimpleXS">
+    <form method="post" action="/information/search" id="searchInputxs" class="input-group">
+      <label for="searchStringxs" class="visually-hidden">Search</label>
+      <input type="text" class="form-control CTAsearch" name="searchString" id="searchStringxs" value="" placeholder="Search" />
+      <input type="hidden" name="searchMode" value="REGEX" class="d-none" />
+      <input type="hidden" name="contentType" value="Product" class="d-none"/>
+      <input type="hidden" name="searchFormId" value="8923" class="d-none"/>
+      <button type="submit" class="btn btn-outline-primary" name="Search" value="Submit">
+        <i class="fa fa-search">
+          <xsl:text> </xsl:text>
+        </i>
+        <span class="sr-only">Search</span>
+      </button>
+    </form>
+  </xsl:template>
 
 	<!-- ############################################ LOGIN ############################################### -->
 

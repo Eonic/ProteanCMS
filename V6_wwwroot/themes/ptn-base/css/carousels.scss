@@ -6,15 +6,29 @@ SWIPER
     position: relative;
 }
 
-.content-carousel .swiper {
-    height: 100%;
-    padding: 2rem 2rem 0;
-    margin: -2rem -2rem 0;
-    width: calc(100% + 4rem);
+.content-carousel {
+    .swiper {
+        height: 100%;
+        padding: 2rem 2rem 0;
+        margin: -2rem -2rem 0;
+        width: calc(100% + 4rem);
+
+        .lIinner {
+            width: 100%;
+        }
+    }
 
     .swiper-button-prev,
     .swiper-button-next {
         color: $primary;
+
+        &:focus-visible {
+            box-shadow: 0 0 0 0.25rem rgba($primary, 0.4);
+        }
+
+        &:after {
+            text-shadow: none;
+        }
     }
 }
 
@@ -164,6 +178,11 @@ SWIPER
 //content carousel
 .swiper-button-prev,
 .swiper-button-next {
+    &:focus-visible {
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(225, 255, 225, 0.4);
+        border-radius:100px;
+    }
 
     &:after {
         font-size: 30px;
