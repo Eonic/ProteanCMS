@@ -1,7 +1,4 @@
-﻿IF OBJECT_ID('spGetPriceRange', 'P') IS NOT NULL
-DROP PROC spGetPriceRange
-GO
-
+﻿
 -- spGetPriceRange 1,5000,500,64 ,' nContentId in (select nContentId from tblCartCatProductRelations c inner join tblAudit a on a.nAuditKey=c.nAuditId and nStatus=1 where c.nCatId in (9)) ','Product'   
           
             
