@@ -21,6 +21,6 @@ FROM            (SELECT        c.nContentKey, c.nVersion, c.cContentName, c.nAud
                          dbo.tblDirectory AS d ON a.nUpdateDirId = d.nDirKey LEFT OUTER JOIN
                          dbo.tblContentLocation ON list.nContentKey = dbo.tblContentLocation.nContentId AND dbo.tblContentLocation.bPrimary = 1 LEFT OUTER JOIN
                          dbo.tblContentStructure ON dbo.tblContentLocation.nStructId = dbo.tblContentStructure.nStructKey
-GO
+
 
 
