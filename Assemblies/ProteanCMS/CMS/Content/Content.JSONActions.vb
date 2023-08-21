@@ -4,6 +4,8 @@ Imports System.Xml
 Imports System.Web.Configuration
 Imports System.Data.SqlClient
 Imports System.Drawing.Imaging
+Imports Newtonsoft.Json
+Imports System.Linq
 
 Partial Public Class Cms
 
@@ -12,14 +14,14 @@ Partial Public Class Cms
 #Region "JSON Actions"
 
         Public Class JSONActions
-            Inherits Base
 
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             Private Const mcModuleName As String = "Eonic.Content.JSONActions"
             Private moLmsConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/lms")
             Private myWeb As Protean.Cms
             Private myCart As Protean.Cms.Cart
-            'Public moCtx As System.Web.HttpContext = System.Web.HttpContext.Current
+            Public moCtx As System.Web.HttpContext = System.Web.HttpContext.Current
+            Public cleanUploadedPaths As String
             Public Sub New()
                 Dim ctest As String = "this constructor is being hit" 'for testing
                 myWeb = New Protean.Cms()
@@ -270,20 +272,13 @@ Partial Public Class Cms
             'Review Path
             Public Function ReviewImagePath(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-                    'Dim errWeb As Protean.Cms
-                    'Dim myCtx As New Protean.Cms(myApi.moCtx)
-                    'errWeb = New Protean.Cms(System.Web.HttpContext.Current)
-                    Dim moFSHelper As fsHelper = New fsHelper
-                    'get the content id
-                    'we build the save path from the contentname making it a safeurl
-                    'check that that contentID is saved in the session as relatable.
-                    'get the customer upload image path
-                    'create the save path
-                    'upload the images
-                    'return comma separated of image paths with clean file names.
+
+                    Dim moFSHelper As New Protean.fsHelper(moCtx)
+
                     Dim cPageContentId As String = String.Empty
                     Dim cContentName As String = String.Empty
                     Dim uploadedfiles As String = String.Empty
+                    Dim JsonResult As String = String.Empty
 
                     Dim encryptedContentId As String = myApi.moSession("contentId")  'rename this to contentId
                     If jObj("cPageContentId").ToString() IsNot Nothing Then
@@ -301,10 +296,9 @@ Partial Public Class Cms
                         moFSHelper.initialiseVariables(fsHelper.LibraryType.Image)
                         Dim UploadDirPath = myApi.moConfig("ReviewImageRootPath") + cContentName.Replace("\", "/").Replace("""", "")
                         If cContentName IsNot Nothing Then
-
                             Dim cleanPathName As String = moFSHelper.UploadRequest(moCtx, UploadDirPath)
-
-
+                            JsonResult = JsonConvert.SerializeObject(cleanPathName)
+                            Return JsonResult
                         End If
                         moFSHelper = Nothing
                     End If
