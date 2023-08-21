@@ -972,7 +972,7 @@ Partial Public Class fsHelper
 
             If UploadDirPath IsNot Nothing Then
 
-                mcStartFolder = mcStartFolder & UploadDirPath.Replace("\", "/")
+                mcStartFolder = mcStartFolder & UploadDirPath.Replace("/", "\")
                 If Not Directory.Exists(mcStartFolder) Then
                     Directory.CreateDirectory(mcStartFolder)
                 End If
@@ -1093,7 +1093,7 @@ Partial Public Class fsHelper
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
                 context.Server.MapPath("/")
 
-                cleanUploadedPaths = mcStartFolder.Replace(context.Server.MapPath("/"), "") & "/" & cfileName
+                cleanUploadedPaths = mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
 
 
             Catch ex As Exception
