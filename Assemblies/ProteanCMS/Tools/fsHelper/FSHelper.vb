@@ -971,13 +971,11 @@ Partial Public Class fsHelper
             context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
             If UploadDirPath IsNot Nothing Then
-                Dim UploadDir As String = UploadDirPath
-                uploadReviewImageRootPath = UploadDir
-                Dim dirpath As String = context.Server.MapPath(UploadDir)
-                If Not Directory.Exists(dirpath) Then
-                    Directory.CreateDirectory(dirpath)
+
+                mcStartFolder = mcStartFolder & UploadDirPath.Replace("\", "/")
+                If Not Directory.Exists(mcStartFolder) Then
+                    Directory.CreateDirectory(mcStartFolder)
                 End If
-                mcStartFolder = dirpath
                 mcRoot = context.Server.MapPath("/")
                 HandleUploads(context)
                 Return cleanUploadedPaths
@@ -991,6 +989,7 @@ Partial Public Class fsHelper
 
         Catch ex As Exception
             'catch errorr
+            Return ex.Message
         End Try
     End Function
 
@@ -1079,16 +1078,9 @@ Partial Public Class fsHelper
 
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-                'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
 
                 Dim cfileName As String = CleanfileName(file.FileName)
 
-
-
-                'If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
-                '    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
-                '    Dim SizeInMB As Decimal = (CType(file.InputStream.Length, Decimal) / CDec(1024 * 1024))
-                '    If Not (SizeInMB > 4.0) Then
                 file.SaveAs(mcStartFolder & cfileName)
 
                 If LCase(mcStartFolder & cfileName).EndsWith(".jpg") Or LCase(mcStartFolder & cfileName).EndsWith(".jpeg") Or LCase(mcStartFolder & cfileName).EndsWith(".png") Then
@@ -1096,20 +1088,13 @@ Partial Public Class fsHelper
                     Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
                     eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
                 End If
+
                 Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
+                context.Server.MapPath("/")
 
-                Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/" & uploadReviewImageRootPath & "/" & cfileName))
-                'cleanUploadedPaths = "<img src=""" & uploadReviewImageRootPath & "/" & cfileName & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
-                cleanUploadedPaths = uploadReviewImageRootPath & "/" & cfileName
+                cleanUploadedPaths = mcStartFolder.Replace(context.Server.MapPath("/"), "") & "/" & cfileName
 
-
-                '    Else
-                '        'alert: image size is bigger than 4 MB
-                '    End If
-                'Else
-                '    'alert: Image with Same  name already exist
-                'End If
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))

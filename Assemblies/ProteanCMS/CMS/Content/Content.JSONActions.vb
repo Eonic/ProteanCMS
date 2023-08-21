@@ -270,7 +270,7 @@ Partial Public Class Cms
 
 
             'Review Path
-            Public Function ReviewImagePath(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            Public Function ImageUpload(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
 
                     Dim moFSHelper As New Protean.fsHelper(moCtx)
@@ -281,69 +281,55 @@ Partial Public Class Cms
                     Dim JsonResult As String = String.Empty
 
                     Dim encryptedContentId As String = myApi.moSession("contentId")  'rename this to contentId
-                    If jObj("cPageContentId").ToString() IsNot Nothing Then
-                        cPageContentId = jObj("cPageContentId").ToString()
-                    End If
-                    If jObj("cContentName").ToString() IsNot Nothing Then
-                        cContentName = jObj("cContentName").ToString()
-                    End If
-                    If jObj("uploadFiles").ToString() IsNot Nothing Then
-                        uploadedfiles = jObj("uploadFiles").ToString()
-                    End If
-                    'replace product to content in all code here 
-                    If encryptedContentId = cPageContentId Then
+                    Dim UploadDirPath As String = String.Empty
 
-                        moFSHelper.initialiseVariables(fsHelper.LibraryType.Image)
-                        Dim UploadDirPath = myApi.moConfig("ReviewImageRootPath") + cContentName.Replace("\", "/").Replace("""", "")
-                        If cContentName IsNot Nothing Then
-                            Dim cleanPathName As String = moFSHelper.UploadRequest(moCtx, UploadDirPath)
-                            JsonResult = JsonConvert.SerializeObject(cleanPathName)
-                            Return JsonResult
+                    If Not jObj Is Nothing Then
+                        If jObj("cPageContentId").ToString() IsNot Nothing Then
+                            cPageContentId = jObj("cPageContentId").ToString()
                         End If
-                        moFSHelper = Nothing
+                        If jObj("cContentName").ToString() IsNot Nothing Then
+                            cContentName = jObj("cContentName").ToString()
+                        End If
+                        If jObj("uploadFiles").ToString() IsNot Nothing Then
+                            uploadedfiles = jObj("uploadFiles").ToString()
+                        End If
+                    Else
+                        cPageContentId = moCtx.Request("contentId")
+                        UploadDirPath = moCtx.Request("storagePath")
+                    End If
+
+                    If moCtx.Request.Files.Count > 0 Then
+                        'replace product to content in all code here 
+                        If encryptedContentId = cPageContentId Then
+                            moFSHelper.initialiseVariables(fsHelper.LibraryType.Image)
+                            If cContentName IsNot Nothing Then
+                                Dim cleanPathName As String = moFSHelper.UploadRequest(moCtx, UploadDirPath)
+                                moCtx.Session("lastUploadedFilePath") = cleanPathName
+
+                                JsonResult = JsonConvert.SerializeObject(cleanPathName)
+                                Return JsonResult
+                            End If
+                            moFSHelper = Nothing
+                        End If
                     End If
 
 
-                    'oFsh.initialiseVariables(fsHelper.LibraryType.Image)
-                    'Dim cFileName As String = String.Empty
-                    'Dim cStorageRoot As String = String.Empty
-                    'Dim cProductName As String = String.Empty
-
-                    'If jObj("filename").ToString() IsNot Nothing Then
-                    '    cFileName = jObj("filename").ToString()
-                    'End If
-                    'If jObj("storageRoot").ToString() IsNot Nothing Then
-                    '    cStorageRoot = jObj("storageRoot").ToString()
-                    'End If
-                    'If jObj("ProductName").ToString() IsNot Nothing Then
-                    '    cProductName = jObj("ProductName").ToString()
-                    'End If
-
-                    'Dim cReviewImagePath As String = String.Empty
-                    'Dim cReturnPath As String = String.Empty
-
-                    'If cProductName IsNot Nothing Then
-                    '    cFileName = Replace(cFileName, "\", "/")
-                    '    cFileName = oFsh.CleanfileName(cFileName)
-                    '    If Not cFileName.StartsWith("/") Then
-                    '        cFileName = "/" & cFileName
-                    '        cReviewImagePath = cStorageRoot + cProductName.Replace("\", "/").Replace("""", "") + cFileName
-
-                    '        If cReviewImagePath.EndsWith(".svg") Then
-                    '            Return "<img src=""" & cReviewImagePath & """ alt=""""/> "
-                    '        Else
-                    '            ' Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(myWeb.goServer.MapPath("/" & cStorageRoot & cFileName))
-                    '            cReturnPath = "<img src=""" & cReviewImagePath & """ height=""200"" width=""200"" alt="""" class=""display""/> "
-                    '        End If
-                    '        Return cReturnPath
-                    '    End If
-
-                    'End If
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""))
                     Return ex.Message
                 End Try
             End Function
+            Public Function GetLastUploadedFilePath(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Return moCtx.Session("lastUploadedFilePath")
+                Catch
+                Finally
+                    moCtx.Session("lastUploadedFilePath") = Nothing
+                End Try
+
+
+            End Function
+
         End Class
 
 

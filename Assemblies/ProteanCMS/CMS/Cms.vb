@@ -1252,7 +1252,7 @@ Public Class Cms
 
                     End If
 
-                        If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
+                    If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
                         sCachePath = goServer.UrlDecode(mcOriginalURL)
                         If sCachePath.Contains("?") Then
