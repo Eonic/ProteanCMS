@@ -24,6 +24,11 @@
 
     .card.bg-primary {
         @include card-contrast($primary);
+
+        .btn-custom,
+        .btn-primary{
+            @extend .btn-dark;
+        }
     }
 
     .card.bg-secondary {
@@ -48,7 +53,8 @@
         margin-bottom: $grid-gutter-y;
 
         .card-header {
-            h5 {
+            padding-bottom:0;
+            .card-title {
                 margin-bottom: 0;
             }
 

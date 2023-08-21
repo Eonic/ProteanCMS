@@ -7,7 +7,7 @@
   </ContentTypes>
   <ModuleTypes>
     <ModuleGroup name="Content Lists" icon="fa-th-list">
-      <Module type="VacanciesList" formPath="vacancies-list" icon="fas fa-hands-helping" name="Vacancies List"></Module>
+      <Module type="JobList" formPath="job-list" icon="fas fa-hands-helping" name="Job List"></Module>
     </ModuleGroup>
   </ModuleTypes>
 </PageLayouts>

@@ -303,6 +303,11 @@ form.xform {
         cursor: pointer;
     }
 
+    button.form-tip {
+        margin-bottom: -4px;
+        margin-top: -9px;
+    }
+
     .form-check-input:checked {
         // background-color: lighten($admin-header-font-color,10%);
         // border-color: lighten($admin-header-font-color,10%);

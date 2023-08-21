@@ -375,13 +375,10 @@
 		  <xsl:text>&#160;</xsl:text>
 			<xsl:copy-of select="LastName"/>
 		  <xsl:text>&#160;</xsl:text>
-		  <a href="?ewCmd=logoff" title="Logout" class="btn btn-primary">
-        <i class="fa fa-sign-out">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>
+		  <a href="?ewCmd=logoff" title="Logout" class="btn btn-custom">
 			  <!--Logout-->
 			  <xsl:call-template name="term4019"/>
+        <xsl:text> </xsl:text>
 		  </a>
       </p>
 
@@ -410,11 +407,10 @@
         </div>
         <div>
 
-          <button type="submit" name="Logout" class="btn btn-primary principle" onclick="window.location.href='?ewCmd=logoff'">
-            <i class="fa fa-sign-out">
-              <xsl:text> </xsl:text>
-            </i>
+          <button type="submit" name="Logout" class="btn btn-custom principle" onclick="window.location.href='?ewCmd=logoff'">
+
             <xsl:call-template name="term4019"/>
+            <xsl:text></xsl:text>
           </button>
             
         </div>
@@ -457,7 +453,7 @@
       </div>
       <input name="ewmLogon/@ewCmd" class="hidden" value="membershipLogon"/>
       <button type="submit" name="submit" value="Login" class="btn btn-primary" onclick="disableButton(this);">
-        Login
+        Log in
       </button>
       <xsl:if test="alert">
         <xsl:apply-templates select="alert" mode="xform"/>
@@ -613,12 +609,9 @@
           </a>
         </p>
         <div>
-          <button type="submit" name="Logout" class="btn btn-primary principle" onclick="window.location.href='?ewCmd=logoff'">
-            <i class="fa fa-sign-out">
-              <xsl:text> </xsl:text>
-            </i>
-            <xsl:text> </xsl:text>
+          <button type="submit" name="Logout" class="btn btn-custom principle" onclick="window.location.href='?ewCmd=logoff'">
             <xsl:call-template name="term4019"/>
+            <xsl:text> </xsl:text>
           </button>
         </div>
       </xsl:when>
@@ -652,12 +645,9 @@
       </a>
     </p>
     <div class="ewXform">
-      <button type="submit" name="Logout" class="btn btn-primary principle" onclick="window.location.href='?ewCmd=logoff'">
-        <i class="fa fa-sign-out">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>
+      <button type="submit" name="Logout" class="btn btn-custom principle" onclick="window.location.href='?ewCmd=logoff'">
         <xsl:call-template name="term4019"/>
+        <xsl:text> </xsl:text>
       </button>
     </div>
       <p>
@@ -843,7 +833,7 @@
 				
 			</td>
 			<td class="view">
-				<a class="btn btn-primary button principle" href="{$href}" title="View order">View order</a>
+				<a class="btn btn-custom button principle" href="{$href}" title="View order">View order</a>
 			</td>
 		</tr>
 	</xsl:template>
@@ -878,7 +868,7 @@
 			</h3>
 			<xsl:apply-templates select="." mode="orderItems"/>
 			<div class="morelink">
-				<a class="btn btn-primary button principle" href="{$href}">View order</a>
+				<a class="btn btn-custom button principle" href="{$href}">View order</a>
 			</div>
 			<div class="terminus">&#160;</div>
 		</div>
@@ -1063,7 +1053,7 @@
 				<xsl:otherwise>
 					<!-- View addresses -->
 					<div class="add">
-            <a class="btn btn-primary principle" href="{$currentPage/@url}?memCmd=addContact">
+            <a class="btn btn-custom principle" href="{$currentPage/@url}?memCmd=addContact">
               <i class="fa fa-plus">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>
