@@ -288,7 +288,7 @@
 					<i class="fa fa-search">
 						<xsl:text> </xsl:text>
 					</i>
-					<span class="sr-only">Search</span>
+					<span class="visually-hidden">Search</span>
 				</button>
 			</form>
 		</div>
@@ -299,7 +299,7 @@
 			<i class="fa fa-search fa-2x">
 				<xsl:text> </xsl:text>
 			</i>
-			<span class="sr-only">Expand search section</span>
+			<span class="visually-hidden">Expand search section</span>
 		</a>
 	</xsl:template>
 
@@ -314,7 +314,7 @@
 				<i class="fa fa-search">
 					<xsl:text> </xsl:text>
 				</i>
-				<span class="sr-only">Search</span>
+				<span class="visually-hidden">Search</span>
 			</button>
 		</form>
 	</xsl:template>
@@ -330,7 +330,7 @@
         <i class="fa fa-search">
           <xsl:text> </xsl:text>
         </i>
-        <span class="sr-only">Search</span>
+        <span class="visually-hidden">Search</span>
       </button>
     </form>
   </xsl:template>

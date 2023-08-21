@@ -98,6 +98,7 @@
         }
 
         .cart-desc {
+            flex-grow:2;
             a {
                 font-size: 1.1rem;
                 //font-weight: 600;
@@ -133,6 +134,8 @@
 
         .cart-prices {
             float: right;
+            text-align:right;
+            padding-left:2rem;
 
             .lineTotal {
                 font-size: 1.2rem;

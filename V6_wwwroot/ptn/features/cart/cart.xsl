@@ -112,12 +112,12 @@
 	</xsl:template>
 
 	<xsl:template match="Order[@errorMsg='-1']" mode="orderProcessTitle">
-		<h2>
+		<h1>
 			<!--Your Order - Generic - Cmd:-->
 			<xsl:call-template name="term3005a" />
-		</h2>
+		</h1>
 		<form method="post" id="cart" class="ewXform">
-			<button type="submit" name="cartBrief" value="Continue Shopping" class="continue">
+			<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
 				<xsl:call-template name="term3060" />
 				<xsl:text> </xsl:text>
 			</button>
@@ -399,7 +399,7 @@
 
 				<div class="cart-btns-btm clearfix">
 					<button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-link continue">
-						
+
 						<xsl:call-template name="term3060" />
 					</button>
 					<xsl:apply-templates select="." mode="principleButton">
@@ -431,14 +431,10 @@
 		<xsl:apply-templates select="." mode="orderProcessTitle"/>
 		<xsl:apply-templates select="." mode="orderErrorReports"/>
 		<div id="template_1_Column" class="template template_1_Column">
-			<div class="card">
-				<h4 class="card-header">
-					<xsl:call-template name="term4031" />
-				</h4>
-				<div class="card-body">
-					<xsl:apply-templates select="." mode="orderEditAddresses"/>
-				</div>
-			</div>
+			<h1>
+				<xsl:call-template name="term4031" />
+			</h1>
+			<xsl:apply-templates select="." mode="orderEditAddresses"/>
 		</div>
 		<xsl:apply-templates select="." mode="displayNotes"/>
 	</xsl:template>
@@ -1455,46 +1451,45 @@
 
 
 		<!--</xsl:if>-->
-		<div class="description">
-			<xsl:if test="productDetail/Images/img[@class='detail']/@src!=''">
-				<div class="cart-thumbnail">
-					<xsl:apply-templates select="productDetail" mode="displayThumbnail">
-						<xsl:with-param name="forceResize">true</xsl:with-param>
-						<xsl:with-param name="crop">true</xsl:with-param>
-						<xsl:with-param name="width">
-							<xsl:value-of select="$cartThumbWidth" />
-						</xsl:with-param>
-						<xsl:with-param name="height">
-							<xsl:value-of select="$cartThumbHeight" />
-						</xsl:with-param>
-					</xsl:apply-templates>
-					<!--<i class="fa fa-image fa-5x text-muted"> </i>-->
+		<xsl:if test="productDetail/Images/img[@class='detail']/@src!=''">
+			<div class="cart-thumbnail">
+				<xsl:apply-templates select="productDetail" mode="displayThumbnail">
+					<xsl:with-param name="forceResize">true</xsl:with-param>
+					<xsl:with-param name="crop">true</xsl:with-param>
+					<xsl:with-param name="width">
+						<xsl:value-of select="$cartThumbWidth" />
+					</xsl:with-param>
+					<xsl:with-param name="height">
+						<xsl:value-of select="$cartThumbHeight" />
+					</xsl:with-param>
+				</xsl:apply-templates>
+				<!--<i class="fa fa-image fa-5x text-muted"> </i>-->
+			</div>
+		</xsl:if>
+		<div class="cart-desc">
+			<a href="{$siteURL}{@url}" title="">
+				<xsl:apply-templates select="." mode="CartProductName"/>
+			</a>
+			<xsl:if test="@ref and @ref!=''">
+				<div class="ref">
+					<xsl:value-of select="@ref"/>&#160;
+					<xsl:for-each select="Item">
+						<xsl:apply-templates select="option" mode="optionCodeConcat"/>
+					</xsl:for-each>
 				</div>
 			</xsl:if>
-			<div class="cart-desc">
-				<a href="{$siteURL}{@url}" title="">
-					<xsl:apply-templates select="." mode="CartProductName"/>
-				</a>
-				<xsl:if test="@ref and @ref!=''">
-					<div class="ref">
-						<xsl:value-of select="@ref"/>&#160;
-						<xsl:for-each select="Item">
-							<xsl:apply-templates select="option" mode="optionCodeConcat"/>
-						</xsl:for-each>
-					</div>
-				</xsl:if>
-			</div>
-			<!-- ################################# Line Options Info ################################# -->
-			<xsl:if test="Item">
-				<span class="optionList">
-					<xsl:for-each select="Item">
-						<xsl:value-of select="Name"/>
-						<xsl:apply-templates select="option" mode="optionDetail"/>
-						<xsl:if test="not(position()=last())">
-							<xsl:text> / </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-					<!-- <xsl:if test="@price!=0">
+		</div>
+		<!-- ################################# Line Options Info ################################# -->
+		<xsl:if test="Item">
+			<span class="optionList">
+				<xsl:for-each select="Item">
+					<xsl:value-of select="Name"/>
+					<xsl:apply-templates select="option" mode="optionDetail"/>
+					<xsl:if test="not(position()=last())">
+						<xsl:text> / </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				<!-- <xsl:if test="@price!=0">
 							  Remmed by Rob
 							  <xsl:value-of select="$currency"/>
 							  <xsl:value-of select="format-number(@price,'#0.00')"/>
@@ -1504,24 +1499,24 @@
 								  <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
 							  </xsl:apply-templates>
 						  </xsl:if>-->
-				</span>
-			</xsl:if>
-			<!-- ################################# Line Discount Info ################################# -->
-			<xsl:if test="Discount">
-				<xsl:for-each select="DiscountPrice/DiscountPriceLine[@UnitSaving &gt; 0]">
-					<xsl:sort select="@PriceOrder"/>
-					<xsl:variable name="DiscID">
-						<xsl:value-of select="@nDiscountKey"/>
-					</xsl:variable>
-					<div class="discount">
-						<xsl:if test="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']/@src!=''">
-							<xsl:copy-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']"/>
-						</xsl:if>
-						<span class="discountName">
-							<xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/cDescription"/>
-						</span>
-						<!--RRP-->
-						<!--xsl:text>&#160;</xsl:text>
+			</span>
+		</xsl:if>
+		<!-- ################################# Line Discount Info ################################# -->
+		<xsl:if test="Discount">
+			<xsl:for-each select="DiscountPrice/DiscountPriceLine[@UnitSaving &gt; 0]">
+				<xsl:sort select="@PriceOrder"/>
+				<xsl:variable name="DiscID">
+					<xsl:value-of select="@nDiscountKey"/>
+				</xsl:variable>
+				<div class="discount">
+					<xsl:if test="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']/@src!=''">
+						<xsl:copy-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']"/>
+					</xsl:if>
+					<span class="discountName">
+						<xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/cDescription"/>
+					</span>
+					<!--RRP-->
+					<!--xsl:text>&#160;</xsl:text>
             <xsl:call-template name="term3053" />
             <xsl:text>:&#160;</xsl:text>
             <strike>
@@ -1542,46 +1537,45 @@
                 </xsl:otherwise>
               </xsl:choose>
             </strike-->
-						<!--less-->
-						<xsl:text>&#160;&#160;&#160;</xsl:text>
-						<xsl:call-template name="term3054" />
-						<xsl:text>:&#160;</xsl:text>
-						<!-- Remmed by Rob 
+					<!--less-->
+					<xsl:text>&#160;&#160;&#160;</xsl:text>
+					<xsl:call-template name="term3054" />
+					<xsl:text>:&#160;</xsl:text>
+					<!-- Remmed by Rob 
 							  <xsl:value-of select="$currency"/>
                               <xsl:value-of select="format-number(@UnitSaving,'#0.00')"/>
 							  -->
-						<xsl:apply-templates select="/Page" mode="formatPrice">
-							<xsl:with-param name="price" select="@UnitSaving"/>
-							<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-						</xsl:apply-templates>
-					</div>
-				</xsl:for-each>
-				<!--More will go here later-->
-				<xsl:for-each select="DiscountItem">
-					<xsl:variable name="DiscID">
-						<xsl:value-of select="@nDiscountKey"/>
-					</xsl:variable>
-					<div class="discount">
-						<strong>
-							DISCOUNT:<xsl:text> </xsl:text><xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/>
-						</strong>
-						<xsl:text> </xsl:text>
-						(<xsl:value-of select="@oldUnits - @Units"/>&#160;Item<xsl:if test="(@oldUnits - @Units) > 1">s</xsl:if>)
-						<!-- Remmed by Rob 
+					<xsl:apply-templates select="/Page" mode="formatPrice">
+						<xsl:with-param name="price" select="@UnitSaving"/>
+						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+					</xsl:apply-templates>
+				</div>
+			</xsl:for-each>
+			<!--More will go here later-->
+			<xsl:for-each select="DiscountItem">
+				<xsl:variable name="DiscID">
+					<xsl:value-of select="@nDiscountKey"/>
+				</xsl:variable>
+				<div class="discount">
+					<strong>
+						DISCOUNT:<xsl:text> </xsl:text><xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/>
+					</strong>
+					<xsl:text> </xsl:text>
+					(<xsl:value-of select="@oldUnits - @Units"/>&#160;Item<xsl:if test="(@oldUnits - @Units) > 1">s</xsl:if>)
+					<!-- Remmed by Rob 
 							  <xsl:value-of select="$currency"/>
                               <xsl:value-of select="format-number(@TotalSaving,'#0.00')"/>
 							  -->
-						<xsl:text> </xsl:text>
-						Total Saving: <xsl:text> </xsl:text>
-						<xsl:apply-templates select="/Page" mode="formatPrice">
-							<xsl:with-param name="price" select="@TotalSaving"/>
-							<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-						</xsl:apply-templates>
+					<xsl:text> </xsl:text>
+					Total Saving: <xsl:text> </xsl:text>
+					<xsl:apply-templates select="/Page" mode="formatPrice">
+						<xsl:with-param name="price" select="@TotalSaving"/>
+						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+					</xsl:apply-templates>
 
-					</div>
-				</xsl:for-each>
-			</xsl:if>
-		</div>
+				</div>
+			</xsl:for-each>
+		</xsl:if>
 		<!--<div class="ref">
       <xsl:value-of select="@ref"/>&#160;
       <xsl:for-each select="Item">

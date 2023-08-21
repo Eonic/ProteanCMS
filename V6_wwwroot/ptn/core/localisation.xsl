@@ -3402,10 +3402,10 @@
   <xsl:template name="term4031">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Your Address Details</xsl:text>
+        <xsl:text>Your Details</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Address Details</xsl:text>
+        <xsl:text>Your Details</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
