@@ -564,7 +564,11 @@
       <!-- for overloading on specific actions -->
   </xsl:template>
 
-	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event">
+	<xsl:template match="Page" mode="google-ga4-event-extra">
+		<!-- for overloading on specific actions -->
+	</xsl:template>
+
+	<xsl:template match="Page[//Content[descendant-or-self::alert/node()='Message Sent']]" mode="google-ga4-event-extra">
 		gtag('event', 'ptn_form_submission', {
 		'form_id':'<xsl:value-of select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::submission/@id"/>',
 		<xsl:for-each select="//Content[descendant-or-self::alert/node()='Message Sent']/descendant-or-self::*[name()='Items']/*">
@@ -1371,6 +1375,7 @@
 			  gtag('js', new Date());
 			  gtag('config', '<xsl:value-of select="$GoogleGA4MeasurementID"/>'<xsl:apply-templates select="." mode="google-ga4-config-params"/>);
 			  <xsl:apply-templates select="." mode="google-ga4-event"/>
+			  <xsl:apply-templates select="." mode="google-ga4-event-extra"/>
 		  </script>
 		  <!-- End GA4 Tag Manager -->
 	  </xsl:if>
