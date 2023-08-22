@@ -59,7 +59,7 @@ Public Class Cms
     Public mcContentType As String = Mime.MediaTypeNames.Text.Html
     Public mcContentDisposition As String = ""
     Public mnProteanCMSError As Long = 0
-
+    Public cleanUploadedPath As List(Of String) = New List(Of String)
 
     Public msException As String = ""
 
@@ -1252,7 +1252,7 @@ Public Class Cms
 
                     End If
 
-                        If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
+                    If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
                         sCachePath = goServer.UrlDecode(mcOriginalURL)
                         If sCachePath.Contains("?") Then
@@ -2618,16 +2618,40 @@ Public Class Cms
                         'create the save path
                         'upload the images
                         'return comma separated of image paths with clean file names.
+                        Dim encryptedProductId As String = moSession("contentId")  'rename this to contentId
+                        Dim ProductId As String = moCtx.Request("cPageContentId")
+                        'replace product to content in all code here 
+                        If encryptedProductId = ProductId Then
+                            'moConfig("BasePath")
+                            'goServer.MapPath("\") & moConfig("ReviewImageRootPath").Replace("/","\")
 
-                        Dim oFsh As fsHelper = New fsHelper
-                        oFsh.initialiseVariables(fsHelper.LibraryType.Image)
-                        oFsh.moPageXML = moPageXml
-                        Dim ProductName As String = moRequest("cProductNameforPath")
-                        If ProductName IsNot Nothing Then
-                            oFsh.UploadRequest(moCtx, ProductName)
+                            moFSHelper.initialiseVariables(fsHelper.LibraryType.Image)
+                            moFSHelper.moPageXML = moPageXml
+                            Dim ProductName As String = moRequest("cProductNameforPath")
+                            Dim UploadDirPath = moConfig("ReviewImageRootPath") + ProductName.Replace("\", "/").Replace("""", "")
+                            If ProductName IsNot Nothing Then
+                                Dim cleanPathName As String = moFSHelper.UploadRequest(moCtx, UploadDirPath)
+                                If (moSession("cleanPath") Is Nothing) Then
+                                    If (moSession("cleanPath") = String.Empty) Then
+                                        moSession("cleanPath") = cleanPathName
+                                    Else
+                                        moSession("cleanPath") = moSession("cleanPath") + "," + cleanPathName
+                                    End If
+                                Else
+                                    moSession("cleanPath") = moSession("cleanPath") + "," + cleanPathName
+                                End If
+
+                                ' only that particular content review images will store in this session
+
+                                'If (moFSHelper.cleanUploadedPaths <> String.Empty) Then
+                                '    cleanUploadedPath.Add(moFSHelper.cleanUploadedPaths)
+                                'End If
+                                ' oPageElmt.SetAttribute("cleanPath", name)
+                            End If
+                            moFSHelper = Nothing
                         End If
-                        'return the clean paths from array on oFsh.cleanUploadedPaths
-                        oFsh = Nothing
+
+
                     Catch ex As Exception
                         returnException(msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
                     End Try

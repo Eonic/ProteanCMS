@@ -10,6 +10,7 @@ Imports System.Web.Configuration
 Imports System.Configuration
 Imports System
 Imports System.Web.UI
+Imports Renci.SshNet
 
 Public Class xForm
 
@@ -1103,41 +1104,12 @@ Public Class xForm
                                                     ElseIf submittedValue = "" Then
                                                         oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     Else
-                                                        If goRequest("type") IsNot Nothing Then
-                                                            If goRequest("type").ToLower() = "review" Then
-                                                                'check cContentDisplay is not empty
-                                                                'check intance if images node is exists
-                                                                'get all images and split '/images'
-                                                                'Create img tag for each image and append to the images node
-                                                                Dim cContentDisplay As String = submittedValue
-                                                                If cContentDisplay.Contains("<img") Then
-                                                                    Dim sSingleImage As String
-                                                                    Dim res() As String = cContentDisplay.Split(New String() {"<img"}, StringSplitOptions.None)
-                                                                    For Each sSingleImage In res
-                                                                        If Not sSingleImage = " " Then
-                                                                            sSingleImage = sSingleImage.Replace(">", "/>")
-                                                                            sSingleImage = "<img " & sSingleImage
-                                                                            Try
-                                                                                oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(sSingleImage) & "").Trim
-                                                                            Catch
-                                                                                oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(sSingleImage) & "").Trim)
-                                                                            End Try
-                                                                            oInstance.SelectSingleNode(sXpath, nsMgr).AppendChild(oElmtTemp.FirstChild.Clone)
-                                                                        End If
-                                                                    Next
-                                                                End If
-                                                            Else
-                                                                Try
-                                                                    oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
-                                                                Catch
-                                                                    oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
-                                                                End Try
-                                                                oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
-
-                                                            End If
-
-                                                        End If
-
+                                                        Try
+                                                            oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
+                                                        Catch
+                                                            oElmtTemp.InnerXml = tidyXhtmlFrag((Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim)
+                                                        End Try
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                     End If
                                                     oElmtTemp = Nothing
 
@@ -1277,7 +1249,21 @@ Public Class xForm
                                                     oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
                                                 Case "string-before-comma"
                                                     'pull the first value in an array and populate the instance
-                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = submittedValue.Trim()
+                                                    If goSession("cleanPath") IsNot Nothing Then
+                                                        Dim cCleanPath As String = goSession("cleanPath")
+                                                        If cCleanPath <> "" Then
+                                                            Dim cFirstPath As String = Left(cCleanPath, InStr(cCleanPath, ","))
+                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = cFirstPath.TrimEnd(CChar(","))
+                                                        End If
+                                                    Else
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = submittedValue.Trim()
+                                                    End If
+                                                Case "string-path"
+                                                    'pull the all values in RelatedLibraryImage instance
+                                                    If goSession("cleanPath") IsNot Nothing Then
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = goSession("cleanPath")
+                                                        goSession("cleanPath") = Nothing
+                                                    End If
                                                 Case Else
                                                     'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
                                                     If bIsXml Then
