@@ -1124,7 +1124,7 @@ Recheck:
             myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Products", defaultPageXml, "Modules_1_column")
             myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Services", defaultPageXml, "Modules_1_column")
 
-            Dim infoId As Long = myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Information", defaultPageXml, "Modules_1_column")
+            Dim infoId As Long = myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Info Menu", defaultPageXml, "Modules_1_column")
             myWeb.moDbHelper.insertStructure(infoId, "", "Contact Us", defaultPageXml, "Modules_1_column")
 
             Return True

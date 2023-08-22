@@ -55,6 +55,7 @@
 				<xsl:apply-templates select="ms:node-set($contentList)/*/*" mode="displayBrief">
 					<xsl:with-param name="sortBy" select="@sortBy"/>
 					<xsl:with-param name="crop" select="@crop"/>
+					<xsl:with-param name="no-stretch" select="@noStretch"/>
 					<xsl:with-param name="lightbox" select="@lightbox"/>
 					<xsl:with-param name="showTitle" select="@showTitle"/>
 					<xsl:with-param name="alignment" select="@alignment"/>
@@ -119,6 +120,7 @@
 					<xsl:apply-templates select="ms:node-set($contentList)/*/*" mode="displayBrief">
 						<xsl:with-param name="sortBy" select="@sortBy"/>
 						<xsl:with-param name="crop" select="@crop"/>
+						<xsl:with-param name="no-stretch" select="@noStretch"/>
 						<xsl:with-param name="lightbox" select="@lightbox"/>
 						<xsl:with-param name="showTitle" select="@showTitle"/>
 						<xsl:with-param name="alignment" select="@alignment"/>
