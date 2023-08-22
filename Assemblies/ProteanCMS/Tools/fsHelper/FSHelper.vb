@@ -29,6 +29,7 @@ Imports Microsoft.Ajax.Utilities
 Imports DelegateWrappers
 Imports System.Drawing.Imaging
 Imports System.Net
+Imports SoundInTheory.DynamicImage.Filters
 
 Partial Public Class fsHelper
 
@@ -1094,6 +1095,8 @@ Partial Public Class fsHelper
                 context.Server.MapPath("/")
 
                 cleanUploadedPaths = mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
+                Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/" & cleanUploadedPaths))
+                cleanUploadedPaths = "<img src=""" & cleanUploadedPaths & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
 
 
             Catch ex As Exception
