@@ -305,15 +305,12 @@ Partial Public Class Cms
                             If cContentName IsNot Nothing Then
                                 Dim cleanPathName As String = moFSHelper.UploadRequest(moCtx, UploadDirPath)
                                 moCtx.Session("lastUploadedFilePath") = cleanPathName
-
-                                JsonResult = JsonConvert.SerializeObject(cleanPathName)
-                                Return JsonResult
+                                'JsonResult = JsonConvert.SerializeObject(cleanPathName)
                             End If
                             moFSHelper = Nothing
                         End If
                     End If
-
-
+                    Return JsonResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""))
                     Return ex.Message
