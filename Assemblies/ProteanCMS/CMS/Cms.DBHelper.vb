@@ -7845,7 +7845,7 @@ restart:
                         'moAdXfm.open(moPageXml)
 
                         Dim nAdditionId As Integer = 0
-                        oLibraryImage = moAdXfm.xFrmEditContent(savedId, "LibraryImage", CLng(myWeb.moRequest("pgid")), myWeb.moRequest("name"), , nAdditionId)
+                        oLibraryImage = moAdXfm.xFrmEditContent(savedId, cRelatedImageType, CLng(myWeb.moRequest("pgid")), myWeb.moRequest("name"), , nAdditionId)
                         'oLibraryImage = moAdXfm.xFrmEditContent(0, "LibraryImage", , "New LibraryImage", , 0)
                         If moAdXfm.valid Then
 

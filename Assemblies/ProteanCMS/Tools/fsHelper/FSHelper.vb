@@ -1096,7 +1096,7 @@ Partial Public Class fsHelper
 
                 cleanUploadedPaths = mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
                 Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/" & cleanUploadedPaths))
-                cleanUploadedPaths = "<img src=""" & cleanUploadedPaths & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
+                cleanUploadedPaths = "<img src=""" & cleanUploadedPaths & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt="""" class=""display""/> "
 
 
             Catch ex As Exception
