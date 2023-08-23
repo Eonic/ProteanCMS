@@ -1,9 +1,4 @@
-IF OBJECT_ID('spGetPagesByParentPageId', 'P') IS NOT NULL
-DROP PROC spGetPagesByParentPageId
-GO
-
--- [spGetPagesByParentPageId] 64,'  nContentId in (select nContentId from tblCartCatProductRelations c inner join tblAudit a on a.nAuditKey=c.nAuditId and nStatus=1 where c.nCatId in (9)) ','Product'            
-            
+   
 CREATE PROCEDURE [dbo].[spGetPagesByParentPageId]                
 @PageId as Int=null   ,            
 @whereSql varchar(max) ,          

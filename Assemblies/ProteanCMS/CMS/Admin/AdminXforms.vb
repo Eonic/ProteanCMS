@@ -3905,7 +3905,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmMoveFile", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
