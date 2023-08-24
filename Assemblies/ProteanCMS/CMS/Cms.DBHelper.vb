@@ -7832,7 +7832,9 @@ restart:
 
         Public Function CreateLibraryImages(ByVal savedId As Integer, ByVal cRelatedLibraryImage As String, ByVal cSkipAttribute As String, Optional ByVal cRelatedImageType As String = "") As String
             Try
-                Dim oLibraryImage As XmlElement
+                Dim oLibraryImageXForm As XmlElement
+                Dim oLibraryImageInstance As XmlElement
+
                 If cRelatedLibraryImage <> "" Then
                     Dim oImagePath() As String = cRelatedLibraryImage.Split(",")
                     'If skipfirst attribute
@@ -7841,95 +7843,37 @@ restart:
                     End If
 
                     For Each cImage As String In oImagePath
-                        Dim moAdXfm As Admin.AdminXforms = myWeb.getAdminXform()
-                        'moAdXfm.open(moPageXml)
+                        Dim moAdXfm As Protean.Cms.xForm
+                        moAdXfm = New Protean.Cms.xForm(myWeb)
+                        Dim cContentSchemaName As String = cRelatedImageType
+                        Dim cXformPath As String = cContentSchemaName
+                        Dim cContentName As String = "New " + cRelatedImageType
 
-                        Dim nAdditionId As Integer = 0
-                        oLibraryImage = moAdXfm.xFrmEditContent(savedId, cRelatedImageType, CLng(myWeb.moRequest("pgid")), myWeb.moRequest("name"), , nAdditionId)
-                        'oLibraryImage = moAdXfm.xFrmEditContent(0, "LibraryImage", , "New LibraryImage", , 0)
-                        If moAdXfm.valid Then
+                        cXformPath = "/xforms/content/" & cXformPath
+                        moAdXfm = myWeb.getXform()
+                        moAdXfm.load(cXformPath & ".xml", myWeb.maCommonFolders)
 
+                        If cContentName <> "" And Not moAdXfm.Instance.FirstChild Is Nothing Then
+                            moAdXfm.Instance.SelectSingleNode("tblContent/cContentName").InnerText() = cContentName
+                            moAdXfm.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText() = Protean.Tools.Xml.XmlDate(Now())
                         End If
-                        Dim xLibraryImage As XmlElement = moPageXml.CreateElement("instance")
-                        'Dim xtblContent As XmlNode = moPageXml.CreateElement("tblContent")
-                        'Dim nContentKey As XmlNode = moPageXml.CreateElement("nContentKey")
-                        'Dim nContentPrimaryId As XmlNode = moPageXml.CreateElement("nContentPrimaryId")
-                        'Dim nVersion As XmlNode = moPageXml.CreateElement("nVersion")
-                        'Dim cContentForiegnRef As XmlNode = moPageXml.CreateElement("cContentForiegnRef")
-                        'Dim cContentName As XmlNode = moPageXml.CreateElement("cContentName")
-                        'Dim cContentSchemaName As XmlNode = moPageXml.CreateElement("cContentSchemaName")
-                        'Dim cContentXmlBrief As XmlNode = moPageXml.CreateElement("cContentXmlBrief")
-                        'Dim Content As XmlNode = moPageXml.CreateElement("Content")
-                        'Dim Title As XmlNode = moPageXml.CreateElement("Title")
-                        'Dim Author As XmlNode = moPageXml.CreateElement("Author")
-                        'Dim Copyright As XmlNode = moPageXml.CreateElement("Copyright")
-                        'Dim Images As XmlNode = moPageXml.CreateElement("Images")
-                        'Dim FileSize As XmlNode = moPageXml.CreateElement("FileSize")
-                        'Dim Body As XmlNode = moPageXml.CreateElement("Body")
-                        'Dim cContentXmlDetail As XmlNode = moPageXml.CreateElement("cContentXmlDetail")
-                        'Dim nAuditId As XmlNode = moPageXml.CreateElement("nAuditId")
-                        'Dim nAuditKey As XmlNode = moPageXml.CreateElement("nAuditKey")
-                        'Dim dPublishDate As XmlNode = moPageXml.CreateElement("dPublishDate")
-                        'Dim dExpireDate As XmlNode = moPageXml.CreateElement("dExpireDate")
-                        'Dim dInsertDate As XmlNode = moPageXml.CreateElement("dInsertDate")
-                        'Dim nInsertDirId As XmlNode = moPageXml.CreateElement("nInsertDirId")
-                        'Dim dUpdateDate As XmlNode = moPageXml.CreateElement("dUpdateDate")
-                        'Dim nUpdateDirId As XmlNode = moPageXml.CreateElement("nUpdateDirId")
-                        'Dim nStatus As XmlNode = moPageXml.CreateElement("nStatus")
-                        'Dim cDescription As XmlNode = moPageXml.CreateElement("cDescription")
-                        'Dim bCascade As XmlNode = moPageXml.CreateElement("bCascade")
 
-                        ''Dim oThumbnail As XmlElement = moPageXml.CreateElement("img")
-                        ''Dim oDetail As XmlElement = moPageXml.CreateElement("img")
-
-                        'Dim oDisplay As XmlElement = moPageXml.CreateElement("img")
-                        'Title.InnerText = "ImageTitle"
-                        'Author.InnerText = ""
-                        'cContentName.InnerText = "New LibraryImage"
-                        'cContentSchemaName.InnerText = "LibraryImage"
-                        'cContentForiegnRef.InnerText = Convert.ToString(cRelatedImageType & nImageCount & "")
-                        ''oThumbnail.SetAttribute("class", "thumbnail")
-                        ''oDetail.SetAttribute("class", "detail")
-                        'Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/" & cImage))
-                        'oDisplay.InnerXml = "<img class=""display"" src=""" & cImage & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
-                        ''Images.AppendChild(oThumbnail)
-                        'Images.AppendChild(oDisplay.FirstChild)
-                        ''Images.AppendChild(oDetail)
-                        'Content.AppendChild(Title)
-                        'Content.AppendChild(Author)
-                        'Content.AppendChild(Copyright)
-                        'Content.AppendChild(Images)
-                        'Content.AppendChild(FileSize)
-                        'Content.AppendChild(Body)
-                        'cContentXmlBrief.InnerXml = Content.OuterXml
-                        'cContentXmlDetail.InnerXml = Content.OuterXml
-                        'xtblContent.AppendChild(nContentKey)
-                        'xtblContent.AppendChild(nContentPrimaryId)
-                        'xtblContent.AppendChild(nVersion)
-                        'xtblContent.AppendChild(cContentForiegnRef)
-                        'xtblContent.AppendChild(cContentName)
-                        'xtblContent.AppendChild(cContentSchemaName)
-                        'xtblContent.AppendChild(cContentXmlBrief)
-                        'xtblContent.AppendChild(cContentXmlDetail)
-                        'xtblContent.AppendChild(nAuditId)
-                        'xtblContent.AppendChild(nAuditKey)
-                        'xtblContent.AppendChild(dPublishDate)
-                        'xtblContent.AppendChild(dExpireDate)
-                        'xtblContent.AppendChild(dInsertDate)
-                        'xtblContent.AppendChild(nInsertDirId)
-                        'xtblContent.AppendChild(dUpdateDate)
-                        'xtblContent.AppendChild(nUpdateDirId)
-                        'xtblContent.AppendChild(nStatus)
-                        'xtblContent.AppendChild(cDescription)
-                        'xtblContent.AppendChild(bCascade)
-                        'xLibraryImage.AppendChild(xtblContent)
-
+                        'oLibraryImageXForm = moAdXfm.xFrmEditContent(0, cRelatedImageType, , "New LibraryImage", , nAdditionId)
+                        oLibraryImageInstance = moAdXfm.Instance
+                        Dim imgElement As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/Images/img[@class='display']")
+                        Dim imgElementDetail As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Images/img[@class='display']")
+                        Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
+                        imgElement.SetAttribute("src", cImage)
+                        imgElement.SetAttribute("height", oImg.Height)
+                        imgElement.SetAttribute("width", oImg.Width)
+                        imgElementDetail.SetAttribute("src", cImage)
+                        imgElementDetail.SetAttribute("height", oImg.Height)
+                        imgElementDetail.SetAttribute("width", oImg.Width)
                         Dim nContentId As Long
-                        nContentId = setObjectInstance(Cms.dbHelper.objectTypes.Content, xLibraryImage)
-                        CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, , "")
+                        nContentId = setObjectInstance(Cms.dbHelper.objectTypes.Content, oLibraryImageInstance)
+                        'CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, , "")
                         'If we have an action here we need to relate the item
                         insertContentRelation(savedId, nContentId, False)
-                        goSession("cleanPath") = Nothing
                     Next
                 End If
             Catch ex As Exception

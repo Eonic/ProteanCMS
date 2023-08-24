@@ -2609,52 +2609,6 @@ Public Class Cms
             End If
 
             Select Case AjaxCmd
-                Case "ContentImageUpload"
-                    Try
-                        'get the content id
-                        'we build the save path from the contentname making it a safeurl
-                        'check that that contentID is saved in the session as relatable.
-                        'get the customer upload image path
-                        'create the save path
-                        'upload the images
-                        'return comma separated of image paths with clean file names.
-                        Dim encryptedProductId As String = moSession("contentId")  'rename this to contentId
-                        Dim ProductId As String = moCtx.Request("cPageContentId")
-                        'replace product to content in all code here 
-                        If encryptedProductId = ProductId Then
-                            'moConfig("BasePath")
-                            'goServer.MapPath("\") & moConfig("ReviewImageRootPath").Replace("/","\")
-
-                            moFSHelper.initialiseVariables(fsHelper.LibraryType.Image)
-                            moFSHelper.moPageXML = moPageXml
-                            Dim ProductName As String = moRequest("cProductNameforPath")
-                            Dim UploadDirPath = moConfig("ReviewImageRootPath") + ProductName.Replace("\", "/").Replace("""", "")
-                            If ProductName IsNot Nothing Then
-                                Dim cleanPathName As String = moFSHelper.UploadRequest(moCtx, UploadDirPath)
-                                If (moSession("cleanPath") Is Nothing) Then
-                                    If (moSession("cleanPath") = String.Empty) Then
-                                        moSession("cleanPath") = cleanPathName
-                                    Else
-                                        moSession("cleanPath") = moSession("cleanPath") + "," + cleanPathName
-                                    End If
-                                Else
-                                    moSession("cleanPath") = moSession("cleanPath") + "," + cleanPathName
-                                End If
-
-                                ' only that particular content review images will store in this session
-
-                                'If (moFSHelper.cleanUploadedPaths <> String.Empty) Then
-                                '    cleanUploadedPath.Add(moFSHelper.cleanUploadedPaths)
-                                'End If
-                                ' oPageElmt.SetAttribute("cleanPath", name)
-                            End If
-                            moFSHelper = Nothing
-                        End If
-
-
-                    Catch ex As Exception
-                        returnException(msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
-                    End Try
                 Case "BespokeProvider"
                     'Dim assemblyInstance As [Assembly]
                     Dim calledType As Type
@@ -2741,9 +2695,18 @@ Public Class Cms
                                 xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest("type"), nPageId, moRequest("name"), , nContentId, , moRequest("formName"), "0" & moRequest("verId"))
                                 If moAdXfm.valid Then
                                     'if we have a parent releationship lets add it
-                                    If moRequest("contentParId") <> "" Then
-                                        moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "true", True, False))
+                                    If moRequest("type") IsNot Nothing Then
+                                        If moRequest("type").ToLower() = "review" Then
+                                            If moRequest("contentParId") <> "" Then
+                                                moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "false", True, False))
+                                            End If
+                                        Else
+                                            If moRequest("contentParId") <> "" Then
+                                                moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "true", True, False))
+                                            End If
+                                        End If
                                     End If
+
                                     'simply output the content detail XML
                                     '  As this is content that we must've been able to get,
                                     '  we should be able to see it.
