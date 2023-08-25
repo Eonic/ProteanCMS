@@ -25,18 +25,19 @@
 						<Path/>
 						<EmailSent/>
 						<ShowImage/>
+						<ProductID/>
 					</Content>
 					<average_rating/>
 					<total/>
 					<recommend_to_friend/>
 				</cContentXmlBrief>
 				<cContentXmlDetail>
-					<Content>
+					<Content showRelated="Tag" recommendToAFriend="">
 						<Reviewer/>
+						<ReviewerEmail/>
 						<ReviewDate/>
 						<Url/>
 						<Summary/>
-						<Description/>
 						<Rating/>
 						<Images>
 							<img class="thumbnail" type="thumbnail"/>
@@ -46,6 +47,7 @@
 						<Path/>
 						<EmailSent/>
 						<ShowImage/>
+						<ProductID/>
 					</Content>
 					<average_rating/>
 					<total/>
@@ -82,6 +84,8 @@
 				<bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
 				<bind id="nEmailSent" nodeset="EmailSent" required="false()" type="string"/>
 				<bind id="nShowImage" nodeset="ShowImage" required="false()" type="string"/>
+				<bind id="nRecommentToFriend" nodeset="@recommendToAFriend" required="false()" type="string"/>
+				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
 				<bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>s
@@ -97,6 +101,8 @@
 				<bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
 				<bind id="nEmailSent" nodeset="EmailSent" required="false()" type="string"/>
 				<bind id="nShowImage" nodeset="ShowImage" required="false()" type="string"/>
+				<bind id="nRecommentToFriend" nodeset="@recommendToAFriend" required="false()" type="string"/>
+				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
 			</bind>
 			<bind id="dPublishDate" nodeset="dPublishDate" required="true()" type="string"/>
 		</bind>

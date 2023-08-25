@@ -29,6 +29,7 @@ Imports Microsoft.Ajax.Utilities
 Imports DelegateWrappers
 Imports System.Drawing.Imaging
 Imports System.Net
+Imports SoundInTheory.DynamicImage.Filters
 
 Partial Public Class fsHelper
 
@@ -51,7 +52,10 @@ Partial Public Class fsHelper
     Public ImpersonationMode As Boolean = False
 
     Private _thumbnailPath As String = "/~ptn"
+    'Public cleanUploadedPaths As New List(Of String)()
 
+    Public uploadReviewImageRootPath As String = ""
+    Public cleanUploadedPaths As String
     Shared _libraryTypeExtensions()() As String = {
                                                  New String() {},
                                                  New String() {"png", "jpg", "gif", "jpeg", "bmp"},
@@ -960,31 +964,35 @@ Partial Public Class fsHelper
     End Function
 
 
-    Public Sub UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal ProductName As String = "")
+    Public Function UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal UploadDirPath As String = "") As String
         Try
 
 
             context.Response.AddHeader("Pragma", "no-cache")
             context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
-            If ProductName IsNot Nothing Then
-                Dim UploadDir As String = context.Request("storageRoot") + ProductName.Replace("\", "/").Replace("""", "")
-                Dim dirpath As String = context.Server.MapPath(UploadDir)
-                If Not Directory.Exists(dirpath) Then
-                    Directory.CreateDirectory(dirpath)
+            If UploadDirPath IsNot Nothing Then
+
+                mcStartFolder = mcStartFolder & UploadDirPath.Replace("/", "\")
+                If Not Directory.Exists(mcStartFolder) Then
+                    Directory.CreateDirectory(mcStartFolder)
                 End If
-                mcStartFolder = dirpath
                 mcRoot = context.Server.MapPath("/")
+                HandleUploads(context)
+                Return cleanUploadedPaths
             Else
                 mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
                 mcRoot = context.Server.MapPath("/")
+                HandleUploads(context)
+                Return String.Empty
             End If
-            HandleUploads(context)
+
 
         Catch ex As Exception
             'catch errorr
+            Return ex.Message
         End Try
-    End Sub
+    End Function
 
     Private Sub HandleUploads(ByVal context As System.Web.HttpContext)
 
@@ -1071,16 +1079,9 @@ Partial Public Class fsHelper
 
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
-                'Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-").Replace("'", "")
 
                 Dim cfileName As String = CleanfileName(file.FileName)
 
-
-
-                'If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
-                '    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
-                '    Dim SizeInMB As Decimal = (CType(file.InputStream.Length, Decimal) / CDec(1024 * 1024))
-                '    If Not (SizeInMB > 4.0) Then
                 file.SaveAs(mcStartFolder & cfileName)
 
                 If LCase(mcStartFolder & cfileName).EndsWith(".jpg") Or LCase(mcStartFolder & cfileName).EndsWith(".jpeg") Or LCase(mcStartFolder & cfileName).EndsWith(".png") Then
@@ -1088,17 +1089,13 @@ Partial Public Class fsHelper
                     Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
                     eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
                 End If
+
                 Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
+                context.Server.MapPath("/")
 
+                cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
 
-
-                '    Else
-                '        'alert: image size is bigger than 4 MB
-                '    End If
-                'Else
-                '    'alert: Image with Same  name already exist
-                'End If
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))

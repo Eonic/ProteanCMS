@@ -26,6 +26,11 @@ Imports Protean.Tools.Xml
 Imports System
 Imports System.Threading
 Imports WebGrease.Css.Ast.Selectors
+Imports System.Windows.Controls.Primitives
+Imports Alphaleonis.Win32.Filesystem.Shell32
+Imports SoundInTheory.DynamicImage.Filters
+Imports System.Linq
+Imports System.Security.Cryptography.X509Certificates
 
 Partial Public Class Cms
 
@@ -2761,26 +2766,28 @@ restart:
                         Dim logArray() As String
                         logArray = Split(EncryptedKey, "=")
                         EncryptedKey = logArray(1)
-                        custEmail = oInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/ReviewerEmail/node()").Value
-                        Dim dtCheckLognode As New DataTable
-                        Dim sSql As String = "select nEmailActivityKey, cActivityXml from tblEmailActivityLog where cEmailRecipient='" & custEmail & "' and CONVERT(XML, cActivityXml).value('(/OrderContacts/OrderContact/ReviewTokenKey)[1]', 'Nvarchar(500)')='" & EncryptedKey & "'"
-                        dtCheckLognode = GetDataSet(sSql, "Application", "JobApplications").Tables(0)
-                        If dtCheckLognode.Rows.Count > 0 Then
-                            Dim oDRreview As DataRow
-                            For Each oDRreview In dtCheckLognode.Rows
-                                Dim nEmailActivityKey As String = oDRreview("nEmailActivityKey")
-                                Dim cActivityXML As String = oDRreview("cActivityXml")
-                                Dim oActivityInstance As XmlElement = moPageXml.CreateElement("instance")
-                                oActivityInstance.InnerXml = cActivityXML
-                                If oActivityInstance.InnerXml <> Nothing Then
-                                    If oActivityInstance.SelectSingleNode("OrderContacts/reviewActivityID") IsNot Nothing Then
-                                        Dim nodeReviewlog As XmlNode = oActivityInstance.SelectSingleNode("/OrderContacts")
-                                        nodeReviewlog.RemoveChild(nodeReviewlog.LastChild)
-                                        Dim sqlUpdateXML As String = "update tblEmailActivityLog set cActivityXml = '" & nodeReviewlog.OuterXml & "' where nEmailActivityKey=" + nEmailActivityKey
-                                        ExeProcessSql(sqlUpdateXML.ToString())
+                        If oInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/ReviewerEmail/node()") IsNot Nothing Then
+                            custEmail = oInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/ReviewerEmail/node()").Value
+                            Dim dtCheckLognode As New DataTable
+                            Dim sSql As String = "select nEmailActivityKey, cActivityXml from tblEmailActivityLog where cEmailRecipient='" & custEmail & "' and CONVERT(XML, cActivityXml).value('(/OrderContacts/OrderContact/ReviewTokenKey)[1]', 'Nvarchar(500)')='" & EncryptedKey & "'"
+                            dtCheckLognode = GetDataSet(sSql, "Application", "JobApplications").Tables(0)
+                            If dtCheckLognode.Rows.Count > 0 Then
+                                Dim oDRreview As DataRow
+                                For Each oDRreview In dtCheckLognode.Rows
+                                    Dim nEmailActivityKey As String = oDRreview("nEmailActivityKey")
+                                    Dim cActivityXML As String = oDRreview("cActivityXml")
+                                    Dim oActivityInstance As XmlElement = moPageXml.CreateElement("instance")
+                                    oActivityInstance.InnerXml = cActivityXML
+                                    If oActivityInstance.InnerXml <> Nothing Then
+                                        If oActivityInstance.SelectSingleNode("OrderContacts/reviewActivityID") IsNot Nothing Then
+                                            Dim nodeReviewlog As XmlNode = oActivityInstance.SelectSingleNode("/OrderContacts")
+                                            nodeReviewlog.RemoveChild(nodeReviewlog.LastChild)
+                                            Dim sqlUpdateXML As String = "update tblEmailActivityLog set cActivityXml = '" & nodeReviewlog.OuterXml & "' where nEmailActivityKey=" + nEmailActivityKey
+                                            ExeProcessSql(sqlUpdateXML.ToString())
+                                        End If
                                     End If
-                                End If
-                            Next
+                                Next
+                            End If
                         End If
                     End If
                 End If
@@ -7755,7 +7762,13 @@ restart:
                             Dim oRelatedLibraryImages As XmlElement
                             For Each oRelatedLibraryImages In oInstance.SelectNodes("RelatedLibraryImages")
                                 ' createGalleryImages(savedId, oRelatedGalleryImages.InnerText,oRelatedGalleryImages.attribute("skipFirst"))
-                                ' function to step through each image in the array, check it exists, get width and height, open LibraryImage Xform, Get the instance, set /images/img[@class=display] with src and width and height then use setObjectInstance, get the new id and related to the savedId setcontentrelation(newid,savedid).
+                                ' function to step through each image in the array, check it exists, get width and height, open LibraryImage Xform,
+                                ' Get the instance, set /images/img[@class=display] with src and width and height
+                                ' then use setObjectInstance, get the new id and related to the savedId setcontentrelation(newid,savedid).
+                                If oRelatedLibraryImages.GetAttribute("skipFirst") <> "" And oRelatedLibraryImages.GetAttribute("type") <> "" Then
+                                    CreateLibraryImages(savedId, oRelatedLibraryImages.InnerText, oRelatedLibraryImages.GetAttribute("skipFirst"), oRelatedLibraryImages.GetAttribute("type"))
+                                End If
+
                             Next
                         Case objectTypes.Directory
 
@@ -7816,6 +7829,60 @@ restart:
                 Return 0
             End Try
         End Function
+
+        Public Function CreateLibraryImages(ByVal savedId As Integer, ByVal cRelatedLibraryImage As String, ByVal cSkipAttribute As String, Optional ByVal cRelatedImageType As String = "") As String
+            Try
+                Dim oLibraryImageXForm As XmlElement
+                Dim oLibraryImageInstance As XmlElement
+
+                If cRelatedLibraryImage <> "" Then
+                    Dim oImagePath() As String = cRelatedLibraryImage.Split(",")
+                    'If skipfirst attribute
+                    If cSkipAttribute = True Then
+                        oImagePath = oImagePath.Skip(1).ToArray()
+                    End If
+
+                    For Each cImage As String In oImagePath
+                        Dim moAdXfm As Protean.Cms.xForm
+                        moAdXfm = New Protean.Cms.xForm(myWeb)
+                        Dim cContentSchemaName As String = cRelatedImageType
+                        Dim cXformPath As String = cContentSchemaName
+                        Dim cContentName As String = "New " + cRelatedImageType
+
+                        cXformPath = "/xforms/content/" & cXformPath
+                        moAdXfm = myWeb.getXform()
+                        moAdXfm.load(cXformPath & ".xml", myWeb.maCommonFolders)
+
+                        If cContentName <> "" And Not moAdXfm.Instance.FirstChild Is Nothing Then
+                            moAdXfm.Instance.SelectSingleNode("tblContent/cContentName").InnerText() = cContentName
+                            moAdXfm.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText() = Protean.Tools.Xml.XmlDate(Now())
+                        End If
+
+                        'oLibraryImageXForm = moAdXfm.xFrmEditContent(0, cRelatedImageType, , "New LibraryImage", , nAdditionId)
+                        oLibraryImageInstance = moAdXfm.Instance
+                        Dim imgElement As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/Images/img[@class='display']")
+                        Dim imgElementDetail As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Images/img[@class='display']")
+                        Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
+                        imgElement.SetAttribute("src", cImage)
+                        imgElement.SetAttribute("height", oImg.Height)
+                        imgElement.SetAttribute("width", oImg.Width)
+                        imgElementDetail.SetAttribute("src", cImage)
+                        imgElementDetail.SetAttribute("height", oImg.Height)
+                        imgElementDetail.SetAttribute("width", oImg.Width)
+                        Dim nContentId As Long
+                        nContentId = setObjectInstance(Cms.dbHelper.objectTypes.Content, oLibraryImageInstance)
+                        'CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, , "")
+                        'If we have an action here we need to relate the item
+                        insertContentRelation(savedId, nContentId, False)
+                    Next
+                End If
+            Catch ex As Exception
+                Return " Relation Error " & ex.Message
+            End Try
+
+
+        End Function
+
 
         ''' <summary>
         '''   <para>This deletes all content locations for an item of content.</para>
@@ -10416,9 +10483,8 @@ ReturnMe:
 
 
                 If oConnection.State = ConnectionState.Closed Then oConnection.Open()
-
-                    Dim oSqlCmd As SqlCommand = New SqlCommand(sSql, oConnection)
-                    moDataAdpt.SelectCommand = oSqlCmd
+                Dim oSqlCmd As SqlCommand = New SqlCommand(sSql, oConnection)
+                moDataAdpt.SelectCommand = oSqlCmd
                 Dim cb As SqlCommandBuilder = New SqlCommandBuilder(moDataAdpt)
                 moDataAdpt.TableMappings.Add(tableName, tableName)
 
@@ -11109,7 +11175,7 @@ ReturnMe:
             Dim reportElement As XmlElement
             Dim reportName As String = ""
             Dim dir As DirectoryInfo
-            Dim files As FileInfo()
+            Dim files As IO.FileInfo()
             Dim foldersToCheck As New List(Of String)
             Try
 
@@ -11127,7 +11193,7 @@ ReturnMe:
                     If dir.Exists Then
                         files = dir.GetFiles("*.xml")
 
-                        For Each reportFile As FileInfo In files
+                        For Each reportFile As IO.FileInfo In files
 
                             reportName = reportFile.Name.Substring(0, reportFile.Name.LastIndexOf("."))
 

@@ -59,7 +59,7 @@ Public Class Cms
     Public mcContentType As String = Mime.MediaTypeNames.Text.Html
     Public mcContentDisposition As String = ""
     Public mnProteanCMSError As Long = 0
-
+    Public cleanUploadedPath As List(Of String) = New List(Of String)
 
     Public msException As String = ""
 
@@ -1252,7 +1252,7 @@ Public Class Cms
 
                     End If
 
-                        If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
+                    If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
                         sCachePath = goServer.UrlDecode(mcOriginalURL)
                         If sCachePath.Contains("?") Then
@@ -2609,28 +2609,6 @@ Public Class Cms
             End If
 
             Select Case AjaxCmd
-                Case "ContentImageUpload"
-                    Try
-                        'get the content id
-                        'we build the save path from the contentname making it a safeurl
-                        'check that that contentID is saved in the session as relatable.
-                        'get the customer upload image path
-                        'create the save path
-                        'upload the images
-                        'return comma separated of image paths with clean file names.
-
-                        Dim oFsh As fsHelper = New fsHelper
-                        oFsh.initialiseVariables(fsHelper.LibraryType.Image)
-                        oFsh.moPageXML = moPageXml
-                        Dim ProductName As String = moRequest("cProductNameforPath")
-                        If ProductName IsNot Nothing Then
-                            oFsh.UploadRequest(moCtx, ProductName)
-                        End If
-                        'return the clean paths from array on oFsh.cleanUploadedPaths
-                        oFsh = Nothing
-                    Catch ex As Exception
-                        returnException(msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
-                    End Try
                 Case "BespokeProvider"
                     'Dim assemblyInstance As [Assembly]
                     Dim calledType As Type
@@ -2717,9 +2695,18 @@ Public Class Cms
                                 xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest("type"), nPageId, moRequest("name"), , nContentId, , moRequest("formName"), "0" & moRequest("verId"))
                                 If moAdXfm.valid Then
                                     'if we have a parent releationship lets add it
-                                    If moRequest("contentParId") <> "" Then
-                                        moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "true", True, False))
+                                    If moRequest("type") IsNot Nothing Then
+                                        If moRequest("type").ToLower() = "review" Then
+                                            If moRequest("contentParId") <> "" Then
+                                                moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "false", True, False))
+                                            End If
+                                        Else
+                                            If moRequest("contentParId") <> "" Then
+                                                moDbHelper.insertContentRelation(moRequest("contentParId"), nContentId, IIf(moRequest("2way") = "true", True, False))
+                                            End If
+                                        End If
                                     End If
+
                                     'simply output the content detail XML
                                     '  As this is content that we must've been able to get,
                                     '  we should be able to see it.
