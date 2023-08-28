@@ -11,6 +11,7 @@ Imports System.Configuration
 Imports System
 Imports System.Web.UI
 Imports Renci.SshNet
+Imports Microsoft.Ajax.Utilities
 
 Public Class xForm
 
@@ -1249,21 +1250,18 @@ Public Class xForm
                                                     oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = xmlDate(oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml)
                                                 Case "string-before-comma"
                                                     'pull the first value in an array and populate the instance
-                                                    If goSession("cleanPath") IsNot Nothing Then
-                                                        Dim cCleanPath As String = goSession("cleanPath")
-                                                        If cCleanPath <> "" Then
-                                                            Dim cFirstPath As String = Left(cCleanPath, InStr(cCleanPath, ","))
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = cFirstPath.TrimEnd(CChar(","))
-                                                        End If
+                                                    Dim oElmtTemp As XmlElement
+                                                    oElmtTemp = moPageXML.CreateElement("Temp")
+                                                    If InStr(1, submittedValue, ",") > 0 Then
+                                                        Dim cFirstPath As String = Left(submittedValue, InStr(submittedValue, ","))
+                                                        cFirstPath = cFirstPath.TrimEnd(CChar(","))
+                                                        oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(cFirstPath) & "").Trim
+                                                        'oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = oElmtTemp.InnerXml
                                                     Else
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = submittedValue.Trim()
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = submittedValue.Trim
                                                     End If
-                                                Case "string-path"
-                                                    'pull the all values in RelatedLibraryImage instance
-                                                    If goSession("cleanPath") IsNot Nothing Then
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = goSession("cleanPath")
-                                                        goSession("cleanPath") = Nothing
-                                                    End If
+
                                                 Case Else
                                                     'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
                                                     If bIsXml Then
