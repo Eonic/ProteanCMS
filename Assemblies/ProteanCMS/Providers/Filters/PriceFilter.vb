@@ -11,6 +11,8 @@ Imports Microsoft.Ajax.Utilities
 Imports Microsoft.ClearScript.Util
 Imports Protean.Cms
 Imports Protean.xForm
+Imports SoundInTheory.DynamicImage.Filters
+
 
 Namespace Providers
 
@@ -40,8 +42,10 @@ Namespace Providers
                     Dim cProductCountList As String = String.Empty
                     Dim nPageId As Integer = aWeb.mnPageId
                     Dim nMaxPRiceProduct As Integer = 0
+                    Dim nMinPriceProduct As Integer = 0
                     Dim oFilterElmt As XmlElement = Nothing
                     Dim className As String = String.Empty
+                    Dim cWhereQuery As String = String.Empty
 
                     If aWeb.moRequest.Form("MaxPrice") IsNot Nothing Then
 
@@ -60,6 +64,13 @@ Namespace Providers
                     If (FilterConfig.Attributes("name") IsNot Nothing) Then
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
                     End If
+                    'If aWeb.moRequest.Form("LocationFilter") IsNot Nothing Then
+                    '    cWhereQuery = GetFilterSQLForLocation(aWeb)
+                    '    If (cWhereSql <> "") Then
+                    '        cWhereSql = cWhereSql & " And " & cWhereQuery
+                    '    End If
+                    'End If
+
                     arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPrice"))
                     arrParams.Add("MaxPrice", FilterConfig.GetAttribute("toPrice"))
                     arrParams.Add("Step", FilterConfig.GetAttribute("step"))
@@ -67,9 +78,12 @@ Namespace Providers
                     arrParams.Add("whereSql", cWhereSql)
                     arrParams.Add("FilterTarget", cFilterTarget)
                     Using oDr As SqlDataReader = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams)
-                        If (oDr.HasRows) Then
+                        If (oDr IsNot Nothing) Then
                             While oDr.Read
                                 cnt = cnt + 1
+                                If cnt = 1 Then
+                                    nMinPriceProduct = oDr.GetValue(4)
+                                End If
                                 nMaxPRiceProduct = oDr("MaxProductPrice")
                                 sProductCount = Convert.ToString(oDr("ContentCount"))
                                 cProductCountList = cProductCountList + cnt.ToString() + ":" + sProductCount + ","
@@ -77,9 +91,11 @@ Namespace Providers
 
                         End If
                         oSliderMinPrice.Value = FilterConfig.GetAttribute("fromPrice")
-                        oSliderMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
-                        oProductTotalCount.Value = nMaxPRiceProduct
-                        ' oSliderMaxPrice.Value = nMaxPRiceProduct
+                        'oSliderMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
+                        'oProductTotalCount.Value = nMaxPRiceProduct
+                        'oSliderMinPrice.Value = nMinPriceProduct
+
+                        oSliderMaxPrice.Value = nMaxPRiceProduct
                         'oMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
 
 
@@ -121,7 +137,7 @@ Namespace Providers
                     oXform.addBind("PriceStep", "PriceFilter/@PriceStep", "false()", "string", oXform.model)
                     oXform.addBind("PriceListCount", "PriceFilter/@PriceCountList", "false()", "string", oXform.model)
                     oXform.addBind("PriceFilter", "PriceFilter/@MaxPrice", "false()", "string", oXform.model)
-                    oXform.addBind("PriceTotalCount", "PriceFilter/@PriceTotalCount", "false()", "string", oXform.model)
+                    ' oXform.addBind("PriceTotalCount", "PriceFilter/@PriceTotalCount", "false()", "string", oXform.model)
 
                     oXform.addInput(oFromGroup, "MinPrice", True, "", "hidden")
                     oXform.addInput(oFromGroup, "MaxPrice", True, "", "hidden")
@@ -130,7 +146,7 @@ Namespace Providers
                     oXform.addInput(oFromGroup, "PriceStep", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceListCount", True, "", "hidden")
                     oXform.addInput(oFromGroup, "PriceFilter", True, "", "hidden")
-                    oXform.addInput(oFromGroup, "PriceTotalCount", True, "", "hidden")
+                    ' oXform.addInput(oFromGroup, "PriceTotalCount", True, "", "hidden")
 
                     'If (oFromGroup.SelectSingleNode("select[@ref='PriceFilter']") IsNot Nothing) Then
                     '    If (oXml.InnerText.Trim() <> String.Empty) Then
