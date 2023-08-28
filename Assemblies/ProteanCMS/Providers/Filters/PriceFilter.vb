@@ -64,12 +64,6 @@ Namespace Providers
                     If (FilterConfig.Attributes("name") IsNot Nothing) Then
                         sCotrolDisplayName = Convert.ToString(FilterConfig.Attributes("name").Value)
                     End If
-                    'If aWeb.moRequest.Form("LocationFilter") IsNot Nothing Then
-                    '    cWhereQuery = GetFilterSQLForLocation(aWeb)
-                    '    If (cWhereSql <> "") Then
-                    '        cWhereSql = cWhereSql & " And " & cWhereQuery
-                    '    End If
-                    'End If
 
                     arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPrice"))
                     arrParams.Add("MaxPrice", FilterConfig.GetAttribute("toPrice"))
@@ -93,7 +87,7 @@ Namespace Providers
                         oSliderMinPrice.Value = FilterConfig.GetAttribute("fromPrice")
                         'oSliderMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
                         'oProductTotalCount.Value = nMaxPRiceProduct
-                        'oSliderMinPrice.Value = nMinPriceProduct
+                        oSliderMinPrice.Value = nMinPriceProduct
 
                         oSliderMaxPrice.Value = nMaxPRiceProduct
                         'oMaxPrice.Value = FilterConfig.GetAttribute("toPrice")
