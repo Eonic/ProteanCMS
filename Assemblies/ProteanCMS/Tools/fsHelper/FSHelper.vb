@@ -963,15 +963,16 @@ Partial Public Class fsHelper
 
     End Function
 
-
+    Public Function ContainsSpecialChars(ByVal sfilename As String) As Boolean
+        Return sfilename.IndexOfAny("[~`!@#$%^&*()-+=|{}':;,<>/?]".ToCharArray) <> -1
+    End Function
     Public Function UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal UploadDirPath As String = "") As String
         Try
-
 
             context.Response.AddHeader("Pragma", "no-cache")
             context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
-            If UploadDirPath IsNot Nothing Then
+            If UploadDirPath IsNot Nothing And UploadDirPath <> "" Then
 
                 mcStartFolder = mcStartFolder & UploadDirPath.Replace("/", "\")
                 If Not Directory.Exists(mcStartFolder) Then
@@ -1093,9 +1094,8 @@ Partial Public Class fsHelper
                 Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
                 context.Server.MapPath("/")
-
-                cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
-
+                'cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
+                cleanUploadedPaths = "/" & mcStartFolder.Replace("\", "/") & cfileName
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))
