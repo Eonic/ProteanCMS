@@ -1094,8 +1094,8 @@ Partial Public Class fsHelper
                 Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
                 context.Server.MapPath("/")
-                'cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
-                cleanUploadedPaths = "/" & mcStartFolder.Replace("\", "/") & cfileName
+                cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "") & cfileName
+                'cleanUploadedPaths = "/" & mcStartFolder.Replace("\", "/") & cfileName
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))
