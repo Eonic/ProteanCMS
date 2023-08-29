@@ -969,6 +969,7 @@ Partial Public Class fsHelper
     Public Function UploadRequest(ByVal context As System.Web.HttpContext, Optional ByVal UploadDirPath As String = "") As String
         Try
 
+
             context.Response.AddHeader("Pragma", "no-cache")
             context.Response.AddHeader("Cache-Control", "Private, no - cache")
 
@@ -1066,6 +1067,7 @@ Partial Public Class fsHelper
             cCleanfileName = Regex.Replace(cCleanfileName, "-{2,}", "-", RegexOptions.None)
             Return cCleanfileName
 
+
         Catch ex As Exception
             'RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""))
             Return ex.Message
@@ -1094,8 +1096,13 @@ Partial Public Class fsHelper
                 Dim fullName As String = Path.GetFileName(file.FileName).Replace("'", "")
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
                 context.Server.MapPath("/")
-                cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "") & cfileName
-                'cleanUploadedPaths = "/" & mcStartFolder.Replace("\", "/") & cfileName
+
+                If goConfig("ReviewImageRootPath") <> Nothing Then
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(goConfig("ReviewImageRootPath"), "").Replace("\", "/") & cfileName
+                Else
+                    cleanUploadedPaths = "/" & mcStartFolder.Replace(context.Server.MapPath("/"), "").Replace("\", "/") & cfileName
+                End If
+
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))
