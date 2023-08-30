@@ -50,7 +50,7 @@
 
 .Site {
     .card {
-        margin-bottom: $grid-gutter-y;
+        margin-bottom: $grid-gutter-height;
 
         .card-header {
             padding-bottom:0;
@@ -71,4 +71,7 @@
     }
 
     @include card-color-bg;
+}
+.alert {
+    margin-bottom: $grid-gutter-height;
 }

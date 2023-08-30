@@ -124,7 +124,7 @@ img {
 }
 
 .layoutModule .align-items-stretch .col {
-    margin-bottom: $spacer;
+    margin-bottom: $grid-gutter-height;
 
     .module-FormattedText {
         @include faux-card;
@@ -143,8 +143,8 @@ img {
 // BACKGROUNDS
 .section-spacing {
     padding-top: $section-padding;
-    padding-bottom: $section-padding - $grid-gutter-y;
-    margin-bottom: $grid-gutter-y;
+    padding-bottom: $section-padding - $grid-gutter-height;
+    margin-bottom: $grid-gutter-height;
 }
 
 section.bg-light,
@@ -349,11 +349,11 @@ section.bg-video-wrapper {
 
 
 .grid-item {
-    margin-bottom: $grid-gutter-width;
+    margin-bottom: $grid-gutter-height;
 }
 
 .listItem {
-    margin-bottom: $grid-gutter-width;
+    margin-bottom: $grid-gutter-height;
 
     .lIinner {
         position: relative;
@@ -441,7 +441,7 @@ section.bg-video-wrapper {
     .grid-item a.grid-link {
         // @extend .bg-light;
         display: block;
-        margin-bottom: $grid-gutter-y;
+        margin-bottom: $grid-gutter-height;
 
         .caption {
             padding: 10px;
@@ -473,7 +473,7 @@ section.bg-video-wrapper {
     }
 
     .grid-item {
-        margin-bottom: $grid-gutter-y;
+        margin-bottom: $grid-gutter-height;
 
         .thumbnail-wrapper {
             height: 100%;
@@ -752,12 +752,12 @@ dd {
 
 .bottom-left .socialBookmarks,
 .bottom-right .socialBookmarks {
-    margin-top: $grid-gutter-y;
+    margin-top: $grid-gutter-height;
 }
 
 .top-left .socialBookmarks,
 .top-right .socialBookmarks {
-    margin-bottom: $grid-gutter-y;
+    margin-bottom: $grid-gutter-height;
 }
 
 .align-Right .socialLinks {
@@ -788,8 +788,8 @@ dd {
 #pagefooter {
     margin-top: auto;
     background: $footer-bg;
-    padding-top: $spacer;
-    padding-bottom: $spacer;
+    padding-top: $grid-gutter-height;
+    padding-bottom: $grid-gutter-height;
 
     .footer-nav {
         margin-left: -1rem;
@@ -798,7 +798,7 @@ dd {
 }
 
 .module.nobox {
-    margin-bottom: $spacer;
+    margin-bottom: $grid-gutter-height;
 }
 
 #Login {

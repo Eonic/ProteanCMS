@@ -9,9 +9,8 @@ SWIPER
 .content-carousel {
     .swiper {
         height: 100%;
-        padding: 2rem 2rem 0;
-        margin: -2rem -2rem 0;
-        width: calc(100% + 4rem);
+        padding: $grid-gutter-height $grid-gutter-width 0;
+        margin: (-$grid-gutter-height) (-$grid-gutter-width) 0;
 
         .lIinner {
             width: 100%;
