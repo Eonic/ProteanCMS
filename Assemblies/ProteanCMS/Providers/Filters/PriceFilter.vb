@@ -76,7 +76,7 @@ Namespace Providers
                             While oDr.Read
                                 cnt = cnt + 1
                                 If cnt = 1 Then
-                                    nMinPriceProduct = oDr.GetValue(4)
+                                    nMinPriceProduct = oDr.GetValue(5)
                                 End If
                                 nMaxPRiceProduct = oDr("MaxProductPrice")
                                 sProductCount = Convert.ToString(oDr("ContentCount"))
