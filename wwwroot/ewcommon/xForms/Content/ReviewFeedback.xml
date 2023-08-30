@@ -10,19 +10,21 @@
 				<cContentName/>
 				<cContentSchemaName>Review</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content showRelated="Tag" Intro="">
+					<Content showRelated="Tag" recommendToAFriend="">
 						<Reviewer/>
 						<ReviewerEmail/>
 						<ReviewDate/>
 						<Url/>
 						<Summary/>
-						<Description/>
 						<Rating/>
 						<Images>
-							<img class="display"/>
+							<img class="thumbnail"/>
+							<img class="display" src=""/>
+							<img class="detail"/>
 						</Images>
 						<Path/>
-						<RecommentToFriend/>
+						<EmailSent/>
+						<ShowImage/>
 						<ProductID/>
 					</Content>
 					<average_rating/>
@@ -30,19 +32,21 @@
 					<recommend_to_friend/>
 				</cContentXmlBrief>
 				<cContentXmlDetail>
-					<Content showRelated="Tag" Intro="">
+					<Content showRelated="Tag" recommendToAFriend="">
 						<Reviewer/>
 						<ReviewerEmail/>
 						<ReviewDate/>
 						<Url/>
 						<Summary/>
-						<Description/>
 						<Rating/>
 						<Images>
-							<img class="display"/>
+							<img class="thumbnail"/>
+							<img class="display" src=""/>
+							<img class="detail"/>
 						</Images>
 						<Path/>
-						<RecommentToFriend/>
+						<EmailSent/>
+						<ShowImage/>
 						<ProductID/>
 					</Content>
 					<average_rating/>
@@ -60,6 +64,8 @@
 				<nStatus>4</nStatus>
 				<cDescription/>
 			</tblContent>
+			<RelatedLibraryImages skipFirst="true" type="LibraryImage">
+			</RelatedLibraryImages>
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind nodeset="tblContent">
@@ -76,12 +82,15 @@
 				<bind id="dReviewDate" nodeset="ReviewDate" required="false()" type="string"/>
 				<bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
 				<bind id="cUrl" nodeset="Url" required="false()" type="string"/>
-				<bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
-				<bind id="cContentRating" nodeset="Rating" required="false()" type="string"/>
+				<bind id="cContentSummary" nodeset="Summary" required="true()" type="string"/>
+				<bind id="cContentRating" nodeset="Rating" required="true()" type="string"/>
 				<bind id="cContentDescription" nodeset="Description" required="false()" type="string"/>
-				<bind id="cContentDisplay" nodeset="Images" required="false()" type="xml-replace" />
+				<bind id="cReviewImagesPaths" nodeset="Images/img[@class='display']/@src" required="false()" type="string-before-comma"/>
+				<!--<bind nodeset="Images/img[@class='display']">
+					<bind id="cReviewImagesPaths" nodeset="@src" required="false()" type="string-before-comma" />
+				</bind>-->
 				<bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
-				<bind id="nRecommentToFriend" nodeset="RecommentToFriend" required="false()" type="string"/>
+				<bind id="nRecommentToFriend" nodeset="@recommendToAFriend" required="false()" type="string"/>
 				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
@@ -93,13 +102,17 @@
 				<bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
 				<bind id="cContentRating" nodeset="Rating" required="false()" type="string"/>
 				<bind id="cContentDescription" nodeset="Description" required="false()" type="string"/>
-				<bind id="cContentDisplay" nodeset="Images" required="false()" type="xml-replace" />
+				<bind id="cReviewImagesPaths" nodeset="Images/img[@class='display']/@src" required="false()" type="string-before-comma"/>
+				<!--<bind nodeset="Images/img[@class='display']">
+					<bind id="cReviewImagesPaths" nodeset="@src" required="false()" type="string-before-comma" />
+				</bind>-->
 				<bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
-				<bind id="nRecommentToFriend" nodeset="RecommentToFriend" required="false()" type="string"/>
+				<bind id="nRecommentToFriend" nodeset="@recommendToAFriend" required="false()" type="string"/>
 				<bind id="nProductID" nodeset="ProductID" required="false()" type="string"/>
 			</bind>
-			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dPublishDate" nodeset="ReviewDate" required="false()" type="string"/>
 		</bind>
+		<bind id="cReviewImagesPaths" nodeset="RelatedLibraryImages" required="false()" type="string"/>
 	</model>
 
 	<group ref="EditReview" class="1col">
@@ -140,9 +153,12 @@
 				<input bind="nProductID" id="nProductID" class="readonly short hidden">
 					<label>ProductID</label>
 				</input>
-				<label class="myrating">Rating</label>
+				<input id="cProductNameforPath" bind="cProductNameforPath" class="readonly short hidden">
+				</input>
 				<div class="stars">
-					<span>
+
+					<span bind="cContentRating" class="required">
+						<label class="myrating">Rating</label>
 						<a class="star-1" onClick="starclick(1)">
 							<i class="rating__star far fa-star"></i>
 						</a>
@@ -164,10 +180,11 @@
 					<value />
 				</input>
 
-				<label>Review Feedback</label>
-				<textarea bind="cContentSummary" class="TextArea" rows="5" cols="70">
+
+				<textarea bind="cContentSummary" appearance="full" class="TextArea required" rows="5" cols="70">
+					<label>Review Feedback</label>
 				</textarea>
-				<select1 bind="nRecommentToFriend" appearance="full" class="required vshort">
+				<select1 bind="nRecommentToFriend" appearance="full" class="vshort">
 					<label>Would you recommend this to a friend?</label>
 					<item>
 						<label>Yes</label>
@@ -182,13 +199,15 @@
 
 			</group>
 			<group class="Content">
-				<input bind="cContentDisplaytext" id="cContentDisplay" class="short userUploadImage">
+				<input id="cReviewImages" class="short userUploadImage">
 					<label>Upload Image</label>
 				</input>
-				<input bind="cContentDisplay" id="cContentImagePath" class="short upimage">
+				<input bind="cReviewImagesPaths" id="cReviewImagesPaths" class="short uploadImagesDisplay">
 					<value />
-
 				</input>
+			</group>
+			<group>
+				<label>*Fields are mandatory.</label>
 			</group>
 		</group>
 	</group>
