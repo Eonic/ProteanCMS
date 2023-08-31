@@ -2077,7 +2077,7 @@
         <xsl:text>Ya Receipt - Thank you for your order.</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Invoice - Thank you for your order.</xsl:text>
+        <xsl:text>Thank you for your order</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2090,7 +2090,7 @@
         <xsl:text>Invoice Date</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Invoice Date</xsl:text>
+        <xsl:text>Order Date</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2101,7 +2101,7 @@
         <xsl:text>Invoice Reference</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Invoice Reference</xsl:text>
+        <xsl:text>Order Reference</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2839,7 +2839,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>          
-          Close Invoice and Return to Site</xsl:text>
+          Back to Home</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -3008,7 +3008,7 @@
         <xsl:text>Ye Arrh back to Port</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Back to Home Page</xsl:text>
+        <xsl:text>Back to Home</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

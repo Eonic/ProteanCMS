@@ -50,11 +50,13 @@
 					<xsl:apply-templates select="." mode="header-menu-right">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>
 						<xsl:with-param name="social-links">true</xsl:with-param>
+						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="." mode="header-menu-below">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>
+						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -72,38 +74,45 @@
 			<div class="container-wrapper {$detail-heading} {$nav-padding} {$home-class}">
 				<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
 					<xsl:attribute name="class">
-						container-wrapper fixed-nav-content <xsl:value-of select="$nav-padding"/> <xsl:value-of select="$detail-heading"/> <xsl:value-of select="$home-class"/>
+						<xsl:text>container-wrapper fixed-nav-content </xsl:text>
+						<xsl:value-of select="$nav-padding"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="$detail-heading"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="$home-class"/>
 					</xsl:attribute>
 				</xsl:if>
 				<div id="mainLayout" class="fullwidth activateAppearAnimation">
-					<div id="content" class="sr-only">&#160;</div>
+					<div id="content" class="visually-hidden">&#160;</div>
 					<xsl:apply-templates select="." mode="mainLayout">
-						<xsl:with-param name="containerClass" select="'container'"/>
+						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</div>
 			</div>
 		</div>
-		<xsl:apply-templates select="." mode="footer1" />
-    <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginTitle" aria-hidden="true">
-      <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="LoginTitle">Log in</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
-          </div>
-          <div class="modal-body">
-            <div id="Login">
-              <xsl:apply-templates select="/Page" mode="addModule">
-                <xsl:with-param name="text">Add Module</xsl:with-param>
-                <xsl:with-param name="position">Login</xsl:with-param>
-              </xsl:apply-templates>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+		<xsl:apply-templates select="." mode="footer1">
+			<xsl:with-param name="containerClass" select="$container"/>
+		</xsl:apply-templates>
+		<div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginTitle" aria-hidden="true">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="LoginTitle">Log in</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+					</div>
+					<div class="modal-body">
+						<div id="Login">
+							<xsl:apply-templates select="/Page" mode="addModule">
+								<xsl:with-param name="text">Add Module</xsl:with-param>
+								<xsl:with-param name="position">Login</xsl:with-param>
+							</xsl:apply-templates>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-  </xsl:template>
+	</xsl:template>
 
 
 </xsl:stylesheet>

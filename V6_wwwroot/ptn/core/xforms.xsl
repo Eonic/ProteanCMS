@@ -878,19 +878,19 @@
           <xsl:value-of select="@data-pleasewaitdetail"/>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="not(contains($class,'icon-right'))">
+      <!--<xsl:if test="not(contains($class,'icon-right'))">
         <i class="fa {$icon} fa-white">
           <xsl:text> </xsl:text>
         </i>
         <xsl:text> </xsl:text>
-      </xsl:if>
+      </xsl:if>-->
       <xsl:apply-templates select="label" mode="submitText"/>
-      <xsl:if test="contains($class,'icon-right')">
+      <!--<xsl:if test="contains($class,'icon-right')">
         <xsl:text> </xsl:text>
         <i class="fa {$icon} fa-white">
           <xsl:text> </xsl:text>
         </i>
-      </xsl:if>
+      </xsl:if>-->
     </button>
   </xsl:template>
 

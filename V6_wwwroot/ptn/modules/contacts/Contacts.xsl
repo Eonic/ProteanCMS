@@ -70,6 +70,7 @@
 							<a href="{$parentURL}" title="View more details on {GivenName/node()} {Surname/node()}" class="list-image-link">
 								<xsl:apply-templates select="." mode="displayThumbnail">
 									<xsl:with-param name="crop" select="$cropSetting" />
+									<xsl:with-param name="no-strecth" select="false()" />
 									<xsl:with-param name="class">list-image</xsl:with-param>
 								</xsl:apply-templates>
 							</a>

@@ -4330,7 +4330,7 @@
 
 		<div class="morelink">
 			<span>
-				<a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-primary">
+				<a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-custom">
 					<xsl:if test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 					</xsl:if>
@@ -4649,7 +4649,7 @@
 		<td>
 			<a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::user/@id}">
 				<span class="btn btn-primary btn-xs">
-					<i class="fa fa-user fa-white">
+					<i class="fa fa-user">
 						<xsl:text> </xsl:text>
 					</i>
 				</span>
