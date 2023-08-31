@@ -24,7 +24,7 @@
 		<xsl:param name="myName"/>
 		<xsl:param name="iconSet"/>
 		<div class="socialLinks clearfix iconset-{$iconSet}">
-			<xsl:choose>
+			<!--<xsl:choose>
 				<xsl:when test="@uploadSprite!=''">
 					<xsl:if test="@facebookURL!=''">
 						<a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb" style="background-image:url({@uploadSprite})" class="social-sprite">
@@ -265,7 +265,8 @@
 						</a>
 					</xsl:if>
 				</xsl:when>
-				<xsl:when test="$iconSet='plain'">
+
+				<xsl:otherwise>
 					<xsl:if test="@facebookURL!=''">
 						<a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
 							<i class="fab fa-facebook">
@@ -329,8 +330,8 @@
 							</i>
 						</a>
 					</xsl:if>
-				</xsl:when>
-				<xsl:otherwise>
+				</xsl:otherwise>-->
+				<!--<xsl:otherwise>
 					<xsl:if test="@facebookURL!=''">
 						<a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
 							<img src="/ptn/core/icons/social/{$iconSet}/facebook.png" alt="{$myName} on Facebook" title="Follow {$myName} on Facebook" />
@@ -366,8 +367,71 @@
 							<img src="/ptn/core/icons/social/{$iconSet}/Instagram.png" alt="{$myName} on Instagram" title="Follow {$myName} on Instagram" />
 						</a>
 					</xsl:if>
-				</xsl:otherwise>
-			</xsl:choose>
+				</xsl:otherwise>--><!--
+			</xsl:choose>-->
+			<xsl:if test="@facebookURL!=''">
+				<a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
+					<i class="fab fa-facebook">
+						<span class="visually-hidden">
+							<xsl:value-of select="$myName"/> on Facebook
+						</span>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@twitterURL!=''">
+				<a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
+					<i class="fab fa-twitter">
+						<span class="visually-hidden">
+							<xsl:value-of select="$myName"/> on Twitter
+						</span>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@linkedInURL!=''">
+				<a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
+					<i class="fab fa-linkedin">
+						<span class="visually-hidden">
+							<xsl:value-of select="$myName"/> on LinkedIn
+						</span>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@googlePlusURL!=''">
+				<a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
+					<i class="fab fa-google-plus">
+						<span class="visually-hidden">
+							<xsl:value-of select="$myName"/> on Google+
+						</span>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@pinterestURL!=''">
+				<a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
+					<i class="fab fa-pinterest">
+						<span class="visually-hidden">
+							<xsl:value-of select="$myName"/> on Pintrest
+						</span>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@youtubeURL!=''">
+				<a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
+					<i class="fab fa-youtube ">
+						<span class="visually-hidden">
+							<xsl:value-of select="$myName"/> on Youtube
+						</span>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@instagramURL!=''">
+				<a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" class="social-id-ig">
+					<i class="fab fa-instagram">
+						<span class="visually-hidden">
+							<xsl:value-of select="$myName"/> on Instagram
+						</span>
+					</i>
+				</a>
+			</xsl:if>
 		</div>
 	</xsl:template>
 	<!-- module -->
@@ -375,7 +439,7 @@
 		<xsl:param name="myName"/>
 		<xsl:param name="iconSet"/>
 		<div class="socialLinks clearfix iconset-{$iconSet}">
-			<xsl:choose>
+			<!--<xsl:choose>
 				<xsl:when test="@uploadSprite!=''">
 					<xsl:if test="@facebookURL!=''">
 						<a href="{@facebookURL}" title="{$myName} on Facebook" style="background-image:url({@uploadSprite})" class="social-id-fb social-sprite">
@@ -715,7 +779,63 @@
 						</a>
 					</xsl:if>
 				</xsl:otherwise>
-			</xsl:choose>
+			</xsl:choose>-->
+			<xsl:if test="@facebookURL!=''">
+				<a href="{@facebookURL}" title="{$myName} on Facebook" class="social-id-fb">
+					<i class="fab fa-facebook-f">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@twitterURL!=''">
+				<a href="{@twitterURL}" title="{$myName} on Twitter" class="social-id-tw">
+					<i class="fab fa-twitter">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@linkedInURL!=''">
+				<a href="{@linkedInURL}" title="{$myName} on LinkedIn" class="social-id-li">
+					<i class="fab fa-linkedin">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@googlePlusURL!=''">
+				<a href="{@googlePlusURL}" title="{$myName} on Google+" class="social-id-gp">
+					<i class="fab fa-google-plus">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@pinterestURL!=''">
+				<a href="{@pinterestURL}" title="{$myName} on Pinterest" class="social-id-pi">
+					<i class="fab fa-pinterest">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@youtubeURL!=''">
+				<a href="{@youtubeURL}" title="{$myName} on Youtube" class="social-id-yt">
+					<i class="fab fa-youtube ">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@instagramURL!=''">
+				<a href="{@instagramURL}" title="{$myName} on Instagram" class="social-id-ig">
+					<i class="fab fa-instagram">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
+			<xsl:if test="@spotifyURL!=''">
+				<a href="{@spotifyURL}" title="{$myName} on Spotify" class="social-id-isp">
+					<i class="fab fa-spotify">
+						<xsl:text> </xsl:text>
+					</i>
+				</a>
+			</xsl:if>
 		</div>
 	</xsl:template>
 
