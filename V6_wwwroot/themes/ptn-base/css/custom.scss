@@ -7,7 +7,9 @@ body {
     flex-direction: column;
     height: 100%;
 }
-
+.container{
+    @extend .container-fluid;
+}
 #mainTable {
     flex-shrink: 0;
 }
@@ -17,6 +19,7 @@ a {
     text-underline-offset: 0.2rem;
     text-decoration-thickness: 0px;
 }
+
 .sitemap a {
     text-decoration-thickness: 0px;
 
@@ -24,14 +27,17 @@ a {
         color: $visited;
     }
 }
+
 h1, h2, h3 {
     a {
         text-underline-offset: 0.4rem;
     }
 }
-.center-block{
-    text-align:center;
+
+.center-block {
+    text-align: center;
 }
+
 .FormattedText {
     .table-responsive {
         margin-bottom: 1rem;
@@ -177,7 +183,7 @@ section.bg-video-wrapper {
     padding-bottom: 0;
 
     > .container {
-     //   padding-top: $section-padding;
+        //   padding-top: $section-padding;
     }
 }
 
@@ -263,6 +269,21 @@ section.bg-video-wrapper {
     }
 }
 
+@mixin listItem-spacing($spacing-v: $grid-gutter-height,$spacing-h: $grid-gutter-width) {
+    .row {
+        margin-right: calc(-.5 * $spacing-h);
+        margin-left: calc(-.5 * $spacing-h);
+
+        .listItem {
+            padding-left: ($spacing-h/2);
+            padding-right: ($spacing-h/2);
+            margin-bottom: $spacing-v;
+        }
+    }
+}
+div[class$="List"].module {
+    @include listItem-spacing;
+}
 @mixin testimonial1 {
     @include unboxed-listItem;
     position: relative;
@@ -415,9 +436,11 @@ section.bg-video-wrapper {
     display: block;
     margin-bottom: 0.5rem;
 }
-.item-label{
-    font-weight:600;
+
+.item-label {
+    font-weight: 600;
 }
+
 .linked-listItem {
     position: relative;
 }
@@ -670,11 +693,13 @@ dd {
         }
     }
 }
+
 .newsarticle {
     .relatedcontent {
         padding-top: 0rem;
     }
 }
+
 .extract {
     font-size: 1.2rem;
     position: relative;
@@ -710,8 +735,9 @@ dd {
         order: 1;
     }
 }
-.product-facts{
-    font-size:0.8rem;
+
+.product-facts {
+    font-size: 0.8rem;
 }
 
 .cartButtons {

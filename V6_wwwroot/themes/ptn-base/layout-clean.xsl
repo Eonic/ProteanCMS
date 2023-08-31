@@ -50,11 +50,13 @@
 					<xsl:apply-templates select="." mode="header-menu-right">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>
 						<xsl:with-param name="social-links">true</xsl:with-param>
+						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="." mode="header-menu-below">
 						<xsl:with-param name="nav-collapse">false</xsl:with-param>
+						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -81,14 +83,16 @@
 					</xsl:attribute>
 				</xsl:if>
 				<div id="mainLayout" class="fullwidth activateAppearAnimation">
-					<div id="content" class="sr-only">&#160;</div>
+					<div id="content" class="visually-hidden">&#160;</div>
 					<xsl:apply-templates select="." mode="mainLayout">
-						<xsl:with-param name="containerClass" select="'container'"/>
+						<xsl:with-param name="containerClass" select="$container"/>
 					</xsl:apply-templates>
 				</div>
 			</div>
 		</div>
-		<xsl:apply-templates select="." mode="footer1" />
+		<xsl:apply-templates select="." mode="footer1">
+			<xsl:with-param name="containerClass" select="$container"/>
+		</xsl:apply-templates>
 		<div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginTitle" aria-hidden="true">
 			<div class="modal-dialog modal-md" role="document">
 				<div class="modal-content">
