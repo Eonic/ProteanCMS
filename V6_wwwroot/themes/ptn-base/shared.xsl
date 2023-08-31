@@ -33,6 +33,7 @@
 	<xsl:variable name="thWidth">500</xsl:variable>
 	<xsl:variable name="thHeight">350</xsl:variable>
 	<xsl:variable name="container">container</xsl:variable>
+	<xsl:variable name="siteAlert">false</xsl:variable>
 
 	<!-- forced on, needs fixing-->
 	<xsl:variable name="membership">
@@ -437,24 +438,33 @@
 								</ul>
 							</div>
 						</xsl:if>
-						<div id="sitefooter">
+						<div id="main-footer">
 							<xsl:apply-templates select="/Page" mode="addModule">
-								<xsl:with-param name="text">Add Module</xsl:with-param>
-								<xsl:with-param name="position">sitefooter</xsl:with-param>
+								<xsl:with-param name="position">main-footer</xsl:with-param>
 								<xsl:with-param name="class">footer-main</xsl:with-param>
 							</xsl:apply-templates>
 						</div>
+						<!--<div id="sitefooter">
+							<xsl:apply-templates select="/Page" mode="addModule">
+								<xsl:with-param name="position">sitefooter</xsl:with-param>
+								<xsl:with-param name="class">footer-main</xsl:with-param>
+							</xsl:apply-templates>
+						</div>-->
 					</div>
 				</div>
 				<div class="clearfix footer-utility">
 					<div class="{$containerClass}">
 						<div class="clearfix footer-utility-inner">
-							<div id="copyright">
+							<div id="footer-utility">
 								<xsl:apply-templates select="/Page" mode="addModule">
-									<xsl:with-param name="text">Copyright</xsl:with-param>
-									<xsl:with-param name="position">copyright</xsl:with-param>
+									<xsl:with-param name="position">footer-utility</xsl:with-param>
 								</xsl:apply-templates>
 							</div>
+							<!--<div id="copyright">
+								<xsl:apply-templates select="/Page" mode="addModule">
+									<xsl:with-param name="position">copyright</xsl:with-param>
+								</xsl:apply-templates>
+							</div>-->
 							<div class="credit">
 								<xsl:apply-templates select="/" mode="developerLink"/>
 							</div>

@@ -169,7 +169,7 @@
 		<xsl:param name="cart-style" />
 		<xsl:param name="social-links" />
 		<xsl:param name="containerClass" />
-		<header class="navbar navbar-expand-lg navbar-light bg-light">
+		<header class="navbar navbar-expand-lg">
 			<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
 				<xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top</xsl:attribute>
 			</xsl:if>

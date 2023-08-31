@@ -34,7 +34,7 @@
 			<!--################## HEADER ################## -->
 
 			<a class="skip" href="#content">Skip to main content</a>
-			<xsl:if test="$adminMode or /Page/Contents/Content[@position='site-alert']">
+			<xsl:if test="($adminMode or /Page/Contents/Content[@position='site-alert']) and $siteAlert='true'">
 				<div id="site-alert" class="clearfix">
 					<xsl:apply-templates select="/Page" mode="addModule">
 						<xsl:with-param name="text">Add Module</xsl:with-param>
@@ -62,7 +62,7 @@
 			</xsl:choose>
 			<xsl:if test="$page/ContentDetail and $themeBreadcrumb='true' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 				<section class="wrapper detail-breadcrumb-wrapper">
-					<div class="container">
+					<div class="{$container}">
 						<ol class="breadcrumb detail-breadcrumb">
 							<xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
 						</ol>
