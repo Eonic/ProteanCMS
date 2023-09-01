@@ -34,6 +34,7 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
     <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
+    <_MigrateToProjectGuid>2bc0d1d1-6762-4d89-85dc-171cf3aeb636</_MigrateToProjectGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

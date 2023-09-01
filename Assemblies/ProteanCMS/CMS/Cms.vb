@@ -3780,12 +3780,13 @@ Public Class Cms
                     nAuthUserId = mnUserId
                     nAuthGroup = gnAuthUsers
                 End If
-
-                If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
-                    cFilterTarget = oContentsNode.Attributes("contentType").Value
-                End If
-                If (oContentsNode.Attributes("filterTarget") IsNot Nothing) Then
-                    cFilterTarget = oContentsNode.Attributes("filterTarget").Value
+                If Not oContentsNode Is Nothing Then
+                    If (oContentsNode.Attributes("contentType") IsNot Nothing) Then
+                        cFilterTarget = oContentsNode.Attributes("contentType").Value
+                    End If
+                    If (oContentsNode.Attributes("filterTarget") IsNot Nothing) Then
+                        cFilterTarget = oContentsNode.Attributes("filterTarget").Value
+                    End If
                 End If
 
                 ' Check the page is not denied
@@ -3793,15 +3794,15 @@ Public Class Cms
 
 
 
-                ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
-                ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"
-                ' add "and" if clause before
-                If sPrimarySql <> "" Then sMembershipSql = " and " & sMembershipSql
-            End If
+                    ' Commenting out the folowing as it wouldn't return items that were Inherited view etc.
+                    ' sMembershipSql = " (dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'OPEN' or dbo.fxn_checkPermission(CL.nStructId," & mnUserId & "," & gnAuthUsers & ") = 'VIEW')"
+                    ' add "and" if clause before
+                    If sPrimarySql <> "" Then sMembershipSql = " and " & sMembershipSql
+                End If
 
 
 
-            If ignoreActiveAndDate = False Then
+                If ignoreActiveAndDate = False Then
                 'show only live content that is within date, unless we are in admin mode.
                 sFilterSql = GetStandardFilterSQLForContent((sPrimarySql <> "" Or sMembershipSql <> ""))
             End If
@@ -3821,18 +3822,21 @@ Public Class Cms
 
 
             sSql = sSql & " where (" & combinedWhereSQL & ")"
+            If Not oContentsNode Is Nothing Then
+                ' Quick call to get the total number of records
+                Dim cSQL As String = "SET ARITHABORT ON "
+                cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
+                cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
+                cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
+                '' Add the extra joins if specified.
+                If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then cSQL &= " " & cAdditionalJoins & " "
+                cSQL = cSQL & " where (" & combinedWhereSQL & ")"
 
-            ' Quick call to get the total number of records
-            Dim cSQL As String = "SET ARITHABORT ON "
-            cSQL &= "Select COUNT(distinct c.nContentKey) FROM tblContent AS c INNER JOIN "
-            cSQL &= "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN "
-            cSQL &= "tblContentLocation AS CL ON c.nContentKey = CL.nContentId "
-            '' Add the extra joins if specified.
-            If Not (String.IsNullOrEmpty(cAdditionalJoins)) Then cSQL &= " " & cAdditionalJoins & " "
-            cSQL = cSQL & " where (" & combinedWhereSQL & ")"
+                Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
 
-            Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
-            oContentsNode.SetAttribute("resultCount", nTotal)
+                oContentsNode.SetAttribute("resultCount", nTotal)
+            End If
+
 
             If cOrderBy <> "" Then
                 sSql &= " ORDER BY " & cOrderBy
