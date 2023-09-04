@@ -123,9 +123,9 @@ Namespace Integration.Directory
                 jsonResponse = userInfo.ReadToEnd()
 
                 ' Deserialize and convert the JSON object to the Facebook.User object type
-                Dim sr As New JavaScriptSerializer()
+
                 Dim jsondata As String = jsonResponse
-                Dim converted As Facebook.User = sr.Deserialize(Of Facebook.User)(jsondata)
+                Dim converted As Facebook.User = JsonConvert.DeserializeObject(jsondata)
 
                 ' Write the user data to a List
                 Dim currentUser As New List(Of Facebook.User)()

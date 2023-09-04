@@ -15,6 +15,7 @@ Imports System.Text.RegularExpressions
 Imports System.Collections.Generic
 Imports Microsoft
 Imports Microsoft.ClearScript.Util
+Imports System.ComponentModel
 
 
 Public Class Cms
@@ -1566,7 +1567,7 @@ Public Class Cms
 
                                             '    moResponse.Buffer = True
                                             'moResponse.Expires = 0
-                                            goServer.ScriptTimeout = 10000
+                                            'goServer.ScriptTimeout = 10000
 
                                             Dim strFileSize As String = ofileStream.Length
                                             Dim Buffer() As Byte = ofileStream.ToArray
@@ -5815,7 +5816,7 @@ Public Class Cms
                             If moConfig("PageURLFormat") = "hyphens" Then
                                 cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-")
                             Else
-                                cPageName =HttpUtility.UrlEncode(oDescendant.GetAttribute("name"))
+                                cPageName = HttpUtility.UrlEncode(oDescendant.GetAttribute("name"))
                             End If
                             If Not foldersExcludedFromPaths.Contains(LCase(cPageName)) Then
                                 sUrl = sUrl & "/" & cPageName
@@ -5933,7 +5934,7 @@ Public Class Cms
                                         If moConfig("PageURLFormat") = "hyphens" Then
                                             cPageName = oRe.Replace(parPvElmt.GetAttribute("name"), "-")
                                         Else
-                                            cPageName =HttpUtility.UrlEncode(parPvElmt.GetAttribute("name"))
+                                            cPageName = HttpUtility.UrlEncode(parPvElmt.GetAttribute("name"))
                                         End If
                                         ' I know this means we get the last one but we should only have one anyway.
                                     Next
@@ -5941,7 +5942,7 @@ Public Class Cms
                                         If moConfig("PageURLFormat") = "hyphens" Then
                                             cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-")
                                         Else
-                                            cPageName =HttpUtility.UrlEncode(oDescendant.GetAttribute("name"))
+                                            cPageName = HttpUtility.UrlEncode(oDescendant.GetAttribute("name"))
                                         End If
                                     End If
                                     If Not foldersExcludedFromPaths.Contains(LCase(cPageName)) Then
@@ -6692,7 +6693,7 @@ Public Class Cms
             End If
             If ContentName <> "" Then
                 ContentName = ContentName.Replace(" ", "-")
-                ContentName =HttpUtility.UrlEncode(ContentName)
+                ContentName = HttpUtility.UrlEncode(ContentName)
                 ContentURL = ContentURL & ContentName
             End If
 
@@ -7248,7 +7249,7 @@ Public Class Cms
                         If IsNumeric(oDR("parId")) And Not oDR("parId").Contains(",") Then
                             ochkStr = moDbHelper.checkPagePermission(oDR("parId"))
                             If IsNumeric(ochkStr) Then
-                                If CInt(ochkStr) = oDR("parId") And Not cDoneIds.Contains("," & oDR("id") & ",") Then
+                                If CInt(ochkStr) = oDR("parId") And Not cDoneIds.Contains("," & oDR("id") & ",", StringComparison.CurrentCulture) Then
                                     oDS.Tables("Content").ImportRow(oDR)
                                     cDoneIds &= oDR("id") & ","
                                 End If
@@ -7808,7 +7809,7 @@ Public Class Cms
         Try
             'moResponse.Buffer = True
             'moResponse.Expires = 0
-            goServer.ScriptTimeout = 10000
+            'goServer.ScriptTimeout = 10000
 
 
             If Regex.IsMatch(CStr(moRequest("docId") & ""), "^[0-9,]*$") And Not (moRequest("docId") Is Nothing) Then
@@ -8183,7 +8184,7 @@ Public Class Cms
 
                 'moResponse.Buffer = True
                 'moResponse.Expires = 0
-                goServer.ScriptTimeout = 10000
+                'goServer.ScriptTimeout = 10000
 
                 strFileSize = ofileStream.Length
 
@@ -9042,19 +9043,19 @@ Public Class Cms
                     PerfMon.Log(mcModuleName, "Impersonation - End")
                 End If
 
-                If Alphaleonis.Win32.Filesystem.Directory.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & mcPageCacheFolder & filepath) Then
-                    If Not Alphaleonis.Win32.Filesystem.File.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath) Then
-                        PerfMon.Log(mcModuleName, "SavePage - start file write")
-                        Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
-                        PerfMon.Log(mcModuleName, "SavePage - end file write")
-                    Else
-                        cProcessInfo &= "<Error>File Locked: " & filepath & " - " & sError & "</Error>" & vbCrLf
-                        sError = cProcessInfo
-                    End If
-                Else
-                    cProcessInfo &= "<Error>Directory Not Exists: " & filepath & " - " & sError & "</Error>" & vbCrLf
-                    sError = cProcessInfo
-                End If
+                'If Alphaleonis.Win32.Filesystem.Directory.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & mcPageCacheFolder & filepath) Then
+                '    If Not Alphaleonis.Win32.Filesystem.File.Exists("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath) Then
+                '        PerfMon.Log(mcModuleName, "SavePage - start file write")
+                '        Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+                '        PerfMon.Log(mcModuleName, "SavePage - end file write")
+                '    Else
+                '        cProcessInfo &= "<Error>File Locked: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                '        sError = cProcessInfo
+                '    End If
+                'Else
+                '    cProcessInfo &= "<Error>Directory Not Exists: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                '    sError = cProcessInfo
+                'End If
 
                 If impersonationMode Then
                     oImp.UndoImpersonation()

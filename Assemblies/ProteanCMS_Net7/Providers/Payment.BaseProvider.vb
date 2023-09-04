@@ -243,11 +243,11 @@ Namespace Providers
                             'Case "ePDQ"
                             '    ccPaymentXform = oEwProv.PayePDQ(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails")
                             Case "SecPay", "PayPoint" ' Paypoint.Net
-                                ccPaymentXform = oEwProv.paySecPay(oOrder, oCart.mcPagePath & returnCmd, oCart.mcPaymentProfile)
+                            '    ccPaymentXform = oEwProv.paySecPay(oOrder, oCart.mcPagePath & returnCmd, oCart.mcPaymentProfile)
                             Case "PremiumCredit"
-                                ccPaymentXform = oEwProv.payPremiumCredit(oOrder, oCart.mcPagePath & returnCmd)
+                         '       ccPaymentXform = oEwProv.payPremiumCredit(oOrder, oCart.mcPagePath & returnCmd)
                             Case "SecPayUkash"
-                                ccPaymentXform = oEwProv.paySecPayUkash(oOrder, oCart.mcPagePath & returnCmd)
+                            '    ccPaymentXform = oEwProv.paySecPayUkash(oOrder, oCart.mcPagePath & returnCmd)
                             Case "WorldPay"
                                 ccPaymentXform = oEwProv.payWorldPay(oOrder, oCart.mcPagePath & returnCmd, oCart.myWeb.mnPageId)
                             Case "NetBanx"
@@ -277,7 +277,7 @@ Namespace Providers
                             Case "AuthorizeNet"
                                 ccPaymentXform = oEwProv.payAuthorizeNet(oOrder, oCart.mcPagePath & returnCmd)
                             Case "DirectDebitSecureEmail"
-                                ccPaymentXform = oEwProv.payDirectDebitSecureEmail(oOrder, oCart.mcPagePath & returnCmd)
+                               ' ccPaymentXform = oEwProv.payDirectDebitSecureEmail(oOrder, oCart.mcPagePath & returnCmd)
 
                             Case "Cheque"
                                 ' to be done

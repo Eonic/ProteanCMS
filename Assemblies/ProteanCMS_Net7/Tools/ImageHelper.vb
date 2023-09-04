@@ -84,22 +84,22 @@ Public Class ImageHelper
 
     Public Sub GeneratePDFThumbNail(PDFThumbNail As PDFThumbNail)
         Try
-            Dim cCheckServerPath As String = PDFThumbNail.newImageFilepath.Substring(0, PDFThumbNail.newImageFilepath.LastIndexOf("/") + 1)
-            cCheckServerPath = goServer.MapPath(cCheckServerPath)
-            If Directory.Exists(cCheckServerPath) = False Then
-                Directory.CreateDirectory(cCheckServerPath)
-            End If
+            'Dim cCheckServerPath As String = PDFThumbNail.newImageFilepath.Substring(0, PDFThumbNail.newImageFilepath.LastIndexOf("/") + 1)
+            'cCheckServerPath = goServer.MapPath(cCheckServerPath)
+            'If Directory.Exists(cCheckServerPath) = False Then
+            '    Directory.CreateDirectory(cCheckServerPath)
+            'End If
 
-            Dim LayerBuilder As SoundInTheory.DynamicImage.Fluent.PdfLayerBuilder = New SoundInTheory.DynamicImage.Fluent.PdfLayerBuilder().SourceFileName(PDFThumbNail.goServer.MapPath(PDFThumbNail.FilePath)).PageNumber(1).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(500)) _
-                                                                                .WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(PDFThumbNail.maxWidth)) _
-                                                                                .WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Border.Width(1).Fill(SoundInTheory.DynamicImage.Colors.Black))
+            'Dim LayerBuilder As SoundInTheory.DynamicImage.Fluent.PdfLayerBuilder = New SoundInTheory.DynamicImage.Fluent.PdfLayerBuilder().SourceFileName(PDFThumbNail.goServer.MapPath(PDFThumbNail.FilePath)).PageNumber(1).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(500)) _
+            '                                                                    .WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(PDFThumbNail.maxWidth)) _
+            '                                                                    .WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Border.Width(1).Fill(SoundInTheory.DynamicImage.Colors.Black))
 
-            Dim imgComp As SoundInTheory.DynamicImage.Fluent.CompositionBuilder = New SoundInTheory.DynamicImage.Fluent.CompositionBuilder() _
-                                                                                .WithLayer(LayerBuilder)
-            imgComp.ImageFormat(SoundInTheory.DynamicImage.DynamicImageFormat.Png)
-            imgComp.SaveTo(PDFThumbNail.goServer.MapPath(PDFThumbNail.newImageFilepath))
-            imgComp = Nothing
-            LayerBuilder = Nothing
+            'Dim imgComp As SoundInTheory.DynamicImage.Fluent.CompositionBuilder = New SoundInTheory.DynamicImage.Fluent.CompositionBuilder() _
+            '                                                                    .WithLayer(LayerBuilder)
+            'imgComp.ImageFormat(SoundInTheory.DynamicImage.DynamicImageFormat.Png)
+            'imgComp.SaveTo(PDFThumbNail.goServer.MapPath(PDFThumbNail.newImageFilepath))
+            'imgComp = Nothing
+            'LayerBuilder = Nothing
 
         Catch ex As Exception
             Err.Raise(8032, "PDFThumbNail", ex.Message)

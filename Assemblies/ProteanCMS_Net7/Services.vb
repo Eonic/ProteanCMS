@@ -217,7 +217,7 @@ Public Class Services
 
     End Function
 
-    <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")>
+    ' <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")>
     Public Function emailerWithAttachment(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal cAttachmentFilePath As String, ByVal bDeleteAfterSend As Boolean) As Object
 
         Dim sMessage As String
@@ -323,7 +323,7 @@ Public Class Services
 
     End Function
 
-    <WebMethod()>
+    '  <WebMethod()>
     Public Function LuceneIndex() As XmlDocument
         Try
             CreateResponse()
@@ -753,10 +753,10 @@ Public Class Services
 
             'Start LocalOrCommonBin
             oElmt = oRXML.CreateElement("LocalOrCommonBin")
-            If Dir(Server.MapPath("../default.ashx")) <> "" Then
+            If Dir(moServer.MapPath("../default.ashx")) <> "" Then
                 oElmt.InnerText = "Local"
             Else
-                If Dir(Server.MapPath("../ewcommon/default.ashx")) <> "" Then
+                If Dir(moServer.MapPath("../ewcommon/default.ashx")) <> "" Then
                     oElmt.InnerText = "Common"
                 Else
                     oElmt.InnerText = "Error"
@@ -788,7 +788,7 @@ Public Class Services
             'Start LatestDBVersion
             oElmt = oRXML.CreateElement("LatestDBVersion")
             Dim LatestDBVersion As XmlTextReader
-            LatestDBVersion = New XmlTextReader(Server.MapPath("../ewcommon/sqlUpdate/DatabaseUpgrade.xml"))
+            LatestDBVersion = New XmlTextReader(moServer.MapPath("../ewcommon/sqlUpdate/DatabaseUpgrade.xml"))
             LatestDBVersion.WhitespaceHandling = WhitespaceHandling.None
             'Disable whitespace so that it doesn't have to read over whitespaces
             LatestDBVersion.Read()
@@ -879,7 +879,7 @@ Public Class Services
         myWeb.Close()
     End Function
 
-    <WebMethod(Description:="check page permission")>
+    ' <WebMethod(Description:="check page permission")>
     Public Function checkPagePermission(parId As Integer) As Integer
         myWeb = New Protean.Cms
         myWeb.Open()
@@ -890,7 +890,7 @@ Public Class Services
         myWeb.Close()
     End Function
 
-    <WebMethod(Description:="return admin mode")>
+    '  <WebMethod(Description:="return admin mode")>
     Public Function returnIsAdminMode() As Boolean
         myWeb = New Protean.Cms
         myWeb.Open()
@@ -901,7 +901,7 @@ Public Class Services
         myWeb.Close()
     End Function
 
-    <WebMethod(Description:="create Element")>
+    '   <WebMethod(Description:="create Element")>
     Public Function createElement(oRoot As XmlElement) As XmlElement
         myWeb = New Protean.Cms
         myWeb.Open()

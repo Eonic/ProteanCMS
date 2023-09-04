@@ -69,7 +69,7 @@ Public Class Config
                 oConfigDoc.LoadXml(oCgfSect.SectionInformation.GetRawXml)
                 Dim oelmt As XmlElement
                 oelmt = oConfigDoc.DocumentElement.SelectSingleNode("add[@key='" & name & "']")
-                If Not oelmt Is Nothing Then
+                If oelmt IsNot Nothing Then
                     oelmt.SetAttribute("value", value)
                 Else
                     oelmt = oConfigDoc.CreateElement("add")
@@ -178,7 +178,7 @@ Public Class XmlSerializerSectionHandler
         Catch ex As Exception
             Dim s As String = ex.Message
             Dim innerException As Exception = ex.InnerException
-            Do While Not innerException Is Nothing
+            Do While innerException IsNot Nothing
                 s &= " " & innerException.Message
                 innerException = innerException.InnerException
             Loop

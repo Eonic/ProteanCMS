@@ -3614,7 +3614,7 @@ Partial Public Class Cms
                     ppBinding.SendTimeout = New System.TimeSpan(0, 2, 0)
                     ppBinding.AllowCookies = False
                     ppBinding.BypassProxyOnLocal = False
-                    ppBinding.HostNameComparisonMode = ServiceModel.HostNameComparisonMode.StrongWildcard
+                    '   ppBinding.HostNameComparisonMode = ServiceModel.HostNameComparisonMode.StrongWildcard
                     ppBinding.MaxBufferSize = 65536
                     ppBinding.MaxBufferPoolSize = 524288
                     ppBinding.MaxReceivedMessageSize = 65536
@@ -4924,7 +4924,7 @@ Partial Public Class Cms
                         cRequest = cRequest & "VendorTXCode=" & HttpUtility.UrlEncode(CStr(mnCartId)) & "&"
                         cRequest = cRequest & "Amount=" & HttpUtility.UrlEncode(CStr(FullMoneyString(mnPaymentAmount))) & "&"
                         cRequest = cRequest & "Currency=" & HttpUtility.UrlEncode(oDictOpt("currency")) & "&"
-                        cRequest = cRequest & "Description=" & Left(goServer.UrlEncode(mcPaymentOrderDescription), 100) & "&"
+                        cRequest = cRequest & "Description=" & Left(HttpUtility.UrlEncode(mcPaymentOrderDescription), 100) & "&"
                         cRequest = cRequest & "RelatedVPSTxId=" & HttpUtility.UrlEncode(cRelatedVPSTxId) & "&"
                         cRequest = cRequest & "RelatedVendorTxCode=" & HttpUtility.UrlEncode(cRelatedVendorTxCode) & "&"
                         cRequest = cRequest & "RelatedSecurityKey=" & HttpUtility.UrlEncode(cRelatedSecurityKey) & "&"

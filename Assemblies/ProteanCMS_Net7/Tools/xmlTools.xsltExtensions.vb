@@ -2027,150 +2027,150 @@ Partial Public Module xmlTools
 
 
                 Dim bReset As Boolean = False
-                If myWeb Is Nothing Or gbDebug Then
-                    'likely to be in error condition
-                    sReturnString = CommaSeparatedFilenames.Replace("~", "")
-                Else
-                    'Dim fsh As New Protean.fsHelper(myWeb.moCtx)
-                    If Not myWeb.moRequest("rebundle") Is Nothing Then
-                        ''code for deleting script.js file from the bundle folders.
+                ' If myWeb Is Nothing Or gbDebug Then
+                'likely to be in error condition
+                sReturnString = CommaSeparatedFilenames.Replace("~", "")
+                '  Else
+                ''Dim fsh As New Protean.fsHelper(myWeb.moCtx)
+                'If Not myWeb.moRequest("rebundle") Is Nothing Then
+                '        ''code for deleting script.js file from the bundle folders.
 
 
-                        If myWeb.mbAdminMode Then
-                            bReset = True
-                        End If
-                    End If
-                        Dim bAppVarExists As Boolean = False
-                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
-                        bAppVarExists = True
-                    End If
+                '        If myWeb.mbAdminMode Then
+                '            bReset = True
+                '        End If
+                '    End If
+                '        Dim bAppVarExists As Boolean = False
+                '    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing Then
+                '        bAppVarExists = True
+                '    End If
 
-                    If bAppVarExists = False Then
-                        'check if the file exists.
-                        If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js") Then
-                            'regenerate the application variable from the files in the folder
-                            'we do not want to recreate all js everytime the application pool is reset anymore.
-                            myWeb.moCtx.Application.Set(TargetPath, "/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js")
-                            bAppVarExists = True
-                        End If
-                    End If
+                '    If bAppVarExists = False Then
+                '        'check if the file exists.
+                '        If VirtualFileExists("/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js") Then
+                '            'regenerate the application variable from the files in the folder
+                '            'we do not want to recreate all js everytime the application pool is reset anymore.
+                '            myWeb.moCtx.Application.Set(TargetPath, "/" & myWeb.moConfig("ProjectPath") & "js" & TargetPath.Replace("~", "") & "/script.js")
+                '            bAppVarExists = True
+                '        End If
+                '    End If
 
-                    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing And bReset = False Then
+                '    If Not myWeb.moCtx.Application.Get(TargetPath) Is Nothing And bReset = False Then
 
-                        sReturnString = myWeb.moCtx.Application.Get(TargetPath)
+                '        sReturnString = myWeb.moCtx.Application.Get(TargetPath)
 
-                    Else
-
-
-
-                        Dim appPath As String = myWeb.moRequest.ApplicationPath
-                        If appPath.EndsWith("ewcommon") Then
-                            CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../")
-                        End If
-
-                        CommaSeparatedFilenames = CommaSeparatedFilenames.TrimEnd(CChar(","))
-
-                        Dim bundleFilePaths As String() = Split(CommaSeparatedFilenames, ",")
-                        'we build the file
-                        Dim nullBuilder As New NullBuilder()
-                        Dim scriptTransformer As New ScriptTransformer()
-                        Dim nullOrderer As New NullOrderer()
-                        ' TODO System.Web.Optimization.BundleCollection is not longer supported. For more details see https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-                        Dim Bundles As New Optimization.BundleCollection()
-                        Dim url As String
-                        Dim fileNameToSave As String = ""
-                        Dim cmd As String = ""
-                        Dim cntFile As Integer = 0
-
-
-                        For cntFile = 0 To bundleFilePaths.Length - 1
-                            url = Convert.ToString(bundleFilePaths(cntFile))
-
-
-                            If (url <> String.Empty And url.Contains("https")) Then
-                                fileNameToSave = url.Substring(url.LastIndexOf("/") + 1)
-                                If Not (fileNameToSave.Contains(".js")) Then
-                                    fileNameToSave = fileNameToSave + ".js"
-                                End If
-                                If Not (Directory.Exists(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/"))) Then
-                                    Directory.CreateDirectory(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/"))
-                                End If
-                                If Not (File.Exists(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/") + fileNameToSave)) Then
-
-                                    Using wc As New System.Net.WebClient()
-                                        Net.ServicePointManager.SecurityProtocol = Net.SecurityProtocolType.Tls12
-                                        wc.DownloadFile(url, goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/") + fileNameToSave)
-                                    End Using
-                                End If
-                                bundleFilePaths(cntFile) = "~/" & myWeb.moConfig("ProjectPath") & "js/external/" + fileNameToSave
-                            End If
-
-
-                        Next
-
-
-                        Dim CtxBase As New System.Web.HttpContextWrapper(myWeb.moCtx)
-                        Dim BundlesCtx As New Optimization.BundleContext(CtxBase, Bundles, "~/" & myWeb.moConfig("ProjectPath") & "js//")
-                        Dim jsBundle As New BundleTransformer.Core.Bundles.CustomScriptBundle(TargetPath)
-
-                        BundlesCtx.EnableInstrumentation = False
-
-                        jsBundle.Include(bundleFilePaths)
-
-                        jsBundle.Builder = nullBuilder
-                        jsBundle.Transforms.Add(scriptTransformer)
-
-                        jsBundle.Orderer = nullOrderer
-
-                        System.Web.Optimization.BundleTable.EnableOptimizations = True
-
-                        Bundles.Add(jsBundle)
-
-                        '  Dim instance As New CustomBundleResolver(Bundles, CtxBase)
-
-                        Dim scriptFile As String
-                        scriptFile = TargetPath & "/script.js"
-
-                        Dim fsh As New Protean.fsHelper(myWeb.moCtx)
-                        fsh.initialiseVariables(fsHelper.LibraryType.Scripts)
-
-                        Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
-                        Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
+                '    Else
 
 
 
+                '        Dim appPath As String = myWeb.moRequest.ApplicationPath
+                '        If appPath.EndsWith("ewcommon") Then
+                '            CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../")
+                '        End If
 
-                        scriptFile = fsh.SaveFile("script.js", TargetPath, info)
+                '        CommaSeparatedFilenames = CommaSeparatedFilenames.TrimEnd(CChar(","))
+
+                '        Dim bundleFilePaths As String() = Split(CommaSeparatedFilenames, ",")
+                '        'we build the file
+                '        Dim nullBuilder As New NullBuilder()
+                '        Dim scriptTransformer As New ScriptTransformer()
+                '        Dim nullOrderer As New NullOrderer()
+                '        ' TODO System.Web.Optimization.BundleCollection is not longer supported. For more details see https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+                '        Dim Bundles As New Optimization.BundleCollection()
+                '        Dim url As String
+                '        Dim fileNameToSave As String = ""
+                '        Dim cmd As String = ""
+                '        Dim cntFile As Integer = 0
 
 
-                        If scriptFile.StartsWith("ERROR: ") Then
-                            myWeb.bPageCache = False
-                        End If
+                '        For cntFile = 0 To bundleFilePaths.Length - 1
+                '            url = Convert.ToString(bundleFilePaths(cntFile))
 
-                        If scriptFile.StartsWith(TargetPath.TrimStart("~")) Then
-                            'file has been saved successfully.
-                            scriptFile = "/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile
-                            If VirtualFileExists(scriptFile) Then
-                                myWeb.moCtx.Application.Set(TargetPath, scriptFile)
-                            End If
-                        Else
-                            'we have a file save error we should try again next request.
-                            myWeb.bPageCache = False
-                        End If
 
-                        sReturnString = scriptFile
+                '            If (url <> String.Empty And url.Contains("https")) Then
+                '                fileNameToSave = url.Substring(url.LastIndexOf("/") + 1)
+                '                If Not (fileNameToSave.Contains(".js")) Then
+                '                    fileNameToSave = fileNameToSave + ".js"
+                '                End If
+                '                If Not (Directory.Exists(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/"))) Then
+                '                    Directory.CreateDirectory(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/"))
+                '                End If
+                '                If Not (File.Exists(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/") + fileNameToSave)) Then
 
-                        info = Nothing
-                        fsh = Nothing
-                        BundlesCtx = Nothing
-                        jsBundle = Nothing
-                        Bundles = Nothing
-                        nullBuilder = Nothing
-                        scriptTransformer = Nothing
-                        bundleFilePaths = Nothing
+                '                    Using wc As New System.Net.WebClient()
+                '                        Net.ServicePointManager.SecurityProtocol = Net.SecurityProtocolType.Tls12
+                '                        wc.DownloadFile(url, goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/") + fileNameToSave)
+                '                    End Using
+                '                End If
+                '                bundleFilePaths(cntFile) = "~/" & myWeb.moConfig("ProjectPath") & "js/external/" + fileNameToSave
+                '            End If
 
-                    End If
-                End If
+
+                '        Next
+
+
+                '        Dim CtxBase As New System.Web.HttpContextWrapper(myWeb.moCtx)
+                '        Dim BundlesCtx As New Optimization.BundleContext(CtxBase, Bundles, "~/" & myWeb.moConfig("ProjectPath") & "js//")
+                '        Dim jsBundle As New BundleTransformer.Core.Bundles.CustomScriptBundle(TargetPath)
+
+                '        BundlesCtx.EnableInstrumentation = False
+
+                '        jsBundle.Include(bundleFilePaths)
+
+                '        jsBundle.Builder = nullBuilder
+                '        jsBundle.Transforms.Add(scriptTransformer)
+
+                '        jsBundle.Orderer = nullOrderer
+
+                '        System.Web.Optimization.BundleTable.EnableOptimizations = True
+
+                '        Bundles.Add(jsBundle)
+
+                '        '  Dim instance As New CustomBundleResolver(Bundles, CtxBase)
+
+                '        Dim scriptFile As String
+                '        scriptFile = TargetPath & "/script.js"
+
+                '        Dim fsh As New Protean.fsHelper(myWeb.moCtx)
+                '        fsh.initialiseVariables(fsHelper.LibraryType.Scripts)
+
+                '        Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetPath).GenerateBundleResponse(BundlesCtx)
+                '        Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
+
+
+
+
+                '        scriptFile = fsh.SaveFile("script.js", TargetPath, info)
+
+
+                '        If scriptFile.StartsWith("ERROR: ") Then
+                '            myWeb.bPageCache = False
+                '        End If
+
+                '        If scriptFile.StartsWith(TargetPath.TrimStart("~")) Then
+                '            'file has been saved successfully.
+                '            scriptFile = "/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile
+                '            If VirtualFileExists(scriptFile) Then
+                '                myWeb.moCtx.Application.Set(TargetPath, scriptFile)
+                '            End If
+                '        Else
+                '            'we have a file save error we should try again next request.
+                '            myWeb.bPageCache = False
+                '        End If
+
+                '        sReturnString = scriptFile
+
+                '        info = Nothing
+                '        fsh = Nothing
+                '        BundlesCtx = Nothing
+                '        jsBundle = Nothing
+                '        Bundles = Nothing
+                '        nullBuilder = Nothing
+                '        scriptTransformer = Nothing
+                '        bundleFilePaths = Nothing
+
+                '    End If
+                'End If
 
                 Return sReturnString
                 sReturnString = Nothing

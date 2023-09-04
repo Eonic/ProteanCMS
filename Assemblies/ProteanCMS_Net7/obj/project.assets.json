@@ -15,15 +15,6 @@
           }
         }
       },
-      "Antlr/3.4.1.9004": {
-        "type": "package",
-        "compile": {
-          "lib/Antlr3.Runtime.dll": {}
-        },
-        "runtime": {
-          "lib/Antlr3.Runtime.dll": {}
-        }
-      },
       "Antlr4/4.6.6": {
         "type": "package",
         "dependencies": {
@@ -54,18 +45,6 @@
           }
         }
       },
-      "CoreCompat.System.Drawing.v2/5.2.0-preview1-r131": {
-        "type": "package",
-        "dependencies": {
-          "System.Security.Permissions": "4.4.0-preview1-25305-02"
-        },
-        "compile": {
-          "lib/netstandard2.0/CoreCompat.System.Drawing.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/CoreCompat.System.Drawing.dll": {}
-        }
-      },
       "DocumentFormat.OpenXml/2.20.0": {
         "type": "package",
         "dependencies": {
@@ -80,31 +59,6 @@
           "lib/net6.0/DocumentFormat.OpenXml.dll": {
             "related": ".xml"
           }
-        }
-      },
-      "dotless.AspNetHandler/1.6.4": {
-        "type": "package",
-        "dependencies": {
-          "dotless.Core": "1.6.4"
-        },
-        "compile": {
-          "lib/net461/dotless.AspNet.dll": {}
-        },
-        "runtime": {
-          "lib/net461/dotless.AspNet.dll": {}
-        }
-      },
-      "dotless.Core/1.6.4": {
-        "type": "package",
-        "dependencies": {
-          "CoreCompat.System.Drawing.v2": "5.2.0-preview1-r131",
-          "Microsoft.Extensions.DependencyInjection": "2.0.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/dotless.Core.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/dotless.Core.dll": {}
         }
       },
       "EcmaScript.NET/2.0.0": {
@@ -311,19 +265,6 @@
           }
         }
       },
-      "Microsoft.AspNet.Web.Optimization/1.1.2": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Web.Infrastructure": "1.0.0",
-          "WebGrease": "1.5.2"
-        },
-        "compile": {
-          "lib/net40/System.Web.Optimization.dll": {}
-        },
-        "runtime": {
-          "lib/net40/System.Web.Optimization.dll": {}
-        }
-      },
       "Microsoft.AspNetCore.SystemWebAdapters/1.2.0": {
         "type": "package",
         "dependencies": {
@@ -428,22 +369,6 @@
         },
         "runtime": {
           "lib/netcoreapp2.0/_._": {}
-        }
-      },
-      "Microsoft.Extensions.DependencyInjection/2.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.0.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll": {
-            "related": ".xml"
-          }
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
@@ -582,15 +507,6 @@
         },
         "runtime": {
           "lib/netcoreapp2.0/_._": {}
-        }
-      },
-      "Microsoft.Web.Infrastructure/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net40/Microsoft.Web.Infrastructure.dll": {}
-        },
-        "runtime": {
-          "lib/net40/Microsoft.Web.Infrastructure.dll": {}
         }
       },
       "Microsoft.Win32.Primitives/4.3.0": {
@@ -2843,23 +2759,6 @@
           }
         }
       },
-      "System.Web.Optimization.Less/1.3.5": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNet.Web.Optimization": "1.1.2",
-          "dotless.AspNetHandler": "1.6.4"
-        },
-        "compile": {
-          "lib/net461/System.Web.Optimization.Less.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net461/System.Web.Optimization.Less.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "System.Web.Services.Description/6.0.0": {
         "type": "package",
         "compile": {
@@ -3030,19 +2929,6 @@
           "lib/netstandard1.0/TidyNetstandard.dll": {}
         }
       },
-      "WebGrease/1.5.2": {
-        "type": "package",
-        "dependencies": {
-          "Antlr": "3.4.1.9004",
-          "Newtonsoft.Json": "5.0.4"
-        },
-        "compile": {
-          "lib/WebGrease.dll": {}
-        },
-        "runtime": {
-          "lib/WebGrease.dll": {}
-        }
-      },
       "Protean.Tools_Net7/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
@@ -3064,7 +2950,6 @@
           "System.Data.SqlClient": "4.8.5",
           "System.Management": "7.0.2",
           "System.ServiceModel.Primitives": "6.0.0",
-          "System.Web.Optimization.Less": "1.3.5",
           "TidyNetstandard": "1.0.2"
         },
         "compile": {
@@ -3094,19 +2979,6 @@
         "lib/netstandard1.0/AdvancedStringBuilder.xml",
         "lib/netstandard2.0/AdvancedStringBuilder.dll",
         "lib/netstandard2.0/AdvancedStringBuilder.xml"
-      ]
-    },
-    "Antlr/3.4.1.9004": {
-      "sha512": "c1S+HBE+KYA5EBxtn25LEK02hHPH/tDQ6RviUTTCJpZIPoputtn8ArsQJy9lVJWZOnw37ufByO2Fmf1M8wpr8Q==",
-      "type": "package",
-      "path": "antlr/3.4.1.9004",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "antlr.3.4.1.9004.nupkg.sha512",
-        "antlr.nuspec",
-        "lib/Antlr3.Runtime.dll",
-        "lib/Antlr3.Runtime.pdb"
       ]
     },
     "Antlr4/4.6.6": {
@@ -3205,18 +3077,6 @@
         "lib/portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1/Antlr4.Runtime.xml"
       ]
     },
-    "CoreCompat.System.Drawing.v2/5.2.0-preview1-r131": {
-      "sha512": "+WrScg+skrIiNLBwbl+BFdlSyzUqKOZtAUskW2xfI8vcKQdDJp+UoreUFC9uMSEgSiAR32e5l3fTtFDUKEpRaA==",
-      "type": "package",
-      "path": "corecompat.system.drawing.v2/5.2.0-preview1-r131",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "corecompat.system.drawing.v2.5.2.0-preview1-r131.nupkg.sha512",
-        "corecompat.system.drawing.v2.nuspec",
-        "lib/netstandard2.0/CoreCompat.System.Drawing.dll"
-      ]
-    },
     "DocumentFormat.OpenXml/2.20.0": {
       "sha512": "+oFMsEppo/W6KpGTRXaJl2jTFYn9zeon4FaZuDoCijQ1/0JaPENaCef7d4Y3f8v116eKhVBwd4Ya+/NDglxkjw==",
       "type": "package",
@@ -3239,37 +3099,6 @@
         "lib/netstandard1.3/DocumentFormat.OpenXml.xml",
         "lib/netstandard2.0/DocumentFormat.OpenXml.dll",
         "lib/netstandard2.0/DocumentFormat.OpenXml.xml"
-      ]
-    },
-    "dotless.AspNetHandler/1.6.4": {
-      "sha512": "l1kpIn3cZu+ZqHXLH9OfaNbMj+fc69FN5gySmpPZWlNREYZeIz6zzgDagOUb08ULz6nqtC9bmoLFfDEnoTsWjw==",
-      "type": "package",
-      "path": "dotless.aspnethandler/1.6.4",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "content/web.config.install.xdt",
-        "dotless.aspnethandler.1.6.4.nupkg.sha512",
-        "dotless.aspnethandler.nuspec",
-        "lib/net461/dotless.AspNet.dll",
-        "tools/Microsoft.Web.XmlTransform.dll",
-        "tools/dotless.Tools.WebTransforms.dll",
-        "tools/install.ps1",
-        "tools/web.config.install.xdt"
-      ]
-    },
-    "dotless.Core/1.6.4": {
-      "sha512": "jmO5cYGahXij/bsuCBfjlqtQOlijQGGQZ4m/+gZ5MVNpl27+xLmEecpTOB5nsYmyyufYR5tK1nRkSpU+o6eroQ==",
-      "type": "package",
-      "path": "dotless.core/1.6.4",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "dotless.core.1.6.4.nupkg.sha512",
-        "dotless.core.nuspec",
-        "lib/net461/dotless.Core.dll",
-        "lib/netstandard2.0/dotless.Core.dll"
       ]
     },
     "EcmaScript.NET/2.0.0": {
@@ -3506,19 +3335,6 @@
         "magick.net.core.nuspec"
       ]
     },
-    "Microsoft.AspNet.Web.Optimization/1.1.2": {
-      "sha512": "o+xd4qDFZ/RMsI+6U5OLpjXMQjuifIeiuKyjDFMAIXukkVqzUHPVchSCkFJCc7QVPqpUW/fU4Vhkxll5YAu1Jw==",
-      "type": "package",
-      "path": "microsoft.aspnet.web.optimization/1.1.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/System.Web.Optimization.dll",
-        "lib/net40/system.web.optimization.xml",
-        "microsoft.aspnet.web.optimization.1.1.2.nupkg.sha512",
-        "microsoft.aspnet.web.optimization.nuspec"
-      ]
-    },
     "Microsoft.AspNetCore.SystemWebAdapters/1.2.0": {
       "sha512": "mlFt7imbWEoU9amOLXM3RxKhcgQ8Zeold1Iz0NAt8o86rre1f8IFJEZRgBAX3foA+p2Q89aHOrKPBBr1GDFcKw==",
       "type": "package",
@@ -3719,19 +3535,6 @@
         "ref/xamarinwatchos10/_._",
         "useSharedDesignerContext.txt",
         "version.txt"
-      ]
-    },
-    "Microsoft.Extensions.DependencyInjection/2.0.0": {
-      "sha512": "wakg18gHYiUL1pcjjyZuYk6OvDpbSw1E7IWxm78TMepsr+gQ8W0tWzuRm0q/9RFblngwPwo15rrgZSUV51W5Iw==",
-      "type": "package",
-      "path": "microsoft.extensions.dependencyinjection/2.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll",
-        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.xml",
-        "microsoft.extensions.dependencyinjection.2.0.0.nupkg.sha512",
-        "microsoft.extensions.dependencyinjection.nuspec"
       ]
     },
     "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
@@ -3943,18 +3746,6 @@
         "ref/wpa81/_._",
         "useSharedDesignerContext.txt",
         "version.txt"
-      ]
-    },
-    "Microsoft.Web.Infrastructure/1.0.0": {
-      "sha512": "FNmvLn5m2LTU/Rs2KWVo0SIIh9Ek+U0ojex7xeDaSHw/zgEP77A8vY5cVWgUtBGS8MJfDGNn8rpXJWEIQaPwTg==",
-      "type": "package",
-      "path": "microsoft.web.infrastructure/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/Microsoft.Web.Infrastructure.dll",
-        "microsoft.web.infrastructure.1.0.0.nupkg.sha512",
-        "microsoft.web.infrastructure.nuspec"
       ]
     },
     "Microsoft.Win32.Primitives/4.3.0": {
@@ -8532,19 +8323,6 @@
         "system.web.http.common.nuspec"
       ]
     },
-    "System.Web.Optimization.Less/1.3.5": {
-      "sha512": "H049Dz8KL3KdFVTNJZv/QcaxCSWtes0JCd9GzRV3c86KoefO8bgGSni1bedN+YH9j7P1+joI4EoH018+bCAHjw==",
-      "type": "package",
-      "path": "system.web.optimization.less/1.3.5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net461/System.Web.Optimization.Less.dll",
-        "lib/net461/System.Web.Optimization.Less.xml",
-        "system.web.optimization.less.1.3.5.nupkg.sha512",
-        "system.web.optimization.less.nuspec"
-      ]
-    },
     "System.Web.Services.Description/6.0.0": {
       "sha512": "Mooat6O2xUK34uGAFBi564JHmvYrhEjLWpEUIZTemPPZQD1KQ5m87tYKVJ1gurS+KiKPEYNgKcP1mn6LMhU9xA==",
       "type": "package",
@@ -8811,22 +8589,6 @@
         "tidynetstandard.nuspec"
       ]
     },
-    "WebGrease/1.5.2": {
-      "sha512": "VoyDSOOugLx3q5IyOgEcjeYZQOqV9VWZQT57UtN4szlYhAmOcEjVfKWXbtRqBuX43pgyL9E7nMSIPoryC8Cu1Q==",
-      "type": "package",
-      "path": "webgrease/1.5.2",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/WebGrease.dll",
-        "tools/WG.exe",
-        "tools/install.ps1",
-        "tools/uninstall.ps1",
-        "webgrease.1.5.2.nupkg.sha512",
-        "webgrease.nuspec"
-      ]
-    },
     "Protean.Tools_Net7/1.0.0": {
       "type": "project",
       "path": "../Protean.Tools_Net7/Protean.Tools_Net7.csproj",
@@ -8881,19 +8643,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\trevo\\.nuget\\packages\\": {}
+    "C:\\Users\\trevors\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
+      "projectUniqueName": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
       "projectName": "ProteanCMS_Net7",
-      "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
-      "packagesPath": "C:\\Users\\trevo\\.nuget\\packages\\",
-      "outputPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\obj\\",
+      "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\ProteanCMS_Net7.vbproj",
+      "packagesPath": "C:\\Users\\trevors\\.nuget\\packages\\",
+      "outputPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS_Net7\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\trevo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\trevors\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8907,8 +8674,8 @@
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
           "projectReferences": {
-            "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
-              "projectPath": "C:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
+            "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj": {
+              "projectPath": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools_Net7\\Protean.Tools_Net7.csproj"
             }
           }
         }
@@ -9120,48 +8887,8 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Antlr 3.4.1.9004' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Antlr",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'dotless.AspNetHandler 1.6.4' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "dotless.AspNetHandler",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
       "message": "Package 'Lucene.Net 3.0.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "Lucene.Net",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.AspNet.Web.Optimization 1.1.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Microsoft.AspNet.Web.Optimization",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.Web.Infrastructure 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Microsoft.Web.Infrastructure",
       "targetGraphs": [
         "net7.0-windows7.0"
       ]
@@ -9182,26 +8909,6 @@
       "warningLevel": 1,
       "message": "Package 'System.Web.Http.Common 4.0.20126.16343' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
       "libraryId": "System.Web.Http.Common",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'System.Web.Optimization.Less 1.3.5' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "System.Web.Optimization.Less",
-      "targetGraphs": [
-        "net7.0-windows7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'WebGrease 1.5.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "WebGrease",
       "targetGraphs": [
         "net7.0-windows7.0"
       ]
