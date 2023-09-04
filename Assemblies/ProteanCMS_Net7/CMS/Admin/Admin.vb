@@ -5149,7 +5149,7 @@ SP:
             Dim SchemaNameForUpdate As String
             Dim sSql As String
             Dim IpAddress As String
-            '  Dim objServ As Services = New Services()
+            Dim objServ As Services = New Services()
 
             Dim mnUserId As Integer = myWeb.mnUserId
             Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession

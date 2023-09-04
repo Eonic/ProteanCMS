@@ -169,7 +169,7 @@ Public Class Tests
                 End If
             End If
 
-            Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
+            System.IO.File.WriteAllText("\\?\" & oEw.goServer.MapPath("/" & oEw.gcProjectPath) & filepath, htmltotest, System.Text.Encoding.UTF8)
 
             Return "File Written Using AlphaFS :" & filepath
 

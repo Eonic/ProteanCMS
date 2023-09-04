@@ -1322,7 +1322,7 @@ Namespace Providers
                     ppBinding.SendTimeout = New System.TimeSpan(0, 2, 0)
                     ppBinding.AllowCookies = False
                     ppBinding.BypassProxyOnLocal = False
-                    ppBinding.HostNameComparisonMode = ServiceModel.HostNameComparisonMode.StrongWildcard
+                    '  ppBinding.HostNameComparisonMode = ServiceModel.HostNameComparisonMode.StrongWildcard
                     ppBinding.MaxBufferSize = 65536
                     ppBinding.MaxBufferPoolSize = 524288
                     ppBinding.MaxReceivedMessageSize = 65536

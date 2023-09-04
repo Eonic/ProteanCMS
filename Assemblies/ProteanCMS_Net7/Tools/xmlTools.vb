@@ -1177,7 +1177,7 @@ Public Class XmlHelper
 
         Public Function RunTransform(AssemblyPath As String, className As String, PageXml As String) As String
             Try
-                HttpContext.Current = _LocalContext
+                'HttpContext.Current = _LocalContext
 
                 Dim oReader As Xml.XmlTextReader = New XmlTextReader(New StringReader(PageXml))
 

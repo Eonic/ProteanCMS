@@ -9,6 +9,7 @@ Imports VB = Microsoft.VisualBasic
 Imports System.Configuration
 Imports System
 Imports System.Web.UI
+Imports System.Web
 
 Public Class xForm
 
@@ -1174,7 +1175,7 @@ Public Class xForm
 
                                                     If (goRequest.Files.Count > 0) _
                                                    AndAlso Not (goRequest.Files.Count = 1 And goRequest.Files(0).ContentLength = 0) Then
-                                                        Dim oFile As System.Web.HttpPostedFile = goRequest.Files(0)
+                                                        Dim oFile As HttpPostedFile = goRequest.Files(0)
 
                                                         cSavePath = cSavePath.Replace("$userId$", mnUserId)
                                                         cSavePath = cSavePath.Replace("$id$", goRequest("id"))
@@ -1218,7 +1219,13 @@ Public Class xForm
                                                             If Directory.Exists(cFullPath & cSavePath) = True Then
 
                                                                 Dim cFinalFullSavePath As String = oFs.getUniqueFilename(cFullPath & cSavePath & Filename)
-                                                                oFile.SaveAs(cFinalFullSavePath)
+                                                                ' oFile.SaveAs(cFinalFullSavePath)
+                                                                Using fs As FileStream = System.IO.File.Create(cFinalFullSavePath)
+                                                                    oFile.CopyTo(fs)
+                                                                    Continue For
+                                                                End Using
+
+
                                                                 oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = cFinalFullSavePath.Replace(cFullPath, "")
 
                                                                 ' Working on the assumption that only one file has been submitted, then store this in a session object

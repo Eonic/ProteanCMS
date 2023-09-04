@@ -1409,9 +1409,9 @@ Partial Public Class fsHelper
 
         If folder.Exists() Then
             ' Filter out the files by type and return the full name
-            Dim fileInfoList As New List(Of FileInfo)(folder.GetFiles("*.*", IIf(includeSubfolders, SearchOption.AllDirectories, SearchOption.TopDirectoryOnly)))
-            fileInfoList = fileInfoList.FindAll(New PredicateWrapper(Of FileInfo, LibraryType)(libraryType, AddressOf FileInfoTypeFilter))
-            fileList = fileInfoList.ConvertAll(New Converter(Of FileInfo, String)(AddressOf FullNameFromFileInfo))
+            '   Dim fileInfoList As New List(Of FileInfo)(folder.GetFiles("*.*", IIf(includeSubfolders, SearchOption.AllDirectories, SearchOption.TopDirectoryOnly)))
+            '   fileInfoList = fileInfoList.FindAll(New PredicateWrapper(Of FileInfo, LibraryType)(libraryType, AddressOf FileInfoTypeFilter))
+            '    fileList = fileInfoList.ConvertAll(New Converter(Of FileInfo, String)(AddressOf FullNameFromFileInfo))
         End If
 
         Return fileList
