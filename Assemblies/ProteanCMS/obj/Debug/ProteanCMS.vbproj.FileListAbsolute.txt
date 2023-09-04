@@ -1695,7 +1695,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Tinify.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JsonWebTokens.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Tools.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AdvancedStringBuilder.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\AlphaFS.pdb
