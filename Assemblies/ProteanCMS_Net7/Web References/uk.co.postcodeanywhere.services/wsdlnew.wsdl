@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://services.postcodeanywhere.co.uk/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s="http://www.w3.org/2001/XMLSchema" targetNamespace="http://services.postcodeanywhere.co.uk/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.postcodeanywhere.co.uk/">
+      <s:element name="BankAccountValidation_Interactive_Validate_v2_00">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AccountNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SortCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BankAccountValidation_Interactive_Validate_v2_00_Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BankAccountValidation_Interactive_Validate_v2_00_Result" type="tns:BankAccountValidation_Interactive_Validate_v2_00_ArrayOfResults" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BankAccountValidation_Interactive_Validate_v2_00_ArrayOfResults">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BankAccountValidation_Interactive_Validate_v2_00_Results" type="tns:BankAccountValidation_Interactive_Validate_v2_00_Results" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BankAccountValidation_Interactive_Validate_v2_00_Results">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="IsCorrect" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsDirectDebitCapable" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="StatusInformation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CorrectedSortCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CorrectedAccountNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IBAN" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Bank" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BankBIC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Branch" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BranchBIC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactAddressLine1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactAddressLine2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactPostTown" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactPostcode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactPhone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactFax" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FasterPaymentsSupported" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="CHAPSSupported" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="BankAccountValidation_Interactive_Validate_v2_00_SoapIn">
+    <wsdl:part name="parameters" element="tns:BankAccountValidation_Interactive_Validate_v2_00" />
+  </wsdl:message>
+  <wsdl:message name="BankAccountValidation_Interactive_Validate_v2_00_SoapOut">
+    <wsdl:part name="parameters" element="tns:BankAccountValidation_Interactive_Validate_v2_00_Response" />
+  </wsdl:message>
+  <wsdl:portType name="PostcodeAnywhere_Soap">
+    <wsdl:operation name="BankAccountValidation_Interactive_Validate_v2_00">
+      <wsdl:input message="tns:BankAccountValidation_Interactive_Validate_v2_00_SoapIn" />
+      <wsdl:output message="tns:BankAccountValidation_Interactive_Validate_v2_00_SoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PostcodeAnywhere_Soap" type="tns:PostcodeAnywhere_Soap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="BankAccountValidation_Interactive_Validate_v2_00">
+      <soap:operation soapAction="http://services.postcodeanywhere.co.uk/BankAccountValidation_Interactive_Validate_v2_00" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PostcodeAnywhere">
+    <wsdl:port name="PostcodeAnywhere_Soap" binding="tns:PostcodeAnywhere_Soap">
+      <soap:address location="https://services.postcodeanywhere.co.uk/BankAccountValidation/Interactive/Validate/v2.00/soapnew.ws" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

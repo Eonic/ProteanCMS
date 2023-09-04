@@ -1,0 +1,530 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <ProjectType>Local</ProjectType>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyOriginatorKeyFile>eonic.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyMode>None</AssemblyOriginatorKeyMode>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Protean</RootNamespace>
+    <StartupObject>Eonic.%28None%29</StartupObject>
+    <MyType>Windows</MyType>
+    <SignAssembly>true</SignAssembly>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">
+    </SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <AssemblyInfoFilePath>AssemblyInfo.vb</AssemblyInfoFilePath>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
+    <AssemblyFileVersionSettings>None.None.None.None</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
+    <ShouldCreateLogs>False</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <AssemblyVersion>6.0.60.340</AssemblyVersion>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+<UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>ProteanCMS.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <AssemblyInfoFilePath>AssemblyInfo.vb</AssemblyInfoFilePath>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.None.None.Increment</AssemblyVersionSettings>
+    <AssemblyFileVersionSettings>None.None.None.Increment</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>None.None.None.Increment</AssemblyInfoVersionSettings>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
+    <ShouldCreateLogs>False</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>ProteanCMS.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DefineDebug>false</DefineDebug>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+    <DebugType>none</DebugType>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
+    <AssemblyFileVersionSettings>None.None.IncrementOnDemand.None</AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>None.None.IncrementOnDemand.None</AssemblyInfoVersionSettings>
+    <AssemblyInfoFilePath>AssemblyInfo.vb</AssemblyInfoFilePath>
+    <ShouldCreateLogs>False</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <DocumentationFile>ProteanCMS.xml</DocumentationFile>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <DocumentationFile>ProteanCMS.xml</DocumentationFile>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Antlr4 Remove="Web References\**" />
+    <Compile Remove="Web References\**" />
+    <EmbeddedResource Remove="Web References\**" />
+    <None Remove="Web References\**" />
+    <Page Remove="Web References\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AngleSharp, Version=0.13.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\AngleSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="CMPCDotNet, Version=2.2.0.28082, Culture=neutral, PublicKeyToken=60064b713d9de8f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\CMPCDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Imazen.WebP, Version=10.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\Imazen.WebP.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Iis.Rewrite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\Reference Assemblies\Microsoft\IIS\Microsoft.Web.Iis.Rewrite.dll</HintPath>
+    </Reference>
+    <Reference Include="PreMailer.Net, Version=2.1.1.0, Culture=neutral, PublicKeyToken=23e3f43e29cae17f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\PreMailer.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="QRCoder, Version=1.4.2.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\QRCoder.dll</HintPath>
+    </Reference>
+    <Reference Update="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Update="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Update="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Service References\PayPalAPI\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Update="Service References\Paypoint\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Update="Service References\proteancms.com\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Update="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Service References\PayPalAPI\CoreComponentTypes1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Service References\PayPalAPI\eBLBaseComponents1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Service References\PayPalAPI\EnhancedDataTypes1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.AddressVerifyResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BAUpdateResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BillOutstandingAmountResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BillUserResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BMButtonSearchResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BMCreateButtonResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BMGetButtonDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BMGetInventoryResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BMManageButtonStatusResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BMSetInventoryResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.BMUpdateButtonResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.CancelRecoupResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.CompleteRecoupResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.CreateBillingAgreementResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.CreateMobilePaymentResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.CreateRecurringPaymentsProfileResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.CustomSecurityHeaderType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoAuthorizationResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoCancelResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoCaptureResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoDirectPaymentResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoExpressCheckoutPaymentResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoMobileCheckoutPaymentResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoNonReferencedCreditResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoReauthorizationResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoReferenceTransactionResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoUATPAuthorizationResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoUATPExpressCheckoutPaymentResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.DoVoidResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.EnterBoardingResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.ExecuteCheckoutOperationsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.ExternalRememberMeOptOutResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetAccessPermissionDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetAuthDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetBalanceResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetBillingAgreementCustomerDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetBoardingDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetExpressCheckoutDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetIncentiveEvaluationResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetMobileStatusResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetPalDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetRecurringPaymentsProfileDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.GetTransactionDetailsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.InitiateRecoupResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.ManagePendingTransactionStatusResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.ManageRecurringPaymentsProfileStatusResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.MassPayResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.RefundTransactionResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.ReverseTransactionResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.SetAccessPermissionsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.SetAuthFlowParamResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.SetCustomerBillingAgreementResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.SetExpressCheckoutResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.SetMobileCheckoutResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.TransactionSearchResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.UpdateAccessPermissionsResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.UpdateAuthorizationResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Update="Service References\PayPalAPI\Eonic.PayPalAPI.UpdateRecurringPaymentsProfileResponseType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\icsharpcode.sharpziplib.pdb" />
+    <Content Include="DebugReadme.txt" />
+    <None Update="Service References\proteancms.com\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Update="Service References\Paypoint\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Update="Service References\PayPalAPI\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="https://services.postcodeanywhere.co.uk/BankAccountValidation/Interactive/Validate/v2.00/wsdlnew.ws">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\uk.co.postcodeanywhere.services\</RelPath>
+      <UpdateFromURL>https://services.postcodeanywhere.co.uk/BankAccountValidation/Interactive/Validate/v2.00/wsdlnew.ws</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>EonicWebV5_uk_co_postcodeanywhere_services_PostcodeAnywhere</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://www.pclpls.com/services/xmltransferengine.asmx%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\com.pclpls.www\</RelPath>
+      <UpdateFromURL>https://www.pclpls.com/services/xmltransferengine.asmx%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>EonicWebV5_com_pclpls_www_XMLTransferEngine</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="https://www.pclplstest.com/services/xmltransferengine.asmx%3fwsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\com.pclplstest.www\</RelPath>
+      <UpdateFromURL>https://www.pclplstest.com/services/xmltransferengine.asmx%3fwsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>EonicWebV5_com_pclplstest_www_XMLTransferEngine</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\PayPalAPI\" />
+    <WCFMetadataStorage Include="Service References\Paypoint\" />
+    <WCFMetadataStorage Include="Service References\proteancms.com\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AdvancedStringBuilder" Version="0.1.0" />
+    <PackageReference Include="EcmaScript.Net" Version="2.0.0" />
+    <PackageReference Include="JavaScriptEngineSwitcher.Core" Version="3.3.0" />
+    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.17.4" />
+    <PackageReference Include="JavaScriptEngineSwitcher.V8.Native.win-x64" Version="3.17.4" />
+    <PackageReference Include="JSPool" Version="4.0.0" />
+    <PackageReference Include="LibSassHost" Version="1.3.3" />
+    <PackageReference Include="LibSassHost.Native.win-x64" Version="1.3.3" />
+    <PackageReference Include="Lucene.Net" Version="3.0.3" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.1.3" />
+    <PackageReference Include="Magick.NET.Core" Version="13.1.3" />
+    <PackageReference Include="Microsoft.ClearScript.Core" Version="7.2.4" />
+    <PackageReference Include="Microsoft.ClearScript.V8" Version="7.2.4" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.2.4" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="MsieJavaScriptEngine" Version="3.0.3" />
+    <PackageReference Include="SharpZipLib" Version="1.3.3" />
+    <PackageReference Include="SSH.NET" Version="2020.0.2" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
+    <PackageReference Include="System.Composition" Version="7.0.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+    <PackageReference Include="System.Management" Version="7.0.2" />
+    <PackageReference Include="System.Net.FtpClient" Version="1.0.5824.34026" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Runtime.Caching" Version="7.0.0" />
+    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+    <PackageReference Include="System.Web.Http.Common" Version="4.0.20126.16343" />
+    <PackageReference Include="System.Web.Services.Description" Version="6.0.0" />
+    <PackageReference Include="TidyHtml5ManagedRepack" Version="1.1.4" />
+    <PackageReference Include="Antlr4" Version="4.6.6" />
+    <PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="CMS\Cart\PaymentProviders\Pay360.vb" />
+    <Compile Remove="CMS\Cart\PaymentProviders\PayPalExpress.vb" />
+    <Compile Remove="CMS\Cart\PaymentProviders\SagePayV3.vb" />
+    <Compile Remove="CMS\httpHandler.vb" />
+    <Compile Remove="ood.vb" />
+    <Compile Remove="Tools\FLVHandler.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Protean.Tools_Net7\Protean.Tools_Net7.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <AssemblyTitle>ProteanCMS</AssemblyTitle>
+    <Description>ProteanCMS</Description>
+    <Company>Eonic Digital LLP</Company>
+    <Product>ProteanCMS</Product>
+    <Copyright>Copyright | Eonic Digital LLP.  2023</Copyright>
+    <FileVersion>6.0.60.340</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <InformationalVersion>0.0.0.708</InformationalVersion>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateFileVersion="False" BuildVersion_StartDate="2000/1/1" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

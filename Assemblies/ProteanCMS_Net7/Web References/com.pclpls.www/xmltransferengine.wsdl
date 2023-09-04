@@ -1,0 +1,1290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="www.PCL.co.uk/XMLTransferService/XMLTransferEngine" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s1="http://microsoft.com/wsdl/types/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" targetNamespace="www.PCL.co.uk/XMLTransferService/XMLTransferEngine" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="www.PCL.co.uk/XMLTransferService/XMLTransferEngine">
+      <s:import namespace="http://microsoft.com/wsdl/types/" />
+      <s:element name="GetQuote">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="TransactionType" type="tns:eTransactionType" />
+            <s:element minOccurs="1" maxOccurs="1" name="Premium" type="s:decimal" />
+            <s:element minOccurs="0" maxOccurs="1" name="PPICode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="RequiredRate" type="s:decimal" />
+            <s:element minOccurs="1" maxOccurs="1" name="OverrideRate" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="eTransactionType">
+        <s:restriction base="s:string">
+          <s:enumeration value="NewBusiness" />
+          <s:enumeration value="Renewal" />
+          <s:enumeration value="Cancellation" />
+          <s:enumeration value="MidTermAdjustment" />
+          <s:enumeration value="MidTermTransfer" />
+          <s:enumeration value="ChangeOfAddress" />
+          <s:enumeration value="ChangeOfAdditionalCover" />
+          <s:enumeration value="ChangeOfBankDetails" />
+          <s:enumeration value="ChangeOfClientReference" />
+          <s:enumeration value="ChangeOfCollectionDate" />
+          <s:enumeration value="ChangeOfContractInceptionDate" />
+          <s:enumeration value="Reinstatement" />
+          <s:enumeration value="CardPayment" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetQuoteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetQuoteResult" type="tns:Quotation" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Quotation">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Result" type="tns:TransactionResult" />
+          <s:element minOccurs="1" maxOccurs="1" name="Premium" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="TransactionType" type="tns:eTransactionType" />
+          <s:element minOccurs="0" maxOccurs="1" name="PPICode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="SchemesAvailable" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeQuotes" type="tns:ArrayOfSchemeQuote" />
+          <s:element minOccurs="1" maxOccurs="1" name="RequiredRate" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OverrideRate" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TransactionResult">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Success" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ErrorCode" type="tns:eErrorCode" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreditAgreementNeeded" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreditAgreement" type="s:base64Binary" />
+          <s:element minOccurs="1" maxOccurs="1" name="SaveState" type="tns:eTransactionState" />
+          <s:element minOccurs="0" maxOccurs="1" name="Results" type="tns:ArrayOfAnyType" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="eErrorCode">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet" />
+          <s:enumeration value="TransactionSuccesful" />
+          <s:enumeration value="LoginFailed" />
+          <s:enumeration value="InternalError" />
+          <s:enumeration value="FieldLengthError" />
+          <s:enumeration value="TransIDAlreadyInUse" />
+          <s:enumeration value="ValidationFailed" />
+          <s:enumeration value="SchemeCodeValidationFailed" />
+          <s:enumeration value="PolicyClientReferenceValidationFailed" />
+          <s:enumeration value="CustNameValidationFailed" />
+          <s:enumeration value="CorpNameAddressValidationFailed" />
+          <s:enumeration value="CustSurnameValidationFailed" />
+          <s:enumeration value="CustAddress1ValidationFailed" />
+          <s:enumeration value="CustAddress2ValidationFailed" />
+          <s:enumeration value="BankSortCodeValidationFailed" />
+          <s:enumeration value="BankAccountNumberValidationFailed" />
+          <s:enumeration value="BankAccountNameValidationFailed" />
+          <s:enumeration value="BusinessTypeValidationFailed" />
+          <s:enumeration value="ClientPremiumValidationFailed" />
+          <s:enumeration value="NumInstalmentsValidationFailed" />
+          <s:enumeration value="InstalmentAmountValidationFailed" />
+          <s:enumeration value="DepositAmountvalidationFailed" />
+          <s:enumeration value="EntryTypeValidationFailed" />
+          <s:enumeration value="PrefPaymentDateValidationFailed" />
+          <s:enumeration value="ChargePercentageValidationFailed" />
+          <s:enumeration value="CancellationRuleValidationFailed" />
+          <s:enumeration value="TransTypeValidationFailed" />
+          <s:enumeration value="DateValidationFailed" />
+          <s:enumeration value="AddressNotFound" />
+          <s:enumeration value="AddressValidationFailed" />
+          <s:enumeration value="PostCodeValidationFailed" />
+          <s:enumeration value="BankDetailValidationFailed" />
+          <s:enumeration value="TransactionDoesNotExist" />
+          <s:enumeration value="TransactionCanNotBeEdited" />
+          <s:enumeration value="NoTransactionSpecified" />
+          <s:enumeration value="RelatedTransactionInQueue" />
+          <s:enumeration value="RealtimeValidationFailed" />
+          <s:enumeration value="BranchCodeRequired" />
+          <s:enumeration value="RecordLocked" />
+          <s:enumeration value="MobileNumberValidationFailed" />
+          <s:enumeration value="EmailAddressValidationFailed" />
+          <s:enumeration value="DOBValidationFailed" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="eTransactionState">
+        <s:restriction base="s:string">
+          <s:enumeration value="Pending" />
+          <s:enumeration value="Held" />
+          <s:enumeration value="Saved" />
+          <s:enumeration value="Incomplete" />
+          <s:enumeration value="Processed" />
+          <s:enumeration value="Deleted" />
+          <s:enumeration value="PCLAttentionRequired" />
+          <s:enumeration value="UserAttentionRequired" />
+          <s:enumeration value="None" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfAnyType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="anyType" nillable="true" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSchemeQuote">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SchemeQuote" nillable="true" type="tns:SchemeQuote" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SchemeQuote">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TransactionType" type="tns:eTransactionType" />
+          <s:element minOccurs="1" maxOccurs="1" name="Premium" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="PPICode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RequiredRate" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OverrideRate" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="InterestFree" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalPayable" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Instalment" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="DefaultPeriod" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumInstalments" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="InstalmentGap" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="InstalmentHoliday" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="InstalmentUnit" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MinimumServiceCharge" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="ServiceChargePercentage" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalPayableWithPPI" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="InstalmentWithPPI" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="APR" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="ServiceChargePercentageNoMSC" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalPayableNoMSC" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="InstalmentNoMSC" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="APRNoMSC" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="BasicServiceChargePercentage" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="SchemeType" type="tns:eSchemeType" />
+          <s:element minOccurs="1" maxOccurs="1" name="SchemeMinimumServiceCharge" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CCAScheme" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="PlasmaMessages" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="SchemeDefaultDeposit" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="eSchemeType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="NetScheme" />
+          <s:enumeration value="MarkupScheme" />
+          <s:enumeration value="GrossScheme" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="SaveTransaction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Transaction" type="tns:Transaction" />
+            <s:element minOccurs="1" maxOccurs="1" name="SaveState" type="tns:eTransactionState" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Transaction" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreateDateTime" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="TransID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PCLReference" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PolicyClientReference" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeBranch" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeBrokerNo" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="SaveState" type="tns:eTransactionState" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SaveTransactionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SaveTransactionResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteTransaction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Transaction" type="tns:Transaction" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteTransactionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteTransactionResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GenerateCreditAgreement">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="business" type="tns:NewBusiness" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="NewBusiness">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CustTitle" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustForeNames" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustSurname" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress1" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress2" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress3" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress4" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress5" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustPostCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustHomeTel" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustWorkTel" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="AddCoverCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BankSortCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BankAccountNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BankAccountName" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="BusinessType" type="s1:char" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreditAgreementDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreditRenewalDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="ClientPremium" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="NumInstalments" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="InstalmentAmt" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="DepositAmt" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="ContractDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="EntryType" type="s1:char" />
+              <s:element minOccurs="1" maxOccurs="1" name="PrefPaymentDate" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="ChargePercentage" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="MobileNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="EmailAddress" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="DOB" type="s:dateTime" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GenerateCreditAgreementResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GenerateCreditAgreementResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateNewBusiness">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Business" type="tns:NewBusiness" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateNewBusinessResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateNewBusinessResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateRenewal">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="renewal" type="tns:Renewal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Renewal">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="RenewalSchemeCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="OldPolicyClientReference" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="AddCoverCode" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreditAgreementDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreditRenewalDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="ClientPremium" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="EntryType" type="s1:char" />
+              <s:element minOccurs="1" maxOccurs="1" name="PrefPaymentDate" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="ChargePercentage" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="MobileNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="EmailAddress" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="DOB" type="s:dateTime" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateRenewalResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateRenewalResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateMidTermAdjustment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Adjustment" type="tns:MidTermAdjustment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="MidTermAdjustment">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ClientPremium" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="TransType" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="EffectiveDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="CollectionFlag" type="s1:char" />
+              <s:element minOccurs="1" maxOccurs="1" name="EntryType" type="s1:char" />
+              <s:element minOccurs="0" maxOccurs="1" name="NewPolicyClientReference" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateMidTermAdjustmentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateMidTermAdjustmentResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateCancellation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cancellation" type="tns:Cancellation" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Cancellation">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="CancellationRule" type="s1:char" />
+              <s:element minOccurs="1" maxOccurs="1" name="EffectiveDate" type="s:dateTime" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateCancellationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateCancellationResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateMidTermTransfer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Transfer" type="tns:MidTermTransfer" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="MidTermTransfer">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="NewPolicyClientReference" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="AdjClientPremium" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="TransType" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="NewSchemeCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="AddCoverCode" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="BusinessType" type="s1:char" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreditAgreementDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreditRenewalDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="NumInstalments" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="EntryType" type="s1:char" />
+              <s:element minOccurs="1" maxOccurs="1" name="PrefPaymentDate" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateMidTermTransferResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateMidTermTransferResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateChangeOfClientReference">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Change" type="tns:ChangeOfClientReference" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ChangeOfClientReference">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="NewPolicyClientReference" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateChangeOfClientReferenceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateChangeOfClientReferenceResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateChangeOfAdditionalCover">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Change" type="tns:ChangeOfAdditionalCover" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ChangeOfAdditionalCover">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="AddCoverCode" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateChangeOfAdditionalCoverResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateChangeOfAdditionalCoverResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateChangeOfAddress">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Change" type="tns:ChangeOfAddress" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ChangeOfAddress">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CustTitle" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustForeNames" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustSurname" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress1" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress2" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress3" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress4" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress5" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustPostCode" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateChangeOfAddressResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateChangeOfAddressResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateReinstatement">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="reInstatement" type="tns:Reinstatement" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Reinstatement">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ReinstatementType" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustTitle" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustForeNames" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustSurname" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress1" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress2" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress3" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress4" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustAddress5" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustPostCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BankSortCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BankAccountNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BankAccountName" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreditAgreementDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="CreditRenewalDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="TotalCollectedFromCustomer" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="PrefPaymentDate" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="CancellationFigure" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="DefaultChargeIncluded" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="NewPolicyClientReference" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="MobileNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="EmailAddress" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="DOB" type="s:dateTime" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateReinstatementResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateReinstatementResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateChangeOfBankDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Change" type="tns:ChangeOfBankDetails" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ChangeOfBankDetails">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="BankSortCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BankAccountNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="BankAccountName" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="ChangeType" type="s1:char" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateChangeOfBankDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateChangeOfBankDetailsResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateChangeOfContractInceptionDate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Change" type="tns:ChangeOfContractInceptionDate" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ChangeOfContractInceptionDate">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ContractInceptionDate" type="s:dateTime" />
+              <s:element minOccurs="1" maxOccurs="1" name="EffectiveDate" type="s:dateTime" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateChangeOfContractInceptionDateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateChangeOfContractInceptionDateResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateChangeOfCollectionDate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Change" type="tns:ChangeOfCollectionDate" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ChangeOfCollectionDate">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="PrefPaymentDate" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CreateChangeOfCollectionDateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateChangeOfCollectionDateResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNextTransactionID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="TransactionType" type="tns:eTransactionType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNextTransactionIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetNextTransactionIDResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetVersion">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetVersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetVersionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatement">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="DateFrom" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="DateTo" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="CurrencyType" type="tns:eCurrencyType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="eCurrencyType">
+        <s:restriction base="s:string">
+          <s:enumeration value="All" />
+          <s:enumeration value="Sterling" />
+          <s:enumeration value="Euros" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="Statement">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Result" type="tns:TransactionResult" />
+          <s:element minOccurs="1" maxOccurs="1" name="Schemes" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeStatements" type="tns:ArrayOfSchemeStatement" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSchemeStatement">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SchemeStatement" nillable="true" type="tns:SchemeStatement" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SchemeStatement">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SchemeName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Lines" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="StatementLines" type="tns:ArrayOfStatementLine" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfStatementLine">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="StatementLine" nillable="true" type="tns:StatementLine" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="StatementLine">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ProcessedDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Branch" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SubAgent" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClientName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PCLReference" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ClientReference" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TransactionType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Amount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="PremiumBasis" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="SettlementDate" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetStatementResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatementResult" type="tns:Statement" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBlankCreditAgreement">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SchemeCode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBlankCreditAgreementResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBlankCreditAgreementResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ValidateBankDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SortCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AccountNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ValidateBankDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ValidateBankDetailsResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FindTransaction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Transaction" type="tns:Transaction" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfTransaction">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Transaction" nillable="true" type="tns:Transaction" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="FindTransactionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FindTransactionResult" type="tns:ArrayOfTransaction" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitCardPayment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="TransID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="SchemeCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PCLReference" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PolicyClientReference" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardPayment" type="tns:CardPayment" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CardPayment">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CardholderName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CardNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CardType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CvvCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IssueNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="StartYear" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="StartMonth" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpiryMonth" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpiryYear" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PaymentAmount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DefaultCharge" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreditCardCharge" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreditTotalAmount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreditMerchantID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DebitCardCharge" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DebitTotalAmount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="DebitMerchantID" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SubmitCardPaymentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubmitCardPaymentResult" type="tns:TransactionResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://microsoft.com/wsdl/types/">
+      <s:simpleType name="char">
+        <s:restriction base="s:unsignedShort" />
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetQuoteSoapIn">
+    <wsdl:part name="parameters" element="tns:GetQuote" />
+  </wsdl:message>
+  <wsdl:message name="GetQuoteSoapOut">
+    <wsdl:part name="parameters" element="tns:GetQuoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveTransactionSoapIn">
+    <wsdl:part name="parameters" element="tns:SaveTransaction" />
+  </wsdl:message>
+  <wsdl:message name="SaveTransactionSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveTransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteTransactionSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteTransaction" />
+  </wsdl:message>
+  <wsdl:message name="DeleteTransactionSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteTransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GenerateCreditAgreementSoapIn">
+    <wsdl:part name="parameters" element="tns:GenerateCreditAgreement" />
+  </wsdl:message>
+  <wsdl:message name="GenerateCreditAgreementSoapOut">
+    <wsdl:part name="parameters" element="tns:GenerateCreditAgreementResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateNewBusinessSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateNewBusiness" />
+  </wsdl:message>
+  <wsdl:message name="CreateNewBusinessSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateNewBusinessResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateRenewalSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateRenewal" />
+  </wsdl:message>
+  <wsdl:message name="CreateRenewalSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateRenewalResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateMidTermAdjustmentSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateMidTermAdjustment" />
+  </wsdl:message>
+  <wsdl:message name="CreateMidTermAdjustmentSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateMidTermAdjustmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateCancellationSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateCancellation" />
+  </wsdl:message>
+  <wsdl:message name="CreateCancellationSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateCancellationResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateMidTermTransferSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateMidTermTransfer" />
+  </wsdl:message>
+  <wsdl:message name="CreateMidTermTransferSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateMidTermTransferResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfClientReferenceSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfClientReference" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfClientReferenceSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfClientReferenceResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfAdditionalCoverSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfAdditionalCover" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfAdditionalCoverSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfAdditionalCoverResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfAddressSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfAddress" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfAddressSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfAddressResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateReinstatementSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateReinstatement" />
+  </wsdl:message>
+  <wsdl:message name="CreateReinstatementSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateReinstatementResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfBankDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfBankDetails" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfBankDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfBankDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfContractInceptionDateSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfContractInceptionDate" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfContractInceptionDateSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfContractInceptionDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfCollectionDateSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfCollectionDate" />
+  </wsdl:message>
+  <wsdl:message name="CreateChangeOfCollectionDateSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateChangeOfCollectionDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetNextTransactionIDSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNextTransactionID" />
+  </wsdl:message>
+  <wsdl:message name="GetNextTransactionIDSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNextTransactionIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVersionSoapIn">
+    <wsdl:part name="parameters" element="tns:GetVersion" />
+  </wsdl:message>
+  <wsdl:message name="GetVersionSoapOut">
+    <wsdl:part name="parameters" element="tns:GetVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStatementSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatement" />
+  </wsdl:message>
+  <wsdl:message name="GetStatementSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatementResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBlankCreditAgreementSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBlankCreditAgreement" />
+  </wsdl:message>
+  <wsdl:message name="GetBlankCreditAgreementSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBlankCreditAgreementResponse" />
+  </wsdl:message>
+  <wsdl:message name="ValidateBankDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:ValidateBankDetails" />
+  </wsdl:message>
+  <wsdl:message name="ValidateBankDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:ValidateBankDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindTransactionSoapIn">
+    <wsdl:part name="parameters" element="tns:FindTransaction" />
+  </wsdl:message>
+  <wsdl:message name="FindTransactionSoapOut">
+    <wsdl:part name="parameters" element="tns:FindTransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitCardPaymentSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitCardPayment" />
+  </wsdl:message>
+  <wsdl:message name="SubmitCardPaymentSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitCardPaymentResponse" />
+  </wsdl:message>
+  <wsdl:portType name="XMLTransferEngineSoap">
+    <wsdl:operation name="GetQuote">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Performs a quotation.</documentation>
+      <wsdl:input message="tns:GetQuoteSoapIn" />
+      <wsdl:output message="tns:GetQuoteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveTransaction">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Save/create a Transaction.&lt;br /&gt;&lt;font color='gray'&gt;This method is Deprecated.&lt;/font&gt;</documentation>
+      <wsdl:input message="tns:SaveTransactionSoapIn" />
+      <wsdl:output message="tns:SaveTransactionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteTransaction">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Deletes a Transaction based on the ID of the Transaction supplied.&lt;br /&gt;FindTransaction() should be used to obtain the required ID.</documentation>
+      <wsdl:input message="tns:DeleteTransactionSoapIn" />
+      <wsdl:output message="tns:DeleteTransactionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GenerateCreditAgreement">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Generates a Credit agreement for the transaction supplied.&lt;br /&gt;A credit agreement is only produced if the transaction requires one.&lt;br /&gt;</documentation>
+      <wsdl:input message="tns:GenerateCreditAgreementSoapIn" />
+      <wsdl:output message="tns:GenerateCreditAgreementSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateNewBusiness">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create new business transaction.</documentation>
+      <wsdl:input message="tns:CreateNewBusinessSoapIn" />
+      <wsdl:output message="tns:CreateNewBusinessSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateRenewal">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a renewal transaction.</documentation>
+      <wsdl:input message="tns:CreateRenewalSoapIn" />
+      <wsdl:output message="tns:CreateRenewalSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateMidTermAdjustment">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a Mid Term Adjustment transaction.</documentation>
+      <wsdl:input message="tns:CreateMidTermAdjustmentSoapIn" />
+      <wsdl:output message="tns:CreateMidTermAdjustmentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateCancellation">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a Cancellation transaction.</documentation>
+      <wsdl:input message="tns:CreateCancellationSoapIn" />
+      <wsdl:output message="tns:CreateCancellationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateMidTermTransfer">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a MidTermTransfer transaction.</documentation>
+      <wsdl:input message="tns:CreateMidTermTransferSoapIn" />
+      <wsdl:output message="tns:CreateMidTermTransferSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfClientReference">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a ChangeOfClientReference transaction.</documentation>
+      <wsdl:input message="tns:CreateChangeOfClientReferenceSoapIn" />
+      <wsdl:output message="tns:CreateChangeOfClientReferenceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfAdditionalCover">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a ChangeOfAdditionalCover transaction.</documentation>
+      <wsdl:input message="tns:CreateChangeOfAdditionalCoverSoapIn" />
+      <wsdl:output message="tns:CreateChangeOfAdditionalCoverSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfAddress">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a ChangeOfAddress transaction.</documentation>
+      <wsdl:input message="tns:CreateChangeOfAddressSoapIn" />
+      <wsdl:output message="tns:CreateChangeOfAddressSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateReinstatement">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a ReInstatement transaction.</documentation>
+      <wsdl:input message="tns:CreateReinstatementSoapIn" />
+      <wsdl:output message="tns:CreateReinstatementSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfBankDetails">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a ChangeOfBankDetails transaction.</documentation>
+      <wsdl:input message="tns:CreateChangeOfBankDetailsSoapIn" />
+      <wsdl:output message="tns:CreateChangeOfBankDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfContractInceptionDate">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a ChangeOfContractInceptionDate transaction.</documentation>
+      <wsdl:input message="tns:CreateChangeOfContractInceptionDateSoapIn" />
+      <wsdl:output message="tns:CreateChangeOfContractInceptionDateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfCollectionDate">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Create a ChangeOfCollectionDate transaction.</documentation>
+      <wsdl:input message="tns:CreateChangeOfCollectionDateSoapIn" />
+      <wsdl:output message="tns:CreateChangeOfCollectionDateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNextTransactionID">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Get next transaction ID for a specific transaction type. NB: This method does not increment the ID and could return the same ID for subsequent calls if a transaction has not been created in the meantime</documentation>
+      <wsdl:input message="tns:GetNextTransactionIDSoapIn" />
+      <wsdl:output message="tns:GetNextTransactionIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVersion">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns the WebService's version number.</documentation>
+      <wsdl:input message="tns:GetVersionSoapIn" />
+      <wsdl:output message="tns:GetVersionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatement">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Retrieves the statement for each scheme available.</documentation>
+      <wsdl:input message="tns:GetStatementSoapIn" />
+      <wsdl:output message="tns:GetStatementSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBlankCreditAgreement">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns a blank Credit Agreement for the specified scheme for printing.</documentation>
+      <wsdl:input message="tns:GetBlankCreditAgreementSoapIn" />
+      <wsdl:output message="tns:GetBlankCreditAgreementSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateBankDetails">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Performs modulus checking routines on the supplied bank details.</documentation>
+      <wsdl:input message="tns:ValidateBankDetailsSoapIn" />
+      <wsdl:output message="tns:ValidateBankDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindTransaction">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Finds a Transaction based on the Transaction supplied.</documentation>
+      <wsdl:input message="tns:FindTransactionSoapIn" />
+      <wsdl:output message="tns:FindTransactionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitCardPayment">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Submits a credit/debit card payment</documentation>
+      <wsdl:input message="tns:SubmitCardPaymentSoapIn" />
+      <wsdl:output message="tns:SubmitCardPaymentSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="XMLTransferEngineSoap" type="tns:XMLTransferEngineSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetQuote">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/GetQuote" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveTransaction">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/SaveTransaction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteTransaction">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/DeleteTransaction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GenerateCreditAgreement">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/GenerateCreditAgreement" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateNewBusiness">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateNewBusiness" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateRenewal">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateRenewal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateMidTermAdjustment">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateMidTermAdjustment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCancellation">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateCancellation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateMidTermTransfer">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateMidTermTransfer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfClientReference">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateChangeOfClientReference" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfAdditionalCover">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateChangeOfAdditionalCover" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfAddress">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateChangeOfAddress" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateReinstatement">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateReinstatement" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfBankDetails">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateChangeOfBankDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfContractInceptionDate">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateChangeOfContractInceptionDate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateChangeOfCollectionDate">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/CreateChangeOfCollectionDate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNextTransactionID">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/GetNextTransactionID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVersion">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/GetVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStatement">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/GetStatement" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBlankCreditAgreement">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/GetBlankCreditAgreement" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateBankDetails">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/ValidateBankDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindTransaction">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/FindTransaction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitCardPayment">
+      <soap:operation soapAction="www.PCL.co.uk/XMLTransferService/XMLTransferEngine/SubmitCardPayment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="XMLTransferEngine">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+    <wsdl:port name="XMLTransferEngineSoap" binding="tns:XMLTransferEngineSoap">
+      <soap:address location="https://www.pclpls.com/services/xmltransferengine.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

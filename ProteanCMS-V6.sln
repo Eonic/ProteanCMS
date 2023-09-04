@@ -27,28 +27,11 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "V6_wwwroot", "V6_wwwroot\",
 		SlnRelativePath = "V6_wwwroot\"
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ewcommon", "wwwroot\ewcommon\", "{F0617DFC-F066-4E7B-88A2-1EB8B779F906}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_50942"
-		Debug.AspNetCompiler.PhysicalPath = "wwwroot\ewcommon\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50942\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_50942"
-		Release.AspNetCompiler.PhysicalPath = "wwwroot\ewcommon\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50942\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "50942"
-		SlnRelativePath = "wwwroot\ewcommon\"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protean.Tools", "Assemblies\Protean.Tools\Protean.Tools.csproj", "{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Protean.Tools_Net7", "Assemblies\Protean.Tools_Net7\Protean.Tools_Net7.csproj", "{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}"
+EndProject
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "ProteanCMS_Net7", "Assemblies\ProteanCMS_Net7\ProteanCMS_Net7.vbproj", "{36007C1C-B663-4762-95EB-6717635CC971}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,14 +57,6 @@ Global
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Release|ARM64.ActiveCfg = Debug|Any CPU
 		{F029CDA1-F973-463A-BA08-6FCBA7C77919}.Release|ARM64.Build.0 = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|ARM64.ActiveCfg = Debug|Any CPU
-		{F0617DFC-F066-4E7B-88A2-1EB8B779F906}.Release|ARM64.Build.0 = Debug|Any CPU
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Debug|ARM64.ActiveCfg = Debug|ARM64
@@ -90,6 +65,22 @@ Global
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Release|ARM64.ActiveCfg = Release|ARM64
 		{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}.Release|ARM64.Build.0 = Release|ARM64
+		{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{D04374B7-AB74-4DC3-A2D4-B5828ECC941A}.Release|ARM64.Build.0 = Release|Any CPU
+		{36007C1C-B663-4762-95EB-6717635CC971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36007C1C-B663-4762-95EB-6717635CC971}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36007C1C-B663-4762-95EB-6717635CC971}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{36007C1C-B663-4762-95EB-6717635CC971}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{36007C1C-B663-4762-95EB-6717635CC971}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36007C1C-B663-4762-95EB-6717635CC971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36007C1C-B663-4762-95EB-6717635CC971}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{36007C1C-B663-4762-95EB-6717635CC971}.Release|ARM64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

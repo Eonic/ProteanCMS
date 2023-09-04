@@ -1,0 +1,5 @@
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.vbproj.AssemblyReference.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\Protean.Resources.resources
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.vbproj.GenerateResource.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.GeneratedMSBuildEditorConfig.editorconfig
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.vbproj.CoreCompileInputs.cache

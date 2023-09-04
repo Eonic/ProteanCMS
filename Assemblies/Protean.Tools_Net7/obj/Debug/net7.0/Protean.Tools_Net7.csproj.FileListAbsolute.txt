@@ -1,0 +1,15 @@
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\bin\Debug\net7.0\Protean.Tools_Net7.dll.config
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\bin\Debug\net7.0\Protean.Tools_Net7.deps.json
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\bin\Debug\net7.0\Protean.Tools_Net7.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\bin\Debug\net7.0\Protean.Tools_Net7.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\bin\Debug\net7.0\JsonWebTokens.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\bin\Debug\net7.0\TidyHTML5Managed.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\bin\Debug\net7.0\Tinify.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.csproj.AssemblyReference.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.GeneratedMSBuildEditorConfig.editorconfig
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.csproj.CoreCompileInputs.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.csproj.CopyComplete
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\refint\Protean.Tools_Net7.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\Protean.Tools_Net7.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools_Net7\obj\Debug\net7.0\ref\Protean.Tools_Net7.dll
