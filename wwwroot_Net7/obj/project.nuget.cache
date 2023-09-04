@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "dgSpecHash": "j/5ZOnHuLp1J5tffJ1YxffsJiEeBC8Jh7CG4D5Ev7VgXt6bP5wJUsXexo/5vGCKVnlJL1QkIUZNOoxpczdaf7w==",
+  "success": false,
+  "projectFilePath": "C:\\HostingSpaces\\ProteanCMS\\wwwroot_Net7\\wwwroot_Net7.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project Protean.Tools_Net7 is not compatible with net6.0 (.NETCoreApp,Version=v6.0). Project Protean.Tools_Net7 supports: net7.0 (.NETCoreApp,Version=v7.0)",
+      "libraryId": "Protean.Tools_Net7",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    },
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project ProteanCMS_Net7 is not compatible with net6.0 (.NETCoreApp,Version=v6.0). Project ProteanCMS_Net7 supports: net7.0-windows7.0 (.NETCoreApp,Version=v7.0)",
+      "libraryId": "ProteanCMS_Net7",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
+}

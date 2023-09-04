@@ -438,7 +438,7 @@ Partial Public Class Cms
                     Dim dateFinish As Date
                     Dim oIndexDir As New System.IO.DirectoryInfo(mcIndexFolder)
                     Dim fsDir As Lucene.Net.Store.FSDirectory = FSDirectory.Open(oIndexDir)
-                    Dim searcher As New IndexSearcher(New DirectoryReader(fsDir), True)
+                    Dim searcher As New IndexSearcher(DirectoryReader.Open(fsDir), TaskScheduler.Current)
 
                     'check whether logged in user is csuser and skip checking status
                     Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
@@ -775,7 +775,7 @@ Partial Public Class Cms
                     Dim oIndexDir As New System.IO.DirectoryInfo(mcIndexFolder)
                     Dim fsDir As Lucene.Net.Store.Directory = FSDirectory.Open(oIndexDir)
                     Dim dirReader As DirectoryReader = DirectoryReader.Open(fsDir)
-                    Dim searcher As New IndexSearcher(dirReader, True)
+                    Dim searcher As New IndexSearcher(DirectoryReader.Open(fsDir), TaskScheduler.Current)
 
                     ' Check for settings
                     If myAPI.moRequest("fuzzy") = "on" Then _includeFuzzySearch = True

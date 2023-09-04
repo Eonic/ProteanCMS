@@ -275,7 +275,7 @@ Public Class MailQueue
         cString = Replace(cString, Chr(9), "")
         cString = Replace(cString, Chr(160), " ")
         cString = Replace(cString, Chr(10), "")
-        cString = Replace(cString, vbNewLine, "")
+        cString = Replace(cString, vbCrLf, "")
         cString = Replace(cString, vbTab, "")
         'Dim i As Integer = 1
         'Do Until i <= 0

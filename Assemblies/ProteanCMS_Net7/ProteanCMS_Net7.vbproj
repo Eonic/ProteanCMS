@@ -522,7 +522,7 @@
     <Company>Eonic Digital LLP</Company>
     <Product>ProteanCMS</Product>
     <Copyright>Copyright | Eonic Digital LLP.  2023</Copyright>
-    <FileVersion>6.0.60.340</FileVersion>
+    <FileVersion>7.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <InformationalVersion>0.0.0.708</InformationalVersion>
   </PropertyGroup>

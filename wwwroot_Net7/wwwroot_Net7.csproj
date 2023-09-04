@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Assemblies\Protean.Tools_Net7\Protean.Tools_Net7.csproj" />
+    <ProjectReference Include="..\Assemblies\ProteanCMS_Net7\ProteanCMS_Net7.vbproj" />
+  </ItemGroup>
+
+</Project>

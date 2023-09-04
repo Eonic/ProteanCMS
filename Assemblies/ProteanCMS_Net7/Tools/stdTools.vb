@@ -444,7 +444,7 @@ Public Module stdTools
         Dim thisError As String
         Dim LogName As String = "ProteanCMS"
         Dim cSource As String = "ProteanCMS Site"
-        Dim cMessage As String = "Site: unknown" & vbNewLine & vbNewLine
+        Dim cMessage As String = "Site: unknown" & vbCrLf & vbCrLf
         Try
             Dim oEventLog As System.Diagnostics.EventLog = Nothing
             Dim oELs() As System.Diagnostics.EventLog = System.Diagnostics.EventLog.GetEventLogs
@@ -458,7 +458,7 @@ Public Module stdTools
 
             If Not System.Web.HttpContext.Current Is Nothing Then
                 cSource = System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST")
-                cMessage = "Site: " & System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST") & vbNewLine & vbNewLine
+                cMessage = "Site: " & System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST") & vbCrLf & vbCrLf
             End If
 
             If oEventLog Is Nothing Then
@@ -467,23 +467,23 @@ Public Module stdTools
 
             'The Current Error
             If Not oCurrentException Is Nothing Then
-                cMessage &= vbNewLine & "Current Error: " & vbNewLine
-                cMessage &= "Info:" & cCurrentInfo & vbNewLine
-                cMessage &= "Exception Type:" & oCurrentException.GetType.ToString & vbNewLine
-                cMessage &= "Message:" & oCurrentException.Message() & vbNewLine
-                cMessage &= "Source:" & oCurrentException.Source() & vbNewLine
-                cMessage &= "Stack:" & oCurrentException.StackTrace & vbNewLine
-                cMessage &= "Full Exception:" & oCurrentException.ToString & vbNewLine
+                cMessage &= vbCrLf & "Current Error: " & vbCrLf
+                cMessage &= "Info:" & cCurrentInfo & vbCrLf
+                cMessage &= "Exception Type:" & oCurrentException.GetType.ToString & vbCrLf
+                cMessage &= "Message:" & oCurrentException.Message() & vbCrLf
+                cMessage &= "Source:" & oCurrentException.Source() & vbCrLf
+                cMessage &= "Stack:" & oCurrentException.StackTrace & vbCrLf
+                cMessage &= "Full Exception:" & oCurrentException.ToString & vbCrLf
             End If
             'We might be coming from an error handling procedure so lets get the orignal error that sent us there too
             If Not oOriginalError Is Nothing Then
-                cMessage &= vbNewLine & "Original Error: " & vbNewLine
-                cMessage &= "Info:" & cOriginalInfo & vbNewLine
-                cMessage &= "Exception Type:" & oOriginalError.GetType.ToString & vbNewLine
-                cMessage &= "Message:" & oOriginalError.Message() & vbNewLine
-                cMessage &= "Source:" & oOriginalError.Source() & vbNewLine
-                cMessage &= "Stack:" & oOriginalError.StackTrace & vbNewLine
-                cMessage &= "Full Exception:" & oOriginalError.ToString & vbNewLine
+                cMessage &= vbCrLf & "Original Error: " & vbCrLf
+                cMessage &= "Info:" & cOriginalInfo & vbCrLf
+                cMessage &= "Exception Type:" & oOriginalError.GetType.ToString & vbCrLf
+                cMessage &= "Message:" & oOriginalError.Message() & vbCrLf
+                cMessage &= "Source:" & oOriginalError.Source() & vbCrLf
+                cMessage &= "Stack:" & oOriginalError.StackTrace & vbCrLf
+                cMessage &= "Full Exception:" & oOriginalError.ToString & vbCrLf
             End If
 
             If Not EventLog.SourceExists(cSource) Then

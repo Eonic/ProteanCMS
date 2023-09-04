@@ -441,7 +441,7 @@ Public Module stdTools
         Dim thisError As String
         Dim LogName As String = "ProteanCMS"
         Dim cSource As String = "ProteanCMS Site"
-        Dim cMessage As String = "Site: unknown" & vbNewLine & vbNewLine
+        Dim cMessage As String = "Site: unknown" & vbCrLf & vbCrLf
         Try
             Dim oEventLog As System.Diagnostics.EventLog = Nothing
             Dim oELs() As System.Diagnostics.EventLog = System.Diagnostics.EventLog.GetEventLogs
