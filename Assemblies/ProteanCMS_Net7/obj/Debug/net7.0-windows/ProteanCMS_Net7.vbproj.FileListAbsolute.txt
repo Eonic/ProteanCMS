@@ -8,3 +8,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.vbproj.GenerateResource.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.GeneratedMSBuildEditorConfig.editorconfig
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.vbproj.CoreCompileInputs.cache
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\refint\ProteanCMS_Net7.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS_Net7\obj\Debug\net7.0-windows\ProteanCMS_Net7.pdb

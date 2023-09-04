@@ -7901,7 +7901,8 @@ processFlow:
                     Dim OrderDoc As New XmlDocument
                     OrderDoc.LoadXml(oCartXML.OuterXml)
 
-                    oTransform.ProcessTimed(OrderDoc, icPageWriter)
+                    'oTransform.ProcessTimed(OrderDoc, icPageWriter)
+                    oTransform.Process(OrderDoc, icPageWriter)
                     OrderDoc = Nothing
 
                     Dim foNetXml As String = icPageWriter.ToString

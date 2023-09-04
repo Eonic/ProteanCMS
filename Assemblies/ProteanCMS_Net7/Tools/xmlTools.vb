@@ -698,80 +698,80 @@ Public Class XmlHelper
         Delegate Sub ProcessDelegate2(ByVal oXml As XmlDocument, ByRef oWriter As IO.TextWriter)
         Delegate Function ProcessDelegateDocument(ByVal oXml As XmlDocument) As XmlDocument
 
-        Public Overloads Sub ProcessTimed(ByVal oXml As XmlDocument, ByRef oResponse As HttpResponse)
+        'Public Overloads Sub ProcessTimed(ByVal oXml As XmlDocument, ByRef oResponse As HttpResponse)
 
-            Dim sProcessInfo As String = ""
-            Try
-                Dim d As New ProcessDelegate(AddressOf Process)
-                Dim res As IAsyncResult = d.BeginInvoke(oXml, oResponse, Nothing, Nothing)
-                If res.IsCompleted = False Then
-                    res.AsyncWaitHandle.WaitOne(mnTimeoutSec, False)
-                    If res.IsCompleted = False Then
-                        d.EndInvoke(DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
-                        d = Nothing
-                        Err.Raise(1010, "TranformXSL", "The XSL took longer than " & (mnTimeoutSec / 1000) & " seconds to process")
-                        bError = True
-                    End If
-                End If
-                d.EndInvoke(DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
-            Catch ex As Exception
-                returnException(myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo, mbDebug)
-                oResponse.Write(myWeb.msException)
-                bError = True
-            End Try
-        End Sub
+        '    Dim sProcessInfo As String = ""
+        '    Try
+        '        Dim d As New ProcessDelegate(AddressOf Process)
+        '        Dim res As IAsyncResult = d.BeginInvoke(oXml, oResponse, Nothing, Nothing)
+        '        If res.IsCompleted = False Then
+        '            res.AsyncWaitHandle.WaitOne(mnTimeoutSec, False)
+        '            If res.IsCompleted = False Then
+        '                d.EndInvoke(DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
+        '                d = Nothing
+        '                Err.Raise(1010, "TranformXSL", "The XSL took longer than " & (mnTimeoutSec / 1000) & " seconds to process")
+        '                bError = True
+        '            End If
+        '        End If
+        '        d.EndInvoke(DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
+        '    Catch ex As Exception
+        '        returnException(myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+        '        oResponse.Write(myWeb.msException)
+        '        bError = True
+        '    End Try
+        'End Sub
 
-        Public Overloads Sub ProcessTimed(ByVal oXml As XmlDocument, ByRef oWriter As IO.TextWriter)
+        'Public Overloads Sub ProcessTimed(ByVal oXml As XmlDocument, ByRef oWriter As IO.TextWriter)
 
-            Dim sProcessInfo As String = ""
-            Try
-                Dim d As New ProcessDelegate2(AddressOf Process)
-                Dim res As IAsyncResult = d.BeginInvoke(oXml, oWriter, Nothing, Nothing)
-                If res.IsCompleted = False Then
-                    res.AsyncWaitHandle.WaitOne(mnTimeoutSec, False)
-                    If res.IsCompleted = False Then
-                        d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
-                        d = Nothing
-                        Err.Raise(1010, "TranformXSL", "The XSL took longer than " & (mnTimeoutSec / 1000) & " seconds to process")
-                        bError = True
-                    End If
-                End If
-                d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
-            Catch ex As Exception
-                returnException(myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo)
-                oWriter.Write(myWeb.msException)
-                bError = True
-            End Try
-        End Sub
+        '    Dim sProcessInfo As String = ""
+        '    Try
+        '        Dim d As New ProcessDelegate2(AddressOf Process)
+        '        Dim res As IAsyncResult = d.BeginInvoke(oXml, oWriter, Nothing, Nothing)
+        '        If res.IsCompleted = False Then
+        '            res.AsyncWaitHandle.WaitOne(mnTimeoutSec, False)
+        '            If res.IsCompleted = False Then
+        '                d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
+        '                d = Nothing
+        '                Err.Raise(1010, "TranformXSL", "The XSL took longer than " & (mnTimeoutSec / 1000) & " seconds to process")
+        '                bError = True
+        '            End If
+        '        End If
+        '        d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
+        '    Catch ex As Exception
+        '        returnException(myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo)
+        '        oWriter.Write(myWeb.msException)
+        '        bError = True
+        '    End Try
+        'End Sub
 
-        Public Function ProcessTimedDocument(ByVal oXml As XmlDocument) As XmlDocument
-            If Not CanProcess Then Return Nothing
-            Dim sProcessInfo As String = ""
-            Dim oWriter As TextWriter = New StringWriter
-            Try
-                Dim d As New ProcessDelegate2(AddressOf Process)
+        'Public Function ProcessTimedDocument(ByVal oXml As XmlDocument) As XmlDocument
+        '    If Not CanProcess Then Return Nothing
+        '    Dim sProcessInfo As String = ""
+        '    Dim oWriter As TextWriter = New StringWriter
+        '    Try
+        '        Dim d As New ProcessDelegate2(AddressOf Process)
 
-                Dim res As IAsyncResult = d.BeginInvoke(oXml, oWriter, Nothing, Nothing)
-                If res.IsCompleted = False Then
-                    res.AsyncWaitHandle.WaitOne(mnTimeoutSec, False)
-                    If res.IsCompleted = False Then
+        '        Dim res As IAsyncResult = d.BeginInvoke(oXml, oWriter, Nothing, Nothing)
+        '        If res.IsCompleted = False Then
+        '            res.AsyncWaitHandle.WaitOne(mnTimeoutSec, False)
+        '            If res.IsCompleted = False Then
 
-                        d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
-                        d = Nothing
-                        Err.Raise(1010, "TranformXSL", "The XSL took longer than " & (mnTimeoutSec / 1000) & " seconds to process")
-                    End If
-                End If
-                d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
-                Dim oXMLNew As New XmlDocument
-                oXml.InnerXml = oWriter.ToString
-                Return oXml
-            Catch ex As Exception
-                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
-                oWriter.Write(myWeb.msException)
-                bError = True
-                Return Nothing
-            End Try
-        End Function
+        '                d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
+        '                d = Nothing
+        '                Err.Raise(1010, "TranformXSL", "The XSL took longer than " & (mnTimeoutSec / 1000) & " seconds to process")
+        '            End If
+        '        End If
+        '        d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
+        '        Dim oXMLNew As New XmlDocument
+        '        oXml.InnerXml = oWriter.ToString
+        '        Return oXml
+        '    Catch ex As Exception
+        '        returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+        '        oWriter.Write(myWeb.msException)
+        '        bError = True
+        '        Return Nothing
+        '    End Try
+        'End Function
         Public Shadows Sub Process(ByVal xReader As XmlReader, ByVal xWriter As XmlWriter)
 
             Dim sProcessInfo As String = "Processing:" & msXslFile

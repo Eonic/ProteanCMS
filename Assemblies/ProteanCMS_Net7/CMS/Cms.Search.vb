@@ -27,6 +27,9 @@ Imports System
 Imports System.Collections.Generic
 Imports System.Web
 Imports System.Collections.Specialized
+Imports AngleSharp.Text
+
+
 
 Partial Public Class Cms
 
@@ -435,7 +438,7 @@ Partial Public Class Cms
                     Dim dateFinish As Date
                     Dim oIndexDir As New System.IO.DirectoryInfo(mcIndexFolder)
                     Dim fsDir As Lucene.Net.Store.FSDirectory = FSDirectory.Open(oIndexDir)
-                    Dim searcher As New IndexSearcher(fsDir, True)
+                    Dim searcher As New IndexSearcher(New DirectoryReader(fsDir), True)
 
                     'check whether logged in user is csuser and skip checking status
                     Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
@@ -581,8 +584,8 @@ Partial Public Class Cms
 
                             resultDoc = searcher.Doc(scoreDocs(i).Doc)
                             pageIdField = resultDoc.GetField("pgid")
-                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
-                                pageId = Convert.ToInt32(pageIdField.StringValue)
+                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.ToString) Then
+                                pageId = Convert.ToInt32(pageIdField.ToString)
                             Else
                                 pageId = 0
                             End If
@@ -596,7 +599,7 @@ Partial Public Class Cms
                                 Dim thisArtId As Long
 
                                 If Not resultDoc.GetField("artid") Is Nothing Then
-                                    thisArtId = CInt(resultDoc.GetField("artid").StringValue)
+                                    thisArtId = CInt(resultDoc.GetField("artid").ToString)
 
                                     If thisArtIdList = "" Then
                                         thisArtIdList = thisArtId
@@ -631,8 +634,8 @@ Partial Public Class Cms
 
                             resultDoc = searcher.Doc(scoreDocs(i).Doc)
                             pageIdField = resultDoc.GetField("pgid")
-                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
-                                pageId = Convert.ToInt32(pageIdField.StringValue)
+                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.ToString) Then
+                                pageId = Convert.ToInt32(pageIdField.ToString)
                             Else
                                 pageId = 0
                             End If
@@ -649,14 +652,14 @@ Partial Public Class Cms
                                 Dim thisArtId As Long = 0
 
                                 If Not resultDoc.GetField("artid") Is Nothing Then
-                                    thisArtId = CInt(resultDoc.GetField("artid").StringValue)
+                                    thisArtId = CInt(resultDoc.GetField("artid").ToString)
                                 End If
 
                                 If thisArtId = 0 Or thisArtIdList.Contains(thisArtId.ToString()) Then
                                     If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
                                         If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
-                                        url = resultDoc.GetField("url").StringValue & ""
+                                        url = resultDoc.GetField("url").ToString & ""
 
                                         ' Build the URL
                                         If url = "" Then
@@ -664,21 +667,21 @@ Partial Public Class Cms
                                             ' Add the artId, if exists
                                             If Not resultDoc.GetField("artid") Is Nothing Then
                                                 If resultDoc.GetField("contenttype") IsNot Nothing _
-                                                        AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
-                                                    url = resultDoc.GetField("url").StringValue
+                                                        AndAlso resultDoc.GetField("contenttype").ToString = "Download" Then
+                                                    url = resultDoc.GetField("url").ToString
                                                 Else
                                                     If moConfig("LegacyRedirect") = "on" Then
-                                                        url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
+                                                        url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").ToString & "-/"
 
                                                         Dim artName As String = ""
                                                         If resultDoc.GetField("name") IsNot Nothing Then
-                                                            artName = resultDoc.GetField("name").StringValue
+                                                            artName = resultDoc.GetField("name").ToString
                                                             Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
                                                             artName = oRe.Replace(artName, "-").Trim("-")
                                                             url &= artName
                                                         End If
                                                     Else
-                                                        url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+                                                        url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").ToString
                                                     End If
                                                 End If
 
@@ -690,17 +693,17 @@ Partial Public Class Cms
                                         'result.SetAttribute("indexId", )
                                         'result.SetAttribute("indexRank", sDoc.Score)
                                         result.SetAttribute("indexRank", scoreDocs(i).Score)
-                                        For Each docField As Field In resultDoc.GetFields()
+                                        For Each docField As Field In resultDoc.Fields()
 
                                             ' Don't add info to certain fields
                                             If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
-                                                result.SetAttribute(docField.Name, docField.StringValue)
+                                                result.SetAttribute(docField.Name, docField.ToString)
                                             End If
 
                                             If docField.Name = "abstract" Then
 
                                                 ' Try to output this as Xml
-                                                Dim innerString As String = docField.StringValue & ""
+                                                Dim innerString As String = docField.ToString & ""
                                                 processInfo = innerString
                                                 Try
                                                     result.InnerXml = innerString.Trim
@@ -770,8 +773,9 @@ Partial Public Class Cms
                     Dim dateStart As Date = Now
                     Dim dateFinish As Date
                     Dim oIndexDir As New System.IO.DirectoryInfo(mcIndexFolder)
-                    Dim fsDir As Lucene.Net.Store.FSDirectory = FSDirectory.Open(oIndexDir)
-                    Dim searcher As New IndexSearcher(fsDir, True)
+                    Dim fsDir As Lucene.Net.Store.Directory = FSDirectory.Open(oIndexDir)
+                    Dim dirReader As DirectoryReader = DirectoryReader.Open(fsDir)
+                    Dim searcher As New IndexSearcher(dirReader, True)
 
                     ' Check for settings
                     If myAPI.moRequest("fuzzy") = "on" Then _includeFuzzySearch = True
@@ -890,8 +894,8 @@ Partial Public Class Cms
                             resultDoc = searcher.Doc(sDoc.Doc)
 
                             pageIdField = resultDoc.GetField("pgid")
-                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
-                                pageId = Convert.ToInt32(pageIdField.StringValue)
+                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.ToString) Then
+                                pageId = Convert.ToInt32(pageIdField.ToString)
                             Else
                                 pageId = 0
                             End If
@@ -901,7 +905,7 @@ Partial Public Class Cms
                             'don't add artId more than twice to results.
                             Dim thisArtId As Long
                             If Not resultDoc.GetField("artid") Is Nothing Then
-                                thisArtId = CInt(resultDoc.GetField("artid").StringValue)
+                                thisArtId = CInt(resultDoc.GetField("artid").ToString)
                                 If thisArtIdList = "" Then
                                     thisArtIdList = thisArtId
                                 Else
@@ -926,8 +930,8 @@ Partial Public Class Cms
                             resultDoc = searcher.Doc(sDoc.Doc)
 
                             pageIdField = resultDoc.GetField("pgid")
-                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
-                                pageId = Convert.ToInt32(pageIdField.StringValue)
+                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.ToString) Then
+                                pageId = Convert.ToInt32(pageIdField.ToString)
                             Else
                                 pageId = 0
                             End If
@@ -935,13 +939,13 @@ Partial Public Class Cms
                             url = "" ' this is the link for the page
                             Dim thisArtId As Long = 0
                             If Not resultDoc.GetField("artid") Is Nothing Then
-                                thisArtId = CInt(resultDoc.GetField("artid").StringValue)
+                                thisArtId = CInt(resultDoc.GetField("artid").ToString)
                             End If
                             If thisArtId = 0 Or thisArtIdList.Contains(thisArtId.ToString()) Then
                                 If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
                                     If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
-                                    url = resultDoc.GetField("url").StringValue & ""
+                                    url = resultDoc.GetField("url").ToString & ""
 
                                     ' Build the URL
                                     If url = "" Then
@@ -951,21 +955,21 @@ Partial Public Class Cms
 
 
                                             If resultDoc.GetField("contenttype") IsNot Nothing _
-                                                    AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
-                                                url = resultDoc.GetField("url").StringValue
+                                                    AndAlso resultDoc.GetField("contenttype").ToString = "Download" Then
+                                                url = resultDoc.GetField("url").ToString
                                             Else
                                                 If moConfig("LegacyRedirect") = "on" Then
-                                                    url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
+                                                    url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").ToString & "-/"
 
                                                     Dim artName As String = ""
                                                     If resultDoc.GetField("name") IsNot Nothing Then
-                                                        artName = resultDoc.GetField("name").StringValue
+                                                        artName = resultDoc.GetField("name").ToString
                                                         Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
                                                         artName = oRe.Replace(artName, "-").Trim("-")
                                                         url &= artName
                                                     End If
                                                 Else
-                                                    url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+                                                    url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").ToString
                                                 End If
                                             End If
                                         End If
@@ -976,7 +980,7 @@ Partial Public Class Cms
                                     'result.SetAttribute("indexId", )
                                     result.SetAttribute("indexRank", sDoc.Score)
 
-                                    For Each docField As Field In resultDoc.GetFields()
+                                    For Each docField As Field In resultDoc.Fields()
 
                                         ' Don't add info to certain fields
                                         'If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
@@ -989,14 +993,14 @@ Partial Public Class Cms
                                             If myWeb.moDbHelper Is Nothing Then
                                                 myWeb.moDbHelper = myWeb.GetDbHelper()
                                             End If
-                                            result.SetAttribute(docField.Name, docField.StringValue) 'search all the products
+                                            result.SetAttribute(docField.Name, docField.ToString) 'search all the products
 
                                         End If
 
                                         If docField.Name = "abstract" Then
 
                                             ' Try to output this as Xml
-                                            Dim innerString As String = docField.StringValue & ""
+                                            Dim innerString As String = docField.ToString & ""
                                             processInfo = innerString
                                             Try
                                                 result.InnerXml = innerString.Trim
@@ -2017,8 +2021,8 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
             Try
 
-                Dim analyzer As New StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29)
-                Dim parser As New QueryParser(Lucene.Net.Util.Version.LUCENE_29, "text", analyzer)
+                Dim analyzer As New StandardAnalyzer(Lucene.Net.Util.LuceneVersion.LUCENE_47)
+                Dim parser As New Lucene.Net.QueryParsers.Classic.QueryParser(Lucene.Net.Util.LuceneVersion.LUCENE_47, "text", analyzer)
                 Dim queryBuilder As New BooleanQuery()
                 Dim queryToBeParsed As New StringBuilder
                 Dim queryTerms As String() = Nothing
@@ -2124,7 +2128,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                                         Else
                                             maxNumber = Integer.MaxValue
                                         End If
-                                        Dim numericQuery As Query = NumericRangeQuery.NewIntRange(fieldName, minNumber, maxNumber, True, True)
+                                        Dim numericQuery As Query = NumericRangeQuery.NewInt64Range(fieldName, minNumber, maxNumber, True, True)
                                         queryBuilder.Add(numericQuery, Occur.MUST)
 
                                     Case "float"
@@ -2142,13 +2146,13 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                                         Else
                                             maxNumber = Single.MaxValue
                                         End If
-                                        Dim numericQuery As Query = NumericRangeQuery.NewFloatRange(fieldName, minNumber, maxNumber, True, True)
+                                        Dim numericQuery As Query = NumericRangeQuery.NewDoubleRange(fieldName, minNumber, maxNumber, True, True)
                                         queryBuilder.Add(numericQuery, Occur.MUST)
 
                                     Case Else
 
-                                        Dim termQuery As New TermRangeQuery(fieldName, fieldMin, fieldMax, True, True)
-                                        queryBuilder.Add(termQuery, Occur.MUST)
+                                        '   Dim termQuery As New TermRangeQuery(fieldName, fieldMin, fieldMax, True, True)
+                                        '   queryBuilder.Add(termQuery, Occur.MUST)
 
 
                                 End Select
@@ -2317,9 +2321,9 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     Dim fieldToSortType As Integer
                     Select Case sortFieldType.ToLower
                         Case "number", "float"
-                            fieldToSortType = SortField.FLOAT
+                            fieldToSortType = Lucene.Net.Search.SortFieldType.DOUBLE
                         Case Else
-                            fieldToSortType = SortField.STRING
+                            fieldToSortType = Lucene.Net.Search.SortFieldType.STRING
                     End Select
 
 

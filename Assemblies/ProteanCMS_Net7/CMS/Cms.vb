@@ -1,6 +1,7 @@
 Option Strict Off
 Option Explicit On
 
+Imports System
 Imports System.Xml
 Imports System.Web
 Imports System.Web.HttpUtility
@@ -1465,7 +1466,8 @@ Public Class Cms
 
                                         Dim textWriter As New StringWriterWithEncoding(System.Text.Encoding.UTF8)
                                         PerfMon.Log("Web", "GetPageHTML-startxsl")
-                                        oTransform.ProcessTimed(moPageXml, textWriter)
+                                        'oTransform.ProcessTimed(moPageXml, textWriter)
+                                        oTransform.Process(moPageXml, textWriter)
                                         PerfMon.Log("Web", "GetPageHTML-endxsl")
 
                                         'save the page
@@ -1505,7 +1507,8 @@ Public Class Cms
                                         msException = ""
                                         icPageWriter = New IO.StringWriter
 
-                                        oTransform.ProcessTimed(moPageXml, icPageWriter)
+                                        ' oTransform.ProcessTimed(moPageXml, icPageWriter)
+                                        oTransform.Process(moPageXml, icPageWriter)
 
                                         Dim foNetXml As String = icPageWriter.ToString
 
@@ -1595,7 +1598,8 @@ Public Class Cms
                                         moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
                                         PerfMon.Log("Web", "GetPageHTML-startxsl")
 
-                                        oTransform.ProcessTimed(moPageXml, moResponse)
+                                        'oTransform.ProcessTimed(moPageXml, moResponse)
+                                        oTransform.Process(moPageXml, moResponse)
                                         PerfMon.Log("Web", "GetPageHTML-endxsl")
                                     End If
                                     PerfMon.Log("Web", "GetPageHTML-endxsl")
@@ -2242,7 +2246,8 @@ Public Class Cms
                     Dim oTransform As New Protean.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, 120000)
                     PerfMon.Log("Web", "GetFeedXML-startxsl")
                     oTransform.mbDebug = gbDebug
-                    oTransform.ProcessTimed(moPageXml, moResponse)
+                    'oTransform.ProcessTimed(moPageXml, moResponse)
+                    oTransform.Process(moPageXml, moResponse)
                     PerfMon.Log("Web", "GetFeedXML-endxsl")
                     oTransform.Close()
                     oTransform = Nothing
@@ -2541,7 +2546,8 @@ Public Class Cms
 
                 PerfMon.Log("Web", "GetPageHTML-startxsl")
                 oTransform.mbDebug = gbDebug
-                oTransform.ProcessTimed(moPageXml, moResponse)
+                'oTransform.ProcessTimed(moPageXml, moResponse)
+                oTransform.Process(moPageXml, moResponse)
                 PerfMon.Log("Web", "GetPageHTML-endxsl")
                 oTransform.Close()
                 oTransform = Nothing
@@ -2888,7 +2894,8 @@ Public Class Cms
 
             moTransform.mbDebug = gbDebug
             icPageWriter = New IO.StringWriter
-            moTransform.ProcessTimed(moPageXml, icPageWriter)
+            ' moTransform.ProcessTimed(moPageXml, icPageWriter)
+            moTransform.Process(moPageXml, icPageWriter)
 
             cPageHTML = Replace(icPageWriter.ToString, "<?xml version=""1.0"" encoding=""utf-16""?>", "")
             cPageHTML = Replace(cPageHTML, "<?xml version=""1.0"" encoding=""UTF-8""?>", "")
@@ -7145,7 +7152,8 @@ Public Class Cms
                     If IsNumeric(oDR("parId")) And Not oDR("parId").Contains(",") Then
                         ochkStr = moDbHelper.checkPagePermission(oDR("parId"))
                         If IsNumeric(ochkStr) Then
-                            If CInt(ochkStr) = oDR("parId") And Not cDoneIds.Contains("," & oDR("id") & ",") Then
+
+                            If CInt(ochkStr) = oDR("parId") And Not cDoneIds.IndexOf("," & oDR("id") & ",") >= 1 Then
                                 oDS.Tables("Content").ImportRow(oDR)
                                 cDoneIds &= oDR("id") & ","
                             End If
@@ -7249,7 +7257,7 @@ Public Class Cms
                         If IsNumeric(oDR("parId")) And Not oDR("parId").Contains(",") Then
                             ochkStr = moDbHelper.checkPagePermission(oDR("parId"))
                             If IsNumeric(ochkStr) Then
-                                If CInt(ochkStr) = oDR("parId") And Not cDoneIds.Contains("," & oDR("id") & ",", StringComparison.CurrentCulture) Then
+                                If CInt(ochkStr) = oDR("parId") And Not cDoneIds.IndexOf("," & oDR("id") & ",") >= 1 Then
                                     oDS.Tables("Content").ImportRow(oDR)
                                     cDoneIds &= oDR("id") & ","
                                 End If
@@ -8142,7 +8150,8 @@ Public Class Cms
 
             moTransform.mbDebug = gbDebug
             icPageWriter = New IO.StringWriter
-            moTransform.ProcessTimed(moPageXml, icPageWriter)
+            '   moTransform.ProcessTimed(moPageXml, icPageWriter)
+            moTransform.Process(moPageXml, icPageWriter)
 
 
 

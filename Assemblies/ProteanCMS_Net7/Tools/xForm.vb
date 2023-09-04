@@ -1219,12 +1219,13 @@ Public Class xForm
                                                             If Directory.Exists(cFullPath & cSavePath) = True Then
 
                                                                 Dim cFinalFullSavePath As String = oFs.getUniqueFilename(cFullPath & cSavePath & Filename)
-                                                                ' oFile.SaveAs(cFinalFullSavePath)
-                                                                Using fs As FileStream = System.IO.File.Create(cFinalFullSavePath)
-                                                                    oFile.CopyTo(fs)
-                                                                    Continue For
-                                                                End Using
 
+
+                                                                Dim FileStream = File.Create(cFinalFullSavePath)
+                                                                oFile.InputStream.Seek(0, SeekOrigin.Begin)
+                                                                oFile.InputStream.CopyTo(FileStream)
+                                                                FileStream.Close()
+                                                                ' oFile.SaveAs(cFinalFullSavePath)
 
                                                                 oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = cFinalFullSavePath.Replace(cFullPath, "")
 
