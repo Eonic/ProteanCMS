@@ -8863,6 +8863,7 @@
       "System.Configuration.ConfigurationManager >= 7.0.0",
       "System.Data.SqlClient >= 4.8.5",
       "System.Diagnostics.DiagnosticSource >= 7.0.2",
+      "System.Drawing.Common >= 7.0.0",
       "System.Management >= 7.0.2",
       "System.Net.FtpClient >= 1.0.5824.34026",
       "System.Net.Http >= 4.3.4",
@@ -9030,6 +9031,10 @@
           "System.Diagnostics.DiagnosticSource": {
             "target": "Package",
             "version": "[7.0.2, )"
+          },
+          "System.Drawing.Common": {
+            "target": "Package",
+            "version": "[7.0.0, )"
           },
           "System.Management": {
             "target": "Package",
