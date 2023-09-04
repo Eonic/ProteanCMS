@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.60.319</AssemblyVersion>
+    <AssemblyVersion>6.0.60.321</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -905,6 +905,12 @@
     <WCFMetadataStorage Include="Service References\PayPalAPI\" />
     <WCFMetadataStorage Include="Service References\Paypoint\" />
     <WCFMetadataStorage Include="Service References\proteancms.com\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
+      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
+      <Name>Protean.Tools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

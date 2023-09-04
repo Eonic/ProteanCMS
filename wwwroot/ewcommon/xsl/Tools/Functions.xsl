@@ -10881,7 +10881,9 @@
       <xsl:if test="@mdCol='6'">col-md-2 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+		<xsl:when test="@xsCol='4'">col-xs-3 </xsl:when>
+		<xsl:when test="@xsCol='3'">col-xs-4 </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-6 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">
@@ -10924,7 +10926,7 @@
       <xsl:if test="@mdCol='2equal'">col-md-6 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-4 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">
@@ -10967,7 +10969,7 @@
       <xsl:if test="@mdCol='2equal'">col-md-equal-2 </xsl:if>
     </xsl:variable>
     <xsl:choose>
-      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:when test="@xsCol='2'">col-xs-4 </xsl:when>
       <xsl:otherwise>mobile-1-col </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@smCol and @smCol!=''">
