@@ -2609,3 +2609,27 @@ function showAdminAlert(message) {
     $('#AdminAlertModal #errorMessage').html(message);
     $('#AdminAlertModal').modal('show');
 }
+
+function ValidateAndSendReviewEmail(event) {
+    
+    if (form_check(event)) {
+        if ($("#nStatus_1").prop("checked") && $("#nEmailSent_True").prop("checked") == false) {
+            debugger            
+            var reviewid = this.getQueryStringParam('id');
+            var inputJson = { ReviewId: reviewid };
+            $("#nEmailSent_True").prop("checked", "checked");
+            var dataurl = '/ewapi/Cms.Admin/SendReviewCompleteEmail'
+            $.ajax({
+                url: dataurl,
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(inputJson),
+                success: function (data) {                    
+                }
+            });
+        }
+
+    } else {
+        return false;
+    }
+}
