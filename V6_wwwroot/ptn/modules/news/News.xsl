@@ -2,144 +2,8 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
 	<!-- ############## News Articles ##############   -->
 
-	<!-- NewsArticle Module -->
-	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="displayBrief">
-		<!-- Set Variables -->
-		<xsl:variable name="contentType" select="@contentType" />
-		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-		<xsl:variable name="contentList">
-			<xsl:apply-templates select="." mode="getContent">
-				<xsl:with-param name="contentType" select="$contentType" />
-				<xsl:with-param name="startPos" select="$startPos" />
-			</xsl:apply-templates>
-		</xsl:variable>
-		<xsl:variable name="totalCount">
-			<xsl:choose>
-				<xsl:when test="@display='related'">
-					<xsl:value-of select="count(Content[@type=$contentType])"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<!--responsive columns variables-->
-
-		<!--end responsive columns variables-->
-		<div class="clearfix {@moduleType}">
-			<div>
-				<!--responsive columns -->
-				<xsl:apply-templates select="." mode="contentColumns"/>
-				<!--end responsive columns-->
-
-				<!-- If Stepper, display Stepper -->
-				<!--<xsl:choose>
-					<xsl:when test="@linkArticle='true'">
-						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-							<xsl:with-param name="sortBy" select="@sortBy"/>
-						</xsl:apply-templates>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-							<xsl:with-param name="sortBy" select="@sortBy"/>
-							<xsl:with-param name="parentId" select="@id"/>
-						</xsl:apply-templates>
-					</xsl:otherwise>
-				</xsl:choose>-->
-				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-					<xsl:with-param name="sortBy" select="@sortBy"/>
-					<xsl:with-param name="parentId" select="@id"/>
-					<xsl:with-param name="linked" select="@linkArticle"/>
-				</xsl:apply-templates>
-				<xsl:if test="@stepCount != '0'">
-					<xsl:apply-templates select="/" mode="genericStepper">
-						<xsl:with-param name="articleList" select="$contentList"/>
-						<xsl:with-param name="noPerPage" select="@stepCount"/>
-						<xsl:with-param name="startPos" select="$startPos"/>
-						<xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-						<xsl:with-param name="totalCount" select="$totalCount"/>
-					</xsl:apply-templates>
-				</xsl:if>
-				<xsl:text> </xsl:text>
-			</div>
-		</div>
-	</xsl:template>
-
-	<!-- NewsArticle Module Swiper -->
-	<xsl:template match="Content[@type='Module' and @moduleType='NewsList' and @carousel='true']" mode="displayBrief">
-		<xsl:param name="linked"/>
-		<!-- Set Variables -->
-		<xsl:variable name="contentType" select="@contentType" />
-		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
-		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-		<xsl:variable name="contentList">
-			<xsl:apply-templates select="." mode="getContent">
-				<xsl:with-param name="contentType" select="$contentType" />
-				<xsl:with-param name="startPos" select="$startPos" />
-			</xsl:apply-templates>
-		</xsl:variable>
-		<xsl:variable name="totalCount">
-			<xsl:choose>
-				<xsl:when test="@display='related'">
-					<xsl:value-of select="count(Content[@type=$contentType])"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<!--responsive columns variables-->
-
-		<!--end responsive columns variables-->
-		<!-- Output Module -->
-		<div class="swiper-container {@moduleType} content-carousel ">
-			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
-				<div class="swiper-wrapper">
-					<xsl:apply-templates select="." mode="contentColumns">
-						<xsl:with-param name="carousel" select="@carousel"/>
-					</xsl:apply-templates>
-					<!--<xsl:choose>
-						<xsl:when test="@linkArticle='true'">
-							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-								<xsl:with-param name="sortBy" select="@sortBy"/>
-								<xsl:with-param name="class" select="'swiper-slide'"/>
-							</xsl:apply-templates>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-								<xsl:with-param name="sortBy" select="@sortBy"/>
-								<xsl:with-param name="class" select="'swiper-slide'"/>
-								<xsl:with-param name="linked" select="$linked"/>
-							</xsl:apply-templates>
-						</xsl:otherwise>
-					</xsl:choose>-->
-					<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-						<xsl:with-param name="sortBy" select="@sortBy"/>
-						<xsl:with-param name="class" select="'swiper-slide'"/>
-						<xsl:with-param name="linked" select="$linked"/>
-					</xsl:apply-templates>
-					<xsl:text> </xsl:text>
-				</div>
-			</div>
-			<xsl:if test="@carouselBullets='true'">
-				<div class="swiper-pagination" id="swiper-pagination-{@id}">
-					<xsl:text> </xsl:text>
-				</div>
-			</xsl:if>
-
-			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
-				<xsl:text> </xsl:text>
-			</div>
-			<div class="swiper-button-next" id="swiper-button-next-{@id}">
-				<xsl:text> </xsl:text>
-			</div>
-			<div class="row">
-				<span>&#160;</span>
-			</div>
-		</div>
-	</xsl:template>
-
+	<!-- wrapping code is generic from layout.xsl with mode displayBrief, override here to customise-->
+	
 	<xsl:template match="Content[@type='Module' and @moduleType='NewsList']" mode="themeModuleExtras">
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
@@ -148,14 +12,13 @@
 		<!-- this is empty because we want this on individual listing panels not the containing module-->
 	</xsl:template>
 
-
 	<!-- NewsArticle Brief -->
 	<xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
+		<xsl:param name="crop"/>
 		<xsl:param name="class"/>
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
-		<!-- articleBrief -->
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -170,27 +33,36 @@
 				<xsl:with-param name="parentId" select="$parentId"/>
 			</xsl:apply-templates>
 		</xsl:variable>
+		<xsl:variable name="cropSetting">
+			<xsl:choose>
+				<xsl:when test="$crop='true'">
+					<xsl:value-of select="true()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="false()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="{$classValues}">
 			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
 				<xsl:with-param name="parentId" select="$parentId"/>
 				<xsl:with-param name="pos" select="position()"/>
 			</xsl:apply-templates>
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="concat('listItem newsarticle ',$class)"/>
+				<xsl:with-param name="class" select="concat($classValues,' ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
 				<xsl:if test="Images/img/@src!=''">
-					<a href="{$parentURL}" title="Read More - {Headline/node()}" class="list-image-link">
+					<a href="{$parentURL}" title="Read more about {Headline/node()}" class="list-image-link">
 						<xsl:apply-templates select="." mode="displayThumbnail">
-							<xsl:with-param name="class">img-fluid</xsl:with-param>
+							<xsl:with-param name="crop" select="$cropSetting" />
+							<xsl:with-param name="class">list-image</xsl:with-param>
 						</xsl:apply-templates>
 					</a>
-					<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-					<span class="hidden">|</span>
 				</xsl:if>
 				<h3 class="title">
-					<a href="{$parentURL}" title="Read More - {Headline/node()}">
+					<a href="{$parentURL}" title="Read more about {Headline/node()}">
 						<xsl:apply-templates select="." mode="getDisplayName"/>
 					</a>
 				</h3>
@@ -232,109 +104,6 @@
 					<xsl:text> </xsl:text>
 				</div>
 			</div>
-			<!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-		</div>
-	</xsl:template>
-
-	<xsl:template match="Content[@type='NewsArticle']" mode="displayBriefLinked">
-		<xsl:param name="sortBy"/>
-		<xsl:param name="link"/>
-		<xsl:param name="altText"/>
-		<xsl:param name="linkType"/>
-		<!-- articleBrief -->
-		<xsl:variable name="parentURL">
-			<xsl:apply-templates select="." mode="getHref"/>
-		</xsl:variable>
-		<xsl:variable name="classValues">
-			<xsl:text>listItem newsarticle </xsl:text>
-			<xsl:value-of select="$class"/>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
-				<xsl:with-param name="parentId" select="$parentId"/>
-			</xsl:apply-templates>
-		</xsl:variable>
-		<div class="{$classValues}">
-			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
-				<xsl:with-param name="parentId" select="$parentId"/>
-				<xsl:with-param name="pos" select="position()"/>
-			</xsl:apply-templates>
-			<xsl:apply-templates select="." mode="inlinePopupOptions">
-				<xsl:with-param name="class" select="'listItem newsarticle'"/>
-				<xsl:with-param name="sortBy" select="$sortBy"/>
-
-			</xsl:apply-templates>
-			<xsl:choose>
-				<xsl:when test="Strapline/descendant-or-self::a">
-					<div class="straphaslinks">
-						<xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
-							<xsl:attribute name="rel">external</xsl:attribute>
-							<xsl:attribute name="class">extLink listItem list-group-item newsarticle straphaslinks</xsl:attribute>
-						</xsl:if>
-						<div class="lIinner">
-							<h3 class="title">
-								<a href="{$parentURL}">
-									<xsl:apply-templates select="." mode="getDisplayName"/>
-								</a>
-							</h3>
-							<xsl:if test="Images/img/@src!=''">
-								<xsl:apply-templates select="." mode="displayThumbnail">
-									<xsl:with-param name="class">img-fluid</xsl:with-param>
-								</xsl:apply-templates>
-								<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-								<span class="hidden">|</span>
-							</xsl:if>
-							<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
-							<xsl:if test="@publish!=''">
-								<p class="date">
-									<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-									<xsl:call-template name="DisplayDate">
-										<xsl:with-param name="date" select="@publish"/>
-									</xsl:call-template>
-								</p>
-							</xsl:if>
-							<xsl:if test="Strapline/node()!=''">
-								<div class="summary">
-									<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-								</div>
-							</xsl:if>
-						</div>
-					</div>
-				</xsl:when>
-				<xsl:otherwise>
-					<a href="{$parentURL}">
-						<xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
-							<xsl:attribute name="rel">external</xsl:attribute>
-							<xsl:attribute name="class">extLink listItem list-group-item newsarticle</xsl:attribute>
-						</xsl:if>
-						<div class="lIinner">
-							<h3 class="title">
-								<xsl:apply-templates select="." mode="getDisplayName"/>
-							</h3>
-							<xsl:if test="Images/img/@src!=''">
-								<xsl:apply-templates select="." mode="displayThumbnail"/>
-								<!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-								<span class="hidden">|</span>
-							</xsl:if>
-							<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
-							<xsl:if test="@publish!=''">
-								<p class="date">
-									<xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-									<xsl:call-template name="DisplayDate">
-										<xsl:with-param name="date" select="@publish"/>
-									</xsl:call-template>
-								</p>
-							</xsl:if>
-							<xsl:if test="Strapline/node()!=''">
-								<div class="summary">
-									<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-								</div>
-							</xsl:if>
-							<xsl:apply-templates select="." mode="displayTagsNoLink"/>
-						</div>
-					</a>
-				</xsl:otherwise>
-			</xsl:choose>
-
 		</div>
 	</xsl:template>
 
@@ -351,28 +120,31 @@
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="'detail newsarticle'"/>
 			</xsl:apply-templates>
-			<div class="detail-text">
-				<h1 class="entry-title content-title" itemprop="headline">
-					<xsl:apply-templates select="." mode="getDisplayName" />
-				</h1>
-				<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
-				<xsl:if test="@publish!=''">
-					<p class="dtstamp" title="{@publish}" itemprop="datePublished">
-						<xsl:call-template name="DisplayDate">
-							<xsl:with-param name="date" select="@publish"/>
-						</xsl:call-template>
-					</p>
-				</xsl:if>
-
-				<xsl:apply-templates select="." mode="displayDetailImage"/>
-				<span class="strapline-detail" itemprop="description">
-					<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-				</span>
-				<div class="description entry-content" itemprop="text">
-					<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
-				</div>
-				<xsl:if test="Content[@type='FAQ']">
-					<div class="faq-list">
+			<div class="row">
+				<div class="col-lg-8">
+					<h1 class="detail-title" itemprop="headline">
+						<xsl:apply-templates select="." mode="getDisplayName" />
+					</h1>
+					<xsl:if test="@imgPosition='main'">
+						<span class="detail-img ">
+							<xsl:apply-templates select="." mode="displayDetailImage"/>
+						</span>
+					</xsl:if>
+					<xsl:if test="@publish!=''">
+						<p class="dtstamp" title="{@publish}" itemprop="datePublished">
+							<xsl:call-template name="DisplayDate">
+								<xsl:with-param name="date" select="@publish"/>
+							</xsl:call-template>
+						</p>
+					</xsl:if>
+					<span class="strapline-detail" itemprop="description">
+						<xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+					</span>
+					<div class="description entry-content" itemprop="text">
+						<xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
+					</div>
+					<xsl:if test="Content[@type='FAQ']">
+						<!--<div class="faq-list">
 						<a name="pageTop" class="pageTop">&#160;</a>
 						<h3>Question and Answer</h3>
 						<ul>
@@ -381,23 +153,57 @@
 						<xsl:apply-templates select="Content[@type='FAQ']" mode="displayBrief">
 							<xsl:with-param name="sortBy" select="@sortBy"/>
 						</xsl:apply-templates>
+					</div>-->
+
+						<div class="faqList panel-group accordion-module" id="accordion-{@id}" role="tablist" aria-multiselectable="true">
+							<xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQAccordianBrief">
+								<xsl:with-param name="parId" select="@id"/>
+							</xsl:apply-templates>
+						</div>
+					</xsl:if>
+					<div class="entryFooter">
+						<xsl:if test="Content[@type='Tag']">
+							<div class="tags">
+								<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
+								<xsl:text> </xsl:text>
+							</div>
+						</xsl:if>
+						<xsl:apply-templates select="." mode="backLink">
+							<xsl:with-param name="link" select="$thisURL"/>
+							<xsl:with-param name="altText">
+								<xsl:call-template name="term2006" />
+							</xsl:with-param>
+						</xsl:apply-templates>
 					</div>
-				</xsl:if>
-				<div class="entryFooter">
-					<div class="tags">
-						<xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
-						<xsl:text> </xsl:text>
-					</div>
-					<xsl:apply-templates select="." mode="backLink">
-						<xsl:with-param name="link" select="$thisURL"/>
-						<xsl:with-param name="altText">
-							<xsl:call-template name="term2006" />
-						</xsl:with-param>
+					<xsl:apply-templates select="." mode="ContentDetailCommenting">
+						<xsl:with-param name="commentPlatform" select="$page/Contents/Content[@moduleType='NewsList']/@commentPlatform"/>
 					</xsl:apply-templates>
 				</div>
-				<xsl:apply-templates select="." mode="ContentDetailCommenting">
-					<xsl:with-param name="commentPlatform" select="$page/Contents/Content[@moduleType='NewsList']/@commentPlatform"/>
-				</xsl:apply-templates>
+				<div class="col-lg-4">
+					<xsl:if test="not(@imgPosition='main')">
+						<span class="detail-img ">
+							<xsl:apply-templates select="." mode="displayDetailImage"/>
+						</span>
+					</xsl:if>
+					<xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
+					<xsl:if test="Extract/node() and Extract/node()!=''">
+						<aside class="extract">
+							<blockquote>
+								<xsl:apply-templates select="Extract/node()" mode="cleanXhtml"/>
+							</blockquote>
+						</aside>
+					</xsl:if>
+					<xsl:if test="Content[@type='NewsArticle']">
+						<div class="relatedcontent NewsList">
+							<h2>Related Articles</h2>
+							<div class="row cols row-cols-1">
+								<xsl:apply-templates select="Content[@type='NewsArticle']" mode="displayBrief">
+									<xsl:with-param name="sortBy" select="@publishDate"/>
+								</xsl:apply-templates>
+							</div>
+						</div>
+					</xsl:if>
+				</div>
 			</div>
 		</div>
 	</xsl:template>

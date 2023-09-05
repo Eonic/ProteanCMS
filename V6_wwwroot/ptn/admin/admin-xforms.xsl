@@ -3103,6 +3103,9 @@
             <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
           </xsl:attribute>
         </xsl:if>
+		  <xsl:if test="contains($class,'readonly')">
+			  <xsl:attribute name="disabled">disabled</xsl:attribute>
+		  </xsl:if>
       </input>
       <label for="{$ref}_{$value}">
         <xsl:if test="not(contains($class,'multiline'))">
@@ -3166,7 +3169,6 @@
           <xsl:text> multiline</xsl:text>
         </xsl:if>
       </xsl:attribute>
-
       <input type="{$type}">
         <xsl:if test="$ref!=''">
           <xsl:attribute name="name">

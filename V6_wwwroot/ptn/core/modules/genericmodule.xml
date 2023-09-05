@@ -42,6 +42,7 @@
 			<bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
 			<bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
 			<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
+			<bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
 			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
 			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
 			<bind id="linkWindow" nodeset="@linkWindow" required="false()" type="string"/>
@@ -194,7 +195,16 @@
 								<label>Upload icon from file</label>
 								<value></value>
 							</input>
-
+							<select1 bind="marginBelow" appearance="full" class="form-group">
+								<item>
+									<label>Margin below module (default)</label>
+									<value>true</value>
+								</item>
+								<item>
+									<label>No margin below</label>
+									<value>false</value>
+								</item>
+							</select1>
 						</group>
 					</group>
 				</group>

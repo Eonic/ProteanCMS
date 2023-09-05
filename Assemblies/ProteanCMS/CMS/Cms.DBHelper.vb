@@ -25,12 +25,9 @@ Imports Protean.Tools.Dictionary
 Imports Protean.Tools.Xml
 Imports System
 Imports System.Threading
-Imports WebGrease.Css.Ast.Selectors
-Imports System.Windows.Controls.Primitives
-Imports Alphaleonis.Win32.Filesystem.Shell32
-Imports SoundInTheory.DynamicImage.Filters
 Imports System.Linq
-Imports System.Security.Cryptography.X509Certificates
+
+
 
 Partial Public Class Cms
 
@@ -2759,6 +2756,8 @@ restart:
                 End If
                 'Add code to remove emailactivityid from review email activityxml when one review 
                 ' feedback is submitted.
+                'Instead of hardcoded comparision can we have config key to check content type for 
+                ' Tracking the email activity.
                 If goRequest("type") IsNot Nothing Then
                     If goRequest("type").ToLower() = "review" Then
                         Dim custEmail As String = String.Empty
@@ -2789,7 +2788,9 @@ restart:
                                 Next
                             End If
                         End If
+
                     End If
+
                 End If
                 PerfMonLog("DBHelper", "setObjectInstance", "endsave")
 
@@ -3164,7 +3165,7 @@ restart:
                         .Columns("currentLiveVersion").ColumnMapping = Data.MappingType.Attribute
                         .Columns("pageid").ColumnMapping = Data.MappingType.Attribute
                         .Columns("page").ColumnMapping = Data.MappingType.Attribute
-                        .Columns("reviewProductID").ColumnMapping = Data.MappingType.Attribute
+                        .Columns("ContentId").ColumnMapping = Data.MappingType.Attribute
                         .Columns("Type").ColumnMapping = Data.MappingType.Attribute
                     End With
 
@@ -7862,16 +7863,21 @@ restart:
                         oLibraryImageInstance = moAdXfm.Instance
                         Dim imgElement As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/Images/img[@class='display']")
                         Dim imgElementDetail As XmlElement = oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Images/img[@class='display']")
-                        Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
-                        imgElement.SetAttribute("src", cImage)
+                        'Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
+                        Dim oImg As System.Drawing.Bitmap
+                        If goConfig("ReviewImageRootPath") <> Nothing Then
+                            oImg = New System.Drawing.Bitmap(goConfig("ReviewImageRootPath") & cImage.Trim.Replace("/", "\"))
+                        Else
+                            oImg = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
+                        End If
+                        imgElement.SetAttribute("src", cImage.Trim)
                         imgElement.SetAttribute("height", oImg.Height)
                         imgElement.SetAttribute("width", oImg.Width)
-                        imgElementDetail.SetAttribute("src", cImage)
+                        imgElementDetail.SetAttribute("src", cImage.Trim)
                         imgElementDetail.SetAttribute("height", oImg.Height)
                         imgElementDetail.SetAttribute("width", oImg.Width)
                         Dim nContentId As Long
                         nContentId = setObjectInstance(Cms.dbHelper.objectTypes.Content, oLibraryImageInstance)
-                        'CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, , "")
                         'If we have an action here we need to relate the item
                         insertContentRelation(savedId, nContentId, False)
                     Next

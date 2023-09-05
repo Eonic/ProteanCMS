@@ -59,7 +59,6 @@ Public Class Cms
     Public mcContentType As String = Mime.MediaTypeNames.Text.Html
     Public mcContentDisposition As String = ""
     Public mnProteanCMSError As Long = 0
-    Public cleanUploadedPath As List(Of String) = New List(Of String)
 
     Public msException As String = ""
 
@@ -1071,9 +1070,9 @@ Public Class Cms
                 AndAlso mbIsUsingHTTPS _
                 AndAlso moConfig("OverrideBaseUrlWithSecureSiteForHTTPS") = "on" _
                 AndAlso moCartConfig("SecureURL") <> "" Then
-                gcEwBaseUrl = moCartConfig("SecureURL")
+                gcEwBaseUrl = moCartConfig("SecureURL").Trim("/")
             Else
-                gcEwBaseUrl = moConfig("BaseUrl")
+                gcEwBaseUrl = moConfig("BaseUrl").Trim("/")
             End If
 
             mcRequestDomain = IIf(mbIsUsingHTTPS, "https://", "http://") & moRequest.ServerVariables("SERVER_NAME")

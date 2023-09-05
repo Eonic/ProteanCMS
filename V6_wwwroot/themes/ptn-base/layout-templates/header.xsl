@@ -6,12 +6,13 @@
 		<xsl:param name="nav-collapse" />
 		<xsl:param name="cart-style" />
 		<xsl:param name="social-links" />
+		<xsl:param name="containerClass" />
 		<header class="navbar navbar-expand-lg header-menu-below">
 			<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
 				<xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top header-menu-below</xsl:attribute>
 			</xsl:if>
 			<!--LOGO-->
-			<div class="container header-inner">
+			<div class="{$containerClass} header-inner">
 				<div class="navbar-brand">
 					<xsl:apply-templates select="/Page" mode="inlinePopupSingle">
 						<xsl:with-param name="type">Image</xsl:with-param>
@@ -82,13 +83,13 @@
 			<!--NAV TOGGLE (MOBILE)-->
 			<xsl:if test="not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 				<nav class="navbar main-nav" aria-label="Main Navigation">
-					<div class="container">
+					<div class="{$containerClass}">
 						<div class="offcanvas offcanvas-end" id="navbarSupportedContent">
 							<button type="button" class="btn-close text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 							<!--SEARCH (MOBILE)-->
 							<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 								<div class="xs-only search-wrapper">
-									<xsl:apply-templates select="/" mode="searchSimple"/>
+									<xsl:apply-templates select="/" mode="searchSimpleXS"/>
 								</div>
 							</xsl:if>
 							<!-- MENU -->
@@ -167,12 +168,13 @@
 		<xsl:param name="nav-collapse" />
 		<xsl:param name="cart-style" />
 		<xsl:param name="social-links" />
-		<header class="navbar navbar-expand-lg navbar-light bg-light">
+		<xsl:param name="containerClass" />
+		<header class="navbar navbar-expand-lg">
 			<xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
 				<xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top</xsl:attribute>
 			</xsl:if>
 			<!--LOGO-->
-			<div class="container header-inner">
+			<div class="{$containerClass} header-inner">
 				<div class="navbar-brand">
 					<xsl:apply-templates select="/Page" mode="inlinePopupSingle">
 						<xsl:with-param name="type">Image</xsl:with-param>
@@ -243,7 +245,7 @@
 								<!--SEARCH (MOBILE)-->
 								<xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
 									<div class="xs-only search-wrapper">
-										<xsl:apply-templates select="/" mode="searchSimple"/>
+										<xsl:apply-templates select="/" mode="searchSimpleXS"/>
 									</div>
 								</xsl:if>
 								<!-- MENU -->

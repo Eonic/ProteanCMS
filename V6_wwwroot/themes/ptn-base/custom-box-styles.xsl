@@ -80,7 +80,7 @@
     ]},
     {title: 'Lead', inline: 'span', classes: 'lead'},
     {title: 'Small', inline: 'span', classes: 'small'},
-    {title: 'Button', inline: 'span', classes: 'btn btn-default'}
+    {title: 'Button', inline: 'span', classes: 'btn btn-custom'}
     ],
   </xsl:template>
 </xsl:stylesheet>

@@ -24,6 +24,11 @@
 
     .card.bg-primary {
         @include card-contrast($primary);
+
+        .btn-custom,
+        .btn-primary{
+            @extend .btn-dark;
+        }
     }
 
     .card.bg-secondary {
@@ -45,10 +50,11 @@
 
 .Site {
     .card {
-        margin-bottom: $grid-gutter-y;
+        margin-bottom: $grid-gutter-height;
 
         .card-header {
-            h5 {
+            padding-bottom:0;
+            .card-title {
                 margin-bottom: 0;
             }
 
@@ -65,4 +71,7 @@
     }
 
     @include card-color-bg;
+}
+.alert {
+    margin-bottom: $grid-gutter-height;
 }
