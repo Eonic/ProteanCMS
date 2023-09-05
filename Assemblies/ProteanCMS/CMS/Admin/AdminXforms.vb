@@ -1512,13 +1512,13 @@ Partial Public Class Cms
                         MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText = cName
                     End If
 
-                    ' delete the status if we are editing the home page
+                    ' disable the status if we are editing the home page
 
                     If pgid = myWeb.moConfig("RootPageId") Then
                         Dim oStatusElmt As XmlElement
                         oStatusElmt = MyBase.moXformElmt.SelectSingleNode("descendant-or-self::*[@bind='nStatus' or @ref='nStatus']")
                         If Not oStatusElmt Is Nothing Then
-                            oStatusElmt.ParentNode.RemoveChild(oStatusElmt)
+                            oStatusElmt.SetAttribute("class", oStatusElmt.GetAttribute("class") & " readonly")
                         End If
                     End If
 
@@ -3907,7 +3907,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmMoveFile", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function

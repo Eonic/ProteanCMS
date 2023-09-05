@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="6.0.53.0">
+<DatabaseUpgrade LatestVersion="6.0.63.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -444,7 +444,7 @@
       </Sub2>
       <Sub2 Number="50">
         <Sub3 Number="0">
-          <Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_checkDiscountCode.sql"/>
+          <Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_checkDiscountCode"/>
           <Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.50.0/fxn_checkDiscountCode.sql"/>
         </Sub3>
       </Sub2>
@@ -478,6 +478,50 @@
 				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.53.0/tblContentIndex.sql"/>
 				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.53.0/tblContentIndexDef.sql"/>
 				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.53.0/spUpdateContentIndexData.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="54">
+			<Sub3 Number="0">
+				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.54.0/spScheduleToUpdateIndexTable.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="55">
+			<Sub3 Number="0">
+				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.55.0/spGetPagesByParentPageId.sql"/>
+				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.55.0/spGetPriceRange.sql"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.55.0/vw_ticketsSalesReport.sql"/>2
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="59">
+			<Sub3 Number="0">
+				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.59.0/tblCartItem.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="60">
+			<Sub3 Number="0">
+				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.60.0/tblCartShippingProductCategoryRelations.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="61">
+			<Sub3 Number="0">
+				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.61.0/spRemoveDuplicateAuditKey.sql"/>
+				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.61.0/RemoveDuplicateAuditKey.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="62">
+			<Sub3 Number="0">
+			  	<Action Order="0" Type="Drop" ObjectType="Procedure" ObjectName="spGetPagesByParentPageId"/>
+				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.62.0/spGetPagesByParentPageId.sql"/>
+				<Action Order="2" Type="Drop" ObjectType="Procedure" ObjectName="spGetPriceRange"/>
+				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.62.0/spGetPriceRange.sql"/>
+				<Action Order="4" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
+				<Action Order="5" Type="File" ObjectType="" ObjectName="/v5/6.0.62.0/spGetValidShippingOptions.sql"/>			
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="63">
+			<Sub3 Number="0">
+				<Action Order="0" Type="File" ObjectType="" ObjectName="/v5/6.0.63.0/CartItemNCIndexForDiscount.sql"/>
+				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.63.0/vw_VersionControl_GetPendingContent.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>

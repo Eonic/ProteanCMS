@@ -8,12 +8,16 @@
       <div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
         <div class="modal-dialog">
           <div class="modal-content  alert alert-danger" role="alert">
+			  <div class="modal-header">
+				  
+				  <button type="button" class="btn-close"  data-bs-dismiss="modal">
+					&#160;
+				  </button>
+			  </div>
             <div class="modal-body" aria-automic="true">
               <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
               <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-              <button type="button" class="close" data-dismiss="modal">
-                <i class="fa fa-times">&#160;</i>
-              </button>
+             
               <span id="errorMessage">&#160;</span>
             </div>
           </div>
@@ -46,12 +50,10 @@
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
     <xsl:if test="$ref!=''">
+		
       <script>
-        $(function () {
-        <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
-        <xsl:text>-btn').popover('show');</xsl:text>
-        });
-      </script>
+		  displayErrorMessage('<xsl:copy-of select="alert/span/node()"/>', 'fa fa-info-circle');
+	  </script>
     </xsl:if>
   </xsl:template>
 
@@ -876,19 +878,19 @@
           <xsl:value-of select="@data-pleasewaitdetail"/>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="not(contains($class,'icon-right'))">
+      <!--<xsl:if test="not(contains($class,'icon-right'))">
         <i class="fa {$icon} fa-white">
           <xsl:text> </xsl:text>
         </i>
         <xsl:text> </xsl:text>
-      </xsl:if>
+      </xsl:if>-->
       <xsl:apply-templates select="label" mode="submitText"/>
-      <xsl:if test="contains($class,'icon-right')">
+      <!--<xsl:if test="contains($class,'icon-right')">
         <xsl:text> </xsl:text>
         <i class="fa {$icon} fa-white">
           <xsl:text> </xsl:text>
         </i>
-      </xsl:if>
+      </xsl:if>-->
     </button>
   </xsl:template>
 
@@ -2510,7 +2512,7 @@
           <xsl:text> multiline</xsl:text>
         </xsl:if>
       </xsl:attribute>		
-      <input type="{$type}" class="form-check-input">
+      <input type="{$type}" class="form-check-input {$class}">
         <xsl:if test="$ref!=''">
           <xsl:attribute name="name">
             <xsl:value-of select="$ref"/>
@@ -2536,7 +2538,9 @@
 		<xsl:if test="not($selectedValue!='') and not($value!='')">
 		    <xsl:attribute name="checked">checked</xsl:attribute>
 		</xsl:if>
-
+		  <xsl:if test="contains($class,'readonly')">
+			  <xsl:attribute name="disabled">disabled</xsl:attribute>
+		  </xsl:if>
 
 		  <!-- Check checkbox should be selected -->
         <xsl:if test="contains($type,'checkbox')">

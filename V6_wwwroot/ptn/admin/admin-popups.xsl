@@ -628,6 +628,9 @@
   </xsl:template>
 
 	<xsl:template match="Content" mode="xform">
+		
+			
+		
 		<form method="{model/submission/@method}" action="">
 			<xsl:attribute name="class">
 				<xsl:text>xform </xsl:text>
@@ -699,6 +702,9 @@
 
 		</form>
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
+		<script>
+			preparePickImageModal($('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>'));
+		</script>
 	</xsl:template>
 
 	<xsl:template match="group[parent::Content]" mode="xform">
