@@ -1,7 +1,0 @@
-CREATE PROCEDURE [dbo].[spEmailOptOuts]
-AS
-BEGIN
-	SET NOCOUNT ON;
-	SELECT * FROM tblOptOutAddresses
-END
-

@@ -15,9 +15,7 @@ Imports System.Text.RegularExpressions
 Imports System.Collections.Specialized
 Imports VB = Microsoft.VisualBasic
 Imports System
-
-
-
+Imports Microsoft.Extensions.Configuration
 Public Class Base
 
 
@@ -78,11 +76,12 @@ Public Class Base
     Public WithEvents moDbHelper As Cms.dbHelper
 
     'Application Level Properties   
-    Public moConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/web")
+    ' Public moConfigNew As ConfigurationSection
+    Public moConfig As NameValueCollection
     '  Public goApp As System.Web.HttpApplicationState
     Public goCache As System.Web.Caching.Cache
     Public goServer As System.Web.HttpServerUtility
-    Public goLangConfig As XmlElement = ConfigurationManager.GetSection("protean/languages")
+    Public goLangConfig As XmlElement ' = ConfigurationManager.GetSection("protean/languages")
 
     Public mcModuleName As String = "Protean.Base"
 
@@ -102,7 +101,8 @@ Public Class Base
 
     End Sub
 
-    Public Sub New(ByVal Context As System.Web.HttpContext)
+
+    Public Sub New(ByVal Context As Microsoft.AspNetCore.Http.HttpContext)
 
         Dim sProcessInfo As String = ""
         Try
@@ -118,11 +118,55 @@ Public Class Base
             moResponse = moCtx.Response
             moSession = moCtx.Session
             goServer = moCtx.Server
-            goCache = moCtx.Cache
+            ' goCache = moCtx.Cache
+            ' stdTools.goApp = moCtx.Application
+            stdTools.goServer = moCtx.Server
 
             PerfMon = New PerfLog("")
             PerfMon.Log("Base", "New")
 
+            Dim PtnCfg As IConfiguration = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+
+            '  Dim MyConfig As Configuration = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+            Dim moConfig As IConfigurationSection = PtnCfg.GetSection("protean:web")
+            '  moConfigNew = Config.GetSection("protean:web")
+            EnumberateFeatures()
+
+        Catch ex As Exception
+            'returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo))
+        End Try
+    End Sub
+
+    Public Sub New(ByVal Context As Microsoft.AspNetCore.Http.HttpContext, ByRef ptnConfig As Configuration)
+
+        Dim sProcessInfo As String = ""
+        Try
+
+            'Dim nMemUse As Integer = Process.GetCurrentProcess.WorkingSet64
+
+            If moCtx Is Nothing Then
+                moCtx = Context
+            End If
+
+            ' goApp = moCtx.Application
+            moRequest = moCtx.Request
+            moResponse = moCtx.Response
+            moSession = moCtx.Session
+            goServer = moCtx.Server
+            ' goCache = moCtx.Cache
+            ' stdTools.goApp = moCtx.Application
+            stdTools.goServer = moCtx.Server
+
+            PerfMon = New PerfLog("")
+            PerfMon.Log("Base", "New")
+
+            Dim MyConfig As Configuration = New ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+
+            moConfig.Add()
+
+
+            '  moConfigNew = Config.GetSection("protean:web")
             EnumberateFeatures()
 
         Catch ex As Exception

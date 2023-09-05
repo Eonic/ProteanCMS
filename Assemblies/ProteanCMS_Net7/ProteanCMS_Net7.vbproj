@@ -20,7 +20,7 @@
     <DelaySign>false</DelaySign>
     <OutputType>Library</OutputType>
     <RootNamespace>Protean</RootNamespace>
-    <StartupObject>Eonic.%28None%29</StartupObject>
+    <StartupObject></StartupObject>
     <MyType>Windows</MyType>
     <SignAssembly>true</SignAssembly>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -145,10 +145,6 @@
     <Reference Include="Imazen.WebP, Version=10.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NonNuget\Imazen.WebP.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Iis.Rewrite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files\Reference Assemblies\Microsoft\IIS\Microsoft.Web.Iis.Rewrite.dll</HintPath>
     </Reference>
     <Reference Include="PreMailer.Net, Version=2.1.1.0, Culture=neutral, PublicKeyToken=23e3f43e29cae17f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

@@ -20,8 +20,8 @@ Public Module stdTools
     Public mbException As Boolean
     '  Public oConfig As System.Collections.Specialized.NameValueCollection = ConfigurationManager.GetSection("protean/web")
 
-    Public goServer As System.Web.HttpServerUtility = System.Web.HttpContext.Current.Server
-    Public goApp As System.Web.HttpApplicationState = System.Web.HttpContext.Current.Application
+    Public goServer As System.Web.HttpServerUtility '= System.Web.HttpContext.Current.Server
+    Public goApp As System.Web.HttpApplicationState '= System.Web.HttpContext.Current.Application
 
     ' Public msException As String = "" 'TODO !-!IMPORTANT!-! WHEN ERROR EVENTS ARE ESTABLISHED THIS SHOULD BE MOVED INSIDE WEB!!!!!
     Public mbDBError As Boolean = False
@@ -275,7 +275,7 @@ Public Module stdTools
                     If LCase(xsltTemplatePath).StartsWith("c:\") Or LCase(xsltTemplatePath).StartsWith("d:\") Then
                         styleFile = CType(xsltTemplatePath, String)
                     Else
-                        styleFile = CType(goServer.MapPath(xsltTemplatePath), String)
+                        '  styleFile = CType(goServer.MapPath(xsltTemplatePath), String)
                     End If
 
                     oStyle.Load(styleFile)
@@ -854,8 +854,8 @@ Public Module stdTools
                 If ConfigurationManager.AppSettings("PublicKey.Modulus") = "" Then
                     'at the moment this writes a new file that needs to be included in web.config
                     asym.GenerateNewKeySet(pubkey, privkey)
-                    pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
-                    privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
+                    '   pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
+                    '   privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
                 Else
                     pubkey.LoadFromConfig()
                     privkey.LoadFromConfig()
@@ -933,8 +933,8 @@ Public Module stdTools
         If ConfigurationManager.AppSettings("PublicKey.Modulus") = "" Then
             'at the moment this writes a new file that needs to be included in web.config
             asym.GenerateNewKeySet(pubkey, privkey)
-            pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
-            privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
+            '  pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
+            '  privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"))
         Else
             pubkey.LoadFromConfig()
             privkey.LoadFromConfig()

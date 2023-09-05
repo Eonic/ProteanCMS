@@ -17,7 +17,7 @@ Public Class API
 
     Public Sub New()
 
-        MyBase.New(System.Web.HttpContext.Current)
+        '  MyBase.New(System.Web.HttpContext.Current)
         InitialiseVariables()
 
     End Sub
