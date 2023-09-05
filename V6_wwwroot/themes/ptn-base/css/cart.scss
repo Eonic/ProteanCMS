@@ -75,7 +75,7 @@
             padding-top: 0;
         }
 
-        .cart-thumbnail img{
+        .cart-thumbnail img {
             border-radius: $img-border-radius;
         }
 
@@ -98,6 +98,8 @@
         }
 
         .cart-desc {
+            flex-grow: 2;
+
             a {
                 font-size: 1.1rem;
                 //font-weight: 600;
@@ -133,6 +135,8 @@
 
         .cart-prices {
             float: right;
+            text-align: right;
+            padding-left: 2rem;
 
             .lineTotal {
                 font-size: 1.2rem;
@@ -187,6 +191,10 @@
     @include cart-style1;
     margin-bottom: $spacer;
 
+    h1 {
+        padding-bottom: 0.8rem;
+    }
+
     #deliveryAddress .btn,
     #billingAddress .btn {
         margin-bottom: 0.5rem;
@@ -199,9 +207,11 @@
 }
 
 .delivery-address {
-    padding-top: 2rem;
-    border-top: 1px solid $grey;
     margin-top: 2rem;
+
+    legend {
+        float: none;
+    }
 }
 
 #order-addresses {
@@ -219,6 +229,14 @@
     }
 }
 
+.cart-address-card {
+    height: calc(100% - 2rem);
+
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
 .address-edit-btn {
     float: right;
 }
@@ -233,11 +251,64 @@
     }
 }
 
+#cartFull .payment-tcs,
+#cartInvoice .confirmation-cart {
+    #cartListing {
+        border-bottom: 1px solid darken($light,10%);
+        padding-bottom: 0;
+        margin-bottom: 1rem;
+    }
+
+    .cart-item .cart-desc a,
+    .cart-prices .lineTotal {
+        font-size: 1rem;
+    }
+
+    .qty-text,
+    .cart-prices .linePrice {
+        font-size: 0.8rem;
+    }
+}
+#cartFull .card-body{
+    *:last-child{
+        margin-bottom:0;
+    }
+}
+.pay-PayPalExpress {
+    background: #ffc520;
+    border-color: #ffc520;
+    color: #253b80;
+    font-weight: 700;
+    font-style: italic;
+
+    &:before {
+        content: '\f1ed';
+        font-family: 'Font Awesome 5 Brands';
+        font-weight: 900;
+        padding-right: 0.3rem;
+    }
+
+    &:hover {
+        background: darken(#ffc520,8%);
+        border-color: darken(#ffc520,8%);
+        color: #253b80;
+    }
+}
+
 .pay-PayOnAccount {
     @extend .btn-link;
     display: block;
     padding-top: 13px;
-    &:hover{
-        background:none;
+
+    &:hover {
+        background: none;
+    }
+}
+
+.cart-card #cartListing {
+    padding-bottom: 0;
+
+    .cart-item:last-child {
+        padding-bottom: 0;
     }
 }

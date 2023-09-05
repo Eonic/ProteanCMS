@@ -9,7 +9,7 @@ Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Collections.Generic
 Imports Microsoft.Ajax.Utilities
-
+Imports System.Management
 
 Partial Public Class Cms
     Public Class Content
@@ -326,11 +326,21 @@ where cl.nStructId = " & myWeb.mnPageId)
 
                 Try
                     If PageId <> "" Then
-                        myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " and a.dExpireDate < GETDATE() and c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
+                        If oContentNode.GetAttribute("display") = "related" Then
+                            Dim contentId As Integer = CInt(oContentNode.GetAttribute("id"))
+                            myWeb.mbAdminMode = True
+                            myWeb.moDbHelper.addRelatedContent(oContentNode, contentId, True)
+                            myWeb.mbAdminMode = False
+                            ' myWeb.moDbHelper.getRelationsByContentId(contentId, oContentNode, 2)
+                        Else
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & PageId & " And a.dExpireDate < GETDATE() And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' ",
                     ,,, nItemsPerPage,,,,, nCurrentPage,,, True)
+                        End If
+
+
 
                         myWeb.bAllowExpired = True
-                    End If
+                        End If
 
 
                 Catch ex As Exception

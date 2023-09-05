@@ -29,7 +29,7 @@ Imports Microsoft.Ajax.Utilities
 Imports DelegateWrappers
 Imports System.Drawing.Imaging
 Imports System.Net
-Imports SoundInTheory.DynamicImage.Filters
+Imports System.Threading
 
 Partial Public Class fsHelper
 
@@ -816,13 +816,21 @@ Partial Public Class fsHelper
 
     Public Function MoveFile(ByVal FileName As String, ByVal cFolderSource As String, ByVal cFolderDestination As String, Optional ByVal bOverwrite As Boolean = False) As Boolean
         'PerfMon.Log("fsHelper", "MoveFile")
-        Try
 
+        Dim cProcessInfo As String = "Moving " & FileName & " to " & cFolderDestination
+        Try
             Dim dir As New DirectoryInfo(goServer.MapPath("/" & mcRoot) & cFolderSource.Replace("/", "\"))
             Dim DestDir As New DirectoryInfo(goServer.MapPath("/" & mcRoot) & cFolderDestination.Replace("/", "\"))
 
             If dir.Exists And DestDir.Exists Then
-                IO.File.Copy(dir.FullName & "\" & FileName, DestDir.FullName & "\" & FileName.Replace(" ", "-"), bOverwrite)
+                If Not IO.File.Exists(DestDir.FullName & "\" & FileName.Replace(" ", "-")) Then
+                    IO.File.Copy(dir.FullName & "\" & FileName, DestDir.FullName & "\" & FileName.Replace(" ", "-"), bOverwrite)
+                End If
+
+                IO.File.SetAttributes(dir.FullName & "\" & FileName, FileAttributes.Normal)
+
+                Thread.Sleep(50)
+
                 IO.File.Delete(dir.FullName & "\" & FileName)
                 Return True
             Else
@@ -830,7 +838,10 @@ Partial Public Class fsHelper
             End If
 
         Catch ex As Exception
-            Return ex.Message
+            ' Return ex.Message
+            returnException(msException, mcModuleName, "MoveFile", ex, "", cProcessInfo, gbDebug)
+            Return False
+
         End Try
     End Function
 

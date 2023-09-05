@@ -348,7 +348,7 @@
 
 	<xsl:template match="Page" mode="layoutHeader">
 		<xsl:param name="containerClass"/>
-		<xsl:if test="/Page/Contents/Content[@name='header' or @position='header'] or /Page/@adminMode">
+		<xsl:if test="/Page/Contents/Content[@name='header' or @position='header']">
 			<xsl:apply-templates select="/Page" mode="addModule">
 				<xsl:with-param name="text">Add Module</xsl:with-param>
 				<xsl:with-param name="position">header</xsl:with-param>
@@ -359,7 +359,7 @@
 
 	<xsl:template match="Page" mode="layoutFooter">
 		<xsl:param name="containerClass"/>
-		<xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer'] or /Page/@adminMode">
+		<xsl:if test="/Page/Contents/Content[@name='footer' or @position='footer']">
 			<xsl:apply-templates select="/Page" mode="addModule">
 				<xsl:with-param name="text">Add Module</xsl:with-param>
 				<xsl:with-param name="position">footer</xsl:with-param>
@@ -1752,7 +1752,131 @@
 	<xsl:template match="Content[@type='Module']" mode="displayBrief">
 		<span class="alert">* Module type unknown *</span>
 	</xsl:template>
+	
+	<!-- ## Generic Module   #####################################################################   -->
+	<!-- Module No Carousel -->
+	<xsl:template match="Content[@type='Module']" mode="displayBrief">
+		<!-- Set Variables -->
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<xsl:variable name="contentList">
+			<xsl:apply-templates select="." mode="getContent">
+				<xsl:with-param name="contentType" select="$contentType" />
+				<xsl:with-param name="startPos" select="$startPos" />
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="cropSetting">
+			<xsl:choose>
+				<xsl:when test="@crop='true'">
+					<xsl:text>true</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>false</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="totalCount">
+			<xsl:choose>
+				<xsl:when test="@display='related'">
+					<xsl:value-of select="count(Content[@type=$contentType])"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<div class="clearfix {@moduleType}">
+			<div>
+				<!--responsive columns -->
+				<xsl:apply-templates select="." mode="contentColumns"/>
+				<!--end responsive columns-->
+				<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+					<xsl:with-param name="sortBy" select="@sortBy"/>
+					<xsl:with-param name="parentId" select="@id"/>
+					<xsl:with-param name="crop" select="$cropSetting"/>
+					<xsl:with-param name="linked" select="@linkArticle"/>
+				</xsl:apply-templates>
+				<xsl:if test="@stepCount != '0'">
+					<xsl:apply-templates select="/" mode="genericStepper">
+						<xsl:with-param name="articleList" select="$contentList"/>
+						<xsl:with-param name="noPerPage" select="@stepCount"/>
+						<xsl:with-param name="startPos" select="$startPos"/>
+						<xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+						<xsl:with-param name="totalCount" select="$totalCount"/>
+					</xsl:apply-templates>
+				</xsl:if>
+				<xsl:text> </xsl:text>
+			</div>
+		</div>
+	</xsl:template>
 
+	<!-- Module with Swiper -->
+	<xsl:template match="Content[@type='Module' and @carousel='true']" mode="displayBrief">
+		<xsl:variable name="contentType" select="@contentType" />
+		<xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+		<xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+		<xsl:variable name="contentList">
+			<xsl:apply-templates select="." mode="getContent">
+				<xsl:with-param name="contentType" select="$contentType" />
+				<xsl:with-param name="startPos" select="$startPos" />
+			</xsl:apply-templates>
+		</xsl:variable>
+		<xsl:variable name="cropSetting">
+			<xsl:choose>
+				<xsl:when test="@crop='true'">
+					<xsl:text>true</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>false</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="totalCount">
+			<xsl:choose>
+				<xsl:when test="@display='related'">
+					<xsl:value-of select="count(Content[@type=$contentType])"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<div class="swiper-container {@moduleType} content-carousel ">
+			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
+				<div class="swiper-wrapper">
+					<xsl:apply-templates select="." mode="contentColumns">
+						<xsl:with-param name="carousel" select="@carousel"/>
+					</xsl:apply-templates>
+					<xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+						<xsl:with-param name="sortBy" select="@sortBy"/>
+						<xsl:with-param name="class" select="'swiper-slide'"/>
+						<xsl:with-param name="crop" select="$cropSetting"/>
+						<xsl:with-param name="linked" select="@linkArticle"/>
+					</xsl:apply-templates>
+					<xsl:text> </xsl:text>
+				</div>
+			</div>
+			<xsl:if test="@carouselBullets='true'">
+				<div class="swiper-pagination" id="swiper-pagination-{@id}">
+					<xsl:text> </xsl:text>
+				</div>
+			</xsl:if>
+
+			<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="swiper-button-next" id="swiper-button-next-{@id}">
+				<xsl:text> </xsl:text>
+			</div>
+			<div class="row">
+				<span>
+					<xsl:text> </xsl:text>
+				</span>
+			</div>
+		</div>
+	</xsl:template>
 
 
 </xsl:stylesheet>

@@ -1071,9 +1071,9 @@ Public Class Cms
                 AndAlso mbIsUsingHTTPS _
                 AndAlso moConfig("OverrideBaseUrlWithSecureSiteForHTTPS") = "on" _
                 AndAlso moCartConfig("SecureURL") <> "" Then
-                gcEwBaseUrl = moCartConfig("SecureURL")
+                gcEwBaseUrl = moCartConfig("SecureURL").Trim("/")
             Else
-                gcEwBaseUrl = moConfig("BaseUrl")
+                gcEwBaseUrl = moConfig("BaseUrl").Trim("/")
             End If
 
             mcRequestDomain = IIf(mbIsUsingHTTPS, "https://", "http://") & moRequest.ServerVariables("SERVER_NAME")

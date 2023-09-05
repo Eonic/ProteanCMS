@@ -2,7 +2,8 @@
 
 	<xsl:template match="Content[@type='LibraryImage']" mode="displayBrief">
 		<xsl:param name="sortBy"/>
-		<xsl:param name="crop"/>
+		<xsl:param name="crop" />
+		<xsl:param name="no-stretch"/>
 		<xsl:param name="lightbox"/>
 		<xsl:param name="showTitle"/>
 		<xsl:param name="alignment"/>
@@ -11,6 +12,16 @@
 		<xsl:variable name="cropSetting">
 			<xsl:choose>
 				<xsl:when test="$crop='false'">
+					<xsl:value-of select="false()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="true()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="no-stretchSetting">
+			<xsl:choose>
+				<xsl:when test="$no-stretch='false'">
 					<xsl:value-of select="false()"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -75,7 +86,6 @@
 				<xsl:with-param name="class" select="concat('grid-item  ',$class)"/>
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
-
 			<!--<xsl:choose>
 				<xsl:when test="$lightbox='false'">-->
 					<div class="thumbnail-wrapper">
@@ -104,13 +114,13 @@
 											</xsl:attribute>
 										</xsl:if>
 										<a href="{$linkURL}" title="{Name}">
-
 											<xsl:apply-templates select="." mode="displayThumbnail">
 												<xsl:with-param name="crop" select="$cropSetting" />
 												<xsl:with-param name="class" select="'img-responsive'" />
 												<xsl:with-param name="style" select="'overflow:hidden;'" />
 												<xsl:with-param name="width" select="$lg-max-width"/>
 												<xsl:with-param name="height" select="$lg-max-height"/>
+												<xsl:with-param name="no-stretch" select="$no-stretchSetting"/>												
 											</xsl:apply-templates>
 										</a>
 									</div>
@@ -135,12 +145,14 @@
 												<xsl:text>px;</xsl:text>
 											</xsl:attribute>
 										</xsl:if>
+										
 										<xsl:apply-templates select="." mode="displayThumbnail">
 											<xsl:with-param name="crop" select="$cropSetting" />
 											<xsl:with-param name="class" select="'img-responsive'" />
 											<xsl:with-param name="style" select="'overflow:hidden;'" />
 											<xsl:with-param name="width" select="$lg-max-width"/>
 											<xsl:with-param name="height" select="$lg-max-height"/>
+											<xsl:with-param name="no-stretch" select="$no-stretchSetting"/>
 										</xsl:apply-templates>
 									</div>
 									<xsl:if test="(Title/node()!='' or Body/node()!='') and not($showTitle='false')">

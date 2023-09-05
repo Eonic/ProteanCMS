@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content contentType="Contact" moduleType="ContactList" box="" title="" link="" linkType="internal" linkText="More contacts" sortBy="Company" order="ascending" cols="" stepBy="" stepCount="0" display="all" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000"/>
+					<Content contentType="Contact" moduleType="ContactList" box="" title="" link="" linkType="internal" linkText="More contacts" sortBy="Company" order="ascending" cols="" stepBy="" stepCount="0" display="all" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000" linkArticle="true"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -181,9 +181,7 @@
 								<value>false</value>
 							</item>
 						</select1>
-
 					</group>
-
 				</group>
 			</group>
 			<group>
@@ -192,7 +190,6 @@
 					<span class="space"> </span>
 					<span>Footer Links</span>
 				</label>
-
 				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
 			</group>
 			<group>
@@ -213,8 +210,6 @@
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
 				</group>
 				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='columns']"/>
-
-
 			</group>
 			<group>
 				<label>
@@ -232,14 +227,8 @@
 				</label>
 				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
 			</group>
-
-
 		</group>
 	</group>
-
-
-
-
 	<group ref="submit" class="contentSubmit">
 		<submit submission="" ref="ewSubmit" class="principle">
 			<label>Save Contact List</label>

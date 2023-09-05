@@ -3,7 +3,7 @@
   <ContentTypes>
     <ContentTypeGroup name="Purchaseables">
       <ContentType type="Product" formPath="product" name="Product">A simple product that users can buy</ContentType>
-      <ContentType type="SKU" name="SKU">A simple product that users can buy</ContentType>
+      <ContentType type="SKU" formPath="sku" name="SKU">A simple product that users can buy</ContentType>
     </ContentTypeGroup>
   </ContentTypes>
   <ModuleTypes>
